@@ -178,7 +178,6 @@
                                  const GLint *value);                                              \
     void clearNamedFramebufferuiv(FramebufferID framebufferPacked, GLenum buffer,                  \
                                   GLint drawbuffer, const GLuint *value);                          \
-    void clipControl(GLenum origin, GLenum depth);                                                 \
     void compressedTextureSubImage1D(TextureID texturePacked, GLint level, GLint xoffset,          \
                                      GLsizei width, GLenum format, GLsizei imageSize,              \
                                      const void *data);                                            \

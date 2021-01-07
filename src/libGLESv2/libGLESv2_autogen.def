@@ -623,6 +623,9 @@ EXPORTS
     ; GL_EXT_buffer_storage
     glBufferStorageEXT
 
+    ; GL_EXT_clip_control
+    glClipControlEXT
+
     ; GL_EXT_copy_image
     glCopyImageSubDataEXT
 
@@ -1043,6 +1046,7 @@ EXPORTS
     glClearStencilContextANGLE
     glClientActiveTextureContextANGLE
     glClientWaitSyncContextANGLE
+    glClipControlEXTContextANGLE
     glClipPlanefContextANGLE
     glClipPlanexContextANGLE
     glColor4fContextANGLE

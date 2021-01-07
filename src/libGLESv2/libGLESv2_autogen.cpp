@@ -3810,6 +3810,12 @@ void GL_APIENTRY glBufferStorageEXT(GLenum target,
     return gl::BufferStorageEXT(target, size, data, flags);
 }
 
+// GL_EXT_clip_control
+void GL_APIENTRY glClipControlEXT(GLenum origin, GLenum depth)
+{
+    return gl::ClipControlEXT(origin, depth);
+}
+
 // GL_EXT_copy_image
 void GL_APIENTRY glCopyImageSubDataEXT(GLuint srcName,
                                        GLenum srcTarget,
@@ -5866,6 +5872,11 @@ GLenum GL_APIENTRY glClientWaitSyncContextANGLE(GLeglContext ctx,
                                                 GLuint64 timeout)
 {
     return gl::ClientWaitSyncContextANGLE(ctx, sync, flags, timeout);
+}
+
+void GL_APIENTRY glClipControlEXTContextANGLE(GLeglContext ctx, GLenum origin, GLenum depth)
+{
+    return gl::ClipControlEXTContextANGLE(ctx, origin, depth);
 }
 
 void GL_APIENTRY glClipPlanefContextANGLE(GLeglContext ctx, GLenum p, const GLfloat *eqn)

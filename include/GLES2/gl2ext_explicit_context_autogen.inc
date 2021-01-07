@@ -169,6 +169,7 @@ typedef void (GL_APIENTRYP PFNGLBLITFRAMEBUFFERNVCONTEXTANGLEPROC)(GLeglContext 
 typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);
 typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEEXTERNALEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 typedef void (GL_APIENTRYP PFNGLBUFFERSTORAGEMEMEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset);
+typedef void (GL_APIENTRYP PFNGLCLIPCONTROLEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum origin, GLenum depth);
 typedef void (GL_APIENTRYP PFNGLCOLORMASKIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 typedef void (GL_APIENTRYP PFNGLCOLORMASKIOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 typedef void (GL_APIENTRYP PFNGLCOMPRESSEDTEXIMAGE3DOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void *data);
@@ -601,6 +602,7 @@ GL_APICALL void GL_APIENTRY glBlitFramebufferNVContextANGLE(GLeglContext ctx, GL
 GL_APICALL void GL_APIENTRY glBufferStorageEXTContextANGLE(GLeglContext ctx, GLenum target, GLsizeiptr size, const void *data, GLbitfield flags);
 GL_APICALL void GL_APIENTRY glBufferStorageExternalEXTContextANGLE(GLeglContext ctx, GLenum target, GLintptr offset, GLsizeiptr size, GLeglClientBufferEXT clientBuffer, GLbitfield flags);
 GL_APICALL void GL_APIENTRY glBufferStorageMemEXTContextANGLE(GLeglContext ctx, GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset);
+GL_APICALL void GL_APIENTRY glClipControlEXTContextANGLE(GLeglContext ctx, GLenum origin, GLenum depth);
 GL_APICALL void GL_APIENTRY glColorMaskiEXTContextANGLE(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 GL_APICALL void GL_APIENTRY glColorMaskiOESContextANGLE(GLeglContext ctx, GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a);
 GL_APICALL void GL_APIENTRY glCompressedTexImage3DOESContextANGLE(GLeglContext ctx, GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void *data);

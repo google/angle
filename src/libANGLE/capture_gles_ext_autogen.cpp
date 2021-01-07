@@ -4577,6 +4577,19 @@ CallCapture CaptureBufferStorageEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLBufferStorageEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureClipControlEXT(const State &glState,
+                                  bool isCallValid,
+                                  GLenum origin,
+                                  GLenum depth)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("origin", GLenumGroup::DefaultGroup, ParamType::TGLenum, origin);
+    paramBuffer.addEnumParam("depth", GLenumGroup::DefaultGroup, ParamType::TGLenum, depth);
+
+    return CallCapture(angle::EntryPoint::GLClipControlEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureCopyImageSubDataEXT(const State &glState,
                                        bool isCallValid,
                                        GLuint srcName,

@@ -672,6 +672,9 @@ ANGLE_EXPORT void GL_APIENTRY BufferStorageEXT(GLenum target,
                                                const void *data,
                                                GLbitfield flags);
 
+// GL_EXT_clip_control
+ANGLE_EXPORT void GL_APIENTRY ClipControlEXT(GLenum origin, GLenum depth);
+
 // GL_EXT_copy_image
 ANGLE_EXPORT void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
                                                   GLenum srcTarget,
@@ -1690,6 +1693,9 @@ ANGLE_EXPORT GLenum GL_APIENTRY ClientWaitSyncContextANGLE(GLeglContext ctx,
                                                            GLsync sync,
                                                            GLbitfield flags,
                                                            GLuint64 timeout);
+ANGLE_EXPORT void GL_APIENTRY ClipControlEXTContextANGLE(GLeglContext ctx,
+                                                         GLenum origin,
+                                                         GLenum depth);
 ANGLE_EXPORT void GL_APIENTRY ClipPlanefContextANGLE(GLeglContext ctx,
                                                      GLenum p,
                                                      const GLfloat *eqn);

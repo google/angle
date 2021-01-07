@@ -902,6 +902,12 @@ angle::CallCapture CaptureBufferStorageEXT(const State &glState,
                                            const void *data,
                                            GLbitfield flags);
 
+// GL_EXT_clip_control
+angle::CallCapture CaptureClipControlEXT(const State &glState,
+                                         bool isCallValid,
+                                         GLenum origin,
+                                         GLenum depth);
+
 // GL_EXT_copy_image
 angle::CallCapture CaptureCopyImageSubDataEXT(const State &glState,
                                               bool isCallValid,

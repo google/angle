@@ -1311,6 +1311,12 @@ bool ValidateBufferStorageEXT(const Context *context,
     return true;
 }
 
+// GL_EXT_clip_control
+bool ValidateClipControlEXT(const Context *context, GLenum origin, GLenum depth)
+{
+    return false;
+}
+
 // GL_EXT_external_buffer
 bool ValidateBufferStorageExternalEXT(const Context *context,
                                       BufferBinding targetPacked,

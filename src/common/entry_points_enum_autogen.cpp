@@ -426,6 +426,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glClientWaitSync";
         case EntryPoint::GLClipControl:
             return "glClipControl";
+        case EntryPoint::GLClipControlEXT:
+            return "glClipControlEXT";
         case EntryPoint::GLClipPlane:
             return "glClipPlane";
         case EntryPoint::GLClipPlanef:

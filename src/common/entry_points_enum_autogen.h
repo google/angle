@@ -219,6 +219,7 @@ enum class EntryPoint
     GLClientActiveTexture,
     GLClientWaitSync,
     GLClipControl,
+    GLClipControlEXT,
     GLClipPlane,
     GLClipPlanef,
     GLClipPlanex,

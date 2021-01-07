@@ -303,6 +303,8 @@
     /* GL_EXT_buffer_storage */                                                                    \
     void bufferStorage(BufferBinding targetPacked, GLsizeiptr size, const void *data,              \
                        GLbitfield flags);                                                          \
+    /* GL_EXT_clip_control */                                                                      \
+    void clipControl(GLenum origin, GLenum depth);                                                 \
     /* GL_EXT_compressed_ETC1_RGB8_sub_texture */                                                  \
     /* GL_EXT_copy_image */                                                                        \
     /* GL_EXT_debug_label */                                                                       \

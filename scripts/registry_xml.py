@@ -66,6 +66,7 @@ gles_extensions = [
     "GL_EXT_blend_func_extended",
     "GL_EXT_buffer_storage",
     "GL_EXT_copy_image",
+    "GL_EXT_clip_control",
     "GL_EXT_debug_label",
     "GL_EXT_debug_marker",
     "GL_EXT_discard_framebuffer",

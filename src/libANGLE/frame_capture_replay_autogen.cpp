@@ -335,6 +335,10 @@ void FrameCapture::ReplayCall(gl::Context *context,
                 params.getParam("flags", ParamType::TGLbitfield, 1).value.GLbitfieldVal,
                 params.getParam("timeout", ParamType::TGLuint64, 2).value.GLuint64Val);
             break;
+        case angle::EntryPoint::GLClipControl:
+            context->clipControl(params.getParam("origin", ParamType::TGLenum, 0).value.GLenumVal,
+                                 params.getParam("depth", ParamType::TGLenum, 1).value.GLenumVal);
+            break;
         case angle::EntryPoint::GLClipPlanef:
             context->clipPlanef(params.getParam("p", ParamType::TGLenum, 0).value.GLenumVal,
                                 replayContext->getAsConstPointer<const GLfloat *>(

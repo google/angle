@@ -3769,6 +3769,31 @@ void GL_APIENTRY BufferStorageEXT(GLenum target,
     }
 }
 
+// GL_EXT_clip_control
+void GL_APIENTRY ClipControlEXT(GLenum origin, GLenum depth)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLClipControlEXT, "context = %d, origin = %s, depth = %s", CID(context),
+          GLenumToString(GLenumGroup::DefaultGroup, origin),
+          GLenumToString(GLenumGroup::DefaultGroup, depth));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateClipControlEXT(context, origin, depth));
+        if (isCallValid)
+        {
+            context->clipControl(origin, depth);
+        }
+        ANGLE_CAPTURE(ClipControlEXT, isCallValid, context, origin, depth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_copy_image
 void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
                                      GLenum srcTarget,
@@ -12051,6 +12076,31 @@ GLenum GL_APIENTRY ClientWaitSyncContextANGLE(GLeglContext ctx,
         returnValue = GetDefaultReturnValue<angle::EntryPoint::GLClientWaitSync, GLenum>();
     }
     return returnValue;
+}
+
+void GL_APIENTRY ClipControlEXTContextANGLE(GLeglContext ctx, GLenum origin, GLenum depth)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLClipControlEXT, "context = %d, origin = %s, depth = %s", CID(context),
+          GLenumToString(GLenumGroup::DefaultGroup, origin),
+          GLenumToString(GLenumGroup::DefaultGroup, depth));
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetShareGroupLock(context);
+        bool isCallValid =
+            (context->skipValidation() || ValidateClipControlEXT(context, origin, depth));
+        if (isCallValid)
+        {
+            context->clipControl(origin, depth);
+        }
+        ANGLE_CAPTURE(ClipControlEXT, isCallValid, context, origin, depth);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
 }
 
 void GL_APIENTRY ClipPlanefContextANGLE(GLeglContext ctx, GLenum p, const GLfloat *eqn)

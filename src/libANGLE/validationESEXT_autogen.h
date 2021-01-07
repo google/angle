@@ -778,6 +778,9 @@ bool ValidateBufferStorageEXT(const Context *context,
                               const void *data,
                               GLbitfield flags);
 
+// GL_EXT_clip_control
+bool ValidateClipControlEXT(const Context *context, GLenum origin, GLenum depth);
+
 // GL_EXT_copy_image
 bool ValidateCopyImageSubDataEXT(const Context *context,
                                  GLuint srcName,
