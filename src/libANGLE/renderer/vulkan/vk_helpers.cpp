@@ -5551,7 +5551,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
         return angle::Result::Continue;
     }
 
-    removeSupersededUpdates(skipLevelsMask);
+    removeSupersededUpdates(contextVk, skipLevelsMask);
 
     // If a clear is requested and we know it was previously cleared with the same value, we drop
     // the clear.
@@ -5639,7 +5639,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             if (isUpdateLevelOutsideRange || areUpdateLayersOutsideRange ||
                 skipLevelsMask.test(updateMipLevelVk.get()))
             {
-                updatesToKeep.emplace_back(update);
+                updatesToKeep.emplace_back(std::move(update));
                 continue;
             }
 
@@ -5813,7 +5813,7 @@ bool ImageHelper::hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelI
     return false;
 }
 
-void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
+void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask skipLevelsMask)
 {
     if (mLayerCount > 64)
     {
@@ -5821,6 +5821,8 @@ void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
         // efficiency, hence the limit.
         return;
     }
+
+    RendererVk *renderer = contextVk->getRenderer();
 
     // Go over updates in reverse order, and mark the layers they completely overwrite.  If an
     // update is encountered whose layers are all already marked, that update is superseded by
@@ -5837,7 +5839,7 @@ void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
     // Note: this lambda only needs |this|, but = is specified because clang warns about kIndex* not
     // needing capture, while MSVC fails to compile without capturing them.
     auto markLayersAndDropSuperseded = [=, &supersededLayers,
-                                        &levelExtents](const SubresourceUpdate &update) {
+                                        &levelExtents](SubresourceUpdate &update) {
         uint32_t updateBaseLayer, updateLayerCount;
         update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
 
@@ -5861,6 +5863,7 @@ void ImageHelper::removeSupersededUpdates(gl::TexLevelMask skipLevelsMask)
 
         if (isColorOrDepthSuperseded && isStencilSuperseded)
         {
+            update.release(renderer);
             return true;
         }
 
@@ -6272,6 +6275,11 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 ImageHelper::SubresourceUpdate::SubresourceUpdate() : updateSource(UpdateSource::Buffer), buffer{}
 {}
 
+ImageHelper::SubresourceUpdate::~SubresourceUpdate()
+{
+    ASSERT(updateSource != UpdateSource::Image || image.image == nullptr);
+}
+
 ImageHelper::SubresourceUpdate::SubresourceUpdate(BufferHelper *bufferHelperIn,
                                                   const VkBufferImageCopy &copyRegionIn)
     : updateSource(UpdateSource::Buffer), buffer{bufferHelperIn, copyRegionIn}
@@ -6295,39 +6303,45 @@ ImageHelper::SubresourceUpdate::SubresourceUpdate(VkImageAspectFlags aspectFlags
         imageIndex.hasLayer() ? imageIndex.getLayerCount() : VK_REMAINING_ARRAY_LAYERS;
 }
 
-ImageHelper::SubresourceUpdate::SubresourceUpdate(const SubresourceUpdate &other)
+ImageHelper::SubresourceUpdate::SubresourceUpdate(SubresourceUpdate &&other)
     : updateSource(other.updateSource)
 {
-    if (updateSource == UpdateSource::Clear)
+    switch (updateSource)
     {
-        clear = other.clear;
-    }
-    else if (updateSource == UpdateSource::Buffer)
-    {
-        buffer = other.buffer;
-    }
-    else
-    {
-        image = other.image;
+        case UpdateSource::Clear:
+            clear = other.clear;
+            break;
+        case UpdateSource::Buffer:
+            buffer = other.buffer;
+            break;
+        case UpdateSource::Image:
+            image             = other.image;
+            other.image.image = nullptr;
+            break;
+        default:
+            UNREACHABLE();
     }
 }
 
-ImageHelper::SubresourceUpdate &ImageHelper::SubresourceUpdate::operator=(
-    const SubresourceUpdate &other)
+ImageHelper::SubresourceUpdate &ImageHelper::SubresourceUpdate::operator=(SubresourceUpdate &&other)
 {
-    updateSource = other.updateSource;
-    if (updateSource == UpdateSource::Clear)
-    {
-        clear = other.clear;
-    }
-    else if (updateSource == UpdateSource::Buffer)
-    {
-        buffer = other.buffer;
-    }
-    else
-    {
-        image = other.image;
-    }
+    // Given that the update is a union of three structs, we can't use std::swap on the fields.  For
+    // example, |this| may be an Image update and |other| may be a Buffer update.
+    // The following could work:
+    //
+    // SubresourceUpdate oldThis;
+    // Set oldThis to this->field based on updateSource
+    // Set this->otherField to other.otherField based on other.updateSource
+    // Set other.field to oldThis->field based on updateSource
+    // std::Swap(updateSource, other.updateSource);
+    //
+    // It's much simpler to just swap the memory instead.
+
+    SubresourceUpdate oldThis;
+    memcpy(&oldThis, this, sizeof(*this));
+    memcpy(this, &other, sizeof(*this));
+    memcpy(&other, &oldThis, sizeof(*this));
+
     return *this;
 }
 

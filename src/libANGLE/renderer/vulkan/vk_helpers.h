@@ -1792,17 +1792,18 @@ class ImageHelper final : public Resource, public angle::Subject
         VkImageCopy copyRegion;
     };
 
-    struct SubresourceUpdate
+    struct SubresourceUpdate : angle::NonCopyable
     {
         SubresourceUpdate();
+        ~SubresourceUpdate();
         SubresourceUpdate(BufferHelper *bufferHelperIn, const VkBufferImageCopy &copyRegion);
         SubresourceUpdate(ImageHelper *image, const VkImageCopy &copyRegion);
         SubresourceUpdate(VkImageAspectFlags aspectFlags,
                           const VkClearValue &clearValue,
                           const gl::ImageIndex &imageIndex);
-        SubresourceUpdate(const SubresourceUpdate &other);
+        SubresourceUpdate(SubresourceUpdate &&other);
 
-        SubresourceUpdate &operator=(const SubresourceUpdate &other);
+        SubresourceUpdate &operator=(SubresourceUpdate &&other);
 
         void release(RendererVk *renderer);
 
@@ -1824,7 +1825,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Called from flushStagedUpdates, removes updates that are later superseded by another.  This
     // cannot be done at the time the updates were staged, as the image is not created (and thus the
     // extents are not known).
-    void removeSupersededUpdates(gl::TexLevelMask skipLevelsMask);
+    void removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask skipLevelsMask);
 
     void initImageMemoryBarrierStruct(VkImageAspectFlags aspectMask,
                                       ImageLayout newLayout,
