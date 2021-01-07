@@ -158,6 +158,69 @@
       "message": "Overall looks good to me. ",
       "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b07227c0_52148b11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:04:00Z",
+      "side": 1,
+      "message": "I will say the SPIR-V workaround seems much less encapsulated than the AST way. It would be nice if the SPIR-V transformations were separable.",
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "336ac0ed_aecbbf31",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:04:00Z",
+      "side": 1,
+      "message": "\"geometry\" is overloaded. how about primitive? that\u0027s similar to the language in the spec.",
+      "range": {
+        "startLine": 120,
+        "startChar": 44,
+        "endLine": 120,
+        "endChar": 63
+      },
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d51a9e07_09e6fb90",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-07T20:04:00Z",
+      "side": 1,
+      "message": "just make this a helper, it overlaps with my work too.",
+      "range": {
+        "startLine": 688,
+        "startChar": 0,
+        "endLine": 691,
+        "endChar": 73
+      },
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
