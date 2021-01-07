@@ -34,6 +34,24 @@
       "parentUuid": "8365390b_7466eb4f",
       "revId": "3df8d06eb44ce51386e9e3b6e848717a2cccd8a1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4873f96e_71d4795c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-07T18:52:47Z",
+      "side": 1,
+      "message": "Once they are checked in and running in Skia Gold, it only compares against previous ANGLE results.  It never compares against the native driver.  So you\u0027re effectively establishing that ANGLE is getting the correct result, and eyeballing it isn\u0027t good enough.  We don\u0027t want to compare against a bad image forever, not knowing that we\u0027re missing geometry or shading which can be very difficult to spot.\n\nComparing against native only takes a few minutes with the steps I\u0027ve sent you previously.  It ends up being a judgement call, since we almost never completely match the native driver.  Another reason to document it.\n\nWe don\u0027t need to gate this CL on the results, the comparison can be done as a follow up.",
+      "parentUuid": "9a88bb57_831995d0",
+      "revId": "3df8d06eb44ce51386e9e3b6e848717a2cccd8a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
