@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46b98137_b0d96b80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T15:24:01Z",
+      "side": 1,
+      "message": "There are at least a few tests that trigger the ASSERT. Any situation where an Image update is superseded by another update has this leak.",
+      "parentUuid": "396bdf19_a37c584e",
+      "revId": "a42fb51fb6ff334528d6909cad6a09ec0f422152",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d4e41862_f1eb7839",
