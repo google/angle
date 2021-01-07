@@ -119,12 +119,11 @@ angle_test("angle_system_info_test") {
 angle_test("angle_unittests") {
   sources = angle_unittests_sources + [ "angle_unittest_main.cpp" ]
 
-  if (angle_enable_essl) {
-    sources += angle_unittests_essl_sources
-  }
+  # Compiler tests frequently require either TranslatorGLSL or TranslatorESSL.  Build them only if
+  # both are enabled.
+  if (angle_enable_essl && angle_enable_glsl) {
+    sources += angle_unittests_compiler_tests_sources
 
-  if (angle_enable_glsl) {
-    sources += angle_unittests_glsl_sources
     if (is_apple) {
       sources += angle_unittests_glsl_mac_sources
     }
