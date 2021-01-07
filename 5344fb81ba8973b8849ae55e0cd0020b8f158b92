@@ -33,6 +33,24 @@
       "message": "PTAL\n\nAlso, presubmit is upset because it thinks the CL needs formatting.   However, running \u0027git cl format\u0027 locally doesn\u0027t update any files.   Looking at the source code, nothing seems out of place either.\n\nThis version is the latest, since trying to re-upload it gives:\n ! [remote rejected]     HEAD -\u003e refs/for/refs/heads/master%notify\u003dNONE,hashtag\u003dtests (no new changes)\nerror: failed to push some refs to \u0027https://chromium.googlesource.com/angle/angle.git\u0027\n\nAny ideas on what\u0027s going wrong here or how to fix it?",
       "revId": "5344fb81ba8973b8849ae55e0cd0020b8f158b92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ef7e6b5_5d8a0b80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T16:16:21Z",
+      "side": 1,
+      "message": "I sometimes see this error message after run_code_generation thinks something is dirty. Maybe rebase to ToT and gclient sync?",
+      "parentUuid": "3566017f_32fdfa71",
+      "revId": "5344fb81ba8973b8849ae55e0cd0020b8f158b92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
