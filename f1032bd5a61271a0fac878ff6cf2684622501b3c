@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0348418d_d1741ead",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-07T19:38:18Z",
+      "side": 1,
+      "message": "There\u0027s some bug I\u0027m working through in metal/ with the flags that are passed, but the change is otherwise good for review.",
+      "revId": "f1032bd5a61271a0fac878ff6cf2684622501b3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
