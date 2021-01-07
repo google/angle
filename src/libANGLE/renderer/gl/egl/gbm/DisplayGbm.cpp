@@ -530,7 +530,7 @@ egl::Error DisplayGbm::initialize(egl::Display *display)
     functionsGL->initialize(display->getAttributeMap());
 
     mRenderer.reset(new RendererEGL(std::move(functionsGL), display->getAttributeMap(), this,
-                                    context, attribs));
+                                    context, attribs, false));
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
     {

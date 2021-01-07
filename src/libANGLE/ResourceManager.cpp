@@ -381,6 +381,11 @@ void FramebufferManager::setDefaultFramebuffer(Framebuffer *framebuffer)
     mObjectMap.assign(Framebuffer::kDefaultDrawFramebufferHandle, framebuffer);
 }
 
+Framebuffer *FramebufferManager::getDefaultFramebuffer() const
+{
+    return getFramebuffer(Framebuffer::kDefaultDrawFramebufferHandle);
+}
+
 void FramebufferManager::invalidateFramebufferCompletenessCache() const
 {
     for (const auto &framebuffer : mObjectMap)

@@ -1688,6 +1688,11 @@ Framebuffer *State::getTargetFramebuffer(GLenum target) const
     }
 }
 
+Framebuffer *State::getDefaultFramebuffer() const
+{
+    return mFramebufferManager->getDefaultFramebuffer();
+}
+
 bool State::removeReadFramebufferBinding(FramebufferID framebuffer)
 {
     if (mReadFramebuffer != nullptr && mReadFramebuffer->id() == framebuffer)

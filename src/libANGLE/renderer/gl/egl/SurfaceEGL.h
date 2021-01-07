@@ -58,6 +58,7 @@ class SurfaceEGL : public SurfaceGL
                                   EGLnsecsANDROID *values) const override;
 
     EGLSurface getSurface() const;
+    virtual bool isExternal() const;
 
   protected:
     const FunctionsEGL *mEGL;

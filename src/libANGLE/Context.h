@@ -406,6 +406,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     bool isVertexArrayGenerated(VertexArrayID vertexArray) const;
     bool isTransformFeedbackGenerated(TransformFeedbackID transformFeedback) const;
 
+    bool isExternal() const { return mIsExternal; }
+    bool saveAndRestoreState() const { return mSaveAndRestoreState; }
+    bool isCurrent() const { return mIsCurrent; }
+
     void getBooleanvImpl(GLenum pname, GLboolean *params) const;
     void getFloatvImpl(GLenum pname, GLfloat *params) const;
     void getIntegervImpl(GLenum pname, GLint *params) const;
@@ -772,7 +776,10 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
 
     OverlayType mOverlay;
 
-    bool mIsCurrent = false;
+    const bool mIsExternal;
+    const bool mSaveAndRestoreState;
+
+    bool mIsCurrent;
 };
 
 // Thread-local current valid context bound to the thread.

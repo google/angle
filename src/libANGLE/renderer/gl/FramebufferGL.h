@@ -87,6 +87,7 @@ class FramebufferGL : public FramebufferImpl
                             gl::Command command) override;
 
     GLuint getFramebufferID() const;
+    void updateDefaultFramebufferID(GLuint framebufferID);
     bool isDefault() const;
 
     bool hasEmulatedAlphaChannelTextureAttachment() const;

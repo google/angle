@@ -34,8 +34,15 @@ class DisplayAndroid : public DisplayEGL
                                const egl::Config *configuration,
                                const gl::Context *shareContext,
                                const egl::AttributeMap &attribs) override;
-
+    SurfaceImpl *createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                               EGLenum buftype,
+                                               EGLClientBuffer clientBuffer,
+                                               const egl::AttributeMap &attribs) override;
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
+    egl::Error validateClientBuffer(const egl::Config *configuration,
+                                    EGLenum buftype,
+                                    EGLClientBuffer clientBuffer,
+                                    const egl::AttributeMap &attribs) const override;
     egl::Error validateImageClientBuffer(const gl::Context *context,
                                          EGLenum target,
                                          EGLClientBuffer clientBuffer,
@@ -62,6 +69,7 @@ class DisplayAndroid : public DisplayEGL
 
     egl::Error createRenderer(EGLContext shareContext,
                               bool makeNewContextCurrent,
+                              bool isExternalContext,
                               std::shared_ptr<RendererEGL> *outRenderer);
 
     bool mVirtualizedContexts;

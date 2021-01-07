@@ -16,6 +16,7 @@
 #include "libANGLE/renderer/gl/functionsgl_typedefs.h"
 #include "platform/FeaturesGL.h"
 
+#include <array>
 #include <map>
 
 namespace gl
@@ -33,6 +34,86 @@ class FunctionsGL;
 class TransformFeedbackGL;
 class VertexArrayGL;
 class QueryGL;
+
+// TODO(penghuang): use gl::State?
+struct ExternalContextState
+{
+    GLint packAlignment;
+    GLint unpackAlignment;
+
+    GLenum vertexArrayBufferBinding;
+    GLenum elementArrayBufferBinding;
+
+    bool depthTest;
+    bool cullFace;
+    GLenum cullFaceMode;
+    std::array<bool, 4> colorMask;
+    gl::ColorF colorClear;
+    gl::ColorF blendColor;
+    GLfloat depthClear;
+    GLenum currentProgram;
+    GLenum depthFunc;
+    bool depthMask;
+    GLfloat depthRage[2];
+    GLenum frontFace;
+    GLfloat lineWidth;
+    GLfloat polygonOffsetFactor;
+    GLfloat polygonOffsetUnits;
+    GLfloat sampleCoverageValue;
+    bool sampleCoverageInvert;
+    GLenum blendEquationRgb;
+    GLenum blendEquationAlpha;
+
+    bool enableDither;
+    bool enablePolygonOffsetFill;
+    bool enableSampleAlphaToCoverage;
+    bool enableSampleCoverage;
+    bool multisampleEnabled;
+
+    bool blendEnabled;
+    GLenum blendSrcRgb;
+    GLenum blendSrcAlpha;
+    GLenum blendDestRgb;
+    GLenum blendDestAlpha;
+    GLenum activeTexture;
+    gl::Rectangle viewport;
+    bool scissorTest;
+    gl::Rectangle scissorBox;
+
+    struct StencilState
+    {
+        bool stencilTestEnabled;
+        GLenum stencilFrontFunc;
+        GLint stencilFrontRef;
+        GLenum stencilFrontMask;
+        GLenum stencilBackFunc;
+        GLint stencilBackRef;
+        GLenum stencilBackMask;
+        GLint stencilClear;
+        GLenum stencilFrontWritemask;
+        GLenum stencilBackWritemask;
+        GLenum stencilFrontFailOp;
+        GLenum stencilFrontZFailOp;
+        GLenum stencilFrontZPassOp;
+        GLenum stencilBackFailOp;
+        GLenum stencilBackZFailOp;
+        GLenum stencilBackZPassOp;
+    };
+    StencilState stencilState;
+
+    GLenum framebufferBinding;
+
+    struct TextureBindings
+    {
+        GLenum texture2d;
+        GLenum textureCubeMap;
+        GLenum textureExternalOES;
+        // TODO(boliu): TEXTURE_RECTANGLE_ARB
+    };
+    std::vector<TextureBindings> textureBindings;
+
+    GLenum vertexArrayBinding;
+};
 
 class StateManagerGL final : angle::NonCopyable
 {
@@ -181,6 +262,9 @@ class StateManagerGL final : angle::NonCopyable
 
     void validateState() const;
 
+    void syncFromNativeContext(const gl::Extensions &extensions, ExternalContextState *state);
+    void restoreNativeContext(const gl::Extensions &extensions, const ExternalContextState *state);
+
   private:
     void setTextureCubemapSeamlessEnabled(bool enabled);
 
@@ -195,12 +279,52 @@ class StateManagerGL final : angle::NonCopyable
     void updateDispatchIndirectBufferBinding(const gl::Context *context);
     void updateDrawIndirectBufferBinding(const gl::Context *context);
 
+    template <typename T>
+    void get(GLenum name, T *value);
+
+    template <size_t n, typename T>
+    void get(GLenum name, std::array<T, n> *values);
+
     void syncSamplersState(const gl::Context *context);
     void syncTransformFeedbackState(const gl::Context *context);
 
     void updateMultiviewBaseViewLayerIndexUniformImpl(
         const gl::Program *program,
         const gl::FramebufferState &drawFramebufferState) const;
+
+    void syncBlendFromNativeContext(const gl::Extensions &extensions, ExternalContextState *state);
+    void restoreBlendNativeContext(const gl::Extensions &extensions,
+                                   const ExternalContextState *state);
+
+    void syncFramebufferFromNativeContext(const gl::Extensions &extensions,
+                                          ExternalContextState *state);
+    void restoreFramebufferNativeContext(const gl::Extensions &extensions,
+                                         const ExternalContextState *state);
+
+    void syncPixelPackUnpackFromNativeContext(const gl::Extensions &extensions,
+                                              ExternalContextState *state);
+    void restorePixelPackUnpackNativeContext(const gl::Extensions &extensions,
+                                             const ExternalContextState *state);
+
+    void syncStencilFromNativeContext(const gl::Extensions &extensions,
+                                      ExternalContextState *state);
+    void restoreStencilNativeContext(const gl::Extensions &extensions,
+                                     const ExternalContextState *state);
+
+    void syncBufferBindingsFromNativeContext(const gl::Extensions &extensions,
+                                             ExternalContextState *state);
+    void restoreBufferBindingsNativeContext(const gl::Extensions &extensions,
+                                            const ExternalContextState *state);
+
+    void syncTextureUnitsFromNativeContext(const gl::Extensions &extensions,
+                                           ExternalContextState *state);
+    void restoreTextureUnitsNativeContext(const gl::Extensions &extensions,
+                                          const ExternalContextState *state);
+
+    void syncVertexArraysFromNativeContext(const gl::Extensions &extensions,
+                                           ExternalContextState *state);
+    void restoreVertexArraysNativeContext(const gl::Extensions &extensions,
+                                          const ExternalContextState *state);
 
     const FunctionsGL *mFunctions;
     const angle::FeaturesGL &mFeatures;
@@ -342,6 +466,7 @@ class StateManagerGL final : angle::NonCopyable
     gl::State::DirtyBits mLocalDirtyBits;
     gl::AttributesMask mLocalDirtyCurrentValues;
 };
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_STATEMANAGERGL_H_

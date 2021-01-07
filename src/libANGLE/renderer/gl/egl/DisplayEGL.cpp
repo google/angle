@@ -280,7 +280,7 @@ egl::Error DisplayEGL::initialize(egl::Display *display)
     functionsGL->initialize(mDisplayAttributes);
 
     mRenderer.reset(
-        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs));
+        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs, false));
     const gl::Version &maxVersion = mRenderer->getMaxSupportedESVersion();
     if (maxVersion < gl::Version(2, 0))
     {
@@ -751,7 +751,7 @@ egl::Error DisplayEGL::createRenderer(EGLContext shareContext,
     functionsGL->initialize(mDisplayAttributes);
 
     outRenderer->reset(
-        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs));
+        new RendererEGL(std::move(functionsGL), mDisplayAttributes, this, context, attribs, false));
 
     return egl::NoError();
 }

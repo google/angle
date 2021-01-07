@@ -281,6 +281,17 @@ bool IsColorMaskedOut(const BlendStateExt &blendStateExt, const GLint drawbuffer
     ASSERT(static_cast<size_t>(drawbuffer) < blendStateExt.mMaxDrawBuffers);
     return blendStateExt.getColorMaskIndexed(static_cast<size_t>(drawbuffer)) == 0;
 }
+
+bool GetIsExternal(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_EXTERNAL_CONTEXT_ANGLE, EGL_FALSE) == EGL_TRUE);
+}
+
+bool GetSaveAndRestoreState(const egl::AttributeMap &attribs)
+{
+    return (attribs.get(EGL_EXTERNAL_CONTEXT_SAVE_STATE_ANGLE, EGL_FALSE) == EGL_TRUE);
+}
+
 }  // anonymous namespace
 
 thread_local Context *gCurrentValidContext = nullptr;
@@ -339,7 +350,10 @@ Context::Context(egl::Display *display,
       mThreadPool(nullptr),
       mFrameCapture(new angle::FrameCapture),
       mRefCount(0),
-      mOverlay(mImplementation.get())
+      mOverlay(mImplementation.get()),
+      mIsExternal(GetIsExternal(attribs)),
+      mSaveAndRestoreState(GetSaveAndRestoreState(attribs)),
+      mIsCurrent(false)
 {
     for (angle::SubjectIndex uboIndex = kUniformBuffer0SubjectIndex;
          uboIndex < kUniformBufferMaxSubjectIndex; ++uboIndex)
@@ -675,6 +689,8 @@ egl::Error Context::makeCurrent(egl::Display *display,
 
     if (!mHasBeenCurrent)
     {
+        ASSERT(!mIsCurrent);
+
         initialize();
         initRendererString();
         initVersionStrings();

@@ -132,6 +132,9 @@ class DisplayEGL : public DisplayGL
     {
         EGLSurface surface = EGL_NO_SURFACE;
         EGLContext context = EGL_NO_CONTEXT;
+        // True if the current context is an external context. and both surface and context will be
+        // unset when an external context is current.
+        bool isExternalContext = false;
     };
     angle::HashMap<std::thread::id, CurrentNativeContext> mCurrentNativeContexts;
 

@@ -237,4 +237,9 @@ egl::Error SurfaceEGL::getFrameTimestamps(EGLuint64KHR frameId,
     return egl::NoError();
 }
 
+bool SurfaceEGL::isExternal() const
+{
+    return false;
+}
+
 }  // namespace rx

@@ -333,6 +333,7 @@ class State : angle::NonCopyable
     Framebuffer *getTargetFramebuffer(GLenum target) const;
     Framebuffer *getReadFramebuffer() const { return mReadFramebuffer; }
     Framebuffer *getDrawFramebuffer() const { return mDrawFramebuffer; }
+    Framebuffer *getDefaultFramebuffer() const;
 
     bool removeReadFramebufferBinding(FramebufferID framebuffer);
     bool removeDrawFramebufferBinding(FramebufferID framebuffer);

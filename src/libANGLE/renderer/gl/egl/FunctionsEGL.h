@@ -46,6 +46,7 @@ class FunctionsEGL
                             EGLint config_size,
                             EGLint *num_config) const;
     EGLBoolean getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value) const;
+    EGLSurface getCurrentSurface(EGLint readdraw) const;
     EGLContext createContext(EGLConfig config,
                              EGLContext share_context,
                              EGLint const *attrib_list) const;
@@ -64,6 +65,8 @@ class FunctionsEGL
     EGLBoolean releaseTexImage(EGLSurface surface, EGLint buffer) const;
     EGLBoolean surfaceAttrib(EGLSurface surface, EGLint attribute, EGLint value) const;
     EGLBoolean swapInterval(EGLint interval) const;
+
+    EGLContext getCurrentContext() const;
 
     EGLImageKHR createImageKHR(EGLContext context,
                                EGLenum target,
