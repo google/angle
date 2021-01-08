@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1f63ab6_f3ab579c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-01-08T21:07:48Z",
+      "side": 1,
+      "message": "Note: obsoleted in favor of https://chromium-review.googlesource.com/c/angle/angle/+/2618530 .\n",
+      "revId": "a63cbf9acc05f2c58af578267217400519f7f6e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
