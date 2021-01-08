@@ -33,6 +33,24 @@
       "message": "Needs a TODO and anglebug.",
       "revId": "78d44c655c95c35b9efdb247721ea6d17c7633ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2840e4e1_1c85cb8d",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1488,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-08T17:10:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "379a3b41_4c6402d1",
+      "revId": "78d44c655c95c35b9efdb247721ea6d17c7633ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
