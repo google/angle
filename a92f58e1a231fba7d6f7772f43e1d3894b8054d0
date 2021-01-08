@@ -33,6 +33,29 @@
       "message": "LGTM once the presubmit issues are cleaned up.\n\nCC\u0027ing Shabi since he\u0027s our buffer memory expert.",
       "revId": "a92f58e1a231fba7d6f7772f43e1d3894b8054d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d4ef476_5d1a0089",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3149,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T04:10:12Z",
+      "side": 1,
+      "message": "Can just check `requiredFlags !\u003d 0`, it can only have that one bit.\n\nAlso, some code here is unnecessary. `preferredFlags` doesn\u0027t need to remove HOST_VISIBLE as I understand it. So this whole section can be:\n\n    const VkMemoryPropertyFlags requiredFlags \u003d\n        memoryPropertyFlags \u0026 VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;\n    VkMemoryPropertyFlags preferredFlags \u003d requiredFlags;\n\n    // If we want host visible memory, also ask for cached.  This can make a big difference for data\n    // upload.\n    if (requiredFlags !\u003d 0)\n    {\n\tpreferredFlags |\u003d VK_MEMORY_PROPERTY_HOST_CACHED_BIT;\n    }\n\nUntested code above. Please verify that this still works as expected.",
+      "range": {
+        "startLine": 3149,
+        "startChar": 8,
+        "endLine": 3149,
+        "endChar": 59
+      },
+      "revId": "a92f58e1a231fba7d6f7772f43e1d3894b8054d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
