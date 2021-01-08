@@ -80,6 +80,30 @@
       },
       "revId": "a92f58e1a231fba7d6f7772f43e1d3894b8054d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d998e924_744f9e86",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3149,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-01-08T18:16:39Z",
+      "side": 1,
+      "message": "Tested (latest patch set w/ Tim\u0027s fix); still works.",
+      "parentUuid": "84a9702a_2188af09",
+      "range": {
+        "startLine": 3149,
+        "startChar": 8,
+        "endLine": 3149,
+        "endChar": 59
+      },
+      "revId": "a92f58e1a231fba7d6f7772f43e1d3894b8054d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
