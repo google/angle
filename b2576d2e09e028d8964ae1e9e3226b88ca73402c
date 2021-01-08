@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "89ac8a45_72229563",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-08T15:21:43Z",
+      "side": 1,
+      "message": "This is where it would be great if the Capture/Replay unit tests could be run against this, then we\u0027d have a definitive answer.  Probably worth some effort to progress that initiative, even if we only run it locally.  I\u0027d much prefer to see new tests come online with these changes.",
+      "parentUuid": "d6fcfcc2_ca0c21aa",
+      "range": {
+        "startLine": 1836,
+        "startChar": 69,
+        "endLine": 1836,
+        "endChar": 83
+      },
+      "revId": "b2576d2e09e028d8964ae1e9e3226b88ca73402c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5ac38cbb_e415e1f4",
         "filename": "src/libANGLE/FrameCapture.cpp",
         "patchSetId": 1
@@ -71,6 +95,30 @@
       "writtenOn": "2021-01-06T20:34:43Z",
       "side": 1,
       "message": "Can you we ASSERT(componentCount \u003d\u003d 1)?",
+      "range": {
+        "startLine": 1839,
+        "startChar": 30,
+        "endLine": 1839,
+        "endChar": 47
+      },
+      "revId": "b2576d2e09e028d8964ae1e9e3226b88ca73402c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7514d97e_e7ecd48a",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1839,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-08T15:21:43Z",
+      "side": 1,
+      "message": "I had originally removed that variable but sampler arrays are a thing in GLSL, so I left component count in.",
+      "parentUuid": "5ac38cbb_e415e1f4",
       "range": {
         "startLine": 1839,
         "startChar": 30,
