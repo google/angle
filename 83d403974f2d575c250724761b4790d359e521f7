@@ -22,6 +22,30 @@
       },
       "revId": "83d403974f2d575c250724761b4790d359e521f7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab6ee8af_81fb8cb9",
+        "filename": "src/libGL/proc_table_wgl_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-08T17:06:23Z",
+      "side": 1,
+      "message": "but copyright year is 2021 right? i dont think i am familiar with ANGLE\u0027s copyright policy. Could this be a follow up change?",
+      "parentUuid": "fa0f1404_f13c114f",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "83d403974f2d575c250724761b4790d359e521f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
