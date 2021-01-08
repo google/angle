@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9583ea5d_dbb7b9b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T03:31:16Z",
+      "side": 1,
+      "message": "You can abandon this in favor of this upcoming change: https://chromium-review.googlesource.com/c/angle/angle/+/2598585/6/src/libANGLE/renderer/glslang_wrapper_utils.h",
+      "revId": "3fd92ad25f69b4a01eac51df1bccc34c9fc9c4b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
