@@ -16,6 +16,80 @@
       "message": "PTAL",
       "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40d2b3e4_1b18e461",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T20:28:54Z",
+      "side": 1,
+      "message": "Is this to support shader-declared gl_PerVertex? I\u0027m not familiar with how the translator handles that, but I was under the impression that gl_PerVertex is specially handled in such a way that doesn\u0027t require this. Does any test/program ever hit this?",
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "353e67fc_26760b30",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T20:28:54Z",
+      "side": 1,
+      "message": "nit: You should be able to remove the `realize()` call.",
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3526d8af_6ebdf6b6",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T20:28:54Z",
+      "side": 1,
+      "message": "Will eventually need to address anglebug.com/5519 for interaction with geometry shaders.",
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd26bb92_04b38cdd",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T20:28:54Z",
+      "side": 1,
+      "message": "Looks like mostly a duplicate, with Cull instead of Clip. If a refactor is possible, that would be nice.",
+      "range": {
+        "startLine": 577,
+        "startChar": 0,
+        "endLine": 641,
+        "endChar": 5
+      },
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
