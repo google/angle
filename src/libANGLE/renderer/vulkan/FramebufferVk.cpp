@@ -49,13 +49,13 @@ constexpr unsigned int kEmulatedAlphaValue = 1;
 
 bool HasSrcBlitFeature(RendererVk *renderer, RenderTargetVk *srcRenderTarget)
 {
-    const VkFormat srcFormat = srcRenderTarget->getImageFormat().actualImageVkFormat;
+    angle::FormatID srcFormat = srcRenderTarget->getImageFormat().actualImageFormatID;
     return renderer->hasImageFormatFeatureBits(srcFormat, VK_FORMAT_FEATURE_BLIT_SRC_BIT);
 }
 
 bool HasDstBlitFeature(RendererVk *renderer, RenderTargetVk *dstRenderTarget)
 {
-    const VkFormat dstFormat = dstRenderTarget->getImageFormat().actualImageVkFormat;
+    angle::FormatID dstFormat = dstRenderTarget->getImageFormat().actualImageFormatID;
     return renderer->hasImageFormatFeatureBits(dstFormat, VK_FORMAT_FEATURE_BLIT_DST_BIT);
 }
 
@@ -87,7 +87,7 @@ bool AreSrcAndDstFormatsIdentical(RenderTargetVk *srcRenderTarget, RenderTargetV
     const vk::Format &srcFormat = srcRenderTarget->getImageFormat();
     const vk::Format &dstFormat = dstRenderTarget->getImageFormat();
 
-    return srcFormat.actualImageVkFormat == dstFormat.actualImageVkFormat;
+    return srcFormat.actualImageFormatID == dstFormat.actualImageFormatID;
 }
 
 bool AreSrcAndDstDepthStencilChannelsBlitCompatible(RenderTargetVk *srcRenderTarget,

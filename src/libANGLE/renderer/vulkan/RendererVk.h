@@ -184,15 +184,17 @@ class RendererVk : angle::NonCopyable
     // Query the format properties for select bits (linearTilingFeatures, optimalTilingFeatures and
     // bufferFeatures).  Looks through mandatory features first, and falls back to querying the
     // device (first time only).
-    bool hasLinearImageFormatFeatureBits(VkFormat format,
+    bool hasLinearImageFormatFeatureBits(angle::FormatID format,
                                          const VkFormatFeatureFlags featureBits) const;
     VkFormatFeatureFlags getLinearImageFormatFeatureBits(
-        VkFormat format,
+        angle::FormatID format,
         const VkFormatFeatureFlags featureBits) const;
-    VkFormatFeatureFlags getImageFormatFeatureBits(VkFormat format,
+    VkFormatFeatureFlags getImageFormatFeatureBits(angle::FormatID format,
                                                    const VkFormatFeatureFlags featureBits) const;
-    bool hasImageFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const;
-    bool hasBufferFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const;
+    bool hasImageFormatFeatureBits(angle::FormatID format,
+                                   const VkFormatFeatureFlags featureBits) const;
+    bool hasBufferFormatFeatureBits(angle::FormatID format,
+                                    const VkFormatFeatureFlags featureBits) const;
 
     ANGLE_INLINE egl::ContextPriority getDriverPriority(egl::ContextPriority priority)
     {
@@ -323,7 +325,7 @@ class RendererVk : angle::NonCopyable
 
     void outputVmaStatString();
 
-    bool haveSameFormatFeatureBits(VkFormat fmt1, VkFormat fmt2) const;
+    bool haveSameFormatFeatureBits(angle::FormatID formatID1, angle::FormatID formatID2) const;
 
     angle::Result cleanupGarbage(Serial lastCompletedQueueSerial);
 
@@ -386,11 +388,12 @@ class RendererVk : angle::NonCopyable
                                     bool *success);
 
     template <VkFormatFeatureFlags VkFormatProperties::*features>
-    VkFormatFeatureFlags getFormatFeatureBits(VkFormat format,
+    VkFormatFeatureFlags getFormatFeatureBits(angle::FormatID formatID,
                                               const VkFormatFeatureFlags featureBits) const;
 
     template <VkFormatFeatureFlags VkFormatProperties::*features>
-    bool hasFormatFeatureBits(VkFormat format, const VkFormatFeatureFlags featureBits) const;
+    bool hasFormatFeatureBits(angle::FormatID formatID,
+                              const VkFormatFeatureFlags featureBits) const;
 
     egl::Display *mDisplay;
 
@@ -453,7 +456,7 @@ class RendererVk : angle::NonCopyable
     bool mPipelineCacheInitialized;
 
     // A cache of VkFormatProperties as queried from the device over time.
-    mutable std::array<VkFormatProperties, vk::kNumVkFormats> mFormatProperties;
+    mutable angle::FormatMap<VkFormatProperties> mFormatProperties;
 
     // Latest validation data for debug overlay.
     std::string mLastValidationMessage;

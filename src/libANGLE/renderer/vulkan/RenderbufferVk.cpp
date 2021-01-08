@@ -45,9 +45,9 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
                                              GLsizei height,
                                              gl::MultisamplingMode mode)
 {
-    ContextVk *contextVk       = vk::GetImpl(context);
-    RendererVk *renderer       = contextVk->getRenderer();
-    const vk::Format &vkFormat = renderer->getFormat(internalformat);
+    ContextVk *contextVk     = vk::GetImpl(context);
+    RendererVk *renderer     = contextVk->getRenderer();
+    const vk::Format &format = renderer->getFormat(internalformat);
 
     if (!mOwnsImage)
     {
@@ -82,10 +82,11 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
     VkImageCreateFlags imageCreateFlags                  = vk::kVkImageCreateFlagsNone;
     VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    VkFormat vkImageFormat                               = vkFormat.actualImageVkFormat;
-    VkFormat vkImageListFormat                           = vkFormat.actualImageFormat().isSRGB
-                                     ? vk::ConvertToLinear(vkImageFormat)
-                                     : vk::ConvertToSRGB(vkImageFormat);
+    angle::FormatID imageFormat                          = format.actualImageFormatID;
+    angle::FormatID imageListFormat                      = format.actualImageFormat().isSRGB
+                                          ? ConvertToLinear(imageFormat)
+                                          : ConvertToSRGB(imageFormat);
+    VkFormat vkFormat = vk::GetVkFormatFromFormatID(imageListFormat);
 
     VkImageFormatListCreateInfoKHR formatListInfo = {};
     if (renderer->getFeatures().supportsImageFormatList.enabled)
@@ -97,11 +98,11 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         formatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
         formatListInfo.pNext           = nullptr;
         formatListInfo.viewFormatCount = 1;
-        formatListInfo.pViewFormats    = &vkImageListFormat;
+        formatListInfo.pViewFormats    = &vkFormat;
         additionalCreateInfo           = &formatListInfo;
     }
 
-    const angle::Format &textureFormat = vkFormat.actualImageFormat();
+    const angle::Format &textureFormat = format.actualImageFormat();
     const bool isDepthStencilFormat    = textureFormat.hasDepthOrStencilBits();
     ASSERT(textureFormat.redBits > 0 || isDepthStencilFormat);
 
@@ -124,7 +125,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     bool robustInit = contextVk->isRobustResourceInitEnabled();
 
     VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
-    ANGLE_TRY(mImage->initExternal(contextVk, gl::TextureType::_2D, extents, vkFormat, imageSamples,
+    ANGLE_TRY(mImage->initExternal(contextVk, gl::TextureType::_2D, extents, format, imageSamples,
                                    usage, imageCreateFlags, vk::ImageLayout::Undefined,
                                    additionalCreateInfo, gl::LevelIndex(0), gl::LevelIndex(0), 1, 1,
                                    robustInit));

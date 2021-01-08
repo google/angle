@@ -1302,7 +1302,7 @@ enum class ImageLayout
 VkImageLayout ConvertImageLayoutToVkImageLayout(ImageLayout imageLayout);
 
 bool FormatHasNecessaryFeature(RendererVk *renderer,
-                               VkFormat format,
+                               angle::FormatID formatID,
                                VkImageTiling tilingMode,
                                VkFormatFeatureFlags featureBits);
 
@@ -1389,7 +1389,7 @@ class ImageHelper final : public Resource, public angle::Subject
                                                   uint32_t baseArrayLayer,
                                                   uint32_t layerCount,
                                                   VkImageUsageFlags imageUsageFlags,
-                                                  VkFormat imageViewFormat) const;
+                                                  angle::FormatID imageViewFormat) const;
     angle::Result initImageView(Context *context,
                                 gl::TextureType textureType,
                                 VkImageAspectFlags aspectMask,
@@ -2089,7 +2089,7 @@ class ImageViewHelper final : public Resource
                                            LevelIndex levelVk,
                                            uint32_t layer,
                                            VkImageUsageFlags imageUsageFlags,
-                                           VkFormat vkImageFormat,
+                                           angle::FormatID formatID,
                                            const ImageView **imageViewOut);
 
     // Creates a storage view with a single layer of the level.
@@ -2098,7 +2098,7 @@ class ImageViewHelper final : public Resource
                                                 LevelIndex levelVk,
                                                 uint32_t layer,
                                                 VkImageUsageFlags imageUsageFlags,
-                                                VkFormat vkImageFormat,
+                                                angle::FormatID formatID,
                                                 const ImageView **imageViewOut);
 
     // Creates a draw view with all layers of the level.

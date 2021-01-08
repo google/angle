@@ -417,6 +417,9 @@ class ResetBaseVertexBaseInstance : angle::NonCopyable
     bool mResetBaseInstance;
 };
 
+angle::FormatID ConvertToSRGB(angle::FormatID formatID);
+angle::FormatID ConvertToLinear(angle::FormatID formatID);
+bool IsOverridableLinearFormat(angle::FormatID formatID);
 }  // namespace rx
 
 // MultiDraw macro patterns

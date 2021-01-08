@@ -1238,4 +1238,130 @@ ResetBaseVertexBaseInstance::~ResetBaseVertexBaseInstance()
     }
 }
 
+angle::FormatID ConvertToSRGB(angle::FormatID formatID)
+{
+    switch (formatID)
+    {
+        case angle::FormatID::R8_UNORM:
+            return angle::FormatID::R8_UNORM_SRGB;
+        case angle::FormatID::R8G8B8_UNORM:
+            return angle::FormatID::R8G8B8_UNORM_SRGB;
+        case angle::FormatID::R8G8B8A8_UNORM:
+            return angle::FormatID::R8G8B8A8_UNORM_SRGB;
+        case angle::FormatID::B8G8R8A8_UNORM:
+            return angle::FormatID::B8G8R8A8_UNORM_SRGB;
+        case angle::FormatID::BC1_RGB_UNORM_BLOCK:
+            return angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK;
+        case angle::FormatID::BC1_RGBA_UNORM_BLOCK:
+            return angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK;
+        case angle::FormatID::BC2_RGBA_UNORM_BLOCK:
+            return angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
+        case angle::FormatID::BC3_RGBA_UNORM_BLOCK:
+            return angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
+        case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
+            return angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+        case angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK:
+            return angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK;
+        case angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK:
+            return angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
+        case angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK:
+            return angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK;
+        case angle::FormatID::ASTC_4x4_UNORM_BLOCK:
+            return angle::FormatID::ASTC_4x4_SRGB_BLOCK;
+        case angle::FormatID::ASTC_5x4_UNORM_BLOCK:
+            return angle::FormatID::ASTC_5x4_SRGB_BLOCK;
+        case angle::FormatID::ASTC_5x5_UNORM_BLOCK:
+            return angle::FormatID::ASTC_5x5_SRGB_BLOCK;
+        case angle::FormatID::ASTC_6x5_UNORM_BLOCK:
+            return angle::FormatID::ASTC_6x5_SRGB_BLOCK;
+        case angle::FormatID::ASTC_6x6_UNORM_BLOCK:
+            return angle::FormatID::ASTC_6x6_SRGB_BLOCK;
+        case angle::FormatID::ASTC_8x5_UNORM_BLOCK:
+            return angle::FormatID::ASTC_8x5_SRGB_BLOCK;
+        case angle::FormatID::ASTC_8x6_UNORM_BLOCK:
+            return angle::FormatID::ASTC_8x6_SRGB_BLOCK;
+        case angle::FormatID::ASTC_8x8_UNORM_BLOCK:
+            return angle::FormatID::ASTC_8x8_SRGB_BLOCK;
+        case angle::FormatID::ASTC_10x5_UNORM_BLOCK:
+            return angle::FormatID::ASTC_10x5_SRGB_BLOCK;
+        case angle::FormatID::ASTC_10x6_UNORM_BLOCK:
+            return angle::FormatID::ASTC_10x6_SRGB_BLOCK;
+        case angle::FormatID::ASTC_10x8_UNORM_BLOCK:
+            return angle::FormatID::ASTC_10x8_SRGB_BLOCK;
+        case angle::FormatID::ASTC_10x10_UNORM_BLOCK:
+            return angle::FormatID::ASTC_10x10_SRGB_BLOCK;
+        case angle::FormatID::ASTC_12x10_UNORM_BLOCK:
+            return angle::FormatID::ASTC_12x10_SRGB_BLOCK;
+        case angle::FormatID::ASTC_12x12_UNORM_BLOCK:
+            return angle::FormatID::ASTC_12x12_SRGB_BLOCK;
+        default:
+            return angle::FormatID::NONE;
+    }
+}
+
+angle::FormatID ConvertToLinear(angle::FormatID formatID)
+{
+    switch (formatID)
+    {
+        case angle::FormatID::R8_UNORM_SRGB:
+            return angle::FormatID::R8_UNORM;
+        case angle::FormatID::R8G8B8_UNORM_SRGB:
+            return angle::FormatID::R8G8B8_UNORM;
+        case angle::FormatID::R8G8B8A8_UNORM_SRGB:
+            return angle::FormatID::R8G8B8A8_UNORM;
+        case angle::FormatID::B8G8R8A8_UNORM_SRGB:
+            return angle::FormatID::B8G8R8A8_UNORM;
+        case angle::FormatID::BC1_RGB_UNORM_SRGB_BLOCK:
+            return angle::FormatID::BC1_RGB_UNORM_BLOCK;
+        case angle::FormatID::BC1_RGBA_UNORM_SRGB_BLOCK:
+            return angle::FormatID::BC1_RGBA_UNORM_BLOCK;
+        case angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK:
+            return angle::FormatID::BC2_RGBA_UNORM_BLOCK;
+        case angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK:
+            return angle::FormatID::BC3_RGBA_UNORM_BLOCK;
+        case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
+            return angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
+        case angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK:
+            return angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
+        case angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK:
+            return angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
+        case angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK:
+            return angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK;
+        case angle::FormatID::ASTC_4x4_SRGB_BLOCK:
+            return angle::FormatID::ASTC_4x4_UNORM_BLOCK;
+        case angle::FormatID::ASTC_5x4_SRGB_BLOCK:
+            return angle::FormatID::ASTC_5x4_UNORM_BLOCK;
+        case angle::FormatID::ASTC_5x5_SRGB_BLOCK:
+            return angle::FormatID::ASTC_5x5_UNORM_BLOCK;
+        case angle::FormatID::ASTC_6x5_SRGB_BLOCK:
+            return angle::FormatID::ASTC_6x5_UNORM_BLOCK;
+        case angle::FormatID::ASTC_6x6_SRGB_BLOCK:
+            return angle::FormatID::ASTC_6x6_UNORM_BLOCK;
+        case angle::FormatID::ASTC_8x5_SRGB_BLOCK:
+            return angle::FormatID::ASTC_8x5_UNORM_BLOCK;
+        case angle::FormatID::ASTC_8x6_SRGB_BLOCK:
+            return angle::FormatID::ASTC_8x6_UNORM_BLOCK;
+        case angle::FormatID::ASTC_8x8_SRGB_BLOCK:
+            return angle::FormatID::ASTC_8x8_UNORM_BLOCK;
+        case angle::FormatID::ASTC_10x5_SRGB_BLOCK:
+            return angle::FormatID::ASTC_10x5_UNORM_BLOCK;
+        case angle::FormatID::ASTC_10x6_SRGB_BLOCK:
+            return angle::FormatID::ASTC_10x6_UNORM_BLOCK;
+        case angle::FormatID::ASTC_10x8_SRGB_BLOCK:
+            return angle::FormatID::ASTC_10x8_UNORM_BLOCK;
+        case angle::FormatID::ASTC_10x10_SRGB_BLOCK:
+            return angle::FormatID::ASTC_10x10_UNORM_BLOCK;
+        case angle::FormatID::ASTC_12x10_SRGB_BLOCK:
+            return angle::FormatID::ASTC_12x10_UNORM_BLOCK;
+        case angle::FormatID::ASTC_12x12_SRGB_BLOCK:
+            return angle::FormatID::ASTC_12x12_UNORM_BLOCK;
+        default:
+            return angle::FormatID::NONE;
+    }
+}
+
+bool IsOverridableLinearFormat(angle::FormatID formatID)
+{
+    return ConvertToSRGB(formatID) != angle::FormatID::NONE;
+}
 }  // namespace rx

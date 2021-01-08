@@ -79,7 +79,7 @@ class TextureCapsMap final : angle::NonCopyable
     TextureCaps &get(angle::FormatID formatID);
 
     // Indexed by angle::FormatID
-    std::array<TextureCaps, angle::kNumANGLEFormats> mFormatData;
+    angle::FormatMap<TextureCaps> mFormatData;
 };
 
 void InitMinimumTextureCapsMap(const Version &clientVersion,

@@ -136,10 +136,11 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
     // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
     VkImageCreateFlags imageCreateFlags                  = vk::kVkImageCreateFlagsNone;
     VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    VkFormat vkImageFormat                               = vkFormat.actualImageVkFormat;
-    VkFormat vkImageListFormat                           = vkFormat.actualImageFormat().isSRGB
-                                     ? vk::ConvertToLinear(vkImageFormat)
-                                     : vk::ConvertToSRGB(vkImageFormat);
+    angle::FormatID imageFormat                          = vkFormat.actualImageFormatID;
+    angle::FormatID imageListFormat                      = vkFormat.actualImageFormat().isSRGB
+                                          ? ConvertToLinear(imageFormat)
+                                          : ConvertToSRGB(imageFormat);
+    VkFormat imageListVkFormat = vk::GetVkFormatFromFormatID(imageListFormat);
 
     VkImageFormatListCreateInfoKHR formatListInfo = {};
     if (renderer->getFeatures().supportsImageFormatList.enabled)
@@ -151,7 +152,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
         formatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
         formatListInfo.pNext           = nullptr;
         formatListInfo.viewFormatCount = 1;
-        formatListInfo.pViewFormats    = &vkImageListFormat;
+        formatListInfo.pViewFormats    = &imageListVkFormat;
         additionalCreateInfo           = &formatListInfo;
     }
 
@@ -680,7 +681,7 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
                                                       surfaceFormats.data()));
 
     const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);
-    VkFormat nativeFormat    = format.actualImageVkFormat;
+    VkFormat nativeFormat    = format.actualImageVkFormat();
 
     if (surfaceFormatCount == 1u && surfaceFormats[0].format == VK_FORMAT_UNDEFINED)
     {
@@ -929,7 +930,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     VkDevice device      = renderer->getDevice();
 
     const vk::Format &format = renderer->getFormat(mState.config->renderTargetFormat);
-    VkFormat nativeFormat    = format.actualImageVkFormat;
+    VkFormat nativeFormat    = format.actualImageVkFormat();
 
     gl::Extents rotatedExtents = extents;
     if (Is90DegreeRotation(getPreTransform()))

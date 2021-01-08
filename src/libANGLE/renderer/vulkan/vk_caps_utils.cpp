@@ -40,12 +40,12 @@ bool HasShaderImageAtomicsSupport(const RendererVk *rendererVk,
     const Format &formatVk = rendererVk->getFormat(GL_R32F);
 
     const bool hasImageAtomicSupport = rendererVk->hasImageFormatFeatureBits(
-        formatVk.actualImageVkFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT);
+        formatVk.actualImageFormatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT);
     bool hasBufferAtomicSupport = true;
     if (supportedExtensions.textureBufferAny())
     {
         hasBufferAtomicSupport = rendererVk->hasBufferFormatFeatureBits(
-            formatVk.actualBufferVkFormat, VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT);
+            formatVk.actualBufferFormatID, VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT);
     }
 
     return hasImageAtomicSupport && hasBufferAtomicSupport;
@@ -65,12 +65,19 @@ bool FormatReinterpretationSupported(const std::vector<GLenum> &optionalSizedFor
         {
             const Format &vkFormat = rendererVk->getFormat(glFormat);
 
-            VkFormat reinterpretedFormat = checkLinearColorspace
-                                               ? ConvertToLinear(vkFormat.actualImageVkFormat)
-                                               : ConvertToSRGB(vkFormat.actualImageVkFormat);
+            angle::FormatID reinterpretedFormatID =
+                checkLinearColorspace ? ConvertToLinear(vkFormat.actualImageFormatID)
+                                      : ConvertToSRGB(vkFormat.actualImageFormatID);
 
-            if (!rendererVk->haveSameFormatFeatureBits(vkFormat.actualImageVkFormat,
-                                                       reinterpretedFormat))
+            const Format &reinterpretedVkFormat = rendererVk->getFormat(reinterpretedFormatID);
+
+            if (reinterpretedVkFormat.actualImageFormatID != reinterpretedFormatID)
+            {
+                return false;
+            }
+
+            if (!rendererVk->haveSameFormatFeatureBits(vkFormat.actualImageFormatID,
+                                                       reinterpretedFormatID))
             {
                 return false;
             }
@@ -179,7 +186,7 @@ bool HasTexelBufferSupport(const RendererVk *rendererVk, GLenum formatGL)
     const Format &formatVk = rendererVk->getFormat(formatGL);
 
     return rendererVk->hasBufferFormatFeatureBits(
-        formatVk.actualBufferVkFormat,
+        formatVk.actualBufferFormatID,
         VK_FORMAT_FEATURE_UNIFORM_TEXEL_BUFFER_BIT | VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_BIT);
 }
 

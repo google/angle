@@ -152,10 +152,10 @@ bool CanCopyWithDraw(RendererVk *renderer,
 {
     // Checks that the formats in copy by drawing have the appropriate feature bits
     bool srcFormatHasNecessaryFeature =
-        vk::FormatHasNecessaryFeature(renderer, srcFormat.actualImageVkFormat, srcTilingMode,
+        vk::FormatHasNecessaryFeature(renderer, srcFormat.actualImageFormatID, srcTilingMode,
                                       VK_FORMAT_FEATURE_SAMPLED_IMAGE_BIT);
     bool dstFormatHasNecessaryFeature =
-        vk::FormatHasNecessaryFeature(renderer, destFormat.actualImageVkFormat, destTilingMode,
+        vk::FormatHasNecessaryFeature(renderer, destFormat.actualImageFormatID, destTilingMode,
                                       VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT);
 
     return srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
@@ -180,7 +180,7 @@ bool CanGenerateMipmapWithCompute(RendererVk *renderer,
 
     // Format must have STORAGE support.
     const bool hasStorageSupport = renderer->hasImageFormatFeatureBits(
-        format.actualImageVkFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
+        format.actualImageFormatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
 
     // No support for sRGB formats yet.
     const bool isSRGB = angleFormat.isSRGB;
@@ -1436,13 +1436,13 @@ void TextureVk::initImageUsageFlags(ContextVk *contextVk, const vk::Format &form
     {
         // Work around a bug in the Mock ICD:
         // https://github.com/KhronosGroup/Vulkan-Tools/issues/445
-        if (renderer->hasImageFormatFeatureBits(format.actualImageVkFormat,
+        if (renderer->hasImageFormatFeatureBits(format.actualImageFormatID,
                                                 VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT))
         {
             mImageUsageFlags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
         }
     }
-    else if (renderer->hasImageFormatFeatureBits(format.actualImageVkFormat,
+    else if (renderer->hasImageFormatFeatureBits(format.actualImageFormatID,
                                                  VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT))
     {
         mImageUsageFlags |=
@@ -1859,7 +1859,7 @@ angle::Result TextureVk::generateMipmap(const gl::Context *context)
 
         return generateMipmapsWithCompute(contextVk);
     }
-    else if (renderer->hasImageFormatFeatureBits(mImage->getFormat().actualImageVkFormat,
+    else if (renderer->hasImageFormatFeatureBits(mImage->getFormat().actualImageFormatID,
                                                  kBlitFeatureFlags))
     {
         // Otherwise, use blit if possible.
@@ -2484,7 +2484,7 @@ bool TextureVk::shouldDecodeSRGB(ContextVk *contextVk,
     bool decodeSRGB          = format.actualImageFormat().isSRGB;
 
     // If the SRGB override is enabled, we also decode SRGB.
-    if (isSRGBOverrideEnabled() && vk::IsOverridableLinearFormat(format.actualImageVkFormat))
+    if (isSRGBOverrideEnabled() && IsOverridableLinearFormat(format.actualImageFormatID))
     {
         decodeSRGB = true;
     }
@@ -2558,7 +2558,7 @@ const vk::ImageView &TextureVk::getCopyImageViewAndRecordUse(ContextVk *contextV
     imageViews.retain(&contextVk->getResourceUseList());
 
     ASSERT(mImage->getFormat().actualImageFormat().isSRGB ==
-           (vk::ConvertToLinear(mImage->getFormat().actualImageVkFormat) != VK_FORMAT_UNDEFINED));
+           (ConvertToLinear(mImage->getFormat().actualImageFormatID) != angle::FormatID::NONE));
     if (mImage->getFormat().actualImageFormat().isSRGB)
     {
         return imageViews.getSRGBCopyImageView();
@@ -2598,7 +2598,7 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
 
         return getImageViews().getLevelLayerStorageImageView(
             contextVk, *mImage, nativeLevelVk, nativeLayer,
-            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.actualImageVkFormat,
+            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.actualImageFormatID,
             imageViewOut);
     }
 
@@ -2606,7 +2606,7 @@ angle::Result TextureVk::getStorageImageView(ContextVk *contextVk,
 
     return getImageViews().getLevelStorageImageView(
         contextVk, mState.getType(), *mImage, nativeLevelVk, nativeLayer,
-        VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.actualImageVkFormat,
+        VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_STORAGE_BIT, format.actualImageFormatID,
         imageViewOut);
 }
 
@@ -2648,13 +2648,15 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     // With the introduction of sRGB related GLES extensions any texture could be respecified
     // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
     VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    VkFormat imageFormat                                 = format.actualImageVkFormat;
-    VkFormat imageListFormat = format.actualImageFormat().isSRGB ? vk::ConvertToLinear(imageFormat)
-                                                                 : vk::ConvertToSRGB(imageFormat);
+    angle::FormatID imageFormat                          = format.actualImageFormatID;
+    angle::FormatID imageListFormat                      = format.actualImageFormat().isSRGB
+                                          ? ConvertToLinear(imageFormat)
+                                          : ConvertToSRGB(imageFormat);
+    VkFormat vkFormat = vk::GetVkFormatFromFormatID(imageListFormat);
 
     VkImageFormatListCreateInfoKHR formatListInfo = {};
     if (renderer->getFeatures().supportsImageFormatList.enabled &&
-        renderer->haveSameFormatFeatureBits(imageFormat, imageListFormat))
+        renderer->haveSameFormatFeatureBits(format.actualImageFormatID, imageListFormat))
     {
         mRequiresMutableStorage = true;
 
@@ -2665,7 +2667,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
         formatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
         formatListInfo.pNext           = nullptr;
         formatListInfo.viewFormatCount = 1;
-        formatListInfo.pViewFormats    = &imageListFormat;
+        formatListInfo.pViewFormats    = &vkFormat;
         additionalCreateInfo           = &formatListInfo;
     }
 

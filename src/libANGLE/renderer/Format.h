@@ -226,6 +226,9 @@ constexpr bool Format::isVertexTypeHalfFloat() const
     return vertexAttribType == gl::VertexAttribType::HalfFloat;
 }
 
+template <typename T>
+using FormatMap = PackedEnumMap<FormatID, T, kNumANGLEFormats>;
+
 }  // namespace angle
 
 #endif  // LIBANGLE_RENDERER_FORMAT_H_

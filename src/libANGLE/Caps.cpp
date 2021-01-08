@@ -109,12 +109,12 @@ const TextureCaps &TextureCapsMap::get(GLenum internalFormat) const
 
 const TextureCaps &TextureCapsMap::get(angle::FormatID formatID) const
 {
-    return mFormatData[static_cast<size_t>(formatID)];
+    return mFormatData[formatID];
 }
 
 TextureCaps &TextureCapsMap::get(angle::FormatID formatID)
 {
-    return mFormatData[static_cast<size_t>(formatID)];
+    return mFormatData[formatID];
 }
 
 void TextureCapsMap::set(angle::FormatID formatID, const TextureCaps &caps)
