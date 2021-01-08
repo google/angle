@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f493fcf_ab2bcba4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-08T17:53:53Z",
+      "side": 1,
+      "message": "thanks, landing this",
+      "revId": "83d403974f2d575c250724761b4790d359e521f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa0f1404_f13c114f",
@@ -62,6 +79,30 @@
       "side": 1,
       "message": "https://chromium.googlesource.com/chromium/src/+/HEAD/styleguide/c++/c++.md#file-headers\n\n\u003e $YEAR should be set to the current year at the time a file is created, and not changed thereafter.\n\nIt\u0027s fine if you want as a follow up.",
       "parentUuid": "ab6ee8af_81fb8cb9",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "83d403974f2d575c250724761b4790d359e521f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8661b28_5f709f6f",
+        "filename": "src/libGL/proc_table_wgl_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-08T17:53:53Z",
+      "side": 1,
+      "message": "Done, created and assigned to myself - http://anglebug.com/5516",
+      "parentUuid": "59461bc4_acbd9cde",
       "range": {
         "startLine": 4,
         "startChar": 13,
