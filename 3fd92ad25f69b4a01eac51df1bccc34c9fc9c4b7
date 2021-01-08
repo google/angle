@@ -16,6 +16,24 @@
       "message": "You can abandon this in favor of this upcoming change: https://chromium-review.googlesource.com/c/angle/angle/+/2598585/6/src/libANGLE/renderer/glslang_wrapper_utils.h",
       "revId": "3fd92ad25f69b4a01eac51df1bccc34c9fc9c4b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "febe3f26_55316b6a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T03:40:22Z",
+      "side": 1,
+      "message": "Well not all of it, but it would need to be reworked on top of that.",
+      "parentUuid": "9583ea5d_dbb7b9b0",
+      "revId": "3fd92ad25f69b4a01eac51df1bccc34c9fc9c4b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
