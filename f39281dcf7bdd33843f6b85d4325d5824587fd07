@@ -16,6 +16,87 @@
       "message": "PTAL\n\nShould help make it a bit easier to get RMSE values when new traces are generated.\n\nIf it\u0027s ever wanted/necessary at some point, it should be possible to expand on this to get the data for all of the traces.",
       "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a91b6710_b79d49e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-08T23:49:07Z",
+      "side": 1,
+      "message": "+1 for scripting, thanks!\n\nYou could also expand it to automatically generate the varying fuzz factors to help isolate the number of pixels that are way off.  That\u0027s the most tedious part of the hand steps, changing the fuzz factor over and over until the errors get low enough.",
+      "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2780164_2989b337",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-08T23:49:07Z",
+      "side": 1,
+      "message": "Cool, looks useful. :). Probably should add \"android\" to the file name to make it clear this isn\u0027t for desktop use.",
+      "parentUuid": "f190c39e_2426ca47",
+      "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de31b42d_5f957868",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-08T23:49:07Z",
+      "side": 1,
+      "message": "2021",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14d1b873_a70c3569",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-08T23:49:07Z",
+      "side": 1,
+      "message": "I\u0027m not sure you need to call out vendors here specifically.  Probably enough to specify a serial and just run the trace once per device, tracking which result is associated with each.  We can already test on more vendors than these two.  I\u0027ll probably just run on a single device at a time, leaving the parameter off.\n\nOne way to keep this automated but flexible would be to pass in a tag that can be added to the output files, so the tag could be \"QC\", and you could specify that as a parameter to easily keep track of which device it is.\n\nI\u0027m not hung up on it though, we can just add more vendors if you really like this method.",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 38
+      },
+      "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
