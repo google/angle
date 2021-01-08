@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bf3c78d_f6bb1577",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T22:01:16Z",
+      "side": 1,
+      "message": "Verified that it fixes the clusterfuzz issue. Also ran locally to verify that fuzzing actually happens (it does). Every test now skips a small percentage of combinations due to invalid options.\n\nI wonder if there\u0027s a way to tell clusterfuzz that \"these are the valid combinations\", as the search space is huge, that would make clusterfuzz focus better on what\u0027s valid instead of generating tests that do nothing.",
+      "revId": "f088eb6f4af08264b935c0d322c617025cf81772",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
