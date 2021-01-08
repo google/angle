@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b2fb899_03722715",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2647,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T03:57:50Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 2647,
+        "startChar": 39,
+        "endLine": 2647,
+        "endChar": 43
+      },
+      "revId": "2a76f5271174b3475dbd0e0a7051291a1c1258f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e269948c_2d4a6cc8",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3087,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T03:57:50Z",
+      "side": 1,
+      "message": "nit: Use mDrawFramebuffer",
+      "range": {
+        "startLine": 3087,
+        "startChar": 16,
+        "endLine": 3087,
+        "endChar": 89
+      },
+      "revId": "2a76f5271174b3475dbd0e0a7051291a1c1258f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "851698c0_73588926",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T03:57:50Z",
+      "side": 1,
+      "message": "I\u0027m having trouble following why four states are needed here.\n\nLet\u0027s take the default framebuffer for the moment. Doesn\u0027t Origin\u003dUpperLeft mean GL and Vulkan have the same origin? So with Origin\u003dUpperLeft, default framebuffers become like Origin\u003dLowerLeft FBOs and vice versa.\n\nWhat if ContextVk::isViewportFlipEnabledForDrawFBO() simply returned `isDefault ^ isUpperLeft` and you didn\u0027t make any modifications here nor add isYFlipEnabledForDrawFBO? What goes wrong in that case?",
+      "revId": "2a76f5271174b3475dbd0e0a7051291a1c1258f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
