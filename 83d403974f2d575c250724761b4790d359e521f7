@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa0f1404_f13c114f",
+        "filename": "src/libGL/proc_table_wgl_autogen.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-08T14:42:10Z",
+      "side": 1,
+      "message": "can you update all the generators to use a fixed year (2020) instead of a dynamic one? this prevents updates based on current machine time.",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "83d403974f2d575c250724761b4790d359e521f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
