@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cb7b867_a4891ae0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-08T18:12:30Z",
+      "side": 1,
+      "message": "minor preference for just one \":\" in this commit message for consistency, \n\ne.g. Vulkan: Prefer host cached memory for Buffers\n\nImproves perf because ...",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 48
+      },
+      "revId": "5cec79d42675039c987723c9ad0046778ad3b825",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
