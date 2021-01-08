@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdf1513e_667b6743",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-01-08T21:32:18Z",
+      "side": 1,
+      "message": "Thanks for the test, looks good. I also verified on pixel4 that the Mean result time are almost the same before and after crrev.com/c/2598584 ",
+      "revId": "072071101a63cd8620771d4c6551b522b3c5fefd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
