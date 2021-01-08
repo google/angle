@@ -16,6 +16,24 @@
       "message": "This version doesn\u0027t look quite correct either.\n\nThe original version would treat HOST_VISIBLE_BIT as the only \"required\" bit, with everything else being \"preferred\".   However, this version loses all of the bits other than HOST_VISIBLE_BIT (and possibly enables HOST_CACHED_BIT).\n\nI think you want to go back to the original version so we don\u0027t lose the other bits in memoryPropertyFlags that the caller may have requested.\n\n    VkMemoryPropertyFlags preferredFlags \u003d\n        (memoryPropertyFlags \u0026 (~VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));\n\nLooking at the VMA documentation, they actually use this visible+cached case as the example:\nhttps://gpuopen-librariesandsdks.github.io/VulkanMemoryAllocator/html/choosing_memory_type.html",
       "revId": "356026be754f870d9580a7844304da53890dc61e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ba5ad33_729ed4a1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3144,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-01-08T17:27:42Z",
+      "side": 1,
+      "message": "Good point; changed",
+      "parentUuid": "ea7311b6_9f6fbcf7",
+      "revId": "356026be754f870d9580a7844304da53890dc61e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
