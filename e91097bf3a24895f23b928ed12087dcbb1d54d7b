@@ -16,6 +16,24 @@
       "message": "Can you please defer the renaming of this file to a follow up change? Then we can see the diff during review.",
       "revId": "e91097bf3a24895f23b928ed12087dcbb1d54d7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "942dff4f_826edd3c",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-08T19:20:40Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "6562a5b7_c12f6876",
+      "revId": "e91097bf3a24895f23b928ed12087dcbb1d54d7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
