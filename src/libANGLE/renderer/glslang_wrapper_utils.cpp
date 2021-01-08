@@ -526,35 +526,6 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool 
     return true;
 }
 
-// Calculates XFB layout qualifier arguments for each tranform feedback varying.  Stores calculated
-// values for the SPIR-V transformation.
-void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programState,
-                                               std::string *xfbShaderSource)
-{
-    const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
-        programState.getLinkedTransformFeedbackVaryings();
-
-    std::string xfbOut;
-
-    for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
-    {
-        const gl::TransformFeedbackVarying &tfVarying = tfVaryings[varyingIndex];
-        const std::string &tfVaryingName              = tfVarying.mappedName;
-
-        if (tfVaryingName == "gl_Position")
-        {
-            ASSERT(tfVarying.isBuiltIn());
-
-            // Add initialization code for the position varying.
-            xfbOut = sh::vk::kXfbExtensionPositionOutName;
-            xfbOut += " = " + tfVaryingName + ";\n";
-            break;
-        }
-    }
-
-    *xfbShaderSource = SubstituteTransformFeedbackMarkers(*xfbShaderSource, xfbOut);
-}
-
 void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
                               gl::ShaderType shaderType,
                               ShaderInterfaceVariableInfoMap *variableInfoMapOut)
@@ -1727,6 +1698,7 @@ class SpirvTransformer final : public SpirvTransformerBase
     void writeOutputPrologue();
     void preRotateXY(uint32_t xId, uint32_t yId, uint32_t *rotatedXIdOut, uint32_t *rotatedYIdOut);
     void transformZToVulkanClipSpace(uint32_t zId, uint32_t wId, uint32_t *correctedZIdOut);
+    void writeTransformFeedbackExtensionOutput(uint32_t positionId);
 
     // Special flags:
     GlslangSpirvOptions mOptions;
@@ -1775,6 +1747,9 @@ class SpirvTransformer final : public SpirvTransformerBase
     };
     PerVertexData mOutputPerVertex;
     PerVertexData mInputPerVertex;
+
+    // Ids needed to generate transform feedback support code.
+    uint32_t mTransformFeedbackExtensionPositionId = 0;
 
     // A handful of ids that are used to generate gl_Position transformation code (for pre-rotation
     // or depth correction).  These IDs are used to load/store gl_Position and apply modifications
@@ -2177,6 +2152,12 @@ void SpirvTransformer::writeOutputPrologue()
 
     writeAccessChain(positionPointerId, mVec4OutTypePointerId, mOutputPerVertexId, mInt0Id);
     writeLoad(positionId, mVec4Id, positionPointerId);
+
+    if (mOptions.isTransformFeedbackStage && mTransformFeedbackExtensionPositionId != 0)
+    {
+        writeTransformFeedbackExtensionOutput(positionId);
+    }
+
     writeCompositeExtract(xId, mFloatId, positionId, 0);
     writeCompositeExtract(yId, mFloatId, positionId, 1);
     writeCompositeExtract(zId, mFloatId, positionId, 2);
@@ -2256,6 +2237,11 @@ void SpirvTransformer::transformZToVulkanClipSpace(uint32_t zId,
 
     // %correctedZ = OpFMul %mFloatId %zPlusW %mFloatHalfId
     writeFMul(*correctedZIdOut, mFloatId, zPlusWId, mFloatHalfId);
+}
+
+void SpirvTransformer::writeTransformFeedbackExtensionOutput(uint32_t positionId)
+{
+    writeStore(mTransformFeedbackExtensionPositionId, positionId);
 }
 
 void SpirvTransformer::visitDecorate(const uint32_t *instruction)
@@ -2570,6 +2556,13 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
         info.activeStages[mOptions.shaderType])
     {
         mHasTransformFeedbackOutput = true;
+
+        // If this is the special ANGLEXfbPosition variable, remember its id to be used for the
+        // ANGLEXfbPosition = gl_Position; assignment code generation.
+        if (strcmp(name, sh::vk::kXfbExtensionPositionOutName) == 0)
+        {
+            mTransformFeedbackExtensionPositionId = id;
+        }
     }
 }
 
@@ -4456,43 +4449,20 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
     gl::ShaderType xfbStage = programState.getAttachedTransformFeedbackStage();
     std::string *xfbSource  = &(*shaderSourcesOut)[xfbStage];
 
-    // Write transform feedback output code.
-    if (!xfbSource->empty())
+    // Write transform feedback output code for emulation path
+    if (xfbStage == gl::ShaderType::Vertex && !xfbSource->empty() &&
+        options.emulateTransformFeedback)
     {
         if (!programState.getLinkedTransformFeedbackVaryings().empty())
         {
-            if (options.supportsTransformFeedbackExtension)
-            {
-                GenerateTransformFeedbackExtensionOutputs(programState, xfbSource);
-            }
-            else if (options.emulateTransformFeedback)
-            {
-                ASSERT(xfbStage == gl::ShaderType::Vertex);
-                GenerateTransformFeedbackEmulationOutputs(options, xfbStage, programState,
-                                                          programInterfaceInfo, xfbSource,
-                                                          variableInfoMapOut);
-            }
-            else
-            {
-                *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "");
-            }
+            GenerateTransformFeedbackEmulationOutputs(options, xfbStage, programState,
+                                                      programInterfaceInfo, xfbSource,
+                                                      variableInfoMapOut);
         }
         else
         {
             *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "");
         }
-    }
-
-    std::string *tessEvalSources = &(*shaderSourcesOut)[gl::ShaderType::TessEvaluation];
-    if (xfbStage > gl::ShaderType::TessEvaluation && !tessEvalSources->empty())
-    {
-        *tessEvalSources = SubstituteTransformFeedbackMarkers(*tessEvalSources, "");
-    }
-
-    std::string *vertexSource = &(*shaderSourcesOut)[gl::ShaderType::Vertex];
-    if (xfbStage > gl::ShaderType::Vertex && !vertexSource->empty())
-    {
-        *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "");
     }
 
     gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
