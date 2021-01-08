@@ -16,6 +16,24 @@
       "message": "FYI: This has caused the ANGLE -\u003e Skia roll to fail. eg: https://skia-review.googlesource.com/c/skia/+/351036",
       "revId": "2762641a3a1edf9665a61f40da6c160338056cb0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b0ff534_c384837c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T17:49:24Z",
+      "side": 1,
+      "message": "Thanks for letting me know. It seems that is_apple is not defined everywhere. Let\u0027s revert this.",
+      "parentUuid": "fc515e53_cd2ec039",
+      "revId": "2762641a3a1edf9665a61f40da6c160338056cb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
