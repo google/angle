@@ -34,6 +34,24 @@
       "parentUuid": "ea7311b6_9f6fbcf7",
       "revId": "356026be754f870d9580a7844304da53890dc61e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e65e30a_ff8d138f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3144,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-08T17:56:55Z",
+      "side": 1,
+      "message": "Good catch Tim, I meant to say `preferredFlags \u003d memoryPropertyFlags;`. Point being that there\u0027s no need to remove HOST_VISIBLE from preferredFlags. Doesn\u0027t hurt though regardless, let\u0027s not waste the bots\u0027 time on a rerun.",
+      "parentUuid": "5ba5ad33_729ed4a1",
+      "revId": "356026be754f870d9580a7844304da53890dc61e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
