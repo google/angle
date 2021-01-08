@@ -443,7 +443,7 @@ angle_static_library("angle_gpu_info_util") {
     libs += [ "pci" ]
   }
 
-  if (is_apple) {
+  if (is_mac || is_ios) {
     frameworks = [
       "IOKit.framework",
       "CoreFoundation.framework",
@@ -485,7 +485,7 @@ angle_static_library("translator") {
     _needs_glsl_base = true
     needs_glsl_and_vulkan_base = true
     sources += angle_translator_glsl_sources
-    if (is_apple) {
+    if (is_mac || is_ios) {
       sources += angle_translator_glsl_mac_sources
     }
     defines += [ "ANGLE_ENABLE_GLSL" ]
@@ -772,7 +772,7 @@ angle_source_set("libANGLE_base") {
     suppressed_configs -= [ "//build/config/clang:find_bad_constructs" ]
   }
 
-  if (is_apple) {
+  if (is_mac || is_ios) {
     sources += libangle_mac_sources
   }
 
@@ -1161,7 +1161,7 @@ if (angle_standalone || build_with_chromium) {
       "${angle_jsoncpp_dir}:jsoncpp_config",
     ]
 
-    if (is_apple && !is_component_build) {
+    if ((is_ios || is_mac) && !is_component_build) {
       ldflags = [
         "-install_name",
         "@rpath/${target_name}.dylib",
