@@ -105,6 +105,23 @@
       "parentUuid": "5a3dc17e_661beeb6",
       "revId": "aa2a4dece2996589901176bbe6b9476800b37caf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9eb1b513_04e1b83a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-08T16:06:47Z",
+      "side": 1,
+      "message": "I understand that Yuly updated the Gold images, which has these bots/tests passing again.  Seems like we should abandon this CL.",
+      "revId": "aa2a4dece2996589901176bbe6b9476800b37caf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
