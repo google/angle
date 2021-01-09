@@ -16,6 +16,23 @@
       "message": "LGTM\n\nJason provided a CL with the version of the Android.bp that this generates:\nhttps://android-review.googlesource.com/c/platform/external/angle/+/1544664/\n\nBuilding Pixel 4 with that CL generates the ANGLE.apk in the correct location while not installing the *_angle.so libraries to vendor/, so everything looks good to me.",
       "revId": "c50aeabf3920ae824aa4d42df76bb329dfe0e6d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "789f1857_4aa08fc6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-09T01:13:45Z",
+      "side": 1,
+      "message": "+Kaiyi",
+      "revId": "c50aeabf3920ae824aa4d42df76bb329dfe0e6d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
