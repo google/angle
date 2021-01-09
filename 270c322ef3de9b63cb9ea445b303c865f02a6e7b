@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48e32bb9_f536e5e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-09T03:11:40Z",
+      "side": 1,
+      "message": "I took a look at the next change, and I don\u0027t quite follow why you need this for EXT_sRGB_write_control. When sRGB write control mode changes, the render pass is broken anyway, so you might as well create a new \"normal\" framebuffer.",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6093a67b_9292a7bd",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-09T03:11:40Z",
+      "side": 1,
+      "message": "`x ? y : true` is `!x || y`.",
+      "range": {
+        "startLine": 50,
+        "startChar": 11,
+        "endLine": 51,
+        "endChar": 82
+      },
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9223773_f5bd6ca5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2054,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-09T03:11:40Z",
+      "side": 1,
+      "message": "No need for extension check. mDeviceImagelessFramebufferProperties is initialized to {} and never modified if the extension doesn\u0027t exist.",
+      "range": {
+        "startLine": 2054,
+        "startChar": 8,
+        "endLine": 2054,
+        "endChar": 90
+      },
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a6c2617_7b8eb3ce",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-09T03:11:40Z",
+      "side": 1,
+      "message": "nit: Features",
+      "range": {
+        "startLine": 425,
+        "startChar": 79,
+        "endLine": 425,
+        "endChar": 89
+      },
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c95a3f3c_301251e8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-09T03:11:40Z",
+      "side": 1,
+      "message": "Can\u0027t store `FramebufferVk *` here:\n\n1. You don\u0027t want to use locks when this command buffer is passed to a thread for processing\n2. It may be possible that it\u0027s deleted before the render pass is closed\n\nInstead you can store a",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
