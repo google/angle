@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23788c3b_91e99998",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-09T19:33:56Z",
+      "side": 1,
+      "message": "Thanks for taking care of this, Ian!\nWould you be able to take care of upstreaming this fix as well?",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4cbd912_23e3c26f",
