@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c273014_e7474d10",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2202,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-09T03:11:44Z",
+      "side": 1,
+      "message": "Check `if (mFramebufferSRGB !\u003d sRGB)` before setting dirty bits.",
+      "revId": "a6e4b9c6a68b7b5e741ff7b468eac5fa7fc72461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48319215_181d3d25",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1885,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-09T03:11:44Z",
+      "side": 1,
+      "message": "This check can be removed in favor of checking this in the front-end (and not setting dirty bit in the first place).",
+      "revId": "a6e4b9c6a68b7b5e741ff7b468eac5fa7fc72461",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
