@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "177090e4_355393a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-09T14:30:34Z",
+      "side": 1,
+      "message": "Please also remove the test suppression with this CL",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4cbd912_23e3c26f",
+        "filename": "src/tests/deqp_support/deqp.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-09T14:30:34Z",
+      "side": 1,
+      "message": "nit: to prevent this weird formatting put this on a prior line instead of RHS",
+      "range": {
+        "startLine": 1195,
+        "startChar": 62,
+        "endLine": 1199,
+        "endChar": 69
+      },
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
