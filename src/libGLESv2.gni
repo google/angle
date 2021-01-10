@@ -95,7 +95,7 @@ if (is_apple) {
 
 if (is_win) {
   libangle_common_sources += [ "src/common/system_utils_win.cpp" ]
-  if (current_os == "winuwp") {
+  if (target_os == "winuwp") {
     libangle_common_sources += [ "src/common/system_utils_winuwp.cpp" ]
   } else {
     libangle_common_sources += [ "src/common/system_utils_win32.cpp" ]
