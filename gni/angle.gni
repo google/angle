@@ -82,7 +82,7 @@ declare_args() {
   angle_shared_libvulkan = !is_mac
 
   # There's no "is_winuwp" helper in BUILDCONFIG.gn, so we define one ourselves
-  angle_is_winuwp = is_win && current_os == "winuwp"
+  angle_is_winuwp = is_win && target_os == "winuwp"
 
   # Default to using "_angle" suffix on Android
   if (is_android) {
@@ -184,6 +184,7 @@ angle_common_configs = [
   angle_root + ":constructor_and_destructor_warnings",
   angle_root + ":extra_warnings",
   angle_root + ":internal_config",
+  angle_root + ":angle_uwp_env",
 ]
 
 angle_remove_configs = []

@@ -256,6 +256,8 @@ if (angle_enable_d3d11) {
 
   if (angle_is_winuwp) {
     _d3d11_backend_sources += [
+      "d3d11/converged/CompositorNativeWindow11.cpp",
+      "d3d11/converged/CompositorNativeWindow11.h",
       "d3d11/winrt/CoreWindowNativeWindow.cpp",
       "d3d11/winrt/CoreWindowNativeWindow.h",
       "d3d11/winrt/InspectableNativeWindow.cpp",
@@ -322,5 +324,13 @@ if (angle_enable_d3d11) {
 
     public_deps = [ ":angle_d3d_shared" ]
     public_configs = [ ":angle_d3d11_backend_config" ]
+  }
+
+  config("angle_enable_winuwp_config") {
+    defines = [ "ANGLE_ENABLE_WINDOWS_UWP 1" ]
+  }
+
+  angle_source_set("angle_enable_winuwp") {
+    public_configs = [ ":angle_enable_winuwp_config" ]
   }
 }

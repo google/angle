@@ -65,6 +65,7 @@
 #include "libANGLE/trace.h"
 
 #ifdef ANGLE_ENABLE_WINDOWS_UWP
+#    include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
 #    include "libANGLE/renderer/d3d/d3d11/winrt/NativeWindow11WinRT.h"
 #else
 #    include "libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.h"
@@ -1316,13 +1317,11 @@ void Renderer11::generateDisplayExtensions(egl::DisplayExtensions *outExtensions
     // All D3D feature levels support robust resource init
     outExtensions->robustResourceInitialization = true;
 
-#if !defined(ANGLE_ENABLE_WINDOWS_UWP)
     // Compositor Native Window capabilies require WinVer >= 1803
     if (CompositorNativeWindow11::IsSupportedWinRelease())
     {
         outExtensions->windowsUIComposition = true;
     }
-#endif
 }
 
 angle::Result Renderer11::flush(Context11 *context11)
@@ -1381,7 +1380,12 @@ bool Renderer11::isValidNativeWindow(EGLNativeWindowType window) const
                   "Pointer size must match Window Handle size");
 
 #if defined(ANGLE_ENABLE_WINDOWS_UWP)
-    return NativeWindow11WinRT::IsValidNativeWindow(window);
+    bool winrt = NativeWindow11WinRT::IsValidNativeWindow(window);
+    if (!winrt)
+    {
+        return CompositorNativeWindow11::IsValidNativeWindow(window);
+    }
+    return true;
 #else
     if (NativeWindow11Win32::IsValidNativeWindow(window))
     {
@@ -1397,9 +1401,19 @@ NativeWindowD3D *Renderer11::createNativeWindow(EGLNativeWindowType window,
                                                 const egl::AttributeMap &attribs) const
 {
 #if defined(ANGLE_ENABLE_WINDOWS_UWP)
-    return new NativeWindow11WinRT(window, config->alphaSize > 0);
+    auto useWinUiComp = window != nullptr && CompositorNativeWindow11::IsValidNativeWindow(window);
+    if (useWinUiComp)
+    {
+        return new CompositorNativeWindow11(window, config->alphaSize > 0);
+    }
+    else
+    {
+        return new NativeWindow11WinRT(window, config->alphaSize > 0);
+    }
+    return nullptr;
 #else
-    auto useWinUiComp = window != nullptr && !NativeWindow11Win32::IsValidNativeWindow(window);
+    auto useWinUiComp = window != nullptr && !NativeWindow11Win32::IsValidNativeWindow(window) &&
+                        CompositorNativeWindow11::IsValidNativeWindow(window);
 
     if (useWinUiComp)
     {
