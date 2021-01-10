@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a766f8db_ac17cdbe",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3818,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-10T03:48:20Z",
+      "side": 1,
+      "message": "Follow up or not: you should be able to eliminate this parameter and use varyingPacking.mBackToFrontStageMap.",
+      "range": {
+        "startLine": 3818,
+        "startChar": 49,
+        "endLine": 3818,
+        "endChar": 64
+      },
+      "revId": "c0ff685602ec727e3508db77bc7774c6e03970d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

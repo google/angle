@@ -33,6 +33,24 @@
       "message": "Feel free to review, but a couple bugs remain it seems.",
       "revId": "880195a46ca62bd426145c7ba88b0508a058fa45",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ef946c5_43616db8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-10T03:48:20Z",
+      "side": 1,
+      "message": "I couldn\u0027t reproduce the timeouts on Linux/Nvidia. Probably the added test has changed the batches exposing something unrelated bug. If you can\u0027t find an easy fix, maybe just suppress the test on Linux and move on. We would still have coverage on windows I guess.",
+      "parentUuid": "8020d3a3_8cd167cf",
+      "revId": "880195a46ca62bd426145c7ba88b0508a058fa45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
