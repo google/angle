@@ -107,6 +107,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc827714_8462946c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T19:37:54Z",
+      "side": 1,
+      "message": "Sure.\n\nHere\u0027s an attempt at a high-level description of the problem: the size of the exponent and mantissa in a GLhalf is smaller than a GLfloat.  This means that small numbers (that approach 0.0) will become 0.0.  This can result in doing a right-shift by 32 or more bits, which is undefined behavior.  It works with some older compilers/CPUs, but not with newer clang.\n\nHere\u0027s a diff ...\n\nIn the FloatToHalf(float f) function, I changed the following else-if case (leaving a number of unchanged lines for more context) from the following:\n\n\u003c     /* check if exponent is \u003c\u003d -15 */\n\u003c     else if (exp \u003c\u003d HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP)\n\u003c     {\n\u003c         /* store a denorm half-float value or zero */\n\u003c         exp \u003d (HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP - exp) \u003e\u003e 23;\n\u003c         mantissa |\u003d (1 \u003c\u003c 23);\n\u003c         mantissa \u003e\u003e\u003d (14 + exp);\n\u003c         hf \u003d (GLhalf)((((GLhalf)sign) \u003c\u003c 15) | (GLhalf)(mantissa));\n\u003c     }\n\nto the following:\n\n\u003e     /* check if exponent is \u003c\u003d -15 */\n\u003e     else if (exp \u003c\u003d HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP)\n\u003e     {\n\u003e         /* store a denorm half-float value or zero */\n\u003e         exp \u003d ((HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP - exp) \u003e\u003e 23) + 14;\n\u003e         // handle 0.0 specially to avoid a right-shift by too many bits\n\u003e         if (exp \u003e\u003d 32)\n\u003e         {\n\u003e             return 0;\n\u003e         }\n\u003e         mantissa |\u003d (1 \u003c\u003c 23);\n\u003e         mantissa \u003e\u003e\u003d exp;\n\u003e         hf \u003d (GLhalf)((((GLhalf)sign) \u003c\u003c 15) | (GLhalf)(mantissa));\n\u003e     }\n\n\nNarrowing that diff to a smaller number of lines, it changes from:\n\n\u003c         exp \u003d (HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP - exp) \u003e\u003e 23;\n\u003c         mantissa |\u003d (1 \u003c\u003c 23);\n\u003c         mantissa \u003e\u003e\u003d (14 + exp);\n\nto the following:\n\n\u003e         exp \u003d ((HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP - exp) \u003e\u003e 23) + 14;\n\u003e         // handle 0.0 specially to avoid a right-shift by too many bits\n\u003e         if (exp \u003e\u003d 32)\n\u003e         {\n\u003e             return 0;\n\u003e         }\n\u003e         mantissa |\u003d (1 \u003c\u003c 23);\n\u003e         mantissa \u003e\u003e\u003d exp;\n\nNotice that I moved the \"+ 14\" in order to make the new \"if\" statement clearer.",
+      "parentUuid": "5481c672_0c62ab32",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4cbd912_23e3c26f",
