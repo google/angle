@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2aaf5ce6_691c5669",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-11T18:26:58Z",
+      "side": 1,
+      "message": "extra }\n\n\"if (is_ios)\" block ended up being outside of \"test(target_name) {\"",
+      "range": {
+        "startLine": 413,
+        "startChar": 0,
+        "endLine": 413,
+        "endChar": 9
+      },
+      "revId": "f4cd17472aca1939277b145ef0f72b0946b83716",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
