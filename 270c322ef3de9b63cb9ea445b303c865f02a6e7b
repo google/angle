@@ -102,6 +102,24 @@
       "message": "Can\u0027t store `FramebufferVk *` here:\n\n1. You don\u0027t want to use locks when this command buffer is passed to a thread for processing\n2. It may be possible that it\u0027s deleted before the render pass is closed\n\nInstead you can store a",
       "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0908c72c_ae6626e9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-11T17:59:21Z",
+      "side": 1,
+      "message": "shabi, your comment seemed to have been cut-off. can you repost?",
+      "parentUuid": "c95a3f3c_301251e8",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
