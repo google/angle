@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56b24ca2_893b6b61",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-11T19:27:34Z",
+      "side": 1,
+      "message": "This simplifies for me the condition to enable white_box on iOS in https://chromium.googlesource.com/chromium/src/+/4abd6dbb667b553aef3ecc536636d32eae3676da/BUILD.gn#244",
+      "revId": "d83c15659f9bed2ea1b6a4d6532c618f8f215bff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
