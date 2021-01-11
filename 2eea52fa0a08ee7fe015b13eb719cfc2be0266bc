@@ -56,6 +56,30 @@
       },
       "revId": "2eea52fa0a08ee7fe015b13eb719cfc2be0266bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e72782e_77b29662",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1361388
+      },
+      "writtenOn": "2021-01-11T16:16:27Z",
+      "side": 1,
+      "message": "Not sure I understand correctly, but FrameBufferVk has a member on FramebufferCache below. That means we need to define incomplete class FramebufferCache here and make the member a pointer (probably std::unique_ptr) to FramebufferCache. Is that what you want?",
+      "parentUuid": "df61aee2_1412a172",
+      "range": {
+        "startLine": 240,
+        "startChar": 10,
+        "endLine": 240,
+        "endChar": 26
+      },
+      "revId": "2eea52fa0a08ee7fe015b13eb719cfc2be0266bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
