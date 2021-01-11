@@ -120,6 +120,24 @@
       "parentUuid": "c95a3f3c_301251e8",
       "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d211c301_a7c1e3f1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-11T18:04:10Z",
+      "side": 1,
+      "message": "Hmm... I probably changed my mind with whatever I was about to suggest, and asked the question regarding the necessity of this CL instead.",
+      "parentUuid": "0908c72c_ae6626e9",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
