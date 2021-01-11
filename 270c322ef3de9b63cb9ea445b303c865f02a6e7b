@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "942e9cd9_d05eadce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-11T19:32:03Z",
+      "side": 1,
+      "message": "I understand the point regarding the color space change. My question is, why not create a a VkFramebuffer as you normally would, with the image views that use a different color space? What benefit do you get from specifying the image views at a later time, instead of at VkFramebuffer creation time?",
+      "parentUuid": "3751082c_c48cc13c",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6093a67b_9292a7bd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
