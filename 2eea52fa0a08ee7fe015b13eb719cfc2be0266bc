@@ -104,6 +104,30 @@
       },
       "revId": "2eea52fa0a08ee7fe015b13eb719cfc2be0266bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "480a5371_a15ca5eb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1361388
+      },
+      "writtenOn": "2021-01-11T21:20:32Z",
+      "side": 1,
+      "message": "Sure, updated in Patchset 2. The test failure from dry run looks unrelated.",
+      "parentUuid": "6b8592cc_9322af0b",
+      "range": {
+        "startLine": 240,
+        "startChar": 10,
+        "endLine": 240,
+        "endChar": 26
+      },
+      "revId": "2eea52fa0a08ee7fe015b13eb719cfc2be0266bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
