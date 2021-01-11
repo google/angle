@@ -412,14 +412,14 @@ if (angle_standalone || build_with_chromium) {
           use_raw_android_executable = true
         }
       }
-    }
-    if (is_ios) {
-      # We use a special main function on iOS to initialize UIKit before the normal main runs.
-      ldflags = [
-        "-e",
-        "_ios_main",
-      ]
-      sources += [ "$angle_root/util/ios/ios_main.mm" ]
+      if (is_ios) {
+        # We use a special main function on iOS to initialize UIKit before the normal main runs.
+        ldflags = [
+          "-e",
+          "_ios_main",
+        ]
+        sources += [ "$angle_root/util/ios/ios_main.mm" ]
+      }
     }
   }
 }
