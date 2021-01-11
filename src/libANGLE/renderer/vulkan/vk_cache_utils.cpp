@@ -3661,45 +3661,6 @@ angle::Result SamplerCache::getSampler(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-// FramebufferCache implementation.
-void FramebufferCache::destroy(RendererVk *rendererVk)
-{
-    rendererVk->accumulateCacheStats(VulkanCacheType::Framebuffer, mCacheStats);
-    mPayload.clear();
-}
-
-bool FramebufferCache::get(ContextVk *contextVk,
-                           const vk::FramebufferDesc &desc,
-                           vk::FramebufferHelper **framebufferHelperOut)
-{
-    auto iter = mPayload.find(desc);
-    if (iter != mPayload.end())
-    {
-        *framebufferHelperOut = &iter->second;
-        mCacheStats.hit();
-        return true;
-    }
-
-    mCacheStats.miss();
-    return false;
-}
-
-void FramebufferCache::insert(const vk::FramebufferDesc &desc,
-                              vk::FramebufferHelper &&framebufferHelper)
-{
-    mPayload.emplace(desc, std::move(framebufferHelper));
-}
-
-void FramebufferCache::clear(ContextVk *contextVk)
-{
-    for (auto &entry : mPayload)
-    {
-        vk::FramebufferHelper &tmpFB = entry.second;
-        tmpFB.release(contextVk);
-    }
-    mPayload.clear();
-}
-
 // DriverUniformsDescriptorSetCache implementation.
 void DriverUniformsDescriptorSetCache::destroy(RendererVk *rendererVk)
 {
