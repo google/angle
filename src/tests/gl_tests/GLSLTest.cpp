@@ -8808,6 +8808,32 @@ void main() {
     EXPECT_NE(0u, program);
 }
 
+// Test that reusing the same uniform variable name for different uses across stages links fine.
+TEST_P(GLSLTest_ES31, UniformVariableNameReuseAcrossStages)
+{
+    constexpr char kVS[] = R"(#version 310 es
+precision mediump float;
+in highp vec4 variableWithSameName;
+
+void main() {
+    gl_Position = variableWithSameName;
+}
+)";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+uniform vec4 variableWithSameName;
+out vec4 col;
+
+void main() {
+    col = vec4(variableWithSameName);
+}
+)";
+
+    GLuint program = CompileProgram(kVS, kFS);
+    EXPECT_NE(0u, program);
+}
+
 // Verify that precision match validation of uniforms is performed only if they are statically used
 TEST_P(GLSLTest_ES31, UniformPrecisionMatchValidation)
 {

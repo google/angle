@@ -1572,9 +1572,18 @@ bool LinkValidateProgramGlobalNames(InfoLog &infoLog, const HasAttachedShaders &
     Shader *vertexShader = programOrPipeline.getAttachedShader(ShaderType::Vertex);
     if (vertexShader)
     {
+        // ESSL 3.00.6 section 4.3.5:
+        // If a uniform variable name is declared in one stage (e.g., a vertex shader)
+        // but not in another (e.g., a fragment shader), then that name is still
+        // available in the other stage for a different use.
+        std::unordered_set<std::string> uniforms;
+        for (const sh::ShaderVariable &uniform : vertexShader->getUniforms())
+        {
+            uniforms.insert(uniform.name);
+        }
         for (const auto &attrib : vertexShader->getActiveAttributes())
         {
-            if (uniformMap.count(attrib.name))
+            if (uniforms.count(attrib.name))
             {
                 infoLog << "Name conflicts between a uniform and an attribute: " << attrib.name;
                 return false;

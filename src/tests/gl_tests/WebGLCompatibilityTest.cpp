@@ -2968,7 +2968,7 @@ void main()
 })";
 
     GLuint program = CompileProgram(kVS, kFS);
-    EXPECT_EQ(0u, program);
+    EXPECT_NE(0u, program);
 }
 
 // Test dimension and image size validation of compressed textures
