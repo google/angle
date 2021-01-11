@@ -221,7 +221,8 @@ if (is_win || is_linux || is_chromeos || is_mac || is_android || is_fuchsia ||
   }
 }
 
-if (is_win || is_linux || is_chromeos || is_mac || is_android || is_ios) {
+if (is_win || is_linux || is_chromeos || is_mac || is_android || is_fuchsia ||
+    is_ios) {
   import("angle_white_box_tests.gni")
 
   angle_test("angle_white_box_tests") {
