@@ -16,6 +16,23 @@
       "message": "I attempted to add some tryjobs but got an error.. is that expected?",
       "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bce637c2_51e80982",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-11T02:14:50Z",
+      "side": 1,
+      "message": "Swapping reviewers. Not familiar with windows APIs.",
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
