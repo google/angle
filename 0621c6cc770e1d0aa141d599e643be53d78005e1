@@ -37,6 +37,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d887c7f1_c606ee20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:55:37Z",
+      "side": 1,
+      "message": "I made it all the way through now.  Overall LGTM.  Some questions, possible bug, \u0026 nits.",
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "225e057b_995fb3e3",
         "filename": "src/libANGLE/renderer/renderer_utils.cpp",
         "patchSetId": 6
@@ -54,6 +71,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e41a20a4_3f5db471",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:55:37Z",
+      "side": 1,
+      "message": "Wait, I see that the old ConvertToSRGB() and ConvertToLinear() functions supported going between VK_FORMAT_R8G8_UNORM and VK_FORMAT_R8G8_SRGB.  Are we losing something here?",
+      "parentUuid": "225e057b_995fb3e3",
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "033847ab_051ac8c5",
         "filename": "src/libANGLE/renderer/renderer_utils.cpp",
         "patchSetId": 6
@@ -65,6 +100,30 @@
       "writtenOn": "2021-01-11T20:02:54Z",
       "side": 1,
       "message": "I think you should delete this line\n\nI was going to suggest that you\u0027re missing the following just above this line, but I see that we don\u0027t have angle::FormatID::R8G8_UNORM_SRGB::\n\n    case angle::FormatID::R8G8_UNORM_SRGB:",
+      "range": {
+        "startLine": 1308,
+        "startChar": 1,
+        "endLine": 1308,
+        "endChar": 35
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2df0e806_b3714293",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:55:37Z",
+      "side": 1,
+      "message": "Wait, I see that the old ConvertToSRGB() and ConvertToLinear() functions supported going between VK_FORMAT_R8G8_UNORM and VK_FORMAT_R8G8_SRGB.  Are we losing something here?",
+      "parentUuid": "033847ab_051ac8c5",
       "range": {
         "startLine": 1308,
         "startChar": 1,
