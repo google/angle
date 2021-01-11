@@ -18,6 +18,109 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "005750ba_421a0c2a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:02:54Z",
+      "side": 1,
+      "message": "Part way through (non-stop meetings this morning).",
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "225e057b_995fb3e3",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:02:54Z",
+      "side": 1,
+      "message": "I was going to suggest that you\u0027re missing the following just above this line, but I see that we don\u0027t have angle::FormatID::R8G8_UNORM_SRGB:\n\n    case angle::FormatID::R8G8_UNORM:\n        return angle::FormatID::R8G8_UNORM_SRGB;\n\nI started to add this because of a comment below...",
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "033847ab_051ac8c5",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:02:54Z",
+      "side": 1,
+      "message": "I think you should delete this line\n\nI was going to suggest that you\u0027re missing the following just above this line, but I see that we don\u0027t have angle::FormatID::R8G8_UNORM_SRGB::\n\n    case angle::FormatID::R8G8_UNORM_SRGB:",
+      "range": {
+        "startLine": 1308,
+        "startChar": 1,
+        "endLine": 1308,
+        "endChar": 35
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35ad53ce_f4d3a64f",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:02:54Z",
+      "side": 1,
+      "message": "This doesn\u0027t look like it\u0027s used",
+      "range": {
+        "startLine": 206,
+        "startChar": 20,
+        "endLine": 206,
+        "endChar": 40
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a04229db_ff10d0cd",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:02:54Z",
+      "side": 1,
+      "message": "Looks like these lines could be moved within the \"then\" part of the following \"if\" (since that\u0027s when they\u0027re used), UNLESS you can use one/both of these below with renderer-\u003ehasImageFormatFeatureBits()",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 0
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "31f6ad6d_c50484ae",
@@ -55,6 +158,30 @@
       "side": 1,
       "message": "I could do it as a follow-up. I used this as an initial implementation. Meant to do it as a table at some point and just ran out of time.",
       "parentUuid": "31f6ad6d_c50484ae",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 6
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42d93000_d74c14d4",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:02:54Z",
+      "side": 1,
+      "message": "Leave a comment to that effect?",
+      "parentUuid": "b82e3d75_03873115",
       "range": {
         "startLine": 57,
         "startChar": 0,
