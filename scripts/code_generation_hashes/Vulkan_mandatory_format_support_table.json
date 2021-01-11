@@ -2,11 +2,13 @@
   "src/libANGLE/renderer/angle_format.py":
     "32ba71942c0fd00e6807104f1bb80a3c",
   "src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":
-    "791db4381676327e49c7a9046423136a",
+    "0d798546ff1b4932164a64b9404396bb",
+  "src/libANGLE/renderer/vulkan/vk_format_map.json":
+    "b62588b1e9f6d9fa98aeea886d8ed2bd",
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json":
     "fa2bd54c1bb0ab2cf1d386061a4bc5c5",
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_table_autogen.cpp":
-    "8bfd8a3857c2b9062d7ada46c7d27bcf",
+    "ed2e75f0b4eec5ad9f55227c5578e0d6",
   "third_party/vulkan-deps/vulkan-headers/src/registry/vk.xml":
     "e7129a174322b4f0a2c8c1229e91f04c"
 }

@@ -2330,15 +2330,15 @@ VkFormatFeatureFlags RendererVk::getFormatFeatureBits(angle::FormatID formatID,
 
     if (deviceProperties.bufferFeatures == kInvalidFormatFeatureFlags)
     {
-        VkFormat vkFormat = vk::GetVkFormatFromFormatID(formatID);
-
         // If we don't have the actual device features, see if the requested features are mandatory.
         // If so, there's no need to query the device.
-        const VkFormatProperties &mandatoryProperties = vk::GetMandatoryFormatSupport(vkFormat);
+        const VkFormatProperties &mandatoryProperties = vk::GetMandatoryFormatSupport(formatID);
         if (IsMaskFlagSet(mandatoryProperties.*features, featureBits))
         {
             return featureBits;
         }
+
+        VkFormat vkFormat = vk::GetVkFormatFromFormatID(formatID);
 
         // Otherwise query the format features and cache it.
         vkGetPhysicalDeviceFormatProperties(mPhysicalDevice, vkFormat, &deviceProperties);
