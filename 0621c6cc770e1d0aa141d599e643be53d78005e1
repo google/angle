@@ -105,6 +105,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4c16462_fa3840ed",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T22:05:20Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b750fdd7_7f29296c",
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "033847ab_051ac8c5",
@@ -354,6 +372,30 @@
       "side": 1,
       "message": "Ack, I originally did and this caused a crash. The issue is that the \"if\" block uses a pointer to these local variables. If I define them inside the block they go out of scope and cause undefined memory accesses.",
       "parentUuid": "a04229db_ff10d0cd",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 0
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "905166da_af3ce876",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T22:05:20Z",
+      "side": 1,
+      "message": "Got it.  Thanks for explaining!",
+      "parentUuid": "5504eb9e_744539b7",
       "range": {
         "startLine": 207,
         "startChar": 0,
