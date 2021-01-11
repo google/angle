@@ -3567,6 +3567,16 @@ angle::Result ContextVk::onPauseTransformFeedback()
     return angle::Result::Continue;
 }
 
+void ContextVk::invalidateGraphicsPipeline()
+{
+    mGraphicsDirtyBits.set(DIRTY_BIT_PIPELINE);
+}
+
+void ContextVk::invalidateComputePipeline()
+{
+    mComputeDirtyBits.set(DIRTY_BIT_PIPELINE);
+}
+
 void ContextVk::invalidateGraphicsDescriptorSet(DescriptorSetIndex usedDescriptorSet)
 {
     // UtilsVk currently only uses set 0
@@ -4977,12 +4987,6 @@ VkWriteDescriptorSet *ContextVk::allocWriteDescriptorSets(size_t count)
 void ContextVk::setDefaultUniformBlocksMinSizeForTesting(size_t minSize)
 {
     mDefaultUniformStorage.setMinimumSizeForTesting(minSize);
-}
-
-void ContextVk::invalidateGraphicsPipelineAndDescriptorSets()
-{
-    mGraphicsDirtyBits.set(DIRTY_BIT_PIPELINE);
-    mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
 }
 
 angle::Result ContextVk::initializeMultisampleTextureToBlack(const gl::Context *context,

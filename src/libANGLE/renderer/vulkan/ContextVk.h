@@ -322,9 +322,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     angle::Result onPauseTransformFeedback();
     void pauseTransformFeedbackIfStartedAndRebindBuffersOnResume();
 
-    // When UtilsVk issues draw or dispatch calls, it binds descriptor sets that the context is not
-    // aware of.  This function is called to make sure affected descriptor set bindings are dirtied
-    // for the next application draw/dispatch call.
+    // When UtilsVk issues draw or dispatch calls, it binds a new pipeline and descriptor sets that
+    // the context is not aware of.  These functions are called to make sure the pipeline and
+    // affected descriptor set bindings are dirtied for the next application draw/dispatch call.
+    void invalidateGraphicsPipeline();
+    void invalidateComputePipeline();
     void invalidateGraphicsDescriptorSet(DescriptorSetIndex usedDescriptorSet);
     void invalidateComputeDescriptorSet(DescriptorSetIndex usedDescriptorSet);
 
@@ -570,10 +572,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void onSyncHelperInitialize() { mSyncObjectPendingFlush = true; }
     void onEGLSyncHelperInitialize() { mEGLSyncObjectPendingFlush = true; }
-
-    // When UtilsVk issues a draw call on the currently running render pass, the pipelines and
-    // descriptor sets it binds need to be undone.
-    void invalidateGraphicsPipelineAndDescriptorSets();
 
     // Implementation of MultisampleTextureInitializer
     angle::Result initializeMultisampleTextureToBlack(const gl::Context *context,

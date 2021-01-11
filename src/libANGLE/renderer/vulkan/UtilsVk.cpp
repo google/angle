@@ -995,6 +995,8 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
         // TODO: https://issuetracker.google.com/issues/169788986: Update serial handling.
         pipelineAndSerial->updateSerial(serial);
         commandBuffer->bindComputePipeline(pipelineAndSerial->get());
+
+        contextVk->invalidateComputePipeline();
     }
     else
     {
@@ -1014,6 +1016,8 @@ angle::Result UtilsVk::setupProgram(ContextVk *contextVk,
             *pipelineDesc, gl::AttributesMask(), gl::ComponentTypeMask(), &descPtr, &helper));
         helper->updateSerial(serial);
         commandBuffer->bindGraphicsPipeline(helper->getPipeline());
+
+        contextVk->invalidateGraphicsPipeline();
     }
 
     if (descriptorSet != VK_NULL_HANDLE)
@@ -1605,9 +1609,6 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     commandBuffer->setScissor(0, 1, &scissor);
     commandBuffer->draw(3, 0);
     ANGLE_TRY(contextVk->resumeRenderPassQueriesIfActive());
-
-    // Make sure what's bound here is correctly reverted on the next draw.
-    contextVk->invalidateGraphicsPipelineAndDescriptorSets();
 
     // If transform feedback was active, we can't pause and resume it in the same render pass
     // because we can't insert a memory barrier for the counter buffers.  In that case, break the

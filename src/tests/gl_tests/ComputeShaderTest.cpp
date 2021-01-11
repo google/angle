@@ -4050,6 +4050,199 @@ void main() {
     glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 }
 
+// Validate that on Vulkan, compute pipeline is correctly bound after an internal dispatch call is
+// made.  Blit stencil may issue a dispatch call.
+TEST_P(ComputeShaderTest, DispatchBlitStencilDispatch)
+{
+    // http://anglebug.com/5533
+    ANGLE_SKIP_TEST_IF(IsQualcomm() && IsOpenGLES());
+
+    constexpr GLsizei kSize = 1;
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=6, local_size_y=1, local_size_z=1) in;
+
+uniform vec4 data;
+
+layout(rgba8, binding = 0) writeonly uniform highp image2D image;
+
+void main()
+{
+    imageStore(image, ivec2(gl_LocalInvocationID.xy), data);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(programCS, kCS);
+    EXPECT_GL_NO_ERROR();
+
+    // Create a framebuffer with stencil buffer.  Use multisampled textures so the future blit
+    // cannot use vkCmdBlitImage.
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, color);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, kSize, kSize, true);
+
+    GLTexture depthStencil;
+    glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, depthStencil);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_DEPTH24_STENCIL8, kSize, kSize,
+                              true);
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, color,
+                           0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D_MULTISAMPLE,
+                           depthStencil, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear the stencil and make sure it's done.
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearStencil(0x55);
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_EQUAL, 0x55, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilMask(0xFF);
+
+    ANGLE_GL_PROGRAM(drawRed, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    GLTexture colorCopy;
+    glBindTexture(GL_TEXTURE_2D, colorCopy);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+
+    GLFramebuffer copyFbo;
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, copyFbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorCopy, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, copyFbo);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+    // Setup image for compute call
+    GLTexture computeOut;
+    glBindTexture(GL_TEXTURE_2D, computeOut);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    glBindImageTexture(0, computeOut, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+    ASSERT_GL_NO_ERROR();
+
+    // Issue a dispatch call.
+    glUseProgram(programCS);
+    GLint uniformLoc = glGetUniformLocation(programCS, "data");
+    ASSERT_NE(uniformLoc, -1);
+
+    glUniform4f(uniformLoc, 0.0f, 0.0f, 1.0f, 1.0f);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Blit the stencil texture.  This may use a compute shader internally.
+    GLTexture depthStencilCopy;
+    glBindTexture(GL_TEXTURE_2D, depthStencilCopy);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_DEPTH24_STENCIL8, kSize, kSize);
+    ASSERT_GL_NO_ERROR();
+
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, copyFbo);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
+                           depthStencilCopy, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_DRAW_FRAMEBUFFER);
+    ASSERT_GL_NO_ERROR();
+
+    glBlitFramebuffer(0, 0, kSize, kSize, 0, 0, kSize, kSize, GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Issue another dispatch call.
+    glUniform4f(uniformLoc, 0.0f, 1.0f, 0.0f, 1.0f);
+    glDispatchCompute(1, 1, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the results.
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, copyFbo);
+    glBindTexture(GL_TEXTURE_2D, computeOut);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, computeOut, 0);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify the blit copy results.
+    drawQuad(drawRed, essl1_shaders::PositionAttrib(), 0.0f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Validate that on Vulkan, compute pipeline is correctly bound after an internal dispatch call is
+// made.  Generate mipmap may issue a dispatch call.
+TEST_P(ComputeShaderTest, DispatchGenerateMipmapDispatch)
+{
+    constexpr GLsizei kSize = 8;
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=6, local_size_y=1, local_size_z=1) in;
+
+uniform vec4 data;
+
+layout(rgba8, binding = 0) writeonly uniform highp image2D image;
+
+void main()
+{
+    imageStore(image, ivec2(gl_LocalInvocationID.xy), data);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(programCS, kCS);
+    EXPECT_GL_NO_ERROR();
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 4, GL_RGBA8, kSize, kSize);
+
+    const std::vector<GLColor> kInitialColor(kSize * kSize, GLColor::green);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_RGBA, GL_UNSIGNED_BYTE,
+                    kInitialColor.data());
+
+    // Setup image for compute call
+    GLTexture computeOut;
+    glBindTexture(GL_TEXTURE_2D, computeOut);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    glBindImageTexture(0, computeOut, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA8);
+    ASSERT_GL_NO_ERROR();
+
+    // Issue a dispatch call.
+    glUseProgram(programCS);
+    GLint uniformLoc = glGetUniformLocation(programCS, "data");
+    ASSERT_NE(uniformLoc, -1);
+
+    glUniform4f(uniformLoc, 0.0f, 0.0f, 1.0f, 1.0f);
+    glDispatchCompute(1, 1, 1);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+    ASSERT_GL_NO_ERROR();
+
+    // Generate mipmap on the texture.  This may use a compute shader internally.
+    glBindTexture(GL_TEXTURE_2D, color);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    // Issue another dispatch call.
+    glUniform4f(uniformLoc, 0.0f, 1.0f, 0.0f, 1.0f);
+    glDispatchCompute(1, 1, 1);
+    ASSERT_GL_NO_ERROR();
+
+    // Verify the results.
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glBindTexture(GL_TEXTURE_2D, computeOut);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, computeOut, 0);
+    ASSERT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 // Write to image array with an aliasing format.
 TEST_P(ComputeShaderTest, AliasingFormatForImageArray)
 {
