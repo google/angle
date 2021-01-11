@@ -140,6 +140,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62cc6cf5_0c81022f",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-01-11T23:55:39Z",
+      "side": 1,
+      "message": "I was looking at this today Jamie and moving the check to the d3d11 backend will require d3d11 to take a dependency on libGLESv2 for the global state. Is that ok?",
+      "parentUuid": "e84474f7_11d20b59",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
