@@ -53,6 +53,42 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b8243ad_5eea3d99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T18:01:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "177090e4_355393a2",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "709ed7c0_4ced4363",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T18:01:02Z",
+      "side": 1,
+      "message": "Jamie, if you\u0027re still willing, I\u0027ll take you up on the offer to offload this.  Otherwise, I\u0027ll get to this, but probably not quickly, as I\u0027d like to make some good progress on ANGLE-AGI testing this week.",
+      "parentUuid": "5fd2f358_9a13c5cf",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4cbd912_23e3c26f",
@@ -76,6 +112,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2934c3eb_f605af11",
+        "filename": "src/tests/deqp_support/deqp.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 1199,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T18:01:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b4cbd912_23e3c26f",
+      "range": {
+        "startLine": 1195,
+        "startChar": 62,
+        "endLine": 1199,
+        "endChar": 69
+      },
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63ae6da6_ae350b28",
@@ -89,6 +149,24 @@
       "writtenOn": "2021-01-11T03:01:40Z",
       "side": 1,
       "message": "exp must be \u003c\u003d 28 for this to be an allowed shift. HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP \u003e\u003e 23 is 112, so this goes wrong if exp \u003c\u003d 83, or, unbiased, \u003c\u003d -44. Your change only checks for 0, but I think it should just check for the paren here being \u003e 32 and then returning 0 (or do the thing nicolascapens suggested on the bug)\n\n(i.e. this fixes all issues with arguments actually used in this file, but it\u0027s still not \"correct\" in the general sense.)",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5df6b2d8_fd16f9aa",
+        "filename": "src/tests/deqp_support/es31cVertexAttribBindingTests_override.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T18:01:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63ae6da6_ae350b28",
       "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
