@@ -33,6 +33,144 @@
       "message": "Swapping reviewers. Not familiar with windows APIs.",
       "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c64202e_0133b8b4",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T15:42:26Z",
+      "side": 1,
+      "message": "nit: angle_uwp_env",
+      "range": {
+        "startLine": 248,
+        "startChar": 8,
+        "endLine": 248,
+        "endChar": 15
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04307520_29e501c1",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T15:42:26Z",
+      "side": 1,
+      "message": "probably we should just switch to target_os instead of using current_os",
+      "range": {
+        "startLine": 84,
+        "startChar": 31,
+        "endLine": 84,
+        "endChar": 41
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f5410f6_020e5cba",
+        "filename": "src/libANGLE/renderer/d3d/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T15:42:26Z",
+      "side": 1,
+      "message": "naming-wise: how about angle_enable_winuwp_config?",
+      "range": {
+        "startLine": 327,
+        "startChar": 10,
+        "endLine": 327,
+        "endChar": 26
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28502c75_b18e66d7",
+        "filename": "src/libANGLE/renderer/d3d/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T15:42:26Z",
+      "side": 1,
+      "message": "how about angle_enable_winuwp?",
+      "range": {
+        "startLine": 331,
+        "startChar": 20,
+        "endLine": 331,
+        "endChar": 37
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b8c7b25_240dfc62",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T15:42:26Z",
+      "side": 1,
+      "message": "nit: usual style is if !defined()",
+      "range": {
+        "startLine": 121,
+        "startChar": 1,
+        "endLine": 121,
+        "endChar": 8
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58457f34_271cb7fb",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T15:42:26Z",
+      "side": 1,
+      "message": "also here - maybe we should just use target_os",
+      "range": {
+        "startLine": 98,
+        "startChar": 6,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
