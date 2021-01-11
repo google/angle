@@ -74,6 +74,23 @@
       },
       "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63ae6da6_ae350b28",
+        "filename": "src/tests/deqp_support/es31cVertexAttribBindingTests_override.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2021-01-11T03:01:40Z",
+      "side": 1,
+      "message": "exp must be \u003c\u003d 28 for this to be an allowed shift. HALF_FLOAT_MIN_BIASED_EXP_AS_SINGLE_FP_EXP \u003e\u003e 23 is 112, so this goes wrong if exp \u003c\u003d 83, or, unbiased, \u003c\u003d -44. Your change only checks for 0, but I think it should just check for the paren here being \u003e 32 and then returning 0 (or do the thing nicolascapens suggested on the bug)\n\n(i.e. this fixes all issues with arguments actually used in this file, but it\u0027s still not \"correct\" in the general sense.)",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
