@@ -89,6 +89,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b750fdd7_7f29296c",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1247,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T21:58:45Z",
+      "side": 1,
+      "message": "Right, good catch. These formats don\u0027t actually exist in ANGLE, or in OpenGL that I could see. They do exist in Vulkan. We should probably add them to ANGLE to cover the very edge case where someone imports these as an AHB or other external texture. I considered this so marginal that I didn\u0027t address it.",
+      "parentUuid": "e41a20a4_3f5db471",
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "033847ab_051ac8c5",
         "filename": "src/libANGLE/renderer/renderer_utils.cpp",
         "patchSetId": 6
@@ -134,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "58700e48_9e5e8e2e",
+        "filename": "src/libANGLE/renderer/renderer_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T21:58:45Z",
+      "side": 1,
+      "message": "Done, thanks for catching.",
+      "parentUuid": "033847ab_051ac8c5",
+      "range": {
+        "startLine": 1308,
+        "startChar": 1,
+        "endLine": 1308,
+        "endChar": 35
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72d6cf76_ac21649f",
@@ -157,6 +199,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cf99fc3_3188d12c",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T21:58:45Z",
+      "side": 1,
+      "message": "Ack, see other comment. I have filed an issue for making this a helper.",
+      "parentUuid": "72d6cf76_ac21649f",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 69
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7543f21_6ea0b66c",
@@ -170,6 +236,30 @@
       "writtenOn": "2021-01-11T20:32:25Z",
       "side": 1,
       "message": "Nit: Is this still accurate?",
+      "range": {
+        "startLine": 458,
+        "startChar": 18,
+        "endLine": 458,
+        "endChar": 36
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "858374b4_13bc6501",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T21:58:45Z",
+      "side": 1,
+      "message": "Ack, yes, this is still a cache of VkFormatProperties. The Key has changed. The Value is the same.",
+      "parentUuid": "c7543f21_6ea0b66c",
       "range": {
         "startLine": 458,
         "startChar": 18,
@@ -250,6 +340,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5504eb9e_744539b7",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T21:58:45Z",
+      "side": 1,
+      "message": "Ack, I originally did and this caused a crash. The issue is that the \"if\" block uses a pointer to these local variables. If I define them inside the block they go out of scope and cause undefined memory accesses.",
+      "parentUuid": "a04229db_ff10d0cd",
+      "range": {
+        "startLine": 207,
+        "startChar": 0,
+        "endLine": 211,
+        "endChar": 0
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "31f6ad6d_c50484ae",
@@ -311,6 +425,30 @@
       "side": 1,
       "message": "Leave a comment to that effect?",
       "parentUuid": "b82e3d75_03873115",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 63,
+        "endChar": 6
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05bdf32e_cb14f1f8",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T21:58:45Z",
+      "side": 1,
+      "message": "Done, added it as a map.",
+      "parentUuid": "42d93000_d74c14d4",
       "range": {
         "startLine": 57,
         "startChar": 0,
