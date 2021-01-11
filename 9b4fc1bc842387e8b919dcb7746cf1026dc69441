@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eabbe72f_047dc3f2",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-11T23:01:34Z",
+      "side": 1,
+      "message": "I think since they crash you need to skip them",
+      "range": {
+        "startLine": 349,
+        "startChar": 85,
+        "endLine": 349,
+        "endChar": 89
+      },
+      "revId": "9b4fc1bc842387e8b919dcb7746cf1026dc69441",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
