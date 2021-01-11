@@ -128,6 +128,24 @@
       "parentUuid": "851698c0_73588926",
       "revId": "2a76f5271174b3475dbd0e0a7051291a1c1258f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a31e9c99_422e0470",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1342,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-11T18:00:16Z",
+      "side": 1,
+      "message": "Ack. I had the order of the clip space transformation and viewport transformation wrong.",
+      "parentUuid": "a926d66e_8ce6126c",
+      "revId": "2a76f5271174b3475dbd0e0a7051291a1c1258f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
