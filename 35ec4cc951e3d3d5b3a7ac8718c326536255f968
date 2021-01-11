@@ -179,6 +179,30 @@
       },
       "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83170bd7_163c8ed3",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-11T17:11:58Z",
+      "side": 1,
+      "message": "Done, now that webgl will also adhere to the relaxed requirement the change becomes much simpler.",
+      "parentUuid": "94afedb6_51d3db45",
+      "range": {
+        "startLine": 522,
+        "startChar": 18,
+        "endLine": 522,
+        "endChar": 74
+      },
+      "revId": "35ec4cc951e3d3d5b3a7ac8718c326536255f968",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
