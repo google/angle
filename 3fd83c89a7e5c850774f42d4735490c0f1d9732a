@@ -89,6 +89,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5481c672_0c62ab32",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-11T18:34:24Z",
+      "side": 1,
+      "message": "Sure, can you please send me the patch diff or a description of what you changed?",
+      "parentUuid": "709ed7c0_4ced4363",
+      "revId": "3fd83c89a7e5c850774f42d4735490c0f1d9732a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4cbd912_23e3c26f",
