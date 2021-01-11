@@ -77,6 +77,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "72d6cf76_ac21649f",
+        "filename": "src/libANGLE/renderer/vulkan/RenderbufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:32:25Z",
+      "side": 1,
+      "message": "I think this can go in the \"then\" part of the following \"if\"",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 69
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7543f21_6ea0b66c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:32:25Z",
+      "side": 1,
+      "message": "Nit: Is this still accurate?",
+      "range": {
+        "startLine": 458,
+        "startChar": 18,
+        "endLine": 458,
+        "endChar": 36
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "35ad53ce_f4d3a64f",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 6
@@ -88,6 +134,30 @@
       "writtenOn": "2021-01-11T20:02:54Z",
       "side": 1,
       "message": "This doesn\u0027t look like it\u0027s used",
+      "range": {
+        "startLine": 206,
+        "startChar": 20,
+        "endLine": 206,
+        "endChar": 40
+      },
+      "revId": "0621c6cc770e1d0aa141d599e643be53d78005e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "910f02e2_cc10a155",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-11T20:32:25Z",
+      "side": 1,
+      "message": "Sorry, not the case",
+      "parentUuid": "35ad53ce_f4d3a64f",
       "range": {
         "startLine": 206,
         "startChar": 20,
