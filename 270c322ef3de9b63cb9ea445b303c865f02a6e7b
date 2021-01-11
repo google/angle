@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3751082c_c48cc13c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-11T19:13:41Z",
+      "side": 1,
+      "message": "Even if the render pass is broken, we still need to be able to render onto a texture with a different colorspace from the texture\u0027s base format. There is a format reinterpretation step involved there that this feature implements.\nIf we did not have VK_KHR_imageless_framebuffer, we could not render onto an sRGB texture with a linear colorspace override at all, broken renderpass or not.\n\nsRGB_override and sRGB_decode do not interact with this, since those extensions are only for sampling, wheras EXT_sRGB_write_control is for rendering.",
+      "parentUuid": "48e32bb9_f536e5e0",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6093a67b_9292a7bd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
@@ -136,6 +154,24 @@
       "side": 1,
       "message": "Hmm... I probably changed my mind with whatever I was about to suggest, and asked the question regarding the necessity of this CL instead.",
       "parentUuid": "0908c72c_ae6626e9",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07a09110_a722a2f1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1243,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-11T19:13:41Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "d211c301_a7c1e3f1",
       "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
