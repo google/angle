@@ -2764,7 +2764,6 @@ TEST_P(TransformFeedbackTestES32, PrimitivesWrittenAndGenerated)
     GLuint readyPG = GL_FALSE;
     while (readyPW == GL_FALSE || readyPG == GL_FALSE)
     {
-        angle::Sleep(0);
         glGetQueryObjectuiv(primitivesWrittenQueries[0], GL_QUERY_RESULT_AVAILABLE, &readyPW);
         glGetQueryObjectuiv(primitivesGeneratedQueries[0], GL_QUERY_RESULT_AVAILABLE, &readyPG);
     }
