@@ -34,6 +34,24 @@
       "parentUuid": "8473cffa_efbc5071",
       "revId": "5b8dec52b68fa29dc5a99dea3a95d819b98091e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a0c8d91_45668f9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1185214
+      },
+      "writtenOn": "2021-01-12T17:39:28Z",
+      "side": 1,
+      "message": "Let me try adding is_apple to our buildconfig.gn, as part of a roll.",
+      "parentUuid": "84acf4dc_498f1b6d",
+      "revId": "5b8dec52b68fa29dc5a99dea3a95d819b98091e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
