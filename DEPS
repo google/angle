@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '734de1a6b288df8381e2e1c1040cb4141a8fccb2',
+  'chromium_revision': '2a7e78c75a37a481d7891a2b08e6da5b81336314',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -65,7 +65,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'b2230ba88f16a0eded9d377ba65b4c30525ef9d4',
+  'catapult_revision': 'd1a3011cd91205aa96b74b5dfc227d391e88108d',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -76,7 +76,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@d5995537211ebc4d1bc37f215c25fa3781ba9d6e',
+    'url': '{chromium_git}/chromium/src/build.git@3769c3b43c3804f9f7f14c6e37f545639fda2852',
     'condition': 'not build_with_chromium',
   },
 
@@ -221,7 +221,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@2246bee280e908ac1fd27ab75e7d0021b14d875c',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@82425b6b98a7f4d6d67060286bdf1cfcf6b462e6',
     'condition': 'not build_with_chromium',
   },
 
@@ -290,7 +290,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/windows-amd64',
-          'version': 'mvme2We4n3wONUhzQu6ATl9Ow4Fb4li6ET-Yhv7Ph3EC',
+          'version': '4r6X5OSxy-ZDOlqtn41HMmKG2qlEfMNdLwpzyufLFzcC',
         },
       ],
       'dep_type': 'cipd',
