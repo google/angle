@@ -277,9 +277,6 @@
 5276 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.compressed.viewclass_etc* = FAIL
 5276 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.mixed.*eac* = FAIL
 
-// imageAtomicExchange failure with r32f format
-5353 NVIDIA VULKAN : dEQP-GLES31.functional.image_load_store.*.atomic.exchange_r32f* = FAIL
-
 // Vulkan Android failures with these formats
 5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb10_a2* = FAIL
 5277 VULKAN ANDROID : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8_snorm_rgb9_e5* = FAIL

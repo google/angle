@@ -459,6 +459,14 @@ struct FeaturesVk : FeatureSetBase
         "exposeNonConformantExtensionsAndVersions", FeatureCategory::VulkanWorkarounds,
         "Expose GLES versions and extensions that are not conformant.", &members,
         "http://anglebug.com/5375"};
+
+    // imageAtomicExchange is expected to work for r32f formats, but support for atomic operations
+    // for VK_FORMAT_R32_SFLOAT is rare.  This support is emulated by using an r32ui format for such
+    // images instead.
+    Feature emulateR32fImageAtomicExchange = {
+        "emulateR32fImageAtomicExchange", FeatureCategory::VulkanWorkarounds,
+        "Emulate r32f images with r32ui to support imageAtomicExchange.", &members,
+        "http://anglebug.com/5535"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

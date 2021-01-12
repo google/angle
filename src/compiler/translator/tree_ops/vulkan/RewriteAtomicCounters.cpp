@@ -225,14 +225,14 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
 
     void visitSymbol(TIntermSymbol *symbol) override
     {
-        // Connot encounter the atomic counter symbol directly.  It can only be used with functions,
+        // Cannot encounter the atomic counter symbol directly.  It can only be used with functions,
         // and therefore it's handled by visitAggregate.
         ASSERT(!symbol->getType().isAtomicCounter());
     }
 
     bool visitBinary(Visit visit, TIntermBinary *node) override
     {
-        // Connot encounter an atomic counter expression directly.  It can only be used with
+        // Cannot encounter an atomic counter expression directly.  It can only be used with
         // functions, and therefore it's handled by visitAggregate.
         ASSERT(!node->getType().isAtomicCounter());
         return true;

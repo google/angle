@@ -3661,7 +3661,6 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysImage)
 // Test that multiple arrays of arrays of images work as expected.
 TEST_P(GLSLTest_ES31, ConsecutiveArraysOfArraysImage)
 {
-    swapBuffers();
     // http://anglebug.com/5072
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
 
@@ -3788,6 +3787,174 @@ TEST_P(GLSLTest_ES31, ConsecutiveArraysOfArraysImage)
         glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData), GL_MAP_READ_BIT));
     EXPECT_EQ(*ptr,
               kImage1Data * kImage1Units + kImage2Data * kImage2Units + kImage3Data * kImage3Units);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
+// Test that arrays of arrays of images of r32f format work when passed to functions.
+TEST_P(GLSLTest_ES31, ArraysOfArraysOfR32fImages)
+{
+    // Skip if GL_OES_shader_image_atomic is not enabled.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_shader_image_atomic"));
+
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
+    // Fails on D3D due to mistranslation.
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    // Fails on Android on GLES.
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // http://anglebug.com/5353
+    ANGLE_SKIP_TEST_IF(IsNVIDIA() && IsOpenGL());
+
+    GLint maxComputeImageUniforms;
+    glGetIntegerv(GL_MAX_COMPUTE_IMAGE_UNIFORMS, &maxComputeImageUniforms);
+    ANGLE_SKIP_TEST_IF(maxComputeImageUniforms < 7);
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+#extension GL_OES_shader_image_atomic : require
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(binding = 0, r32f) uniform highp image2D image1[2][3];
+layout(binding = 6, r32f) uniform highp image2D image2;
+
+void testFunction(image2D imageOut[2][3])
+{
+    // image1 is an array of 1x1 images.
+    // image2 is a 1x4 image with the following data:
+    //
+    // (0, 0): 234.5
+    // (0, 1): 4.0
+    // (0, 2): 456.0
+    // (0, 3): 987.0
+
+
+    // Write to [0][0]
+    imageStore(imageOut[0][0], ivec2(0, 0), vec4(1234.5));
+
+    // Write to [0][1]
+    imageStore(imageOut[0][1], ivec2(0, 0), imageLoad(image2, ivec2(0, 0)));
+
+    // Write to [0][2]
+    imageStore(imageOut[0][2], ivec2(0, 0), vec4(imageSize(image2).y));
+
+    // Write to [1][0]
+    imageStore(imageOut[1][0], ivec2(0,
+                 imageSize(image2).y - int(imageLoad(image2, ivec2(0, 1)).x)
+                ), vec4(678.0));
+
+    // Write to [1][1]
+    imageStore(imageOut[1][1], ivec2(0, 0),
+                vec4(imageAtomicExchange(image2, ivec2(0, 2), 135.0)));
+
+    // Write to [1][2]
+    imageStore(imageOut[1][2], ivec2(0, 0),
+                    imageLoad(image2, ivec2(imageSize(image2).x - 1, 3)));
+}
+
+void main(void)
+{
+    testFunction(image1);
+})";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    constexpr GLsizei kImageRows = 2;
+    constexpr GLsizei kImageCols = 3;
+    constexpr GLfloat kImageData = 0;
+    GLTexture images[kImageRows][kImageCols];
+    for (size_t row = 0; row < kImageRows; row++)
+    {
+        for (size_t col = 0; col < kImageCols; col++)
+        {
+            glBindTexture(GL_TEXTURE_2D, images[row][col]);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32F, 1, 1);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED, GL_FLOAT, &kImageData);
+            glBindImageTexture(row * kImageCols + col, images[row][col], 0, GL_FALSE, 0,
+                               GL_READ_WRITE, GL_R32F);
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+
+    constexpr GLsizei kImage2Size                          = 4;
+    constexpr std::array<GLfloat, kImage2Size> kImage2Data = {
+        234.5f,
+        4.0f,
+        456.0f,
+        987.0f,
+    };
+    GLTexture image2;
+    glBindTexture(GL_TEXTURE_2D, image2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32F, 1, kImage2Size);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, kImage2Size, GL_RED, GL_FLOAT, kImage2Data.data());
+    glBindImageTexture(6, image2, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32F);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+
+    // Verify the previous dispatch with another dispatch
+    constexpr char kVerifyShader[] = R"(#version 310 es
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+layout(binding = 0, r32f) uniform highp readonly image2D image1[2][3];
+layout(binding = 6, r32f) uniform highp readonly image2D image2;
+layout(binding = 0, std430) buffer Output {
+    float image2Data[4];
+    float image1Data[6];
+} outbuf;
+
+void main(void)
+{
+    for (int i = 0; i < 4; ++i)
+    {
+        outbuf.image2Data[i] = imageLoad(image2, ivec2(0, i)).x;
+    }
+    outbuf.image1Data[0] = imageLoad(image1[0][0], ivec2(0, 0)).x;
+    outbuf.image1Data[1] = imageLoad(image1[0][1], ivec2(0, 0)).x;
+    outbuf.image1Data[2] = imageLoad(image1[0][2], ivec2(0, 0)).x;
+    outbuf.image1Data[3] = imageLoad(image1[1][0], ivec2(0, 0)).x;
+    outbuf.image1Data[4] = imageLoad(image1[1][1], ivec2(0, 0)).x;
+    outbuf.image1Data[5] = imageLoad(image1[1][2], ivec2(0, 0)).x;
+})";
+    ANGLE_GL_COMPUTE_PROGRAM(verifyProgram, kVerifyShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(verifyProgram);
+
+    constexpr std::array<GLfloat, kImage2Size + kImageRows *kImageCols> kOutputInitData = {};
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kOutputInitData), kOutputInitData.data(),
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // Verify
+    const GLfloat *ptr = reinterpret_cast<const GLfloat *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData), GL_MAP_READ_BIT));
+
+    EXPECT_EQ(ptr[0], kImage2Data[0]);
+    EXPECT_EQ(ptr[1], kImage2Data[1]);
+    EXPECT_NEAR(ptr[2], 135.0f, 0.0001f);
+    EXPECT_EQ(ptr[3], kImage2Data[3]);
+
+    EXPECT_NEAR(ptr[4], 1234.5f, 0.0001f);
+    EXPECT_NEAR(ptr[5], kImage2Data[0], 0.0001f);
+    EXPECT_NEAR(ptr[6], kImage2Size, 0.0001f);
+    EXPECT_NEAR(ptr[7], 678.0f, 0.0001f);
+    EXPECT_NEAR(ptr[8], kImage2Data[2], 0.0001f);
+    EXPECT_NEAR(ptr[9], kImage2Data[3], 0.0001f);
+
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 

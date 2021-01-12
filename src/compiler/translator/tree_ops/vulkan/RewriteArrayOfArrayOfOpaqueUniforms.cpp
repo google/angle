@@ -63,12 +63,6 @@ class RewriteExpressionTraverser final : public TIntermTraverser
 
     bool visitBinary(Visit visit, TIntermBinary *node) override
     {
-        // Only interested in opaque uniforms.
-        if (!IsOpaqueType(node->getType().getBasicType()))
-        {
-            return true;
-        }
-
         TIntermTyped *rewritten =
             RewriteArrayOfArraySubscriptExpression(mCompiler, node, mUniformMap);
         if (rewritten == nullptr)
@@ -130,7 +124,11 @@ TIntermTyped *RewriteArrayOfArraySubscriptExpression(TCompiler *compiler,
                                                      TIntermBinary *node,
                                                      const UniformMap &uniformMap)
 {
-    ASSERT(IsOpaqueType(node->getType().getBasicType()));
+    // Only interested in opaque uniforms.
+    if (!IsOpaqueType(node->getType().getBasicType()))
+    {
+        return nullptr;
+    }
 
     TIntermSymbol *opaqueUniform = nullptr;
 
@@ -315,12 +313,6 @@ class RewriteArrayOfArrayOfOpaqueUniformsTraverser : public TIntermTraverser
     // Same implementation as in RewriteExpressionTraverser.  That traverser cannot replace root.
     bool visitBinary(Visit visit, TIntermBinary *node) override
     {
-        // Only interested in opaque uniforms.
-        if (!IsOpaqueType(node->getType().getBasicType()))
-        {
-            return true;
-        }
-
         TIntermTyped *rewritten =
             RewriteArrayOfArraySubscriptExpression(mCompiler, node, mUniformMap);
         if (rewritten == nullptr)

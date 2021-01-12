@@ -12,6 +12,7 @@
 // - Partially subscripted array of array of images
 // - Atomic counters
 // - samplerCube variables when emulating ES2's cube map sampling
+// - image* variables with r32f formats (to emulate imageAtomicExchange)
 //
 // This transformation basically duplicates such functions, removes the
 // sampler/image/atomic_counter parameters and uses the opaque uniforms used by the caller.

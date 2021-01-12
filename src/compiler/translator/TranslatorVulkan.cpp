@@ -29,6 +29,7 @@
 #include "compiler/translator/tree_ops/vulkan/RewriteCubeMapSamplersAs2DArray.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h"
+#include "compiler/translator/tree_ops/vulkan/RewriteR32fImages.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteStructSamplers.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
@@ -731,6 +732,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     // Write out default uniforms into a uniform block assigned to a specific set/binding.
     int defaultUniformCount           = 0;
     int aggregateTypesUsedForUniforms = 0;
+    int r32fImageCount                = 0;
     int atomicCounterCount            = 0;
     for (const auto &uniform : getUniforms())
     {
@@ -742,6 +744,11 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         if (uniform.isStruct() || uniform.isArrayOfArrays())
         {
             ++aggregateTypesUsedForUniforms;
+        }
+
+        if (uniform.active && gl::IsImageType(uniform.type) && uniform.imageUnitFormat == GL_R32F)
+        {
+            ++r32fImageCount;
         }
 
         if (uniform.active && gl::IsAtomicCounterType(uniform.type))
@@ -851,6 +858,14 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     else
     {
         driverUniforms->addGraphicsDriverUniformsToShader(root, &getSymbolTable());
+    }
+
+    if (r32fImageCount > 0)
+    {
+        if (!RewriteR32fImages(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
     }
 
     if (atomicCounterCount > 0)

@@ -317,6 +317,7 @@ class MonomorphizeTraverser final : public TIntermTraverser
             //   subscripted (i.e. the function itself expects an array), or
             // - The opaque uniform is an atomic counter
             // - The opaque uniform is a samplerCube and ES2's cube sampling emulation is requested.
+            // - The opaque uniform is an image* with r32f format.
             //
             const TType &type = uniform->getType();
             const bool isArrayOfArrayOfSamplerOrImage =
@@ -326,11 +327,13 @@ class MonomorphizeTraverser final : public TIntermTraverser
             const bool isSamplerCubeEmulation =
                 type.isSamplerCube() &&
                 (mCompileOptions & SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING) != 0;
+            const bool isR32fImage =
+                type.isImage() && type.getLayoutQualifier().imageInternalFormat == EiifR32F;
 
             if (!(isStructContainingSamplers ||
                   (isSamplerInStruct && isParameterArrayOfOpaqueType) ||
                   (isArrayOfArrayOfSamplerOrImage && isParameterArrayOfOpaqueType) ||
-                  isAtomicCounter || isSamplerCubeEmulation))
+                  isAtomicCounter || isSamplerCubeEmulation || isR32fImage))
             {
                 continue;
             }

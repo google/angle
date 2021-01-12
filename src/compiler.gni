@@ -333,6 +333,8 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/tree_ops/vulkan/RewriteDfdy.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.cpp",
   "src/compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h",
+  "src/compiler/translator/tree_ops/vulkan/RewriteR32fImages.cpp",
+  "src/compiler/translator/tree_ops/vulkan/RewriteR32fImages.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteStructSamplers.cpp",
   "src/compiler/translator/tree_ops/vulkan/RewriteStructSamplers.h",
 ]

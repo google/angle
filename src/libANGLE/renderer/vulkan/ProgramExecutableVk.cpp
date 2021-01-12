@@ -1276,7 +1276,7 @@ angle::Result ProgramExecutableVk::updateImagesDescriptorSet(
                 TextureVk *textureVk = activeImages[imageUnit];
 
                 const vk::BufferView *view = nullptr;
-                ANGLE_TRY(textureVk->getBufferViewAndRecordUse(contextVk, format, &view));
+                ANGLE_TRY(textureVk->getBufferViewAndRecordUse(contextVk, format, true, &view));
 
                 const ShaderInterfaceVariableInfo &info =
                     mVariableInfoMap.get(shaderType, mappedImageName);
@@ -1510,7 +1510,8 @@ angle::Result ProgramExecutableVk::updateTexturesDescriptorSet(ContextVk *contex
                     GLuint textureUnit         = samplerBinding.boundTextureUnits[arrayElement];
                     TextureVk *textureVk       = activeTextures[textureUnit].texture;
                     const vk::BufferView *view = nullptr;
-                    ANGLE_TRY(textureVk->getBufferViewAndRecordUse(contextVk, nullptr, &view));
+                    ANGLE_TRY(
+                        textureVk->getBufferViewAndRecordUse(contextVk, nullptr, false, &view));
 
                     const std::string samplerName =
                         GlslangGetMappedSamplerName(samplerUniform.name);

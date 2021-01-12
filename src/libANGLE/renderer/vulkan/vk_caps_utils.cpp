@@ -32,25 +32,6 @@ namespace vk
 {
 namespace
 {
-bool HasShaderImageAtomicsSupport(const RendererVk *rendererVk,
-                                  const gl::Extensions &supportedExtensions)
-{
-    // Only VK_FORMAT_R32_SFLOAT doesn't have mandatory support for the STORAGE_IMAGE_ATOMIC and
-    // STORAGE_TEXEL_BUFFER_ATOMIC features.
-    const Format &formatVk = rendererVk->getFormat(GL_R32F);
-
-    const bool hasImageAtomicSupport = rendererVk->hasImageFormatFeatureBits(
-        formatVk.actualImageFormatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_ATOMIC_BIT);
-    bool hasBufferAtomicSupport = true;
-    if (supportedExtensions.textureBufferAny())
-    {
-        hasBufferAtomicSupport = rendererVk->hasBufferFormatFeatureBits(
-            formatVk.actualBufferFormatID, VK_FORMAT_FEATURE_STORAGE_TEXEL_BUFFER_ATOMIC_BIT);
-    }
-
-    return hasImageAtomicSupport && hasBufferAtomicSupport;
-}
-
 // Checks to see if each format can be reinterpreted to an equivalent format in a different
 // colorspace. If all supported formats can be reinterpreted, it returns true. Formats which are not
 // supported at all are ignored and not counted as failures.
@@ -909,11 +890,9 @@ void RendererVk::ensureCapsInitialized() const
     // GL_OES_shader_image_atomic requires that image atomic functions have support for r32i and
     // r32ui formats.  These formats have mandatory support for STORAGE_IMAGE_ATOMIC and
     // STORAGE_TEXEL_BUFFER_ATOMIC features in Vulkan.  Additionally, it requires that
-    // imageAtomicExchange supports r32f.  Exposing this extension is thus restricted to this format
-    // having support for the aforementioned features.
-    mNativeExtensions.shaderImageAtomicOES =
-        vk::HasShaderImageAtomicsSupport(this, mNativeExtensions) ||
-        getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
+    // imageAtomicExchange supports r32f, which is emulated in ANGLE transforming the shader to
+    // expect r32ui instead.
+    mNativeExtensions.shaderImageAtomicOES = true;
 
     // Geometry shaders are required for ES 3.2.
     // We don't support GS when we are emulating line raster due to the tricky position varying.
