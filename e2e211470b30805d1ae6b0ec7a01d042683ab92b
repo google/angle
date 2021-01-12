@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22a032fb_4111efbc",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:56:39Z",
+      "side": 1,
+      "message": "\u003e Does any test/program ever hit this?\n\nNo, there are no tests hitting this code. I will remove this code for now and we can take care of this when supporting interaction of this extension with GS or TS.",
+      "parentUuid": "40d2b3e4_1b18e461",
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "353e67fc_26760b30",
@@ -48,6 +66,24 @@
       "writtenOn": "2021-01-08T20:28:54Z",
       "side": 1,
       "message": "nit: You should be able to remove the `realize()` call.",
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ffb1fce_8b1f6226",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:56:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "353e67fc_26760b30",
       "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -69,6 +105,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d025294c_cf6ba276",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:56:39Z",
+      "side": 1,
+      "message": "indeed but for now going with current setup",
+      "parentUuid": "3526d8af_6ebdf6b6",
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd26bb92_04b38cdd",
@@ -82,6 +136,30 @@
       "writtenOn": "2021-01-08T20:28:54Z",
       "side": 1,
       "message": "Looks like mostly a duplicate, with Cull instead of Clip. If a refactor is possible, that would be nice.",
+      "range": {
+        "startLine": 577,
+        "startChar": 0,
+        "endLine": 641,
+        "endChar": 5
+      },
+      "revId": "e2e211470b30805d1ae6b0ec7a01d042683ab92b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58a269b8_91e5cab8",
+        "filename": "src/compiler/translator/tree_util/ReplaceClipDistanceVariable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 641,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:56:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd26bb92_04b38cdd",
       "range": {
         "startLine": 577,
         "startChar": 0,

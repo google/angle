@@ -106,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d12148a_df2fd2a0",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 630,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:56:39Z",
+      "side": 1,
+      "message": "Ah, yup. will handle this in the next patch",
+      "parentUuid": "9183d324_940fd009",
+      "range": {
+        "startLine": 630,
+        "startChar": 8,
+        "endLine": 630,
+        "endChar": 29
+      },
+      "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65a89c82_647ebd1f",
@@ -143,6 +167,30 @@
       "side": 1,
       "message": "no need to worry about else case here. if EXT_clip_cull_distance extension is not enabled, there is no need to validate whether the sum of the size of both gl_ClipDistance and gl_CullDistance is greater then gl_MaxCombinedClipAndCullDistances.\n\nAlso, there is no need to check the extension is enabled like this. Just checking that maxCombinedClipAndCullDistances is available is enough.",
       "parentUuid": "65a89c82_647ebd1f",
+      "range": {
+        "startLine": 1304,
+        "startChar": 0,
+        "endLine": 1306,
+        "endChar": 52
+      },
+      "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f1658a9_1fb16d5b",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:56:39Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "74d65c1e_5b90f3d3",
       "range": {
         "startLine": 1304,
         "startChar": 0,
@@ -214,6 +262,30 @@
       "side": 1,
       "message": "I don\u0027t totally follow the logic of the code. Putting validation in the traverser SGTM because I know that worked for some of the validation I did for TS.",
       "parentUuid": "2d58d587_ff0e70e6",
+      "range": {
+        "startLine": 1363,
+        "startChar": 63,
+        "endLine": 1363,
+        "endChar": 74
+      },
+      "revId": "23c8f1c52a3dc1936d7ee85f7945fe740209ceee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b07b5f8e_cb877531",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1363,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:56:39Z",
+      "side": 1,
+      "message": "the validation of the sum of of gl_ClipDistance and gl_CullDistance array is already taken care of in ValidateClipCullDistance. So, removing this chunk here should be ok",
+      "parentUuid": "caa4b005_6b37b094",
       "range": {
         "startLine": 1363,
         "startChar": 63,
