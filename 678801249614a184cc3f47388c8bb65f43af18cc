@@ -16,6 +16,23 @@
       "message": "Jason FYI",
       "revId": "678801249614a184cc3f47388c8bb65f43af18cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e207166f_f785718a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T19:44:03Z",
+      "side": 1,
+      "message": "Maybe split out the copyright year changes",
+      "revId": "678801249614a184cc3f47388c8bb65f43af18cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
