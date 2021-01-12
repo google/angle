@@ -854,7 +854,7 @@ class State : angle::NonCopyable
         return mBlendFuncConstantColorDrawBuffers;
     }
 
-    const std::vector<ImageUnit> getImageUnits() const { return mImageUnits; }
+    const std::vector<ImageUnit> &getImageUnits() const { return mImageUnits; }
 
   private:
     friend class Context;
