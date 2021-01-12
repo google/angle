@@ -188,6 +188,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d28d250_59dfe95d",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-01-12T21:17:18Z",
+      "side": 1,
+      "message": "Err, you\u0027re right. Here\u0027s the problem I\u0027m currently facing, just speaking aloud essentially:\n\nWe can cache the last context in onMakeCurrent(), but it seems like syncState() can fire asynchronously/on a different context than is current, which messes with the object caches we have (mFrameBuffer11, et. al.). I think we need to store these on a per-context basis, which is the approach I\u0027m looking at now. I\u0027m not actually sure how this worked with the current patchset, I suspect it has something to do when when syncState fires in relation to when the dirty call is made.",
+      "parentUuid": "6644f104_502e5d5a",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
