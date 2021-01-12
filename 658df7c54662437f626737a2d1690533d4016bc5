@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8f098f2_3e1ded50",
+        "filename": "src/common/string_utils_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T21:23:28Z",
+      "side": 1,
+      "message": "Suggest also:\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*F\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*DF\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*SDF\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*ASDF\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"AS**\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"AS***\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"**DF\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"***DF\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"A*F\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"A**F\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*SD*\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*S*D*\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"ASD*\", \"ASDF*\"));",
+      "revId": "658df7c54662437f626737a2d1690533d4016bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
