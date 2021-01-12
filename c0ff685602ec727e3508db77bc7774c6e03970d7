@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "34fc8b02_700ad8e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T02:44:29Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "c0ff685602ec727e3508db77bc7774c6e03970d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fcf95d9_0e4ade22",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T02:44:29Z",
+      "side": 1,
+      "message": "Can this be tracked in a ShaderBitSet mAttachedGraphicsShaderStages, similar to ProgramExecutable::mLinkedGraphicsShaderStages?",
+      "range": {
+        "startLine": 534,
+        "startChar": 0,
+        "endLine": 542,
+        "endChar": 5
+      },
+      "revId": "c0ff685602ec727e3508db77bc7774c6e03970d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a766f8db_ac17cdbe",
