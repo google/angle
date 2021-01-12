@@ -33,6 +33,86 @@
       "message": "nice tests.",
       "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52c0af6b_645cfa97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T01:55:30Z",
+      "side": 1,
+      "message": "Good find.",
+      "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aece240_ea6cf5d7",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1175,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T01:55:30Z",
+      "side": 1,
+      "message": "Doing this work looks like something that can easily be missed if/when a new UtilsVk compute function is added.   I think it makes sense to put calls into a cleanup function, or maybe make a helper dispatch() function that does it, with the hope that any new functions will steal a bunch of code, including the corresponding cleanup (and make it clearer that the invalidate and descriptor pool reset are both necessary.",
+      "range": {
+        "startLine": 1172,
+        "startChar": 0,
+        "endLine": 1175,
+        "endChar": 34
+      },
+      "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eebdfd22_957e7ed5",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T01:55:30Z",
+      "side": 1,
+      "message": "Can this be moved up next to the dispatch()/reset() above to make it move obvious they are related?",
+      "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2d0dd08_d64a37a8",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4074,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T01:55:30Z",
+      "side": 1,
+      "message": "nit: feature (I think?)",
+      "range": {
+        "startLine": 4074,
+        "startChar": 83,
+        "endLine": 4074,
+        "endChar": 89
+      },
+      "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
