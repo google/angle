@@ -164,7 +164,7 @@ target_blockist = [
 ]
 
 include_blocklist = [
-    '//out/Android/gen/third_party/glslang/src/include/',
+    '//out/Android/gen/third_party/vulkan-deps/glslang/src/include/',
 ]
 
 
@@ -354,8 +354,10 @@ def gn_action_args_to_blueprint_args(blueprint_inputs, blueprint_outputs, args):
     # path. b/150457277
     remap_folders = [
         # Specific special-cases first, since the other will strip the prefixes.
-        ('gen/third_party/glslang/src/include/glslang/build_info.h', 'glslang/build_info.h'),
-        ('third_party/glslang/src', 'external/angle/third_party/glslang/src'),
+        ('gen/third_party/vulkan-deps/glslang/src/include/glslang/build_info.h',
+         'glslang/build_info.h'),
+        ('third_party/vulkan-deps/glslang/src',
+         'external/angle/third_party/vulkan-deps/glslang/src'),
         ('../../', ''),
         ('gen/', ''),
     ]
