@@ -25,6 +25,7 @@
 #include "google_maps/google_maps_capture_context3.h"
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
 #include "lego_legacy/lego_legacy_capture_context2.h"
+#include "magic_tiles_3/magic_tiles_3_capture_context2.h"
 #include "manhattan_10/manhattan_10_capture_context1.h"
 #include "marvel_contest_of_champions/marvel_contest_of_champions_capture_context1.h"
 #include "mobile_legends/mobile_legends_capture_context1.h"
@@ -92,6 +93,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::lego_legacy,
      {lego_legacy::kReplayFrameStart, lego_legacy::kReplayFrameEnd,
       lego_legacy::kReplayDrawSurfaceWidth, lego_legacy::kReplayDrawSurfaceHeight, "lego_legacy"}},
+    {RestrictedTraceID::magic_tiles_3,
+     {magic_tiles_3::kReplayFrameStart, magic_tiles_3::kReplayFrameEnd,
+      magic_tiles_3::kReplayDrawSurfaceWidth, magic_tiles_3::kReplayDrawSurfaceHeight,
+      "magic_tiles_3"}},
     {RestrictedTraceID::manhattan_10,
      {manhattan_10::kReplayFrameStart, manhattan_10::kReplayFrameEnd,
       manhattan_10::kReplayDrawSurfaceWidth, manhattan_10::kReplayDrawSurfaceHeight,
@@ -191,6 +196,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::lego_legacy:
             lego_legacy::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::magic_tiles_3:
+            magic_tiles_3::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ReplayContext1Frame(frameIndex);
             break;
@@ -279,6 +287,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::magic_tiles_3:
+            magic_tiles_3::ResetContext2Replay();
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ResetContext1Replay();
@@ -369,6 +380,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetupContext2Replay();
             break;
+        case RestrictedTraceID::magic_tiles_3:
+            magic_tiles_3::SetupContext2Replay();
+            break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetupContext1Replay();
             break;
@@ -458,6 +472,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::magic_tiles_3:
+            magic_tiles_3::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDir(dataDir);
             break;
@@ -546,6 +563,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::magic_tiles_3:
+            magic_tiles_3::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDecompressCallback(callback);

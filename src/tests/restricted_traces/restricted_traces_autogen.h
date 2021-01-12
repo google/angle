@@ -68,6 +68,7 @@ enum class RestrictedTraceID
     google_maps,
     kartrider_rush,
     lego_legacy,
+    magic_tiles_3,
     manhattan_10,
     marvel_contest_of_champions,
     mobile_legends,

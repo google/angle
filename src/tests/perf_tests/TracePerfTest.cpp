@@ -301,6 +301,12 @@ TracePerfTest::TracePerfTest()
         }
     }
 
+    if (param.testID == RestrictedTraceID::magic_tiles_3)
+    {
+        // Linux+Nvidia doesn't support GL_KHR_texture_compression_astc_ldr (possibly others also)
+        addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 
