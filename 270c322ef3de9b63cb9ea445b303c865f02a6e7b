@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cdac674a_d9213ffe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-12T18:40:54Z",
+      "side": 1,
+      "message": "shabi, the validation error that used to appear no longer does. you seem to be correct that imageless extension is not needed. Will confirm and upload new patchset accordingly",
+      "parentUuid": "942e9cd9_d05eadce",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6093a67b_9292a7bd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
