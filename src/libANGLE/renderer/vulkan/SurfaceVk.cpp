@@ -165,6 +165,12 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
 }
 }  // namespace
 
+#if defined(ANGLE_ENABLE_OVERLAY)
+constexpr bool kEnableOverlay = ANGLE_ENABLE_OVERLAY;
+#else
+constexpr bool kEnableOverlay = false;
+#endif
+
 SurfaceVk::SurfaceVk(const egl::SurfaceState &surfaceState) : SurfaceImpl(surfaceState) {}
 
 SurfaceVk::~SurfaceVk() = default;
@@ -948,15 +954,16 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     // We need transfer src for reading back from the backbuffer.
     VkImageUsageFlags imageUsageFlags = kSurfaceVkColorImageUsageFlags;
 
-#if ANGLE_ENABLE_OVERLAY
     // We need storage image for compute writes (debug overlay output).
-    VkFormatFeatureFlags featureBits =
-        renderer->getImageFormatFeatureBits(nativeFormat, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
-    if ((featureBits & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) != 0)
+    if (kEnableOverlay)
     {
-        imageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
+        VkFormatFeatureFlags featureBits = renderer->getImageFormatFeatureBits(
+            format.actualImageFormatID, VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT);
+        if ((featureBits & VK_FORMAT_FEATURE_STORAGE_IMAGE_BIT) != 0)
+        {
+            imageUsageFlags |= VK_IMAGE_USAGE_STORAGE_BIT;
+        }
     }
-#endif
 
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
