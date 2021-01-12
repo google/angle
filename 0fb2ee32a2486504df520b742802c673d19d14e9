@@ -164,6 +164,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6644f104_502e5d5a",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-12T15:37:34Z",
+      "side": 1,
+      "message": "I don\u0027t see why you need to do that Doug. The D3D11 back-end can determine the last context without needing global state. There\u0027s probably several ways. In onMakeCurrent you could cache the prior Context11 pointer or something if you want to do the check there.",
+      "parentUuid": "62cc6cf5_0c81022f",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
