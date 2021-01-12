@@ -16,6 +16,29 @@
       "message": "PTAL. Did I miss anything?",
       "revId": "8139dba6a18fac7baa0504ba5699cfb36604bd48",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5ec568b_aca4e818",
+        "filename": "infra/config/global/cr-buildbucket.cfg",
+        "patchSetId": 1
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-12T22:48:51Z",
+      "side": 1,
+      "message": "We didn\u0027t allocate GCEs for trybots.\nWe can still land this, since it\u0027s a shared pool of 20 Linux + 40 Windows, so shouldn\u0027t be too problematic.",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 383,
+        "endChar": 0
+      },
+      "revId": "8139dba6a18fac7baa0504ba5699cfb36604bd48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
