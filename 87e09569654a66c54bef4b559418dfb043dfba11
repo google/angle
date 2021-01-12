@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "843504e2_5cb9d551",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1185214
+      },
+      "writtenOn": "2021-01-12T15:15:08Z",
+      "side": 1,
+      "message": "You\u0027d have to build Skia locally, with this patched in, I think. https://skia.org/user/build (and make sure to include skia_use_angle\u003dtrue in your GN args). Or just land your CL, and then trigger a manual ANGLE -\u003e Skia roll here: https://autoroll.skia.org/r/angle-skia-autoroll\n\nThat said - I think this will work, if my understanding of both projects\u0027 GN files is correct.",
+      "parentUuid": "98ab6bfc_1294db24",
+      "revId": "87e09569654a66c54bef4b559418dfb043dfba11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "904c5190_0a45bcc5",
