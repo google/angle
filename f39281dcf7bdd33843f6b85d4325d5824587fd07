@@ -76,6 +76,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40a72176_c654f11d",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T19:01:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de31b42d_5f957868",
+      "range": {
+        "startLine": 2,
+        "startChar": 12,
+        "endLine": 2,
+        "endChar": 16
+      },
+      "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14d1b873_a70c3569",
@@ -89,6 +113,30 @@
       "writtenOn": "2021-01-08T23:49:07Z",
       "side": 1,
       "message": "I\u0027m not sure you need to call out vendors here specifically.  Probably enough to specify a serial and just run the trace once per device, tracking which result is associated with each.  We can already test on more vendors than these two.  I\u0027ll probably just run on a single device at a time, leaving the parameter off.\n\nOne way to keep this automated but flexible would be to pass in a tag that can be added to the output files, so the tag could be \"QC\", and you could specify that as a parameter to easily keep track of which device it is.\n\nI\u0027m not hung up on it though, we can just add more vendors if you really like this method.",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 38
+      },
+      "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccc4c8b6_691e6198",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-12T19:01:04Z",
+      "side": 1,
+      "message": "I changed these to \u0027--serials\u0027 which takes a list of serial numbers and calculates scores for each one.\n\nLet me know what you think.",
+      "parentUuid": "14d1b873_a70c3569",
       "range": {
         "startLine": 134,
         "startChar": 0,
