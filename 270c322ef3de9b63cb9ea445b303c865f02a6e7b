@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4af6329c_319cd142",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T18:56:49Z",
+      "side": 1,
+      "message": "Excellent, one fewer complexity to track!\n\nThere\u0027s something useful here though nevertheless. If we could always use imageless framebuffers, our vk framebuffer cache could go away. Something to remember if we ever find that an interesting optimization.",
+      "parentUuid": "cdac674a_d9213ffe",
+      "revId": "270c322ef3de9b63cb9ea445b303c865f02a6e7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6093a67b_9292a7bd",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 4
