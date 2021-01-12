@@ -6985,15 +6985,15 @@ void BufferViewHelper::release(RendererVk *renderer)
 
         // Ensure the resource use is always valid.
         mUse.init();
+
+        // Update image view serial.
+        mViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
     }
 
     mViews.clear();
 
     mOffset = 0;
     mSize   = 0;
-
-    // Update image view serial.
-    mViewSerial = renderer->getResourceSerialFactory().generateImageOrBufferViewSerial();
 }
 
 void BufferViewHelper::destroy(VkDevice device)
