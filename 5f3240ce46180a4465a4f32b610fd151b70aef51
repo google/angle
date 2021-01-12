@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "407e1469_709b190b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-01-12T22:19:39Z",
+      "side": 1,
+      "message": "PTAL\n\nAdded third_party/vulkan-deps to the delete deps section so that third_party/vulkan-deps/.git is removed in order for the \u0027git add -f third_party/vulkan-deps/*\u0027 to succeed. This was building locally but not in aosp/1548235 which previously was missing those deps. Note: we will need to manually remove the subdirectories that were migrated from third_party to third_party/vulkan-deps once. \n\nAlso \u0027git cl format\u0027.",
+      "revId": "5f3240ce46180a4465a4f32b610fd151b70aef51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
