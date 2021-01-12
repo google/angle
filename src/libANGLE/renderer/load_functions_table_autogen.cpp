@@ -1608,6 +1608,18 @@ LoadImageFunctionInfo ETC1_RGB8_OES_to_R8G8B8A8_UNORM(GLenum type)
     }
 }
 
+LoadImageFunctionInfo G8_B8_R8_3PLANE_420_UNORM_ANGLEX_to_default(GLenum type)
+{
+    switch (type)
+    {
+        case GL_UNSIGNED_BYTE:
+            return LoadImageFunctionInfo(UnimplementedLoadFunction, true);
+        default:
+            UNREACHABLE();
+            return LoadImageFunctionInfo(UnreachableLoadFunction, true);
+    }
+}
+
 LoadImageFunctionInfo LUMINANCE_to_R16G16B16A16_FLOAT(GLenum type)
 {
     switch (type)
@@ -3678,6 +3690,8 @@ LoadFunctionMap GetLoadFunctionsMap(GLenum internalFormat, FormatID angleFormat)
             }
             break;
         }
+        case GL_G8_B8_R8_3PLANE_420_UNORM_ANGLEX:
+            return G8_B8_R8_3PLANE_420_UNORM_ANGLEX_to_default;
         case GL_LUMINANCE:
         {
             switch (angleFormat)

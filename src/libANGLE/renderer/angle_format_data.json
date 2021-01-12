@@ -284,5 +284,8 @@
   },
   "PVRTC1_RGBA_4BPP_UNORM_SRGB_BLOCK": {
     "blockPixelBytes": "8"
+  },
+  "G8_B8_R8_3PLANE_420_UNORM": {
+    "channelStruct": "R8G8B8"
   }
 }

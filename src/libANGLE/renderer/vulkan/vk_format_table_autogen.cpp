@@ -960,6 +960,16 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vertexLoadRequiresConversion = false;
             break;
 
+        case angle::FormatID::G8_B8_R8_3PLANE_420_UNORM:
+            intendedGLFormat             = GL_G8_B8_R8_3PLANE_420_UNORM_ANGLEX;
+            actualImageFormatID          = angle::FormatID::G8_B8_R8_3PLANE_420_UNORM;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::G8_B8_R8_3PLANE_420_UNORM;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 3, 3, 0>;
+            vertexLoadRequiresConversion = false;
+            break;
+
         case angle::FormatID::L16A16_FLOAT:
             intendedGLFormat         = GL_LUMINANCE_ALPHA16F_EXT;
             actualImageFormatID      = angle::FormatID::R16G16_FLOAT;
@@ -2486,6 +2496,7 @@ VkFormat GetVkFormatFromFormatID(angle::FormatID formatID)
         {angle::FormatID::R8G8_UINT, VK_FORMAT_R8G8_UINT},
         {angle::FormatID::R5G5B5A1_UNORM, VK_FORMAT_R5G5B5A1_UNORM_PACK16},
         {angle::FormatID::R8G8B8_UINT, VK_FORMAT_R8G8B8_UINT},
+        {angle::FormatID::G8_B8_R8_3PLANE_420_UNORM, VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM},
         {angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK, VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK},
         {angle::FormatID::R32_UINT, VK_FORMAT_R32_UINT},
         {angle::FormatID::R9G9B9E5_SHAREDEXP, VK_FORMAT_E5B9G9R9_UFLOAT_PACK32},
@@ -2777,6 +2788,8 @@ angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat)
             return angle::FormatID::R5G5B5A1_UNORM;
         case VK_FORMAT_R8G8B8_UINT:
             return angle::FormatID::R8G8B8_UINT;
+        case VK_FORMAT_G8_B8_R8_3PLANE_420_UNORM:
+            return angle::FormatID::G8_B8_R8_3PLANE_420_UNORM;
         case VK_FORMAT_ETC2_R8G8B8_UNORM_BLOCK:
             return angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
         case VK_FORMAT_R32_UINT:

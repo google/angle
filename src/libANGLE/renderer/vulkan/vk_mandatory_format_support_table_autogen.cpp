@@ -274,6 +274,7 @@ constexpr FormatMap<VkFormatProperties> kFormatProperties = {
       UNIFORM_TEXEL_BUFFER | VERTEX_BUFFER}},
     {FormatID::R5G5B5A1_UNORM, {0, 0, 0}},
     {FormatID::R8G8B8_UINT, {0, 0, 0}},
+    {FormatID::G8_B8_R8_3PLANE_420_UNORM, {0, 0, 0}},
     {FormatID::ETC2_R8G8B8_UNORM_BLOCK, {0, 0, 0}},
     {FormatID::R32_UINT,
      {0,

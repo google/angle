@@ -120,6 +120,7 @@ enum class FormatID
     ETC2_R8G8B8A8_UNORM_BLOCK,
     ETC2_R8G8B8_SRGB_BLOCK,
     ETC2_R8G8B8_UNORM_BLOCK,
+    G8_B8_R8_3PLANE_420_UNORM,
     L16A16_FLOAT,
     L16_FLOAT,
     L32A32_FLOAT,
@@ -243,7 +244,7 @@ enum class FormatID
     X2R10G10B10_USCALED_VERTEX
 };
 
-constexpr uint32_t kNumANGLEFormats = 224;
+constexpr uint32_t kNumANGLEFormats = 225;
 
 }  // namespace angle
 
