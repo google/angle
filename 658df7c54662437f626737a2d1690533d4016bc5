@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7342cab2_e68a4870",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-12T23:10:34Z",
+      "side": 1,
+      "message": "Does it make sense to replace \"*\" in ref with \".*\" and then use std::regex_match instead of implementing this?\nProbably need to also replace \".\" with \"\\.\".\nI don\u0027t think we use other special characters in test names?",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 66
+      },
+      "revId": "658df7c54662437f626737a2d1690533d4016bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d8f098f2_3e1ded50",
         "filename": "src/common/string_utils_unittest.cpp",
         "patchSetId": 2
@@ -14,6 +37,29 @@
       "writtenOn": "2021-01-12T21:23:28Z",
       "side": 1,
       "message": "Suggest also:\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*F\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*DF\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*SDF\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*ASDF\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"AS**\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"AS***\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"**DF\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"***DF\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"A*F\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"A**F\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*SD*\", \"ASDF\"));\n    EXPECT_TRUE(NamesMatchWithWildcard(\"*S*D*\", \"ASDF\"));\n\n    EXPECT_TRUE(NamesMatchWithWildcard(\"ASD*\", \"ASDF*\"));",
+      "revId": "658df7c54662437f626737a2d1690533d4016bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30e6abba_affeb345",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-12T23:10:34Z",
+      "side": 1,
+      "message": "I\u0027d be happier if this used snprintf",
+      "range": {
+        "startLine": 380,
+        "startChar": 11,
+        "endLine": 380,
+        "endChar": 18
+      },
       "revId": "658df7c54662437f626737a2d1690533d4016bc5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
