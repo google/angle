@@ -75,6 +75,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "389382c4_71781c9a",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1175,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T04:10:12Z",
+      "side": 1,
+      "message": "You\u0027re right. I moved this to setupProgram. There was something about desc sets there too already actually!",
+      "parentUuid": "7aece240_ea6cf5d7",
+      "range": {
+        "startLine": 1172,
+        "startChar": 0,
+        "endLine": 1175,
+        "endChar": 34
+      },
+      "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eebdfd22_957e7ed5",
@@ -92,6 +116,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "01f2bc7b_35cd504c",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T04:10:12Z",
+      "side": 1,
+      "message": "N/A",
+      "parentUuid": "eebdfd22_957e7ed5",
+      "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2d0dd08_d64a37a8",
@@ -105,6 +147,30 @@
       "writtenOn": "2021-01-12T01:55:30Z",
       "side": 1,
       "message": "nit: feature (I think?)",
+      "range": {
+        "startLine": 4074,
+        "startChar": 83,
+        "endLine": 4074,
+        "endChar": 89
+      },
+      "revId": "f99479e0f855cffaea024d5f6fbbbc0c75cfa6e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ac2091a_acd8b333",
+        "filename": "src/tests/gl_tests/ComputeShaderTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4074,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T04:10:12Z",
+      "side": 1,
+      "message": "future blit",
+      "parentUuid": "b2d0dd08_d64a37a8",
       "range": {
         "startLine": 4074,
         "startChar": 83,
