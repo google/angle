@@ -238,47 +238,6 @@ inline Token ParseToken(const std::string &word)
     }
     return kTokenWord;
 }
-
-// reference name can have *.
-inline bool NamesMatching(const char *ref, const char *testName)
-{
-    // Find the first * in ref.
-    const char *firstWildcard = strchr(ref, '*');
-
-    // If there are no wildcards, match the strings precisely.
-    if (firstWildcard == nullptr)
-    {
-        return strcmp(ref, testName) == 0;
-    }
-
-    // Otherwise, match up to the wildcard first.
-    size_t preWildcardLen = firstWildcard - ref;
-    if (strncmp(ref, testName, preWildcardLen) != 0)
-    {
-        return false;
-    }
-
-    const char *postWildcardRef = ref + preWildcardLen + 1;
-
-    // As a small optimization, if the wildcard is the last character in ref, accept the match
-    // already.
-    if (postWildcardRef[0] == '\0')
-    {
-        return true;
-    }
-
-    // Try to match the wildcard with a number of characters.
-    for (size_t matchSize = 0; testName[matchSize] != '\0'; ++matchSize)
-    {
-        if (NamesMatching(postWildcardRef, testName + matchSize))
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 }  // anonymous namespace
 
 const char *GetConditionName(uint32_t condition)
@@ -356,7 +315,7 @@ int32_t GPUTestExpectationsParser::getTestExpectation(const std::string &testNam
     GPUTestExpectationEntry *foundEntry = nullptr;
     for (size_t i = 0; i < mEntries.size(); ++i)
     {
-        if (NamesMatching(mEntries[i].testName.c_str(), testName.c_str()))
+        if (NamesMatchWithWildcard(mEntries[i].testName.c_str(), testName.c_str()))
         {
             size_t expectationLen = mEntries[i].testName.length();
             // The longest/most specific matching expectation overrides any others.

@@ -2113,9 +2113,6 @@ void main()
 // can actually be used.
 TEST_P(GLSLTest, VerifyMaxVertexUniformVectors)
 {
-    // Times out on D3D11 on test infra. http://anglebug.com/5076
-    ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel());
-
     // crbug.com/680631
     ANGLE_SKIP_TEST_IF(IsOzone() && IsIntel());
 

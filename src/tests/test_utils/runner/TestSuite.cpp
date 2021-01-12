@@ -374,17 +374,39 @@ TestIdentifier GetTestIdentifier(const testing::TestInfo &testInfo)
     return {testInfo.test_suite_name(), testInfo.name()};
 }
 
+bool IsSlowTest(const std::vector<std::string> &slowTests, const TestIdentifier &testID)
+{
+    char buffer[200] = {};
+    testID.sprintfName(buffer);
+
+    for (const std::string &slowTest : slowTests)
+    {
+        if (NamesMatchWithWildcard(slowTest.c_str(), buffer))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 class TestEventListener : public testing::EmptyTestEventListener
 {
   public:
     // Note: TestResults is owned by the TestSuite. It should outlive TestEventListener.
     TestEventListener(const std::string &resultsFile,
                       const std::string &histogramJsonFile,
+                      const std::vector<std::string> &slowTests,
+                      double fastTestTimeout,
+                      double slowTestTimeout,
                       const char *testSuiteName,
                       TestResults *testResults,
                       HistogramWriter *histogramWriter)
         : mResultsFile(resultsFile),
           mHistogramJsonFile(histogramJsonFile),
+          mSlowTests(slowTests),
+          mFastTestTimeout(fastTestTimeout),
+          mSlowTestTimeout(slowTestTimeout),
           mTestSuiteName(testSuiteName),
           mTestResults(testResults),
           mHistogramWriter(histogramWriter)
@@ -395,6 +417,8 @@ class TestEventListener : public testing::EmptyTestEventListener
         std::lock_guard<std::mutex> guard(mTestResults->currentTestMutex);
         mTestResults->currentTest = GetTestIdentifier(testInfo);
         mTestResults->currentTestTimer.start();
+        mTestResults->currentTestTimeout =
+            IsSlowTest(mSlowTests, mTestResults->currentTest) ? mSlowTestTimeout : mFastTestTimeout;
     }
 
     void OnTestEnd(const testing::TestInfo &testInfo) override
@@ -403,7 +427,8 @@ class TestEventListener : public testing::EmptyTestEventListener
         mTestResults->currentTestTimer.stop();
         const testing::TestResult &resultIn = *testInfo.result();
         UpdateCurrentTestResult(resultIn, mTestResults);
-        mTestResults->currentTest = TestIdentifier();
+        mTestResults->currentTest        = TestIdentifier();
+        mTestResults->currentTestTimeout = 0.0;
     }
 
     void OnTestProgramEnd(const testing::UnitTest &testProgramInfo) override
@@ -417,6 +442,9 @@ class TestEventListener : public testing::EmptyTestEventListener
   private:
     std::string mResultsFile;
     std::string mHistogramJsonFile;
+    const std::vector<std::string> &mSlowTests;
+    double mFastTestTimeout;
+    double mSlowTestTimeout;
     const char *mTestSuiteName;
     TestResults *mTestResults;
     HistogramWriter *mHistogramWriter;
@@ -1107,9 +1135,9 @@ TestSuite::TestSuite(int *argc, char **argv)
     if (!mBotMode)
     {
         testing::TestEventListeners &listeners = testing::UnitTest::GetInstance()->listeners();
-        listeners.Append(new TestEventListener(mResultsFile, mHistogramJsonFile,
-                                               mTestSuiteName.c_str(), &mTestResults,
-                                               &mHistogramWriter));
+        listeners.Append(new TestEventListener(
+            mResultsFile, mHistogramJsonFile, mSlowTests, mTestTimeout, mTestTimeout * 3.0,
+            mTestSuiteName.c_str(), &mTestResults, &mHistogramWriter));
 
         for (const TestIdentifier &id : testSet)
         {
@@ -1590,7 +1618,7 @@ void TestSuite::startWatchdog()
             {
                 std::lock_guard<std::mutex> guard(mTestResults.currentTestMutex);
                 if (mTestResults.currentTestTimer.getElapsedTime() >
-                    static_cast<double>(mTestTimeout))
+                    mTestResults.currentTestTimeout)
                 {
                     break;
                 }
@@ -1613,6 +1641,14 @@ void TestSuite::addHistogramSample(const std::string &measurement,
                                    const std::string &units)
 {
     mHistogramWriter.addSample(measurement, story, value, units);
+}
+
+void TestSuite::registerSlowTests(const char *slowTests[], size_t numSlowTests)
+{
+    for (size_t slowTestIndex = 0; slowTestIndex < numSlowTests; ++slowTestIndex)
+    {
+        mSlowTests.push_back(slowTests[slowTestIndex]);
+    }
 }
 
 bool GetTestResultsFromFile(const char *fileName, TestResults *resultsOut)

@@ -136,6 +136,33 @@ TEST(StringUtilsTest, HexStringToUIntBasic)
     EXPECT_FALSE(HexStringToUInt(testStringD, &uintValue));
 }
 
+// Basic functionality for NamesMatchWithWildcard.
+TEST(StringUtilsTest, NamesMatchWithWildcard)
+{
+    EXPECT_TRUE(NamesMatchWithWildcard("ASDF", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("A*", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("AS*", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("ASD*", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("ASDF*", "ASDF"));
+
+    EXPECT_TRUE(NamesMatchWithWildcard("*F", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("*DF", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("*SDF", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("*ASDF", "ASDF"));
+
+    EXPECT_TRUE(NamesMatchWithWildcard("AS**", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("AS***", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("**DF", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("***DF", "ASDF"));
+
+    EXPECT_TRUE(NamesMatchWithWildcard("A*F", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("A**F", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("*SD*", "ASDF"));
+    EXPECT_TRUE(NamesMatchWithWildcard("*S*D*", "ASDF"));
+
+    EXPECT_TRUE(NamesMatchWithWildcard("ASD*", "ASDF*"));
+}
+
 // Note: ReadFileToString is harder to test
 
 class BeginsWithTest : public testing::Test
