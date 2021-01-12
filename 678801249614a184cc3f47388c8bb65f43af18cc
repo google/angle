@@ -50,6 +50,24 @@
       "message": "LGTM",
       "revId": "678801249614a184cc3f47388c8bb65f43af18cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54d5745a_55d8d709",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-12T20:28:29Z",
+      "side": 1,
+      "message": "It would be a good idea. Will land as-is in the interests of time saving.",
+      "parentUuid": "e207166f_f785718a",
+      "revId": "678801249614a184cc3f47388c8bb65f43af18cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
