@@ -212,6 +212,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a9a483d_babe88a8",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-12T21:37:52Z",
+      "side": 1,
+      "message": "You will always get a Context11::onMakeCurrent call when you get a next context on a thread. So your question is  - given I get onMakeCurrent, how do *force* gl::Context (owner of Context11) to call syncState with the right dirty bits after an onMakeCurrent? Let me know if I have your question right. The syncState call won\u0027t happen until the next draw call.\n\nOK, so if I have that right, one solution: we can force all dirty bits on D3D11 *only* using our subject/object state notification system. See an example in Buffer.h:\n\n\u003e    angle::ObserverBinding mImplObserver;\n\nThis is the binding that passes the notification back up the chain from rx::BufferImpl to gl::Buffer. Then in Buffer.cpp we call:\n\n\u003e     mImplObserver.bind(mImpl);\n\nThis establishes the binding. Then in Buffer11.cpp we call:\n\n\u003e    onStateChange(angle::SubjectMessage::SubjectChanged);\n\nThis sends the notification. And in Buffer.cpp we receive the notification:\n\n\u003e void Buffer::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)\n\nIn Context::onSubjectStateChange you\u0027d handle the matching ID for the Impl (Context11) and set all the right dirty bits. This would constrain this behaviour to D3D11.\n\nAn alternative solution: expose a flag in ContextImpl that says \"set all dirty bits on a new context\" and handle this in Context::makeCurrent instead of Context11/notifiers.",
+      "parentUuid": "2d28d250_59dfe95d",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
