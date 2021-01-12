@@ -52,6 +52,23 @@
       "parentUuid": "84acf4dc_498f1b6d",
       "revId": "5b8dec52b68fa29dc5a99dea3a95d819b98091e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55b3c952_ac9b2ba3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1185214
+      },
+      "writtenOn": "2021-01-12T19:52:25Z",
+      "side": 1,
+      "message": "I landed the Skia fix (added is_apple), and re-kicked the roll. It should land soon.",
+      "revId": "5b8dec52b68fa29dc5a99dea3a95d819b98091e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
