@@ -16,6 +16,23 @@
       "message": "I can take a crack at this if you\u0027re unable to help here. Or maybe Courtney. Adding new formats without corresponding ANGLE formats can cause problems down the line.",
       "revId": "da5b0113526c3c8cd16dbda35c1913f6b732ec08",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5e3f944_7c5b433f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-12T21:22:57Z",
+      "side": 1,
+      "message": "Jason: the format issue is fixed in ANGLE now: http://crrev.com/c/2623813\n\nI didn\u0027t realize you had already gone back and worked around this in SwiftShader. If using UNDEFINED as a format is a messy solution you can apply this CL on top of master.",
+      "revId": "da5b0113526c3c8cd16dbda35c1913f6b732ec08",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
