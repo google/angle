@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "43973596_dc0df187",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-12T10:05:30Z",
+      "side": 1,
+      "message": "@Shabi, let\u0027s discuss with the example below.\n----------------------------------------------------------\nglUseProgram(programNonFetch)\n...\nglBindFramebuffer()\n...\ndraw1()\nglUseProgram(programFetch)\ndraw2()\nglUseProgram(programNonFetch)\ndraw3()\n...\n-----------------------------------------------------------\nThis is a problematic case in my current patch. ANGLE creates a renderpass just before draw1 and the renderpass will not have input attachments because the program used in draw1 does not use framebuffer fetch. It will cause descriptor state mismatch in draw2.\n\nIIUC, your multiple subpasses approach needs to create additional subpass for every renderpass then call nextsubpass between framebuffer fetch and one that doesn\u0027t. In that case we will have 2 subpasses in a renderpass so we can\u0027t call nextsubpass before draw3. I don\u0027t think I understand properly. Can you explain details?\n\nOtherwise, how about this approach? When glUseProgram is called, if a program use framebuffer fetch, we add some codes to make following drawcall call startRenderPass(). It will create new renderpass which has proper input attachments so we can avoid state mismatch.\n\nplease give me feedback.",
+      "parentUuid": "0b90f86f_061286e2",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
