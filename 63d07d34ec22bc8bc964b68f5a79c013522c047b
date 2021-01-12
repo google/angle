@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "b9810c03_105223ad",
         "filename": "extensions/EGL_ANGLE_d3d_texture_client_buffer.txt",
@@ -20,10 +21,10 @@
         "endChar": 79
       },
       "revId": "63d07d34ec22bc8bc964b68f5a79c013522c047b",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "56a175de_afc8dff3",
         "filename": "extensions/EGL_ANGLE_d3d_texture_client_buffer.txt",
@@ -44,10 +45,10 @@
         "endChar": 79
       },
       "revId": "63d07d34ec22bc8bc964b68f5a79c013522c047b",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "0db8ea06_b13e3461",
         "filename": "extensions/EGL_ANGLE_d3d_texture_client_buffer.txt",
@@ -68,10 +69,10 @@
         "endChar": 79
       },
       "revId": "63d07d34ec22bc8bc964b68f5a79c013522c047b",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "4f78c2a3_606d227b",
         "filename": "extensions/EGL_ANGLE_d3d_texture_client_buffer.txt",
@@ -92,8 +93,31 @@
         "endChar": 79
       },
       "revId": "63d07d34ec22bc8bc964b68f5a79c013522c047b",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "306482aa_ecdb8796",
+        "filename": "extensions/EGL_ANGLE_d3d_texture_client_buffer.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-12T07:04:20Z",
+      "side": 1,
+      "message": "I chose EGL_D3D11_TEXTURE_PLANE_ANGLE for this.",
+      "parentUuid": "4f78c2a3_606d227b",
+      "range": {
+        "startLine": 82,
+        "startChar": 5,
+        "endLine": 85,
+        "endChar": 79
+      },
+      "revId": "63d07d34ec22bc8bc964b68f5a79c013522c047b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
