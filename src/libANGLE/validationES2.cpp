@@ -6296,6 +6296,11 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
         return false;
     }
 
+    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
+    {
+        return false;
+    }
+
     // EXT_multisampled_render_to_texture returns INVALID_OPERATION when a sample number higher than
     // the maximum sample number supported by this format is passed.
     // The TextureCaps::getMaxSamples method is only guarenteed to be valid when the context is ES3.
@@ -6309,11 +6314,6 @@ bool ValidateFramebufferTexture2DMultisampleEXT(const Context *context,
             context->validationError(GL_INVALID_OPERATION, kSamplesOutOfRange);
             return false;
         }
-    }
-
-    if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))
-    {
-        return false;
     }
 
     // Unless EXT_multisampled_render_to_texture2 is enabled, only color attachment 0 can be used.
