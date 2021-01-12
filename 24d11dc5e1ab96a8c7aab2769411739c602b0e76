@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4903c1a3_bd0e3d91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T15:23:21Z",
+      "side": 1,
+      "message": "I think it\u0027s important to avoid breaking the render pass. The entire raison-d\u0027etre of this extension is to avoid that.\n\nFrom your example, the render pass will have **3** subpasses, one for each draw call. In implementation, a subpass is added when switching between nonfetch and fetch and vice versa, also when changing the bindings for the input attachments even when using the same program (1). You would need to keep track of the number of subpasses in the render pass desc (there\u0027s already mechanism for that there), and when creating the render pass proper (InitializeRenderPassFromDesc()), build the dependencies. Probably not worth tracking the details of the dependency in render pass desc and just use \"color+depth+stencil write -\u003e color+depth+stencil\" read dependencies everywhere.\n\n(1) another test for this is needed: draw with non-fetch program, draw with fetch program using some input attachment, draw with fetch program using some other input attachment. Yet another test could be: draw with non-fetch program, draw with fetch program 1 using some input attachment, draw with fetch program 2 using same input attachment.\n\nBy the way, you can add a \"subpass count\" performance counter (struct RenderPassPerfCounters) and duplicate some of these tests in VulkanPerformanceCounterTest.cpp to verify that the number of subpasses that are generated are correct (for example, the second test in (1) should use 2 subpasses, not 3).",
+      "parentUuid": "43973596_dc0df187",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
