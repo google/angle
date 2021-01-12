@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b81bb139_4d44facf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T15:42:25Z",
+      "side": 1,
+      "message": "Ok, let\u0027s land this and if the roll breaks, maybe we can just fix it.",
+      "parentUuid": "843504e2_5cb9d551",
+      "revId": "87e09569654a66c54bef4b559418dfb043dfba11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "904c5190_0a45bcc5",
@@ -66,6 +84,30 @@
       "writtenOn": "2021-01-12T15:29:58Z",
       "side": 1,
       "message": "This should remain as is, right?",
+      "range": {
+        "startLine": 416,
+        "startChar": 10,
+        "endLine": 416,
+        "endChar": 16
+      },
+      "revId": "87e09569654a66c54bef4b559418dfb043dfba11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b043b72_46bb7d22",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T15:42:25Z",
+      "side": 1,
+      "message": "There\u0027s no functional change in this CL. Probably yes, but I\u0027m not familiar with this.",
+      "parentUuid": "8e7125a2_73218040",
       "range": {
         "startLine": 416,
         "startChar": 10,
