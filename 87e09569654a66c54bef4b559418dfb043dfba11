@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98ab6bfc_1294db24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T04:19:18Z",
+      "side": 1,
+      "message": "@Brian, any way I can verify this won\u0027t break the Skia roll again?",
+      "revId": "87e09569654a66c54bef4b559418dfb043dfba11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "904c5190_0a45bcc5",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-12T04:19:18Z",
+      "side": 1,
+      "message": "Just to confirm, this is what you meant Jamie, right?",
+      "revId": "87e09569654a66c54bef4b559418dfb043dfba11",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
