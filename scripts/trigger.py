@@ -72,24 +72,23 @@ def main():
 
     isolate_cmd_path = os.path.join('tools', 'luci-go', 'isolate')
     isolate_file = os.path.join(out_file_path, '%s.isolate' % args.test)
-    isolated_file = os.path.join(out_file_path, '%s.isolated' % args.test)
+    archive_file = os.path.join(out_file_path, '%s.archive.json' % args.test)
 
     isolate_args = [
-        isolate_cmd_path, 'archive', '-I', 'https://isolateserver.appspot.com', '-i', isolate_file,
-        '-s', isolated_file
+        isolate_cmd_path, 'archive', '-i', isolate_file, '-cas-instance', 'chromium-swarm',
+        '-dump-json', archive_file
     ]
     logging.info('Invoking isolate: %s' % ' '.join(isolate_args))
     subprocess.check_call(isolate_args)
-    with open(isolated_file, 'rb') as f:
-        sha = hashlib.sha1(f.read()).hexdigest()
+    with open(archive_file) as f:
+        digest = json.load(f).get(args.test)
 
-    logging.info('Got an isolated SHA of %s' % sha)
+    logging.info('Got an CAS digest %s' % digest)
     swarming_script_path = os.path.join('tools', 'luci-go', 'swarming')
 
     swarming_args = [
-        swarming_script_path, 'trigger', '-S', 'chromium-swarm.appspot.com', '-I',
-        'https://isolateserver.appspot.com', '-d', 'os=' + args.os_dim, '-d', 'pool=' + args.pool,
-        '-s', sha
+        swarming_script_path, 'trigger', '-S', 'chromium-swarm.appspot.com', '-d',
+        'os=' + args.os_dim, '-d', 'pool=' + args.pool, '-digest', digest
     ]
 
     # Set priority. Don't abuse this!
