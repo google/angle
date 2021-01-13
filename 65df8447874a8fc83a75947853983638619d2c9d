@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "088af6d8_dc2bb5fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-13T23:16:53Z",
+      "side": 1,
+      "message": "Here is what ios_framework_bundle doc says:\n\n#     public_headers:\n#         (optional) list of paths to header file that needs to be copied\n#         into the framework bundle Headers subdirectory. If omitted or\n#         empty then the Headers subdirectory is not created.\n\nLooks like you can include files from a different bundle only if these files are in the Headers subdirectory in the bundle?\nhttps://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPFrameworks/Concepts/FrameworkAnatomy.html\n\nSo, IMO, defining \"public_headers\" variable is unavoidable.",
+      "parentUuid": "8e677b98_9382819c",
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "743b712f_1f1aab91",
         "filename": "gni/angle.gni",
         "patchSetId": 1
