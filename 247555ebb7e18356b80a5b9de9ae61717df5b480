@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "247555ebb7e18356b80a5b9de9ae61717df5b480",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68d67c87_985a2c1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T15:36:41Z",
+      "side": 1,
+      "message": "Thanks Tim. Can we change this to be a runtime \"if\" instead and prevent this kind of error in the future?",
+      "revId": "247555ebb7e18356b80a5b9de9ae61717df5b480",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
