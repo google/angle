@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "352062d28d977e05fa462800e7dd33ad5d024033",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95f1866f_590a6001",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-13T02:49:13Z",
+      "side": 1,
+      "message": "Use LimitToInt, so GL queries with `int` type don\u0027t get a negative number (not that billions of attachments is possible, but still).",
+      "range": {
+        "startLine": 944,
+        "startChar": 8,
+        "endLine": 944,
+        "endChar": 27
+      },
+      "revId": "352062d28d977e05fa462800e7dd33ad5d024033",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
