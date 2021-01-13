@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8e677b98_9382819c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-13T22:37:17Z",
+      "side": 1,
+      "message": "I don\u0027t see where changing deps to public_deps would fix the issue.\nCould you point this out?\n\nRegarding your suggestion to fix this in ios/rules.gni - I think the private deps are intentional, otherwise I don\u0027t see a reason to create _framework_headers target, if you could just include the sources.",
+      "parentUuid": "5ea71e04_3c3d6fdc",
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "743b712f_1f1aab91",
         "filename": "gni/angle.gni",
         "patchSetId": 1
