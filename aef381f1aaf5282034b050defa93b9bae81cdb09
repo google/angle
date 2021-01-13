@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "396ac45c_32e94f75",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T20:42:19Z",
+      "side": 1,
+      "message": "LGTM. I\u0027m surprised at this error as we compile with VS2019 and have this warning enabled.",
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd252a9a_808534b4",
+        "filename": "AUTHORS",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T20:42:19Z",
+      "side": 1,
+      "message": "can you please also update CONTRIBUTORS with your company section?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
