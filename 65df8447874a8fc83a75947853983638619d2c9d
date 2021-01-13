@@ -61,6 +61,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8f1a6303_83271871",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-13T21:32:12Z",
+      "side": 1,
+      "message": "The \"specific libglesv2_headers target\" is created by template(\"ios_framework_bundle\") and is named libGLESv2_framework_framework_headers.\nHere I make it a public_deps of libGLESv2, so that anyone who depends on libGLESv2 also has access to it\u0027s headers.\n\nWhy do you think the issue is specific? This applies to any wannabe shared_library on iOS.",
+      "parentUuid": "743b712f_1f1aab91",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 309,
+        "endChar": 7
+      },
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "241ad681_50905c2f",
         "filename": "src/libGLESv2.gni",
         "patchSetId": 1
@@ -72,6 +96,30 @@
       "writtenOn": "2021-01-13T21:18:20Z",
       "side": 1,
       "message": "For consistency we can use all of the headers in libglesv2 and just call this libglesv2_headers. There\u0027s no real public/private separation here. As it stands only using 4 of the headers is a bit selective.",
+      "range": {
+        "startLine": 524,
+        "startChar": 17,
+        "endLine": 524,
+        "endChar": 46
+      },
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1560a3c8_d67c4f18",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-13T21:32:12Z",
+      "side": 1,
+      "message": "I don\u0027t mind adding the rest, but looks like they are not used outside of libGLESv2",
+      "parentUuid": "241ad681_50905c2f",
       "range": {
         "startLine": 524,
         "startChar": 17,
