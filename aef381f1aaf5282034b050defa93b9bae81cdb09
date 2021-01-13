@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8624ff01_182b3cc0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1483077
+      },
+      "writtenOn": "2021-01-13T21:38:44Z",
+      "side": 1,
+      "message": "I *think* it started happening with the newer VS2019. We\u0027ve not had this until recently.\n\nAlso, just a thought since I was looking at this, wouldn\u0027t it be better (in general) to do something like:\n\nint E2 \u003d 1 \u003c\u003c (inputData-\u003eE - g_sharedexp_bias - g_sharedexp_mantissabits)\n*red \u003d inputData-\u003eR * E2;\n*green \u003d inputData-\u003eG * E2;\n*blue \u003d inputData-\u003eB * E2;\n\nThe pow(2.0f, x) just seems a bit overkill.",
+      "parentUuid": "396ac45c_32e94f75",
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd252a9a_808534b4",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-01-13T20:42:19Z",
       "side": 1,
       "message": "can you please also update CONTRIBUTORS with your company section?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5309add_fd5763bc",
+        "filename": "AUTHORS",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1483077
+      },
+      "writtenOn": "2021-01-13T21:38:44Z",
+      "side": 1,
+      "message": "So both AUTHORS and CONTRIBUTORS with the same details?",
+      "parentUuid": "fd252a9a_808534b4",
       "range": {
         "startLine": 39,
         "startChar": 0,
