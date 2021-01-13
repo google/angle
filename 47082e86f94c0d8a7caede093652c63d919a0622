@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "41b9f2a6_93e517b9",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3856,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-13T19:56:35Z",
+      "side": 1,
+      "message": "Rebase. There were practically no conflicts.",
+      "parentUuid": "9cb2c0d8_356ed71a",
+      "range": {
+        "startLine": 3856,
+        "startChar": 38,
+        "endLine": 3856,
+        "endChar": 51
+      },
+      "revId": "47082e86f94c0d8a7caede093652c63d919a0622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68af4276_aa0c70dd",
@@ -61,6 +85,30 @@
       "writtenOn": "2021-01-07T20:34:35Z",
       "side": 1,
       "message": "all this is going to conflict with my work unfortunately.",
+      "range": {
+        "startLine": 89,
+        "startChar": 23,
+        "endLine": 89,
+        "endChar": 48
+      },
+      "revId": "47082e86f94c0d8a7caede093652c63d919a0622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbef6009_d27782cf",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-13T19:56:35Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "68af4276_aa0c70dd",
       "range": {
         "startLine": 89,
         "startChar": 23,
