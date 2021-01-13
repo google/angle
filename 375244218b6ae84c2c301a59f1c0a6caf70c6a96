@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ea5b2ab_5324016e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-13T19:03:59Z",
+      "side": 1,
+      "message": "Thanks! Updated the test to check for format support before running.",
+      "revId": "375244218b6ae84c2c301a59f1c0a6caf70c6a96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
