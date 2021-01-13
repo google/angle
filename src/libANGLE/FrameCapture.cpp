@@ -2776,7 +2776,9 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             CaptureFramebufferAttachment(setupCalls, replayState, *stencilAttachment);
         }
 
-        // TODO(jmadill): Draw buffer states. http://anglebug.com/3662
+        const std::vector<GLenum> &drawBufferStates = framebuffer->getDrawBufferStates();
+        cap(CaptureDrawBuffers(replayState, true, static_cast<GLsizei>(drawBufferStates.size()),
+                               drawBufferStates.data()));
     }
 
     // Capture framebuffer bindings.
