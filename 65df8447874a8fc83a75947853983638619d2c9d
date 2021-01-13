@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "358f5329_85b83c0e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T21:18:20Z",
+      "side": 1,
+      "message": "I don\u0027t understand how/why iOS is so different. I think there\u0027s something subtle I misunderstand here. I\u0027m hopefuly we can do it without needing to introduce a public headers concept. Because I already coded a bunch of \"headers\" targets to fix gn check.",
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "743b712f_1f1aab91",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 309,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T21:18:20Z",
+      "side": 1,
+      "message": "this is a bit too general for a specific issue. I\u0027d suggest just making a specific libglesv2_headers target or template target and making that a public_deps of the libGLESv2 specializations.",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 309,
+        "endChar": 7
+      },
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "241ad681_50905c2f",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T21:18:20Z",
+      "side": 1,
+      "message": "For consistency we can use all of the headers in libglesv2 and just call this libglesv2_headers. There\u0027s no real public/private separation here. As it stands only using 4 of the headers is a bit selective.",
+      "range": {
+        "startLine": 524,
+        "startChar": 17,
+        "endLine": 524,
+        "endChar": 46
+      },
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
