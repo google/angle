@@ -34,6 +34,23 @@
       "parentUuid": "d3e47983_ac08b244",
       "revId": "a484307a177391f893523c7495ca711b927eb8b9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0435e2b2_fe1054f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T17:03:56Z",
+      "side": 1,
+      "message": "Feel free to approve in that case Shabi.",
+      "revId": "a484307a177391f893523c7495ca711b927eb8b9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
