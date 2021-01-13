@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5ea71e04_3c3d6fdc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T22:02:23Z",
+      "side": 1,
+      "message": "This is a bug in ios/rules.gni - it should be using public_deps to ensure that the sources are visible between angle:libfeature_support_framework_signed_bundle, angle:libfeature_support_framework_shared_library, and angle:libfeature_support_framework_arch_shared_library_sources. The file is pretty complex so it\u0027s not clear exactly which deps should be changed to public_deps.\n\nWhy wasn\u0027t this detected? Chrome doesn\u0027t use gn check in many places and ANGLE does.\n\nI suggest instead working around this by overriding deps -\u003e public_deps in angle.gni test target for ios only and filing a bug/todo that we should remove this if the upstream bug ever gets fixed.",
+      "parentUuid": "66b52a5e_d4b2a9a3",
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "743b712f_1f1aab91",
         "filename": "gni/angle.gni",
         "patchSetId": 1
