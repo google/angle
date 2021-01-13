@@ -68,6 +68,30 @@
       },
       "revId": "6fd32c40e8b00a41592e70988c134ce994107fd9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dbb9e00_db43fad0",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2834,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-13T18:53:38Z",
+      "side": 1,
+      "message": "1, I think WebView doesn\u0027t create EGLSurface, only Android does. So there is not requirement for it right now, I believe. Maybe boliu@ can confirm it.\n2. For reducing the complicity. If we allow switching from and to externalContext, it is unclear when we need to save and restore native context state. For example:\n1. Null -\u003e Normal ANGLE context\n2. Normal ANGLE context -\u003e External context\n3. ExternalContext -\u003e Normal ANGLE context\n4. Normail ANGLE context -\u003e Null.\n\nand",
+      "parentUuid": "916403c6_68fc313b",
+      "range": {
+        "startLine": 2831,
+        "startChar": 4,
+        "endLine": 2834,
+        "endChar": 69
+      },
+      "revId": "6fd32c40e8b00a41592e70988c134ce994107fd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
