@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "214234e4_0b4c8955",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T20:25:20Z",
+      "side": 1,
+      "message": "how about LastPreFragmentStage to be fully explicit",
+      "range": {
+        "startLine": 1167,
+        "startChar": 11,
+        "endLine": 1167,
+        "endChar": 39
+      },
+      "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
