@@ -1243,6 +1243,7 @@ TEST_P(D3DTextureTest, ClearTextureImage)
 
     glDeleteFramebuffers(1, &fbo);
     glDeleteTextures(1, &texture);
+    eglDestroyImageKHR(display, image);
 
     d3d11_texture->Release();
 }
@@ -1292,6 +1293,7 @@ TEST_P(D3DTextureTest, NonRenderableTextureImage)
 
     glDeleteFramebuffers(1, &fbo);
     glDeleteTextures(1, &texture);
+    eglDestroyImageKHR(display, image);
 
     d3d11_texture->Release();
 }
@@ -1426,6 +1428,82 @@ TEST_P(D3DTextureTest, RGBEmulationTextureImage)
     glDeleteRenderbuffers(1, &rgbaRbo);
     glDeleteFramebuffers(1, &fbo);
     glDeleteTextures(1, &texture);
+    eglDestroyImageKHR(display, image);
+
+    d3d11_texture->Release();
+}
+
+TEST_P(D3DTextureTest, TextureArrayImage)
+{
+    ANGLE_SKIP_TEST_IF(!valid() || !IsD3D11());
+
+    EGLWindow *window  = getEGLWindow();
+    EGLDisplay display = window->getDisplay();
+
+    window->makeCurrent();
+
+    const UINT bufferSize = 32;
+    const UINT arraySize  = 4;
+
+    ID3D11Texture2D *d3d11_texture = nullptr;
+    CD3D11_TEXTURE2D_DESC desc(DXGI_FORMAT_R8G8B8A8_UNORM, bufferSize, bufferSize, arraySize, 1,
+                               D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET);
+    EXPECT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, nullptr, &d3d11_texture)));
+
+    const unsigned char kRFill = 0x12;
+    const unsigned char kGFill = 0x23;
+    const unsigned char kBFill = 0x34;
+    const unsigned char kAFill = 0x45;
+
+    std::vector<unsigned char> imageData(bufferSize * bufferSize * 4, 0);
+    for (size_t i = 0; i < imageData.size(); i += 4)
+    {
+        imageData[i]     = kRFill;
+        imageData[i + 1] = kGFill;
+        imageData[i + 2] = kBFill;
+        imageData[i + 3] = kAFill;
+    }
+
+    ID3D11DeviceContext *context = nullptr;
+    mD3D11Device->GetImmediateContext(&context);
+    ASSERT_NE(context, nullptr);
+
+    D3D11_BOX dstBox = {0, 0, 0, bufferSize, bufferSize, 1};
+    context->UpdateSubresource(d3d11_texture, arraySize - 1, &dstBox, imageData.data(),
+                               bufferSize * 4, imageData.size());
+
+    const EGLint attribs[] = {EGL_D3D11_TEXTURE_ARRAY_SLICE_ANGLE, arraySize - 1, EGL_NONE};
+    EGLImage image         = eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
+                                       static_cast<EGLClientBuffer>(d3d11_texture), attribs);
+    ASSERT_EGL_SUCCESS();
+    ASSERT_NE(image, EGL_NO_IMAGE_KHR);
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    ASSERT_GL_NO_ERROR();
+
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_2D, image);
+    ASSERT_GL_NO_ERROR();
+
+    GLuint fbo;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_EQ(glCheckFramebufferStatus(GL_FRAMEBUFFER),
+              static_cast<unsigned>(GL_FRAMEBUFFER_COMPLETE));
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_EQ(static_cast<GLint>(bufferSize) / 2, static_cast<GLint>(bufferSize) / 2, kRFill,
+                    kGFill, kBFill, kAFill);
+
+    glDeleteFramebuffers(1, &fbo);
+    glDeleteTextures(1, &texture);
+    eglDestroyImageKHR(display, image);
 
     d3d11_texture->Release();
 }
@@ -1634,10 +1712,13 @@ class D3DTextureYUVTest : public D3DTextureTest
         }
         ASSERT_GL_NO_ERROR();
 
-        glDeleteTextures(1, &uvTexture);
+        glDeleteProgram(textureExternalOESProgram);
         glDeleteTextures(1, &yTexture);
+        glDeleteTextures(1, &uvTexture);
         glDeleteFramebuffers(1, &fbo);
         glDeleteRenderbuffers(1, &rbo);
+        eglDestroyImageKHR(display, yImage);
+        eglDestroyImageKHR(display, uvImage);
 
         d3d11_texture->Release();
     }

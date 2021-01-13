@@ -322,7 +322,7 @@ egl::Error DisplayD3D::validateClientBuffer(const egl::Config *config,
         case EGL_D3D_TEXTURE_ANGLE:
             return mRenderer->getD3DTextureInfo(config, static_cast<IUnknown *>(clientBuffer),
                                                 attribs, nullptr, nullptr, nullptr, nullptr,
-                                                nullptr);
+                                                nullptr, nullptr);
 
         default:
             return DisplayImpl::validateClientBuffer(config, buftype, clientBuffer, attribs);
@@ -340,7 +340,7 @@ egl::Error DisplayD3D::validateImageClientBuffer(const gl::Context *context,
         {
             return mRenderer->getD3DTextureInfo(nullptr, static_cast<IUnknown *>(clientBuffer),
                                                 attribs, nullptr, nullptr, nullptr, nullptr,
-                                                nullptr);
+                                                nullptr, nullptr);
         }
 
         default:

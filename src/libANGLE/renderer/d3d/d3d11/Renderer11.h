@@ -108,7 +108,8 @@ class Renderer11 : public RendererD3D
                                  EGLint *height,
                                  GLsizei *samples,
                                  gl::Format *glFormat,
-                                 const angle::Format **angleFormat) const override;
+                                 const angle::Format **angleFormat,
+                                 UINT *arraySlice) const override;
     egl::Error validateShareHandle(const egl::Config *config,
                                    HANDLE shareHandle,
                                    const egl::AttributeMap &attribs) const override;

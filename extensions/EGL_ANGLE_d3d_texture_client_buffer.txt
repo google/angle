@@ -87,6 +87,9 @@ Additions to Chapter 2 of the EGL 1.2 Specification (EGL Operation)
     specified plane of <buffer>. See table egl.restrictions for acceptable
     values.
 
+    If EGL_D3D11_TEXTURE_ARRAY_SLICE_ANGLE is specified, it is used to access
+    the specified array slice of the texture array <buffer>.
+
     If EGL_TEXTURE_OFFSET_X_ANGLE or EGL_TEXTURE_OFFSET_Y_ANGLE are specified,
     they must be non-negative and are used to offset all rendering into the
     surface including blits, clears and draws.
@@ -199,7 +202,7 @@ Issues
 
     1. What renderers allow the use of a multi-sampled texture?
 
-    PROPOSED: Mutli-sampled texture support is currently limited to D3D11.
+    PROPOSED: Multi-sampled texture support is currently limited to D3D11.
     Additionally, the client is responsible for resolving the texture.
 
     2. How does this extension interact with EXT_sRGB_write_control?
@@ -229,6 +232,8 @@ Issues
     correct rendering in that case.
 
 Revision History
+
+    Version 8, 2021/01/13 - added support for texture array.
 
     Version 7, 2021/01/12 - added support for NV12/P010/P016 planar formats.
 

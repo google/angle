@@ -732,7 +732,8 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
                                         EGLint *height,
                                         GLsizei *samples,
                                         gl::Format *glFormat,
-                                        const angle::Format **angleFormat) const
+                                        const angle::Format **angleFormat,
+                                        UINT *arraySlice) const
 {
     IDirect3DTexture9 *texture = nullptr;
     if (FAILED(d3dTexture->QueryInterface(&texture)))
@@ -799,6 +800,11 @@ egl::Error Renderer9::getD3DTextureInfo(const egl::Config *configuration,
     {
 
         *angleFormat = &d3dFormatInfo.info();
+    }
+
+    if (arraySlice)
+    {
+        *arraySlice = 0;
     }
 
     return egl::NoError();

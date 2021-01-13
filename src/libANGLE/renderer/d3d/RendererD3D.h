@@ -187,7 +187,8 @@ class RendererD3D : public BufferFactoryD3D
                                          EGLint *height,
                                          GLsizei *samples,
                                          gl::Format *glFormat,
-                                         const angle::Format **angleFormat) const  = 0;
+                                         const angle::Format **angleFormat,
+                                         UINT *arraySlice) const                   = 0;
     virtual egl::Error validateShareHandle(const egl::Config *config,
                                            HANDLE shareHandle,
                                            const egl::AttributeMap &attribs) const = 0;
