@@ -284,6 +284,30 @@
       },
       "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df47cc81_892a0949",
+        "filename": "src/libGLESv2/global_state.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T15:50:17Z",
+      "side": 1,
+      "message": "Ah, you\u0027re right. We need to run this check on every API call, and I misunderstood. Sorry!\n\nThe \"good\" soltuion is to make the D3D11 state manager per-context instead of global. And then when the back-end accesses the single-threaded ID3D11DeviceContext we could force the state update. That would be quite a bit more investment than landing this CL.\n\nSo: at least rename the define to something like ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL or something to make it clearer. And add a TODO/filed issue to track fixing the kludge in the future.",
+      "parentUuid": "e2ab6d53_160bbc98",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 156,
+        "endChar": 5
+      },
+      "revId": "0fb2ee32a2486504df520b742802c673d19d14e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
