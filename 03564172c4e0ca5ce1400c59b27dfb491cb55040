@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56c6716c_5d1494e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-13T02:27:09Z",
+      "side": 1,
+      "message": "PTAL - this is more or less ready now\n\nThe P016 test fails on my machine because D3D claims it\u0027s not supported by the device despite being a required format for feature level 11.0.  Calling CheckFormatSupport() for P016 also fails mysteriously with E_FAIL.  I\u0027m hoping this is just an issue with my GPU/driver (Nvidia GTX 1050 Ti).",
+      "revId": "03564172c4e0ca5ce1400c59b27dfb491cb55040",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
