@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82ce527b_cecaf991",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-13T17:21:13Z",
+      "side": 1,
+      "message": "LGTM, looks like our tests need some early-outs if texture creation fails.",
+      "revId": "b6451202958a2cbd97ada5c7c3e6b513d8917f98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
