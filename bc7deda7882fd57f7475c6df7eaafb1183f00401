@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66a663b1_220cfb1a",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 917,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T20:51:05Z",
+      "side": 1,
+      "message": "why even use the bool? the validation shouldn\u0027t be done here.",
+      "range": {
+        "startLine": 917,
+        "startChar": 23,
+        "endLine": 917,
+        "endChar": 52
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55981d48_200d84d2",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T20:51:05Z",
+      "side": 1,
+      "message": "can we instead put these in the exectuable? that way I believe they\u0027ll work with pipelines.",
+      "range": {
+        "startLine": 549,
+        "startChar": 68,
+        "endLine": 549,
+        "endChar": 95
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0623d89f_4a862e75",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T20:51:05Z",
+      "side": 1,
+      "message": "why is 1 the default? comments/concerns?",
+      "range": {
+        "startLine": 601,
+        "startChar": 15,
+        "endLine": 601,
+        "endChar": 32
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10e24b5b_1aa53b44",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T20:51:05Z",
+      "side": 1,
+      "message": "can you move all this and the above logic into a helper that specifically handles secondary output locations?",
+      "range": {
+        "startLine": 615,
+        "startChar": 2,
+        "endLine": 631,
+        "endChar": 9
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
