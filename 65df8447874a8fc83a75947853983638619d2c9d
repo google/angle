@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "66b52a5e_d4b2a9a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-13T21:25:54Z",
+      "side": 1,
+      "message": "If you look at template(\"ios_framework_bundle\") in https://source.chromium.org/chromium/chromium/src/+/master:build/config/ios/rules.gni, it creates a bunch of targets instead of just 1 shared library.\n\nWithout my change, \"gn gen --check\" gives errors like:\n\nERROR at //third_party/angle/src/feature_support_util/feature_support_util_unittest.cpp:12:11: Can\u0027t include this header from here.\n#include \"feature_support_util.h\"\n          ^---------------------\nThe target:\n  //third_party/angle/src/tests:angle_unittests_arch_executable_sources\nis including a file from the target:\n  //third_party/angle:libfeature_support_framework_arch_shared_library_sources\n\nIt\u0027s usually best to depend directly on the destination target.\nIn some cases, the destination target is considered a subcomponent\nof an intermediate target. In this case, the intermediate target\nshould depend publicly on the destination to forward the ability\nto include headers.\n\nDependency chain (there may also be others):\n  //third_party/angle/src/tests:angle_unittests_arch_executable_sources --\u003e\n  //third_party/angle:libfeature_support --\u003e\n  //third_party/angle:libfeature_support_framework+bundle --\u003e\n  //third_party/angle:libfeature_support_framework --\u003e\n  //third_party/angle:libfeature_support_framework_signed_bundle --\u003e\n  //third_party/angle:libfeature_support_framework_shared_library --[private]--\u003e\n  //third_party/angle:libfeature_support_framework_arch_shared_library --[private]--\u003e\n  //third_party/angle:libfeature_support_framework_arch_shared_library_sources\n\nBy defining public_headers variable, I get ios_framework_bundle to also create *_framework_headers target. Then I add it to public_deps of the target which is the shared_library on non-iOS",
+      "parentUuid": "358f5329_85b83c0e",
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "743b712f_1f1aab91",
         "filename": "gni/angle.gni",
         "patchSetId": 1
