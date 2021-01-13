@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "62cec88e_4846ae03",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T21:44:48Z",
+      "side": 1,
+      "message": "Ah yes, can you make that change? This code is actually quite bad.",
+      "parentUuid": "8624ff01_182b3cc0",
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd252a9a_808534b4",
@@ -73,6 +91,30 @@
       "side": 1,
       "message": "So both AUTHORS and CONTRIBUTORS with the same details?",
       "parentUuid": "fd252a9a_808534b4",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a5a107d_9ac3cae7",
+        "filename": "AUTHORS",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T21:44:48Z",
+      "side": 1,
+      "message": "AUTHORS just has the company name, CONTRIBUTORS has a section for your company + all company members. You\u0027ll see if you look at the file. Just follow the pattern.",
+      "parentUuid": "d5309add_fd5763bc",
       "range": {
         "startLine": 39,
         "startChar": 0,
