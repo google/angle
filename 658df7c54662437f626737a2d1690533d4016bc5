@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4386e5f4_89dfafd3",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T16:10:37Z",
+      "side": 1,
+      "message": "Ack, this function is already more powerful than we really need as it can do multiple wildcards. We only really need one at the end, so left it as is.",
+      "parentUuid": "a9e78a85_3d2de642",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 66
+      },
+      "revId": "658df7c54662437f626737a2d1690533d4016bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8f098f2_3e1ded50",
@@ -65,6 +89,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "89a6ff83_b54b1db8",
+        "filename": "src/common/string_utils_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 146,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T16:10:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8f098f2_3e1ded50",
+      "revId": "658df7c54662437f626737a2d1690533d4016bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30e6abba_affeb345",
@@ -78,6 +120,30 @@
       "writtenOn": "2021-01-12T23:10:34Z",
       "side": 1,
       "message": "I\u0027d be happier if this used snprintf",
+      "range": {
+        "startLine": 380,
+        "startChar": 11,
+        "endLine": 380,
+        "endChar": 18
+      },
+      "revId": "658df7c54662437f626737a2d1690533d4016bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52da567a_a972addb",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T16:10:37Z",
+      "side": 1,
+      "message": "Ack, I left it as it\u0027s an internal method and not user-facing so as far as I can see zero risk. (Test-only)",
+      "parentUuid": "30e6abba_affeb345",
       "range": {
         "startLine": 380,
         "startChar": 11,
