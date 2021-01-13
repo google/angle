@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae366271_7cf88d8f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-13T17:46:25Z",
+      "side": 1,
+      "message": "Not saying we do this now, but there is probably some good opportunities for refactoring this struct and using it directly in StateManagerGL to store the current state. That\u0027ll make sure we sync everything that ANGLE knows about/can modify.",
+      "range": {
+        "startLine": 37,
+        "startChar": 7,
+        "endLine": 37,
+        "endChar": 27
+      },
+      "revId": "6fd32c40e8b00a41592e70988c134ce994107fd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "523f2b4c_62109177",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-13T17:46:25Z",
+      "side": 1,
+      "message": "ANGLE requires and always uses VAOs so I don\u0027t think you need to save/restore this, just the vertex array binding. You also don\u0027t need to check for the extension.",
+      "range": {
+        "startLine": 478,
+        "startChar": 4,
+        "endLine": 478,
+        "endChar": 71
+      },
+      "revId": "6fd32c40e8b00a41592e70988c134ce994107fd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "916403c6_68fc313b",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2834,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-13T17:46:25Z",
+      "side": 1,
+      "message": "The intent here is to disallow switching to/from an external context without switching to null first? Can you explain why?",
+      "range": {
+        "startLine": 2831,
+        "startChar": 4,
+        "endLine": 2834,
+        "endChar": 69
+      },
+      "revId": "6fd32c40e8b00a41592e70988c134ce994107fd9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
