@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "296b2017_f5e43fab",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 542,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T17:47:13Z",
+      "side": 1,
+      "message": "Ack, there\u0027s no need to cache it like there is for mLinked right now. So I\u0027d prefer keeping it used only as a local variable. In the next patch I\u0027ll check if I\u0027m using this pattern twice and make it a helper if so.\n\nfyi mLinked is used in draw call validation. Also IIRC it\u0027s not duplicated with anything.",
+      "parentUuid": "7fcf95d9_0e4ade22",
+      "range": {
+        "startLine": 534,
+        "startChar": 0,
+        "endLine": 542,
+        "endChar": 5
+      },
+      "revId": "c0ff685602ec727e3508db77bc7774c6e03970d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a766f8db_ac17cdbe",
