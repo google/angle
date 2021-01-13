@@ -693,15 +693,6 @@ static GLenum GetNativeCompressedFormat(const FunctionsGL *functions,
         }
     }
 
-    if (features.avoidDXT1sRGBTextureFormat.enabled)
-    {
-        if (format == GL_COMPRESSED_SRGB_S3TC_DXT1_EXT)
-        {
-            // Pass GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT instead to workaround driver bug.
-            result = GL_COMPRESSED_SRGB_ALPHA_S3TC_DXT1_EXT;
-        }
-    }
-
     return result;
 }
 
