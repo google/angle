@@ -683,6 +683,7 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
     size_t getChildCount() const final;
     TIntermNode *getChildNode(size_t index) const final;
     bool replaceChildNode(TIntermNode *original, TIntermNode *replacement) override;
+    void replaceAllChildren(const TIntermSequence &newStatements);
 
     // Only intended for initially building the block.
     void appendStatement(TIntermNode *statement);
@@ -793,13 +794,23 @@ class TIntermDeclaration : public TIntermNode, public TIntermAggregateBase
     TIntermSequence *getSequence() override { return &mDeclarators; }
     const TIntermSequence *getSequence() const override { return &mDeclarators; }
 
-    TIntermNode *deepCopy() const override
+    TIntermDeclaration *deepCopy() const override
     {
-        UNREACHABLE();
-        return nullptr;
+        // Note: This is only useful as support for deepCopy of TIntermBlock and TIntermLoop, but is
+        // not sufficient as it will be redeclaring the same TVariable.  If a function body is
+        // duplicated for example, it means that both functions reference the same TVariable pointer
+        // which works, but is technically not correct.  In particular, maps with TVariable * as key
+        // can get confused.
+        //
+        // After deepCopy() is issued, ReplaceVariables must be used to replace every declared
+        // variable with a duplicate.  This is NOT automatically done when deepCopy-ing TIntermBlock
+        // and TIntermLoop nodes.
+        return new TIntermDeclaration(*this);
     }
 
   protected:
+    TIntermDeclaration(const TIntermDeclaration &node);
+
     TIntermSequence mDeclarators;
 };
 

@@ -40,6 +40,67 @@ class ReplaceVariableTraverser : public TIntermTraverser
     const TIntermTyped *const mReplacement;
 };
 
+class ReplaceVariablesTraverser : public TIntermTraverser
+{
+  public:
+    ReplaceVariablesTraverser(const VariableReplacementMap &variableMap)
+        : TIntermTraverser(true, false, false), mVariableMap(variableMap)
+    {}
+
+    void visitSymbol(TIntermSymbol *node) override
+    {
+        auto iter = mVariableMap.find(&node->variable());
+        if (iter != mVariableMap.end())
+        {
+            queueReplacement(iter->second->deepCopy(), OriginalNode::IS_DROPPED);
+        }
+    }
+
+  private:
+    const VariableReplacementMap &mVariableMap;
+};
+
+class GetDeclaratorReplacementsTraverser : public TIntermTraverser
+{
+  public:
+    GetDeclaratorReplacementsTraverser(TSymbolTable *symbolTable,
+                                       VariableReplacementMap *variableMap)
+        : TIntermTraverser(true, false, false, symbolTable), mVariableMap(variableMap)
+    {}
+
+    bool visitDeclaration(Visit visit, TIntermDeclaration *node) override
+    {
+        const TIntermSequence &sequence = *(node->getSequence());
+
+        for (TIntermNode *decl : sequence)
+        {
+            TIntermSymbol *asSymbol = decl->getAsSymbolNode();
+            TIntermBinary *asBinary = decl->getAsBinaryNode();
+
+            if (asBinary != nullptr)
+            {
+                ASSERT(asBinary->getOp() == EOpInitialize);
+                asSymbol = asBinary->getLeft()->getAsSymbolNode();
+            }
+
+            ASSERT(asSymbol);
+            const TVariable &variable = asSymbol->variable();
+
+            ASSERT(mVariableMap->find(&variable) == mVariableMap->end());
+
+            const TVariable *replacementVariable = new TVariable(
+                mSymbolTable, variable.name(), &variable.getType(), variable.symbolType());
+
+            (*mVariableMap)[&variable] = new TIntermSymbol(replacementVariable);
+        }
+
+        return false;
+    }
+
+  private:
+    VariableReplacementMap *mVariableMap;
+};
+
 }  // anonymous namespace
 
 // Replaces every occurrence of a variable with another variable.
@@ -51,6 +112,23 @@ ANGLE_NO_DISCARD bool ReplaceVariable(TCompiler *compiler,
     ReplaceVariableTraverser traverser(toBeReplaced, new TIntermSymbol(replacement));
     root->traverse(&traverser);
     return traverser.updateTree(compiler, root);
+}
+
+ANGLE_NO_DISCARD bool ReplaceVariables(TCompiler *compiler,
+                                       TIntermBlock *root,
+                                       const VariableReplacementMap &variableMap)
+{
+    ReplaceVariablesTraverser traverser(variableMap);
+    root->traverse(&traverser);
+    return traverser.updateTree(compiler, root);
+}
+
+void GetDeclaratorReplacements(TSymbolTable *symbolTable,
+                               TIntermBlock *root,
+                               VariableReplacementMap *variableMap)
+{
+    GetDeclaratorReplacementsTraverser traverser(symbolTable, variableMap);
+    root->traverse(&traverser);
 }
 
 // Replaces every occurrence of a variable with a TIntermNode.

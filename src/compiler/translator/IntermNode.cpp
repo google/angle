@@ -430,6 +430,12 @@ bool TIntermBlock::replaceChildNode(TIntermNode *original, TIntermNode *replacem
     return replaceChildNodeInternal(original, replacement);
 }
 
+void TIntermBlock::replaceAllChildren(const TIntermSequence &newStatements)
+{
+    mStatements.clear();
+    mStatements.insert(mStatements.begin(), newStatements.begin(), newStatements.end());
+}
+
 size_t TIntermFunctionPrototype::getChildCount() const
 {
     return 0;
@@ -459,6 +465,14 @@ TIntermNode *TIntermDeclaration::getChildNode(size_t index) const
 bool TIntermDeclaration::replaceChildNode(TIntermNode *original, TIntermNode *replacement)
 {
     return replaceChildNodeInternal(original, replacement);
+}
+
+TIntermDeclaration::TIntermDeclaration(const TIntermDeclaration &node)
+{
+    for (TIntermNode *node : node.mDeclarators)
+    {
+        mDeclarators.push_back(node->deepCopy());
+    }
 }
 
 bool TIntermAggregateBase::replaceChildNodeInternal(TIntermNode *original, TIntermNode *replacement)

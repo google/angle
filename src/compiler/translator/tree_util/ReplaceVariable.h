@@ -36,6 +36,20 @@ ANGLE_NO_DISCARD bool ReplaceVariableWithTyped(TCompiler *compiler,
                                                const TVariable *toBeReplaced,
                                                const TIntermTyped *replacement);
 
+using VariableReplacementMap = angle::HashMap<const TVariable *, const TIntermTyped *>;
+
+// Replace a set of variables with their corresponding expression.
+ANGLE_NO_DISCARD bool ReplaceVariables(TCompiler *compiler,
+                                       TIntermBlock *root,
+                                       const VariableReplacementMap &variableMap);
+
+// Find all declarators, and replace the TVariable they are declaring with a duplicate.  This is
+// used to support deepCopy of TIntermBlock and TIntermLoop nodes that include declarations.
+// Replacements already present in variableMap are preserved.
+void GetDeclaratorReplacements(TSymbolTable *symbolTable,
+                               TIntermBlock *root,
+                               VariableReplacementMap *variableMap);
+
 // A helper class to keep track of opaque variable re-typing during a pass.  Unlike the above
 // functions, this can be used to replace all opaque variables of a certain type with another in a
 // pass that possibly does other related transformations.  Only opaque variables are supported as

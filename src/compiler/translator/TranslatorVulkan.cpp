@@ -20,16 +20,14 @@
 #include "compiler/translator/OutputVulkanGLSL.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h"
+#include "compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.h"
 #include "compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteAtomicCounters.h"
-
 #include "compiler/translator/tree_ops/vulkan/RewriteCubeMapSamplersAs2DArray.h"
-
 #include "compiler/translator/tree_ops/vulkan/RewriteDfdy.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h"
-
 #include "compiler/translator/tree_ops/vulkan/RewriteStructSamplers.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
@@ -761,8 +759,21 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         return false;
     }
 
-    // TODO(lucferron): Refactor this function to do fewer tree traversals.
-    // http://anglebug.com/2461
+    // If there are any function calls that take array-of-array of opaque uniform parameters, or
+    // other opaque uniforms that need special handling in Vulkan, such as atomic counters,
+    // monomorphize the functions by removing said parameters and replacing them in the function
+    // body with the call arguments.
+    //
+    // This has a few benefits:
+    //
+    // - It dramatically simplifies future transformations w.r.t to samplers in structs, array of
+    //   arrays of opaque types, atomic counters etc.
+    // - Avoids the need for shader*ArrayDynamicIndexing Vulkan features.
+    if (!MonomorphizeUnsupportedFunctionsInVulkanGLSL(this, root, &getSymbolTable()))
+    {
+        return false;
+    }
+
     if (aggregateTypesUsedForUniforms > 0)
     {
         if (!NameEmbeddedStructUniforms(this, root, &getSymbolTable()))
