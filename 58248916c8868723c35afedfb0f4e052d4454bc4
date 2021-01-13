@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "58248916c8868723c35afedfb0f4e052d4454bc4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d238a69e_80ee1b66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-13T00:24:54Z",
+      "side": 1,
+      "message": "jamie, you know why the linux and mac bots continue to fail on \"conformance/glsl/misc/shaders-with-name-conflicts.html\" even after the suppression change?",
+      "revId": "58248916c8868723c35afedfb0f4e052d4454bc4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
