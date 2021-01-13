@@ -16,6 +16,23 @@
       "message": "PTAL\n\nMoved it into a normal conditional.",
       "revId": "27a65e44bd42dd9ea2c2c029e8eaed7928b8efd8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40ee1f47_3eca5388",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-13T17:37:58Z",
+      "side": 1,
+      "message": "re-lgtm",
+      "revId": "27a65e44bd42dd9ea2c2c029e8eaed7928b8efd8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
