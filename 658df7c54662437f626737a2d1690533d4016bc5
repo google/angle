@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a9e78a85_3d2de642",
+        "filename": "src/common/string_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-13T02:51:11Z",
+      "side": 1,
+      "message": "This is shared with the code that does wildcard matching in deqp expectations files.",
+      "parentUuid": "7342cab2_e68a4870",
+      "range": {
+        "startLine": 256,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 66
+      },
+      "revId": "658df7c54662437f626737a2d1690533d4016bc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d8f098f2_3e1ded50",
         "filename": "src/common/string_utils_unittest.cpp",
         "patchSetId": 2
