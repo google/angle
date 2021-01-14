@@ -2825,15 +2825,15 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         gl::ShaderProgramID id     = {programIter.first};
         const gl::Program *program = programIter.second;
 
-        // Get last compiled shader source.
-        const ProgramSources &linkedSources =
-            context->getShareGroup()->getFrameCaptureShared()->getProgramSources(id);
-
         // Unlinked programs don't have an executable. Thus they don't need to be linked.
         if (!program->isLinked())
         {
             continue;
         }
+
+        // Get last linked shader source.
+        const ProgramSources &linkedSources =
+            context->getShareGroup()->getFrameCaptureShared()->getProgramSources(id);
 
         cap(CaptureCreateProgram(replayState, true, id.value));
 
