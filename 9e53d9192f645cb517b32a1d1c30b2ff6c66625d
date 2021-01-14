@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b516c813_36dfab0d",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1304760
+      },
+      "writtenOn": "2021-01-14T13:23:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c64202e_0133b8b4",
+      "range": {
+        "startLine": 248,
+        "startChar": 8,
+        "endLine": 248,
+        "endChar": 15
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "04307520_29e501c1",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-01-11T15:42:26Z",
       "side": 1,
       "message": "probably we should just switch to target_os instead of using current_os",
+      "range": {
+        "startLine": 84,
+        "startChar": 31,
+        "endLine": 84,
+        "endChar": 41
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "765e6755_7ab993d0",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1304760
+      },
+      "writtenOn": "2021-01-14T13:23:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "04307520_29e501c1",
       "range": {
         "startLine": 84,
         "startChar": 31,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a02c3136_855ab164",
+        "filename": "src/libANGLE/renderer/d3d/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1304760
+      },
+      "writtenOn": "2021-01-14T13:23:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8f5410f6_020e5cba",
+      "range": {
+        "startLine": 327,
+        "startChar": 10,
+        "endLine": 327,
+        "endChar": 26
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "28502c75_b18e66d7",
@@ -117,6 +189,30 @@
       "writtenOn": "2021-01-11T15:42:26Z",
       "side": 1,
       "message": "how about angle_enable_winuwp?",
+      "range": {
+        "startLine": 331,
+        "startChar": 20,
+        "endLine": 331,
+        "endChar": 37
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ff57f17_92596441",
+        "filename": "src/libANGLE/renderer/d3d/BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 331,
+      "author": {
+        "id": 1304760
+      },
+      "writtenOn": "2021-01-14T13:23:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28502c75_b18e66d7",
       "range": {
         "startLine": 331,
         "startChar": 20,
@@ -150,6 +246,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec9bee23_c0ed0b7b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1304760
+      },
+      "writtenOn": "2021-01-14T13:23:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0b8c7b25_240dfc62",
+      "range": {
+        "startLine": 121,
+        "startChar": 1,
+        "endLine": 121,
+        "endChar": 8
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "58457f34_271cb7fb",
@@ -163,6 +283,30 @@
       "writtenOn": "2021-01-11T15:42:26Z",
       "side": 1,
       "message": "also here - maybe we should just use target_os",
+      "range": {
+        "startLine": 98,
+        "startChar": 6,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "9e53d9192f645cb517b32a1d1c30b2ff6c66625d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e5894a7_3d52991f",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1304760
+      },
+      "writtenOn": "2021-01-14T13:23:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "58457f34_271cb7fb",
       "range": {
         "startLine": 98,
         "startChar": 6,
