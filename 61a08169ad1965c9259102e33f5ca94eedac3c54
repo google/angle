@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "012a3818_ca2a2ec7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-14T21:43:21Z",
+      "side": 1,
+      "message": "Capturing this trace requires hacking CaptureMidExecutionSetup():\n\n            // Check for supported textures\n            ASSERT(index.getType() \u003d\u003d gl::TextureType::_2D ||\n                   index.getType() \u003d\u003d gl::TextureType::_3D ||\n                   index.getType() \u003d\u003d gl::TextureType::_2DArray ||\n                   index.getType() \u003d\u003d gl::TextureType::CubeMap ||\n                   index.getType() \u003d\u003d gl::TextureType::External);  \u003c\u003c--- add this\n\nIt doesn\u0027t actually use the external texture, since we generate an error when it tries to bind the texture, so the trace looks fine.   We\u0027ll need to add support for EGLImages and external textures to get a new capture without the hack.",
+      "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
