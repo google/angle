@@ -1620,7 +1620,7 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     angle::SystemInfo systemInfo;
     bool isGetSystemInfoSuccess = angle::GetSystemInfo(&systemInfo);
-    if (isGetSystemInfoSuccess)
+    if (isGetSystemInfoSuccess && !systemInfo.gpus.empty())
     {
         vendor = systemInfo.gpus[systemInfo.activeGPUIndex].vendorId;
         device = systemInfo.gpus[systemInfo.activeGPUIndex].deviceId;
