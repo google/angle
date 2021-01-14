@@ -25,11 +25,12 @@
 #include "libANGLE/validationGL1_autogen.h"
 #include "libGLESv2/global_state.h"
 
-namespace gl
-{
+using namespace gl;
+
+extern "C" {
 
 // GL 1.0
-void GL_APIENTRY Accum(GLenum op, GLfloat value)
+void GL_APIENTRY GL_Accum(GLenum op, GLfloat value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLAccum, "context = %d, op = %s, value = %f", CID(context),
@@ -51,7 +52,7 @@ void GL_APIENTRY Accum(GLenum op, GLfloat value)
     }
 }
 
-void GL_APIENTRY AlphaFunc(GLenum func, GLfloat ref)
+void GL_APIENTRY GL_AlphaFunc(GLenum func, GLfloat ref)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLAlphaFunc, "context = %d, func = %s, ref = %f", CID(context),
@@ -75,7 +76,7 @@ void GL_APIENTRY AlphaFunc(GLenum func, GLfloat ref)
     }
 }
 
-void GL_APIENTRY Begin(GLenum mode)
+void GL_APIENTRY GL_Begin(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBegin, "context = %d, mode = %s", CID(context),
@@ -97,13 +98,13 @@ void GL_APIENTRY Begin(GLenum mode)
     }
 }
 
-void GL_APIENTRY Bitmap(GLsizei width,
-                        GLsizei height,
-                        GLfloat xorig,
-                        GLfloat yorig,
-                        GLfloat xmove,
-                        GLfloat ymove,
-                        const GLubyte *bitmap)
+void GL_APIENTRY GL_Bitmap(GLsizei width,
+                           GLsizei height,
+                           GLfloat xorig,
+                           GLfloat yorig,
+                           GLfloat xmove,
+                           GLfloat ymove,
+                           const GLubyte *bitmap)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBitmap,
@@ -130,7 +131,7 @@ void GL_APIENTRY Bitmap(GLsizei width,
     }
 }
 
-void GL_APIENTRY BlendFunc(GLenum sfactor, GLenum dfactor)
+void GL_APIENTRY GL_BlendFunc(GLenum sfactor, GLenum dfactor)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendFunc, "context = %d, sfactor = %s, dfactor = %s", CID(context),
@@ -154,7 +155,7 @@ void GL_APIENTRY BlendFunc(GLenum sfactor, GLenum dfactor)
     }
 }
 
-void GL_APIENTRY CallList(GLuint list)
+void GL_APIENTRY GL_CallList(GLuint list)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCallList, "context = %d, list = %u", CID(context), list);
@@ -175,7 +176,7 @@ void GL_APIENTRY CallList(GLuint list)
     }
 }
 
-void GL_APIENTRY CallLists(GLsizei n, GLenum type, const void *lists)
+void GL_APIENTRY GL_CallLists(GLsizei n, GLenum type, const void *lists)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCallLists, "context = %d, n = %d, type = %s, lists = 0x%016" PRIxPTR "",
@@ -198,7 +199,7 @@ void GL_APIENTRY CallLists(GLsizei n, GLenum type, const void *lists)
     }
 }
 
-void GL_APIENTRY Clear(GLbitfield mask)
+void GL_APIENTRY GL_Clear(GLbitfield mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClear, "context = %d, mask = %s", CID(context),
@@ -220,7 +221,7 @@ void GL_APIENTRY Clear(GLbitfield mask)
     }
 }
 
-void GL_APIENTRY ClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+void GL_APIENTRY GL_ClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClearAccum, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -243,7 +244,7 @@ void GL_APIENTRY ClearAccum(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
     }
 }
 
-void GL_APIENTRY ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+void GL_APIENTRY GL_ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClearColor, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -266,7 +267,7 @@ void GL_APIENTRY ClearColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
     }
 }
 
-void GL_APIENTRY ClearDepth(GLdouble depth)
+void GL_APIENTRY GL_ClearDepth(GLdouble depth)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClearDepth, "context = %d, depth = %f", CID(context), depth);
@@ -287,7 +288,7 @@ void GL_APIENTRY ClearDepth(GLdouble depth)
     }
 }
 
-void GL_APIENTRY ClearIndex(GLfloat c)
+void GL_APIENTRY GL_ClearIndex(GLfloat c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClearIndex, "context = %d, c = %f", CID(context), c);
@@ -308,7 +309,7 @@ void GL_APIENTRY ClearIndex(GLfloat c)
     }
 }
 
-void GL_APIENTRY ClearStencil(GLint s)
+void GL_APIENTRY GL_ClearStencil(GLint s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClearStencil, "context = %d, s = %d", CID(context), s);
@@ -329,7 +330,7 @@ void GL_APIENTRY ClearStencil(GLint s)
     }
 }
 
-void GL_APIENTRY ClipPlane(GLenum plane, const GLdouble *equation)
+void GL_APIENTRY GL_ClipPlane(GLenum plane, const GLdouble *equation)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClipPlane, "context = %d, plane = %s, equation = 0x%016" PRIxPTR "",
@@ -352,7 +353,7 @@ void GL_APIENTRY ClipPlane(GLenum plane, const GLdouble *equation)
     }
 }
 
-void GL_APIENTRY Color3b(GLbyte red, GLbyte green, GLbyte blue)
+void GL_APIENTRY GL_Color3b(GLbyte red, GLbyte green, GLbyte blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3b, "context = %d, red = %d, green = %d, blue = %d", CID(context), red,
@@ -375,7 +376,7 @@ void GL_APIENTRY Color3b(GLbyte red, GLbyte green, GLbyte blue)
     }
 }
 
-void GL_APIENTRY Color3bv(const GLbyte *v)
+void GL_APIENTRY GL_Color3bv(const GLbyte *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3bv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -396,7 +397,7 @@ void GL_APIENTRY Color3bv(const GLbyte *v)
     }
 }
 
-void GL_APIENTRY Color3d(GLdouble red, GLdouble green, GLdouble blue)
+void GL_APIENTRY GL_Color3d(GLdouble red, GLdouble green, GLdouble blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3d, "context = %d, red = %f, green = %f, blue = %f", CID(context), red,
@@ -419,7 +420,7 @@ void GL_APIENTRY Color3d(GLdouble red, GLdouble green, GLdouble blue)
     }
 }
 
-void GL_APIENTRY Color3dv(const GLdouble *v)
+void GL_APIENTRY GL_Color3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -440,7 +441,7 @@ void GL_APIENTRY Color3dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY Color3f(GLfloat red, GLfloat green, GLfloat blue)
+void GL_APIENTRY GL_Color3f(GLfloat red, GLfloat green, GLfloat blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3f, "context = %d, red = %f, green = %f, blue = %f", CID(context), red,
@@ -463,7 +464,7 @@ void GL_APIENTRY Color3f(GLfloat red, GLfloat green, GLfloat blue)
     }
 }
 
-void GL_APIENTRY Color3fv(const GLfloat *v)
+void GL_APIENTRY GL_Color3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -484,7 +485,7 @@ void GL_APIENTRY Color3fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY Color3i(GLint red, GLint green, GLint blue)
+void GL_APIENTRY GL_Color3i(GLint red, GLint green, GLint blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3i, "context = %d, red = %d, green = %d, blue = %d", CID(context), red,
@@ -507,7 +508,7 @@ void GL_APIENTRY Color3i(GLint red, GLint green, GLint blue)
     }
 }
 
-void GL_APIENTRY Color3iv(const GLint *v)
+void GL_APIENTRY GL_Color3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -528,7 +529,7 @@ void GL_APIENTRY Color3iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY Color3s(GLshort red, GLshort green, GLshort blue)
+void GL_APIENTRY GL_Color3s(GLshort red, GLshort green, GLshort blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3s, "context = %d, red = %d, green = %d, blue = %d", CID(context), red,
@@ -551,7 +552,7 @@ void GL_APIENTRY Color3s(GLshort red, GLshort green, GLshort blue)
     }
 }
 
-void GL_APIENTRY Color3sv(const GLshort *v)
+void GL_APIENTRY GL_Color3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -572,7 +573,7 @@ void GL_APIENTRY Color3sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY Color3ub(GLubyte red, GLubyte green, GLubyte blue)
+void GL_APIENTRY GL_Color3ub(GLubyte red, GLubyte green, GLubyte blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3ub, "context = %d, red = %d, green = %d, blue = %d", CID(context), red,
@@ -595,7 +596,7 @@ void GL_APIENTRY Color3ub(GLubyte red, GLubyte green, GLubyte blue)
     }
 }
 
-void GL_APIENTRY Color3ubv(const GLubyte *v)
+void GL_APIENTRY GL_Color3ubv(const GLubyte *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3ubv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -616,7 +617,7 @@ void GL_APIENTRY Color3ubv(const GLubyte *v)
     }
 }
 
-void GL_APIENTRY Color3ui(GLuint red, GLuint green, GLuint blue)
+void GL_APIENTRY GL_Color3ui(GLuint red, GLuint green, GLuint blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3ui, "context = %d, red = %u, green = %u, blue = %u", CID(context), red,
@@ -639,7 +640,7 @@ void GL_APIENTRY Color3ui(GLuint red, GLuint green, GLuint blue)
     }
 }
 
-void GL_APIENTRY Color3uiv(const GLuint *v)
+void GL_APIENTRY GL_Color3uiv(const GLuint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3uiv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -660,7 +661,7 @@ void GL_APIENTRY Color3uiv(const GLuint *v)
     }
 }
 
-void GL_APIENTRY Color3us(GLushort red, GLushort green, GLushort blue)
+void GL_APIENTRY GL_Color3us(GLushort red, GLushort green, GLushort blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3us, "context = %d, red = %u, green = %u, blue = %u", CID(context), red,
@@ -683,7 +684,7 @@ void GL_APIENTRY Color3us(GLushort red, GLushort green, GLushort blue)
     }
 }
 
-void GL_APIENTRY Color3usv(const GLushort *v)
+void GL_APIENTRY GL_Color3usv(const GLushort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor3usv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -704,7 +705,7 @@ void GL_APIENTRY Color3usv(const GLushort *v)
     }
 }
 
-void GL_APIENTRY Color4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha)
+void GL_APIENTRY GL_Color4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4b, "context = %d, red = %d, green = %d, blue = %d, alpha = %d",
@@ -727,7 +728,7 @@ void GL_APIENTRY Color4b(GLbyte red, GLbyte green, GLbyte blue, GLbyte alpha)
     }
 }
 
-void GL_APIENTRY Color4bv(const GLbyte *v)
+void GL_APIENTRY GL_Color4bv(const GLbyte *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4bv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -748,7 +749,7 @@ void GL_APIENTRY Color4bv(const GLbyte *v)
     }
 }
 
-void GL_APIENTRY Color4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
+void GL_APIENTRY GL_Color4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4d, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -771,7 +772,7 @@ void GL_APIENTRY Color4d(GLdouble red, GLdouble green, GLdouble blue, GLdouble a
     }
 }
 
-void GL_APIENTRY Color4dv(const GLdouble *v)
+void GL_APIENTRY GL_Color4dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -792,7 +793,7 @@ void GL_APIENTRY Color4dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY Color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+void GL_APIENTRY GL_Color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4f, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -815,7 +816,7 @@ void GL_APIENTRY Color4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha
     }
 }
 
-void GL_APIENTRY Color4fv(const GLfloat *v)
+void GL_APIENTRY GL_Color4fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -836,7 +837,7 @@ void GL_APIENTRY Color4fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY Color4i(GLint red, GLint green, GLint blue, GLint alpha)
+void GL_APIENTRY GL_Color4i(GLint red, GLint green, GLint blue, GLint alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4i, "context = %d, red = %d, green = %d, blue = %d, alpha = %d",
@@ -859,7 +860,7 @@ void GL_APIENTRY Color4i(GLint red, GLint green, GLint blue, GLint alpha)
     }
 }
 
-void GL_APIENTRY Color4iv(const GLint *v)
+void GL_APIENTRY GL_Color4iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -880,7 +881,7 @@ void GL_APIENTRY Color4iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY Color4s(GLshort red, GLshort green, GLshort blue, GLshort alpha)
+void GL_APIENTRY GL_Color4s(GLshort red, GLshort green, GLshort blue, GLshort alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4s, "context = %d, red = %d, green = %d, blue = %d, alpha = %d",
@@ -903,7 +904,7 @@ void GL_APIENTRY Color4s(GLshort red, GLshort green, GLshort blue, GLshort alpha
     }
 }
 
-void GL_APIENTRY Color4sv(const GLshort *v)
+void GL_APIENTRY GL_Color4sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -924,7 +925,7 @@ void GL_APIENTRY Color4sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY Color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
+void GL_APIENTRY GL_Color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4ub, "context = %d, red = %d, green = %d, blue = %d, alpha = %d",
@@ -947,7 +948,7 @@ void GL_APIENTRY Color4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alph
     }
 }
 
-void GL_APIENTRY Color4ubv(const GLubyte *v)
+void GL_APIENTRY GL_Color4ubv(const GLubyte *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4ubv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -968,7 +969,7 @@ void GL_APIENTRY Color4ubv(const GLubyte *v)
     }
 }
 
-void GL_APIENTRY Color4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha)
+void GL_APIENTRY GL_Color4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4ui, "context = %d, red = %u, green = %u, blue = %u, alpha = %u",
@@ -991,7 +992,7 @@ void GL_APIENTRY Color4ui(GLuint red, GLuint green, GLuint blue, GLuint alpha)
     }
 }
 
-void GL_APIENTRY Color4uiv(const GLuint *v)
+void GL_APIENTRY GL_Color4uiv(const GLuint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4uiv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -1012,7 +1013,7 @@ void GL_APIENTRY Color4uiv(const GLuint *v)
     }
 }
 
-void GL_APIENTRY Color4us(GLushort red, GLushort green, GLushort blue, GLushort alpha)
+void GL_APIENTRY GL_Color4us(GLushort red, GLushort green, GLushort blue, GLushort alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4us, "context = %d, red = %u, green = %u, blue = %u, alpha = %u",
@@ -1035,7 +1036,7 @@ void GL_APIENTRY Color4us(GLushort red, GLushort green, GLushort blue, GLushort 
     }
 }
 
-void GL_APIENTRY Color4usv(const GLushort *v)
+void GL_APIENTRY GL_Color4usv(const GLushort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColor4usv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -1056,7 +1057,7 @@ void GL_APIENTRY Color4usv(const GLushort *v)
     }
 }
 
-void GL_APIENTRY ColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
+void GL_APIENTRY GL_ColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColorMask, "context = %d, red = %s, green = %s, blue = %s, alpha = %s",
@@ -1080,7 +1081,7 @@ void GL_APIENTRY ColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboo
     }
 }
 
-void GL_APIENTRY ColorMaterial(GLenum face, GLenum mode)
+void GL_APIENTRY GL_ColorMaterial(GLenum face, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColorMaterial, "context = %d, face = %s, mode = %s", CID(context),
@@ -1104,7 +1105,7 @@ void GL_APIENTRY ColorMaterial(GLenum face, GLenum mode)
     }
 }
 
-void GL_APIENTRY CopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type)
+void GL_APIENTRY GL_CopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum type)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyPixels, "context = %d, x = %d, y = %d, width = %d, height = %d, type = %s",
@@ -1127,7 +1128,7 @@ void GL_APIENTRY CopyPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLe
     }
 }
 
-void GL_APIENTRY CullFace(GLenum mode)
+void GL_APIENTRY GL_CullFace(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCullFace, "context = %d, mode = %s", CID(context),
@@ -1150,7 +1151,7 @@ void GL_APIENTRY CullFace(GLenum mode)
     }
 }
 
-void GL_APIENTRY DeleteLists(GLuint list, GLsizei range)
+void GL_APIENTRY GL_DeleteLists(GLuint list, GLsizei range)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteLists, "context = %d, list = %u, range = %d", CID(context), list, range);
@@ -1171,7 +1172,7 @@ void GL_APIENTRY DeleteLists(GLuint list, GLsizei range)
     }
 }
 
-void GL_APIENTRY DepthFunc(GLenum func)
+void GL_APIENTRY GL_DepthFunc(GLenum func)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDepthFunc, "context = %d, func = %s", CID(context),
@@ -1193,7 +1194,7 @@ void GL_APIENTRY DepthFunc(GLenum func)
     }
 }
 
-void GL_APIENTRY DepthMask(GLboolean flag)
+void GL_APIENTRY GL_DepthMask(GLboolean flag)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDepthMask, "context = %d, flag = %s", CID(context), GLbooleanToString(flag));
@@ -1214,7 +1215,7 @@ void GL_APIENTRY DepthMask(GLboolean flag)
     }
 }
 
-void GL_APIENTRY DepthRange(GLdouble n, GLdouble f)
+void GL_APIENTRY GL_DepthRange(GLdouble n, GLdouble f)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDepthRange, "context = %d, n = %f, f = %f", CID(context), n, f);
@@ -1235,7 +1236,7 @@ void GL_APIENTRY DepthRange(GLdouble n, GLdouble f)
     }
 }
 
-void GL_APIENTRY Disable(GLenum cap)
+void GL_APIENTRY GL_Disable(GLenum cap)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDisable, "context = %d, cap = %s", CID(context),
@@ -1257,7 +1258,7 @@ void GL_APIENTRY Disable(GLenum cap)
     }
 }
 
-void GL_APIENTRY DrawBuffer(GLenum buf)
+void GL_APIENTRY GL_DrawBuffer(GLenum buf)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawBuffer, "context = %d, buf = %s", CID(context),
@@ -1280,7 +1281,7 @@ void GL_APIENTRY DrawBuffer(GLenum buf)
 }
 
 void GL_APIENTRY
-DrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
+GL_DrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawPixels,
@@ -1306,7 +1307,7 @@ DrawPixels(GLsizei width, GLsizei height, GLenum format, GLenum type, const void
     }
 }
 
-void GL_APIENTRY EdgeFlag(GLboolean flag)
+void GL_APIENTRY GL_EdgeFlag(GLboolean flag)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEdgeFlag, "context = %d, flag = %s", CID(context), GLbooleanToString(flag));
@@ -1327,7 +1328,7 @@ void GL_APIENTRY EdgeFlag(GLboolean flag)
     }
 }
 
-void GL_APIENTRY EdgeFlagv(const GLboolean *flag)
+void GL_APIENTRY GL_EdgeFlagv(const GLboolean *flag)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEdgeFlagv, "context = %d, flag = 0x%016" PRIxPTR "", CID(context),
@@ -1349,7 +1350,7 @@ void GL_APIENTRY EdgeFlagv(const GLboolean *flag)
     }
 }
 
-void GL_APIENTRY Enable(GLenum cap)
+void GL_APIENTRY GL_Enable(GLenum cap)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEnable, "context = %d, cap = %s", CID(context),
@@ -1371,7 +1372,7 @@ void GL_APIENTRY Enable(GLenum cap)
     }
 }
 
-void GL_APIENTRY End()
+void GL_APIENTRY GL_End()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEnd, "context = %d", CID(context));
@@ -1392,7 +1393,7 @@ void GL_APIENTRY End()
     }
 }
 
-void GL_APIENTRY EndList()
+void GL_APIENTRY GL_EndList()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEndList, "context = %d", CID(context));
@@ -1413,7 +1414,7 @@ void GL_APIENTRY EndList()
     }
 }
 
-void GL_APIENTRY EvalCoord1d(GLdouble u)
+void GL_APIENTRY GL_EvalCoord1d(GLdouble u)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord1d, "context = %d, u = %f", CID(context), u);
@@ -1434,7 +1435,7 @@ void GL_APIENTRY EvalCoord1d(GLdouble u)
     }
 }
 
-void GL_APIENTRY EvalCoord1dv(const GLdouble *u)
+void GL_APIENTRY GL_EvalCoord1dv(const GLdouble *u)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord1dv, "context = %d, u = 0x%016" PRIxPTR "", CID(context),
@@ -1456,7 +1457,7 @@ void GL_APIENTRY EvalCoord1dv(const GLdouble *u)
     }
 }
 
-void GL_APIENTRY EvalCoord1f(GLfloat u)
+void GL_APIENTRY GL_EvalCoord1f(GLfloat u)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord1f, "context = %d, u = %f", CID(context), u);
@@ -1477,7 +1478,7 @@ void GL_APIENTRY EvalCoord1f(GLfloat u)
     }
 }
 
-void GL_APIENTRY EvalCoord1fv(const GLfloat *u)
+void GL_APIENTRY GL_EvalCoord1fv(const GLfloat *u)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord1fv, "context = %d, u = 0x%016" PRIxPTR "", CID(context),
@@ -1499,7 +1500,7 @@ void GL_APIENTRY EvalCoord1fv(const GLfloat *u)
     }
 }
 
-void GL_APIENTRY EvalCoord2d(GLdouble u, GLdouble v)
+void GL_APIENTRY GL_EvalCoord2d(GLdouble u, GLdouble v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord2d, "context = %d, u = %f, v = %f", CID(context), u, v);
@@ -1520,7 +1521,7 @@ void GL_APIENTRY EvalCoord2d(GLdouble u, GLdouble v)
     }
 }
 
-void GL_APIENTRY EvalCoord2dv(const GLdouble *u)
+void GL_APIENTRY GL_EvalCoord2dv(const GLdouble *u)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord2dv, "context = %d, u = 0x%016" PRIxPTR "", CID(context),
@@ -1542,7 +1543,7 @@ void GL_APIENTRY EvalCoord2dv(const GLdouble *u)
     }
 }
 
-void GL_APIENTRY EvalCoord2f(GLfloat u, GLfloat v)
+void GL_APIENTRY GL_EvalCoord2f(GLfloat u, GLfloat v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord2f, "context = %d, u = %f, v = %f", CID(context), u, v);
@@ -1563,7 +1564,7 @@ void GL_APIENTRY EvalCoord2f(GLfloat u, GLfloat v)
     }
 }
 
-void GL_APIENTRY EvalCoord2fv(const GLfloat *u)
+void GL_APIENTRY GL_EvalCoord2fv(const GLfloat *u)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalCoord2fv, "context = %d, u = 0x%016" PRIxPTR "", CID(context),
@@ -1585,7 +1586,7 @@ void GL_APIENTRY EvalCoord2fv(const GLfloat *u)
     }
 }
 
-void GL_APIENTRY EvalMesh1(GLenum mode, GLint i1, GLint i2)
+void GL_APIENTRY GL_EvalMesh1(GLenum mode, GLint i1, GLint i2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalMesh1, "context = %d, mode = %s, i1 = %d, i2 = %d", CID(context),
@@ -1607,7 +1608,7 @@ void GL_APIENTRY EvalMesh1(GLenum mode, GLint i1, GLint i2)
     }
 }
 
-void GL_APIENTRY EvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2)
+void GL_APIENTRY GL_EvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalMesh2, "context = %d, mode = %s, i1 = %d, i2 = %d, j1 = %d, j2 = %d",
@@ -1630,7 +1631,7 @@ void GL_APIENTRY EvalMesh2(GLenum mode, GLint i1, GLint i2, GLint j1, GLint j2)
     }
 }
 
-void GL_APIENTRY EvalPoint1(GLint i)
+void GL_APIENTRY GL_EvalPoint1(GLint i)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalPoint1, "context = %d, i = %d", CID(context), i);
@@ -1651,7 +1652,7 @@ void GL_APIENTRY EvalPoint1(GLint i)
     }
 }
 
-void GL_APIENTRY EvalPoint2(GLint i, GLint j)
+void GL_APIENTRY GL_EvalPoint2(GLint i, GLint j)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEvalPoint2, "context = %d, i = %d, j = %d", CID(context), i, j);
@@ -1672,7 +1673,7 @@ void GL_APIENTRY EvalPoint2(GLint i, GLint j)
     }
 }
 
-void GL_APIENTRY FeedbackBuffer(GLsizei size, GLenum type, GLfloat *buffer)
+void GL_APIENTRY GL_FeedbackBuffer(GLsizei size, GLenum type, GLfloat *buffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFeedbackBuffer,
@@ -1696,7 +1697,7 @@ void GL_APIENTRY FeedbackBuffer(GLsizei size, GLenum type, GLfloat *buffer)
     }
 }
 
-void GL_APIENTRY Finish()
+void GL_APIENTRY GL_Finish()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFinish, "context = %d", CID(context));
@@ -1717,7 +1718,7 @@ void GL_APIENTRY Finish()
     }
 }
 
-void GL_APIENTRY Flush()
+void GL_APIENTRY GL_Flush()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFlush, "context = %d", CID(context));
@@ -1738,7 +1739,7 @@ void GL_APIENTRY Flush()
     }
 }
 
-void GL_APIENTRY Fogf(GLenum pname, GLfloat param)
+void GL_APIENTRY GL_Fogf(GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogf, "context = %d, pname = %s, param = %f", CID(context),
@@ -1760,7 +1761,7 @@ void GL_APIENTRY Fogf(GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY Fogfv(GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_Fogfv(GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogfv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
@@ -1782,7 +1783,7 @@ void GL_APIENTRY Fogfv(GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY Fogi(GLenum pname, GLint param)
+void GL_APIENTRY GL_Fogi(GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogi, "context = %d, pname = %s, param = %d", CID(context),
@@ -1804,7 +1805,7 @@ void GL_APIENTRY Fogi(GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY Fogiv(GLenum pname, const GLint *params)
+void GL_APIENTRY GL_Fogiv(GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogiv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
@@ -1826,7 +1827,7 @@ void GL_APIENTRY Fogiv(GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY FrontFace(GLenum mode)
+void GL_APIENTRY GL_FrontFace(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFrontFace, "context = %d, mode = %s", CID(context),
@@ -1848,8 +1849,12 @@ void GL_APIENTRY FrontFace(GLenum mode)
     }
 }
 
-void GL_APIENTRY
-Frustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
+void GL_APIENTRY GL_Frustum(GLdouble left,
+                            GLdouble right,
+                            GLdouble bottom,
+                            GLdouble top,
+                            GLdouble zNear,
+                            GLdouble zFar)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFrustum,
@@ -1873,7 +1878,7 @@ Frustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble z
     }
 }
 
-GLuint GL_APIENTRY GenLists(GLsizei range)
+GLuint GL_APIENTRY GL_GenLists(GLsizei range)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenLists, "context = %d, range = %d", CID(context), range);
@@ -1901,7 +1906,7 @@ GLuint GL_APIENTRY GenLists(GLsizei range)
     return returnValue;
 }
 
-void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
+void GL_APIENTRY GL_GetBooleanv(GLenum pname, GLboolean *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBooleanv, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -1923,7 +1928,7 @@ void GL_APIENTRY GetBooleanv(GLenum pname, GLboolean *data)
     }
 }
 
-void GL_APIENTRY GetClipPlane(GLenum plane, GLdouble *equation)
+void GL_APIENTRY GL_GetClipPlane(GLenum plane, GLdouble *equation)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetClipPlane, "context = %d, plane = %s, equation = 0x%016" PRIxPTR "",
@@ -1946,7 +1951,7 @@ void GL_APIENTRY GetClipPlane(GLenum plane, GLdouble *equation)
     }
 }
 
-void GL_APIENTRY GetDoublev(GLenum pname, GLdouble *data)
+void GL_APIENTRY GL_GetDoublev(GLenum pname, GLdouble *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetDoublev, "context = %d, pname = %s, data = 0x%016" PRIxPTR "", CID(context),
@@ -1968,7 +1973,7 @@ void GL_APIENTRY GetDoublev(GLenum pname, GLdouble *data)
     }
 }
 
-GLenum GL_APIENTRY GetError()
+GLenum GL_APIENTRY GL_GetError()
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetError, "context = %d", CID(context));
@@ -1996,7 +2001,7 @@ GLenum GL_APIENTRY GetError()
     return returnValue;
 }
 
-void GL_APIENTRY GetFloatv(GLenum pname, GLfloat *data)
+void GL_APIENTRY GL_GetFloatv(GLenum pname, GLfloat *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFloatv, "context = %d, pname = %s, data = 0x%016" PRIxPTR "", CID(context),
@@ -2018,7 +2023,7 @@ void GL_APIENTRY GetFloatv(GLenum pname, GLfloat *data)
     }
 }
 
-void GL_APIENTRY GetIntegerv(GLenum pname, GLint *data)
+void GL_APIENTRY GL_GetIntegerv(GLenum pname, GLint *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetIntegerv, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -2040,7 +2045,7 @@ void GL_APIENTRY GetIntegerv(GLenum pname, GLint *data)
     }
 }
 
-void GL_APIENTRY GetLightfv(GLenum light, GLenum pname, GLfloat *params)
+void GL_APIENTRY GL_GetLightfv(GLenum light, GLenum pname, GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetLightfv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -2065,7 +2070,7 @@ void GL_APIENTRY GetLightfv(GLenum light, GLenum pname, GLfloat *params)
     }
 }
 
-void GL_APIENTRY GetLightiv(GLenum light, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetLightiv(GLenum light, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetLightiv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -2089,7 +2094,7 @@ void GL_APIENTRY GetLightiv(GLenum light, GLenum pname, GLint *params)
     }
 }
 
-void GL_APIENTRY GetMapdv(GLenum target, GLenum query, GLdouble *v)
+void GL_APIENTRY GL_GetMapdv(GLenum target, GLenum query, GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMapdv, "context = %d, target = %s, query = %s, v = 0x%016" PRIxPTR "",
@@ -2113,7 +2118,7 @@ void GL_APIENTRY GetMapdv(GLenum target, GLenum query, GLdouble *v)
     }
 }
 
-void GL_APIENTRY GetMapfv(GLenum target, GLenum query, GLfloat *v)
+void GL_APIENTRY GL_GetMapfv(GLenum target, GLenum query, GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMapfv, "context = %d, target = %s, query = %s, v = 0x%016" PRIxPTR "",
@@ -2137,7 +2142,7 @@ void GL_APIENTRY GetMapfv(GLenum target, GLenum query, GLfloat *v)
     }
 }
 
-void GL_APIENTRY GetMapiv(GLenum target, GLenum query, GLint *v)
+void GL_APIENTRY GL_GetMapiv(GLenum target, GLenum query, GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMapiv, "context = %d, target = %s, query = %s, v = 0x%016" PRIxPTR "",
@@ -2161,7 +2166,7 @@ void GL_APIENTRY GetMapiv(GLenum target, GLenum query, GLint *v)
     }
 }
 
-void GL_APIENTRY GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
+void GL_APIENTRY GL_GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMaterialfv,
@@ -2187,7 +2192,7 @@ void GL_APIENTRY GetMaterialfv(GLenum face, GLenum pname, GLfloat *params)
     }
 }
 
-void GL_APIENTRY GetMaterialiv(GLenum face, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetMaterialiv(GLenum face, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMaterialiv,
@@ -2212,7 +2217,7 @@ void GL_APIENTRY GetMaterialiv(GLenum face, GLenum pname, GLint *params)
     }
 }
 
-void GL_APIENTRY GetPixelMapfv(GLenum map, GLfloat *values)
+void GL_APIENTRY GL_GetPixelMapfv(GLenum map, GLfloat *values)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetPixelMapfv, "context = %d, map = %s, values = 0x%016" PRIxPTR "",
@@ -2235,7 +2240,7 @@ void GL_APIENTRY GetPixelMapfv(GLenum map, GLfloat *values)
     }
 }
 
-void GL_APIENTRY GetPixelMapuiv(GLenum map, GLuint *values)
+void GL_APIENTRY GL_GetPixelMapuiv(GLenum map, GLuint *values)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetPixelMapuiv, "context = %d, map = %s, values = 0x%016" PRIxPTR "",
@@ -2258,7 +2263,7 @@ void GL_APIENTRY GetPixelMapuiv(GLenum map, GLuint *values)
     }
 }
 
-void GL_APIENTRY GetPixelMapusv(GLenum map, GLushort *values)
+void GL_APIENTRY GL_GetPixelMapusv(GLenum map, GLushort *values)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetPixelMapusv, "context = %d, map = %s, values = 0x%016" PRIxPTR "",
@@ -2281,7 +2286,7 @@ void GL_APIENTRY GetPixelMapusv(GLenum map, GLushort *values)
     }
 }
 
-void GL_APIENTRY GetPolygonStipple(GLubyte *mask)
+void GL_APIENTRY GL_GetPolygonStipple(GLubyte *mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetPolygonStipple, "context = %d, mask = 0x%016" PRIxPTR "", CID(context),
@@ -2303,7 +2308,7 @@ void GL_APIENTRY GetPolygonStipple(GLubyte *mask)
     }
 }
 
-const GLubyte *GL_APIENTRY GetString(GLenum name)
+const GLubyte *GL_APIENTRY GL_GetString(GLenum name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetString, "context = %d, name = %s", CID(context),
@@ -2332,7 +2337,7 @@ const GLubyte *GL_APIENTRY GetString(GLenum name)
     return returnValue;
 }
 
-void GL_APIENTRY GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
+void GL_APIENTRY GL_GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexEnvfv,
@@ -2359,7 +2364,7 @@ void GL_APIENTRY GetTexEnvfv(GLenum target, GLenum pname, GLfloat *params)
     }
 }
 
-void GL_APIENTRY GetTexEnviv(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetTexEnviv(GLenum target, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexEnviv,
@@ -2386,7 +2391,7 @@ void GL_APIENTRY GetTexEnviv(GLenum target, GLenum pname, GLint *params)
     }
 }
 
-void GL_APIENTRY GetTexGendv(GLenum coord, GLenum pname, GLdouble *params)
+void GL_APIENTRY GL_GetTexGendv(GLenum coord, GLenum pname, GLdouble *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexGendv,
@@ -2411,7 +2416,7 @@ void GL_APIENTRY GetTexGendv(GLenum coord, GLenum pname, GLdouble *params)
     }
 }
 
-void GL_APIENTRY GetTexGenfv(GLenum coord, GLenum pname, GLfloat *params)
+void GL_APIENTRY GL_GetTexGenfv(GLenum coord, GLenum pname, GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexGenfv,
@@ -2436,7 +2441,7 @@ void GL_APIENTRY GetTexGenfv(GLenum coord, GLenum pname, GLfloat *params)
     }
 }
 
-void GL_APIENTRY GetTexGeniv(GLenum coord, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetTexGeniv(GLenum coord, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexGeniv,
@@ -2461,7 +2466,8 @@ void GL_APIENTRY GetTexGeniv(GLenum coord, GLenum pname, GLint *params)
     }
 }
 
-void GL_APIENTRY GetTexImage(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
+void GL_APIENTRY
+GL_GetTexImage(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexImage,
@@ -2490,7 +2496,10 @@ void GL_APIENTRY GetTexImage(GLenum target, GLint level, GLenum format, GLenum t
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params)
+void GL_APIENTRY GL_GetTexLevelParameterfv(GLenum target,
+                                           GLint level,
+                                           GLenum pname,
+                                           GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexLevelParameterfv,
@@ -2518,7 +2527,7 @@ void GL_APIENTRY GetTexLevelParameterfv(GLenum target, GLint level, GLenum pname
     }
 }
 
-void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexLevelParameteriv,
@@ -2546,7 +2555,7 @@ void GL_APIENTRY GetTexLevelParameteriv(GLenum target, GLint level, GLenum pname
     }
 }
 
-void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
+void GL_APIENTRY GL_GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameterfv,
@@ -2572,7 +2581,7 @@ void GL_APIENTRY GetTexParameterfv(GLenum target, GLenum pname, GLfloat *params)
     }
 }
 
-void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameteriv,
@@ -2598,7 +2607,7 @@ void GL_APIENTRY GetTexParameteriv(GLenum target, GLenum pname, GLint *params)
     }
 }
 
-void GL_APIENTRY Hint(GLenum target, GLenum mode)
+void GL_APIENTRY GL_Hint(GLenum target, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLHint, "context = %d, target = %s, mode = %s", CID(context),
@@ -2621,7 +2630,7 @@ void GL_APIENTRY Hint(GLenum target, GLenum mode)
     }
 }
 
-void GL_APIENTRY IndexMask(GLuint mask)
+void GL_APIENTRY GL_IndexMask(GLuint mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexMask, "context = %d, mask = %u", CID(context), mask);
@@ -2642,7 +2651,7 @@ void GL_APIENTRY IndexMask(GLuint mask)
     }
 }
 
-void GL_APIENTRY Indexd(GLdouble c)
+void GL_APIENTRY GL_Indexd(GLdouble c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexd, "context = %d, c = %f", CID(context), c);
@@ -2663,7 +2672,7 @@ void GL_APIENTRY Indexd(GLdouble c)
     }
 }
 
-void GL_APIENTRY Indexdv(const GLdouble *c)
+void GL_APIENTRY GL_Indexdv(const GLdouble *c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexdv, "context = %d, c = 0x%016" PRIxPTR "", CID(context), (uintptr_t)c);
@@ -2684,7 +2693,7 @@ void GL_APIENTRY Indexdv(const GLdouble *c)
     }
 }
 
-void GL_APIENTRY Indexf(GLfloat c)
+void GL_APIENTRY GL_Indexf(GLfloat c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexf, "context = %d, c = %f", CID(context), c);
@@ -2705,7 +2714,7 @@ void GL_APIENTRY Indexf(GLfloat c)
     }
 }
 
-void GL_APIENTRY Indexfv(const GLfloat *c)
+void GL_APIENTRY GL_Indexfv(const GLfloat *c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexfv, "context = %d, c = 0x%016" PRIxPTR "", CID(context), (uintptr_t)c);
@@ -2726,7 +2735,7 @@ void GL_APIENTRY Indexfv(const GLfloat *c)
     }
 }
 
-void GL_APIENTRY Indexi(GLint c)
+void GL_APIENTRY GL_Indexi(GLint c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexi, "context = %d, c = %d", CID(context), c);
@@ -2747,7 +2756,7 @@ void GL_APIENTRY Indexi(GLint c)
     }
 }
 
-void GL_APIENTRY Indexiv(const GLint *c)
+void GL_APIENTRY GL_Indexiv(const GLint *c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexiv, "context = %d, c = 0x%016" PRIxPTR "", CID(context), (uintptr_t)c);
@@ -2768,7 +2777,7 @@ void GL_APIENTRY Indexiv(const GLint *c)
     }
 }
 
-void GL_APIENTRY Indexs(GLshort c)
+void GL_APIENTRY GL_Indexs(GLshort c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexs, "context = %d, c = %d", CID(context), c);
@@ -2789,7 +2798,7 @@ void GL_APIENTRY Indexs(GLshort c)
     }
 }
 
-void GL_APIENTRY Indexsv(const GLshort *c)
+void GL_APIENTRY GL_Indexsv(const GLshort *c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexsv, "context = %d, c = 0x%016" PRIxPTR "", CID(context), (uintptr_t)c);
@@ -2810,7 +2819,7 @@ void GL_APIENTRY Indexsv(const GLshort *c)
     }
 }
 
-void GL_APIENTRY InitNames()
+void GL_APIENTRY GL_InitNames()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLInitNames, "context = %d", CID(context));
@@ -2831,7 +2840,7 @@ void GL_APIENTRY InitNames()
     }
 }
 
-GLboolean GL_APIENTRY IsEnabled(GLenum cap)
+GLboolean GL_APIENTRY GL_IsEnabled(GLenum cap)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsEnabled, "context = %d, cap = %s", CID(context),
@@ -2860,7 +2869,7 @@ GLboolean GL_APIENTRY IsEnabled(GLenum cap)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsList(GLuint list)
+GLboolean GL_APIENTRY GL_IsList(GLuint list)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsList, "context = %d, list = %u", CID(context), list);
@@ -2888,7 +2897,7 @@ GLboolean GL_APIENTRY IsList(GLuint list)
     return returnValue;
 }
 
-void GL_APIENTRY LightModelf(GLenum pname, GLfloat param)
+void GL_APIENTRY GL_LightModelf(GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLightModelf, "context = %d, pname = %s, param = %f", CID(context),
@@ -2911,7 +2920,7 @@ void GL_APIENTRY LightModelf(GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY LightModelfv(GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_LightModelfv(GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLightModelfv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -2934,7 +2943,7 @@ void GL_APIENTRY LightModelfv(GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY LightModeli(GLenum pname, GLint param)
+void GL_APIENTRY GL_LightModeli(GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLightModeli, "context = %d, pname = %s, param = %d", CID(context),
@@ -2957,7 +2966,7 @@ void GL_APIENTRY LightModeli(GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY LightModeliv(GLenum pname, const GLint *params)
+void GL_APIENTRY GL_LightModeliv(GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLightModeliv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -2980,7 +2989,7 @@ void GL_APIENTRY LightModeliv(GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY Lightf(GLenum light, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_Lightf(GLenum light, GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLightf, "context = %d, light = %s, pname = %s, param = %f", CID(context),
@@ -3005,7 +3014,7 @@ void GL_APIENTRY Lightf(GLenum light, GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY Lightfv(GLenum light, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_Lightfv(GLenum light, GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLightfv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -3030,7 +3039,7 @@ void GL_APIENTRY Lightfv(GLenum light, GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY Lighti(GLenum light, GLenum pname, GLint param)
+void GL_APIENTRY GL_Lighti(GLenum light, GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLighti, "context = %d, light = %s, pname = %s, param = %d", CID(context),
@@ -3054,7 +3063,7 @@ void GL_APIENTRY Lighti(GLenum light, GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY Lightiv(GLenum light, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_Lightiv(GLenum light, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLightiv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -3078,7 +3087,7 @@ void GL_APIENTRY Lightiv(GLenum light, GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY LineStipple(GLint factor, GLushort pattern)
+void GL_APIENTRY GL_LineStipple(GLint factor, GLushort pattern)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLineStipple, "context = %d, factor = %d, pattern = %u", CID(context), factor,
@@ -3101,7 +3110,7 @@ void GL_APIENTRY LineStipple(GLint factor, GLushort pattern)
     }
 }
 
-void GL_APIENTRY LineWidth(GLfloat width)
+void GL_APIENTRY GL_LineWidth(GLfloat width)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLineWidth, "context = %d, width = %f", CID(context), width);
@@ -3122,7 +3131,7 @@ void GL_APIENTRY LineWidth(GLfloat width)
     }
 }
 
-void GL_APIENTRY ListBase(GLuint base)
+void GL_APIENTRY GL_ListBase(GLuint base)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLListBase, "context = %d, base = %u", CID(context), base);
@@ -3143,7 +3152,7 @@ void GL_APIENTRY ListBase(GLuint base)
     }
 }
 
-void GL_APIENTRY LoadIdentity()
+void GL_APIENTRY GL_LoadIdentity()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoadIdentity, "context = %d", CID(context));
@@ -3164,7 +3173,7 @@ void GL_APIENTRY LoadIdentity()
     }
 }
 
-void GL_APIENTRY LoadMatrixd(const GLdouble *m)
+void GL_APIENTRY GL_LoadMatrixd(const GLdouble *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoadMatrixd, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -3186,7 +3195,7 @@ void GL_APIENTRY LoadMatrixd(const GLdouble *m)
     }
 }
 
-void GL_APIENTRY LoadMatrixf(const GLfloat *m)
+void GL_APIENTRY GL_LoadMatrixf(const GLfloat *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoadMatrixf, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -3208,7 +3217,7 @@ void GL_APIENTRY LoadMatrixf(const GLfloat *m)
     }
 }
 
-void GL_APIENTRY LoadName(GLuint name)
+void GL_APIENTRY GL_LoadName(GLuint name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoadName, "context = %d, name = %u", CID(context), name);
@@ -3229,7 +3238,7 @@ void GL_APIENTRY LoadName(GLuint name)
     }
 }
 
-void GL_APIENTRY LogicOp(GLenum opcode)
+void GL_APIENTRY GL_LogicOp(GLenum opcode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLogicOp, "context = %d, opcode = %s", CID(context),
@@ -3253,7 +3262,7 @@ void GL_APIENTRY LogicOp(GLenum opcode)
 }
 
 void GL_APIENTRY
-Map1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const GLdouble *points)
+GL_Map1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const GLdouble *points)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMap1d,
@@ -3280,7 +3289,7 @@ Map1d(GLenum target, GLdouble u1, GLdouble u2, GLint stride, GLint order, const 
 }
 
 void GL_APIENTRY
-Map1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat *points)
+GL_Map1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GLfloat *points)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMap1f,
@@ -3306,16 +3315,16 @@ Map1f(GLenum target, GLfloat u1, GLfloat u2, GLint stride, GLint order, const GL
     }
 }
 
-void GL_APIENTRY Map2d(GLenum target,
-                       GLdouble u1,
-                       GLdouble u2,
-                       GLint ustride,
-                       GLint uorder,
-                       GLdouble v1,
-                       GLdouble v2,
-                       GLint vstride,
-                       GLint vorder,
-                       const GLdouble *points)
+void GL_APIENTRY GL_Map2d(GLenum target,
+                          GLdouble u1,
+                          GLdouble u2,
+                          GLint ustride,
+                          GLint uorder,
+                          GLdouble v1,
+                          GLdouble v2,
+                          GLint vstride,
+                          GLint vorder,
+                          const GLdouble *points)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMap2d,
@@ -3343,16 +3352,16 @@ void GL_APIENTRY Map2d(GLenum target,
     }
 }
 
-void GL_APIENTRY Map2f(GLenum target,
-                       GLfloat u1,
-                       GLfloat u2,
-                       GLint ustride,
-                       GLint uorder,
-                       GLfloat v1,
-                       GLfloat v2,
-                       GLint vstride,
-                       GLint vorder,
-                       const GLfloat *points)
+void GL_APIENTRY GL_Map2f(GLenum target,
+                          GLfloat u1,
+                          GLfloat u2,
+                          GLint ustride,
+                          GLint uorder,
+                          GLfloat v1,
+                          GLfloat v2,
+                          GLint vstride,
+                          GLint vorder,
+                          const GLfloat *points)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMap2f,
@@ -3380,7 +3389,7 @@ void GL_APIENTRY Map2f(GLenum target,
     }
 }
 
-void GL_APIENTRY MapGrid1d(GLint un, GLdouble u1, GLdouble u2)
+void GL_APIENTRY GL_MapGrid1d(GLint un, GLdouble u1, GLdouble u2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMapGrid1d, "context = %d, un = %d, u1 = %f, u2 = %f", CID(context), un, u1,
@@ -3402,7 +3411,7 @@ void GL_APIENTRY MapGrid1d(GLint un, GLdouble u1, GLdouble u2)
     }
 }
 
-void GL_APIENTRY MapGrid1f(GLint un, GLfloat u1, GLfloat u2)
+void GL_APIENTRY GL_MapGrid1f(GLint un, GLfloat u1, GLfloat u2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMapGrid1f, "context = %d, un = %d, u1 = %f, u2 = %f", CID(context), un, u1,
@@ -3424,7 +3433,8 @@ void GL_APIENTRY MapGrid1f(GLint un, GLfloat u1, GLfloat u2)
     }
 }
 
-void GL_APIENTRY MapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2)
+void GL_APIENTRY
+GL_MapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdouble v1, GLdouble v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMapGrid2d,
@@ -3448,7 +3458,7 @@ void GL_APIENTRY MapGrid2d(GLint un, GLdouble u1, GLdouble u2, GLint vn, GLdoubl
     }
 }
 
-void GL_APIENTRY MapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2)
+void GL_APIENTRY GL_MapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v1, GLfloat v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMapGrid2f,
@@ -3472,7 +3482,7 @@ void GL_APIENTRY MapGrid2f(GLint un, GLfloat u1, GLfloat u2, GLint vn, GLfloat v
     }
 }
 
-void GL_APIENTRY Materialf(GLenum face, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_Materialf(GLenum face, GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialf, "context = %d, face = %s, pname = %s, param = %f", CID(context),
@@ -3497,7 +3507,7 @@ void GL_APIENTRY Materialf(GLenum face, GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY Materialfv(GLenum face, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_Materialfv(GLenum face, GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialfv, "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -3522,7 +3532,7 @@ void GL_APIENTRY Materialfv(GLenum face, GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY Materiali(GLenum face, GLenum pname, GLint param)
+void GL_APIENTRY GL_Materiali(GLenum face, GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMateriali, "context = %d, face = %s, pname = %s, param = %d", CID(context),
@@ -3546,7 +3556,7 @@ void GL_APIENTRY Materiali(GLenum face, GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY Materialiv(GLenum face, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_Materialiv(GLenum face, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaterialiv, "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -3570,7 +3580,7 @@ void GL_APIENTRY Materialiv(GLenum face, GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY MatrixMode(GLenum mode)
+void GL_APIENTRY GL_MatrixMode(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMatrixMode, "context = %d, mode = %s", CID(context),
@@ -3593,7 +3603,7 @@ void GL_APIENTRY MatrixMode(GLenum mode)
     }
 }
 
-void GL_APIENTRY MultMatrixd(const GLdouble *m)
+void GL_APIENTRY GL_MultMatrixd(const GLdouble *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultMatrixd, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -3615,7 +3625,7 @@ void GL_APIENTRY MultMatrixd(const GLdouble *m)
     }
 }
 
-void GL_APIENTRY MultMatrixf(const GLfloat *m)
+void GL_APIENTRY GL_MultMatrixf(const GLfloat *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultMatrixf, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -3637,7 +3647,7 @@ void GL_APIENTRY MultMatrixf(const GLfloat *m)
     }
 }
 
-void GL_APIENTRY NewList(GLuint list, GLenum mode)
+void GL_APIENTRY GL_NewList(GLuint list, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNewList, "context = %d, list = %u, mode = %s", CID(context), list,
@@ -3659,7 +3669,7 @@ void GL_APIENTRY NewList(GLuint list, GLenum mode)
     }
 }
 
-void GL_APIENTRY Normal3b(GLbyte nx, GLbyte ny, GLbyte nz)
+void GL_APIENTRY GL_Normal3b(GLbyte nx, GLbyte ny, GLbyte nz)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3b, "context = %d, nx = %d, ny = %d, nz = %d", CID(context), nx, ny, nz);
@@ -3680,7 +3690,7 @@ void GL_APIENTRY Normal3b(GLbyte nx, GLbyte ny, GLbyte nz)
     }
 }
 
-void GL_APIENTRY Normal3bv(const GLbyte *v)
+void GL_APIENTRY GL_Normal3bv(const GLbyte *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3bv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -3701,7 +3711,7 @@ void GL_APIENTRY Normal3bv(const GLbyte *v)
     }
 }
 
-void GL_APIENTRY Normal3d(GLdouble nx, GLdouble ny, GLdouble nz)
+void GL_APIENTRY GL_Normal3d(GLdouble nx, GLdouble ny, GLdouble nz)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3d, "context = %d, nx = %f, ny = %f, nz = %f", CID(context), nx, ny, nz);
@@ -3722,7 +3732,7 @@ void GL_APIENTRY Normal3d(GLdouble nx, GLdouble ny, GLdouble nz)
     }
 }
 
-void GL_APIENTRY Normal3dv(const GLdouble *v)
+void GL_APIENTRY GL_Normal3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -3743,7 +3753,7 @@ void GL_APIENTRY Normal3dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY Normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
+void GL_APIENTRY GL_Normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3f, "context = %d, nx = %f, ny = %f, nz = %f", CID(context), nx, ny, nz);
@@ -3764,7 +3774,7 @@ void GL_APIENTRY Normal3f(GLfloat nx, GLfloat ny, GLfloat nz)
     }
 }
 
-void GL_APIENTRY Normal3fv(const GLfloat *v)
+void GL_APIENTRY GL_Normal3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -3785,7 +3795,7 @@ void GL_APIENTRY Normal3fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY Normal3i(GLint nx, GLint ny, GLint nz)
+void GL_APIENTRY GL_Normal3i(GLint nx, GLint ny, GLint nz)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3i, "context = %d, nx = %d, ny = %d, nz = %d", CID(context), nx, ny, nz);
@@ -3806,7 +3816,7 @@ void GL_APIENTRY Normal3i(GLint nx, GLint ny, GLint nz)
     }
 }
 
-void GL_APIENTRY Normal3iv(const GLint *v)
+void GL_APIENTRY GL_Normal3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -3827,7 +3837,7 @@ void GL_APIENTRY Normal3iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY Normal3s(GLshort nx, GLshort ny, GLshort nz)
+void GL_APIENTRY GL_Normal3s(GLshort nx, GLshort ny, GLshort nz)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3s, "context = %d, nx = %d, ny = %d, nz = %d", CID(context), nx, ny, nz);
@@ -3848,7 +3858,7 @@ void GL_APIENTRY Normal3s(GLshort nx, GLshort ny, GLshort nz)
     }
 }
 
-void GL_APIENTRY Normal3sv(const GLshort *v)
+void GL_APIENTRY GL_Normal3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormal3sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -3869,8 +3879,12 @@ void GL_APIENTRY Normal3sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY
-Ortho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNear, GLdouble zFar)
+void GL_APIENTRY GL_Ortho(GLdouble left,
+                          GLdouble right,
+                          GLdouble bottom,
+                          GLdouble top,
+                          GLdouble zNear,
+                          GLdouble zFar)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLOrtho,
@@ -3894,7 +3908,7 @@ Ortho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble zNe
     }
 }
 
-void GL_APIENTRY PassThrough(GLfloat token)
+void GL_APIENTRY GL_PassThrough(GLfloat token)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPassThrough, "context = %d, token = %f", CID(context), token);
@@ -3915,7 +3929,7 @@ void GL_APIENTRY PassThrough(GLfloat token)
     }
 }
 
-void GL_APIENTRY PixelMapfv(GLenum map, GLsizei mapsize, const GLfloat *values)
+void GL_APIENTRY GL_PixelMapfv(GLenum map, GLsizei mapsize, const GLfloat *values)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelMapfv, "context = %d, map = %s, mapsize = %d, values = 0x%016" PRIxPTR "",
@@ -3938,7 +3952,7 @@ void GL_APIENTRY PixelMapfv(GLenum map, GLsizei mapsize, const GLfloat *values)
     }
 }
 
-void GL_APIENTRY PixelMapuiv(GLenum map, GLsizei mapsize, const GLuint *values)
+void GL_APIENTRY GL_PixelMapuiv(GLenum map, GLsizei mapsize, const GLuint *values)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelMapuiv,
@@ -3962,7 +3976,7 @@ void GL_APIENTRY PixelMapuiv(GLenum map, GLsizei mapsize, const GLuint *values)
     }
 }
 
-void GL_APIENTRY PixelMapusv(GLenum map, GLsizei mapsize, const GLushort *values)
+void GL_APIENTRY GL_PixelMapusv(GLenum map, GLsizei mapsize, const GLushort *values)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelMapusv,
@@ -3986,7 +4000,7 @@ void GL_APIENTRY PixelMapusv(GLenum map, GLsizei mapsize, const GLushort *values
     }
 }
 
-void GL_APIENTRY PixelStoref(GLenum pname, GLfloat param)
+void GL_APIENTRY GL_PixelStoref(GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelStoref, "context = %d, pname = %s, param = %f", CID(context),
@@ -4009,7 +4023,7 @@ void GL_APIENTRY PixelStoref(GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
+void GL_APIENTRY GL_PixelStorei(GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelStorei, "context = %d, pname = %s, param = %d", CID(context),
@@ -4032,7 +4046,7 @@ void GL_APIENTRY PixelStorei(GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY PixelTransferf(GLenum pname, GLfloat param)
+void GL_APIENTRY GL_PixelTransferf(GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelTransferf, "context = %d, pname = %s, param = %f", CID(context),
@@ -4055,7 +4069,7 @@ void GL_APIENTRY PixelTransferf(GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY PixelTransferi(GLenum pname, GLint param)
+void GL_APIENTRY GL_PixelTransferi(GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelTransferi, "context = %d, pname = %s, param = %d", CID(context),
@@ -4078,7 +4092,7 @@ void GL_APIENTRY PixelTransferi(GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY PixelZoom(GLfloat xfactor, GLfloat yfactor)
+void GL_APIENTRY GL_PixelZoom(GLfloat xfactor, GLfloat yfactor)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPixelZoom, "context = %d, xfactor = %f, yfactor = %f", CID(context), xfactor,
@@ -4101,7 +4115,7 @@ void GL_APIENTRY PixelZoom(GLfloat xfactor, GLfloat yfactor)
     }
 }
 
-void GL_APIENTRY PointSize(GLfloat size)
+void GL_APIENTRY GL_PointSize(GLfloat size)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPointSize, "context = %d, size = %f", CID(context), size);
@@ -4122,7 +4136,7 @@ void GL_APIENTRY PointSize(GLfloat size)
     }
 }
 
-void GL_APIENTRY PolygonMode(GLenum face, GLenum mode)
+void GL_APIENTRY GL_PolygonMode(GLenum face, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPolygonMode, "context = %d, face = %s, mode = %s", CID(context),
@@ -4145,7 +4159,7 @@ void GL_APIENTRY PolygonMode(GLenum face, GLenum mode)
     }
 }
 
-void GL_APIENTRY PolygonStipple(const GLubyte *mask)
+void GL_APIENTRY GL_PolygonStipple(const GLubyte *mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPolygonStipple, "context = %d, mask = 0x%016" PRIxPTR "", CID(context),
@@ -4167,7 +4181,7 @@ void GL_APIENTRY PolygonStipple(const GLubyte *mask)
     }
 }
 
-void GL_APIENTRY PopAttrib()
+void GL_APIENTRY GL_PopAttrib()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPopAttrib, "context = %d", CID(context));
@@ -4188,7 +4202,7 @@ void GL_APIENTRY PopAttrib()
     }
 }
 
-void GL_APIENTRY PopMatrix()
+void GL_APIENTRY GL_PopMatrix()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPopMatrix, "context = %d", CID(context));
@@ -4209,7 +4223,7 @@ void GL_APIENTRY PopMatrix()
     }
 }
 
-void GL_APIENTRY PopName()
+void GL_APIENTRY GL_PopName()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPopName, "context = %d", CID(context));
@@ -4230,7 +4244,7 @@ void GL_APIENTRY PopName()
     }
 }
 
-void GL_APIENTRY PushAttrib(GLbitfield mask)
+void GL_APIENTRY GL_PushAttrib(GLbitfield mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPushAttrib, "context = %d, mask = %s", CID(context),
@@ -4252,7 +4266,7 @@ void GL_APIENTRY PushAttrib(GLbitfield mask)
     }
 }
 
-void GL_APIENTRY PushMatrix()
+void GL_APIENTRY GL_PushMatrix()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPushMatrix, "context = %d", CID(context));
@@ -4273,7 +4287,7 @@ void GL_APIENTRY PushMatrix()
     }
 }
 
-void GL_APIENTRY PushName(GLuint name)
+void GL_APIENTRY GL_PushName(GLuint name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPushName, "context = %d, name = %u", CID(context), name);
@@ -4294,7 +4308,7 @@ void GL_APIENTRY PushName(GLuint name)
     }
 }
 
-void GL_APIENTRY RasterPos2d(GLdouble x, GLdouble y)
+void GL_APIENTRY GL_RasterPos2d(GLdouble x, GLdouble y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2d, "context = %d, x = %f, y = %f", CID(context), x, y);
@@ -4315,7 +4329,7 @@ void GL_APIENTRY RasterPos2d(GLdouble x, GLdouble y)
     }
 }
 
-void GL_APIENTRY RasterPos2dv(const GLdouble *v)
+void GL_APIENTRY GL_RasterPos2dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4337,7 +4351,7 @@ void GL_APIENTRY RasterPos2dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY RasterPos2f(GLfloat x, GLfloat y)
+void GL_APIENTRY GL_RasterPos2f(GLfloat x, GLfloat y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2f, "context = %d, x = %f, y = %f", CID(context), x, y);
@@ -4358,7 +4372,7 @@ void GL_APIENTRY RasterPos2f(GLfloat x, GLfloat y)
     }
 }
 
-void GL_APIENTRY RasterPos2fv(const GLfloat *v)
+void GL_APIENTRY GL_RasterPos2fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4380,7 +4394,7 @@ void GL_APIENTRY RasterPos2fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY RasterPos2i(GLint x, GLint y)
+void GL_APIENTRY GL_RasterPos2i(GLint x, GLint y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2i, "context = %d, x = %d, y = %d", CID(context), x, y);
@@ -4401,7 +4415,7 @@ void GL_APIENTRY RasterPos2i(GLint x, GLint y)
     }
 }
 
-void GL_APIENTRY RasterPos2iv(const GLint *v)
+void GL_APIENTRY GL_RasterPos2iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4423,7 +4437,7 @@ void GL_APIENTRY RasterPos2iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY RasterPos2s(GLshort x, GLshort y)
+void GL_APIENTRY GL_RasterPos2s(GLshort x, GLshort y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2s, "context = %d, x = %d, y = %d", CID(context), x, y);
@@ -4444,7 +4458,7 @@ void GL_APIENTRY RasterPos2s(GLshort x, GLshort y)
     }
 }
 
-void GL_APIENTRY RasterPos2sv(const GLshort *v)
+void GL_APIENTRY GL_RasterPos2sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos2sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4466,7 +4480,7 @@ void GL_APIENTRY RasterPos2sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY RasterPos3d(GLdouble x, GLdouble y, GLdouble z)
+void GL_APIENTRY GL_RasterPos3d(GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3d, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -4487,7 +4501,7 @@ void GL_APIENTRY RasterPos3d(GLdouble x, GLdouble y, GLdouble z)
     }
 }
 
-void GL_APIENTRY RasterPos3dv(const GLdouble *v)
+void GL_APIENTRY GL_RasterPos3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4509,7 +4523,7 @@ void GL_APIENTRY RasterPos3dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY RasterPos3f(GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_RasterPos3f(GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3f, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -4530,7 +4544,7 @@ void GL_APIENTRY RasterPos3f(GLfloat x, GLfloat y, GLfloat z)
     }
 }
 
-void GL_APIENTRY RasterPos3fv(const GLfloat *v)
+void GL_APIENTRY GL_RasterPos3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4552,7 +4566,7 @@ void GL_APIENTRY RasterPos3fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY RasterPos3i(GLint x, GLint y, GLint z)
+void GL_APIENTRY GL_RasterPos3i(GLint x, GLint y, GLint z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3i, "context = %d, x = %d, y = %d, z = %d", CID(context), x, y, z);
@@ -4573,7 +4587,7 @@ void GL_APIENTRY RasterPos3i(GLint x, GLint y, GLint z)
     }
 }
 
-void GL_APIENTRY RasterPos3iv(const GLint *v)
+void GL_APIENTRY GL_RasterPos3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4595,7 +4609,7 @@ void GL_APIENTRY RasterPos3iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY RasterPos3s(GLshort x, GLshort y, GLshort z)
+void GL_APIENTRY GL_RasterPos3s(GLshort x, GLshort y, GLshort z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3s, "context = %d, x = %d, y = %d, z = %d", CID(context), x, y, z);
@@ -4616,7 +4630,7 @@ void GL_APIENTRY RasterPos3s(GLshort x, GLshort y, GLshort z)
     }
 }
 
-void GL_APIENTRY RasterPos3sv(const GLshort *v)
+void GL_APIENTRY GL_RasterPos3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos3sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4638,7 +4652,7 @@ void GL_APIENTRY RasterPos3sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY RasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
+void GL_APIENTRY GL_RasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4d, "context = %d, x = %f, y = %f, z = %f, w = %f", CID(context), x,
@@ -4660,7 +4674,7 @@ void GL_APIENTRY RasterPos4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
     }
 }
 
-void GL_APIENTRY RasterPos4dv(const GLdouble *v)
+void GL_APIENTRY GL_RasterPos4dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4682,7 +4696,7 @@ void GL_APIENTRY RasterPos4dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY RasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+void GL_APIENTRY GL_RasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4f, "context = %d, x = %f, y = %f, z = %f, w = %f", CID(context), x,
@@ -4704,7 +4718,7 @@ void GL_APIENTRY RasterPos4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
     }
 }
 
-void GL_APIENTRY RasterPos4fv(const GLfloat *v)
+void GL_APIENTRY GL_RasterPos4fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4726,7 +4740,7 @@ void GL_APIENTRY RasterPos4fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY RasterPos4i(GLint x, GLint y, GLint z, GLint w)
+void GL_APIENTRY GL_RasterPos4i(GLint x, GLint y, GLint z, GLint w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4i, "context = %d, x = %d, y = %d, z = %d, w = %d", CID(context), x,
@@ -4748,7 +4762,7 @@ void GL_APIENTRY RasterPos4i(GLint x, GLint y, GLint z, GLint w)
     }
 }
 
-void GL_APIENTRY RasterPos4iv(const GLint *v)
+void GL_APIENTRY GL_RasterPos4iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4770,7 +4784,7 @@ void GL_APIENTRY RasterPos4iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY RasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w)
+void GL_APIENTRY GL_RasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4s, "context = %d, x = %d, y = %d, z = %d, w = %d", CID(context), x,
@@ -4792,7 +4806,7 @@ void GL_APIENTRY RasterPos4s(GLshort x, GLshort y, GLshort z, GLshort w)
     }
 }
 
-void GL_APIENTRY RasterPos4sv(const GLshort *v)
+void GL_APIENTRY GL_RasterPos4sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRasterPos4sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -4814,7 +4828,7 @@ void GL_APIENTRY RasterPos4sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY ReadBuffer(GLenum src)
+void GL_APIENTRY GL_ReadBuffer(GLenum src)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLReadBuffer, "context = %d, src = %s", CID(context),
@@ -4836,13 +4850,13 @@ void GL_APIENTRY ReadBuffer(GLenum src)
     }
 }
 
-void GL_APIENTRY ReadPixels(GLint x,
-                            GLint y,
-                            GLsizei width,
-                            GLsizei height,
-                            GLenum format,
-                            GLenum type,
-                            void *pixels)
+void GL_APIENTRY GL_ReadPixels(GLint x,
+                               GLint y,
+                               GLsizei width,
+                               GLsizei height,
+                               GLenum format,
+                               GLenum type,
+                               void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLReadPixels,
@@ -4868,7 +4882,7 @@ void GL_APIENTRY ReadPixels(GLint x,
     }
 }
 
-void GL_APIENTRY Rectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2)
+void GL_APIENTRY GL_Rectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRectd, "context = %d, x1 = %f, y1 = %f, x2 = %f, y2 = %f", CID(context), x1,
@@ -4890,7 +4904,7 @@ void GL_APIENTRY Rectd(GLdouble x1, GLdouble y1, GLdouble x2, GLdouble y2)
     }
 }
 
-void GL_APIENTRY Rectdv(const GLdouble *v1, const GLdouble *v2)
+void GL_APIENTRY GL_Rectdv(const GLdouble *v1, const GLdouble *v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRectdv, "context = %d, v1 = 0x%016" PRIxPTR ", v2 = 0x%016" PRIxPTR "",
@@ -4912,7 +4926,7 @@ void GL_APIENTRY Rectdv(const GLdouble *v1, const GLdouble *v2)
     }
 }
 
-void GL_APIENTRY Rectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
+void GL_APIENTRY GL_Rectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRectf, "context = %d, x1 = %f, y1 = %f, x2 = %f, y2 = %f", CID(context), x1,
@@ -4934,7 +4948,7 @@ void GL_APIENTRY Rectf(GLfloat x1, GLfloat y1, GLfloat x2, GLfloat y2)
     }
 }
 
-void GL_APIENTRY Rectfv(const GLfloat *v1, const GLfloat *v2)
+void GL_APIENTRY GL_Rectfv(const GLfloat *v1, const GLfloat *v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRectfv, "context = %d, v1 = 0x%016" PRIxPTR ", v2 = 0x%016" PRIxPTR "",
@@ -4956,7 +4970,7 @@ void GL_APIENTRY Rectfv(const GLfloat *v1, const GLfloat *v2)
     }
 }
 
-void GL_APIENTRY Recti(GLint x1, GLint y1, GLint x2, GLint y2)
+void GL_APIENTRY GL_Recti(GLint x1, GLint y1, GLint x2, GLint y2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRecti, "context = %d, x1 = %d, y1 = %d, x2 = %d, y2 = %d", CID(context), x1,
@@ -4978,7 +4992,7 @@ void GL_APIENTRY Recti(GLint x1, GLint y1, GLint x2, GLint y2)
     }
 }
 
-void GL_APIENTRY Rectiv(const GLint *v1, const GLint *v2)
+void GL_APIENTRY GL_Rectiv(const GLint *v1, const GLint *v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRectiv, "context = %d, v1 = 0x%016" PRIxPTR ", v2 = 0x%016" PRIxPTR "",
@@ -5000,7 +5014,7 @@ void GL_APIENTRY Rectiv(const GLint *v1, const GLint *v2)
     }
 }
 
-void GL_APIENTRY Rects(GLshort x1, GLshort y1, GLshort x2, GLshort y2)
+void GL_APIENTRY GL_Rects(GLshort x1, GLshort y1, GLshort x2, GLshort y2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRects, "context = %d, x1 = %d, y1 = %d, x2 = %d, y2 = %d", CID(context), x1,
@@ -5022,7 +5036,7 @@ void GL_APIENTRY Rects(GLshort x1, GLshort y1, GLshort x2, GLshort y2)
     }
 }
 
-void GL_APIENTRY Rectsv(const GLshort *v1, const GLshort *v2)
+void GL_APIENTRY GL_Rectsv(const GLshort *v1, const GLshort *v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRectsv, "context = %d, v1 = 0x%016" PRIxPTR ", v2 = 0x%016" PRIxPTR "",
@@ -5044,7 +5058,7 @@ void GL_APIENTRY Rectsv(const GLshort *v1, const GLshort *v2)
     }
 }
 
-GLint GL_APIENTRY RenderMode(GLenum mode)
+GLint GL_APIENTRY GL_RenderMode(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRenderMode, "context = %d, mode = %s", CID(context),
@@ -5073,7 +5087,7 @@ GLint GL_APIENTRY RenderMode(GLenum mode)
     return returnValue;
 }
 
-void GL_APIENTRY Rotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z)
+void GL_APIENTRY GL_Rotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRotated, "context = %d, angle = %f, x = %f, y = %f, z = %f", CID(context),
@@ -5095,7 +5109,7 @@ void GL_APIENTRY Rotated(GLdouble angle, GLdouble x, GLdouble y, GLdouble z)
     }
 }
 
-void GL_APIENTRY Rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_Rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRotatef, "context = %d, angle = %f, x = %f, y = %f, z = %f", CID(context),
@@ -5117,7 +5131,7 @@ void GL_APIENTRY Rotatef(GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
     }
 }
 
-void GL_APIENTRY Scaled(GLdouble x, GLdouble y, GLdouble z)
+void GL_APIENTRY GL_Scaled(GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLScaled, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -5138,7 +5152,7 @@ void GL_APIENTRY Scaled(GLdouble x, GLdouble y, GLdouble z)
     }
 }
 
-void GL_APIENTRY Scalef(GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_Scalef(GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLScalef, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -5159,7 +5173,7 @@ void GL_APIENTRY Scalef(GLfloat x, GLfloat y, GLfloat z)
     }
 }
 
-void GL_APIENTRY Scissor(GLint x, GLint y, GLsizei width, GLsizei height)
+void GL_APIENTRY GL_Scissor(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLScissor, "context = %d, x = %d, y = %d, width = %d, height = %d", CID(context),
@@ -5182,7 +5196,7 @@ void GL_APIENTRY Scissor(GLint x, GLint y, GLsizei width, GLsizei height)
     }
 }
 
-void GL_APIENTRY SelectBuffer(GLsizei size, GLuint *buffer)
+void GL_APIENTRY GL_SelectBuffer(GLsizei size, GLuint *buffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSelectBuffer, "context = %d, size = %d, buffer = 0x%016" PRIxPTR "",
@@ -5205,7 +5219,7 @@ void GL_APIENTRY SelectBuffer(GLsizei size, GLuint *buffer)
     }
 }
 
-void GL_APIENTRY ShadeModel(GLenum mode)
+void GL_APIENTRY GL_ShadeModel(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLShadeModel, "context = %d, mode = %s", CID(context),
@@ -5228,7 +5242,7 @@ void GL_APIENTRY ShadeModel(GLenum mode)
     }
 }
 
-void GL_APIENTRY StencilFunc(GLenum func, GLint ref, GLuint mask)
+void GL_APIENTRY GL_StencilFunc(GLenum func, GLint ref, GLuint mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLStencilFunc, "context = %d, func = %s, ref = %d, mask = %u", CID(context),
@@ -5251,7 +5265,7 @@ void GL_APIENTRY StencilFunc(GLenum func, GLint ref, GLuint mask)
     }
 }
 
-void GL_APIENTRY StencilMask(GLuint mask)
+void GL_APIENTRY GL_StencilMask(GLuint mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLStencilMask, "context = %d, mask = %u", CID(context), mask);
@@ -5272,7 +5286,7 @@ void GL_APIENTRY StencilMask(GLuint mask)
     }
 }
 
-void GL_APIENTRY StencilOp(GLenum fail, GLenum zfail, GLenum zpass)
+void GL_APIENTRY GL_StencilOp(GLenum fail, GLenum zfail, GLenum zpass)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLStencilOp, "context = %d, fail = %s, zfail = %s, zpass = %s", CID(context),
@@ -5297,7 +5311,7 @@ void GL_APIENTRY StencilOp(GLenum fail, GLenum zfail, GLenum zpass)
     }
 }
 
-void GL_APIENTRY TexCoord1d(GLdouble s)
+void GL_APIENTRY GL_TexCoord1d(GLdouble s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1d, "context = %d, s = %f", CID(context), s);
@@ -5318,7 +5332,7 @@ void GL_APIENTRY TexCoord1d(GLdouble s)
     }
 }
 
-void GL_APIENTRY TexCoord1dv(const GLdouble *v)
+void GL_APIENTRY GL_TexCoord1dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5340,7 +5354,7 @@ void GL_APIENTRY TexCoord1dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY TexCoord1f(GLfloat s)
+void GL_APIENTRY GL_TexCoord1f(GLfloat s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1f, "context = %d, s = %f", CID(context), s);
@@ -5361,7 +5375,7 @@ void GL_APIENTRY TexCoord1f(GLfloat s)
     }
 }
 
-void GL_APIENTRY TexCoord1fv(const GLfloat *v)
+void GL_APIENTRY GL_TexCoord1fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5383,7 +5397,7 @@ void GL_APIENTRY TexCoord1fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY TexCoord1i(GLint s)
+void GL_APIENTRY GL_TexCoord1i(GLint s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1i, "context = %d, s = %d", CID(context), s);
@@ -5404,7 +5418,7 @@ void GL_APIENTRY TexCoord1i(GLint s)
     }
 }
 
-void GL_APIENTRY TexCoord1iv(const GLint *v)
+void GL_APIENTRY GL_TexCoord1iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5426,7 +5440,7 @@ void GL_APIENTRY TexCoord1iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY TexCoord1s(GLshort s)
+void GL_APIENTRY GL_TexCoord1s(GLshort s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1s, "context = %d, s = %d", CID(context), s);
@@ -5447,7 +5461,7 @@ void GL_APIENTRY TexCoord1s(GLshort s)
     }
 }
 
-void GL_APIENTRY TexCoord1sv(const GLshort *v)
+void GL_APIENTRY GL_TexCoord1sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord1sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5469,7 +5483,7 @@ void GL_APIENTRY TexCoord1sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY TexCoord2d(GLdouble s, GLdouble t)
+void GL_APIENTRY GL_TexCoord2d(GLdouble s, GLdouble t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2d, "context = %d, s = %f, t = %f", CID(context), s, t);
@@ -5490,7 +5504,7 @@ void GL_APIENTRY TexCoord2d(GLdouble s, GLdouble t)
     }
 }
 
-void GL_APIENTRY TexCoord2dv(const GLdouble *v)
+void GL_APIENTRY GL_TexCoord2dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5512,7 +5526,7 @@ void GL_APIENTRY TexCoord2dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY TexCoord2f(GLfloat s, GLfloat t)
+void GL_APIENTRY GL_TexCoord2f(GLfloat s, GLfloat t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2f, "context = %d, s = %f, t = %f", CID(context), s, t);
@@ -5533,7 +5547,7 @@ void GL_APIENTRY TexCoord2f(GLfloat s, GLfloat t)
     }
 }
 
-void GL_APIENTRY TexCoord2fv(const GLfloat *v)
+void GL_APIENTRY GL_TexCoord2fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5555,7 +5569,7 @@ void GL_APIENTRY TexCoord2fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY TexCoord2i(GLint s, GLint t)
+void GL_APIENTRY GL_TexCoord2i(GLint s, GLint t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2i, "context = %d, s = %d, t = %d", CID(context), s, t);
@@ -5576,7 +5590,7 @@ void GL_APIENTRY TexCoord2i(GLint s, GLint t)
     }
 }
 
-void GL_APIENTRY TexCoord2iv(const GLint *v)
+void GL_APIENTRY GL_TexCoord2iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5598,7 +5612,7 @@ void GL_APIENTRY TexCoord2iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY TexCoord2s(GLshort s, GLshort t)
+void GL_APIENTRY GL_TexCoord2s(GLshort s, GLshort t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2s, "context = %d, s = %d, t = %d", CID(context), s, t);
@@ -5619,7 +5633,7 @@ void GL_APIENTRY TexCoord2s(GLshort s, GLshort t)
     }
 }
 
-void GL_APIENTRY TexCoord2sv(const GLshort *v)
+void GL_APIENTRY GL_TexCoord2sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord2sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5641,7 +5655,7 @@ void GL_APIENTRY TexCoord2sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY TexCoord3d(GLdouble s, GLdouble t, GLdouble r)
+void GL_APIENTRY GL_TexCoord3d(GLdouble s, GLdouble t, GLdouble r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3d, "context = %d, s = %f, t = %f, r = %f", CID(context), s, t, r);
@@ -5662,7 +5676,7 @@ void GL_APIENTRY TexCoord3d(GLdouble s, GLdouble t, GLdouble r)
     }
 }
 
-void GL_APIENTRY TexCoord3dv(const GLdouble *v)
+void GL_APIENTRY GL_TexCoord3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5684,7 +5698,7 @@ void GL_APIENTRY TexCoord3dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY TexCoord3f(GLfloat s, GLfloat t, GLfloat r)
+void GL_APIENTRY GL_TexCoord3f(GLfloat s, GLfloat t, GLfloat r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3f, "context = %d, s = %f, t = %f, r = %f", CID(context), s, t, r);
@@ -5705,7 +5719,7 @@ void GL_APIENTRY TexCoord3f(GLfloat s, GLfloat t, GLfloat r)
     }
 }
 
-void GL_APIENTRY TexCoord3fv(const GLfloat *v)
+void GL_APIENTRY GL_TexCoord3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5727,7 +5741,7 @@ void GL_APIENTRY TexCoord3fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY TexCoord3i(GLint s, GLint t, GLint r)
+void GL_APIENTRY GL_TexCoord3i(GLint s, GLint t, GLint r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3i, "context = %d, s = %d, t = %d, r = %d", CID(context), s, t, r);
@@ -5748,7 +5762,7 @@ void GL_APIENTRY TexCoord3i(GLint s, GLint t, GLint r)
     }
 }
 
-void GL_APIENTRY TexCoord3iv(const GLint *v)
+void GL_APIENTRY GL_TexCoord3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5770,7 +5784,7 @@ void GL_APIENTRY TexCoord3iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY TexCoord3s(GLshort s, GLshort t, GLshort r)
+void GL_APIENTRY GL_TexCoord3s(GLshort s, GLshort t, GLshort r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3s, "context = %d, s = %d, t = %d, r = %d", CID(context), s, t, r);
@@ -5791,7 +5805,7 @@ void GL_APIENTRY TexCoord3s(GLshort s, GLshort t, GLshort r)
     }
 }
 
-void GL_APIENTRY TexCoord3sv(const GLshort *v)
+void GL_APIENTRY GL_TexCoord3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord3sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5813,7 +5827,7 @@ void GL_APIENTRY TexCoord3sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY TexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q)
+void GL_APIENTRY GL_TexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4d, "context = %d, s = %f, t = %f, r = %f, q = %f", CID(context), s, t,
@@ -5835,7 +5849,7 @@ void GL_APIENTRY TexCoord4d(GLdouble s, GLdouble t, GLdouble r, GLdouble q)
     }
 }
 
-void GL_APIENTRY TexCoord4dv(const GLdouble *v)
+void GL_APIENTRY GL_TexCoord4dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5857,7 +5871,7 @@ void GL_APIENTRY TexCoord4dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY TexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q)
+void GL_APIENTRY GL_TexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4f, "context = %d, s = %f, t = %f, r = %f, q = %f", CID(context), s, t,
@@ -5879,7 +5893,7 @@ void GL_APIENTRY TexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q)
     }
 }
 
-void GL_APIENTRY TexCoord4fv(const GLfloat *v)
+void GL_APIENTRY GL_TexCoord4fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5901,7 +5915,7 @@ void GL_APIENTRY TexCoord4fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY TexCoord4i(GLint s, GLint t, GLint r, GLint q)
+void GL_APIENTRY GL_TexCoord4i(GLint s, GLint t, GLint r, GLint q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4i, "context = %d, s = %d, t = %d, r = %d, q = %d", CID(context), s, t,
@@ -5923,7 +5937,7 @@ void GL_APIENTRY TexCoord4i(GLint s, GLint t, GLint r, GLint q)
     }
 }
 
-void GL_APIENTRY TexCoord4iv(const GLint *v)
+void GL_APIENTRY GL_TexCoord4iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5945,7 +5959,7 @@ void GL_APIENTRY TexCoord4iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY TexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q)
+void GL_APIENTRY GL_TexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4s, "context = %d, s = %d, t = %d, r = %d, q = %d", CID(context), s, t,
@@ -5967,7 +5981,7 @@ void GL_APIENTRY TexCoord4s(GLshort s, GLshort t, GLshort r, GLshort q)
     }
 }
 
-void GL_APIENTRY TexCoord4sv(const GLshort *v)
+void GL_APIENTRY GL_TexCoord4sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoord4sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -5989,7 +6003,7 @@ void GL_APIENTRY TexCoord4sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY TexEnvf(GLenum target, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_TexEnvf(GLenum target, GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexEnvf, "context = %d, target = %s, pname = %s, param = %f", CID(context),
@@ -6015,7 +6029,7 @@ void GL_APIENTRY TexEnvf(GLenum target, GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexEnvfv, "context = %d, target = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -6041,7 +6055,7 @@ void GL_APIENTRY TexEnvfv(GLenum target, GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY TexEnvi(GLenum target, GLenum pname, GLint param)
+void GL_APIENTRY GL_TexEnvi(GLenum target, GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexEnvi, "context = %d, target = %s, pname = %s, param = %d", CID(context),
@@ -6067,7 +6081,7 @@ void GL_APIENTRY TexEnvi(GLenum target, GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY TexEnviv(GLenum target, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_TexEnviv(GLenum target, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexEnviv, "context = %d, target = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -6093,7 +6107,7 @@ void GL_APIENTRY TexEnviv(GLenum target, GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY TexGend(GLenum coord, GLenum pname, GLdouble param)
+void GL_APIENTRY GL_TexGend(GLenum coord, GLenum pname, GLdouble param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGend, "context = %d, coord = %s, pname = %s, param = %f", CID(context),
@@ -6117,7 +6131,7 @@ void GL_APIENTRY TexGend(GLenum coord, GLenum pname, GLdouble param)
     }
 }
 
-void GL_APIENTRY TexGendv(GLenum coord, GLenum pname, const GLdouble *params)
+void GL_APIENTRY GL_TexGendv(GLenum coord, GLenum pname, const GLdouble *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGendv, "context = %d, coord = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -6141,7 +6155,7 @@ void GL_APIENTRY TexGendv(GLenum coord, GLenum pname, const GLdouble *params)
     }
 }
 
-void GL_APIENTRY TexGenf(GLenum coord, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_TexGenf(GLenum coord, GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGenf, "context = %d, coord = %s, pname = %s, param = %f", CID(context),
@@ -6165,7 +6179,7 @@ void GL_APIENTRY TexGenf(GLenum coord, GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY TexGenfv(GLenum coord, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_TexGenfv(GLenum coord, GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGenfv, "context = %d, coord = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -6189,7 +6203,7 @@ void GL_APIENTRY TexGenfv(GLenum coord, GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY TexGeni(GLenum coord, GLenum pname, GLint param)
+void GL_APIENTRY GL_TexGeni(GLenum coord, GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGeni, "context = %d, coord = %s, pname = %s, param = %d", CID(context),
@@ -6213,7 +6227,7 @@ void GL_APIENTRY TexGeni(GLenum coord, GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY TexGeniv(GLenum coord, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_TexGeniv(GLenum coord, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGeniv, "context = %d, coord = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -6237,14 +6251,14 @@ void GL_APIENTRY TexGeniv(GLenum coord, GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY TexImage1D(GLenum target,
-                            GLint level,
-                            GLint internalformat,
-                            GLsizei width,
-                            GLint border,
-                            GLenum format,
-                            GLenum type,
-                            const void *pixels)
+void GL_APIENTRY GL_TexImage1D(GLenum target,
+                               GLint level,
+                               GLint internalformat,
+                               GLsizei width,
+                               GLint border,
+                               GLenum format,
+                               GLenum type,
+                               const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexImage1D,
@@ -6273,15 +6287,15 @@ void GL_APIENTRY TexImage1D(GLenum target,
     }
 }
 
-void GL_APIENTRY TexImage2D(GLenum target,
-                            GLint level,
-                            GLint internalformat,
-                            GLsizei width,
-                            GLsizei height,
-                            GLint border,
-                            GLenum format,
-                            GLenum type,
-                            const void *pixels)
+void GL_APIENTRY GL_TexImage2D(GLenum target,
+                               GLint level,
+                               GLint internalformat,
+                               GLsizei width,
+                               GLsizei height,
+                               GLint border,
+                               GLenum format,
+                               GLenum type,
+                               const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexImage2D,
@@ -6312,7 +6326,7 @@ void GL_APIENTRY TexImage2D(GLenum target,
     }
 }
 
-void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_TexParameterf(GLenum target, GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterf, "context = %d, target = %s, pname = %s, param = %f",
@@ -6337,7 +6351,7 @@ void GL_APIENTRY TexParameterf(GLenum target, GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_TexParameterfv(GLenum target, GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterfv,
@@ -6363,7 +6377,7 @@ void GL_APIENTRY TexParameterfv(GLenum target, GLenum pname, const GLfloat *para
     }
 }
 
-void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
+void GL_APIENTRY GL_TexParameteri(GLenum target, GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameteri, "context = %d, target = %s, pname = %s, param = %d",
@@ -6388,7 +6402,7 @@ void GL_APIENTRY TexParameteri(GLenum target, GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_TexParameteriv(GLenum target, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameteriv,
@@ -6414,7 +6428,7 @@ void GL_APIENTRY TexParameteriv(GLenum target, GLenum pname, const GLint *params
     }
 }
 
-void GL_APIENTRY Translated(GLdouble x, GLdouble y, GLdouble z)
+void GL_APIENTRY GL_Translated(GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTranslated, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -6435,7 +6449,7 @@ void GL_APIENTRY Translated(GLdouble x, GLdouble y, GLdouble z)
     }
 }
 
-void GL_APIENTRY Translatef(GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_Translatef(GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTranslatef, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -6456,7 +6470,7 @@ void GL_APIENTRY Translatef(GLfloat x, GLfloat y, GLfloat z)
     }
 }
 
-void GL_APIENTRY Vertex2d(GLdouble x, GLdouble y)
+void GL_APIENTRY GL_Vertex2d(GLdouble x, GLdouble y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2d, "context = %d, x = %f, y = %f", CID(context), x, y);
@@ -6477,7 +6491,7 @@ void GL_APIENTRY Vertex2d(GLdouble x, GLdouble y)
     }
 }
 
-void GL_APIENTRY Vertex2dv(const GLdouble *v)
+void GL_APIENTRY GL_Vertex2dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6498,7 +6512,7 @@ void GL_APIENTRY Vertex2dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY Vertex2f(GLfloat x, GLfloat y)
+void GL_APIENTRY GL_Vertex2f(GLfloat x, GLfloat y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2f, "context = %d, x = %f, y = %f", CID(context), x, y);
@@ -6519,7 +6533,7 @@ void GL_APIENTRY Vertex2f(GLfloat x, GLfloat y)
     }
 }
 
-void GL_APIENTRY Vertex2fv(const GLfloat *v)
+void GL_APIENTRY GL_Vertex2fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6540,7 +6554,7 @@ void GL_APIENTRY Vertex2fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY Vertex2i(GLint x, GLint y)
+void GL_APIENTRY GL_Vertex2i(GLint x, GLint y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2i, "context = %d, x = %d, y = %d", CID(context), x, y);
@@ -6561,7 +6575,7 @@ void GL_APIENTRY Vertex2i(GLint x, GLint y)
     }
 }
 
-void GL_APIENTRY Vertex2iv(const GLint *v)
+void GL_APIENTRY GL_Vertex2iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6582,7 +6596,7 @@ void GL_APIENTRY Vertex2iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY Vertex2s(GLshort x, GLshort y)
+void GL_APIENTRY GL_Vertex2s(GLshort x, GLshort y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2s, "context = %d, x = %d, y = %d", CID(context), x, y);
@@ -6603,7 +6617,7 @@ void GL_APIENTRY Vertex2s(GLshort x, GLshort y)
     }
 }
 
-void GL_APIENTRY Vertex2sv(const GLshort *v)
+void GL_APIENTRY GL_Vertex2sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex2sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6624,7 +6638,7 @@ void GL_APIENTRY Vertex2sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY Vertex3d(GLdouble x, GLdouble y, GLdouble z)
+void GL_APIENTRY GL_Vertex3d(GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3d, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -6645,7 +6659,7 @@ void GL_APIENTRY Vertex3d(GLdouble x, GLdouble y, GLdouble z)
     }
 }
 
-void GL_APIENTRY Vertex3dv(const GLdouble *v)
+void GL_APIENTRY GL_Vertex3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6666,7 +6680,7 @@ void GL_APIENTRY Vertex3dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY Vertex3f(GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_Vertex3f(GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3f, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -6687,7 +6701,7 @@ void GL_APIENTRY Vertex3f(GLfloat x, GLfloat y, GLfloat z)
     }
 }
 
-void GL_APIENTRY Vertex3fv(const GLfloat *v)
+void GL_APIENTRY GL_Vertex3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6708,7 +6722,7 @@ void GL_APIENTRY Vertex3fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY Vertex3i(GLint x, GLint y, GLint z)
+void GL_APIENTRY GL_Vertex3i(GLint x, GLint y, GLint z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3i, "context = %d, x = %d, y = %d, z = %d", CID(context), x, y, z);
@@ -6729,7 +6743,7 @@ void GL_APIENTRY Vertex3i(GLint x, GLint y, GLint z)
     }
 }
 
-void GL_APIENTRY Vertex3iv(const GLint *v)
+void GL_APIENTRY GL_Vertex3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6750,7 +6764,7 @@ void GL_APIENTRY Vertex3iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY Vertex3s(GLshort x, GLshort y, GLshort z)
+void GL_APIENTRY GL_Vertex3s(GLshort x, GLshort y, GLshort z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3s, "context = %d, x = %d, y = %d, z = %d", CID(context), x, y, z);
@@ -6771,7 +6785,7 @@ void GL_APIENTRY Vertex3s(GLshort x, GLshort y, GLshort z)
     }
 }
 
-void GL_APIENTRY Vertex3sv(const GLshort *v)
+void GL_APIENTRY GL_Vertex3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex3sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6792,7 +6806,7 @@ void GL_APIENTRY Vertex3sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY Vertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
+void GL_APIENTRY GL_Vertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4d, "context = %d, x = %f, y = %f, z = %f, w = %f", CID(context), x, y,
@@ -6814,7 +6828,7 @@ void GL_APIENTRY Vertex4d(GLdouble x, GLdouble y, GLdouble z, GLdouble w)
     }
 }
 
-void GL_APIENTRY Vertex4dv(const GLdouble *v)
+void GL_APIENTRY GL_Vertex4dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6835,7 +6849,7 @@ void GL_APIENTRY Vertex4dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY Vertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
+void GL_APIENTRY GL_Vertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4f, "context = %d, x = %f, y = %f, z = %f, w = %f", CID(context), x, y,
@@ -6857,7 +6871,7 @@ void GL_APIENTRY Vertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w)
     }
 }
 
-void GL_APIENTRY Vertex4fv(const GLfloat *v)
+void GL_APIENTRY GL_Vertex4fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6878,7 +6892,7 @@ void GL_APIENTRY Vertex4fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY Vertex4i(GLint x, GLint y, GLint z, GLint w)
+void GL_APIENTRY GL_Vertex4i(GLint x, GLint y, GLint z, GLint w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4i, "context = %d, x = %d, y = %d, z = %d, w = %d", CID(context), x, y,
@@ -6900,7 +6914,7 @@ void GL_APIENTRY Vertex4i(GLint x, GLint y, GLint z, GLint w)
     }
 }
 
-void GL_APIENTRY Vertex4iv(const GLint *v)
+void GL_APIENTRY GL_Vertex4iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6921,7 +6935,7 @@ void GL_APIENTRY Vertex4iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY Vertex4s(GLshort x, GLshort y, GLshort z, GLshort w)
+void GL_APIENTRY GL_Vertex4s(GLshort x, GLshort y, GLshort z, GLshort w)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4s, "context = %d, x = %d, y = %d, z = %d, w = %d", CID(context), x, y,
@@ -6943,7 +6957,7 @@ void GL_APIENTRY Vertex4s(GLshort x, GLshort y, GLshort z, GLshort w)
     }
 }
 
-void GL_APIENTRY Vertex4sv(const GLshort *v)
+void GL_APIENTRY GL_Vertex4sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertex4sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context), (uintptr_t)v);
@@ -6964,7 +6978,7 @@ void GL_APIENTRY Vertex4sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY Viewport(GLint x, GLint y, GLsizei width, GLsizei height)
+void GL_APIENTRY GL_Viewport(GLint x, GLint y, GLsizei width, GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLViewport, "context = %d, x = %d, y = %d, width = %d, height = %d",
@@ -6988,7 +7002,9 @@ void GL_APIENTRY Viewport(GLint x, GLint y, GLsizei width, GLsizei height)
 }
 
 // GL 1.1
-GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLboolean *residences)
+GLboolean GL_APIENTRY GL_AreTexturesResident(GLsizei n,
+                                             const GLuint *textures,
+                                             GLboolean *residences)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLAreTexturesResident,
@@ -7021,7 +7037,7 @@ GLboolean GL_APIENTRY AreTexturesResident(GLsizei n, const GLuint *textures, GLb
     return returnValue;
 }
 
-void GL_APIENTRY ArrayElement(GLint i)
+void GL_APIENTRY GL_ArrayElement(GLint i)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLArrayElement, "context = %d, i = %d", CID(context), i);
@@ -7042,7 +7058,7 @@ void GL_APIENTRY ArrayElement(GLint i)
     }
 }
 
-void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
+void GL_APIENTRY GL_BindTexture(GLenum target, GLuint texture)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindTexture, "context = %d, target = %s, texture = %u", CID(context),
@@ -7067,7 +7083,7 @@ void GL_APIENTRY BindTexture(GLenum target, GLuint texture)
     }
 }
 
-void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_ColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColorPointer,
@@ -7093,13 +7109,13 @@ void GL_APIENTRY ColorPointer(GLint size, GLenum type, GLsizei stride, const voi
     }
 }
 
-void GL_APIENTRY CopyTexImage1D(GLenum target,
-                                GLint level,
-                                GLenum internalformat,
-                                GLint x,
-                                GLint y,
-                                GLsizei width,
-                                GLint border)
+void GL_APIENTRY GL_CopyTexImage1D(GLenum target,
+                                   GLint level,
+                                   GLenum internalformat,
+                                   GLint x,
+                                   GLint y,
+                                   GLsizei width,
+                                   GLint border)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTexImage1D,
@@ -7127,14 +7143,14 @@ void GL_APIENTRY CopyTexImage1D(GLenum target,
     }
 }
 
-void GL_APIENTRY CopyTexImage2D(GLenum target,
-                                GLint level,
-                                GLenum internalformat,
-                                GLint x,
-                                GLint y,
-                                GLsizei width,
-                                GLsizei height,
-                                GLint border)
+void GL_APIENTRY GL_CopyTexImage2D(GLenum target,
+                                   GLint level,
+                                   GLenum internalformat,
+                                   GLint x,
+                                   GLint y,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLint border)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTexImage2D,
@@ -7165,7 +7181,7 @@ void GL_APIENTRY CopyTexImage2D(GLenum target,
 }
 
 void GL_APIENTRY
-CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width)
+GL_CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, GLsizei width)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTexSubImage1D,
@@ -7191,14 +7207,14 @@ CopyTexSubImage1D(GLenum target, GLint level, GLint xoffset, GLint x, GLint y, G
     }
 }
 
-void GL_APIENTRY CopyTexSubImage2D(GLenum target,
-                                   GLint level,
-                                   GLint xoffset,
-                                   GLint yoffset,
-                                   GLint x,
-                                   GLint y,
-                                   GLsizei width,
-                                   GLsizei height)
+void GL_APIENTRY GL_CopyTexSubImage2D(GLenum target,
+                                      GLint level,
+                                      GLint xoffset,
+                                      GLint yoffset,
+                                      GLint x,
+                                      GLint y,
+                                      GLsizei width,
+                                      GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTexSubImage2D,
@@ -7227,7 +7243,7 @@ void GL_APIENTRY CopyTexSubImage2D(GLenum target,
     }
 }
 
-void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
+void GL_APIENTRY GL_DeleteTextures(GLsizei n, const GLuint *textures)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteTextures, "context = %d, n = %d, textures = 0x%016" PRIxPTR "",
@@ -7251,7 +7267,7 @@ void GL_APIENTRY DeleteTextures(GLsizei n, const GLuint *textures)
     }
 }
 
-void GL_APIENTRY DisableClientState(GLenum array)
+void GL_APIENTRY GL_DisableClientState(GLenum array)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDisableClientState, "context = %d, array = %s", CID(context),
@@ -7275,7 +7291,7 @@ void GL_APIENTRY DisableClientState(GLenum array)
     }
 }
 
-void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
+void GL_APIENTRY GL_DrawArrays(GLenum mode, GLint first, GLsizei count)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawArrays, "context = %d, mode = %s, first = %d, count = %d", CID(context),
@@ -7299,7 +7315,7 @@ void GL_APIENTRY DrawArrays(GLenum mode, GLint first, GLsizei count)
     }
 }
 
-void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
+void GL_APIENTRY GL_DrawElements(GLenum mode, GLsizei count, GLenum type, const void *indices)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElements,
@@ -7326,7 +7342,7 @@ void GL_APIENTRY DrawElements(GLenum mode, GLsizei count, GLenum type, const voi
     }
 }
 
-void GL_APIENTRY EdgeFlagPointer(GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_EdgeFlagPointer(GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEdgeFlagPointer, "context = %d, stride = %d, pointer = 0x%016" PRIxPTR "",
@@ -7349,7 +7365,7 @@ void GL_APIENTRY EdgeFlagPointer(GLsizei stride, const void *pointer)
     }
 }
 
-void GL_APIENTRY EnableClientState(GLenum array)
+void GL_APIENTRY GL_EnableClientState(GLenum array)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEnableClientState, "context = %d, array = %s", CID(context),
@@ -7373,7 +7389,7 @@ void GL_APIENTRY EnableClientState(GLenum array)
     }
 }
 
-void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
+void GL_APIENTRY GL_GenTextures(GLsizei n, GLuint *textures)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenTextures, "context = %d, n = %d, textures = 0x%016" PRIxPTR "",
@@ -7397,7 +7413,7 @@ void GL_APIENTRY GenTextures(GLsizei n, GLuint *textures)
     }
 }
 
-void GL_APIENTRY GetPointerv(GLenum pname, void **params)
+void GL_APIENTRY GL_GetPointerv(GLenum pname, void **params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetPointerv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -7420,7 +7436,7 @@ void GL_APIENTRY GetPointerv(GLenum pname, void **params)
     }
 }
 
-void GL_APIENTRY IndexPointer(GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_IndexPointer(GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexPointer,
@@ -7444,7 +7460,7 @@ void GL_APIENTRY IndexPointer(GLenum type, GLsizei stride, const void *pointer)
     }
 }
 
-void GL_APIENTRY Indexub(GLubyte c)
+void GL_APIENTRY GL_Indexub(GLubyte c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexub, "context = %d, c = %d", CID(context), c);
@@ -7465,7 +7481,7 @@ void GL_APIENTRY Indexub(GLubyte c)
     }
 }
 
-void GL_APIENTRY Indexubv(const GLubyte *c)
+void GL_APIENTRY GL_Indexubv(const GLubyte *c)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIndexubv, "context = %d, c = 0x%016" PRIxPTR "", CID(context), (uintptr_t)c);
@@ -7486,7 +7502,7 @@ void GL_APIENTRY Indexubv(const GLubyte *c)
     }
 }
 
-void GL_APIENTRY InterleavedArrays(GLenum format, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_InterleavedArrays(GLenum format, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLInterleavedArrays,
@@ -7510,7 +7526,7 @@ void GL_APIENTRY InterleavedArrays(GLenum format, GLsizei stride, const void *po
     }
 }
 
-GLboolean GL_APIENTRY IsTexture(GLuint texture)
+GLboolean GL_APIENTRY GL_IsTexture(GLuint texture)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsTexture, "context = %d, texture = %u", CID(context), texture);
@@ -7539,7 +7555,7 @@ GLboolean GL_APIENTRY IsTexture(GLuint texture)
     return returnValue;
 }
 
-void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_NormalPointer(GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNormalPointer,
@@ -7564,7 +7580,7 @@ void GL_APIENTRY NormalPointer(GLenum type, GLsizei stride, const void *pointer)
     }
 }
 
-void GL_APIENTRY PolygonOffset(GLfloat factor, GLfloat units)
+void GL_APIENTRY GL_PolygonOffset(GLfloat factor, GLfloat units)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPolygonOffset, "context = %d, factor = %f, units = %f", CID(context), factor,
@@ -7587,7 +7603,7 @@ void GL_APIENTRY PolygonOffset(GLfloat factor, GLfloat units)
     }
 }
 
-void GL_APIENTRY PopClientAttrib()
+void GL_APIENTRY GL_PopClientAttrib()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPopClientAttrib, "context = %d", CID(context));
@@ -7608,7 +7624,7 @@ void GL_APIENTRY PopClientAttrib()
     }
 }
 
-void GL_APIENTRY PrioritizeTextures(GLsizei n, const GLuint *textures, const GLfloat *priorities)
+void GL_APIENTRY GL_PrioritizeTextures(GLsizei n, const GLuint *textures, const GLfloat *priorities)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPrioritizeTextures,
@@ -7632,7 +7648,7 @@ void GL_APIENTRY PrioritizeTextures(GLsizei n, const GLuint *textures, const GLf
     }
 }
 
-void GL_APIENTRY PushClientAttrib(GLbitfield mask)
+void GL_APIENTRY GL_PushClientAttrib(GLbitfield mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPushClientAttrib, "context = %d, mask = %s", CID(context),
@@ -7654,7 +7670,7 @@ void GL_APIENTRY PushClientAttrib(GLbitfield mask)
     }
 }
 
-void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_TexCoordPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexCoordPointer,
@@ -7680,13 +7696,13 @@ void GL_APIENTRY TexCoordPointer(GLint size, GLenum type, GLsizei stride, const 
     }
 }
 
-void GL_APIENTRY TexSubImage1D(GLenum target,
-                               GLint level,
-                               GLint xoffset,
-                               GLsizei width,
-                               GLenum format,
-                               GLenum type,
-                               const void *pixels)
+void GL_APIENTRY GL_TexSubImage1D(GLenum target,
+                                  GLint level,
+                                  GLint xoffset,
+                                  GLsizei width,
+                                  GLenum format,
+                                  GLenum type,
+                                  const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexSubImage1D,
@@ -7715,15 +7731,15 @@ void GL_APIENTRY TexSubImage1D(GLenum target,
     }
 }
 
-void GL_APIENTRY TexSubImage2D(GLenum target,
-                               GLint level,
-                               GLint xoffset,
-                               GLint yoffset,
-                               GLsizei width,
-                               GLsizei height,
-                               GLenum format,
-                               GLenum type,
-                               const void *pixels)
+void GL_APIENTRY GL_TexSubImage2D(GLenum target,
+                                  GLint level,
+                                  GLint xoffset,
+                                  GLint yoffset,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLenum format,
+                                  GLenum type,
+                                  const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexSubImage2D,
@@ -7754,7 +7770,7 @@ void GL_APIENTRY TexSubImage2D(GLenum target,
     }
 }
 
-void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_VertexPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertexPointer,
@@ -7781,15 +7797,15 @@ void GL_APIENTRY VertexPointer(GLint size, GLenum type, GLsizei stride, const vo
 }
 
 // GL 1.2
-void GL_APIENTRY CopyTexSubImage3D(GLenum target,
-                                   GLint level,
-                                   GLint xoffset,
-                                   GLint yoffset,
-                                   GLint zoffset,
-                                   GLint x,
-                                   GLint y,
-                                   GLsizei width,
-                                   GLsizei height)
+void GL_APIENTRY GL_CopyTexSubImage3D(GLenum target,
+                                      GLint level,
+                                      GLint xoffset,
+                                      GLint yoffset,
+                                      GLint zoffset,
+                                      GLint x,
+                                      GLint y,
+                                      GLsizei width,
+                                      GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTexSubImage3D,
@@ -7819,12 +7835,12 @@ void GL_APIENTRY CopyTexSubImage3D(GLenum target,
     }
 }
 
-void GL_APIENTRY DrawRangeElements(GLenum mode,
-                                   GLuint start,
-                                   GLuint end,
-                                   GLsizei count,
-                                   GLenum type,
-                                   const void *indices)
+void GL_APIENTRY GL_DrawRangeElements(GLenum mode,
+                                      GLuint start,
+                                      GLuint end,
+                                      GLsizei count,
+                                      GLenum type,
+                                      const void *indices)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawRangeElements,
@@ -7854,16 +7870,16 @@ void GL_APIENTRY DrawRangeElements(GLenum mode,
     }
 }
 
-void GL_APIENTRY TexImage3D(GLenum target,
-                            GLint level,
-                            GLint internalformat,
-                            GLsizei width,
-                            GLsizei height,
-                            GLsizei depth,
-                            GLint border,
-                            GLenum format,
-                            GLenum type,
-                            const void *pixels)
+void GL_APIENTRY GL_TexImage3D(GLenum target,
+                               GLint level,
+                               GLint internalformat,
+                               GLsizei width,
+                               GLsizei height,
+                               GLsizei depth,
+                               GLint border,
+                               GLenum format,
+                               GLenum type,
+                               const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexImage3D,
@@ -7894,17 +7910,17 @@ void GL_APIENTRY TexImage3D(GLenum target,
     }
 }
 
-void GL_APIENTRY TexSubImage3D(GLenum target,
-                               GLint level,
-                               GLint xoffset,
-                               GLint yoffset,
-                               GLint zoffset,
-                               GLsizei width,
-                               GLsizei height,
-                               GLsizei depth,
-                               GLenum format,
-                               GLenum type,
-                               const void *pixels)
+void GL_APIENTRY GL_TexSubImage3D(GLenum target,
+                                  GLint level,
+                                  GLint xoffset,
+                                  GLint yoffset,
+                                  GLint zoffset,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLsizei depth,
+                                  GLenum format,
+                                  GLenum type,
+                                  const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexSubImage3D,
@@ -7937,7 +7953,7 @@ void GL_APIENTRY TexSubImage3D(GLenum target,
 }
 
 // GL 1.3
-void GL_APIENTRY ActiveTexture(GLenum texture)
+void GL_APIENTRY GL_ActiveTexture(GLenum texture)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLActiveTexture, "context = %d, texture = %s", CID(context),
@@ -7959,7 +7975,7 @@ void GL_APIENTRY ActiveTexture(GLenum texture)
     }
 }
 
-void GL_APIENTRY ClientActiveTexture(GLenum texture)
+void GL_APIENTRY GL_ClientActiveTexture(GLenum texture)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClientActiveTexture, "context = %d, texture = %s", CID(context),
@@ -7982,13 +7998,13 @@ void GL_APIENTRY ClientActiveTexture(GLenum texture)
     }
 }
 
-void GL_APIENTRY CompressedTexImage1D(GLenum target,
-                                      GLint level,
-                                      GLenum internalformat,
-                                      GLsizei width,
-                                      GLint border,
-                                      GLsizei imageSize,
-                                      const void *data)
+void GL_APIENTRY GL_CompressedTexImage1D(GLenum target,
+                                         GLint level,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLint border,
+                                         GLsizei imageSize,
+                                         const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexImage1D,
@@ -8018,14 +8034,14 @@ void GL_APIENTRY CompressedTexImage1D(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexImage2D(GLenum target,
-                                      GLint level,
-                                      GLenum internalformat,
-                                      GLsizei width,
-                                      GLsizei height,
-                                      GLint border,
-                                      GLsizei imageSize,
-                                      const void *data)
+void GL_APIENTRY GL_CompressedTexImage2D(GLenum target,
+                                         GLint level,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLint border,
+                                         GLsizei imageSize,
+                                         const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexImage2D,
@@ -8057,15 +8073,15 @@ void GL_APIENTRY CompressedTexImage2D(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexImage3D(GLenum target,
-                                      GLint level,
-                                      GLenum internalformat,
-                                      GLsizei width,
-                                      GLsizei height,
-                                      GLsizei depth,
-                                      GLint border,
-                                      GLsizei imageSize,
-                                      const void *data)
+void GL_APIENTRY GL_CompressedTexImage3D(GLenum target,
+                                         GLint level,
+                                         GLenum internalformat,
+                                         GLsizei width,
+                                         GLsizei height,
+                                         GLsizei depth,
+                                         GLint border,
+                                         GLsizei imageSize,
+                                         const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexImage3D,
@@ -8097,13 +8113,13 @@ void GL_APIENTRY CompressedTexImage3D(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage1D(GLenum target,
-                                         GLint level,
-                                         GLint xoffset,
-                                         GLsizei width,
-                                         GLenum format,
-                                         GLsizei imageSize,
-                                         const void *data)
+void GL_APIENTRY GL_CompressedTexSubImage1D(GLenum target,
+                                            GLint level,
+                                            GLint xoffset,
+                                            GLsizei width,
+                                            GLenum format,
+                                            GLsizei imageSize,
+                                            const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexSubImage1D,
@@ -8132,15 +8148,15 @@ void GL_APIENTRY CompressedTexSubImage1D(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage2D(GLenum target,
-                                         GLint level,
-                                         GLint xoffset,
-                                         GLint yoffset,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLenum format,
-                                         GLsizei imageSize,
-                                         const void *data)
+void GL_APIENTRY GL_CompressedTexSubImage2D(GLenum target,
+                                            GLint level,
+                                            GLint xoffset,
+                                            GLint yoffset,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLenum format,
+                                            GLsizei imageSize,
+                                            const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexSubImage2D,
@@ -8172,17 +8188,17 @@ void GL_APIENTRY CompressedTexSubImage2D(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage3D(GLenum target,
-                                         GLint level,
-                                         GLint xoffset,
-                                         GLint yoffset,
-                                         GLint zoffset,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLsizei depth,
-                                         GLenum format,
-                                         GLsizei imageSize,
-                                         const void *data)
+void GL_APIENTRY GL_CompressedTexSubImage3D(GLenum target,
+                                            GLint level,
+                                            GLint xoffset,
+                                            GLint yoffset,
+                                            GLint zoffset,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLsizei depth,
+                                            GLenum format,
+                                            GLsizei imageSize,
+                                            const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexSubImage3D,
@@ -8214,7 +8230,7 @@ void GL_APIENTRY CompressedTexSubImage3D(GLenum target,
     }
 }
 
-void GL_APIENTRY GetCompressedTexImage(GLenum target, GLint level, void *img)
+void GL_APIENTRY GL_GetCompressedTexImage(GLenum target, GLint level, void *img)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetCompressedTexImage,
@@ -8238,7 +8254,7 @@ void GL_APIENTRY GetCompressedTexImage(GLenum target, GLint level, void *img)
     }
 }
 
-void GL_APIENTRY LoadTransposeMatrixd(const GLdouble *m)
+void GL_APIENTRY GL_LoadTransposeMatrixd(const GLdouble *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoadTransposeMatrixd, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -8260,7 +8276,7 @@ void GL_APIENTRY LoadTransposeMatrixd(const GLdouble *m)
     }
 }
 
-void GL_APIENTRY LoadTransposeMatrixf(const GLfloat *m)
+void GL_APIENTRY GL_LoadTransposeMatrixf(const GLfloat *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoadTransposeMatrixf, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -8282,7 +8298,7 @@ void GL_APIENTRY LoadTransposeMatrixf(const GLfloat *m)
     }
 }
 
-void GL_APIENTRY MultTransposeMatrixd(const GLdouble *m)
+void GL_APIENTRY GL_MultTransposeMatrixd(const GLdouble *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultTransposeMatrixd, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -8304,7 +8320,7 @@ void GL_APIENTRY MultTransposeMatrixd(const GLdouble *m)
     }
 }
 
-void GL_APIENTRY MultTransposeMatrixf(const GLfloat *m)
+void GL_APIENTRY GL_MultTransposeMatrixf(const GLfloat *m)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultTransposeMatrixf, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -8326,7 +8342,7 @@ void GL_APIENTRY MultTransposeMatrixf(const GLfloat *m)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1d(GLenum target, GLdouble s)
+void GL_APIENTRY GL_MultiTexCoord1d(GLenum target, GLdouble s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1d, "context = %d, target = %s, s = %f", CID(context),
@@ -8349,7 +8365,7 @@ void GL_APIENTRY MultiTexCoord1d(GLenum target, GLdouble s)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1dv(GLenum target, const GLdouble *v)
+void GL_APIENTRY GL_MultiTexCoord1dv(GLenum target, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1dv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8372,7 +8388,7 @@ void GL_APIENTRY MultiTexCoord1dv(GLenum target, const GLdouble *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1f(GLenum target, GLfloat s)
+void GL_APIENTRY GL_MultiTexCoord1f(GLenum target, GLfloat s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1f, "context = %d, target = %s, s = %f", CID(context),
@@ -8395,7 +8411,7 @@ void GL_APIENTRY MultiTexCoord1f(GLenum target, GLfloat s)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1fv(GLenum target, const GLfloat *v)
+void GL_APIENTRY GL_MultiTexCoord1fv(GLenum target, const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1fv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8418,7 +8434,7 @@ void GL_APIENTRY MultiTexCoord1fv(GLenum target, const GLfloat *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1i(GLenum target, GLint s)
+void GL_APIENTRY GL_MultiTexCoord1i(GLenum target, GLint s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1i, "context = %d, target = %s, s = %d", CID(context),
@@ -8441,7 +8457,7 @@ void GL_APIENTRY MultiTexCoord1i(GLenum target, GLint s)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1iv(GLenum target, const GLint *v)
+void GL_APIENTRY GL_MultiTexCoord1iv(GLenum target, const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1iv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8464,7 +8480,7 @@ void GL_APIENTRY MultiTexCoord1iv(GLenum target, const GLint *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1s(GLenum target, GLshort s)
+void GL_APIENTRY GL_MultiTexCoord1s(GLenum target, GLshort s)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1s, "context = %d, target = %s, s = %d", CID(context),
@@ -8487,7 +8503,7 @@ void GL_APIENTRY MultiTexCoord1s(GLenum target, GLshort s)
     }
 }
 
-void GL_APIENTRY MultiTexCoord1sv(GLenum target, const GLshort *v)
+void GL_APIENTRY GL_MultiTexCoord1sv(GLenum target, const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord1sv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8510,7 +8526,7 @@ void GL_APIENTRY MultiTexCoord1sv(GLenum target, const GLshort *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2d(GLenum target, GLdouble s, GLdouble t)
+void GL_APIENTRY GL_MultiTexCoord2d(GLenum target, GLdouble s, GLdouble t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2d, "context = %d, target = %s, s = %f, t = %f", CID(context),
@@ -8533,7 +8549,7 @@ void GL_APIENTRY MultiTexCoord2d(GLenum target, GLdouble s, GLdouble t)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2dv(GLenum target, const GLdouble *v)
+void GL_APIENTRY GL_MultiTexCoord2dv(GLenum target, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2dv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8556,7 +8572,7 @@ void GL_APIENTRY MultiTexCoord2dv(GLenum target, const GLdouble *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2f(GLenum target, GLfloat s, GLfloat t)
+void GL_APIENTRY GL_MultiTexCoord2f(GLenum target, GLfloat s, GLfloat t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2f, "context = %d, target = %s, s = %f, t = %f", CID(context),
@@ -8579,7 +8595,7 @@ void GL_APIENTRY MultiTexCoord2f(GLenum target, GLfloat s, GLfloat t)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2fv(GLenum target, const GLfloat *v)
+void GL_APIENTRY GL_MultiTexCoord2fv(GLenum target, const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2fv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8602,7 +8618,7 @@ void GL_APIENTRY MultiTexCoord2fv(GLenum target, const GLfloat *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2i(GLenum target, GLint s, GLint t)
+void GL_APIENTRY GL_MultiTexCoord2i(GLenum target, GLint s, GLint t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2i, "context = %d, target = %s, s = %d, t = %d", CID(context),
@@ -8625,7 +8641,7 @@ void GL_APIENTRY MultiTexCoord2i(GLenum target, GLint s, GLint t)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2iv(GLenum target, const GLint *v)
+void GL_APIENTRY GL_MultiTexCoord2iv(GLenum target, const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2iv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8648,7 +8664,7 @@ void GL_APIENTRY MultiTexCoord2iv(GLenum target, const GLint *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2s(GLenum target, GLshort s, GLshort t)
+void GL_APIENTRY GL_MultiTexCoord2s(GLenum target, GLshort s, GLshort t)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2s, "context = %d, target = %s, s = %d, t = %d", CID(context),
@@ -8671,7 +8687,7 @@ void GL_APIENTRY MultiTexCoord2s(GLenum target, GLshort s, GLshort t)
     }
 }
 
-void GL_APIENTRY MultiTexCoord2sv(GLenum target, const GLshort *v)
+void GL_APIENTRY GL_MultiTexCoord2sv(GLenum target, const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord2sv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8694,7 +8710,7 @@ void GL_APIENTRY MultiTexCoord2sv(GLenum target, const GLshort *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble r)
+void GL_APIENTRY GL_MultiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3d, "context = %d, target = %s, s = %f, t = %f, r = %f",
@@ -8717,7 +8733,7 @@ void GL_APIENTRY MultiTexCoord3d(GLenum target, GLdouble s, GLdouble t, GLdouble
     }
 }
 
-void GL_APIENTRY MultiTexCoord3dv(GLenum target, const GLdouble *v)
+void GL_APIENTRY GL_MultiTexCoord3dv(GLenum target, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3dv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8740,7 +8756,7 @@ void GL_APIENTRY MultiTexCoord3dv(GLenum target, const GLdouble *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r)
+void GL_APIENTRY GL_MultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3f, "context = %d, target = %s, s = %f, t = %f, r = %f",
@@ -8763,7 +8779,7 @@ void GL_APIENTRY MultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r)
     }
 }
 
-void GL_APIENTRY MultiTexCoord3fv(GLenum target, const GLfloat *v)
+void GL_APIENTRY GL_MultiTexCoord3fv(GLenum target, const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3fv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8786,7 +8802,7 @@ void GL_APIENTRY MultiTexCoord3fv(GLenum target, const GLfloat *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord3i(GLenum target, GLint s, GLint t, GLint r)
+void GL_APIENTRY GL_MultiTexCoord3i(GLenum target, GLint s, GLint t, GLint r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3i, "context = %d, target = %s, s = %d, t = %d, r = %d",
@@ -8809,7 +8825,7 @@ void GL_APIENTRY MultiTexCoord3i(GLenum target, GLint s, GLint t, GLint r)
     }
 }
 
-void GL_APIENTRY MultiTexCoord3iv(GLenum target, const GLint *v)
+void GL_APIENTRY GL_MultiTexCoord3iv(GLenum target, const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3iv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8832,7 +8848,7 @@ void GL_APIENTRY MultiTexCoord3iv(GLenum target, const GLint *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r)
+void GL_APIENTRY GL_MultiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3s, "context = %d, target = %s, s = %d, t = %d, r = %d",
@@ -8855,7 +8871,7 @@ void GL_APIENTRY MultiTexCoord3s(GLenum target, GLshort s, GLshort t, GLshort r)
     }
 }
 
-void GL_APIENTRY MultiTexCoord3sv(GLenum target, const GLshort *v)
+void GL_APIENTRY GL_MultiTexCoord3sv(GLenum target, const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord3sv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8878,7 +8894,7 @@ void GL_APIENTRY MultiTexCoord3sv(GLenum target, const GLshort *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q)
+void GL_APIENTRY GL_MultiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble r, GLdouble q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4d, "context = %d, target = %s, s = %f, t = %f, r = %f, q = %f",
@@ -8901,7 +8917,7 @@ void GL_APIENTRY MultiTexCoord4d(GLenum target, GLdouble s, GLdouble t, GLdouble
     }
 }
 
-void GL_APIENTRY MultiTexCoord4dv(GLenum target, const GLdouble *v)
+void GL_APIENTRY GL_MultiTexCoord4dv(GLenum target, const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4dv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8924,7 +8940,7 @@ void GL_APIENTRY MultiTexCoord4dv(GLenum target, const GLdouble *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q)
+void GL_APIENTRY GL_MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4f, "context = %d, target = %s, s = %f, t = %f, r = %f, q = %f",
@@ -8947,7 +8963,7 @@ void GL_APIENTRY MultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r,
     }
 }
 
-void GL_APIENTRY MultiTexCoord4fv(GLenum target, const GLfloat *v)
+void GL_APIENTRY GL_MultiTexCoord4fv(GLenum target, const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4fv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -8970,7 +8986,7 @@ void GL_APIENTRY MultiTexCoord4fv(GLenum target, const GLfloat *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint q)
+void GL_APIENTRY GL_MultiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4i, "context = %d, target = %s, s = %d, t = %d, r = %d, q = %d",
@@ -8993,7 +9009,7 @@ void GL_APIENTRY MultiTexCoord4i(GLenum target, GLint s, GLint t, GLint r, GLint
     }
 }
 
-void GL_APIENTRY MultiTexCoord4iv(GLenum target, const GLint *v)
+void GL_APIENTRY GL_MultiTexCoord4iv(GLenum target, const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4iv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -9016,7 +9032,7 @@ void GL_APIENTRY MultiTexCoord4iv(GLenum target, const GLint *v)
     }
 }
 
-void GL_APIENTRY MultiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r, GLshort q)
+void GL_APIENTRY GL_MultiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r, GLshort q)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4s, "context = %d, target = %s, s = %d, t = %d, r = %d, q = %d",
@@ -9039,7 +9055,7 @@ void GL_APIENTRY MultiTexCoord4s(GLenum target, GLshort s, GLshort t, GLshort r,
     }
 }
 
-void GL_APIENTRY MultiTexCoord4sv(GLenum target, const GLshort *v)
+void GL_APIENTRY GL_MultiTexCoord4sv(GLenum target, const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiTexCoord4sv, "context = %d, target = %s, v = 0x%016" PRIxPTR "",
@@ -9062,7 +9078,7 @@ void GL_APIENTRY MultiTexCoord4sv(GLenum target, const GLshort *v)
     }
 }
 
-void GL_APIENTRY SampleCoverage(GLfloat value, GLboolean invert)
+void GL_APIENTRY GL_SampleCoverage(GLfloat value, GLboolean invert)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSampleCoverage, "context = %d, value = %f, invert = %s", CID(context), value,
@@ -9086,7 +9102,7 @@ void GL_APIENTRY SampleCoverage(GLfloat value, GLboolean invert)
 }
 
 // GL 1.4
-void GL_APIENTRY BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+void GL_APIENTRY GL_BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendColor, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -9109,7 +9125,7 @@ void GL_APIENTRY BlendColor(GLfloat red, GLfloat green, GLfloat blue, GLfloat al
     }
 }
 
-void GL_APIENTRY BlendEquation(GLenum mode)
+void GL_APIENTRY GL_BlendEquation(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendEquation, "context = %d, mode = %s", CID(context),
@@ -9131,10 +9147,10 @@ void GL_APIENTRY BlendEquation(GLenum mode)
     }
 }
 
-void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
-                                   GLenum dfactorRGB,
-                                   GLenum sfactorAlpha,
-                                   GLenum dfactorAlpha)
+void GL_APIENTRY GL_BlendFuncSeparate(GLenum sfactorRGB,
+                                      GLenum dfactorRGB,
+                                      GLenum sfactorAlpha,
+                                      GLenum dfactorAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendFuncSeparate,
@@ -9163,7 +9179,7 @@ void GL_APIENTRY BlendFuncSeparate(GLenum sfactorRGB,
     }
 }
 
-void GL_APIENTRY FogCoordPointer(GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_FogCoordPointer(GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogCoordPointer,
@@ -9187,7 +9203,7 @@ void GL_APIENTRY FogCoordPointer(GLenum type, GLsizei stride, const void *pointe
     }
 }
 
-void GL_APIENTRY FogCoordd(GLdouble coord)
+void GL_APIENTRY GL_FogCoordd(GLdouble coord)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogCoordd, "context = %d, coord = %f", CID(context), coord);
@@ -9208,7 +9224,7 @@ void GL_APIENTRY FogCoordd(GLdouble coord)
     }
 }
 
-void GL_APIENTRY FogCoorddv(const GLdouble *coord)
+void GL_APIENTRY GL_FogCoorddv(const GLdouble *coord)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogCoorddv, "context = %d, coord = 0x%016" PRIxPTR "", CID(context),
@@ -9230,7 +9246,7 @@ void GL_APIENTRY FogCoorddv(const GLdouble *coord)
     }
 }
 
-void GL_APIENTRY FogCoordf(GLfloat coord)
+void GL_APIENTRY GL_FogCoordf(GLfloat coord)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogCoordf, "context = %d, coord = %f", CID(context), coord);
@@ -9251,7 +9267,7 @@ void GL_APIENTRY FogCoordf(GLfloat coord)
     }
 }
 
-void GL_APIENTRY FogCoordfv(const GLfloat *coord)
+void GL_APIENTRY GL_FogCoordfv(const GLfloat *coord)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFogCoordfv, "context = %d, coord = 0x%016" PRIxPTR "", CID(context),
@@ -9273,10 +9289,10 @@ void GL_APIENTRY FogCoordfv(const GLfloat *coord)
     }
 }
 
-void GL_APIENTRY MultiDrawArrays(GLenum mode,
-                                 const GLint *first,
-                                 const GLsizei *count,
-                                 GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawArrays(GLenum mode,
+                                    const GLint *first,
+                                    const GLsizei *count,
+                                    GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawArrays,
@@ -9303,11 +9319,11 @@ void GL_APIENTRY MultiDrawArrays(GLenum mode,
     }
 }
 
-void GL_APIENTRY MultiDrawElements(GLenum mode,
-                                   const GLsizei *count,
-                                   GLenum type,
-                                   const void *const *indices,
-                                   GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawElements(GLenum mode,
+                                      const GLsizei *count,
+                                      GLenum type,
+                                      const void *const *indices,
+                                      GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawElements,
@@ -9337,7 +9353,7 @@ void GL_APIENTRY MultiDrawElements(GLenum mode,
     }
 }
 
-void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
+void GL_APIENTRY GL_PointParameterf(GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPointParameterf, "context = %d, pname = %s, param = %f", CID(context),
@@ -9361,7 +9377,7 @@ void GL_APIENTRY PointParameterf(GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_PointParameterfv(GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPointParameterfv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -9385,7 +9401,7 @@ void GL_APIENTRY PointParameterfv(GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY PointParameteri(GLenum pname, GLint param)
+void GL_APIENTRY GL_PointParameteri(GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPointParameteri, "context = %d, pname = %s, param = %d", CID(context),
@@ -9408,7 +9424,7 @@ void GL_APIENTRY PointParameteri(GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY PointParameteriv(GLenum pname, const GLint *params)
+void GL_APIENTRY GL_PointParameteriv(GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPointParameteriv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -9431,7 +9447,7 @@ void GL_APIENTRY PointParameteriv(GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
+void GL_APIENTRY GL_SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3b, "context = %d, red = %d, green = %d, blue = %d",
@@ -9454,7 +9470,7 @@ void GL_APIENTRY SecondaryColor3b(GLbyte red, GLbyte green, GLbyte blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3bv(const GLbyte *v)
+void GL_APIENTRY GL_SecondaryColor3bv(const GLbyte *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3bv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9476,7 +9492,7 @@ void GL_APIENTRY SecondaryColor3bv(const GLbyte *v)
     }
 }
 
-void GL_APIENTRY SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue)
+void GL_APIENTRY GL_SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3d, "context = %d, red = %f, green = %f, blue = %f",
@@ -9499,7 +9515,7 @@ void GL_APIENTRY SecondaryColor3d(GLdouble red, GLdouble green, GLdouble blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3dv(const GLdouble *v)
+void GL_APIENTRY GL_SecondaryColor3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9521,7 +9537,7 @@ void GL_APIENTRY SecondaryColor3dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue)
+void GL_APIENTRY GL_SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3f, "context = %d, red = %f, green = %f, blue = %f",
@@ -9544,7 +9560,7 @@ void GL_APIENTRY SecondaryColor3f(GLfloat red, GLfloat green, GLfloat blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3fv(const GLfloat *v)
+void GL_APIENTRY GL_SecondaryColor3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9566,7 +9582,7 @@ void GL_APIENTRY SecondaryColor3fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY SecondaryColor3i(GLint red, GLint green, GLint blue)
+void GL_APIENTRY GL_SecondaryColor3i(GLint red, GLint green, GLint blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3i, "context = %d, red = %d, green = %d, blue = %d",
@@ -9589,7 +9605,7 @@ void GL_APIENTRY SecondaryColor3i(GLint red, GLint green, GLint blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3iv(const GLint *v)
+void GL_APIENTRY GL_SecondaryColor3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9611,7 +9627,7 @@ void GL_APIENTRY SecondaryColor3iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY SecondaryColor3s(GLshort red, GLshort green, GLshort blue)
+void GL_APIENTRY GL_SecondaryColor3s(GLshort red, GLshort green, GLshort blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3s, "context = %d, red = %d, green = %d, blue = %d",
@@ -9634,7 +9650,7 @@ void GL_APIENTRY SecondaryColor3s(GLshort red, GLshort green, GLshort blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3sv(const GLshort *v)
+void GL_APIENTRY GL_SecondaryColor3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9656,7 +9672,7 @@ void GL_APIENTRY SecondaryColor3sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue)
+void GL_APIENTRY GL_SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3ub, "context = %d, red = %d, green = %d, blue = %d",
@@ -9679,7 +9695,7 @@ void GL_APIENTRY SecondaryColor3ub(GLubyte red, GLubyte green, GLubyte blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3ubv(const GLubyte *v)
+void GL_APIENTRY GL_SecondaryColor3ubv(const GLubyte *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3ubv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9701,7 +9717,7 @@ void GL_APIENTRY SecondaryColor3ubv(const GLubyte *v)
     }
 }
 
-void GL_APIENTRY SecondaryColor3ui(GLuint red, GLuint green, GLuint blue)
+void GL_APIENTRY GL_SecondaryColor3ui(GLuint red, GLuint green, GLuint blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3ui, "context = %d, red = %u, green = %u, blue = %u",
@@ -9724,7 +9740,7 @@ void GL_APIENTRY SecondaryColor3ui(GLuint red, GLuint green, GLuint blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3uiv(const GLuint *v)
+void GL_APIENTRY GL_SecondaryColor3uiv(const GLuint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3uiv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9746,7 +9762,7 @@ void GL_APIENTRY SecondaryColor3uiv(const GLuint *v)
     }
 }
 
-void GL_APIENTRY SecondaryColor3us(GLushort red, GLushort green, GLushort blue)
+void GL_APIENTRY GL_SecondaryColor3us(GLushort red, GLushort green, GLushort blue)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3us, "context = %d, red = %u, green = %u, blue = %u",
@@ -9769,7 +9785,7 @@ void GL_APIENTRY SecondaryColor3us(GLushort red, GLushort green, GLushort blue)
     }
 }
 
-void GL_APIENTRY SecondaryColor3usv(const GLushort *v)
+void GL_APIENTRY GL_SecondaryColor3usv(const GLushort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColor3usv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9791,7 +9807,10 @@ void GL_APIENTRY SecondaryColor3usv(const GLushort *v)
     }
 }
 
-void GL_APIENTRY SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_SecondaryColorPointer(GLint size,
+                                          GLenum type,
+                                          GLsizei stride,
+                                          const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSecondaryColorPointer,
@@ -9816,7 +9835,7 @@ void GL_APIENTRY SecondaryColorPointer(GLint size, GLenum type, GLsizei stride, 
     }
 }
 
-void GL_APIENTRY WindowPos2d(GLdouble x, GLdouble y)
+void GL_APIENTRY GL_WindowPos2d(GLdouble x, GLdouble y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2d, "context = %d, x = %f, y = %f", CID(context), x, y);
@@ -9837,7 +9856,7 @@ void GL_APIENTRY WindowPos2d(GLdouble x, GLdouble y)
     }
 }
 
-void GL_APIENTRY WindowPos2dv(const GLdouble *v)
+void GL_APIENTRY GL_WindowPos2dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9859,7 +9878,7 @@ void GL_APIENTRY WindowPos2dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY WindowPos2f(GLfloat x, GLfloat y)
+void GL_APIENTRY GL_WindowPos2f(GLfloat x, GLfloat y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2f, "context = %d, x = %f, y = %f", CID(context), x, y);
@@ -9880,7 +9899,7 @@ void GL_APIENTRY WindowPos2f(GLfloat x, GLfloat y)
     }
 }
 
-void GL_APIENTRY WindowPos2fv(const GLfloat *v)
+void GL_APIENTRY GL_WindowPos2fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9902,7 +9921,7 @@ void GL_APIENTRY WindowPos2fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY WindowPos2i(GLint x, GLint y)
+void GL_APIENTRY GL_WindowPos2i(GLint x, GLint y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2i, "context = %d, x = %d, y = %d", CID(context), x, y);
@@ -9923,7 +9942,7 @@ void GL_APIENTRY WindowPos2i(GLint x, GLint y)
     }
 }
 
-void GL_APIENTRY WindowPos2iv(const GLint *v)
+void GL_APIENTRY GL_WindowPos2iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9945,7 +9964,7 @@ void GL_APIENTRY WindowPos2iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY WindowPos2s(GLshort x, GLshort y)
+void GL_APIENTRY GL_WindowPos2s(GLshort x, GLshort y)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2s, "context = %d, x = %d, y = %d", CID(context), x, y);
@@ -9966,7 +9985,7 @@ void GL_APIENTRY WindowPos2s(GLshort x, GLshort y)
     }
 }
 
-void GL_APIENTRY WindowPos2sv(const GLshort *v)
+void GL_APIENTRY GL_WindowPos2sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos2sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -9988,7 +10007,7 @@ void GL_APIENTRY WindowPos2sv(const GLshort *v)
     }
 }
 
-void GL_APIENTRY WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
+void GL_APIENTRY GL_WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3d, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -10009,7 +10028,7 @@ void GL_APIENTRY WindowPos3d(GLdouble x, GLdouble y, GLdouble z)
     }
 }
 
-void GL_APIENTRY WindowPos3dv(const GLdouble *v)
+void GL_APIENTRY GL_WindowPos3dv(const GLdouble *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3dv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -10031,7 +10050,7 @@ void GL_APIENTRY WindowPos3dv(const GLdouble *v)
     }
 }
 
-void GL_APIENTRY WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3f, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -10052,7 +10071,7 @@ void GL_APIENTRY WindowPos3f(GLfloat x, GLfloat y, GLfloat z)
     }
 }
 
-void GL_APIENTRY WindowPos3fv(const GLfloat *v)
+void GL_APIENTRY GL_WindowPos3fv(const GLfloat *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3fv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -10074,7 +10093,7 @@ void GL_APIENTRY WindowPos3fv(const GLfloat *v)
     }
 }
 
-void GL_APIENTRY WindowPos3i(GLint x, GLint y, GLint z)
+void GL_APIENTRY GL_WindowPos3i(GLint x, GLint y, GLint z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3i, "context = %d, x = %d, y = %d, z = %d", CID(context), x, y, z);
@@ -10095,7 +10114,7 @@ void GL_APIENTRY WindowPos3i(GLint x, GLint y, GLint z)
     }
 }
 
-void GL_APIENTRY WindowPos3iv(const GLint *v)
+void GL_APIENTRY GL_WindowPos3iv(const GLint *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3iv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -10117,7 +10136,7 @@ void GL_APIENTRY WindowPos3iv(const GLint *v)
     }
 }
 
-void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z)
+void GL_APIENTRY GL_WindowPos3s(GLshort x, GLshort y, GLshort z)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3s, "context = %d, x = %d, y = %d, z = %d", CID(context), x, y, z);
@@ -10138,7 +10157,7 @@ void GL_APIENTRY WindowPos3s(GLshort x, GLshort y, GLshort z)
     }
 }
 
-void GL_APIENTRY WindowPos3sv(const GLshort *v)
+void GL_APIENTRY GL_WindowPos3sv(const GLshort *v)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWindowPos3sv, "context = %d, v = 0x%016" PRIxPTR "", CID(context),
@@ -10161,7 +10180,7 @@ void GL_APIENTRY WindowPos3sv(const GLshort *v)
 }
 
 // GL 1.5
-void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
+void GL_APIENTRY GL_BeginQuery(GLenum target, GLuint id)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBeginQuery, "context = %d, target = %s, id = %u", CID(context),
@@ -10186,7 +10205,7 @@ void GL_APIENTRY BeginQuery(GLenum target, GLuint id)
     }
 }
 
-void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
+void GL_APIENTRY GL_BindBuffer(GLenum target, GLuint buffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindBuffer, "context = %d, target = %s, buffer = %u", CID(context),
@@ -10211,7 +10230,7 @@ void GL_APIENTRY BindBuffer(GLenum target, GLuint buffer)
     }
 }
 
-void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
+void GL_APIENTRY GL_BufferData(GLenum target, GLsizeiptr size, const void *data, GLenum usage)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBufferData,
@@ -10239,7 +10258,7 @@ void GL_APIENTRY BufferData(GLenum target, GLsizeiptr size, const void *data, GL
     }
 }
 
-void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data)
+void GL_APIENTRY GL_BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBufferSubData,
@@ -10266,7 +10285,7 @@ void GL_APIENTRY BufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, 
     }
 }
 
-void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
+void GL_APIENTRY GL_DeleteBuffers(GLsizei n, const GLuint *buffers)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteBuffers, "context = %d, n = %d, buffers = 0x%016" PRIxPTR "",
@@ -10290,7 +10309,7 @@ void GL_APIENTRY DeleteBuffers(GLsizei n, const GLuint *buffers)
     }
 }
 
-void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
+void GL_APIENTRY GL_DeleteQueries(GLsizei n, const GLuint *ids)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteQueries, "context = %d, n = %d, ids = 0x%016" PRIxPTR "", CID(context),
@@ -10314,7 +10333,7 @@ void GL_APIENTRY DeleteQueries(GLsizei n, const GLuint *ids)
     }
 }
 
-void GL_APIENTRY EndQuery(GLenum target)
+void GL_APIENTRY GL_EndQuery(GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEndQuery, "context = %d, target = %s", CID(context),
@@ -10337,7 +10356,7 @@ void GL_APIENTRY EndQuery(GLenum target)
     }
 }
 
-void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
+void GL_APIENTRY GL_GenBuffers(GLsizei n, GLuint *buffers)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenBuffers, "context = %d, n = %d, buffers = 0x%016" PRIxPTR "", CID(context),
@@ -10361,7 +10380,7 @@ void GL_APIENTRY GenBuffers(GLsizei n, GLuint *buffers)
     }
 }
 
-void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
+void GL_APIENTRY GL_GenQueries(GLsizei n, GLuint *ids)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenQueries, "context = %d, n = %d, ids = 0x%016" PRIxPTR "", CID(context), n,
@@ -10384,7 +10403,7 @@ void GL_APIENTRY GenQueries(GLsizei n, GLuint *ids)
     }
 }
 
-void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetBufferParameteriv(GLenum target, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBufferParameteriv,
@@ -10410,7 +10429,7 @@ void GL_APIENTRY GetBufferParameteriv(GLenum target, GLenum pname, GLint *params
     }
 }
 
-void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
+void GL_APIENTRY GL_GetBufferPointerv(GLenum target, GLenum pname, void **params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBufferPointerv,
@@ -10436,7 +10455,7 @@ void GL_APIENTRY GetBufferPointerv(GLenum target, GLenum pname, void **params)
     }
 }
 
-void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void *data)
+void GL_APIENTRY GL_GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr size, void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBufferSubData,
@@ -10462,7 +10481,7 @@ void GL_APIENTRY GetBufferSubData(GLenum target, GLintptr offset, GLsizeiptr siz
     }
 }
 
-void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectiv,
@@ -10485,7 +10504,7 @@ void GL_APIENTRY GetQueryObjectiv(GLuint id, GLenum pname, GLint *params)
     {}
 }
 
-void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
+void GL_APIENTRY GL_GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryObjectuiv,
@@ -10510,7 +10529,7 @@ void GL_APIENTRY GetQueryObjectuiv(GLuint id, GLenum pname, GLuint *params)
     }
 }
 
-void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetQueryiv(GLenum target, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryiv,
@@ -10536,7 +10555,7 @@ void GL_APIENTRY GetQueryiv(GLenum target, GLenum pname, GLint *params)
     }
 }
 
-GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
+GLboolean GL_APIENTRY GL_IsBuffer(GLuint buffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsBuffer, "context = %d, buffer = %u", CID(context), buffer);
@@ -10565,7 +10584,7 @@ GLboolean GL_APIENTRY IsBuffer(GLuint buffer)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsQuery(GLuint id)
+GLboolean GL_APIENTRY GL_IsQuery(GLuint id)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsQuery, "context = %d, id = %u", CID(context), id);
@@ -10594,7 +10613,7 @@ GLboolean GL_APIENTRY IsQuery(GLuint id)
     return returnValue;
 }
 
-void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
+void *GL_APIENTRY GL_MapBuffer(GLenum target, GLenum access)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMapBuffer, "context = %d, target = %s, access = %s", CID(context),
@@ -10626,7 +10645,7 @@ void *GL_APIENTRY MapBuffer(GLenum target, GLenum access)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
+GLboolean GL_APIENTRY GL_UnmapBuffer(GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLUnmapBuffer, "context = %d, target = %s", CID(context),
@@ -10656,4 +10675,5 @@ GLboolean GL_APIENTRY UnmapBuffer(GLenum target)
     }
     return returnValue;
 }
-}  // namespace gl
+
+}  // extern "C"

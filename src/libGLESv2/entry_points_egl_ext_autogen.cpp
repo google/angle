@@ -1123,4 +1123,5 @@ EGLBoolean EGLAPIENTRY EGL_StreamConsumerGLTextureExternalAttribsNV(EGLDisplay d
     return StreamConsumerGLTextureExternalAttribsNV(thread, dpyPacked, streamPacked,
                                                     attrib_listPacked);
 }
+
 }  // extern "C"

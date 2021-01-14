@@ -808,4 +808,5 @@ EGLBoolean EGLAPIENTRY EGL_WaitSync(EGLDisplay dpy, EGLSync sync, EGLint flags)
 
     return WaitSync(thread, dpyPacked, syncPacked, flags);
 }
+
 }  // extern "C"

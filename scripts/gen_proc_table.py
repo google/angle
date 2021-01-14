@@ -132,10 +132,10 @@ def main():
 
     for function in gles_data:
         if function.startswith("gl"):
-            all_functions[function] = "gl::" + function[2:]
+            all_functions[function] = "GL_" + function[2:]
             # Special handling for EGL_ANGLE_explicit_context extension
             if support_egl_ANGLE_explicit_context:
-                all_functions[function + "ContextANGLE"] = "gl::" + function[2:] + "ContextANGLE"
+                all_functions[function + "ContextANGLE"] = "GL_" + function[2:] + "ContextANGLE"
         elif function.startswith("egl"):
             all_functions[function] = "EGL_" + function[3:]
         else:
@@ -181,7 +181,7 @@ def main():
 
     for function in gl_data:
         if function.startswith("gl"):
-            all_functions[function] = "gl::" + function[2:]
+            all_functions[function] = "GL_" + function[2:]
         else:
             all_functions[function] = function
 

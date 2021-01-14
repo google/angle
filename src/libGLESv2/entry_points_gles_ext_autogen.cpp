@@ -19,6 +19,8 @@
 #include "libANGLE/validationESEXT.h"
 #include "libGLESv2/global_state.h"
 
+using namespace gl;
+
 #include "libANGLE/capture_gles_1_0_autogen.h"
 #include "libANGLE/capture_gles_2_0_autogen.h"
 #include "libANGLE/capture_gles_3_0_autogen.h"
@@ -30,15 +32,16 @@
 #include "libANGLE/validationES31.h"
 #include "libANGLE/validationES32.h"
 
-namespace gl
-{
+using namespace gl;
+
+extern "C" {
 
 // GL_ANGLE_base_vertex_base_instance
-void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
-                                                      GLint first,
-                                                      GLsizei count,
-                                                      GLsizei instanceCount,
-                                                      GLuint baseInstance)
+void GL_APIENTRY GL_DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
+                                                         GLint first,
+                                                         GLsizei count,
+                                                         GLsizei instanceCount,
+                                                         GLuint baseInstance)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawArraysInstancedBaseInstanceANGLE,
@@ -67,13 +70,13 @@ void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLE(GLenum mode,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
-                                                                  GLsizei count,
-                                                                  GLenum type,
-                                                                  const GLvoid *indices,
-                                                                  GLsizei instanceCounts,
-                                                                  GLint baseVertex,
-                                                                  GLuint baseInstance)
+void GL_APIENTRY GL_DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
+                                                                     GLsizei count,
+                                                                     GLenum type,
+                                                                     const GLvoid *indices,
+                                                                     GLsizei instanceCounts,
+                                                                     GLint baseVertex,
+                                                                     GLuint baseInstance)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsInstancedBaseVertexBaseInstanceANGLE,
@@ -107,12 +110,12 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
     }
 }
 
-void GL_APIENTRY MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
-                                                           const GLint *firsts,
-                                                           const GLsizei *counts,
-                                                           const GLsizei *instanceCounts,
-                                                           const GLuint *baseInstances,
-                                                           GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
+                                                              const GLint *firsts,
+                                                              const GLsizei *counts,
+                                                              const GLsizei *instanceCounts,
+                                                              const GLuint *baseInstances,
+                                                              GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawArraysInstancedBaseInstanceANGLE,
@@ -144,14 +147,14 @@ void GL_APIENTRY MultiDrawArraysInstancedBaseInstanceANGLE(GLenum mode,
 }
 
 void GL_APIENTRY
-MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
-                                                      const GLsizei *counts,
-                                                      GLenum type,
-                                                      const GLvoid *const *indices,
-                                                      const GLsizei *instanceCounts,
-                                                      const GLint *baseVertices,
-                                                      const GLuint *baseInstances,
-                                                      GLsizei drawcount)
+GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
+                                                         const GLsizei *counts,
+                                                         GLenum type,
+                                                         const GLvoid *const *indices,
+                                                         const GLsizei *instanceCounts,
+                                                         const GLint *baseVertices,
+                                                         const GLuint *baseInstances,
+                                                         GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE,
@@ -188,16 +191,16 @@ MultiDrawElementsInstancedBaseVertexBaseInstanceANGLE(GLenum mode,
 }
 
 // GL_ANGLE_copy_texture_3d
-void GL_APIENTRY CopyTexture3DANGLE(GLuint sourceId,
-                                    GLint sourceLevel,
-                                    GLenum destTarget,
-                                    GLuint destId,
-                                    GLint destLevel,
-                                    GLint internalFormat,
-                                    GLenum destType,
-                                    GLboolean unpackFlipY,
-                                    GLboolean unpackPremultiplyAlpha,
-                                    GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopyTexture3DANGLE(GLuint sourceId,
+                                       GLint sourceLevel,
+                                       GLenum destTarget,
+                                       GLuint destId,
+                                       GLint destLevel,
+                                       GLint internalFormat,
+                                       GLenum destType,
+                                       GLboolean unpackFlipY,
+                                       GLboolean unpackPremultiplyAlpha,
+                                       GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTexture3DANGLE,
@@ -236,23 +239,23 @@ void GL_APIENTRY CopyTexture3DANGLE(GLuint sourceId,
     }
 }
 
-void GL_APIENTRY CopySubTexture3DANGLE(GLuint sourceId,
-                                       GLint sourceLevel,
-                                       GLenum destTarget,
-                                       GLuint destId,
-                                       GLint destLevel,
-                                       GLint xoffset,
-                                       GLint yoffset,
-                                       GLint zoffset,
-                                       GLint x,
-                                       GLint y,
-                                       GLint z,
-                                       GLint width,
-                                       GLint height,
-                                       GLint depth,
-                                       GLboolean unpackFlipY,
-                                       GLboolean unpackPremultiplyAlpha,
-                                       GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopySubTexture3DANGLE(GLuint sourceId,
+                                          GLint sourceLevel,
+                                          GLenum destTarget,
+                                          GLuint destId,
+                                          GLint destLevel,
+                                          GLint xoffset,
+                                          GLint yoffset,
+                                          GLint zoffset,
+                                          GLint x,
+                                          GLint y,
+                                          GLint z,
+                                          GLint width,
+                                          GLint height,
+                                          GLint depth,
+                                          GLboolean unpackFlipY,
+                                          GLboolean unpackPremultiplyAlpha,
+                                          GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopySubTexture3DANGLE,
@@ -296,16 +299,16 @@ void GL_APIENTRY CopySubTexture3DANGLE(GLuint sourceId,
 }
 
 // GL_ANGLE_framebuffer_blit
-void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0,
-                                      GLint srcY0,
-                                      GLint srcX1,
-                                      GLint srcY1,
-                                      GLint dstX0,
-                                      GLint dstY0,
-                                      GLint dstX1,
-                                      GLint dstY1,
-                                      GLbitfield mask,
-                                      GLenum filter)
+void GL_APIENTRY GL_BlitFramebufferANGLE(GLint srcX0,
+                                         GLint srcY0,
+                                         GLint srcX1,
+                                         GLint srcY1,
+                                         GLint dstX0,
+                                         GLint dstY0,
+                                         GLint dstX1,
+                                         GLint dstY1,
+                                         GLbitfield mask,
+                                         GLenum filter)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlitFramebufferANGLE,
@@ -336,11 +339,11 @@ void GL_APIENTRY BlitFramebufferANGLE(GLint srcX0,
 }
 
 // GL_ANGLE_framebuffer_multisample
-void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target,
-                                                     GLsizei samples,
-                                                     GLenum internalformat,
-                                                     GLsizei width,
-                                                     GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageMultisampleANGLE(GLenum target,
+                                                        GLsizei samples,
+                                                        GLenum internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRenderbufferStorageMultisampleANGLE,
@@ -369,7 +372,7 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLE(GLenum target,
 
 // GL_ANGLE_get_image
 void GL_APIENTRY
-GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
+GL_GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexImageANGLE,
@@ -399,7 +402,10 @@ GetTexImageANGLE(GLenum target, GLint level, GLenum format, GLenum type, void *p
     }
 }
 
-void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target, GLenum format, GLenum type, void *pixels)
+void GL_APIENTRY GL_GetRenderbufferImageANGLE(GLenum target,
+                                              GLenum format,
+                                              GLenum type,
+                                              void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetRenderbufferImageANGLE,
@@ -428,10 +434,10 @@ void GL_APIENTRY GetRenderbufferImageANGLE(GLenum target, GLenum format, GLenum 
 }
 
 // GL_ANGLE_get_tex_level_parameter
-void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
-                                             GLint level,
-                                             GLenum pname,
-                                             GLint *params)
+void GL_APIENTRY GL_GetTexLevelParameterivANGLE(GLenum target,
+                                                GLint level,
+                                                GLenum pname,
+                                                GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexLevelParameterivANGLE,
@@ -459,10 +465,10 @@ void GL_APIENTRY GetTexLevelParameterivANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
-                                             GLint level,
-                                             GLenum pname,
-                                             GLfloat *params)
+void GL_APIENTRY GL_GetTexLevelParameterfvANGLE(GLenum target,
+                                                GLint level,
+                                                GLenum pname,
+                                                GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexLevelParameterfvANGLE,
@@ -491,10 +497,10 @@ void GL_APIENTRY GetTexLevelParameterfvANGLE(GLenum target,
 }
 
 // GL_ANGLE_instanced_arrays
-void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
-                                          GLint first,
-                                          GLsizei count,
-                                          GLsizei primcount)
+void GL_APIENTRY GL_DrawArraysInstancedANGLE(GLenum mode,
+                                             GLint first,
+                                             GLsizei count,
+                                             GLsizei primcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawArraysInstancedANGLE,
@@ -521,11 +527,11 @@ void GL_APIENTRY DrawArraysInstancedANGLE(GLenum mode,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
-                                            GLsizei count,
-                                            GLenum type,
-                                            const void *indices,
-                                            GLsizei primcount)
+void GL_APIENTRY GL_DrawElementsInstancedANGLE(GLenum mode,
+                                               GLsizei count,
+                                               GLenum type,
+                                               const void *indices,
+                                               GLsizei primcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsInstancedANGLE,
@@ -555,7 +561,7 @@ void GL_APIENTRY DrawElementsInstancedANGLE(GLenum mode,
     }
 }
 
-void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
+void GL_APIENTRY GL_VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertexAttribDivisorANGLE, "context = %d, index = %u, divisor = %u",
@@ -579,15 +585,15 @@ void GL_APIENTRY VertexAttribDivisorANGLE(GLuint index, GLuint divisor)
 }
 
 // GL_ANGLE_memory_object_flags
-void GL_APIENTRY TexStorageMemFlags2DANGLE(GLenum target,
-                                           GLsizei levels,
-                                           GLenum internalFormat,
-                                           GLsizei width,
-                                           GLsizei height,
-                                           GLuint memory,
-                                           GLuint64 offset,
-                                           GLbitfield createFlags,
-                                           GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags2DANGLE(GLenum target,
+                                              GLsizei levels,
+                                              GLenum internalFormat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLuint memory,
+                                              GLuint64 offset,
+                                              GLbitfield createFlags,
+                                              GLbitfield usageFlags)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMemFlags2DANGLE,
@@ -622,16 +628,16 @@ void GL_APIENTRY TexStorageMemFlags2DANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexStorageMemFlags2DMultisampleANGLE(GLenum target,
-                                                      GLsizei samples,
-                                                      GLenum internalFormat,
-                                                      GLsizei width,
-                                                      GLsizei height,
-                                                      GLboolean fixedSampleLocations,
-                                                      GLuint memory,
-                                                      GLuint64 offset,
-                                                      GLbitfield createFlags,
-                                                      GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags2DMultisampleANGLE(GLenum target,
+                                                         GLsizei samples,
+                                                         GLenum internalFormat,
+                                                         GLsizei width,
+                                                         GLsizei height,
+                                                         GLboolean fixedSampleLocations,
+                                                         GLuint memory,
+                                                         GLuint64 offset,
+                                                         GLbitfield createFlags,
+                                                         GLbitfield usageFlags)
 {
     Context *context = GetValidGlobalContext();
     EVENT(
@@ -670,16 +676,16 @@ void GL_APIENTRY TexStorageMemFlags2DMultisampleANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexStorageMemFlags3DANGLE(GLenum target,
-                                           GLsizei levels,
-                                           GLenum internalFormat,
-                                           GLsizei width,
-                                           GLsizei height,
-                                           GLsizei depth,
-                                           GLuint memory,
-                                           GLuint64 offset,
-                                           GLbitfield createFlags,
-                                           GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags3DANGLE(GLenum target,
+                                              GLsizei levels,
+                                              GLenum internalFormat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLsizei depth,
+                                              GLuint memory,
+                                              GLuint64 offset,
+                                              GLbitfield createFlags,
+                                              GLbitfield usageFlags)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMemFlags3DANGLE,
@@ -715,17 +721,17 @@ void GL_APIENTRY TexStorageMemFlags3DANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexStorageMemFlags3DMultisampleANGLE(GLenum target,
-                                                      GLsizei samples,
-                                                      GLenum internalFormat,
-                                                      GLsizei width,
-                                                      GLsizei height,
-                                                      GLsizei depth,
-                                                      GLboolean fixedSampleLocations,
-                                                      GLuint memory,
-                                                      GLuint64 offset,
-                                                      GLbitfield createFlags,
-                                                      GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags3DMultisampleANGLE(GLenum target,
+                                                         GLsizei samples,
+                                                         GLenum internalFormat,
+                                                         GLsizei width,
+                                                         GLsizei height,
+                                                         GLsizei depth,
+                                                         GLboolean fixedSampleLocations,
+                                                         GLuint memory,
+                                                         GLuint64 offset,
+                                                         GLbitfield createFlags,
+                                                         GLbitfield usageFlags)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMemFlags3DMultisampleANGLE,
@@ -765,10 +771,10 @@ void GL_APIENTRY TexStorageMemFlags3DMultisampleANGLE(GLenum target,
 }
 
 // GL_ANGLE_memory_object_fuchsia
-void GL_APIENTRY ImportMemoryZirconHandleANGLE(GLuint memory,
-                                               GLuint64 size,
-                                               GLenum handleType,
-                                               GLuint handle)
+void GL_APIENTRY GL_ImportMemoryZirconHandleANGLE(GLuint memory,
+                                                  GLuint64 size,
+                                                  GLenum handleType,
+                                                  GLuint handle)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLImportMemoryZirconHandleANGLE,
@@ -798,10 +804,10 @@ void GL_APIENTRY ImportMemoryZirconHandleANGLE(GLuint memory,
 }
 
 // GL_ANGLE_multi_draw
-void GL_APIENTRY MultiDrawArraysANGLE(GLenum mode,
-                                      const GLint *firsts,
-                                      const GLsizei *counts,
-                                      GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawArraysANGLE(GLenum mode,
+                                         const GLint *firsts,
+                                         const GLsizei *counts,
+                                         GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawArraysANGLE,
@@ -830,11 +836,11 @@ void GL_APIENTRY MultiDrawArraysANGLE(GLenum mode,
     }
 }
 
-void GL_APIENTRY MultiDrawArraysInstancedANGLE(GLenum mode,
-                                               const GLint *firsts,
-                                               const GLsizei *counts,
-                                               const GLsizei *instanceCounts,
-                                               GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawArraysInstancedANGLE(GLenum mode,
+                                                  const GLint *firsts,
+                                                  const GLsizei *counts,
+                                                  const GLsizei *instanceCounts,
+                                                  GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawArraysInstancedANGLE,
@@ -864,11 +870,11 @@ void GL_APIENTRY MultiDrawArraysInstancedANGLE(GLenum mode,
     }
 }
 
-void GL_APIENTRY MultiDrawElementsANGLE(GLenum mode,
-                                        const GLsizei *counts,
-                                        GLenum type,
-                                        const GLvoid *const *indices,
-                                        GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawElementsANGLE(GLenum mode,
+                                           const GLsizei *counts,
+                                           GLenum type,
+                                           const GLvoid *const *indices,
+                                           GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawElementsANGLE,
@@ -898,12 +904,12 @@ void GL_APIENTRY MultiDrawElementsANGLE(GLenum mode,
     }
 }
 
-void GL_APIENTRY MultiDrawElementsInstancedANGLE(GLenum mode,
-                                                 const GLsizei *counts,
-                                                 GLenum type,
-                                                 const GLvoid *const *indices,
-                                                 const GLsizei *instanceCounts,
-                                                 GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawElementsInstancedANGLE(GLenum mode,
+                                                    const GLsizei *counts,
+                                                    GLenum type,
+                                                    const GLvoid *const *indices,
+                                                    const GLsizei *instanceCounts,
+                                                    GLsizei drawcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawElementsInstancedANGLE,
@@ -939,7 +945,7 @@ void GL_APIENTRY MultiDrawElementsInstancedANGLE(GLenum mode,
 // GL_ANGLE_program_binary
 
 // GL_ANGLE_provoking_vertex
-void GL_APIENTRY ProvokingVertexANGLE(GLenum mode)
+void GL_APIENTRY GL_ProvokingVertexANGLE(GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProvokingVertexANGLE, "context = %d, mode = %s", CID(context),
@@ -964,7 +970,7 @@ void GL_APIENTRY ProvokingVertexANGLE(GLenum mode)
 }
 
 // GL_ANGLE_request_extension
-void GL_APIENTRY RequestExtensionANGLE(const GLchar *name)
+void GL_APIENTRY GL_RequestExtensionANGLE(const GLchar *name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRequestExtensionANGLE, "context = %d, name = 0x%016" PRIxPTR "", CID(context),
@@ -987,7 +993,7 @@ void GL_APIENTRY RequestExtensionANGLE(const GLchar *name)
     }
 }
 
-void GL_APIENTRY DisableExtensionANGLE(const GLchar *name)
+void GL_APIENTRY GL_DisableExtensionANGLE(const GLchar *name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDisableExtensionANGLE, "context = %d, name = 0x%016" PRIxPTR "", CID(context),
@@ -1011,10 +1017,10 @@ void GL_APIENTRY DisableExtensionANGLE(const GLchar *name)
 }
 
 // GL_ANGLE_robust_client_memory
-void GL_APIENTRY GetBooleanvRobustANGLE(GLenum pname,
-                                        GLsizei bufSize,
-                                        GLsizei *length,
-                                        GLboolean *params)
+void GL_APIENTRY GL_GetBooleanvRobustANGLE(GLenum pname,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLboolean *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBooleanvRobustANGLE,
@@ -1041,11 +1047,11 @@ void GL_APIENTRY GetBooleanvRobustANGLE(GLenum pname,
     }
 }
 
-void GL_APIENTRY GetBufferParameterivRobustANGLE(GLenum target,
-                                                 GLenum pname,
-                                                 GLsizei bufSize,
-                                                 GLsizei *length,
-                                                 GLint *params)
+void GL_APIENTRY GL_GetBufferParameterivRobustANGLE(GLenum target,
+                                                    GLenum pname,
+                                                    GLsizei bufSize,
+                                                    GLsizei *length,
+                                                    GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBufferParameterivRobustANGLE,
@@ -1075,10 +1081,10 @@ void GL_APIENTRY GetBufferParameterivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetFloatvRobustANGLE(GLenum pname,
-                                      GLsizei bufSize,
-                                      GLsizei *length,
-                                      GLfloat *params)
+void GL_APIENTRY GL_GetFloatvRobustANGLE(GLenum pname,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFloatvRobustANGLE,
@@ -1104,12 +1110,12 @@ void GL_APIENTRY GetFloatvRobustANGLE(GLenum pname,
     }
 }
 
-void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLE(GLenum target,
-                                                                GLenum attachment,
-                                                                GLenum pname,
-                                                                GLsizei bufSize,
-                                                                GLsizei *length,
-                                                                GLint *params)
+void GL_APIENTRY GL_GetFramebufferAttachmentParameterivRobustANGLE(GLenum target,
+                                                                   GLenum attachment,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   GLsizei *length,
+                                                                   GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFramebufferAttachmentParameterivRobustANGLE,
@@ -1140,7 +1146,10 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetIntegervRobustANGLE(GLenum pname, GLsizei bufSize, GLsizei *length, GLint *data)
+void GL_APIENTRY GL_GetIntegervRobustANGLE(GLenum pname,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLint *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetIntegervRobustANGLE,
@@ -1166,11 +1175,11 @@ void GL_APIENTRY GetIntegervRobustANGLE(GLenum pname, GLsizei bufSize, GLsizei *
     }
 }
 
-void GL_APIENTRY GetProgramivRobustANGLE(GLuint program,
-                                         GLenum pname,
-                                         GLsizei bufSize,
-                                         GLsizei *length,
-                                         GLint *params)
+void GL_APIENTRY GL_GetProgramivRobustANGLE(GLuint program,
+                                            GLenum pname,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLint *params)
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetProgramivRobustANGLE,
@@ -1197,11 +1206,11 @@ void GL_APIENTRY GetProgramivRobustANGLE(GLuint program,
     {}
 }
 
-void GL_APIENTRY GetRenderbufferParameterivRobustANGLE(GLenum target,
-                                                       GLenum pname,
-                                                       GLsizei bufSize,
-                                                       GLsizei *length,
-                                                       GLint *params)
+void GL_APIENTRY GL_GetRenderbufferParameterivRobustANGLE(GLenum target,
+                                                          GLenum pname,
+                                                          GLsizei bufSize,
+                                                          GLsizei *length,
+                                                          GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetRenderbufferParameterivRobustANGLE,
@@ -1230,8 +1239,11 @@ void GL_APIENTRY GetRenderbufferParameterivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY
-GetShaderivRobustANGLE(GLuint shader, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *params)
+void GL_APIENTRY GL_GetShaderivRobustANGLE(GLuint shader,
+                                           GLenum pname,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLint *params)
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetShaderivRobustANGLE,
@@ -1258,11 +1270,11 @@ GetShaderivRobustANGLE(GLuint shader, GLenum pname, GLsizei bufSize, GLsizei *le
     {}
 }
 
-void GL_APIENTRY GetTexParameterfvRobustANGLE(GLenum target,
-                                              GLenum pname,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLfloat *params)
+void GL_APIENTRY GL_GetTexParameterfvRobustANGLE(GLenum target,
+                                                 GLenum pname,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameterfvRobustANGLE,
@@ -1292,11 +1304,11 @@ void GL_APIENTRY GetTexParameterfvRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetTexParameterivRobustANGLE(GLenum target,
-                                              GLenum pname,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLint *params)
+void GL_APIENTRY GL_GetTexParameterivRobustANGLE(GLenum target,
+                                                 GLenum pname,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameterivRobustANGLE,
@@ -1326,11 +1338,11 @@ void GL_APIENTRY GetTexParameterivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetUniformfvRobustANGLE(GLuint program,
-                                         GLint location,
-                                         GLsizei bufSize,
-                                         GLsizei *length,
-                                         GLfloat *params)
+void GL_APIENTRY GL_GetUniformfvRobustANGLE(GLuint program,
+                                            GLint location,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetUniformfvRobustANGLE,
@@ -1359,11 +1371,11 @@ void GL_APIENTRY GetUniformfvRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY GetUniformivRobustANGLE(GLuint program,
-                                         GLint location,
-                                         GLsizei bufSize,
-                                         GLsizei *length,
-                                         GLint *params)
+void GL_APIENTRY GL_GetUniformivRobustANGLE(GLuint program,
+                                            GLint location,
+                                            GLsizei bufSize,
+                                            GLsizei *length,
+                                            GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetUniformivRobustANGLE,
@@ -1392,11 +1404,11 @@ void GL_APIENTRY GetUniformivRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY GetVertexAttribfvRobustANGLE(GLuint index,
-                                              GLenum pname,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLfloat *params)
+void GL_APIENTRY GL_GetVertexAttribfvRobustANGLE(GLuint index,
+                                                 GLenum pname,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetVertexAttribfvRobustANGLE,
@@ -1424,11 +1436,11 @@ void GL_APIENTRY GetVertexAttribfvRobustANGLE(GLuint index,
     }
 }
 
-void GL_APIENTRY GetVertexAttribivRobustANGLE(GLuint index,
-                                              GLenum pname,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLint *params)
+void GL_APIENTRY GL_GetVertexAttribivRobustANGLE(GLuint index,
+                                                 GLenum pname,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetVertexAttribivRobustANGLE,
@@ -1456,11 +1468,11 @@ void GL_APIENTRY GetVertexAttribivRobustANGLE(GLuint index,
     }
 }
 
-void GL_APIENTRY GetVertexAttribPointervRobustANGLE(GLuint index,
-                                                    GLenum pname,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    void **pointer)
+void GL_APIENTRY GL_GetVertexAttribPointervRobustANGLE(GLuint index,
+                                                       GLenum pname,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       void **pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetVertexAttribPointervRobustANGLE,
@@ -1488,17 +1500,17 @@ void GL_APIENTRY GetVertexAttribPointervRobustANGLE(GLuint index,
     }
 }
 
-void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
-                                       GLint y,
-                                       GLsizei width,
-                                       GLsizei height,
-                                       GLenum format,
-                                       GLenum type,
-                                       GLsizei bufSize,
-                                       GLsizei *length,
-                                       GLsizei *columns,
-                                       GLsizei *rows,
-                                       void *pixels)
+void GL_APIENTRY GL_ReadPixelsRobustANGLE(GLint x,
+                                          GLint y,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLenum format,
+                                          GLenum type,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLsizei *columns,
+                                          GLsizei *rows,
+                                          void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLReadPixelsRobustANGLE,
@@ -1530,16 +1542,16 @@ void GL_APIENTRY ReadPixelsRobustANGLE(GLint x,
     }
 }
 
-void GL_APIENTRY TexImage2DRobustANGLE(GLenum target,
-                                       GLint level,
-                                       GLint internalformat,
-                                       GLsizei width,
-                                       GLsizei height,
-                                       GLint border,
-                                       GLenum format,
-                                       GLenum type,
-                                       GLsizei bufSize,
-                                       const void *pixels)
+void GL_APIENTRY GL_TexImage2DRobustANGLE(GLenum target,
+                                          GLint level,
+                                          GLint internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLint border,
+                                          GLenum format,
+                                          GLenum type,
+                                          GLsizei bufSize,
+                                          const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexImage2DRobustANGLE,
@@ -1571,10 +1583,10 @@ void GL_APIENTRY TexImage2DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexParameterfvRobustANGLE(GLenum target,
-                                           GLenum pname,
-                                           GLsizei bufSize,
-                                           const GLfloat *params)
+void GL_APIENTRY GL_TexParameterfvRobustANGLE(GLenum target,
+                                              GLenum pname,
+                                              GLsizei bufSize,
+                                              const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterfvRobustANGLE,
@@ -1602,10 +1614,10 @@ void GL_APIENTRY TexParameterfvRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexParameterivRobustANGLE(GLenum target,
-                                           GLenum pname,
-                                           GLsizei bufSize,
-                                           const GLint *params)
+void GL_APIENTRY GL_TexParameterivRobustANGLE(GLenum target,
+                                              GLenum pname,
+                                              GLsizei bufSize,
+                                              const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterivRobustANGLE,
@@ -1633,16 +1645,16 @@ void GL_APIENTRY TexParameterivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexSubImage2DRobustANGLE(GLenum target,
-                                          GLint level,
-                                          GLint xoffset,
-                                          GLint yoffset,
-                                          GLsizei width,
-                                          GLsizei height,
-                                          GLenum format,
-                                          GLenum type,
-                                          GLsizei bufSize,
-                                          const void *pixels)
+void GL_APIENTRY GL_TexSubImage2DRobustANGLE(GLenum target,
+                                             GLint level,
+                                             GLint xoffset,
+                                             GLint yoffset,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLenum format,
+                                             GLenum type,
+                                             GLsizei bufSize,
+                                             const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexSubImage2DRobustANGLE,
@@ -1674,17 +1686,17 @@ void GL_APIENTRY TexSubImage2DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexImage3DRobustANGLE(GLenum target,
-                                       GLint level,
-                                       GLint internalformat,
-                                       GLsizei width,
-                                       GLsizei height,
-                                       GLsizei depth,
-                                       GLint border,
-                                       GLenum format,
-                                       GLenum type,
-                                       GLsizei bufSize,
-                                       const void *pixels)
+void GL_APIENTRY GL_TexImage3DRobustANGLE(GLenum target,
+                                          GLint level,
+                                          GLint internalformat,
+                                          GLsizei width,
+                                          GLsizei height,
+                                          GLsizei depth,
+                                          GLint border,
+                                          GLenum format,
+                                          GLenum type,
+                                          GLsizei bufSize,
+                                          const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexImage3DRobustANGLE,
@@ -1717,18 +1729,18 @@ void GL_APIENTRY TexImage3DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexSubImage3DRobustANGLE(GLenum target,
-                                          GLint level,
-                                          GLint xoffset,
-                                          GLint yoffset,
-                                          GLint zoffset,
-                                          GLsizei width,
-                                          GLsizei height,
-                                          GLsizei depth,
-                                          GLenum format,
-                                          GLenum type,
-                                          GLsizei bufSize,
-                                          const void *pixels)
+void GL_APIENTRY GL_TexSubImage3DRobustANGLE(GLenum target,
+                                             GLint level,
+                                             GLint xoffset,
+                                             GLint yoffset,
+                                             GLint zoffset,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLsizei depth,
+                                             GLenum format,
+                                             GLenum type,
+                                             GLsizei bufSize,
+                                             const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(
@@ -1762,15 +1774,15 @@ void GL_APIENTRY TexSubImage3DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexImage2DRobustANGLE(GLenum target,
-                                                 GLint level,
-                                                 GLenum internalformat,
-                                                 GLsizei width,
-                                                 GLsizei height,
-                                                 GLint border,
-                                                 GLsizei imageSize,
-                                                 GLsizei dataSize,
-                                                 const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexImage2DRobustANGLE(GLenum target,
+                                                    GLint level,
+                                                    GLenum internalformat,
+                                                    GLsizei width,
+                                                    GLsizei height,
+                                                    GLint border,
+                                                    GLsizei imageSize,
+                                                    GLsizei dataSize,
+                                                    const GLvoid *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexImage2DRobustANGLE,
@@ -1802,16 +1814,16 @@ void GL_APIENTRY CompressedTexImage2DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage2DRobustANGLE(GLenum target,
-                                                    GLint level,
-                                                    GLsizei xoffset,
-                                                    GLsizei yoffset,
-                                                    GLsizei width,
-                                                    GLsizei height,
-                                                    GLenum format,
-                                                    GLsizei imageSize,
-                                                    GLsizei dataSize,
-                                                    const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexSubImage2DRobustANGLE(GLenum target,
+                                                       GLint level,
+                                                       GLsizei xoffset,
+                                                       GLsizei yoffset,
+                                                       GLsizei width,
+                                                       GLsizei height,
+                                                       GLenum format,
+                                                       GLsizei imageSize,
+                                                       GLsizei dataSize,
+                                                       const GLvoid *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexSubImage2DRobustANGLE,
@@ -1843,16 +1855,16 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
-                                                 GLint level,
-                                                 GLenum internalformat,
-                                                 GLsizei width,
-                                                 GLsizei height,
-                                                 GLsizei depth,
-                                                 GLint border,
-                                                 GLsizei imageSize,
-                                                 GLsizei dataSize,
-                                                 const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexImage3DRobustANGLE(GLenum target,
+                                                    GLint level,
+                                                    GLenum internalformat,
+                                                    GLsizei width,
+                                                    GLsizei height,
+                                                    GLsizei depth,
+                                                    GLint border,
+                                                    GLsizei imageSize,
+                                                    GLsizei dataSize,
+                                                    const GLvoid *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexImage3DRobustANGLE,
@@ -1884,18 +1896,18 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage3DRobustANGLE(GLenum target,
-                                                    GLint level,
-                                                    GLint xoffset,
-                                                    GLint yoffset,
-                                                    GLint zoffset,
-                                                    GLsizei width,
-                                                    GLsizei height,
-                                                    GLsizei depth,
-                                                    GLenum format,
-                                                    GLsizei imageSize,
-                                                    GLsizei dataSize,
-                                                    const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLE(GLenum target,
+                                                       GLint level,
+                                                       GLint xoffset,
+                                                       GLint yoffset,
+                                                       GLint zoffset,
+                                                       GLsizei width,
+                                                       GLsizei height,
+                                                       GLsizei depth,
+                                                       GLenum format,
+                                                       GLsizei imageSize,
+                                                       GLsizei dataSize,
+                                                       const GLvoid *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexSubImage3DRobustANGLE,
@@ -1930,8 +1942,11 @@ void GL_APIENTRY CompressedTexSubImage3DRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY
-GetQueryivRobustANGLE(GLenum target, GLenum pname, GLsizei bufSize, GLsizei *length, GLint *params)
+void GL_APIENTRY GL_GetQueryivRobustANGLE(GLenum target,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryivRobustANGLE,
@@ -1961,11 +1976,11 @@ GetQueryivRobustANGLE(GLenum target, GLenum pname, GLsizei bufSize, GLsizei *len
     }
 }
 
-void GL_APIENTRY GetQueryObjectuivRobustANGLE(GLuint id,
-                                              GLenum pname,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLuint *params)
+void GL_APIENTRY GL_GetQueryObjectuivRobustANGLE(GLuint id,
+                                                 GLenum pname,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryObjectuivRobustANGLE,
@@ -1994,11 +2009,11 @@ void GL_APIENTRY GetQueryObjectuivRobustANGLE(GLuint id,
     }
 }
 
-void GL_APIENTRY GetBufferPointervRobustANGLE(GLenum target,
-                                              GLenum pname,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              void **params)
+void GL_APIENTRY GL_GetBufferPointervRobustANGLE(GLenum target,
+                                                 GLenum pname,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 void **params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBufferPointervRobustANGLE,
@@ -2028,8 +2043,11 @@ void GL_APIENTRY GetBufferPointervRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY
-GetIntegeri_vRobustANGLE(GLenum target, GLuint index, GLsizei bufSize, GLsizei *length, GLint *data)
+void GL_APIENTRY GL_GetIntegeri_vRobustANGLE(GLenum target,
+                                             GLuint index,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLint *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetIntegeri_vRobustANGLE,
@@ -2057,12 +2075,12 @@ GetIntegeri_vRobustANGLE(GLenum target, GLuint index, GLsizei bufSize, GLsizei *
     }
 }
 
-void GL_APIENTRY GetInternalformativRobustANGLE(GLenum target,
-                                                GLenum internalformat,
-                                                GLenum pname,
-                                                GLsizei bufSize,
-                                                GLsizei *length,
-                                                GLint *params)
+void GL_APIENTRY GL_GetInternalformativRobustANGLE(GLenum target,
+                                                   GLenum internalformat,
+                                                   GLenum pname,
+                                                   GLsizei bufSize,
+                                                   GLsizei *length,
+                                                   GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetInternalformativRobustANGLE,
@@ -2093,11 +2111,11 @@ void GL_APIENTRY GetInternalformativRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
-                                               GLenum pname,
-                                               GLsizei bufSize,
-                                               GLsizei *length,
-                                               GLint *params)
+void GL_APIENTRY GL_GetVertexAttribIivRobustANGLE(GLuint index,
+                                                  GLenum pname,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetVertexAttribIivRobustANGLE,
@@ -2125,11 +2143,11 @@ void GL_APIENTRY GetVertexAttribIivRobustANGLE(GLuint index,
     }
 }
 
-void GL_APIENTRY GetVertexAttribIuivRobustANGLE(GLuint index,
-                                                GLenum pname,
-                                                GLsizei bufSize,
-                                                GLsizei *length,
-                                                GLuint *params)
+void GL_APIENTRY GL_GetVertexAttribIuivRobustANGLE(GLuint index,
+                                                   GLenum pname,
+                                                   GLsizei bufSize,
+                                                   GLsizei *length,
+                                                   GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetVertexAttribIuivRobustANGLE,
@@ -2157,11 +2175,11 @@ void GL_APIENTRY GetVertexAttribIuivRobustANGLE(GLuint index,
     }
 }
 
-void GL_APIENTRY GetUniformuivRobustANGLE(GLuint program,
-                                          GLint location,
-                                          GLsizei bufSize,
-                                          GLsizei *length,
-                                          GLuint *params)
+void GL_APIENTRY GL_GetUniformuivRobustANGLE(GLuint program,
+                                             GLint location,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetUniformuivRobustANGLE,
@@ -2190,12 +2208,12 @@ void GL_APIENTRY GetUniformuivRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY GetActiveUniformBlockivRobustANGLE(GLuint program,
-                                                    GLuint uniformBlockIndex,
-                                                    GLenum pname,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    GLint *params)
+void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLE(GLuint program,
+                                                       GLuint uniformBlockIndex,
+                                                       GLenum pname,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetActiveUniformBlockivRobustANGLE,
@@ -2227,10 +2245,10 @@ void GL_APIENTRY GetActiveUniformBlockivRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY GetInteger64vRobustANGLE(GLenum pname,
-                                          GLsizei bufSize,
-                                          GLsizei *length,
-                                          GLint64 *data)
+void GL_APIENTRY GL_GetInteger64vRobustANGLE(GLenum pname,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLint64 *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetInteger64vRobustANGLE,
@@ -2257,11 +2275,11 @@ void GL_APIENTRY GetInteger64vRobustANGLE(GLenum pname,
     }
 }
 
-void GL_APIENTRY GetInteger64i_vRobustANGLE(GLenum target,
-                                            GLuint index,
-                                            GLsizei bufSize,
-                                            GLsizei *length,
-                                            GLint64 *data)
+void GL_APIENTRY GL_GetInteger64i_vRobustANGLE(GLenum target,
+                                               GLuint index,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLint64 *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetInteger64i_vRobustANGLE,
@@ -2289,11 +2307,11 @@ void GL_APIENTRY GetInteger64i_vRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetBufferParameteri64vRobustANGLE(GLenum target,
-                                                   GLenum pname,
-                                                   GLsizei bufSize,
-                                                   GLsizei *length,
-                                                   GLint64 *params)
+void GL_APIENTRY GL_GetBufferParameteri64vRobustANGLE(GLenum target,
+                                                      GLenum pname,
+                                                      GLsizei bufSize,
+                                                      GLsizei *length,
+                                                      GLint64 *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBufferParameteri64vRobustANGLE,
@@ -2323,10 +2341,10 @@ void GL_APIENTRY GetBufferParameteri64vRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY SamplerParameterivRobustANGLE(GLuint sampler,
-                                               GLuint pname,
-                                               GLsizei bufSize,
-                                               const GLint *param)
+void GL_APIENTRY GL_SamplerParameterivRobustANGLE(GLuint sampler,
+                                                  GLuint pname,
+                                                  GLsizei bufSize,
+                                                  const GLint *param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSamplerParameterivRobustANGLE,
@@ -2353,10 +2371,10 @@ void GL_APIENTRY SamplerParameterivRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY SamplerParameterfvRobustANGLE(GLuint sampler,
-                                               GLenum pname,
-                                               GLsizei bufSize,
-                                               const GLfloat *param)
+void GL_APIENTRY GL_SamplerParameterfvRobustANGLE(GLuint sampler,
+                                                  GLenum pname,
+                                                  GLsizei bufSize,
+                                                  const GLfloat *param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSamplerParameterfvRobustANGLE,
@@ -2384,11 +2402,11 @@ void GL_APIENTRY SamplerParameterfvRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterivRobustANGLE(GLuint sampler,
-                                                  GLenum pname,
-                                                  GLsizei bufSize,
-                                                  GLsizei *length,
-                                                  GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterivRobustANGLE(GLuint sampler,
+                                                     GLenum pname,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetSamplerParameterivRobustANGLE,
@@ -2417,11 +2435,11 @@ void GL_APIENTRY GetSamplerParameterivRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
-                                                  GLenum pname,
-                                                  GLsizei bufSize,
-                                                  GLsizei *length,
-                                                  GLfloat *params)
+void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLE(GLuint sampler,
+                                                     GLenum pname,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetSamplerParameterfvRobustANGLE,
@@ -2450,11 +2468,11 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLenum target,
-                                                      GLenum pname,
-                                                      GLsizei bufSize,
-                                                      GLsizei *length,
-                                                      GLint *params)
+void GL_APIENTRY GL_GetFramebufferParameterivRobustANGLE(GLenum target,
+                                                         GLenum pname,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFramebufferParameterivRobustANGLE,
@@ -2483,12 +2501,12 @@ void GL_APIENTRY GetFramebufferParameterivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetProgramInterfaceivRobustANGLE(GLuint program,
-                                                  GLenum programInterface,
-                                                  GLenum pname,
-                                                  GLsizei bufSize,
-                                                  GLsizei *length,
-                                                  GLint *params)
+void GL_APIENTRY GL_GetProgramInterfaceivRobustANGLE(GLuint program,
+                                                     GLenum programInterface,
+                                                     GLenum pname,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetProgramInterfaceivRobustANGLE,
@@ -2520,11 +2538,11 @@ void GL_APIENTRY GetProgramInterfaceivRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY GetBooleani_vRobustANGLE(GLenum target,
-                                          GLuint index,
-                                          GLsizei bufSize,
-                                          GLsizei *length,
-                                          GLboolean *data)
+void GL_APIENTRY GL_GetBooleani_vRobustANGLE(GLenum target,
+                                             GLuint index,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLboolean *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBooleani_vRobustANGLE,
@@ -2552,11 +2570,11 @@ void GL_APIENTRY GetBooleani_vRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetMultisamplefvRobustANGLE(GLenum pname,
-                                             GLuint index,
-                                             GLsizei bufSize,
-                                             GLsizei *length,
-                                             GLfloat *val)
+void GL_APIENTRY GL_GetMultisamplefvRobustANGLE(GLenum pname,
+                                                GLuint index,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLfloat *val)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMultisamplefvRobustANGLE,
@@ -2584,12 +2602,12 @@ void GL_APIENTRY GetMultisamplefvRobustANGLE(GLenum pname,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterivRobustANGLE(GLenum target,
-                                                   GLint level,
-                                                   GLenum pname,
-                                                   GLsizei bufSize,
-                                                   GLsizei *length,
-                                                   GLint *params)
+void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLE(GLenum target,
+                                                      GLint level,
+                                                      GLenum pname,
+                                                      GLsizei bufSize,
+                                                      GLsizei *length,
+                                                      GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexLevelParameterivRobustANGLE,
@@ -2620,12 +2638,12 @@ void GL_APIENTRY GetTexLevelParameterivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterfvRobustANGLE(GLenum target,
-                                                   GLint level,
-                                                   GLenum pname,
-                                                   GLsizei bufSize,
-                                                   GLsizei *length,
-                                                   GLfloat *params)
+void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLE(GLenum target,
+                                                      GLint level,
+                                                      GLenum pname,
+                                                      GLsizei bufSize,
+                                                      GLsizei *length,
+                                                      GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexLevelParameterfvRobustANGLE,
@@ -2656,10 +2674,10 @@ void GL_APIENTRY GetTexLevelParameterfvRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetPointervRobustANGLERobustANGLE(GLenum pname,
-                                                   GLsizei bufSize,
-                                                   GLsizei *length,
-                                                   void **params)
+void GL_APIENTRY GL_GetPointervRobustANGLERobustANGLE(GLenum pname,
+                                                      GLsizei bufSize,
+                                                      GLsizei *length,
+                                                      void **params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetPointervRobustANGLERobustANGLE,
@@ -2687,17 +2705,17 @@ void GL_APIENTRY GetPointervRobustANGLERobustANGLE(GLenum pname,
     }
 }
 
-void GL_APIENTRY ReadnPixelsRobustANGLE(GLint x,
-                                        GLint y,
-                                        GLsizei width,
-                                        GLsizei height,
-                                        GLenum format,
-                                        GLenum type,
-                                        GLsizei bufSize,
-                                        GLsizei *length,
-                                        GLsizei *columns,
-                                        GLsizei *rows,
-                                        void *data)
+void GL_APIENTRY GL_ReadnPixelsRobustANGLE(GLint x,
+                                           GLint y,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLenum format,
+                                           GLenum type,
+                                           GLsizei bufSize,
+                                           GLsizei *length,
+                                           GLsizei *columns,
+                                           GLsizei *rows,
+                                           void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLReadnPixelsRobustANGLE,
@@ -2729,11 +2747,11 @@ void GL_APIENTRY ReadnPixelsRobustANGLE(GLint x,
     }
 }
 
-void GL_APIENTRY GetnUniformfvRobustANGLE(GLuint program,
-                                          GLint location,
-                                          GLsizei bufSize,
-                                          GLsizei *length,
-                                          GLfloat *params)
+void GL_APIENTRY GL_GetnUniformfvRobustANGLE(GLuint program,
+                                             GLint location,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetnUniformfvRobustANGLE,
@@ -2762,11 +2780,11 @@ void GL_APIENTRY GetnUniformfvRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY GetnUniformivRobustANGLE(GLuint program,
-                                          GLint location,
-                                          GLsizei bufSize,
-                                          GLsizei *length,
-                                          GLint *params)
+void GL_APIENTRY GL_GetnUniformivRobustANGLE(GLuint program,
+                                             GLint location,
+                                             GLsizei bufSize,
+                                             GLsizei *length,
+                                             GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetnUniformivRobustANGLE,
@@ -2795,11 +2813,11 @@ void GL_APIENTRY GetnUniformivRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY GetnUniformuivRobustANGLE(GLuint program,
-                                           GLint location,
-                                           GLsizei bufSize,
-                                           GLsizei *length,
-                                           GLuint *params)
+void GL_APIENTRY GL_GetnUniformuivRobustANGLE(GLuint program,
+                                              GLint location,
+                                              GLsizei bufSize,
+                                              GLsizei *length,
+                                              GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetnUniformuivRobustANGLE,
@@ -2828,10 +2846,10 @@ void GL_APIENTRY GetnUniformuivRobustANGLE(GLuint program,
     }
 }
 
-void GL_APIENTRY TexParameterIivRobustANGLE(GLenum target,
-                                            GLenum pname,
-                                            GLsizei bufSize,
-                                            const GLint *params)
+void GL_APIENTRY GL_TexParameterIivRobustANGLE(GLenum target,
+                                               GLenum pname,
+                                               GLsizei bufSize,
+                                               const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterIivRobustANGLE,
@@ -2859,10 +2877,10 @@ void GL_APIENTRY TexParameterIivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY TexParameterIuivRobustANGLE(GLenum target,
-                                             GLenum pname,
-                                             GLsizei bufSize,
-                                             const GLuint *params)
+void GL_APIENTRY GL_TexParameterIuivRobustANGLE(GLenum target,
+                                                GLenum pname,
+                                                GLsizei bufSize,
+                                                const GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterIuivRobustANGLE,
@@ -2890,11 +2908,11 @@ void GL_APIENTRY TexParameterIuivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetTexParameterIivRobustANGLE(GLenum target,
-                                               GLenum pname,
-                                               GLsizei bufSize,
-                                               GLsizei *length,
-                                               GLint *params)
+void GL_APIENTRY GL_GetTexParameterIivRobustANGLE(GLenum target,
+                                                  GLenum pname,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameterIivRobustANGLE,
@@ -2924,11 +2942,11 @@ void GL_APIENTRY GetTexParameterIivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetTexParameterIuivRobustANGLE(GLenum target,
-                                                GLenum pname,
-                                                GLsizei bufSize,
-                                                GLsizei *length,
-                                                GLuint *params)
+void GL_APIENTRY GL_GetTexParameterIuivRobustANGLE(GLenum target,
+                                                   GLenum pname,
+                                                   GLsizei bufSize,
+                                                   GLsizei *length,
+                                                   GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameterIuivRobustANGLE,
@@ -2958,10 +2976,10 @@ void GL_APIENTRY GetTexParameterIuivRobustANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY SamplerParameterIivRobustANGLE(GLuint sampler,
-                                                GLenum pname,
-                                                GLsizei bufSize,
-                                                const GLint *param)
+void GL_APIENTRY GL_SamplerParameterIivRobustANGLE(GLuint sampler,
+                                                   GLenum pname,
+                                                   GLsizei bufSize,
+                                                   const GLint *param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSamplerParameterIivRobustANGLE,
@@ -2989,10 +3007,10 @@ void GL_APIENTRY SamplerParameterIivRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY SamplerParameterIuivRobustANGLE(GLuint sampler,
-                                                 GLenum pname,
-                                                 GLsizei bufSize,
-                                                 const GLuint *param)
+void GL_APIENTRY GL_SamplerParameterIuivRobustANGLE(GLuint sampler,
+                                                    GLenum pname,
+                                                    GLsizei bufSize,
+                                                    const GLuint *param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSamplerParameterIuivRobustANGLE,
@@ -3020,11 +3038,11 @@ void GL_APIENTRY SamplerParameterIuivRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIivRobustANGLE(GLuint sampler,
-                                                   GLenum pname,
-                                                   GLsizei bufSize,
-                                                   GLsizei *length,
-                                                   GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterIivRobustANGLE(GLuint sampler,
+                                                      GLenum pname,
+                                                      GLsizei bufSize,
+                                                      GLsizei *length,
+                                                      GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetSamplerParameterIivRobustANGLE,
@@ -3053,11 +3071,11 @@ void GL_APIENTRY GetSamplerParameterIivRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIuivRobustANGLE(GLuint sampler,
-                                                    GLenum pname,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    GLuint *params)
+void GL_APIENTRY GL_GetSamplerParameterIuivRobustANGLE(GLuint sampler,
+                                                       GLenum pname,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetSamplerParameterIuivRobustANGLE,
@@ -3086,11 +3104,11 @@ void GL_APIENTRY GetSamplerParameterIuivRobustANGLE(GLuint sampler,
     }
 }
 
-void GL_APIENTRY GetQueryObjectivRobustANGLE(GLuint id,
-                                             GLenum pname,
-                                             GLsizei bufSize,
-                                             GLsizei *length,
-                                             GLint *params)
+void GL_APIENTRY GL_GetQueryObjectivRobustANGLE(GLuint id,
+                                                GLenum pname,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLint *params)
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectivRobustANGLE,
@@ -3117,11 +3135,11 @@ void GL_APIENTRY GetQueryObjectivRobustANGLE(GLuint id,
     {}
 }
 
-void GL_APIENTRY GetQueryObjecti64vRobustANGLE(GLuint id,
-                                               GLenum pname,
-                                               GLsizei bufSize,
-                                               GLsizei *length,
-                                               GLint64 *params)
+void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLE(GLuint id,
+                                                  GLenum pname,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLint64 *params)
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjecti64vRobustANGLE,
@@ -3148,11 +3166,11 @@ void GL_APIENTRY GetQueryObjecti64vRobustANGLE(GLuint id,
     {}
 }
 
-void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
-                                                GLenum pname,
-                                                GLsizei bufSize,
-                                                GLsizei *length,
-                                                GLuint64 *params)
+void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLE(GLuint id,
+                                                   GLenum pname,
+                                                   GLsizei bufSize,
+                                                   GLsizei *length,
+                                                   GLuint64 *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryObjectui64vRobustANGLE,
@@ -3182,9 +3200,9 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLE(GLuint id,
 }
 
 // GL_ANGLE_semaphore_fuchsia
-void GL_APIENTRY ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
-                                                  GLenum handleType,
-                                                  GLuint handle)
+void GL_APIENTRY GL_ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
+                                                     GLenum handleType,
+                                                     GLuint handle)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLImportSemaphoreZirconHandleANGLE,
@@ -3213,14 +3231,14 @@ void GL_APIENTRY ImportSemaphoreZirconHandleANGLE(GLuint semaphore,
 }
 
 // GL_ANGLE_texture_external_update
-void GL_APIENTRY TexImage2DExternalANGLE(GLenum target,
-                                         GLint level,
-                                         GLint internalformat,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLint border,
-                                         GLenum format,
-                                         GLenum type)
+void GL_APIENTRY GL_TexImage2DExternalANGLE(GLenum target,
+                                            GLint level,
+                                            GLint internalformat,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLint border,
+                                            GLenum format,
+                                            GLenum type)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexImage2DExternalANGLE,
@@ -3252,7 +3270,7 @@ void GL_APIENTRY TexImage2DExternalANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY InvalidateTextureANGLE(GLenum target)
+void GL_APIENTRY GL_InvalidateTextureANGLE(GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLInvalidateTextureANGLE, "context = %d, target = %s", CID(context),
@@ -3277,12 +3295,12 @@ void GL_APIENTRY InvalidateTextureANGLE(GLenum target)
 }
 
 // GL_ANGLE_texture_multisample
-void GL_APIENTRY TexStorage2DMultisampleANGLE(GLenum target,
-                                              GLsizei samples,
-                                              GLenum internalformat,
-                                              GLsizei width,
-                                              GLsizei height,
-                                              GLboolean fixedsamplelocations)
+void GL_APIENTRY GL_TexStorage2DMultisampleANGLE(GLenum target,
+                                                 GLsizei samples,
+                                                 GLenum internalformat,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLboolean fixedsamplelocations)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorage2DMultisampleANGLE,
@@ -3314,7 +3332,7 @@ void GL_APIENTRY TexStorage2DMultisampleANGLE(GLenum target,
     }
 }
 
-void GL_APIENTRY GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
+void GL_APIENTRY GL_GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMultisamplefvANGLE,
@@ -3338,7 +3356,7 @@ void GL_APIENTRY GetMultisamplefvANGLE(GLenum pname, GLuint index, GLfloat *val)
     }
 }
 
-void GL_APIENTRY SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
+void GL_APIENTRY GL_SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSampleMaskiANGLE, "context = %d, maskNumber = %u, mask = %s", CID(context),
@@ -3366,10 +3384,10 @@ void GL_APIENTRY SampleMaskiANGLE(GLuint maskNumber, GLbitfield mask)
 // GetTexLevelParameterivANGLE is already defined.
 
 // GL_ANGLE_translated_shader_source
-void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
-                                                GLsizei bufsize,
-                                                GLsizei *length,
-                                                GLchar *source)
+void GL_APIENTRY GL_GetTranslatedShaderSourceANGLE(GLuint shader,
+                                                   GLsizei bufsize,
+                                                   GLsizei *length,
+                                                   GLchar *source)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTranslatedShaderSourceANGLE,
@@ -3398,7 +3416,7 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLE(GLuint shader,
 }
 
 // GL_CHROMIUM_bind_uniform_location
-void GL_APIENTRY BindUniformLocationCHROMIUM(GLuint program, GLint location, const GLchar *name)
+void GL_APIENTRY GL_BindUniformLocationCHROMIUM(GLuint program, GLint location, const GLchar *name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindUniformLocationCHROMIUM,
@@ -3427,7 +3445,7 @@ void GL_APIENTRY BindUniformLocationCHROMIUM(GLuint program, GLint location, con
 }
 
 // GL_CHROMIUM_copy_compressed_texture
-void GL_APIENTRY CompressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
+void GL_APIENTRY GL_CompressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedCopyTextureCHROMIUM, "context = %d, sourceId = %u, destId = %u",
@@ -3455,16 +3473,16 @@ void GL_APIENTRY CompressedCopyTextureCHROMIUM(GLuint sourceId, GLuint destId)
 }
 
 // GL_CHROMIUM_copy_texture
-void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
-                                     GLint sourceLevel,
-                                     GLenum destTarget,
-                                     GLuint destId,
-                                     GLint destLevel,
-                                     GLint internalFormat,
-                                     GLenum destType,
-                                     GLboolean unpackFlipY,
-                                     GLboolean unpackPremultiplyAlpha,
-                                     GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopyTextureCHROMIUM(GLuint sourceId,
+                                        GLint sourceLevel,
+                                        GLenum destTarget,
+                                        GLuint destId,
+                                        GLint destLevel,
+                                        GLint internalFormat,
+                                        GLenum destType,
+                                        GLboolean unpackFlipY,
+                                        GLboolean unpackPremultiplyAlpha,
+                                        GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTextureCHROMIUM,
@@ -3503,20 +3521,20 @@ void GL_APIENTRY CopyTextureCHROMIUM(GLuint sourceId,
     }
 }
 
-void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
-                                        GLint sourceLevel,
-                                        GLenum destTarget,
-                                        GLuint destId,
-                                        GLint destLevel,
-                                        GLint xoffset,
-                                        GLint yoffset,
-                                        GLint x,
-                                        GLint y,
-                                        GLint width,
-                                        GLint height,
-                                        GLboolean unpackFlipY,
-                                        GLboolean unpackPremultiplyAlpha,
-                                        GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopySubTextureCHROMIUM(GLuint sourceId,
+                                           GLint sourceLevel,
+                                           GLenum destTarget,
+                                           GLuint destId,
+                                           GLint destLevel,
+                                           GLint xoffset,
+                                           GLint yoffset,
+                                           GLint x,
+                                           GLint y,
+                                           GLint width,
+                                           GLint height,
+                                           GLboolean unpackFlipY,
+                                           GLboolean unpackPremultiplyAlpha,
+                                           GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopySubTextureCHROMIUM,
@@ -3556,7 +3574,7 @@ void GL_APIENTRY CopySubTextureCHROMIUM(GLuint sourceId,
 }
 
 // GL_CHROMIUM_framebuffer_mixed_samples
-void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
+void GL_APIENTRY GL_CoverageModulationCHROMIUM(GLenum components)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCoverageModulationCHROMIUM, "context = %d, components = %s", CID(context),
@@ -3580,7 +3598,7 @@ void GL_APIENTRY CoverageModulationCHROMIUM(GLenum components)
 }
 
 // GL_CHROMIUM_lose_context
-void GL_APIENTRY LoseContextCHROMIUM(GLenum current, GLenum other)
+void GL_APIENTRY GL_LoseContextCHROMIUM(GLenum current, GLenum other)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoseContextCHROMIUM, "context = %d, current = %s, other = %s", CID(context),
@@ -3611,7 +3629,7 @@ void GL_APIENTRY LoseContextCHROMIUM(GLenum current, GLenum other)
 // GL_EXT_YUV_target
 
 // GL_EXT_blend_func_extended
-void GL_APIENTRY BindFragDataLocationEXT(GLuint program, GLuint color, const GLchar *name)
+void GL_APIENTRY GL_BindFragDataLocationEXT(GLuint program, GLuint color, const GLchar *name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindFragDataLocationEXT,
@@ -3636,10 +3654,10 @@ void GL_APIENTRY BindFragDataLocationEXT(GLuint program, GLuint color, const GLc
     }
 }
 
-void GL_APIENTRY BindFragDataLocationIndexedEXT(GLuint program,
-                                                GLuint colorNumber,
-                                                GLuint index,
-                                                const GLchar *name)
+void GL_APIENTRY GL_BindFragDataLocationIndexedEXT(GLuint program,
+                                                   GLuint colorNumber,
+                                                   GLuint index,
+                                                   const GLchar *name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindFragDataLocationIndexedEXT,
@@ -3666,7 +3684,7 @@ void GL_APIENTRY BindFragDataLocationIndexedEXT(GLuint program,
     }
 }
 
-GLint GL_APIENTRY GetFragDataIndexEXT(GLuint program, const GLchar *name)
+GLint GL_APIENTRY GL_GetFragDataIndexEXT(GLuint program, const GLchar *name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFragDataIndexEXT, "context = %d, program = %u, name = 0x%016" PRIxPTR "",
@@ -3697,9 +3715,9 @@ GLint GL_APIENTRY GetFragDataIndexEXT(GLuint program, const GLchar *name)
     return returnValue;
 }
 
-GLint GL_APIENTRY GetProgramResourceLocationIndexEXT(GLuint program,
-                                                     GLenum programInterface,
-                                                     const GLchar *name)
+GLint GL_APIENTRY GL_GetProgramResourceLocationIndexEXT(GLuint program,
+                                                        GLenum programInterface,
+                                                        const GLchar *name)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetProgramResourceLocationIndexEXT,
@@ -3739,10 +3757,10 @@ GLint GL_APIENTRY GetProgramResourceLocationIndexEXT(GLuint program,
 }
 
 // GL_EXT_buffer_storage
-void GL_APIENTRY BufferStorageEXT(GLenum target,
-                                  GLsizeiptr size,
-                                  const void *data,
-                                  GLbitfield flags)
+void GL_APIENTRY GL_BufferStorageEXT(GLenum target,
+                                     GLsizeiptr size,
+                                     const void *data,
+                                     GLbitfield flags)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBufferStorageEXT,
@@ -3770,7 +3788,7 @@ void GL_APIENTRY BufferStorageEXT(GLenum target,
 }
 
 // GL_EXT_clip_control
-void GL_APIENTRY ClipControlEXT(GLenum origin, GLenum depth)
+void GL_APIENTRY GL_ClipControlEXT(GLenum origin, GLenum depth)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLClipControlEXT, "context = %d, origin = %s, depth = %s", CID(context),
@@ -3795,21 +3813,21 @@ void GL_APIENTRY ClipControlEXT(GLenum origin, GLenum depth)
 }
 
 // GL_EXT_copy_image
-void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
-                                     GLenum srcTarget,
-                                     GLint srcLevel,
-                                     GLint srcX,
-                                     GLint srcY,
-                                     GLint srcZ,
-                                     GLuint dstName,
-                                     GLenum dstTarget,
-                                     GLint dstLevel,
-                                     GLint dstX,
-                                     GLint dstY,
-                                     GLint dstZ,
-                                     GLsizei srcWidth,
-                                     GLsizei srcHeight,
-                                     GLsizei srcDepth)
+void GL_APIENTRY GL_CopyImageSubDataEXT(GLuint srcName,
+                                        GLenum srcTarget,
+                                        GLint srcLevel,
+                                        GLint srcX,
+                                        GLint srcY,
+                                        GLint srcZ,
+                                        GLuint dstName,
+                                        GLenum dstTarget,
+                                        GLint dstLevel,
+                                        GLint dstX,
+                                        GLint dstY,
+                                        GLint dstZ,
+                                        GLsizei srcWidth,
+                                        GLsizei srcHeight,
+                                        GLsizei srcDepth)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyImageSubDataEXT,
@@ -3847,7 +3865,7 @@ void GL_APIENTRY CopyImageSubDataEXT(GLuint srcName,
 
 // GL_EXT_debug_label
 void GL_APIENTRY
-GetObjectLabelEXT(GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label)
+GL_GetObjectLabelEXT(GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, GLchar *label)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetObjectLabelEXT,
@@ -3875,7 +3893,7 @@ GetObjectLabelEXT(GLenum type, GLuint object, GLsizei bufSize, GLsizei *length, 
     }
 }
 
-void GL_APIENTRY LabelObjectEXT(GLenum type, GLuint object, GLsizei length, const GLchar *label)
+void GL_APIENTRY GL_LabelObjectEXT(GLenum type, GLuint object, GLsizei length, const GLchar *label)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLabelObjectEXT,
@@ -3901,7 +3919,7 @@ void GL_APIENTRY LabelObjectEXT(GLenum type, GLuint object, GLsizei length, cons
 }
 
 // GL_EXT_debug_marker
-void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
+void GL_APIENTRY GL_InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
 {
     Context *context = GetValidGlobalContext();
     // Don't run the EVENT() macro on the EXT_debug_marker entry points.
@@ -3926,7 +3944,7 @@ void GL_APIENTRY InsertEventMarkerEXT(GLsizei length, const GLchar *marker)
     }
 }
 
-void GL_APIENTRY PopGroupMarkerEXT()
+void GL_APIENTRY GL_PopGroupMarkerEXT()
 {
     Context *context = GetValidGlobalContext();
     // Don't run the EVENT() macro on the EXT_debug_marker entry points.
@@ -3949,7 +3967,7 @@ void GL_APIENTRY PopGroupMarkerEXT()
     }
 }
 
-void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const GLchar *marker)
+void GL_APIENTRY GL_PushGroupMarkerEXT(GLsizei length, const GLchar *marker)
 {
     Context *context = GetValidGlobalContext();
     // Don't run the EVENT() macro on the EXT_debug_marker entry points.
@@ -3975,9 +3993,9 @@ void GL_APIENTRY PushGroupMarkerEXT(GLsizei length, const GLchar *marker)
 }
 
 // GL_EXT_discard_framebuffer
-void GL_APIENTRY DiscardFramebufferEXT(GLenum target,
-                                       GLsizei numAttachments,
-                                       const GLenum *attachments)
+void GL_APIENTRY GL_DiscardFramebufferEXT(GLenum target,
+                                          GLsizei numAttachments,
+                                          const GLenum *attachments)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDiscardFramebufferEXT,
@@ -4005,7 +4023,7 @@ void GL_APIENTRY DiscardFramebufferEXT(GLenum target,
 }
 
 // GL_EXT_disjoint_timer_query
-void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
+void GL_APIENTRY GL_BeginQueryEXT(GLenum target, GLuint id)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBeginQueryEXT, "context = %d, target = %s, id = %u", CID(context),
@@ -4030,7 +4048,7 @@ void GL_APIENTRY BeginQueryEXT(GLenum target, GLuint id)
     }
 }
 
-void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
+void GL_APIENTRY GL_DeleteQueriesEXT(GLsizei n, const GLuint *ids)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteQueriesEXT, "context = %d, n = %d, ids = 0x%016" PRIxPTR "",
@@ -4054,7 +4072,7 @@ void GL_APIENTRY DeleteQueriesEXT(GLsizei n, const GLuint *ids)
     }
 }
 
-void GL_APIENTRY EndQueryEXT(GLenum target)
+void GL_APIENTRY GL_EndQueryEXT(GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEndQueryEXT, "context = %d, target = %s", CID(context),
@@ -4078,7 +4096,7 @@ void GL_APIENTRY EndQueryEXT(GLenum target)
     }
 }
 
-void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids)
+void GL_APIENTRY GL_GenQueriesEXT(GLsizei n, GLuint *ids)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenQueriesEXT, "context = %d, n = %d, ids = 0x%016" PRIxPTR "", CID(context),
@@ -4102,7 +4120,7 @@ void GL_APIENTRY GenQueriesEXT(GLsizei n, GLuint *ids)
     }
 }
 
-void GL_APIENTRY GetInteger64vEXT(GLenum pname, GLint64 *data)
+void GL_APIENTRY GL_GetInteger64vEXT(GLenum pname, GLint64 *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetInteger64vEXT, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -4125,7 +4143,7 @@ void GL_APIENTRY GetInteger64vEXT(GLenum pname, GLint64 *data)
     }
 }
 
-void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
+void GL_APIENTRY GL_GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjecti64vEXT,
@@ -4148,7 +4166,7 @@ void GL_APIENTRY GetQueryObjecti64vEXT(GLuint id, GLenum pname, GLint64 *params)
     {}
 }
 
-void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetQueryObjectivEXT,
@@ -4171,7 +4189,7 @@ void GL_APIENTRY GetQueryObjectivEXT(GLuint id, GLenum pname, GLint *params)
     {}
 }
 
-void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params)
+void GL_APIENTRY GL_GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryObjectui64vEXT,
@@ -4196,7 +4214,7 @@ void GL_APIENTRY GetQueryObjectui64vEXT(GLuint id, GLenum pname, GLuint64 *param
     }
 }
 
-void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
+void GL_APIENTRY GL_GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryObjectuivEXT,
@@ -4221,7 +4239,7 @@ void GL_APIENTRY GetQueryObjectuivEXT(GLuint id, GLenum pname, GLuint *params)
     }
 }
 
-void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetQueryivEXT,
@@ -4247,7 +4265,7 @@ void GL_APIENTRY GetQueryivEXT(GLenum target, GLenum pname, GLint *params)
     }
 }
 
-GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
+GLboolean GL_APIENTRY GL_IsQueryEXT(GLuint id)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsQueryEXT, "context = %d, id = %u", CID(context), id);
@@ -4276,7 +4294,7 @@ GLboolean GL_APIENTRY IsQueryEXT(GLuint id)
     return returnValue;
 }
 
-void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target)
+void GL_APIENTRY GL_QueryCounterEXT(GLuint id, GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLQueryCounterEXT, "context = %d, id = %u, target = %s", CID(context), id,
@@ -4302,7 +4320,7 @@ void GL_APIENTRY QueryCounterEXT(GLuint id, GLenum target)
 }
 
 // GL_EXT_draw_buffers
-void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
+void GL_APIENTRY GL_DrawBuffersEXT(GLsizei n, const GLenum *bufs)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawBuffersEXT, "context = %d, n = %d, bufs = 0x%016" PRIxPTR "", CID(context),
@@ -4325,7 +4343,7 @@ void GL_APIENTRY DrawBuffersEXT(GLsizei n, const GLenum *bufs)
 }
 
 // GL_EXT_draw_buffers_indexed
-void GL_APIENTRY BlendEquationSeparateiEXT(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+void GL_APIENTRY GL_BlendEquationSeparateiEXT(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendEquationSeparateiEXT,
@@ -4350,7 +4368,7 @@ void GL_APIENTRY BlendEquationSeparateiEXT(GLuint buf, GLenum modeRGB, GLenum mo
     }
 }
 
-void GL_APIENTRY BlendEquationiEXT(GLuint buf, GLenum mode)
+void GL_APIENTRY GL_BlendEquationiEXT(GLuint buf, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendEquationiEXT, "context = %d, buf = %u, mode = %s", CID(context), buf,
@@ -4374,7 +4392,7 @@ void GL_APIENTRY BlendEquationiEXT(GLuint buf, GLenum mode)
 }
 
 void GL_APIENTRY
-BlendFuncSeparateiEXT(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+GL_BlendFuncSeparateiEXT(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendFuncSeparateiEXT,
@@ -4403,7 +4421,7 @@ BlendFuncSeparateiEXT(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
     }
 }
 
-void GL_APIENTRY BlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
+void GL_APIENTRY GL_BlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendFunciEXT, "context = %d, buf = %u, src = %s, dst = %s", CID(context), buf,
@@ -4427,7 +4445,7 @@ void GL_APIENTRY BlendFunciEXT(GLuint buf, GLenum src, GLenum dst)
     }
 }
 
-void GL_APIENTRY ColorMaskiEXT(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+void GL_APIENTRY GL_ColorMaskiEXT(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColorMaskiEXT, "context = %d, index = %u, r = %s, g = %s, b = %s, a = %s",
@@ -4451,7 +4469,7 @@ void GL_APIENTRY ColorMaskiEXT(GLuint index, GLboolean r, GLboolean g, GLboolean
     }
 }
 
-void GL_APIENTRY DisableiEXT(GLenum target, GLuint index)
+void GL_APIENTRY GL_DisableiEXT(GLenum target, GLuint index)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDisableiEXT, "context = %d, target = %s, index = %u", CID(context),
@@ -4474,7 +4492,7 @@ void GL_APIENTRY DisableiEXT(GLenum target, GLuint index)
     }
 }
 
-void GL_APIENTRY EnableiEXT(GLenum target, GLuint index)
+void GL_APIENTRY GL_EnableiEXT(GLenum target, GLuint index)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEnableiEXT, "context = %d, target = %s, index = %u", CID(context),
@@ -4497,7 +4515,7 @@ void GL_APIENTRY EnableiEXT(GLenum target, GLuint index)
     }
 }
 
-GLboolean GL_APIENTRY IsEnablediEXT(GLenum target, GLuint index)
+GLboolean GL_APIENTRY GL_IsEnablediEXT(GLenum target, GLuint index)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsEnablediEXT, "context = %d, target = %s, index = %u", CID(context),
@@ -4528,11 +4546,11 @@ GLboolean GL_APIENTRY IsEnablediEXT(GLenum target, GLuint index)
 }
 
 // GL_EXT_draw_elements_base_vertex
-void GL_APIENTRY DrawElementsBaseVertexEXT(GLenum mode,
-                                           GLsizei count,
-                                           GLenum type,
-                                           const void *indices,
-                                           GLint basevertex)
+void GL_APIENTRY GL_DrawElementsBaseVertexEXT(GLenum mode,
+                                              GLsizei count,
+                                              GLenum type,
+                                              const void *indices,
+                                              GLint basevertex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsBaseVertexEXT,
@@ -4562,12 +4580,12 @@ void GL_APIENTRY DrawElementsBaseVertexEXT(GLenum mode,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedBaseVertexEXT(GLenum mode,
-                                                    GLsizei count,
-                                                    GLenum type,
-                                                    const void *indices,
-                                                    GLsizei instancecount,
-                                                    GLint basevertex)
+void GL_APIENTRY GL_DrawElementsInstancedBaseVertexEXT(GLenum mode,
+                                                       GLsizei count,
+                                                       GLenum type,
+                                                       const void *indices,
+                                                       GLsizei instancecount,
+                                                       GLint basevertex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsInstancedBaseVertexEXT,
@@ -4599,13 +4617,13 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexEXT(GLenum mode,
     }
 }
 
-void GL_APIENTRY DrawRangeElementsBaseVertexEXT(GLenum mode,
-                                                GLuint start,
-                                                GLuint end,
-                                                GLsizei count,
-                                                GLenum type,
-                                                const void *indices,
-                                                GLint basevertex)
+void GL_APIENTRY GL_DrawRangeElementsBaseVertexEXT(GLenum mode,
+                                                   GLuint start,
+                                                   GLuint end,
+                                                   GLsizei count,
+                                                   GLenum type,
+                                                   const void *indices,
+                                                   GLint basevertex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawRangeElementsBaseVertexEXT,
@@ -4636,12 +4654,12 @@ void GL_APIENTRY DrawRangeElementsBaseVertexEXT(GLenum mode,
     }
 }
 
-void GL_APIENTRY MultiDrawElementsBaseVertexEXT(GLenum mode,
-                                                const GLsizei *count,
-                                                GLenum type,
-                                                const void *const *indices,
-                                                GLsizei primcount,
-                                                const GLint *basevertex)
+void GL_APIENTRY GL_MultiDrawElementsBaseVertexEXT(GLenum mode,
+                                                   const GLsizei *count,
+                                                   GLenum type,
+                                                   const void *const *indices,
+                                                   GLsizei primcount,
+                                                   const GLint *basevertex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMultiDrawElementsBaseVertexEXT,
@@ -4674,11 +4692,11 @@ void GL_APIENTRY MultiDrawElementsBaseVertexEXT(GLenum mode,
 }
 
 // GL_EXT_external_buffer
-void GL_APIENTRY BufferStorageExternalEXT(GLenum target,
-                                          GLintptr offset,
-                                          GLsizeiptr size,
-                                          GLeglClientBufferEXT clientBuffer,
-                                          GLbitfield flags)
+void GL_APIENTRY GL_BufferStorageExternalEXT(GLenum target,
+                                             GLintptr offset,
+                                             GLsizeiptr size,
+                                             GLeglClientBufferEXT clientBuffer,
+                                             GLbitfield flags)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBufferStorageExternalEXT,
@@ -4709,11 +4727,11 @@ void GL_APIENTRY BufferStorageExternalEXT(GLenum target,
     }
 }
 
-void GL_APIENTRY NamedBufferStorageExternalEXT(GLuint buffer,
-                                               GLintptr offset,
-                                               GLsizeiptr size,
-                                               GLeglClientBufferEXT clientBuffer,
-                                               GLbitfield flags)
+void GL_APIENTRY GL_NamedBufferStorageExternalEXT(GLuint buffer,
+                                                  GLintptr offset,
+                                                  GLsizeiptr size,
+                                                  GLeglClientBufferEXT clientBuffer,
+                                                  GLbitfield flags)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLNamedBufferStorageExternalEXT,
@@ -4743,10 +4761,10 @@ void GL_APIENTRY NamedBufferStorageExternalEXT(GLuint buffer,
 }
 
 // GL_EXT_geometry_shader
-void GL_APIENTRY FramebufferTextureEXT(GLenum target,
-                                       GLenum attachment,
-                                       GLuint texture,
-                                       GLint level)
+void GL_APIENTRY GL_FramebufferTextureEXT(GLenum target,
+                                          GLenum attachment,
+                                          GLuint texture,
+                                          GLint level)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFramebufferTextureEXT,
@@ -4775,7 +4793,10 @@ void GL_APIENTRY FramebufferTextureEXT(GLenum target,
 }
 
 // GL_EXT_instanced_arrays
-void GL_APIENTRY DrawArraysInstancedEXT(GLenum mode, GLint start, GLsizei count, GLsizei primcount)
+void GL_APIENTRY GL_DrawArraysInstancedEXT(GLenum mode,
+                                           GLint start,
+                                           GLsizei count,
+                                           GLsizei primcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawArraysInstancedEXT,
@@ -4802,11 +4823,11 @@ void GL_APIENTRY DrawArraysInstancedEXT(GLenum mode, GLint start, GLsizei count,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedEXT(GLenum mode,
-                                          GLsizei count,
-                                          GLenum type,
-                                          const void *indices,
-                                          GLsizei primcount)
+void GL_APIENTRY GL_DrawElementsInstancedEXT(GLenum mode,
+                                             GLsizei count,
+                                             GLenum type,
+                                             const void *indices,
+                                             GLsizei primcount)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsInstancedEXT,
@@ -4836,7 +4857,7 @@ void GL_APIENTRY DrawElementsInstancedEXT(GLenum mode,
     }
 }
 
-void GL_APIENTRY VertexAttribDivisorEXT(GLuint index, GLuint divisor)
+void GL_APIENTRY GL_VertexAttribDivisorEXT(GLuint index, GLuint divisor)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLVertexAttribDivisorEXT, "context = %d, index = %u, divisor = %u", CID(context),
@@ -4860,7 +4881,7 @@ void GL_APIENTRY VertexAttribDivisorEXT(GLuint index, GLuint divisor)
 }
 
 // GL_EXT_map_buffer_range
-void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
+void GL_APIENTRY GL_FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsizeiptr length)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFlushMappedBufferRangeEXT,
@@ -4888,10 +4909,10 @@ void GL_APIENTRY FlushMappedBufferRangeEXT(GLenum target, GLintptr offset, GLsiz
     }
 }
 
-void *GL_APIENTRY MapBufferRangeEXT(GLenum target,
-                                    GLintptr offset,
-                                    GLsizeiptr length,
-                                    GLbitfield access)
+void *GL_APIENTRY GL_MapBufferRangeEXT(GLenum target,
+                                       GLintptr offset,
+                                       GLsizeiptr length,
+                                       GLbitfield access)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMapBufferRangeEXT,
@@ -4928,7 +4949,10 @@ void *GL_APIENTRY MapBufferRangeEXT(GLenum target,
 }
 
 // GL_EXT_memory_object
-void GL_APIENTRY BufferStorageMemEXT(GLenum target, GLsizeiptr size, GLuint memory, GLuint64 offset)
+void GL_APIENTRY GL_BufferStorageMemEXT(GLenum target,
+                                        GLsizeiptr size,
+                                        GLuint memory,
+                                        GLuint64 offset)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBufferStorageMemEXT,
@@ -4957,7 +4981,7 @@ void GL_APIENTRY BufferStorageMemEXT(GLenum target, GLsizeiptr size, GLuint memo
     }
 }
 
-void GL_APIENTRY CreateMemoryObjectsEXT(GLsizei n, GLuint *memoryObjects)
+void GL_APIENTRY GL_CreateMemoryObjectsEXT(GLsizei n, GLuint *memoryObjects)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCreateMemoryObjectsEXT,
@@ -4982,7 +5006,7 @@ void GL_APIENTRY CreateMemoryObjectsEXT(GLsizei n, GLuint *memoryObjects)
     }
 }
 
-void GL_APIENTRY DeleteMemoryObjectsEXT(GLsizei n, const GLuint *memoryObjects)
+void GL_APIENTRY GL_DeleteMemoryObjectsEXT(GLsizei n, const GLuint *memoryObjects)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteMemoryObjectsEXT,
@@ -5008,7 +5032,7 @@ void GL_APIENTRY DeleteMemoryObjectsEXT(GLsizei n, const GLuint *memoryObjects)
     }
 }
 
-void GL_APIENTRY GetMemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetMemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetMemoryObjectParameterivEXT,
@@ -5036,7 +5060,7 @@ void GL_APIENTRY GetMemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname
     }
 }
 
-void GL_APIENTRY GetUnsignedBytevEXT(GLenum pname, GLubyte *data)
+void GL_APIENTRY GL_GetUnsignedBytevEXT(GLenum pname, GLubyte *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetUnsignedBytevEXT, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -5059,7 +5083,7 @@ void GL_APIENTRY GetUnsignedBytevEXT(GLenum pname, GLubyte *data)
     }
 }
 
-void GL_APIENTRY GetUnsignedBytei_vEXT(GLenum target, GLuint index, GLubyte *data)
+void GL_APIENTRY GL_GetUnsignedBytei_vEXT(GLenum target, GLuint index, GLubyte *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetUnsignedBytei_vEXT,
@@ -5083,7 +5107,7 @@ void GL_APIENTRY GetUnsignedBytei_vEXT(GLenum target, GLuint index, GLubyte *dat
     }
 }
 
-GLboolean GL_APIENTRY IsMemoryObjectEXT(GLuint memoryObject)
+GLboolean GL_APIENTRY GL_IsMemoryObjectEXT(GLuint memoryObject)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsMemoryObjectEXT, "context = %d, memoryObject = %u", CID(context),
@@ -5115,7 +5139,9 @@ GLboolean GL_APIENTRY IsMemoryObjectEXT(GLuint memoryObject)
     return returnValue;
 }
 
-void GL_APIENTRY MemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_MemoryObjectParameterivEXT(GLuint memoryObject,
+                                               GLenum pname,
+                                               const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMemoryObjectParameterivEXT,
@@ -5143,13 +5169,13 @@ void GL_APIENTRY MemoryObjectParameterivEXT(GLuint memoryObject, GLenum pname, c
     }
 }
 
-void GL_APIENTRY TexStorageMem2DEXT(GLenum target,
-                                    GLsizei levels,
-                                    GLenum internalFormat,
-                                    GLsizei width,
-                                    GLsizei height,
-                                    GLuint memory,
-                                    GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem2DEXT(GLenum target,
+                                       GLsizei levels,
+                                       GLenum internalFormat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLuint memory,
+                                       GLuint64 offset)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMem2DEXT,
@@ -5182,14 +5208,14 @@ void GL_APIENTRY TexStorageMem2DEXT(GLenum target,
     }
 }
 
-void GL_APIENTRY TexStorageMem2DMultisampleEXT(GLenum target,
-                                               GLsizei samples,
-                                               GLenum internalFormat,
-                                               GLsizei width,
-                                               GLsizei height,
-                                               GLboolean fixedSampleLocations,
-                                               GLuint memory,
-                                               GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem2DMultisampleEXT(GLenum target,
+                                                  GLsizei samples,
+                                                  GLenum internalFormat,
+                                                  GLsizei width,
+                                                  GLsizei height,
+                                                  GLboolean fixedSampleLocations,
+                                                  GLuint memory,
+                                                  GLuint64 offset)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMem2DMultisampleEXT,
@@ -5222,14 +5248,14 @@ void GL_APIENTRY TexStorageMem2DMultisampleEXT(GLenum target,
     }
 }
 
-void GL_APIENTRY TexStorageMem3DEXT(GLenum target,
-                                    GLsizei levels,
-                                    GLenum internalFormat,
-                                    GLsizei width,
-                                    GLsizei height,
-                                    GLsizei depth,
-                                    GLuint memory,
-                                    GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem3DEXT(GLenum target,
+                                       GLsizei levels,
+                                       GLenum internalFormat,
+                                       GLsizei width,
+                                       GLsizei height,
+                                       GLsizei depth,
+                                       GLuint memory,
+                                       GLuint64 offset)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMem3DEXT,
@@ -5262,15 +5288,15 @@ void GL_APIENTRY TexStorageMem3DEXT(GLenum target,
     }
 }
 
-void GL_APIENTRY TexStorageMem3DMultisampleEXT(GLenum target,
-                                               GLsizei samples,
-                                               GLenum internalFormat,
-                                               GLsizei width,
-                                               GLsizei height,
-                                               GLsizei depth,
-                                               GLboolean fixedSampleLocations,
-                                               GLuint memory,
-                                               GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem3DMultisampleEXT(GLenum target,
+                                                  GLsizei samples,
+                                                  GLenum internalFormat,
+                                                  GLsizei width,
+                                                  GLsizei height,
+                                                  GLsizei depth,
+                                                  GLboolean fixedSampleLocations,
+                                                  GLuint memory,
+                                                  GLuint64 offset)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorageMem3DMultisampleEXT,
@@ -5306,7 +5332,7 @@ void GL_APIENTRY TexStorageMem3DMultisampleEXT(GLenum target,
 }
 
 // GL_EXT_memory_object_fd
-void GL_APIENTRY ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handleType, GLint fd)
+void GL_APIENTRY GL_ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handleType, GLint fd)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLImportMemoryFdEXT,
@@ -5336,12 +5362,12 @@ void GL_APIENTRY ImportMemoryFdEXT(GLuint memory, GLuint64 size, GLenum handleTy
 }
 
 // GL_EXT_multisampled_render_to_texture
-void GL_APIENTRY FramebufferTexture2DMultisampleEXT(GLenum target,
-                                                    GLenum attachment,
-                                                    GLenum textarget,
-                                                    GLuint texture,
-                                                    GLint level,
-                                                    GLsizei samples)
+void GL_APIENTRY GL_FramebufferTexture2DMultisampleEXT(GLenum target,
+                                                       GLenum attachment,
+                                                       GLenum textarget,
+                                                       GLuint texture,
+                                                       GLint level,
+                                                       GLsizei samples)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFramebufferTexture2DMultisampleEXT,
@@ -5374,11 +5400,11 @@ void GL_APIENTRY FramebufferTexture2DMultisampleEXT(GLenum target,
     }
 }
 
-void GL_APIENTRY RenderbufferStorageMultisampleEXT(GLenum target,
-                                                   GLsizei samples,
-                                                   GLenum internalformat,
-                                                   GLsizei width,
-                                                   GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageMultisampleEXT(GLenum target,
+                                                      GLsizei samples,
+                                                      GLenum internalformat,
+                                                      GLsizei width,
+                                                      GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRenderbufferStorageMultisampleEXT,
@@ -5424,7 +5450,7 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXT(GLenum target,
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness
-GLenum GL_APIENTRY GetGraphicsResetStatusEXT()
+GLenum GL_APIENTRY GL_GetGraphicsResetStatusEXT()
 {
     Context *context = GetGlobalContext();
     EVENT(context, GLGetGraphicsResetStatusEXT, "context = %d", CID(context));
@@ -5455,7 +5481,10 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXT()
     return returnValue;
 }
 
-void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSize, GLfloat *params)
+void GL_APIENTRY GL_GetnUniformfvEXT(GLuint program,
+                                     GLint location,
+                                     GLsizei bufSize,
+                                     GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetnUniformfvEXT,
@@ -5483,7 +5512,7 @@ void GL_APIENTRY GetnUniformfvEXT(GLuint program, GLint location, GLsizei bufSiz
     }
 }
 
-void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint *params)
+void GL_APIENTRY GL_GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSize, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetnUniformivEXT,
@@ -5511,14 +5540,14 @@ void GL_APIENTRY GetnUniformivEXT(GLuint program, GLint location, GLsizei bufSiz
     }
 }
 
-void GL_APIENTRY ReadnPixelsEXT(GLint x,
-                                GLint y,
-                                GLsizei width,
-                                GLsizei height,
-                                GLenum format,
-                                GLenum type,
-                                GLsizei bufSize,
-                                void *data)
+void GL_APIENTRY GL_ReadnPixelsEXT(GLint x,
+                                   GLint y,
+                                   GLsizei width,
+                                   GLsizei height,
+                                   GLenum format,
+                                   GLenum type,
+                                   GLsizei bufSize,
+                                   void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLReadnPixelsEXT,
@@ -5549,7 +5578,7 @@ void GL_APIENTRY ReadnPixelsEXT(GLint x,
 // GL_EXT_sRGB
 
 // GL_EXT_semaphore
-void GL_APIENTRY DeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
+void GL_APIENTRY GL_DeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteSemaphoresEXT, "context = %d, n = %d, semaphores = 0x%016" PRIxPTR "",
@@ -5573,7 +5602,7 @@ void GL_APIENTRY DeleteSemaphoresEXT(GLsizei n, const GLuint *semaphores)
     }
 }
 
-void GL_APIENTRY GenSemaphoresEXT(GLsizei n, GLuint *semaphores)
+void GL_APIENTRY GL_GenSemaphoresEXT(GLsizei n, GLuint *semaphores)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenSemaphoresEXT, "context = %d, n = %d, semaphores = 0x%016" PRIxPTR "",
@@ -5597,7 +5626,7 @@ void GL_APIENTRY GenSemaphoresEXT(GLsizei n, GLuint *semaphores)
     }
 }
 
-void GL_APIENTRY GetSemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, GLuint64 *params)
+void GL_APIENTRY GL_GetSemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, GLuint64 *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetSemaphoreParameterui64vEXT,
@@ -5624,7 +5653,7 @@ void GL_APIENTRY GetSemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, G
     }
 }
 
-GLboolean GL_APIENTRY IsSemaphoreEXT(GLuint semaphore)
+GLboolean GL_APIENTRY GL_IsSemaphoreEXT(GLuint semaphore)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsSemaphoreEXT, "context = %d, semaphore = %u", CID(context), semaphore);
@@ -5654,7 +5683,9 @@ GLboolean GL_APIENTRY IsSemaphoreEXT(GLuint semaphore)
     return returnValue;
 }
 
-void GL_APIENTRY SemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, const GLuint64 *params)
+void GL_APIENTRY GL_SemaphoreParameterui64vEXT(GLuint semaphore,
+                                               GLenum pname,
+                                               const GLuint64 *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSemaphoreParameterui64vEXT,
@@ -5681,12 +5712,12 @@ void GL_APIENTRY SemaphoreParameterui64vEXT(GLuint semaphore, GLenum pname, cons
     }
 }
 
-void GL_APIENTRY SignalSemaphoreEXT(GLuint semaphore,
-                                    GLuint numBufferBarriers,
-                                    const GLuint *buffers,
-                                    GLuint numTextureBarriers,
-                                    const GLuint *textures,
-                                    const GLenum *dstLayouts)
+void GL_APIENTRY GL_SignalSemaphoreEXT(GLuint semaphore,
+                                       GLuint numBufferBarriers,
+                                       const GLuint *buffers,
+                                       GLuint numTextureBarriers,
+                                       const GLuint *textures,
+                                       const GLenum *dstLayouts)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSignalSemaphoreEXT,
@@ -5719,12 +5750,12 @@ void GL_APIENTRY SignalSemaphoreEXT(GLuint semaphore,
     }
 }
 
-void GL_APIENTRY WaitSemaphoreEXT(GLuint semaphore,
-                                  GLuint numBufferBarriers,
-                                  const GLuint *buffers,
-                                  GLuint numTextureBarriers,
-                                  const GLuint *textures,
-                                  const GLenum *srcLayouts)
+void GL_APIENTRY GL_WaitSemaphoreEXT(GLuint semaphore,
+                                     GLuint numBufferBarriers,
+                                     const GLuint *buffers,
+                                     GLuint numTextureBarriers,
+                                     const GLuint *textures,
+                                     const GLenum *srcLayouts)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWaitSemaphoreEXT,
@@ -5762,7 +5793,7 @@ void GL_APIENTRY WaitSemaphoreEXT(GLuint semaphore,
 // GetUnsignedBytevEXT is already defined.
 
 // GL_EXT_semaphore_fd
-void GL_APIENTRY ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint fd)
+void GL_APIENTRY GL_ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint fd)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLImportSemaphoreFdEXT, "context = %d, semaphore = %u, handleType = %s, fd = %d",
@@ -5790,7 +5821,7 @@ void GL_APIENTRY ImportSemaphoreFdEXT(GLuint semaphore, GLenum handleType, GLint
 }
 
 // GL_EXT_separate_shader_objects
-void GL_APIENTRY ActiveShaderProgramEXT(GLuint pipeline, GLuint program)
+void GL_APIENTRY GL_ActiveShaderProgramEXT(GLuint pipeline, GLuint program)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLActiveShaderProgramEXT, "context = %d, pipeline = %u, program = %u",
@@ -5815,7 +5846,7 @@ void GL_APIENTRY ActiveShaderProgramEXT(GLuint pipeline, GLuint program)
     }
 }
 
-void GL_APIENTRY BindProgramPipelineEXT(GLuint pipeline)
+void GL_APIENTRY GL_BindProgramPipelineEXT(GLuint pipeline)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindProgramPipelineEXT, "context = %d, pipeline = %u", CID(context), pipeline);
@@ -5838,7 +5869,7 @@ void GL_APIENTRY BindProgramPipelineEXT(GLuint pipeline)
     }
 }
 
-GLuint GL_APIENTRY CreateShaderProgramvEXT(GLenum type, GLsizei count, const GLchar **strings)
+GLuint GL_APIENTRY GL_CreateShaderProgramvEXT(GLenum type, GLsizei count, const GLchar **strings)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCreateShaderProgramvEXT,
@@ -5872,7 +5903,7 @@ GLuint GL_APIENTRY CreateShaderProgramvEXT(GLenum type, GLsizei count, const GLc
     return returnValue;
 }
 
-void GL_APIENTRY DeleteProgramPipelinesEXT(GLsizei n, const GLuint *pipelines)
+void GL_APIENTRY GL_DeleteProgramPipelinesEXT(GLsizei n, const GLuint *pipelines)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteProgramPipelinesEXT,
@@ -5897,7 +5928,7 @@ void GL_APIENTRY DeleteProgramPipelinesEXT(GLsizei n, const GLuint *pipelines)
     }
 }
 
-void GL_APIENTRY GenProgramPipelinesEXT(GLsizei n, GLuint *pipelines)
+void GL_APIENTRY GL_GenProgramPipelinesEXT(GLsizei n, GLuint *pipelines)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenProgramPipelinesEXT, "context = %d, n = %d, pipelines = 0x%016" PRIxPTR "",
@@ -5921,10 +5952,10 @@ void GL_APIENTRY GenProgramPipelinesEXT(GLsizei n, GLuint *pipelines)
     }
 }
 
-void GL_APIENTRY GetProgramPipelineInfoLogEXT(GLuint pipeline,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLchar *infoLog)
+void GL_APIENTRY GL_GetProgramPipelineInfoLogEXT(GLuint pipeline,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLchar *infoLog)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetProgramPipelineInfoLogEXT,
@@ -5952,7 +5983,7 @@ void GL_APIENTRY GetProgramPipelineInfoLogEXT(GLuint pipeline,
     }
 }
 
-void GL_APIENTRY GetProgramPipelineivEXT(GLuint pipeline, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetProgramPipelineivEXT(GLuint pipeline, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetProgramPipelineivEXT,
@@ -5978,7 +6009,7 @@ void GL_APIENTRY GetProgramPipelineivEXT(GLuint pipeline, GLenum pname, GLint *p
     }
 }
 
-GLboolean GL_APIENTRY IsProgramPipelineEXT(GLuint pipeline)
+GLboolean GL_APIENTRY GL_IsProgramPipelineEXT(GLuint pipeline)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsProgramPipelineEXT, "context = %d, pipeline = %u", CID(context), pipeline);
@@ -6009,7 +6040,7 @@ GLboolean GL_APIENTRY IsProgramPipelineEXT(GLuint pipeline)
     return returnValue;
 }
 
-void GL_APIENTRY ProgramParameteriEXT(GLuint program, GLenum pname, GLint value)
+void GL_APIENTRY GL_ProgramParameteriEXT(GLuint program, GLenum pname, GLint value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramParameteriEXT, "context = %d, program = %u, pname = %s, value = %d",
@@ -6033,7 +6064,7 @@ void GL_APIENTRY ProgramParameteriEXT(GLuint program, GLenum pname, GLint value)
     }
 }
 
-void GL_APIENTRY ProgramUniform1fEXT(GLuint program, GLint location, GLfloat v0)
+void GL_APIENTRY GL_ProgramUniform1fEXT(GLuint program, GLint location, GLfloat v0)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform1fEXT, "context = %d, program = %u, location = %d, v0 = %f",
@@ -6059,10 +6090,10 @@ void GL_APIENTRY ProgramUniform1fEXT(GLuint program, GLint location, GLfloat v0)
     }
 }
 
-void GL_APIENTRY ProgramUniform1fvEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform1fvEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform1fvEXT,
@@ -6090,7 +6121,7 @@ void GL_APIENTRY ProgramUniform1fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniform1iEXT(GLuint program, GLint location, GLint v0)
+void GL_APIENTRY GL_ProgramUniform1iEXT(GLuint program, GLint location, GLint v0)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform1iEXT, "context = %d, program = %u, location = %d, v0 = %d",
@@ -6116,10 +6147,10 @@ void GL_APIENTRY ProgramUniform1iEXT(GLuint program, GLint location, GLint v0)
     }
 }
 
-void GL_APIENTRY ProgramUniform1ivEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLint *value)
+void GL_APIENTRY GL_ProgramUniform1ivEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform1ivEXT,
@@ -6147,7 +6178,7 @@ void GL_APIENTRY ProgramUniform1ivEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniform1uiEXT(GLuint program, GLint location, GLuint v0)
+void GL_APIENTRY GL_ProgramUniform1uiEXT(GLuint program, GLint location, GLuint v0)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform1uiEXT, "context = %d, program = %u, location = %d, v0 = %u",
@@ -6174,10 +6205,10 @@ void GL_APIENTRY ProgramUniform1uiEXT(GLuint program, GLint location, GLuint v0)
     }
 }
 
-void GL_APIENTRY ProgramUniform1uivEXT(GLuint program,
-                                       GLint location,
-                                       GLsizei count,
-                                       const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform1uivEXT(GLuint program,
+                                          GLint location,
+                                          GLsizei count,
+                                          const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform1uivEXT,
@@ -6205,7 +6236,7 @@ void GL_APIENTRY ProgramUniform1uivEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniform2fEXT(GLuint program, GLint location, GLfloat v0, GLfloat v1)
+void GL_APIENTRY GL_ProgramUniform2fEXT(GLuint program, GLint location, GLfloat v0, GLfloat v1)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform2fEXT,
@@ -6233,10 +6264,10 @@ void GL_APIENTRY ProgramUniform2fEXT(GLuint program, GLint location, GLfloat v0,
     }
 }
 
-void GL_APIENTRY ProgramUniform2fvEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform2fvEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform2fvEXT,
@@ -6264,7 +6295,7 @@ void GL_APIENTRY ProgramUniform2fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniform2iEXT(GLuint program, GLint location, GLint v0, GLint v1)
+void GL_APIENTRY GL_ProgramUniform2iEXT(GLuint program, GLint location, GLint v0, GLint v1)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform2iEXT,
@@ -6292,10 +6323,10 @@ void GL_APIENTRY ProgramUniform2iEXT(GLuint program, GLint location, GLint v0, G
     }
 }
 
-void GL_APIENTRY ProgramUniform2ivEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLint *value)
+void GL_APIENTRY GL_ProgramUniform2ivEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform2ivEXT,
@@ -6323,7 +6354,7 @@ void GL_APIENTRY ProgramUniform2ivEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniform2uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1)
+void GL_APIENTRY GL_ProgramUniform2uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform2uiEXT,
@@ -6351,10 +6382,10 @@ void GL_APIENTRY ProgramUniform2uiEXT(GLuint program, GLint location, GLuint v0,
     }
 }
 
-void GL_APIENTRY ProgramUniform2uivEXT(GLuint program,
-                                       GLint location,
-                                       GLsizei count,
-                                       const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform2uivEXT(GLuint program,
+                                          GLint location,
+                                          GLsizei count,
+                                          const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform2uivEXT,
@@ -6383,7 +6414,7 @@ void GL_APIENTRY ProgramUniform2uivEXT(GLuint program,
 }
 
 void GL_APIENTRY
-ProgramUniform3fEXT(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
+GL_ProgramUniform3fEXT(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform3fEXT,
@@ -6411,10 +6442,10 @@ ProgramUniform3fEXT(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
     }
 }
 
-void GL_APIENTRY ProgramUniform3fvEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform3fvEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform3fvEXT,
@@ -6442,7 +6473,8 @@ void GL_APIENTRY ProgramUniform3fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniform3iEXT(GLuint program, GLint location, GLint v0, GLint v1, GLint v2)
+void GL_APIENTRY
+GL_ProgramUniform3iEXT(GLuint program, GLint location, GLint v0, GLint v1, GLint v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform3iEXT,
@@ -6470,10 +6502,10 @@ void GL_APIENTRY ProgramUniform3iEXT(GLuint program, GLint location, GLint v0, G
     }
 }
 
-void GL_APIENTRY ProgramUniform3ivEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLint *value)
+void GL_APIENTRY GL_ProgramUniform3ivEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform3ivEXT,
@@ -6502,7 +6534,7 @@ void GL_APIENTRY ProgramUniform3ivEXT(GLuint program,
 }
 
 void GL_APIENTRY
-ProgramUniform3uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2)
+GL_ProgramUniform3uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform3uiEXT,
@@ -6530,10 +6562,10 @@ ProgramUniform3uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
     }
 }
 
-void GL_APIENTRY ProgramUniform3uivEXT(GLuint program,
-                                       GLint location,
-                                       GLsizei count,
-                                       const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform3uivEXT(GLuint program,
+                                          GLint location,
+                                          GLsizei count,
+                                          const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform3uivEXT,
@@ -6561,8 +6593,12 @@ void GL_APIENTRY ProgramUniform3uivEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY
-ProgramUniform4fEXT(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3)
+void GL_APIENTRY GL_ProgramUniform4fEXT(GLuint program,
+                                        GLint location,
+                                        GLfloat v0,
+                                        GLfloat v1,
+                                        GLfloat v2,
+                                        GLfloat v3)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform4fEXT,
@@ -6590,10 +6626,10 @@ ProgramUniform4fEXT(GLuint program, GLint location, GLfloat v0, GLfloat v1, GLfl
     }
 }
 
-void GL_APIENTRY ProgramUniform4fvEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform4fvEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform4fvEXT,
@@ -6622,7 +6658,7 @@ void GL_APIENTRY ProgramUniform4fvEXT(GLuint program,
 }
 
 void GL_APIENTRY
-ProgramUniform4iEXT(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
+GL_ProgramUniform4iEXT(GLuint program, GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform4iEXT,
@@ -6650,10 +6686,10 @@ ProgramUniform4iEXT(GLuint program, GLint location, GLint v0, GLint v1, GLint v2
     }
 }
 
-void GL_APIENTRY ProgramUniform4ivEXT(GLuint program,
-                                      GLint location,
-                                      GLsizei count,
-                                      const GLint *value)
+void GL_APIENTRY GL_ProgramUniform4ivEXT(GLuint program,
+                                         GLint location,
+                                         GLsizei count,
+                                         const GLint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform4ivEXT,
@@ -6682,7 +6718,7 @@ void GL_APIENTRY ProgramUniform4ivEXT(GLuint program,
 }
 
 void GL_APIENTRY
-ProgramUniform4uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+GL_ProgramUniform4uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform4uiEXT,
@@ -6710,10 +6746,10 @@ ProgramUniform4uiEXT(GLuint program, GLint location, GLuint v0, GLuint v1, GLuin
     }
 }
 
-void GL_APIENTRY ProgramUniform4uivEXT(GLuint program,
-                                       GLint location,
-                                       GLsizei count,
-                                       const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform4uivEXT(GLuint program,
+                                          GLint location,
+                                          GLsizei count,
+                                          const GLuint *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniform4uivEXT,
@@ -6741,11 +6777,11 @@ void GL_APIENTRY ProgramUniform4uivEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2fvEXT(GLuint program,
-                                            GLint location,
-                                            GLsizei count,
-                                            GLboolean transpose,
-                                            const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2fvEXT(GLuint program,
+                                               GLint location,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix2fvEXT,
@@ -6775,11 +6811,11 @@ void GL_APIENTRY ProgramUniformMatrix2fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2x3fvEXT(GLuint program,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2x3fvEXT(GLuint program,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix2x3fvEXT,
@@ -6809,11 +6845,11 @@ void GL_APIENTRY ProgramUniformMatrix2x3fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2x4fvEXT(GLuint program,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2x4fvEXT(GLuint program,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix2x4fvEXT,
@@ -6843,11 +6879,11 @@ void GL_APIENTRY ProgramUniformMatrix2x4fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3fvEXT(GLuint program,
-                                            GLint location,
-                                            GLsizei count,
-                                            GLboolean transpose,
-                                            const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3fvEXT(GLuint program,
+                                               GLint location,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix3fvEXT,
@@ -6877,11 +6913,11 @@ void GL_APIENTRY ProgramUniformMatrix3fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3x2fvEXT(GLuint program,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3x2fvEXT(GLuint program,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix3x2fvEXT,
@@ -6911,11 +6947,11 @@ void GL_APIENTRY ProgramUniformMatrix3x2fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3x4fvEXT(GLuint program,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3x4fvEXT(GLuint program,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix3x4fvEXT,
@@ -6945,11 +6981,11 @@ void GL_APIENTRY ProgramUniformMatrix3x4fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4fvEXT(GLuint program,
-                                            GLint location,
-                                            GLsizei count,
-                                            GLboolean transpose,
-                                            const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4fvEXT(GLuint program,
+                                               GLint location,
+                                               GLsizei count,
+                                               GLboolean transpose,
+                                               const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix4fvEXT,
@@ -6979,11 +7015,11 @@ void GL_APIENTRY ProgramUniformMatrix4fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4x2fvEXT(GLuint program,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4x2fvEXT(GLuint program,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix4x2fvEXT,
@@ -7013,11 +7049,11 @@ void GL_APIENTRY ProgramUniformMatrix4x2fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4x3fvEXT(GLuint program,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4x3fvEXT(GLuint program,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramUniformMatrix4x3fvEXT,
@@ -7047,7 +7083,7 @@ void GL_APIENTRY ProgramUniformMatrix4x3fvEXT(GLuint program,
     }
 }
 
-void GL_APIENTRY UseProgramStagesEXT(GLuint pipeline, GLbitfield stages, GLuint program)
+void GL_APIENTRY GL_UseProgramStagesEXT(GLuint pipeline, GLbitfield stages, GLuint program)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLUseProgramStagesEXT, "context = %d, pipeline = %u, stages = %s, program = %u",
@@ -7075,7 +7111,7 @@ void GL_APIENTRY UseProgramStagesEXT(GLuint pipeline, GLbitfield stages, GLuint 
     }
 }
 
-void GL_APIENTRY ValidateProgramPipelineEXT(GLuint pipeline)
+void GL_APIENTRY GL_ValidateProgramPipelineEXT(GLuint pipeline)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLValidateProgramPipelineEXT, "context = %d, pipeline = %u", CID(context),
@@ -7100,7 +7136,7 @@ void GL_APIENTRY ValidateProgramPipelineEXT(GLuint pipeline)
 }
 
 // GL_EXT_shader_framebuffer_fetch_non_coherent
-void GL_APIENTRY FramebufferFetchBarrierEXT()
+void GL_APIENTRY GL_FramebufferFetchBarrierEXT()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFramebufferFetchBarrierEXT, "context = %d", CID(context));
@@ -7125,7 +7161,7 @@ void GL_APIENTRY FramebufferFetchBarrierEXT()
 // GL_EXT_shader_io_blocks
 
 // GL_EXT_tessellation_shader
-void GL_APIENTRY PatchParameteriEXT(GLenum pname, GLint value)
+void GL_APIENTRY GL_PatchParameteriEXT(GLenum pname, GLint value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPatchParameteriEXT, "context = %d, pname = %s, value = %d", CID(context),
@@ -7149,7 +7185,7 @@ void GL_APIENTRY PatchParameteriEXT(GLenum pname, GLint value)
 }
 
 // GL_EXT_texture_buffer
-void GL_APIENTRY TexBufferEXT(GLenum target, GLenum internalformat, GLuint buffer)
+void GL_APIENTRY GL_TexBufferEXT(GLenum target, GLenum internalformat, GLuint buffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexBufferEXT, "context = %d, target = %s, internalformat = %s, buffer = %u",
@@ -7177,11 +7213,11 @@ void GL_APIENTRY TexBufferEXT(GLenum target, GLenum internalformat, GLuint buffe
     }
 }
 
-void GL_APIENTRY TexBufferRangeEXT(GLenum target,
-                                   GLenum internalformat,
-                                   GLuint buffer,
-                                   GLintptr offset,
-                                   GLsizeiptr size)
+void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
+                                      GLenum internalformat,
+                                      GLuint buffer,
+                                      GLintptr offset,
+                                      GLsizeiptr size)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexBufferRangeEXT,
@@ -7230,10 +7266,10 @@ void GL_APIENTRY TexBufferRangeEXT(GLenum target,
 // GL_EXT_texture_sRGB_R8
 
 // GL_EXT_texture_storage
-void GL_APIENTRY TexStorage1DEXT(GLenum target,
-                                 GLsizei levels,
-                                 GLenum internalformat,
-                                 GLsizei width)
+void GL_APIENTRY GL_TexStorage1DEXT(GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalformat,
+                                    GLsizei width)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorage1DEXT,
@@ -7259,8 +7295,11 @@ void GL_APIENTRY TexStorage1DEXT(GLenum target,
     }
 }
 
-void GL_APIENTRY
-TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei width, GLsizei height)
+void GL_APIENTRY GL_TexStorage2DEXT(GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorage2DEXT,
@@ -7288,12 +7327,12 @@ TexStorage2DEXT(GLenum target, GLsizei levels, GLenum internalformat, GLsizei wi
     }
 }
 
-void GL_APIENTRY TexStorage3DEXT(GLenum target,
-                                 GLsizei levels,
-                                 GLenum internalformat,
-                                 GLsizei width,
-                                 GLsizei height,
-                                 GLsizei depth)
+void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
+                                    GLsizei levels,
+                                    GLenum internalformat,
+                                    GLsizei width,
+                                    GLsizei height,
+                                    GLsizei depth)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorage3DEXT,
@@ -7323,7 +7362,7 @@ void GL_APIENTRY TexStorage3DEXT(GLenum target,
 }
 
 // GL_KHR_debug
-void GL_APIENTRY DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *userParam)
+void GL_APIENTRY GL_DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *userParam)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDebugMessageCallbackKHR,
@@ -7347,12 +7386,12 @@ void GL_APIENTRY DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *us
     }
 }
 
-void GL_APIENTRY DebugMessageControlKHR(GLenum source,
-                                        GLenum type,
-                                        GLenum severity,
-                                        GLsizei count,
-                                        const GLuint *ids,
-                                        GLboolean enabled)
+void GL_APIENTRY GL_DebugMessageControlKHR(GLenum source,
+                                           GLenum type,
+                                           GLenum severity,
+                                           GLsizei count,
+                                           const GLuint *ids,
+                                           GLboolean enabled)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDebugMessageControlKHR,
@@ -7382,12 +7421,12 @@ void GL_APIENTRY DebugMessageControlKHR(GLenum source,
     }
 }
 
-void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
-                                       GLenum type,
-                                       GLuint id,
-                                       GLenum severity,
-                                       GLsizei length,
-                                       const GLchar *buf)
+void GL_APIENTRY GL_DebugMessageInsertKHR(GLenum source,
+                                          GLenum type,
+                                          GLuint id,
+                                          GLenum severity,
+                                          GLsizei length,
+                                          const GLchar *buf)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDebugMessageInsertKHR,
@@ -7416,14 +7455,14 @@ void GL_APIENTRY DebugMessageInsertKHR(GLenum source,
     }
 }
 
-GLuint GL_APIENTRY GetDebugMessageLogKHR(GLuint count,
-                                         GLsizei bufSize,
-                                         GLenum *sources,
-                                         GLenum *types,
-                                         GLuint *ids,
-                                         GLenum *severities,
-                                         GLsizei *lengths,
-                                         GLchar *messageLog)
+GLuint GL_APIENTRY GL_GetDebugMessageLogKHR(GLuint count,
+                                            GLsizei bufSize,
+                                            GLenum *sources,
+                                            GLenum *types,
+                                            GLuint *ids,
+                                            GLenum *severities,
+                                            GLsizei *lengths,
+                                            GLchar *messageLog)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetDebugMessageLogKHR,
@@ -7461,8 +7500,11 @@ GLuint GL_APIENTRY GetDebugMessageLogKHR(GLuint count,
     return returnValue;
 }
 
-void GL_APIENTRY
-GetObjectLabelKHR(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *length, GLchar *label)
+void GL_APIENTRY GL_GetObjectLabelKHR(GLenum identifier,
+                                      GLuint name,
+                                      GLsizei bufSize,
+                                      GLsizei *length,
+                                      GLchar *label)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetObjectLabelKHR,
@@ -7490,10 +7532,10 @@ GetObjectLabelKHR(GLenum identifier, GLuint name, GLsizei bufSize, GLsizei *leng
     }
 }
 
-void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
-                                      GLsizei bufSize,
-                                      GLsizei *length,
-                                      GLchar *label)
+void GL_APIENTRY GL_GetObjectPtrLabelKHR(const void *ptr,
+                                         GLsizei bufSize,
+                                         GLsizei *length,
+                                         GLchar *label)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetObjectPtrLabelKHR,
@@ -7518,7 +7560,7 @@ void GL_APIENTRY GetObjectPtrLabelKHR(const void *ptr,
     }
 }
 
-void GL_APIENTRY GetPointervKHR(GLenum pname, void **params)
+void GL_APIENTRY GL_GetPointervKHR(GLenum pname, void **params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetPointervKHR, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -7541,7 +7583,10 @@ void GL_APIENTRY GetPointervKHR(GLenum pname, void **params)
     }
 }
 
-void GL_APIENTRY ObjectLabelKHR(GLenum identifier, GLuint name, GLsizei length, const GLchar *label)
+void GL_APIENTRY GL_ObjectLabelKHR(GLenum identifier,
+                                   GLuint name,
+                                   GLsizei length,
+                                   const GLchar *label)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLObjectLabelKHR,
@@ -7566,7 +7611,7 @@ void GL_APIENTRY ObjectLabelKHR(GLenum identifier, GLuint name, GLsizei length, 
     }
 }
 
-void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar *label)
+void GL_APIENTRY GL_ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar *label)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLObjectPtrLabelKHR,
@@ -7590,7 +7635,7 @@ void GL_APIENTRY ObjectPtrLabelKHR(const void *ptr, GLsizei length, const GLchar
     }
 }
 
-void GL_APIENTRY PopDebugGroupKHR()
+void GL_APIENTRY GL_PopDebugGroupKHR()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPopDebugGroupKHR, "context = %d", CID(context));
@@ -7611,7 +7656,10 @@ void GL_APIENTRY PopDebugGroupKHR()
     }
 }
 
-void GL_APIENTRY PushDebugGroupKHR(GLenum source, GLuint id, GLsizei length, const GLchar *message)
+void GL_APIENTRY GL_PushDebugGroupKHR(GLenum source,
+                                      GLuint id,
+                                      GLsizei length,
+                                      const GLchar *message)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPushDebugGroupKHR,
@@ -7637,7 +7685,7 @@ void GL_APIENTRY PushDebugGroupKHR(GLenum source, GLuint id, GLsizei length, con
 }
 
 // GL_KHR_parallel_shader_compile
-void GL_APIENTRY MaxShaderCompilerThreadsKHR(GLuint count)
+void GL_APIENTRY GL_MaxShaderCompilerThreadsKHR(GLuint count)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMaxShaderCompilerThreadsKHR, "context = %d, count = %u", CID(context), count);
@@ -7660,7 +7708,7 @@ void GL_APIENTRY MaxShaderCompilerThreadsKHR(GLuint count)
 }
 
 // GL_NV_fence
-void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
+void GL_APIENTRY GL_DeleteFencesNV(GLsizei n, const GLuint *fences)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteFencesNV, "context = %d, n = %d, fences = 0x%016" PRIxPTR "",
@@ -7684,7 +7732,7 @@ void GL_APIENTRY DeleteFencesNV(GLsizei n, const GLuint *fences)
     }
 }
 
-void GL_APIENTRY FinishFenceNV(GLuint fence)
+void GL_APIENTRY GL_FinishFenceNV(GLuint fence)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFinishFenceNV, "context = %d, fence = %u", CID(context), fence);
@@ -7707,7 +7755,7 @@ void GL_APIENTRY FinishFenceNV(GLuint fence)
     }
 }
 
-void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
+void GL_APIENTRY GL_GenFencesNV(GLsizei n, GLuint *fences)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenFencesNV, "context = %d, n = %d, fences = 0x%016" PRIxPTR "", CID(context),
@@ -7731,7 +7779,7 @@ void GL_APIENTRY GenFencesNV(GLsizei n, GLuint *fences)
     }
 }
 
-void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFenceivNV,
@@ -7756,7 +7804,7 @@ void GL_APIENTRY GetFenceivNV(GLuint fence, GLenum pname, GLint *params)
     }
 }
 
-GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
+GLboolean GL_APIENTRY GL_IsFenceNV(GLuint fence)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsFenceNV, "context = %d, fence = %u", CID(context), fence);
@@ -7785,7 +7833,7 @@ GLboolean GL_APIENTRY IsFenceNV(GLuint fence)
     return returnValue;
 }
 
-void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
+void GL_APIENTRY GL_SetFenceNV(GLuint fence, GLenum condition)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSetFenceNV, "context = %d, fence = %u, condition = %s", CID(context), fence,
@@ -7809,7 +7857,7 @@ void GL_APIENTRY SetFenceNV(GLuint fence, GLenum condition)
     }
 }
 
-GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
+GLboolean GL_APIENTRY GL_TestFenceNV(GLuint fence)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTestFenceNV, "context = %d, fence = %u", CID(context), fence);
@@ -7839,16 +7887,16 @@ GLboolean GL_APIENTRY TestFenceNV(GLuint fence)
 }
 
 // GL_NV_framebuffer_blit
-void GL_APIENTRY BlitFramebufferNV(GLint srcX0,
-                                   GLint srcY0,
-                                   GLint srcX1,
-                                   GLint srcY1,
-                                   GLint dstX0,
-                                   GLint dstY0,
-                                   GLint dstX1,
-                                   GLint dstY1,
-                                   GLbitfield mask,
-                                   GLenum filter)
+void GL_APIENTRY GL_BlitFramebufferNV(GLint srcX0,
+                                      GLint srcY0,
+                                      GLint srcX1,
+                                      GLint srcY1,
+                                      GLint dstX0,
+                                      GLint dstY0,
+                                      GLint dstX1,
+                                      GLint dstY1,
+                                      GLbitfield mask,
+                                      GLenum filter)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlitFramebufferNV,
@@ -7879,7 +7927,7 @@ void GL_APIENTRY BlitFramebufferNV(GLint srcX0,
 }
 
 // GL_OES_EGL_image
-void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
+void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageOES image)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEGLImageTargetRenderbufferStorageOES,
@@ -7903,7 +7951,7 @@ void GL_APIENTRY EGLImageTargetRenderbufferStorageOES(GLenum target, GLeglImageO
     }
 }
 
-void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
+void GL_APIENTRY GL_EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEGLImageTargetTexture2DOES,
@@ -7931,21 +7979,21 @@ void GL_APIENTRY EGLImageTargetTexture2DOES(GLenum target, GLeglImageOES image)
 // GL_OES_compressed_ETC1_RGB8_texture
 
 // GL_OES_copy_image
-void GL_APIENTRY CopyImageSubDataOES(GLuint srcName,
-                                     GLenum srcTarget,
-                                     GLint srcLevel,
-                                     GLint srcX,
-                                     GLint srcY,
-                                     GLint srcZ,
-                                     GLuint dstName,
-                                     GLenum dstTarget,
-                                     GLint dstLevel,
-                                     GLint dstX,
-                                     GLint dstY,
-                                     GLint dstZ,
-                                     GLsizei srcWidth,
-                                     GLsizei srcHeight,
-                                     GLsizei srcDepth)
+void GL_APIENTRY GL_CopyImageSubDataOES(GLuint srcName,
+                                        GLenum srcTarget,
+                                        GLint srcLevel,
+                                        GLint srcX,
+                                        GLint srcY,
+                                        GLint srcZ,
+                                        GLuint dstName,
+                                        GLenum dstTarget,
+                                        GLint dstLevel,
+                                        GLint dstX,
+                                        GLint dstY,
+                                        GLint dstZ,
+                                        GLsizei srcWidth,
+                                        GLsizei srcHeight,
+                                        GLsizei srcDepth)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyImageSubDataOES,
@@ -7984,7 +8032,7 @@ void GL_APIENTRY CopyImageSubDataOES(GLuint srcName,
 // GL_OES_depth32
 
 // GL_OES_draw_buffers_indexed
-void GL_APIENTRY BlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
+void GL_APIENTRY GL_BlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum modeAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendEquationSeparateiOES,
@@ -8009,7 +8057,7 @@ void GL_APIENTRY BlendEquationSeparateiOES(GLuint buf, GLenum modeRGB, GLenum mo
     }
 }
 
-void GL_APIENTRY BlendEquationiOES(GLuint buf, GLenum mode)
+void GL_APIENTRY GL_BlendEquationiOES(GLuint buf, GLenum mode)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendEquationiOES, "context = %d, buf = %u, mode = %s", CID(context), buf,
@@ -8033,7 +8081,7 @@ void GL_APIENTRY BlendEquationiOES(GLuint buf, GLenum mode)
 }
 
 void GL_APIENTRY
-BlendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
+GL_BlendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha, GLenum dstAlpha)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendFuncSeparateiOES,
@@ -8062,7 +8110,7 @@ BlendFuncSeparateiOES(GLuint buf, GLenum srcRGB, GLenum dstRGB, GLenum srcAlpha,
     }
 }
 
-void GL_APIENTRY BlendFunciOES(GLuint buf, GLenum src, GLenum dst)
+void GL_APIENTRY GL_BlendFunciOES(GLuint buf, GLenum src, GLenum dst)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBlendFunciOES, "context = %d, buf = %u, src = %s, dst = %s", CID(context), buf,
@@ -8086,7 +8134,7 @@ void GL_APIENTRY BlendFunciOES(GLuint buf, GLenum src, GLenum dst)
     }
 }
 
-void GL_APIENTRY ColorMaskiOES(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+void GL_APIENTRY GL_ColorMaskiOES(GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLColorMaskiOES, "context = %d, index = %u, r = %s, g = %s, b = %s, a = %s",
@@ -8110,7 +8158,7 @@ void GL_APIENTRY ColorMaskiOES(GLuint index, GLboolean r, GLboolean g, GLboolean
     }
 }
 
-void GL_APIENTRY DisableiOES(GLenum target, GLuint index)
+void GL_APIENTRY GL_DisableiOES(GLenum target, GLuint index)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDisableiOES, "context = %d, target = %s, index = %u", CID(context),
@@ -8133,7 +8181,7 @@ void GL_APIENTRY DisableiOES(GLenum target, GLuint index)
     }
 }
 
-void GL_APIENTRY EnableiOES(GLenum target, GLuint index)
+void GL_APIENTRY GL_EnableiOES(GLenum target, GLuint index)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLEnableiOES, "context = %d, target = %s, index = %u", CID(context),
@@ -8156,7 +8204,7 @@ void GL_APIENTRY EnableiOES(GLenum target, GLuint index)
     }
 }
 
-GLboolean GL_APIENTRY IsEnablediOES(GLenum target, GLuint index)
+GLboolean GL_APIENTRY GL_IsEnablediOES(GLenum target, GLuint index)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsEnablediOES, "context = %d, target = %s, index = %u", CID(context),
@@ -8187,11 +8235,11 @@ GLboolean GL_APIENTRY IsEnablediOES(GLenum target, GLuint index)
 }
 
 // GL_OES_draw_elements_base_vertex
-void GL_APIENTRY DrawElementsBaseVertexOES(GLenum mode,
-                                           GLsizei count,
-                                           GLenum type,
-                                           const void *indices,
-                                           GLint basevertex)
+void GL_APIENTRY GL_DrawElementsBaseVertexOES(GLenum mode,
+                                              GLsizei count,
+                                              GLenum type,
+                                              const void *indices,
+                                              GLint basevertex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsBaseVertexOES,
@@ -8221,12 +8269,12 @@ void GL_APIENTRY DrawElementsBaseVertexOES(GLenum mode,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedBaseVertexOES(GLenum mode,
-                                                    GLsizei count,
-                                                    GLenum type,
-                                                    const void *indices,
-                                                    GLsizei instancecount,
-                                                    GLint basevertex)
+void GL_APIENTRY GL_DrawElementsInstancedBaseVertexOES(GLenum mode,
+                                                       GLsizei count,
+                                                       GLenum type,
+                                                       const void *indices,
+                                                       GLsizei instancecount,
+                                                       GLint basevertex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawElementsInstancedBaseVertexOES,
@@ -8258,13 +8306,13 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexOES(GLenum mode,
     }
 }
 
-void GL_APIENTRY DrawRangeElementsBaseVertexOES(GLenum mode,
-                                                GLuint start,
-                                                GLuint end,
-                                                GLsizei count,
-                                                GLenum type,
-                                                const void *indices,
-                                                GLint basevertex)
+void GL_APIENTRY GL_DrawRangeElementsBaseVertexOES(GLenum mode,
+                                                   GLuint start,
+                                                   GLuint end,
+                                                   GLsizei count,
+                                                   GLenum type,
+                                                   const void *indices,
+                                                   GLint basevertex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawRangeElementsBaseVertexOES,
@@ -8298,7 +8346,7 @@ void GL_APIENTRY DrawRangeElementsBaseVertexOES(GLenum mode,
 // MultiDrawElementsBaseVertexEXT is already defined.
 
 // GL_OES_draw_texture
-void GL_APIENTRY DrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height)
+void GL_APIENTRY GL_DrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLfloat height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexfOES, "context = %d, x = %f, y = %f, z = %f, width = %f, height = %f",
@@ -8321,7 +8369,7 @@ void GL_APIENTRY DrawTexfOES(GLfloat x, GLfloat y, GLfloat z, GLfloat width, GLf
     }
 }
 
-void GL_APIENTRY DrawTexfvOES(const GLfloat *coords)
+void GL_APIENTRY GL_DrawTexfvOES(const GLfloat *coords)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexfvOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -8343,7 +8391,7 @@ void GL_APIENTRY DrawTexfvOES(const GLfloat *coords)
     }
 }
 
-void GL_APIENTRY DrawTexiOES(GLint x, GLint y, GLint z, GLint width, GLint height)
+void GL_APIENTRY GL_DrawTexiOES(GLint x, GLint y, GLint z, GLint width, GLint height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexiOES, "context = %d, x = %d, y = %d, z = %d, width = %d, height = %d",
@@ -8366,7 +8414,7 @@ void GL_APIENTRY DrawTexiOES(GLint x, GLint y, GLint z, GLint width, GLint heigh
     }
 }
 
-void GL_APIENTRY DrawTexivOES(const GLint *coords)
+void GL_APIENTRY GL_DrawTexivOES(const GLint *coords)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexivOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -8388,7 +8436,7 @@ void GL_APIENTRY DrawTexivOES(const GLint *coords)
     }
 }
 
-void GL_APIENTRY DrawTexsOES(GLshort x, GLshort y, GLshort z, GLshort width, GLshort height)
+void GL_APIENTRY GL_DrawTexsOES(GLshort x, GLshort y, GLshort z, GLshort width, GLshort height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexsOES, "context = %d, x = %d, y = %d, z = %d, width = %d, height = %d",
@@ -8411,7 +8459,7 @@ void GL_APIENTRY DrawTexsOES(GLshort x, GLshort y, GLshort z, GLshort width, GLs
     }
 }
 
-void GL_APIENTRY DrawTexsvOES(const GLshort *coords)
+void GL_APIENTRY GL_DrawTexsvOES(const GLshort *coords)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexsvOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -8433,7 +8481,7 @@ void GL_APIENTRY DrawTexsvOES(const GLshort *coords)
     }
 }
 
-void GL_APIENTRY DrawTexxOES(GLfixed x, GLfixed y, GLfixed z, GLfixed width, GLfixed height)
+void GL_APIENTRY GL_DrawTexxOES(GLfixed x, GLfixed y, GLfixed z, GLfixed width, GLfixed height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexxOES,
@@ -8457,7 +8505,7 @@ void GL_APIENTRY DrawTexxOES(GLfixed x, GLfixed y, GLfixed z, GLfixed width, GLf
     }
 }
 
-void GL_APIENTRY DrawTexxvOES(const GLfixed *coords)
+void GL_APIENTRY GL_DrawTexxvOES(const GLfixed *coords)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDrawTexxvOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -8480,7 +8528,7 @@ void GL_APIENTRY DrawTexxvOES(const GLfixed *coords)
 }
 
 // GL_OES_framebuffer_object
-void GL_APIENTRY BindFramebufferOES(GLenum target, GLuint framebuffer)
+void GL_APIENTRY GL_BindFramebufferOES(GLenum target, GLuint framebuffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindFramebufferOES, "context = %d, target = %s, framebuffer = %u",
@@ -8504,7 +8552,7 @@ void GL_APIENTRY BindFramebufferOES(GLenum target, GLuint framebuffer)
     }
 }
 
-void GL_APIENTRY BindRenderbufferOES(GLenum target, GLuint renderbuffer)
+void GL_APIENTRY GL_BindRenderbufferOES(GLenum target, GLuint renderbuffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindRenderbufferOES, "context = %d, target = %s, renderbuffer = %u",
@@ -8528,7 +8576,7 @@ void GL_APIENTRY BindRenderbufferOES(GLenum target, GLuint renderbuffer)
     }
 }
 
-GLenum GL_APIENTRY CheckFramebufferStatusOES(GLenum target)
+GLenum GL_APIENTRY GL_CheckFramebufferStatusOES(GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCheckFramebufferStatusOES, "context = %d, target = %s", CID(context),
@@ -8560,7 +8608,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusOES(GLenum target)
     return returnValue;
 }
 
-void GL_APIENTRY DeleteFramebuffersOES(GLsizei n, const GLuint *framebuffers)
+void GL_APIENTRY GL_DeleteFramebuffersOES(GLsizei n, const GLuint *framebuffers)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteFramebuffersOES,
@@ -8585,7 +8633,7 @@ void GL_APIENTRY DeleteFramebuffersOES(GLsizei n, const GLuint *framebuffers)
     }
 }
 
-void GL_APIENTRY DeleteRenderbuffersOES(GLsizei n, const GLuint *renderbuffers)
+void GL_APIENTRY GL_DeleteRenderbuffersOES(GLsizei n, const GLuint *renderbuffers)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteRenderbuffersOES,
@@ -8611,10 +8659,10 @@ void GL_APIENTRY DeleteRenderbuffersOES(GLsizei n, const GLuint *renderbuffers)
     }
 }
 
-void GL_APIENTRY FramebufferRenderbufferOES(GLenum target,
-                                            GLenum attachment,
-                                            GLenum renderbuffertarget,
-                                            GLuint renderbuffer)
+void GL_APIENTRY GL_FramebufferRenderbufferOES(GLenum target,
+                                               GLenum attachment,
+                                               GLenum renderbuffertarget,
+                                               GLuint renderbuffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFramebufferRenderbufferOES,
@@ -8645,11 +8693,11 @@ void GL_APIENTRY FramebufferRenderbufferOES(GLenum target,
     }
 }
 
-void GL_APIENTRY FramebufferTexture2DOES(GLenum target,
-                                         GLenum attachment,
-                                         GLenum textarget,
-                                         GLuint texture,
-                                         GLint level)
+void GL_APIENTRY GL_FramebufferTexture2DOES(GLenum target,
+                                            GLenum attachment,
+                                            GLenum textarget,
+                                            GLuint texture,
+                                            GLint level)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFramebufferTexture2DOES,
@@ -8680,7 +8728,7 @@ void GL_APIENTRY FramebufferTexture2DOES(GLenum target,
     }
 }
 
-void GL_APIENTRY GenFramebuffersOES(GLsizei n, GLuint *framebuffers)
+void GL_APIENTRY GL_GenFramebuffersOES(GLsizei n, GLuint *framebuffers)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenFramebuffersOES, "context = %d, n = %d, framebuffers = 0x%016" PRIxPTR "",
@@ -8704,7 +8752,7 @@ void GL_APIENTRY GenFramebuffersOES(GLsizei n, GLuint *framebuffers)
     }
 }
 
-void GL_APIENTRY GenRenderbuffersOES(GLsizei n, GLuint *renderbuffers)
+void GL_APIENTRY GL_GenRenderbuffersOES(GLsizei n, GLuint *renderbuffers)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenRenderbuffersOES, "context = %d, n = %d, renderbuffers = 0x%016" PRIxPTR "",
@@ -8728,7 +8776,7 @@ void GL_APIENTRY GenRenderbuffersOES(GLsizei n, GLuint *renderbuffers)
     }
 }
 
-void GL_APIENTRY GenerateMipmapOES(GLenum target)
+void GL_APIENTRY GL_GenerateMipmapOES(GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenerateMipmapOES, "context = %d, target = %s", CID(context),
@@ -8752,10 +8800,10 @@ void GL_APIENTRY GenerateMipmapOES(GLenum target)
     }
 }
 
-void GL_APIENTRY GetFramebufferAttachmentParameterivOES(GLenum target,
-                                                        GLenum attachment,
-                                                        GLenum pname,
-                                                        GLint *params)
+void GL_APIENTRY GL_GetFramebufferAttachmentParameterivOES(GLenum target,
+                                                           GLenum attachment,
+                                                           GLenum pname,
+                                                           GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetFramebufferAttachmentParameterivOES,
@@ -8784,7 +8832,7 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivOES(GLenum target,
     }
 }
 
-void GL_APIENTRY GetRenderbufferParameterivOES(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetRenderbufferParameterivOES(GLenum target, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetRenderbufferParameterivOES,
@@ -8809,7 +8857,7 @@ void GL_APIENTRY GetRenderbufferParameterivOES(GLenum target, GLenum pname, GLin
     }
 }
 
-GLboolean GL_APIENTRY IsFramebufferOES(GLuint framebuffer)
+GLboolean GL_APIENTRY GL_IsFramebufferOES(GLuint framebuffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsFramebufferOES, "context = %d, framebuffer = %u", CID(context), framebuffer);
@@ -8839,7 +8887,7 @@ GLboolean GL_APIENTRY IsFramebufferOES(GLuint framebuffer)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsRenderbufferOES(GLuint renderbuffer)
+GLboolean GL_APIENTRY GL_IsRenderbufferOES(GLuint renderbuffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsRenderbufferOES, "context = %d, renderbuffer = %u", CID(context),
@@ -8871,10 +8919,10 @@ GLboolean GL_APIENTRY IsRenderbufferOES(GLuint renderbuffer)
     return returnValue;
 }
 
-void GL_APIENTRY RenderbufferStorageOES(GLenum target,
-                                        GLenum internalformat,
-                                        GLsizei width,
-                                        GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageOES(GLenum target,
+                                           GLenum internalformat,
+                                           GLsizei width,
+                                           GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLRenderbufferStorageOES,
@@ -8902,11 +8950,11 @@ void GL_APIENTRY RenderbufferStorageOES(GLenum target,
 }
 
 // GL_OES_get_program_binary
-void GL_APIENTRY GetProgramBinaryOES(GLuint program,
-                                     GLsizei bufSize,
-                                     GLsizei *length,
-                                     GLenum *binaryFormat,
-                                     void *binary)
+void GL_APIENTRY GL_GetProgramBinaryOES(GLuint program,
+                                        GLsizei bufSize,
+                                        GLsizei *length,
+                                        GLenum *binaryFormat,
+                                        void *binary)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetProgramBinaryOES,
@@ -8935,10 +8983,10 @@ void GL_APIENTRY GetProgramBinaryOES(GLuint program,
     }
 }
 
-void GL_APIENTRY ProgramBinaryOES(GLuint program,
-                                  GLenum binaryFormat,
-                                  const void *binary,
-                                  GLint length)
+void GL_APIENTRY GL_ProgramBinaryOES(GLuint program,
+                                     GLenum binaryFormat,
+                                     const void *binary,
+                                     GLint length)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLProgramBinaryOES,
@@ -8967,7 +9015,7 @@ void GL_APIENTRY ProgramBinaryOES(GLuint program,
 }
 
 // GL_OES_mapbuffer
-void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void **params)
+void GL_APIENTRY GL_GetBufferPointervOES(GLenum target, GLenum pname, void **params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetBufferPointervOES,
@@ -8993,7 +9041,7 @@ void GL_APIENTRY GetBufferPointervOES(GLenum target, GLenum pname, void **params
     }
 }
 
-void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access)
+void *GL_APIENTRY GL_MapBufferOES(GLenum target, GLenum access)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMapBufferOES, "context = %d, target = %s, access = %s", CID(context),
@@ -9025,7 +9073,7 @@ void *GL_APIENTRY MapBufferOES(GLenum target, GLenum access)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
+GLboolean GL_APIENTRY GL_UnmapBufferOES(GLenum target)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLUnmapBufferOES, "context = %d, target = %s", CID(context),
@@ -9057,7 +9105,7 @@ GLboolean GL_APIENTRY UnmapBufferOES(GLenum target)
 }
 
 // GL_OES_matrix_palette
-void GL_APIENTRY CurrentPaletteMatrixOES(GLuint matrixpaletteindex)
+void GL_APIENTRY GL_CurrentPaletteMatrixOES(GLuint matrixpaletteindex)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCurrentPaletteMatrixOES, "context = %d, matrixpaletteindex = %u", CID(context),
@@ -9080,7 +9128,7 @@ void GL_APIENTRY CurrentPaletteMatrixOES(GLuint matrixpaletteindex)
     }
 }
 
-void GL_APIENTRY LoadPaletteFromModelViewMatrixOES()
+void GL_APIENTRY GL_LoadPaletteFromModelViewMatrixOES()
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLLoadPaletteFromModelViewMatrixOES, "context = %d", CID(context));
@@ -9102,7 +9150,10 @@ void GL_APIENTRY LoadPaletteFromModelViewMatrixOES()
     }
 }
 
-void GL_APIENTRY MatrixIndexPointerOES(GLint size, GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_MatrixIndexPointerOES(GLint size,
+                                          GLenum type,
+                                          GLsizei stride,
+                                          const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMatrixIndexPointerOES,
@@ -9127,7 +9178,7 @@ void GL_APIENTRY MatrixIndexPointerOES(GLint size, GLenum type, GLsizei stride, 
     }
 }
 
-void GL_APIENTRY WeightPointerOES(GLint size, GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_WeightPointerOES(GLint size, GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLWeightPointerOES,
@@ -9153,7 +9204,7 @@ void GL_APIENTRY WeightPointerOES(GLint size, GLenum type, GLsizei stride, const
 }
 
 // GL_OES_point_size_array
-void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, const void *pointer)
+void GL_APIENTRY GL_PointSizePointerOES(GLenum type, GLsizei stride, const void *pointer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLPointSizePointerOES,
@@ -9179,7 +9230,7 @@ void GL_APIENTRY PointSizePointerOES(GLenum type, GLsizei stride, const void *po
 }
 
 // GL_OES_query_matrix
-GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
+GLbitfield GL_APIENTRY GL_QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLQueryMatrixxOES,
@@ -9211,7 +9262,7 @@ GLbitfield GL_APIENTRY QueryMatrixxOES(GLfixed *mantissa, GLint *exponent)
 }
 
 // GL_OES_sample_shading
-void GL_APIENTRY MinSampleShadingOES(GLfloat value)
+void GL_APIENTRY GL_MinSampleShadingOES(GLfloat value)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLMinSampleShadingOES, "context = %d, value = %f", CID(context), value);
@@ -9236,15 +9287,15 @@ void GL_APIENTRY MinSampleShadingOES(GLfloat value)
 // GL_OES_shader_io_blocks
 
 // GL_OES_texture_3D
-void GL_APIENTRY CompressedTexImage3DOES(GLenum target,
-                                         GLint level,
-                                         GLenum internalformat,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLsizei depth,
-                                         GLint border,
-                                         GLsizei imageSize,
-                                         const void *data)
+void GL_APIENTRY GL_CompressedTexImage3DOES(GLenum target,
+                                            GLint level,
+                                            GLenum internalformat,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLsizei depth,
+                                            GLint border,
+                                            GLsizei imageSize,
+                                            const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexImage3DOES,
@@ -9276,17 +9327,17 @@ void GL_APIENTRY CompressedTexImage3DOES(GLenum target,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage3DOES(GLenum target,
-                                            GLint level,
-                                            GLint xoffset,
-                                            GLint yoffset,
-                                            GLint zoffset,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLsizei depth,
-                                            GLenum format,
-                                            GLsizei imageSize,
-                                            const void *data)
+void GL_APIENTRY GL_CompressedTexSubImage3DOES(GLenum target,
+                                               GLint level,
+                                               GLint xoffset,
+                                               GLint yoffset,
+                                               GLint zoffset,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLsizei depth,
+                                               GLenum format,
+                                               GLsizei imageSize,
+                                               const void *data)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCompressedTexSubImage3DOES,
@@ -9318,15 +9369,15 @@ void GL_APIENTRY CompressedTexSubImage3DOES(GLenum target,
     }
 }
 
-void GL_APIENTRY CopyTexSubImage3DOES(GLenum target,
-                                      GLint level,
-                                      GLint xoffset,
-                                      GLint yoffset,
-                                      GLint zoffset,
-                                      GLint x,
-                                      GLint y,
-                                      GLsizei width,
-                                      GLsizei height)
+void GL_APIENTRY GL_CopyTexSubImage3DOES(GLenum target,
+                                         GLint level,
+                                         GLint xoffset,
+                                         GLint yoffset,
+                                         GLint zoffset,
+                                         GLint x,
+                                         GLint y,
+                                         GLsizei width,
+                                         GLsizei height)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLCopyTexSubImage3DOES,
@@ -9356,12 +9407,12 @@ void GL_APIENTRY CopyTexSubImage3DOES(GLenum target,
     }
 }
 
-void GL_APIENTRY FramebufferTexture3DOES(GLenum target,
-                                         GLenum attachment,
-                                         GLenum textarget,
-                                         GLuint texture,
-                                         GLint level,
-                                         GLint zoffset)
+void GL_APIENTRY GL_FramebufferTexture3DOES(GLenum target,
+                                            GLenum attachment,
+                                            GLenum textarget,
+                                            GLuint texture,
+                                            GLint level,
+                                            GLint zoffset)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFramebufferTexture3DOES,
@@ -9394,16 +9445,16 @@ void GL_APIENTRY FramebufferTexture3DOES(GLenum target,
     }
 }
 
-void GL_APIENTRY TexImage3DOES(GLenum target,
-                               GLint level,
-                               GLenum internalformat,
-                               GLsizei width,
-                               GLsizei height,
-                               GLsizei depth,
-                               GLint border,
-                               GLenum format,
-                               GLenum type,
-                               const void *pixels)
+void GL_APIENTRY GL_TexImage3DOES(GLenum target,
+                                  GLint level,
+                                  GLenum internalformat,
+                                  GLsizei width,
+                                  GLsizei height,
+                                  GLsizei depth,
+                                  GLint border,
+                                  GLenum format,
+                                  GLenum type,
+                                  const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexImage3DOES,
@@ -9436,17 +9487,17 @@ void GL_APIENTRY TexImage3DOES(GLenum target,
     }
 }
 
-void GL_APIENTRY TexSubImage3DOES(GLenum target,
-                                  GLint level,
-                                  GLint xoffset,
-                                  GLint yoffset,
-                                  GLint zoffset,
-                                  GLsizei width,
-                                  GLsizei height,
-                                  GLsizei depth,
-                                  GLenum format,
-                                  GLenum type,
-                                  const void *pixels)
+void GL_APIENTRY GL_TexSubImage3DOES(GLenum target,
+                                     GLint level,
+                                     GLint xoffset,
+                                     GLint yoffset,
+                                     GLint zoffset,
+                                     GLsizei width,
+                                     GLsizei height,
+                                     GLsizei depth,
+                                     GLenum format,
+                                     GLenum type,
+                                     const void *pixels)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexSubImage3DOES,
@@ -9479,7 +9530,7 @@ void GL_APIENTRY TexSubImage3DOES(GLenum target,
 }
 
 // GL_OES_texture_border_clamp
-void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetSamplerParameterIivOES,
@@ -9506,7 +9557,7 @@ void GL_APIENTRY GetSamplerParameterIivOES(GLuint sampler, GLenum pname, GLint *
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint *params)
+void GL_APIENTRY GL_GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetSamplerParameterIuivOES,
@@ -9533,7 +9584,7 @@ void GL_APIENTRY GetSamplerParameterIuivOES(GLuint sampler, GLenum pname, GLuint
     }
 }
 
-void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetTexParameterIivOES(GLenum target, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameterIivOES,
@@ -9559,7 +9610,7 @@ void GL_APIENTRY GetTexParameterIivOES(GLenum target, GLenum pname, GLint *param
     }
 }
 
-void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *params)
+void GL_APIENTRY GL_GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexParameterIuivOES,
@@ -9585,7 +9636,7 @@ void GL_APIENTRY GetTexParameterIuivOES(GLenum target, GLenum pname, GLuint *par
     }
 }
 
-void GL_APIENTRY SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLint *param)
+void GL_APIENTRY GL_SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLint *param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSamplerParameterIivOES,
@@ -9610,7 +9661,7 @@ void GL_APIENTRY SamplerParameterIivOES(GLuint sampler, GLenum pname, const GLin
     }
 }
 
-void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLuint *param)
+void GL_APIENTRY GL_SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLuint *param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLSamplerParameterIuivOES,
@@ -9635,7 +9686,7 @@ void GL_APIENTRY SamplerParameterIuivOES(GLuint sampler, GLenum pname, const GLu
     }
 }
 
-void GL_APIENTRY TexParameterIivOES(GLenum target, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_TexParameterIivOES(GLenum target, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterIivOES,
@@ -9661,7 +9712,7 @@ void GL_APIENTRY TexParameterIivOES(GLenum target, GLenum pname, const GLint *pa
     }
 }
 
-void GL_APIENTRY TexParameterIuivOES(GLenum target, GLenum pname, const GLuint *params)
+void GL_APIENTRY GL_TexParameterIuivOES(GLenum target, GLenum pname, const GLuint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexParameterIuivOES,
@@ -9688,7 +9739,7 @@ void GL_APIENTRY TexParameterIuivOES(GLenum target, GLenum pname, const GLuint *
 }
 
 // GL_OES_texture_buffer
-void GL_APIENTRY TexBufferOES(GLenum target, GLenum internalformat, GLuint buffer)
+void GL_APIENTRY GL_TexBufferOES(GLenum target, GLenum internalformat, GLuint buffer)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexBufferOES, "context = %d, target = %s, internalformat = %s, buffer = %u",
@@ -9716,11 +9767,11 @@ void GL_APIENTRY TexBufferOES(GLenum target, GLenum internalformat, GLuint buffe
     }
 }
 
-void GL_APIENTRY TexBufferRangeOES(GLenum target,
-                                   GLenum internalformat,
-                                   GLuint buffer,
-                                   GLintptr offset,
-                                   GLsizeiptr size)
+void GL_APIENTRY GL_TexBufferRangeOES(GLenum target,
+                                      GLenum internalformat,
+                                      GLuint buffer,
+                                      GLintptr offset,
+                                      GLsizeiptr size)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexBufferRangeOES,
@@ -9751,7 +9802,7 @@ void GL_APIENTRY TexBufferRangeOES(GLenum target,
 }
 
 // GL_OES_texture_cube_map
-void GL_APIENTRY GetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
+void GL_APIENTRY GL_GetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexGenfvOES,
@@ -9776,7 +9827,7 @@ void GL_APIENTRY GetTexGenfvOES(GLenum coord, GLenum pname, GLfloat *params)
     }
 }
 
-void GL_APIENTRY GetTexGenivOES(GLenum coord, GLenum pname, GLint *params)
+void GL_APIENTRY GL_GetTexGenivOES(GLenum coord, GLenum pname, GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexGenivOES,
@@ -9801,7 +9852,7 @@ void GL_APIENTRY GetTexGenivOES(GLenum coord, GLenum pname, GLint *params)
     }
 }
 
-void GL_APIENTRY GetTexGenxvOES(GLenum coord, GLenum pname, GLfixed *params)
+void GL_APIENTRY GL_GetTexGenxvOES(GLenum coord, GLenum pname, GLfixed *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexGenxvOES,
@@ -9826,7 +9877,7 @@ void GL_APIENTRY GetTexGenxvOES(GLenum coord, GLenum pname, GLfixed *params)
     }
 }
 
-void GL_APIENTRY TexGenfOES(GLenum coord, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_TexGenfOES(GLenum coord, GLenum pname, GLfloat param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGenfOES, "context = %d, coord = %s, pname = %s, param = %f", CID(context),
@@ -9850,7 +9901,7 @@ void GL_APIENTRY TexGenfOES(GLenum coord, GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY TexGenfvOES(GLenum coord, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_TexGenfvOES(GLenum coord, GLenum pname, const GLfloat *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGenfvOES,
@@ -9875,7 +9926,7 @@ void GL_APIENTRY TexGenfvOES(GLenum coord, GLenum pname, const GLfloat *params)
     }
 }
 
-void GL_APIENTRY TexGeniOES(GLenum coord, GLenum pname, GLint param)
+void GL_APIENTRY GL_TexGeniOES(GLenum coord, GLenum pname, GLint param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGeniOES, "context = %d, coord = %s, pname = %s, param = %d", CID(context),
@@ -9899,7 +9950,7 @@ void GL_APIENTRY TexGeniOES(GLenum coord, GLenum pname, GLint param)
     }
 }
 
-void GL_APIENTRY TexGenivOES(GLenum coord, GLenum pname, const GLint *params)
+void GL_APIENTRY GL_TexGenivOES(GLenum coord, GLenum pname, const GLint *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGenivOES,
@@ -9924,7 +9975,7 @@ void GL_APIENTRY TexGenivOES(GLenum coord, GLenum pname, const GLint *params)
     }
 }
 
-void GL_APIENTRY TexGenxOES(GLenum coord, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_TexGenxOES(GLenum coord, GLenum pname, GLfixed param)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGenxOES, "context = %d, coord = %s, pname = %s, param = 0x%X", CID(context),
@@ -9948,7 +9999,7 @@ void GL_APIENTRY TexGenxOES(GLenum coord, GLenum pname, GLfixed param)
     }
 }
 
-void GL_APIENTRY TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params)
+void GL_APIENTRY GL_TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexGenxvOES,
@@ -9980,13 +10031,13 @@ void GL_APIENTRY TexGenxvOES(GLenum coord, GLenum pname, const GLfixed *params)
 // GL_OES_texture_stencil8
 
 // GL_OES_texture_storage_multisample_2d_array
-void GL_APIENTRY TexStorage3DMultisampleOES(GLenum target,
-                                            GLsizei samples,
-                                            GLenum internalformat,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLsizei depth,
-                                            GLboolean fixedsamplelocations)
+void GL_APIENTRY GL_TexStorage3DMultisampleOES(GLenum target,
+                                               GLsizei samples,
+                                               GLenum internalformat,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLsizei depth,
+                                               GLboolean fixedsamplelocations)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLTexStorage3DMultisampleOES,
@@ -10019,7 +10070,7 @@ void GL_APIENTRY TexStorage3DMultisampleOES(GLenum target,
 }
 
 // GL_OES_vertex_array_object
-void GL_APIENTRY BindVertexArrayOES(GLuint array)
+void GL_APIENTRY GL_BindVertexArrayOES(GLuint array)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLBindVertexArrayOES, "context = %d, array = %u", CID(context), array);
@@ -10042,7 +10093,7 @@ void GL_APIENTRY BindVertexArrayOES(GLuint array)
     }
 }
 
-void GL_APIENTRY DeleteVertexArraysOES(GLsizei n, const GLuint *arrays)
+void GL_APIENTRY GL_DeleteVertexArraysOES(GLsizei n, const GLuint *arrays)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDeleteVertexArraysOES, "context = %d, n = %d, arrays = 0x%016" PRIxPTR "",
@@ -10066,7 +10117,7 @@ void GL_APIENTRY DeleteVertexArraysOES(GLsizei n, const GLuint *arrays)
     }
 }
 
-void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays)
+void GL_APIENTRY GL_GenVertexArraysOES(GLsizei n, GLuint *arrays)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGenVertexArraysOES, "context = %d, n = %d, arrays = 0x%016" PRIxPTR "",
@@ -10090,7 +10141,7 @@ void GL_APIENTRY GenVertexArraysOES(GLsizei n, GLuint *arrays)
     }
 }
 
-GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array)
+GLboolean GL_APIENTRY GL_IsVertexArrayOES(GLuint array)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLIsVertexArrayOES, "context = %d, array = %u", CID(context), array);
@@ -10121,12 +10172,12 @@ GLboolean GL_APIENTRY IsVertexArrayOES(GLuint array)
 }
 
 // GL_OVR_multiview
-void GL_APIENTRY FramebufferTextureMultiviewOVR(GLenum target,
-                                                GLenum attachment,
-                                                GLuint texture,
-                                                GLint level,
-                                                GLint baseViewIndex,
-                                                GLsizei numViews)
+void GL_APIENTRY GL_FramebufferTextureMultiviewOVR(GLenum target,
+                                                   GLenum attachment,
+                                                   GLuint texture,
+                                                   GLint level,
+                                                   GLint baseViewIndex,
+                                                   GLsizei numViews)
 {
     Context *context = GetValidGlobalContext();
     EVENT(context, GLFramebufferTextureMultiviewOVR,
@@ -10161,7 +10212,9 @@ void GL_APIENTRY FramebufferTextureMultiviewOVR(GLenum target,
 // GL_OVR_multiview2
 
 // EGL_ANGLE_explicit_context
-void GL_APIENTRY ActiveShaderProgramContextANGLE(GLeglContext ctx, GLuint pipeline, GLuint program)
+void GL_APIENTRY GL_ActiveShaderProgramContextANGLE(GLeglContext ctx,
+                                                    GLuint pipeline,
+                                                    GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLActiveShaderProgram, "context = %d, pipeline = %u, program = %u", CID(context),
@@ -10187,9 +10240,9 @@ void GL_APIENTRY ActiveShaderProgramContextANGLE(GLeglContext ctx, GLuint pipeli
     }
 }
 
-void GL_APIENTRY ActiveShaderProgramEXTContextANGLE(GLeglContext ctx,
-                                                    GLuint pipeline,
-                                                    GLuint program)
+void GL_APIENTRY GL_ActiveShaderProgramEXTContextANGLE(GLeglContext ctx,
+                                                       GLuint pipeline,
+                                                       GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLActiveShaderProgramEXT, "context = %d, pipeline = %u, program = %u",
@@ -10215,7 +10268,7 @@ void GL_APIENTRY ActiveShaderProgramEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
+void GL_APIENTRY GL_ActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLActiveTexture, "context = %d, texture = %s", CID(context),
@@ -10238,7 +10291,7 @@ void GL_APIENTRY ActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
     }
 }
 
-void GL_APIENTRY AlphaFuncContextANGLE(GLeglContext ctx, GLenum func, GLfloat ref)
+void GL_APIENTRY GL_AlphaFuncContextANGLE(GLeglContext ctx, GLenum func, GLfloat ref)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLAlphaFunc, "context = %d, func = %s, ref = %f", CID(context),
@@ -10263,7 +10316,7 @@ void GL_APIENTRY AlphaFuncContextANGLE(GLeglContext ctx, GLenum func, GLfloat re
     }
 }
 
-void GL_APIENTRY AlphaFuncxContextANGLE(GLeglContext ctx, GLenum func, GLfixed ref)
+void GL_APIENTRY GL_AlphaFuncxContextANGLE(GLeglContext ctx, GLenum func, GLfixed ref)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLAlphaFuncx, "context = %d, func = %s, ref = 0x%X", CID(context),
@@ -10288,7 +10341,7 @@ void GL_APIENTRY AlphaFuncxContextANGLE(GLeglContext ctx, GLenum func, GLfixed r
     }
 }
 
-void GL_APIENTRY AttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader)
+void GL_APIENTRY GL_AttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLAttachShader, "context = %d, program = %u, shader = %u", CID(context), program,
@@ -10314,7 +10367,7 @@ void GL_APIENTRY AttachShaderContextANGLE(GLeglContext ctx, GLuint program, GLui
     }
 }
 
-void GL_APIENTRY BeginQueryContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
+void GL_APIENTRY GL_BeginQueryContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBeginQuery, "context = %d, target = %s, id = %u", CID(context),
@@ -10340,7 +10393,7 @@ void GL_APIENTRY BeginQueryContextANGLE(GLeglContext ctx, GLenum target, GLuint 
     }
 }
 
-void GL_APIENTRY BeginQueryEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
+void GL_APIENTRY GL_BeginQueryEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBeginQueryEXT, "context = %d, target = %s, id = %u", CID(context),
@@ -10366,7 +10419,7 @@ void GL_APIENTRY BeginQueryEXTContextANGLE(GLeglContext ctx, GLenum target, GLui
     }
 }
 
-void GL_APIENTRY BeginTransformFeedbackContextANGLE(GLeglContext ctx, GLenum primitiveMode)
+void GL_APIENTRY GL_BeginTransformFeedbackContextANGLE(GLeglContext ctx, GLenum primitiveMode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBeginTransformFeedback, "context = %d, primitiveMode = %s", CID(context),
@@ -10391,10 +10444,10 @@ void GL_APIENTRY BeginTransformFeedbackContextANGLE(GLeglContext ctx, GLenum pri
     }
 }
 
-void GL_APIENTRY BindAttribLocationContextANGLE(GLeglContext ctx,
-                                                GLuint program,
-                                                GLuint index,
-                                                const GLchar *name)
+void GL_APIENTRY GL_BindAttribLocationContextANGLE(GLeglContext ctx,
+                                                   GLuint program,
+                                                   GLuint index,
+                                                   const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindAttribLocation,
@@ -10420,7 +10473,7 @@ void GL_APIENTRY BindAttribLocationContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindBufferContextANGLE(GLeglContext ctx, GLenum target, GLuint buffer)
+void GL_APIENTRY GL_BindBufferContextANGLE(GLeglContext ctx, GLenum target, GLuint buffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindBuffer, "context = %d, target = %s, buffer = %u", CID(context),
@@ -10446,10 +10499,10 @@ void GL_APIENTRY BindBufferContextANGLE(GLeglContext ctx, GLenum target, GLuint 
     }
 }
 
-void GL_APIENTRY BindBufferBaseContextANGLE(GLeglContext ctx,
-                                            GLenum target,
-                                            GLuint index,
-                                            GLuint buffer)
+void GL_APIENTRY GL_BindBufferBaseContextANGLE(GLeglContext ctx,
+                                               GLenum target,
+                                               GLuint index,
+                                               GLuint buffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindBufferBase, "context = %d, target = %s, index = %u, buffer = %u",
@@ -10475,12 +10528,12 @@ void GL_APIENTRY BindBufferBaseContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindBufferRangeContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLuint index,
-                                             GLuint buffer,
-                                             GLintptr offset,
-                                             GLsizeiptr size)
+void GL_APIENTRY GL_BindBufferRangeContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLuint index,
+                                                GLuint buffer,
+                                                GLintptr offset,
+                                                GLsizeiptr size)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindBufferRange,
@@ -10510,10 +10563,10 @@ void GL_APIENTRY BindBufferRangeContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLuint color,
-                                                     const GLchar *name)
+void GL_APIENTRY GL_BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLuint color,
+                                                        const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindFragDataLocationEXT,
@@ -10539,11 +10592,11 @@ void GL_APIENTRY BindFragDataLocationEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
-                                                            GLuint program,
-                                                            GLuint colorNumber,
-                                                            GLuint index,
-                                                            const GLchar *name)
+void GL_APIENTRY GL_BindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
+                                                               GLuint program,
+                                                               GLuint colorNumber,
+                                                               GLuint index,
+                                                               const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindFragDataLocationIndexedEXT,
@@ -10571,7 +10624,7 @@ void GL_APIENTRY BindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindFramebufferContextANGLE(GLeglContext ctx, GLenum target, GLuint framebuffer)
+void GL_APIENTRY GL_BindFramebufferContextANGLE(GLeglContext ctx, GLenum target, GLuint framebuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindFramebuffer, "context = %d, target = %s, framebuffer = %u", CID(context),
@@ -10596,7 +10649,9 @@ void GL_APIENTRY BindFramebufferContextANGLE(GLeglContext ctx, GLenum target, GL
     }
 }
 
-void GL_APIENTRY BindFramebufferOESContextANGLE(GLeglContext ctx, GLenum target, GLuint framebuffer)
+void GL_APIENTRY GL_BindFramebufferOESContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLuint framebuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindFramebufferOES, "context = %d, target = %s, framebuffer = %u",
@@ -10621,14 +10676,14 @@ void GL_APIENTRY BindFramebufferOESContextANGLE(GLeglContext ctx, GLenum target,
     }
 }
 
-void GL_APIENTRY BindImageTextureContextANGLE(GLeglContext ctx,
-                                              GLuint unit,
-                                              GLuint texture,
-                                              GLint level,
-                                              GLboolean layered,
-                                              GLint layer,
-                                              GLenum access,
-                                              GLenum format)
+void GL_APIENTRY GL_BindImageTextureContextANGLE(GLeglContext ctx,
+                                                 GLuint unit,
+                                                 GLuint texture,
+                                                 GLint level,
+                                                 GLboolean layered,
+                                                 GLint layer,
+                                                 GLenum access,
+                                                 GLenum format)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindImageTexture,
@@ -10659,7 +10714,7 @@ void GL_APIENTRY BindImageTextureContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
+void GL_APIENTRY GL_BindProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindProgramPipeline, "context = %d, pipeline = %u", CID(context), pipeline);
@@ -10683,7 +10738,7 @@ void GL_APIENTRY BindProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeli
     }
 }
 
-void GL_APIENTRY BindProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pipeline)
+void GL_APIENTRY GL_BindProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pipeline)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindProgramPipelineEXT, "context = %d, pipeline = %u", CID(context), pipeline);
@@ -10707,7 +10762,9 @@ void GL_APIENTRY BindProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pip
     }
 }
 
-void GL_APIENTRY BindRenderbufferContextANGLE(GLeglContext ctx, GLenum target, GLuint renderbuffer)
+void GL_APIENTRY GL_BindRenderbufferContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLuint renderbuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindRenderbuffer, "context = %d, target = %s, renderbuffer = %u", CID(context),
@@ -10732,9 +10789,9 @@ void GL_APIENTRY BindRenderbufferContextANGLE(GLeglContext ctx, GLenum target, G
     }
 }
 
-void GL_APIENTRY BindRenderbufferOESContextANGLE(GLeglContext ctx,
-                                                 GLenum target,
-                                                 GLuint renderbuffer)
+void GL_APIENTRY GL_BindRenderbufferOESContextANGLE(GLeglContext ctx,
+                                                    GLenum target,
+                                                    GLuint renderbuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindRenderbufferOES, "context = %d, target = %s, renderbuffer = %u",
@@ -10759,7 +10816,7 @@ void GL_APIENTRY BindRenderbufferOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindSamplerContextANGLE(GLeglContext ctx, GLuint unit, GLuint sampler)
+void GL_APIENTRY GL_BindSamplerContextANGLE(GLeglContext ctx, GLuint unit, GLuint sampler)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindSampler, "context = %d, unit = %u, sampler = %u", CID(context), unit,
@@ -10784,7 +10841,7 @@ void GL_APIENTRY BindSamplerContextANGLE(GLeglContext ctx, GLuint unit, GLuint s
     }
 }
 
-void GL_APIENTRY BindTextureContextANGLE(GLeglContext ctx, GLenum target, GLuint texture)
+void GL_APIENTRY GL_BindTextureContextANGLE(GLeglContext ctx, GLenum target, GLuint texture)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindTexture, "context = %d, target = %s, texture = %u", CID(context),
@@ -10810,7 +10867,7 @@ void GL_APIENTRY BindTextureContextANGLE(GLeglContext ctx, GLenum target, GLuint
     }
 }
 
-void GL_APIENTRY BindTransformFeedbackContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
+void GL_APIENTRY GL_BindTransformFeedbackContextANGLE(GLeglContext ctx, GLenum target, GLuint id)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindTransformFeedback, "context = %d, target = %s, id = %u", CID(context),
@@ -10835,7 +10892,7 @@ void GL_APIENTRY BindTransformFeedbackContextANGLE(GLeglContext ctx, GLenum targ
     }
 }
 
-void GL_APIENTRY BindVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
+void GL_APIENTRY GL_BindVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindVertexArray, "context = %d, array = %u", CID(context), array);
@@ -10859,7 +10916,7 @@ void GL_APIENTRY BindVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
     }
 }
 
-void GL_APIENTRY BindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
+void GL_APIENTRY GL_BindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindVertexArrayOES, "context = %d, array = %u", CID(context), array);
@@ -10883,11 +10940,11 @@ void GL_APIENTRY BindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
     }
 }
 
-void GL_APIENTRY BindVertexBufferContextANGLE(GLeglContext ctx,
-                                              GLuint bindingindex,
-                                              GLuint buffer,
-                                              GLintptr offset,
-                                              GLsizei stride)
+void GL_APIENTRY GL_BindVertexBufferContextANGLE(GLeglContext ctx,
+                                                 GLuint bindingindex,
+                                                 GLuint buffer,
+                                                 GLintptr offset,
+                                                 GLsizei stride)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindVertexBuffer,
@@ -10915,7 +10972,7 @@ void GL_APIENTRY BindVertexBufferContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendBarrierContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_BlendBarrierContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendBarrier, "context = %d", CID(context));
@@ -10938,7 +10995,7 @@ void GL_APIENTRY BlendBarrierContextANGLE(GLeglContext ctx)
 }
 
 void GL_APIENTRY
-BlendColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+GL_BlendColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendColor, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -10962,7 +11019,7 @@ BlendColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blu
     }
 }
 
-void GL_APIENTRY BlendEquationContextANGLE(GLeglContext ctx, GLenum mode)
+void GL_APIENTRY GL_BlendEquationContextANGLE(GLeglContext ctx, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquation, "context = %d, mode = %s", CID(context),
@@ -10985,9 +11042,9 @@ void GL_APIENTRY BlendEquationContextANGLE(GLeglContext ctx, GLenum mode)
     }
 }
 
-void GL_APIENTRY BlendEquationSeparateContextANGLE(GLeglContext ctx,
-                                                   GLenum modeRGB,
-                                                   GLenum modeAlpha)
+void GL_APIENTRY GL_BlendEquationSeparateContextANGLE(GLeglContext ctx,
+                                                      GLenum modeRGB,
+                                                      GLenum modeAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquationSeparate, "context = %d, modeRGB = %s, modeAlpha = %s",
@@ -11012,10 +11069,10 @@ void GL_APIENTRY BlendEquationSeparateContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendEquationSeparateiContextANGLE(GLeglContext ctx,
-                                                    GLuint buf,
-                                                    GLenum modeRGB,
-                                                    GLenum modeAlpha)
+void GL_APIENTRY GL_BlendEquationSeparateiContextANGLE(GLeglContext ctx,
+                                                       GLuint buf,
+                                                       GLenum modeRGB,
+                                                       GLenum modeAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquationSeparatei, "context = %d, buf = %u, modeRGB = %s, modeAlpha = %s",
@@ -11040,10 +11097,10 @@ void GL_APIENTRY BlendEquationSeparateiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendEquationSeparateiEXTContextANGLE(GLeglContext ctx,
-                                                       GLuint buf,
-                                                       GLenum modeRGB,
-                                                       GLenum modeAlpha)
+void GL_APIENTRY GL_BlendEquationSeparateiEXTContextANGLE(GLeglContext ctx,
+                                                          GLuint buf,
+                                                          GLenum modeRGB,
+                                                          GLenum modeAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquationSeparateiEXT,
@@ -11069,10 +11126,10 @@ void GL_APIENTRY BlendEquationSeparateiEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendEquationSeparateiOESContextANGLE(GLeglContext ctx,
-                                                       GLuint buf,
-                                                       GLenum modeRGB,
-                                                       GLenum modeAlpha)
+void GL_APIENTRY GL_BlendEquationSeparateiOESContextANGLE(GLeglContext ctx,
+                                                          GLuint buf,
+                                                          GLenum modeRGB,
+                                                          GLenum modeAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquationSeparateiOES,
@@ -11098,7 +11155,7 @@ void GL_APIENTRY BlendEquationSeparateiOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
+void GL_APIENTRY GL_BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquationi, "context = %d, buf = %u, mode = %s", CID(context), buf,
@@ -11122,7 +11179,7 @@ void GL_APIENTRY BlendEquationiContextANGLE(GLeglContext ctx, GLuint buf, GLenum
     }
 }
 
-void GL_APIENTRY BlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
+void GL_APIENTRY GL_BlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquationiEXT, "context = %d, buf = %u, mode = %s", CID(context), buf,
@@ -11146,7 +11203,7 @@ void GL_APIENTRY BlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLe
     }
 }
 
-void GL_APIENTRY BlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
+void GL_APIENTRY GL_BlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendEquationiOES, "context = %d, buf = %u, mode = %s", CID(context), buf,
@@ -11170,7 +11227,7 @@ void GL_APIENTRY BlendEquationiOESContextANGLE(GLeglContext ctx, GLuint buf, GLe
     }
 }
 
-void GL_APIENTRY BlendFuncContextANGLE(GLeglContext ctx, GLenum sfactor, GLenum dfactor)
+void GL_APIENTRY GL_BlendFuncContextANGLE(GLeglContext ctx, GLenum sfactor, GLenum dfactor)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFunc, "context = %d, sfactor = %s, dfactor = %s", CID(context),
@@ -11195,11 +11252,11 @@ void GL_APIENTRY BlendFuncContextANGLE(GLeglContext ctx, GLenum sfactor, GLenum 
     }
 }
 
-void GL_APIENTRY BlendFuncSeparateContextANGLE(GLeglContext ctx,
-                                               GLenum sfactorRGB,
-                                               GLenum dfactorRGB,
-                                               GLenum sfactorAlpha,
-                                               GLenum dfactorAlpha)
+void GL_APIENTRY GL_BlendFuncSeparateContextANGLE(GLeglContext ctx,
+                                                  GLenum sfactorRGB,
+                                                  GLenum dfactorRGB,
+                                                  GLenum sfactorAlpha,
+                                                  GLenum dfactorAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFuncSeparate,
@@ -11229,12 +11286,12 @@ void GL_APIENTRY BlendFuncSeparateContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendFuncSeparateiContextANGLE(GLeglContext ctx,
-                                                GLuint buf,
-                                                GLenum srcRGB,
-                                                GLenum dstRGB,
-                                                GLenum srcAlpha,
-                                                GLenum dstAlpha)
+void GL_APIENTRY GL_BlendFuncSeparateiContextANGLE(GLeglContext ctx,
+                                                   GLuint buf,
+                                                   GLenum srcRGB,
+                                                   GLenum dstRGB,
+                                                   GLenum srcAlpha,
+                                                   GLenum dstAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFuncSeparatei,
@@ -11264,12 +11321,12 @@ void GL_APIENTRY BlendFuncSeparateiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendFuncSeparateiEXTContextANGLE(GLeglContext ctx,
-                                                   GLuint buf,
-                                                   GLenum srcRGB,
-                                                   GLenum dstRGB,
-                                                   GLenum srcAlpha,
-                                                   GLenum dstAlpha)
+void GL_APIENTRY GL_BlendFuncSeparateiEXTContextANGLE(GLeglContext ctx,
+                                                      GLuint buf,
+                                                      GLenum srcRGB,
+                                                      GLenum dstRGB,
+                                                      GLenum srcAlpha,
+                                                      GLenum dstAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFuncSeparateiEXT,
@@ -11299,12 +11356,12 @@ void GL_APIENTRY BlendFuncSeparateiEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendFuncSeparateiOESContextANGLE(GLeglContext ctx,
-                                                   GLuint buf,
-                                                   GLenum srcRGB,
-                                                   GLenum dstRGB,
-                                                   GLenum srcAlpha,
-                                                   GLenum dstAlpha)
+void GL_APIENTRY GL_BlendFuncSeparateiOESContextANGLE(GLeglContext ctx,
+                                                      GLuint buf,
+                                                      GLenum srcRGB,
+                                                      GLenum dstRGB,
+                                                      GLenum srcAlpha,
+                                                      GLenum dstAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFuncSeparateiOES,
@@ -11334,7 +11391,7 @@ void GL_APIENTRY BlendFuncSeparateiOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
+void GL_APIENTRY GL_BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFunci, "context = %d, buf = %u, src = %s, dst = %s", CID(context), buf,
@@ -11359,7 +11416,7 @@ void GL_APIENTRY BlendFunciContextANGLE(GLeglContext ctx, GLuint buf, GLenum src
     }
 }
 
-void GL_APIENTRY BlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
+void GL_APIENTRY GL_BlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFunciEXT, "context = %d, buf = %u, src = %s, dst = %s", CID(context), buf,
@@ -11384,7 +11441,7 @@ void GL_APIENTRY BlendFunciEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum 
     }
 }
 
-void GL_APIENTRY BlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
+void GL_APIENTRY GL_BlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum src, GLenum dst)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlendFunciOES, "context = %d, buf = %u, src = %s, dst = %s", CID(context), buf,
@@ -11409,17 +11466,17 @@ void GL_APIENTRY BlendFunciOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum 
     }
 }
 
-void GL_APIENTRY BlitFramebufferContextANGLE(GLeglContext ctx,
-                                             GLint srcX0,
-                                             GLint srcY0,
-                                             GLint srcX1,
-                                             GLint srcY1,
-                                             GLint dstX0,
-                                             GLint dstY0,
-                                             GLint dstX1,
-                                             GLint dstY1,
-                                             GLbitfield mask,
-                                             GLenum filter)
+void GL_APIENTRY GL_BlitFramebufferContextANGLE(GLeglContext ctx,
+                                                GLint srcX0,
+                                                GLint srcY0,
+                                                GLint srcX1,
+                                                GLint srcY1,
+                                                GLint dstX0,
+                                                GLint dstY0,
+                                                GLint dstX1,
+                                                GLint dstY1,
+                                                GLbitfield mask,
+                                                GLenum filter)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlitFramebuffer,
@@ -11450,17 +11507,17 @@ void GL_APIENTRY BlitFramebufferContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlitFramebufferANGLEContextANGLE(GLeglContext ctx,
-                                                  GLint srcX0,
-                                                  GLint srcY0,
-                                                  GLint srcX1,
-                                                  GLint srcY1,
-                                                  GLint dstX0,
-                                                  GLint dstY0,
-                                                  GLint dstX1,
-                                                  GLint dstY1,
-                                                  GLbitfield mask,
-                                                  GLenum filter)
+void GL_APIENTRY GL_BlitFramebufferANGLEContextANGLE(GLeglContext ctx,
+                                                     GLint srcX0,
+                                                     GLint srcY0,
+                                                     GLint srcX1,
+                                                     GLint srcY1,
+                                                     GLint dstX0,
+                                                     GLint dstY0,
+                                                     GLint dstX1,
+                                                     GLint dstY1,
+                                                     GLbitfield mask,
+                                                     GLenum filter)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlitFramebufferANGLE,
@@ -11491,17 +11548,17 @@ void GL_APIENTRY BlitFramebufferANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BlitFramebufferNVContextANGLE(GLeglContext ctx,
-                                               GLint srcX0,
-                                               GLint srcY0,
-                                               GLint srcX1,
-                                               GLint srcY1,
-                                               GLint dstX0,
-                                               GLint dstY0,
-                                               GLint dstX1,
-                                               GLint dstY1,
-                                               GLbitfield mask,
-                                               GLenum filter)
+void GL_APIENTRY GL_BlitFramebufferNVContextANGLE(GLeglContext ctx,
+                                                  GLint srcX0,
+                                                  GLint srcY0,
+                                                  GLint srcX1,
+                                                  GLint srcY1,
+                                                  GLint dstX0,
+                                                  GLint dstY0,
+                                                  GLint dstX1,
+                                                  GLint dstY1,
+                                                  GLbitfield mask,
+                                                  GLenum filter)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBlitFramebufferNV,
@@ -11532,11 +11589,11 @@ void GL_APIENTRY BlitFramebufferNVContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
-                                        GLenum target,
-                                        GLsizeiptr size,
-                                        const void *data,
-                                        GLenum usage)
+void GL_APIENTRY GL_BufferDataContextANGLE(GLeglContext ctx,
+                                           GLenum target,
+                                           GLsizeiptr size,
+                                           const void *data,
+                                           GLenum usage)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBufferData,
@@ -11565,11 +11622,11 @@ void GL_APIENTRY BufferDataContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
-                                              GLenum target,
-                                              GLsizeiptr size,
-                                              const void *data,
-                                              GLbitfield flags)
+void GL_APIENTRY GL_BufferStorageEXTContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLsizeiptr size,
+                                                 const void *data,
+                                                 GLbitfield flags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBufferStorageEXT,
@@ -11597,12 +11654,12 @@ void GL_APIENTRY BufferStorageEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BufferStorageExternalEXTContextANGLE(GLeglContext ctx,
-                                                      GLenum target,
-                                                      GLintptr offset,
-                                                      GLsizeiptr size,
-                                                      GLeglClientBufferEXT clientBuffer,
-                                                      GLbitfield flags)
+void GL_APIENTRY GL_BufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLintptr offset,
+                                                         GLsizeiptr size,
+                                                         GLeglClientBufferEXT clientBuffer,
+                                                         GLbitfield flags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBufferStorageExternalEXT,
@@ -11634,11 +11691,11 @@ void GL_APIENTRY BufferStorageExternalEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BufferStorageMemEXTContextANGLE(GLeglContext ctx,
-                                                 GLenum target,
-                                                 GLsizeiptr size,
-                                                 GLuint memory,
-                                                 GLuint64 offset)
+void GL_APIENTRY GL_BufferStorageMemEXTContextANGLE(GLeglContext ctx,
+                                                    GLenum target,
+                                                    GLsizeiptr size,
+                                                    GLuint memory,
+                                                    GLuint64 offset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBufferStorageMemEXT,
@@ -11668,11 +11725,11 @@ void GL_APIENTRY BufferStorageMemEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BufferSubDataContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLintptr offset,
-                                           GLsizeiptr size,
-                                           const void *data)
+void GL_APIENTRY GL_BufferSubDataContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLintptr offset,
+                                              GLsizeiptr size,
+                                              const void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBufferSubData,
@@ -11700,7 +11757,7 @@ void GL_APIENTRY BufferSubDataContextANGLE(GLeglContext ctx,
     }
 }
 
-GLenum GL_APIENTRY CheckFramebufferStatusContextANGLE(GLeglContext ctx, GLenum target)
+GLenum GL_APIENTRY GL_CheckFramebufferStatusContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCheckFramebufferStatus, "context = %d, target = %s", CID(context),
@@ -11732,7 +11789,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusContextANGLE(GLeglContext ctx, GLenum t
     return returnValue;
 }
 
-GLenum GL_APIENTRY CheckFramebufferStatusOESContextANGLE(GLeglContext ctx, GLenum target)
+GLenum GL_APIENTRY GL_CheckFramebufferStatusOESContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCheckFramebufferStatusOES, "context = %d, target = %s", CID(context),
@@ -11765,7 +11822,7 @@ GLenum GL_APIENTRY CheckFramebufferStatusOESContextANGLE(GLeglContext ctx, GLenu
     return returnValue;
 }
 
-void GL_APIENTRY ClearContextANGLE(GLeglContext ctx, GLbitfield mask)
+void GL_APIENTRY GL_ClearContextANGLE(GLeglContext ctx, GLbitfield mask)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClear, "context = %d, mask = %s", CID(context),
@@ -11788,11 +11845,11 @@ void GL_APIENTRY ClearContextANGLE(GLeglContext ctx, GLbitfield mask)
     }
 }
 
-void GL_APIENTRY ClearBufferfiContextANGLE(GLeglContext ctx,
-                                           GLenum buffer,
-                                           GLint drawbuffer,
-                                           GLfloat depth,
-                                           GLint stencil)
+void GL_APIENTRY GL_ClearBufferfiContextANGLE(GLeglContext ctx,
+                                              GLenum buffer,
+                                              GLint drawbuffer,
+                                              GLfloat depth,
+                                              GLint stencil)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearBufferfi,
@@ -11817,10 +11874,10 @@ void GL_APIENTRY ClearBufferfiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ClearBufferfvContextANGLE(GLeglContext ctx,
-                                           GLenum buffer,
-                                           GLint drawbuffer,
-                                           const GLfloat *value)
+void GL_APIENTRY GL_ClearBufferfvContextANGLE(GLeglContext ctx,
+                                              GLenum buffer,
+                                              GLint drawbuffer,
+                                              const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearBufferfv,
@@ -11845,10 +11902,10 @@ void GL_APIENTRY ClearBufferfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ClearBufferivContextANGLE(GLeglContext ctx,
-                                           GLenum buffer,
-                                           GLint drawbuffer,
-                                           const GLint *value)
+void GL_APIENTRY GL_ClearBufferivContextANGLE(GLeglContext ctx,
+                                              GLenum buffer,
+                                              GLint drawbuffer,
+                                              const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearBufferiv,
@@ -11873,10 +11930,10 @@ void GL_APIENTRY ClearBufferivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ClearBufferuivContextANGLE(GLeglContext ctx,
-                                            GLenum buffer,
-                                            GLint drawbuffer,
-                                            const GLuint *value)
+void GL_APIENTRY GL_ClearBufferuivContextANGLE(GLeglContext ctx,
+                                               GLenum buffer,
+                                               GLint drawbuffer,
+                                               const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearBufferuiv,
@@ -11902,7 +11959,7 @@ void GL_APIENTRY ClearBufferuivContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-ClearColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+GL_ClearColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearColor, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -11926,8 +11983,11 @@ ClearColorContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blu
     }
 }
 
-void GL_APIENTRY
-ClearColorxContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
+void GL_APIENTRY GL_ClearColorxContextANGLE(GLeglContext ctx,
+                                            GLfixed red,
+                                            GLfixed green,
+                                            GLfixed blue,
+                                            GLfixed alpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearColorx,
@@ -11952,7 +12012,7 @@ ClearColorxContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed bl
     }
 }
 
-void GL_APIENTRY ClearDepthfContextANGLE(GLeglContext ctx, GLfloat d)
+void GL_APIENTRY GL_ClearDepthfContextANGLE(GLeglContext ctx, GLfloat d)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearDepthf, "context = %d, d = %f", CID(context), d);
@@ -11974,7 +12034,7 @@ void GL_APIENTRY ClearDepthfContextANGLE(GLeglContext ctx, GLfloat d)
     }
 }
 
-void GL_APIENTRY ClearDepthxContextANGLE(GLeglContext ctx, GLfixed depth)
+void GL_APIENTRY GL_ClearDepthxContextANGLE(GLeglContext ctx, GLfixed depth)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearDepthx, "context = %d, depth = 0x%X", CID(context), depth);
@@ -11996,7 +12056,7 @@ void GL_APIENTRY ClearDepthxContextANGLE(GLeglContext ctx, GLfixed depth)
     }
 }
 
-void GL_APIENTRY ClearStencilContextANGLE(GLeglContext ctx, GLint s)
+void GL_APIENTRY GL_ClearStencilContextANGLE(GLeglContext ctx, GLint s)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClearStencil, "context = %d, s = %d", CID(context), s);
@@ -12018,7 +12078,7 @@ void GL_APIENTRY ClearStencilContextANGLE(GLeglContext ctx, GLint s)
     }
 }
 
-void GL_APIENTRY ClientActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
+void GL_APIENTRY GL_ClientActiveTextureContextANGLE(GLeglContext ctx, GLenum texture)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClientActiveTexture, "context = %d, texture = %s", CID(context),
@@ -12042,10 +12102,10 @@ void GL_APIENTRY ClientActiveTextureContextANGLE(GLeglContext ctx, GLenum textur
     }
 }
 
-GLenum GL_APIENTRY ClientWaitSyncContextANGLE(GLeglContext ctx,
-                                              GLsync sync,
-                                              GLbitfield flags,
-                                              GLuint64 timeout)
+GLenum GL_APIENTRY GL_ClientWaitSyncContextANGLE(GLeglContext ctx,
+                                                 GLsync sync,
+                                                 GLbitfield flags,
+                                                 GLuint64 timeout)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClientWaitSync,
@@ -12078,7 +12138,7 @@ GLenum GL_APIENTRY ClientWaitSyncContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY ClipControlEXTContextANGLE(GLeglContext ctx, GLenum origin, GLenum depth)
+void GL_APIENTRY GL_ClipControlEXTContextANGLE(GLeglContext ctx, GLenum origin, GLenum depth)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClipControlEXT, "context = %d, origin = %s, depth = %s", CID(context),
@@ -12103,7 +12163,7 @@ void GL_APIENTRY ClipControlEXTContextANGLE(GLeglContext ctx, GLenum origin, GLe
     }
 }
 
-void GL_APIENTRY ClipPlanefContextANGLE(GLeglContext ctx, GLenum p, const GLfloat *eqn)
+void GL_APIENTRY GL_ClipPlanefContextANGLE(GLeglContext ctx, GLenum p, const GLfloat *eqn)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClipPlanef, "context = %d, p = %s, eqn = 0x%016" PRIxPTR "", CID(context),
@@ -12126,7 +12186,7 @@ void GL_APIENTRY ClipPlanefContextANGLE(GLeglContext ctx, GLenum p, const GLfloa
     }
 }
 
-void GL_APIENTRY ClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, const GLfixed *equation)
+void GL_APIENTRY GL_ClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, const GLfixed *equation)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLClipPlanex, "context = %d, plane = %s, equation = 0x%016" PRIxPTR "",
@@ -12151,7 +12211,7 @@ void GL_APIENTRY ClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, const GL
 }
 
 void GL_APIENTRY
-Color4fContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
+GL_Color4fContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColor4f, "context = %d, red = %f, green = %f, blue = %f, alpha = %f",
@@ -12176,7 +12236,7 @@ Color4fContextANGLE(GLeglContext ctx, GLfloat red, GLfloat green, GLfloat blue, 
 }
 
 void GL_APIENTRY
-Color4ubContextANGLE(GLeglContext ctx, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
+GL_Color4ubContextANGLE(GLeglContext ctx, GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColor4ub, "context = %d, red = %d, green = %d, blue = %d, alpha = %d",
@@ -12201,7 +12261,7 @@ Color4ubContextANGLE(GLeglContext ctx, GLubyte red, GLubyte green, GLubyte blue,
 }
 
 void GL_APIENTRY
-Color4xContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
+GL_Color4xContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed blue, GLfixed alpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColor4x, "context = %d, red = 0x%X, green = 0x%X, blue = 0x%X, alpha = 0x%X",
@@ -12225,11 +12285,11 @@ Color4xContextANGLE(GLeglContext ctx, GLfixed red, GLfixed green, GLfixed blue, 
     }
 }
 
-void GL_APIENTRY ColorMaskContextANGLE(GLeglContext ctx,
-                                       GLboolean red,
-                                       GLboolean green,
-                                       GLboolean blue,
-                                       GLboolean alpha)
+void GL_APIENTRY GL_ColorMaskContextANGLE(GLeglContext ctx,
+                                          GLboolean red,
+                                          GLboolean green,
+                                          GLboolean blue,
+                                          GLboolean alpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColorMask, "context = %d, red = %s, green = %s, blue = %s, alpha = %s",
@@ -12254,12 +12314,12 @@ void GL_APIENTRY ColorMaskContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ColorMaskiContextANGLE(GLeglContext ctx,
-                                        GLuint index,
-                                        GLboolean r,
-                                        GLboolean g,
-                                        GLboolean b,
-                                        GLboolean a)
+void GL_APIENTRY GL_ColorMaskiContextANGLE(GLeglContext ctx,
+                                           GLuint index,
+                                           GLboolean r,
+                                           GLboolean g,
+                                           GLboolean b,
+                                           GLboolean a)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColorMaski, "context = %d, index = %u, r = %s, g = %s, b = %s, a = %s",
@@ -12284,12 +12344,12 @@ void GL_APIENTRY ColorMaskiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ColorMaskiEXTContextANGLE(GLeglContext ctx,
-                                           GLuint index,
-                                           GLboolean r,
-                                           GLboolean g,
-                                           GLboolean b,
-                                           GLboolean a)
+void GL_APIENTRY GL_ColorMaskiEXTContextANGLE(GLeglContext ctx,
+                                              GLuint index,
+                                              GLboolean r,
+                                              GLboolean g,
+                                              GLboolean b,
+                                              GLboolean a)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColorMaskiEXT, "context = %d, index = %u, r = %s, g = %s, b = %s, a = %s",
@@ -12314,12 +12374,12 @@ void GL_APIENTRY ColorMaskiEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ColorMaskiOESContextANGLE(GLeglContext ctx,
-                                           GLuint index,
-                                           GLboolean r,
-                                           GLboolean g,
-                                           GLboolean b,
-                                           GLboolean a)
+void GL_APIENTRY GL_ColorMaskiOESContextANGLE(GLeglContext ctx,
+                                              GLuint index,
+                                              GLboolean r,
+                                              GLboolean g,
+                                              GLboolean b,
+                                              GLboolean a)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColorMaskiOES, "context = %d, index = %u, r = %s, g = %s, b = %s, a = %s",
@@ -12344,11 +12404,11 @@ void GL_APIENTRY ColorMaskiOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ColorPointerContextANGLE(GLeglContext ctx,
-                                          GLint size,
-                                          GLenum type,
-                                          GLsizei stride,
-                                          const void *pointer)
+void GL_APIENTRY GL_ColorPointerContextANGLE(GLeglContext ctx,
+                                             GLint size,
+                                             GLenum type,
+                                             GLsizei stride,
+                                             const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLColorPointer,
@@ -12375,7 +12435,7 @@ void GL_APIENTRY ColorPointerContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompileShaderContextANGLE(GLeglContext ctx, GLuint shader)
+void GL_APIENTRY GL_CompileShaderContextANGLE(GLeglContext ctx, GLuint shader)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompileShader, "context = %d, shader = %u", CID(context), shader);
@@ -12399,15 +12459,15 @@ void GL_APIENTRY CompileShaderContextANGLE(GLeglContext ctx, GLuint shader)
     }
 }
 
-void GL_APIENTRY CompressedTexImage2DContextANGLE(GLeglContext ctx,
-                                                  GLenum target,
-                                                  GLint level,
-                                                  GLenum internalformat,
-                                                  GLsizei width,
-                                                  GLsizei height,
-                                                  GLint border,
-                                                  GLsizei imageSize,
-                                                  const void *data)
+void GL_APIENTRY GL_CompressedTexImage2DContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLint level,
+                                                     GLenum internalformat,
+                                                     GLsizei width,
+                                                     GLsizei height,
+                                                     GLint border,
+                                                     GLsizei imageSize,
+                                                     const void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexImage2D,
@@ -12440,16 +12500,16 @@ void GL_APIENTRY CompressedTexImage2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexImage3DContextANGLE(GLeglContext ctx,
-                                                  GLenum target,
-                                                  GLint level,
-                                                  GLenum internalformat,
-                                                  GLsizei width,
-                                                  GLsizei height,
-                                                  GLsizei depth,
-                                                  GLint border,
-                                                  GLsizei imageSize,
-                                                  const void *data)
+void GL_APIENTRY GL_CompressedTexImage3DContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLint level,
+                                                     GLenum internalformat,
+                                                     GLsizei width,
+                                                     GLsizei height,
+                                                     GLsizei depth,
+                                                     GLint border,
+                                                     GLsizei imageSize,
+                                                     const void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexImage3D,
@@ -12482,16 +12542,16 @@ void GL_APIENTRY CompressedTexImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexImage3DOESContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLint level,
-                                                     GLenum internalformat,
-                                                     GLsizei width,
-                                                     GLsizei height,
-                                                     GLsizei depth,
-                                                     GLint border,
-                                                     GLsizei imageSize,
-                                                     const void *data)
+void GL_APIENTRY GL_CompressedTexImage3DOESContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLint level,
+                                                        GLenum internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        GLint border,
+                                                        GLsizei imageSize,
+                                                        const void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexImage3DOES,
@@ -12524,16 +12584,16 @@ void GL_APIENTRY CompressedTexImage3DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage2DContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLint level,
-                                                     GLint xoffset,
-                                                     GLint yoffset,
-                                                     GLsizei width,
-                                                     GLsizei height,
-                                                     GLenum format,
-                                                     GLsizei imageSize,
-                                                     const void *data)
+void GL_APIENTRY GL_CompressedTexSubImage2DContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLint level,
+                                                        GLint xoffset,
+                                                        GLint yoffset,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLenum format,
+                                                        GLsizei imageSize,
+                                                        const void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexSubImage2D,
@@ -12566,18 +12626,18 @@ void GL_APIENTRY CompressedTexSubImage2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage3DContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLint level,
-                                                     GLint xoffset,
-                                                     GLint yoffset,
-                                                     GLint zoffset,
-                                                     GLsizei width,
-                                                     GLsizei height,
-                                                     GLsizei depth,
-                                                     GLenum format,
-                                                     GLsizei imageSize,
-                                                     const void *data)
+void GL_APIENTRY GL_CompressedTexSubImage3DContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLint level,
+                                                        GLint xoffset,
+                                                        GLint yoffset,
+                                                        GLint zoffset,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        GLenum format,
+                                                        GLsizei imageSize,
+                                                        const void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexSubImage3D,
@@ -12610,18 +12670,18 @@ void GL_APIENTRY CompressedTexSubImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage3DOESContextANGLE(GLeglContext ctx,
-                                                        GLenum target,
-                                                        GLint level,
-                                                        GLint xoffset,
-                                                        GLint yoffset,
-                                                        GLint zoffset,
-                                                        GLsizei width,
-                                                        GLsizei height,
-                                                        GLsizei depth,
-                                                        GLenum format,
-                                                        GLsizei imageSize,
-                                                        const void *data)
+void GL_APIENTRY GL_CompressedTexSubImage3DOESContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLint level,
+                                                           GLint xoffset,
+                                                           GLint yoffset,
+                                                           GLint zoffset,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLsizei depth,
+                                                           GLenum format,
+                                                           GLsizei imageSize,
+                                                           const void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexSubImage3DOES,
@@ -12654,12 +12714,12 @@ void GL_APIENTRY CompressedTexSubImage3DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyBufferSubDataContextANGLE(GLeglContext ctx,
-                                               GLenum readTarget,
-                                               GLenum writeTarget,
-                                               GLintptr readOffset,
-                                               GLintptr writeOffset,
-                                               GLsizeiptr size)
+void GL_APIENTRY GL_CopyBufferSubDataContextANGLE(GLeglContext ctx,
+                                                  GLenum readTarget,
+                                                  GLenum writeTarget,
+                                                  GLintptr readOffset,
+                                                  GLintptr writeOffset,
+                                                  GLsizeiptr size)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyBufferSubData,
@@ -12693,22 +12753,22 @@ void GL_APIENTRY CopyBufferSubDataContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyImageSubDataContextANGLE(GLeglContext ctx,
-                                              GLuint srcName,
-                                              GLenum srcTarget,
-                                              GLint srcLevel,
-                                              GLint srcX,
-                                              GLint srcY,
-                                              GLint srcZ,
-                                              GLuint dstName,
-                                              GLenum dstTarget,
-                                              GLint dstLevel,
-                                              GLint dstX,
-                                              GLint dstY,
-                                              GLint dstZ,
-                                              GLsizei srcWidth,
-                                              GLsizei srcHeight,
-                                              GLsizei srcDepth)
+void GL_APIENTRY GL_CopyImageSubDataContextANGLE(GLeglContext ctx,
+                                                 GLuint srcName,
+                                                 GLenum srcTarget,
+                                                 GLint srcLevel,
+                                                 GLint srcX,
+                                                 GLint srcY,
+                                                 GLint srcZ,
+                                                 GLuint dstName,
+                                                 GLenum dstTarget,
+                                                 GLint dstLevel,
+                                                 GLint dstX,
+                                                 GLint dstY,
+                                                 GLint dstZ,
+                                                 GLsizei srcWidth,
+                                                 GLsizei srcHeight,
+                                                 GLsizei srcDepth)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyImageSubData,
@@ -12744,22 +12804,22 @@ void GL_APIENTRY CopyImageSubDataContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyImageSubDataEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint srcName,
-                                                 GLenum srcTarget,
-                                                 GLint srcLevel,
-                                                 GLint srcX,
-                                                 GLint srcY,
-                                                 GLint srcZ,
-                                                 GLuint dstName,
-                                                 GLenum dstTarget,
-                                                 GLint dstLevel,
-                                                 GLint dstX,
-                                                 GLint dstY,
-                                                 GLint dstZ,
-                                                 GLsizei srcWidth,
-                                                 GLsizei srcHeight,
-                                                 GLsizei srcDepth)
+void GL_APIENTRY GL_CopyImageSubDataEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint srcName,
+                                                    GLenum srcTarget,
+                                                    GLint srcLevel,
+                                                    GLint srcX,
+                                                    GLint srcY,
+                                                    GLint srcZ,
+                                                    GLuint dstName,
+                                                    GLenum dstTarget,
+                                                    GLint dstLevel,
+                                                    GLint dstX,
+                                                    GLint dstY,
+                                                    GLint dstZ,
+                                                    GLsizei srcWidth,
+                                                    GLsizei srcHeight,
+                                                    GLsizei srcDepth)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyImageSubDataEXT,
@@ -12796,22 +12856,22 @@ void GL_APIENTRY CopyImageSubDataEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyImageSubDataOESContextANGLE(GLeglContext ctx,
-                                                 GLuint srcName,
-                                                 GLenum srcTarget,
-                                                 GLint srcLevel,
-                                                 GLint srcX,
-                                                 GLint srcY,
-                                                 GLint srcZ,
-                                                 GLuint dstName,
-                                                 GLenum dstTarget,
-                                                 GLint dstLevel,
-                                                 GLint dstX,
-                                                 GLint dstY,
-                                                 GLint dstZ,
-                                                 GLsizei srcWidth,
-                                                 GLsizei srcHeight,
-                                                 GLsizei srcDepth)
+void GL_APIENTRY GL_CopyImageSubDataOESContextANGLE(GLeglContext ctx,
+                                                    GLuint srcName,
+                                                    GLenum srcTarget,
+                                                    GLint srcLevel,
+                                                    GLint srcX,
+                                                    GLint srcY,
+                                                    GLint srcZ,
+                                                    GLuint dstName,
+                                                    GLenum dstTarget,
+                                                    GLint dstLevel,
+                                                    GLint dstX,
+                                                    GLint dstY,
+                                                    GLint dstZ,
+                                                    GLsizei srcWidth,
+                                                    GLsizei srcHeight,
+                                                    GLsizei srcDepth)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyImageSubDataOES,
@@ -12848,15 +12908,15 @@ void GL_APIENTRY CopyImageSubDataOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyTexImage2DContextANGLE(GLeglContext ctx,
-                                            GLenum target,
-                                            GLint level,
-                                            GLenum internalformat,
-                                            GLint x,
-                                            GLint y,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLint border)
+void GL_APIENTRY GL_CopyTexImage2DContextANGLE(GLeglContext ctx,
+                                               GLenum target,
+                                               GLint level,
+                                               GLenum internalformat,
+                                               GLint x,
+                                               GLint y,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLint border)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyTexImage2D,
@@ -12887,15 +12947,15 @@ void GL_APIENTRY CopyTexImage2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyTexSubImage2DContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLint level,
-                                               GLint xoffset,
-                                               GLint yoffset,
-                                               GLint x,
-                                               GLint y,
-                                               GLsizei width,
-                                               GLsizei height)
+void GL_APIENTRY GL_CopyTexSubImage2DContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLint level,
+                                                  GLint xoffset,
+                                                  GLint yoffset,
+                                                  GLint x,
+                                                  GLint y,
+                                                  GLsizei width,
+                                                  GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyTexSubImage2D,
@@ -12925,16 +12985,16 @@ void GL_APIENTRY CopyTexSubImage2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyTexSubImage3DContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLint level,
-                                               GLint xoffset,
-                                               GLint yoffset,
-                                               GLint zoffset,
-                                               GLint x,
-                                               GLint y,
-                                               GLsizei width,
-                                               GLsizei height)
+void GL_APIENTRY GL_CopyTexSubImage3DContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLint level,
+                                                  GLint xoffset,
+                                                  GLint yoffset,
+                                                  GLint zoffset,
+                                                  GLint x,
+                                                  GLint y,
+                                                  GLsizei width,
+                                                  GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyTexSubImage3D,
@@ -12965,16 +13025,16 @@ void GL_APIENTRY CopyTexSubImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyTexSubImage3DOESContextANGLE(GLeglContext ctx,
-                                                  GLenum target,
-                                                  GLint level,
-                                                  GLint xoffset,
-                                                  GLint yoffset,
-                                                  GLint zoffset,
-                                                  GLint x,
-                                                  GLint y,
-                                                  GLsizei width,
-                                                  GLsizei height)
+void GL_APIENTRY GL_CopyTexSubImage3DOESContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLint level,
+                                                     GLint xoffset,
+                                                     GLint yoffset,
+                                                     GLint zoffset,
+                                                     GLint x,
+                                                     GLint y,
+                                                     GLsizei width,
+                                                     GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyTexSubImage3DOES,
@@ -13005,9 +13065,9 @@ void GL_APIENTRY CopyTexSubImage3DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CreateMemoryObjectsEXTContextANGLE(GLeglContext ctx,
-                                                    GLsizei n,
-                                                    GLuint *memoryObjects)
+void GL_APIENTRY GL_CreateMemoryObjectsEXTContextANGLE(GLeglContext ctx,
+                                                       GLsizei n,
+                                                       GLuint *memoryObjects)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCreateMemoryObjectsEXT,
@@ -13033,7 +13093,7 @@ void GL_APIENTRY CreateMemoryObjectsEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-GLuint GL_APIENTRY CreateProgramContextANGLE(GLeglContext ctx)
+GLuint GL_APIENTRY GL_CreateProgramContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCreateProgram, "context = %d", CID(context));
@@ -13062,7 +13122,7 @@ GLuint GL_APIENTRY CreateProgramContextANGLE(GLeglContext ctx)
     return returnValue;
 }
 
-GLuint GL_APIENTRY CreateShaderContextANGLE(GLeglContext ctx, GLenum type)
+GLuint GL_APIENTRY GL_CreateShaderContextANGLE(GLeglContext ctx, GLenum type)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCreateShader, "context = %d, type = %s", CID(context),
@@ -13093,10 +13153,10 @@ GLuint GL_APIENTRY CreateShaderContextANGLE(GLeglContext ctx, GLenum type)
     return returnValue;
 }
 
-GLuint GL_APIENTRY CreateShaderProgramvContextANGLE(GLeglContext ctx,
-                                                    GLenum type,
-                                                    GLsizei count,
-                                                    const GLchar *const *strings)
+GLuint GL_APIENTRY GL_CreateShaderProgramvContextANGLE(GLeglContext ctx,
+                                                       GLenum type,
+                                                       GLsizei count,
+                                                       const GLchar *const *strings)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCreateShaderProgramv,
@@ -13131,10 +13191,10 @@ GLuint GL_APIENTRY CreateShaderProgramvContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-GLuint GL_APIENTRY CreateShaderProgramvEXTContextANGLE(GLeglContext ctx,
-                                                       GLenum type,
-                                                       GLsizei count,
-                                                       const GLchar **strings)
+GLuint GL_APIENTRY GL_CreateShaderProgramvEXTContextANGLE(GLeglContext ctx,
+                                                          GLenum type,
+                                                          GLsizei count,
+                                                          const GLchar **strings)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCreateShaderProgramvEXT,
@@ -13169,7 +13229,7 @@ GLuint GL_APIENTRY CreateShaderProgramvEXTContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY CullFaceContextANGLE(GLeglContext ctx, GLenum mode)
+void GL_APIENTRY GL_CullFaceContextANGLE(GLeglContext ctx, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCullFace, "context = %d, mode = %s", CID(context),
@@ -13193,7 +13253,7 @@ void GL_APIENTRY CullFaceContextANGLE(GLeglContext ctx, GLenum mode)
     }
 }
 
-void GL_APIENTRY CurrentPaletteMatrixOESContextANGLE(GLeglContext ctx, GLuint matrixpaletteindex)
+void GL_APIENTRY GL_CurrentPaletteMatrixOESContextANGLE(GLeglContext ctx, GLuint matrixpaletteindex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCurrentPaletteMatrixOES, "context = %d, matrixpaletteindex = %u", CID(context),
@@ -13217,9 +13277,9 @@ void GL_APIENTRY CurrentPaletteMatrixOESContextANGLE(GLeglContext ctx, GLuint ma
     }
 }
 
-void GL_APIENTRY DebugMessageCallbackContextANGLE(GLeglContext ctx,
-                                                  GLDEBUGPROC callback,
-                                                  const void *userParam)
+void GL_APIENTRY GL_DebugMessageCallbackContextANGLE(GLeglContext ctx,
+                                                     GLDEBUGPROC callback,
+                                                     const void *userParam)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDebugMessageCallback,
@@ -13244,9 +13304,9 @@ void GL_APIENTRY DebugMessageCallbackContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DebugMessageCallbackKHRContextANGLE(GLeglContext ctx,
-                                                     GLDEBUGPROCKHR callback,
-                                                     const void *userParam)
+void GL_APIENTRY GL_DebugMessageCallbackKHRContextANGLE(GLeglContext ctx,
+                                                        GLDEBUGPROCKHR callback,
+                                                        const void *userParam)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDebugMessageCallbackKHR,
@@ -13271,13 +13331,13 @@ void GL_APIENTRY DebugMessageCallbackKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DebugMessageControlContextANGLE(GLeglContext ctx,
-                                                 GLenum source,
-                                                 GLenum type,
-                                                 GLenum severity,
-                                                 GLsizei count,
-                                                 const GLuint *ids,
-                                                 GLboolean enabled)
+void GL_APIENTRY GL_DebugMessageControlContextANGLE(GLeglContext ctx,
+                                                    GLenum source,
+                                                    GLenum type,
+                                                    GLenum severity,
+                                                    GLsizei count,
+                                                    const GLuint *ids,
+                                                    GLboolean enabled)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDebugMessageControl,
@@ -13308,13 +13368,13 @@ void GL_APIENTRY DebugMessageControlContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DebugMessageControlKHRContextANGLE(GLeglContext ctx,
-                                                    GLenum source,
-                                                    GLenum type,
-                                                    GLenum severity,
-                                                    GLsizei count,
-                                                    const GLuint *ids,
-                                                    GLboolean enabled)
+void GL_APIENTRY GL_DebugMessageControlKHRContextANGLE(GLeglContext ctx,
+                                                       GLenum source,
+                                                       GLenum type,
+                                                       GLenum severity,
+                                                       GLsizei count,
+                                                       const GLuint *ids,
+                                                       GLboolean enabled)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDebugMessageControlKHR,
@@ -13345,13 +13405,13 @@ void GL_APIENTRY DebugMessageControlKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DebugMessageInsertContextANGLE(GLeglContext ctx,
-                                                GLenum source,
-                                                GLenum type,
-                                                GLuint id,
-                                                GLenum severity,
-                                                GLsizei length,
-                                                const GLchar *buf)
+void GL_APIENTRY GL_DebugMessageInsertContextANGLE(GLeglContext ctx,
+                                                   GLenum source,
+                                                   GLenum type,
+                                                   GLuint id,
+                                                   GLenum severity,
+                                                   GLsizei length,
+                                                   const GLchar *buf)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDebugMessageInsert,
@@ -13381,13 +13441,13 @@ void GL_APIENTRY DebugMessageInsertContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DebugMessageInsertKHRContextANGLE(GLeglContext ctx,
-                                                   GLenum source,
-                                                   GLenum type,
-                                                   GLuint id,
-                                                   GLenum severity,
-                                                   GLsizei length,
-                                                   const GLchar *buf)
+void GL_APIENTRY GL_DebugMessageInsertKHRContextANGLE(GLeglContext ctx,
+                                                      GLenum source,
+                                                      GLenum type,
+                                                      GLuint id,
+                                                      GLenum severity,
+                                                      GLsizei length,
+                                                      const GLchar *buf)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDebugMessageInsertKHR,
@@ -13417,7 +13477,7 @@ void GL_APIENTRY DebugMessageInsertKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *buffers)
+void GL_APIENTRY GL_DeleteBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *buffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteBuffers, "context = %d, n = %d, buffers = 0x%016" PRIxPTR "",
@@ -13442,7 +13502,7 @@ void GL_APIENTRY DeleteBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GL
     }
 }
 
-void GL_APIENTRY DeleteFencesNVContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *fences)
+void GL_APIENTRY GL_DeleteFencesNVContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *fences)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteFencesNV, "context = %d, n = %d, fences = 0x%016" PRIxPTR "",
@@ -13467,9 +13527,9 @@ void GL_APIENTRY DeleteFencesNVContextANGLE(GLeglContext ctx, GLsizei n, const G
     }
 }
 
-void GL_APIENTRY DeleteFramebuffersContextANGLE(GLeglContext ctx,
-                                                GLsizei n,
-                                                const GLuint *framebuffers)
+void GL_APIENTRY GL_DeleteFramebuffersContextANGLE(GLeglContext ctx,
+                                                   GLsizei n,
+                                                   const GLuint *framebuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteFramebuffers, "context = %d, n = %d, framebuffers = 0x%016" PRIxPTR "",
@@ -13494,9 +13554,9 @@ void GL_APIENTRY DeleteFramebuffersContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteFramebuffersOESContextANGLE(GLeglContext ctx,
-                                                   GLsizei n,
-                                                   const GLuint *framebuffers)
+void GL_APIENTRY GL_DeleteFramebuffersOESContextANGLE(GLeglContext ctx,
+                                                      GLsizei n,
+                                                      const GLuint *framebuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteFramebuffersOES,
@@ -13522,9 +13582,9 @@ void GL_APIENTRY DeleteFramebuffersOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteMemoryObjectsEXTContextANGLE(GLeglContext ctx,
-                                                    GLsizei n,
-                                                    const GLuint *memoryObjects)
+void GL_APIENTRY GL_DeleteMemoryObjectsEXTContextANGLE(GLeglContext ctx,
+                                                       GLsizei n,
+                                                       const GLuint *memoryObjects)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteMemoryObjectsEXT,
@@ -13551,7 +13611,7 @@ void GL_APIENTRY DeleteMemoryObjectsEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteProgramContextANGLE(GLeglContext ctx, GLuint program)
+void GL_APIENTRY GL_DeleteProgramContextANGLE(GLeglContext ctx, GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteProgram, "context = %d, program = %u", CID(context), program);
@@ -13575,9 +13635,9 @@ void GL_APIENTRY DeleteProgramContextANGLE(GLeglContext ctx, GLuint program)
     }
 }
 
-void GL_APIENTRY DeleteProgramPipelinesContextANGLE(GLeglContext ctx,
-                                                    GLsizei n,
-                                                    const GLuint *pipelines)
+void GL_APIENTRY GL_DeleteProgramPipelinesContextANGLE(GLeglContext ctx,
+                                                       GLsizei n,
+                                                       const GLuint *pipelines)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteProgramPipelines, "context = %d, n = %d, pipelines = 0x%016" PRIxPTR "",
@@ -13602,9 +13662,9 @@ void GL_APIENTRY DeleteProgramPipelinesContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteProgramPipelinesEXTContextANGLE(GLeglContext ctx,
-                                                       GLsizei n,
-                                                       const GLuint *pipelines)
+void GL_APIENTRY GL_DeleteProgramPipelinesEXTContextANGLE(GLeglContext ctx,
+                                                          GLsizei n,
+                                                          const GLuint *pipelines)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteProgramPipelinesEXT,
@@ -13630,7 +13690,7 @@ void GL_APIENTRY DeleteProgramPipelinesEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteQueriesContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *ids)
+void GL_APIENTRY GL_DeleteQueriesContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *ids)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteQueries, "context = %d, n = %d, ids = 0x%016" PRIxPTR "", CID(context),
@@ -13655,7 +13715,7 @@ void GL_APIENTRY DeleteQueriesContextANGLE(GLeglContext ctx, GLsizei n, const GL
     }
 }
 
-void GL_APIENTRY DeleteQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *ids)
+void GL_APIENTRY GL_DeleteQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *ids)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteQueriesEXT, "context = %d, n = %d, ids = 0x%016" PRIxPTR "",
@@ -13680,9 +13740,9 @@ void GL_APIENTRY DeleteQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, const
     }
 }
 
-void GL_APIENTRY DeleteRenderbuffersContextANGLE(GLeglContext ctx,
-                                                 GLsizei n,
-                                                 const GLuint *renderbuffers)
+void GL_APIENTRY GL_DeleteRenderbuffersContextANGLE(GLeglContext ctx,
+                                                    GLsizei n,
+                                                    const GLuint *renderbuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteRenderbuffers, "context = %d, n = %d, renderbuffers = 0x%016" PRIxPTR "",
@@ -13708,9 +13768,9 @@ void GL_APIENTRY DeleteRenderbuffersContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteRenderbuffersOESContextANGLE(GLeglContext ctx,
-                                                    GLsizei n,
-                                                    const GLuint *renderbuffers)
+void GL_APIENTRY GL_DeleteRenderbuffersOESContextANGLE(GLeglContext ctx,
+                                                       GLsizei n,
+                                                       const GLuint *renderbuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteRenderbuffersOES,
@@ -13737,7 +13797,9 @@ void GL_APIENTRY DeleteRenderbuffersOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteSamplersContextANGLE(GLeglContext ctx, GLsizei count, const GLuint *samplers)
+void GL_APIENTRY GL_DeleteSamplersContextANGLE(GLeglContext ctx,
+                                               GLsizei count,
+                                               const GLuint *samplers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteSamplers, "context = %d, count = %d, samplers = 0x%016" PRIxPTR "",
@@ -13762,9 +13824,9 @@ void GL_APIENTRY DeleteSamplersContextANGLE(GLeglContext ctx, GLsizei count, con
     }
 }
 
-void GL_APIENTRY DeleteSemaphoresEXTContextANGLE(GLeglContext ctx,
-                                                 GLsizei n,
-                                                 const GLuint *semaphores)
+void GL_APIENTRY GL_DeleteSemaphoresEXTContextANGLE(GLeglContext ctx,
+                                                    GLsizei n,
+                                                    const GLuint *semaphores)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteSemaphoresEXT, "context = %d, n = %d, semaphores = 0x%016" PRIxPTR "",
@@ -13789,7 +13851,7 @@ void GL_APIENTRY DeleteSemaphoresEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteShaderContextANGLE(GLeglContext ctx, GLuint shader)
+void GL_APIENTRY GL_DeleteShaderContextANGLE(GLeglContext ctx, GLuint shader)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteShader, "context = %d, shader = %u", CID(context), shader);
@@ -13813,7 +13875,7 @@ void GL_APIENTRY DeleteShaderContextANGLE(GLeglContext ctx, GLuint shader)
     }
 }
 
-void GL_APIENTRY DeleteSyncContextANGLE(GLeglContext ctx, GLsync sync)
+void GL_APIENTRY GL_DeleteSyncContextANGLE(GLeglContext ctx, GLsync sync)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteSync, "context = %d, sync = 0x%016" PRIxPTR "", CID(context),
@@ -13836,7 +13898,7 @@ void GL_APIENTRY DeleteSyncContextANGLE(GLeglContext ctx, GLsync sync)
     }
 }
 
-void GL_APIENTRY DeleteTexturesContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *textures)
+void GL_APIENTRY GL_DeleteTexturesContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *textures)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteTextures, "context = %d, n = %d, textures = 0x%016" PRIxPTR "",
@@ -13861,9 +13923,9 @@ void GL_APIENTRY DeleteTexturesContextANGLE(GLeglContext ctx, GLsizei n, const G
     }
 }
 
-void GL_APIENTRY DeleteTransformFeedbacksContextANGLE(GLeglContext ctx,
-                                                      GLsizei n,
-                                                      const GLuint *ids)
+void GL_APIENTRY GL_DeleteTransformFeedbacksContextANGLE(GLeglContext ctx,
+                                                         GLsizei n,
+                                                         const GLuint *ids)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteTransformFeedbacks, "context = %d, n = %d, ids = 0x%016" PRIxPTR "",
@@ -13888,7 +13950,9 @@ void GL_APIENTRY DeleteTransformFeedbacksContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DeleteVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, const GLuint *arrays)
+void GL_APIENTRY GL_DeleteVertexArraysContextANGLE(GLeglContext ctx,
+                                                   GLsizei n,
+                                                   const GLuint *arrays)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteVertexArrays, "context = %d, n = %d, arrays = 0x%016" PRIxPTR "",
@@ -13913,9 +13977,9 @@ void GL_APIENTRY DeleteVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, con
     }
 }
 
-void GL_APIENTRY DeleteVertexArraysOESContextANGLE(GLeglContext ctx,
-                                                   GLsizei n,
-                                                   const GLuint *arrays)
+void GL_APIENTRY GL_DeleteVertexArraysOESContextANGLE(GLeglContext ctx,
+                                                      GLsizei n,
+                                                      const GLuint *arrays)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDeleteVertexArraysOES, "context = %d, n = %d, arrays = 0x%016" PRIxPTR "",
@@ -13940,7 +14004,7 @@ void GL_APIENTRY DeleteVertexArraysOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DepthFuncContextANGLE(GLeglContext ctx, GLenum func)
+void GL_APIENTRY GL_DepthFuncContextANGLE(GLeglContext ctx, GLenum func)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDepthFunc, "context = %d, func = %s", CID(context),
@@ -13963,7 +14027,7 @@ void GL_APIENTRY DepthFuncContextANGLE(GLeglContext ctx, GLenum func)
     }
 }
 
-void GL_APIENTRY DepthMaskContextANGLE(GLeglContext ctx, GLboolean flag)
+void GL_APIENTRY GL_DepthMaskContextANGLE(GLeglContext ctx, GLboolean flag)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDepthMask, "context = %d, flag = %s", CID(context), GLbooleanToString(flag));
@@ -13985,7 +14049,7 @@ void GL_APIENTRY DepthMaskContextANGLE(GLeglContext ctx, GLboolean flag)
     }
 }
 
-void GL_APIENTRY DepthRangefContextANGLE(GLeglContext ctx, GLfloat n, GLfloat f)
+void GL_APIENTRY GL_DepthRangefContextANGLE(GLeglContext ctx, GLfloat n, GLfloat f)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDepthRangef, "context = %d, n = %f, f = %f", CID(context), n, f);
@@ -14007,7 +14071,7 @@ void GL_APIENTRY DepthRangefContextANGLE(GLeglContext ctx, GLfloat n, GLfloat f)
     }
 }
 
-void GL_APIENTRY DepthRangexContextANGLE(GLeglContext ctx, GLfixed n, GLfixed f)
+void GL_APIENTRY GL_DepthRangexContextANGLE(GLeglContext ctx, GLfixed n, GLfixed f)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDepthRangex, "context = %d, n = 0x%X, f = 0x%X", CID(context), n, f);
@@ -14029,7 +14093,7 @@ void GL_APIENTRY DepthRangexContextANGLE(GLeglContext ctx, GLfixed n, GLfixed f)
     }
 }
 
-void GL_APIENTRY DetachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader)
+void GL_APIENTRY GL_DetachShaderContextANGLE(GLeglContext ctx, GLuint program, GLuint shader)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDetachShader, "context = %d, program = %u, shader = %u", CID(context), program,
@@ -14055,7 +14119,7 @@ void GL_APIENTRY DetachShaderContextANGLE(GLeglContext ctx, GLuint program, GLui
     }
 }
 
-void GL_APIENTRY DisableContextANGLE(GLeglContext ctx, GLenum cap)
+void GL_APIENTRY GL_DisableContextANGLE(GLeglContext ctx, GLenum cap)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDisable, "context = %d, cap = %s", CID(context),
@@ -14078,7 +14142,7 @@ void GL_APIENTRY DisableContextANGLE(GLeglContext ctx, GLenum cap)
     }
 }
 
-void GL_APIENTRY DisableClientStateContextANGLE(GLeglContext ctx, GLenum array)
+void GL_APIENTRY GL_DisableClientStateContextANGLE(GLeglContext ctx, GLenum array)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDisableClientState, "context = %d, array = %s", CID(context),
@@ -14103,7 +14167,7 @@ void GL_APIENTRY DisableClientStateContextANGLE(GLeglContext ctx, GLenum array)
     }
 }
 
-void GL_APIENTRY DisableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint index)
+void GL_APIENTRY GL_DisableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDisableVertexAttribArray, "context = %d, index = %u", CID(context), index);
@@ -14126,7 +14190,7 @@ void GL_APIENTRY DisableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint i
     }
 }
 
-void GL_APIENTRY DisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+void GL_APIENTRY GL_DisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDisablei, "context = %d, target = %s, index = %u", CID(context),
@@ -14149,7 +14213,7 @@ void GL_APIENTRY DisableiContextANGLE(GLeglContext ctx, GLenum target, GLuint in
     }
 }
 
-void GL_APIENTRY DisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+void GL_APIENTRY GL_DisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDisableiEXT, "context = %d, target = %s, index = %u", CID(context),
@@ -14173,7 +14237,7 @@ void GL_APIENTRY DisableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint
     }
 }
 
-void GL_APIENTRY DisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+void GL_APIENTRY GL_DisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDisableiOES, "context = %d, target = %s, index = %u", CID(context),
@@ -14197,10 +14261,10 @@ void GL_APIENTRY DisableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint
     }
 }
 
-void GL_APIENTRY DiscardFramebufferEXTContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLsizei numAttachments,
-                                                   const GLenum *attachments)
+void GL_APIENTRY GL_DiscardFramebufferEXTContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLsizei numAttachments,
+                                                      const GLenum *attachments)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDiscardFramebufferEXT,
@@ -14228,10 +14292,10 @@ void GL_APIENTRY DiscardFramebufferEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DispatchComputeContextANGLE(GLeglContext ctx,
-                                             GLuint num_groups_x,
-                                             GLuint num_groups_y,
-                                             GLuint num_groups_z)
+void GL_APIENTRY GL_DispatchComputeContextANGLE(GLeglContext ctx,
+                                                GLuint num_groups_x,
+                                                GLuint num_groups_y,
+                                                GLuint num_groups_z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDispatchCompute,
@@ -14258,7 +14322,7 @@ void GL_APIENTRY DispatchComputeContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DispatchComputeIndirectContextANGLE(GLeglContext ctx, GLintptr indirect)
+void GL_APIENTRY GL_DispatchComputeIndirectContextANGLE(GLeglContext ctx, GLintptr indirect)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDispatchComputeIndirect, "context = %d, indirect = %llu", CID(context),
@@ -14282,7 +14346,10 @@ void GL_APIENTRY DispatchComputeIndirectContextANGLE(GLeglContext ctx, GLintptr 
     }
 }
 
-void GL_APIENTRY DrawArraysContextANGLE(GLeglContext ctx, GLenum mode, GLint first, GLsizei count)
+void GL_APIENTRY GL_DrawArraysContextANGLE(GLeglContext ctx,
+                                           GLenum mode,
+                                           GLint first,
+                                           GLsizei count)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawArrays, "context = %d, mode = %s, first = %d, count = %d", CID(context),
@@ -14307,7 +14374,9 @@ void GL_APIENTRY DrawArraysContextANGLE(GLeglContext ctx, GLenum mode, GLint fir
     }
 }
 
-void GL_APIENTRY DrawArraysIndirectContextANGLE(GLeglContext ctx, GLenum mode, const void *indirect)
+void GL_APIENTRY GL_DrawArraysIndirectContextANGLE(GLeglContext ctx,
+                                                   GLenum mode,
+                                                   const void *indirect)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawArraysIndirect, "context = %d, mode = %s, indirect = 0x%016" PRIxPTR "",
@@ -14332,11 +14401,11 @@ void GL_APIENTRY DrawArraysIndirectContextANGLE(GLeglContext ctx, GLenum mode, c
     }
 }
 
-void GL_APIENTRY DrawArraysInstancedContextANGLE(GLeglContext ctx,
-                                                 GLenum mode,
-                                                 GLint first,
-                                                 GLsizei count,
-                                                 GLsizei instancecount)
+void GL_APIENTRY GL_DrawArraysInstancedContextANGLE(GLeglContext ctx,
+                                                    GLenum mode,
+                                                    GLint first,
+                                                    GLsizei count,
+                                                    GLsizei instancecount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawArraysInstanced,
@@ -14364,11 +14433,11 @@ void GL_APIENTRY DrawArraysInstancedContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
-                                                      GLenum mode,
-                                                      GLint first,
-                                                      GLsizei count,
-                                                      GLsizei primcount)
+void GL_APIENTRY GL_DrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum mode,
+                                                         GLint first,
+                                                         GLsizei count,
+                                                         GLsizei primcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawArraysInstancedANGLE,
@@ -14396,11 +14465,11 @@ void GL_APIENTRY DrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawArraysInstancedEXTContextANGLE(GLeglContext ctx,
-                                                    GLenum mode,
-                                                    GLint start,
-                                                    GLsizei count,
-                                                    GLsizei primcount)
+void GL_APIENTRY GL_DrawArraysInstancedEXTContextANGLE(GLeglContext ctx,
+                                                       GLenum mode,
+                                                       GLint start,
+                                                       GLsizei count,
+                                                       GLsizei primcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawArraysInstancedEXT,
@@ -14428,7 +14497,7 @@ void GL_APIENTRY DrawArraysInstancedEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLenum *bufs)
+void GL_APIENTRY GL_DrawBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLenum *bufs)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawBuffers, "context = %d, n = %d, bufs = 0x%016" PRIxPTR "", CID(context), n,
@@ -14451,7 +14520,7 @@ void GL_APIENTRY DrawBuffersContextANGLE(GLeglContext ctx, GLsizei n, const GLen
     }
 }
 
-void GL_APIENTRY DrawBuffersEXTContextANGLE(GLeglContext ctx, GLsizei n, const GLenum *bufs)
+void GL_APIENTRY GL_DrawBuffersEXTContextANGLE(GLeglContext ctx, GLsizei n, const GLenum *bufs)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawBuffersEXT, "context = %d, n = %d, bufs = 0x%016" PRIxPTR "", CID(context),
@@ -14474,11 +14543,11 @@ void GL_APIENTRY DrawBuffersEXTContextANGLE(GLeglContext ctx, GLsizei n, const G
     }
 }
 
-void GL_APIENTRY DrawElementsContextANGLE(GLeglContext ctx,
-                                          GLenum mode,
-                                          GLsizei count,
-                                          GLenum type,
-                                          const void *indices)
+void GL_APIENTRY GL_DrawElementsContextANGLE(GLeglContext ctx,
+                                             GLenum mode,
+                                             GLsizei count,
+                                             GLenum type,
+                                             const void *indices)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElements,
@@ -14506,12 +14575,12 @@ void GL_APIENTRY DrawElementsContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsBaseVertexContextANGLE(GLeglContext ctx,
-                                                    GLenum mode,
-                                                    GLsizei count,
-                                                    GLenum type,
-                                                    const void *indices,
-                                                    GLint basevertex)
+void GL_APIENTRY GL_DrawElementsBaseVertexContextANGLE(GLeglContext ctx,
+                                                       GLenum mode,
+                                                       GLsizei count,
+                                                       GLenum type,
+                                                       const void *indices,
+                                                       GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsBaseVertex,
@@ -14542,12 +14611,12 @@ void GL_APIENTRY DrawElementsBaseVertexContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
-                                                       GLenum mode,
-                                                       GLsizei count,
-                                                       GLenum type,
-                                                       const void *indices,
-                                                       GLint basevertex)
+void GL_APIENTRY GL_DrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                          GLenum mode,
+                                                          GLsizei count,
+                                                          GLenum type,
+                                                          const void *indices,
+                                                          GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsBaseVertexEXT,
@@ -14578,12 +14647,12 @@ void GL_APIENTRY DrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsBaseVertexOESContextANGLE(GLeglContext ctx,
-                                                       GLenum mode,
-                                                       GLsizei count,
-                                                       GLenum type,
-                                                       const void *indices,
-                                                       GLint basevertex)
+void GL_APIENTRY GL_DrawElementsBaseVertexOESContextANGLE(GLeglContext ctx,
+                                                          GLenum mode,
+                                                          GLsizei count,
+                                                          GLenum type,
+                                                          const void *indices,
+                                                          GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsBaseVertexOES,
@@ -14614,10 +14683,10 @@ void GL_APIENTRY DrawElementsBaseVertexOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsIndirectContextANGLE(GLeglContext ctx,
-                                                  GLenum mode,
-                                                  GLenum type,
-                                                  const void *indirect)
+void GL_APIENTRY GL_DrawElementsIndirectContextANGLE(GLeglContext ctx,
+                                                     GLenum mode,
+                                                     GLenum type,
+                                                     const void *indirect)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsIndirect,
@@ -14646,12 +14715,12 @@ void GL_APIENTRY DrawElementsIndirectContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedContextANGLE(GLeglContext ctx,
-                                                   GLenum mode,
-                                                   GLsizei count,
-                                                   GLenum type,
-                                                   const void *indices,
-                                                   GLsizei instancecount)
+void GL_APIENTRY GL_DrawElementsInstancedContextANGLE(GLeglContext ctx,
+                                                      GLenum mode,
+                                                      GLsizei count,
+                                                      GLenum type,
+                                                      const void *indices,
+                                                      GLsizei instancecount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsInstanced,
@@ -14682,12 +14751,12 @@ void GL_APIENTRY DrawElementsInstancedContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
-                                                        GLenum mode,
-                                                        GLsizei count,
-                                                        GLenum type,
-                                                        const void *indices,
-                                                        GLsizei primcount)
+void GL_APIENTRY GL_DrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
+                                                           GLenum mode,
+                                                           GLsizei count,
+                                                           GLenum type,
+                                                           const void *indices,
+                                                           GLsizei primcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsInstancedANGLE,
@@ -14718,13 +14787,13 @@ void GL_APIENTRY DrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedBaseVertexContextANGLE(GLeglContext ctx,
-                                                             GLenum mode,
-                                                             GLsizei count,
-                                                             GLenum type,
-                                                             const void *indices,
-                                                             GLsizei instancecount,
-                                                             GLint basevertex)
+void GL_APIENTRY GL_DrawElementsInstancedBaseVertexContextANGLE(GLeglContext ctx,
+                                                                GLenum mode,
+                                                                GLsizei count,
+                                                                GLenum type,
+                                                                const void *indices,
+                                                                GLsizei instancecount,
+                                                                GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsInstancedBaseVertex,
@@ -14757,13 +14826,13 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedBaseVertexEXTContextANGLE(GLeglContext ctx,
-                                                                GLenum mode,
-                                                                GLsizei count,
-                                                                GLenum type,
-                                                                const void *indices,
-                                                                GLsizei instancecount,
-                                                                GLint basevertex)
+void GL_APIENTRY GL_DrawElementsInstancedBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                                   GLenum mode,
+                                                                   GLsizei count,
+                                                                   GLenum type,
+                                                                   const void *indices,
+                                                                   GLsizei instancecount,
+                                                                   GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsInstancedBaseVertexEXT,
@@ -14796,13 +14865,13 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexEXTContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedBaseVertexOESContextANGLE(GLeglContext ctx,
-                                                                GLenum mode,
-                                                                GLsizei count,
-                                                                GLenum type,
-                                                                const void *indices,
-                                                                GLsizei instancecount,
-                                                                GLint basevertex)
+void GL_APIENTRY GL_DrawElementsInstancedBaseVertexOESContextANGLE(GLeglContext ctx,
+                                                                   GLenum mode,
+                                                                   GLsizei count,
+                                                                   GLenum type,
+                                                                   const void *indices,
+                                                                   GLsizei instancecount,
+                                                                   GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsInstancedBaseVertexOES,
@@ -14835,12 +14904,12 @@ void GL_APIENTRY DrawElementsInstancedBaseVertexOESContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY DrawElementsInstancedEXTContextANGLE(GLeglContext ctx,
-                                                      GLenum mode,
-                                                      GLsizei count,
-                                                      GLenum type,
-                                                      const void *indices,
-                                                      GLsizei primcount)
+void GL_APIENTRY GL_DrawElementsInstancedEXTContextANGLE(GLeglContext ctx,
+                                                         GLenum mode,
+                                                         GLsizei count,
+                                                         GLenum type,
+                                                         const void *indices,
+                                                         GLsizei primcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsInstancedEXT,
@@ -14871,13 +14940,13 @@ void GL_APIENTRY DrawElementsInstancedEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawRangeElementsContextANGLE(GLeglContext ctx,
-                                               GLenum mode,
-                                               GLuint start,
-                                               GLuint end,
-                                               GLsizei count,
-                                               GLenum type,
-                                               const void *indices)
+void GL_APIENTRY GL_DrawRangeElementsContextANGLE(GLeglContext ctx,
+                                                  GLenum mode,
+                                                  GLuint start,
+                                                  GLuint end,
+                                                  GLsizei count,
+                                                  GLenum type,
+                                                  const void *indices)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawRangeElements,
@@ -14908,14 +14977,14 @@ void GL_APIENTRY DrawRangeElementsContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawRangeElementsBaseVertexContextANGLE(GLeglContext ctx,
-                                                         GLenum mode,
-                                                         GLuint start,
-                                                         GLuint end,
-                                                         GLsizei count,
-                                                         GLenum type,
-                                                         const void *indices,
-                                                         GLint basevertex)
+void GL_APIENTRY GL_DrawRangeElementsBaseVertexContextANGLE(GLeglContext ctx,
+                                                            GLenum mode,
+                                                            GLuint start,
+                                                            GLuint end,
+                                                            GLsizei count,
+                                                            GLenum type,
+                                                            const void *indices,
+                                                            GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawRangeElementsBaseVertex,
@@ -14947,14 +15016,14 @@ void GL_APIENTRY DrawRangeElementsBaseVertexContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawRangeElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
-                                                            GLenum mode,
-                                                            GLuint start,
-                                                            GLuint end,
-                                                            GLsizei count,
-                                                            GLenum type,
-                                                            const void *indices,
-                                                            GLint basevertex)
+void GL_APIENTRY GL_DrawRangeElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                               GLenum mode,
+                                                               GLuint start,
+                                                               GLuint end,
+                                                               GLsizei count,
+                                                               GLenum type,
+                                                               const void *indices,
+                                                               GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawRangeElementsBaseVertexEXT,
@@ -14986,14 +15055,14 @@ void GL_APIENTRY DrawRangeElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawRangeElementsBaseVertexOESContextANGLE(GLeglContext ctx,
-                                                            GLenum mode,
-                                                            GLuint start,
-                                                            GLuint end,
-                                                            GLsizei count,
-                                                            GLenum type,
-                                                            const void *indices,
-                                                            GLint basevertex)
+void GL_APIENTRY GL_DrawRangeElementsBaseVertexOESContextANGLE(GLeglContext ctx,
+                                                               GLenum mode,
+                                                               GLuint start,
+                                                               GLuint end,
+                                                               GLsizei count,
+                                                               GLenum type,
+                                                               const void *indices,
+                                                               GLint basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawRangeElementsBaseVertexOES,
@@ -15025,12 +15094,12 @@ void GL_APIENTRY DrawRangeElementsBaseVertexOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawTexfOESContextANGLE(GLeglContext ctx,
-                                         GLfloat x,
-                                         GLfloat y,
-                                         GLfloat z,
-                                         GLfloat width,
-                                         GLfloat height)
+void GL_APIENTRY GL_DrawTexfOESContextANGLE(GLeglContext ctx,
+                                            GLfloat x,
+                                            GLfloat y,
+                                            GLfloat z,
+                                            GLfloat width,
+                                            GLfloat height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexfOES, "context = %d, x = %f, y = %f, z = %f, width = %f, height = %f",
@@ -15054,7 +15123,7 @@ void GL_APIENTRY DrawTexfOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawTexfvOESContextANGLE(GLeglContext ctx, const GLfloat *coords)
+void GL_APIENTRY GL_DrawTexfvOESContextANGLE(GLeglContext ctx, const GLfloat *coords)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexfvOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -15078,7 +15147,7 @@ void GL_APIENTRY DrawTexfvOESContextANGLE(GLeglContext ctx, const GLfloat *coord
 }
 
 void GL_APIENTRY
-DrawTexiOESContextANGLE(GLeglContext ctx, GLint x, GLint y, GLint z, GLint width, GLint height)
+GL_DrawTexiOESContextANGLE(GLeglContext ctx, GLint x, GLint y, GLint z, GLint width, GLint height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexiOES, "context = %d, x = %d, y = %d, z = %d, width = %d, height = %d",
@@ -15102,7 +15171,7 @@ DrawTexiOESContextANGLE(GLeglContext ctx, GLint x, GLint y, GLint z, GLint width
     }
 }
 
-void GL_APIENTRY DrawTexivOESContextANGLE(GLeglContext ctx, const GLint *coords)
+void GL_APIENTRY GL_DrawTexivOESContextANGLE(GLeglContext ctx, const GLint *coords)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexivOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -15125,12 +15194,12 @@ void GL_APIENTRY DrawTexivOESContextANGLE(GLeglContext ctx, const GLint *coords)
     }
 }
 
-void GL_APIENTRY DrawTexsOESContextANGLE(GLeglContext ctx,
-                                         GLshort x,
-                                         GLshort y,
-                                         GLshort z,
-                                         GLshort width,
-                                         GLshort height)
+void GL_APIENTRY GL_DrawTexsOESContextANGLE(GLeglContext ctx,
+                                            GLshort x,
+                                            GLshort y,
+                                            GLshort z,
+                                            GLshort width,
+                                            GLshort height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexsOES, "context = %d, x = %d, y = %d, z = %d, width = %d, height = %d",
@@ -15154,7 +15223,7 @@ void GL_APIENTRY DrawTexsOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawTexsvOESContextANGLE(GLeglContext ctx, const GLshort *coords)
+void GL_APIENTRY GL_DrawTexsvOESContextANGLE(GLeglContext ctx, const GLshort *coords)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexsvOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -15177,12 +15246,12 @@ void GL_APIENTRY DrawTexsvOESContextANGLE(GLeglContext ctx, const GLshort *coord
     }
 }
 
-void GL_APIENTRY DrawTexxOESContextANGLE(GLeglContext ctx,
-                                         GLfixed x,
-                                         GLfixed y,
-                                         GLfixed z,
-                                         GLfixed width,
-                                         GLfixed height)
+void GL_APIENTRY GL_DrawTexxOESContextANGLE(GLeglContext ctx,
+                                            GLfixed x,
+                                            GLfixed y,
+                                            GLfixed z,
+                                            GLfixed width,
+                                            GLfixed height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexxOES,
@@ -15207,7 +15276,7 @@ void GL_APIENTRY DrawTexxOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawTexxvOESContextANGLE(GLeglContext ctx, const GLfixed *coords)
+void GL_APIENTRY GL_DrawTexxvOESContextANGLE(GLeglContext ctx, const GLfixed *coords)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawTexxvOES, "context = %d, coords = 0x%016" PRIxPTR "", CID(context),
@@ -15230,9 +15299,9 @@ void GL_APIENTRY DrawTexxvOESContextANGLE(GLeglContext ctx, const GLfixed *coord
     }
 }
 
-void GL_APIENTRY EGLImageTargetRenderbufferStorageOESContextANGLE(GLeglContext ctx,
-                                                                  GLenum target,
-                                                                  GLeglImageOES image)
+void GL_APIENTRY GL_EGLImageTargetRenderbufferStorageOESContextANGLE(GLeglContext ctx,
+                                                                     GLenum target,
+                                                                     GLeglImageOES image)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEGLImageTargetRenderbufferStorageOES,
@@ -15257,9 +15326,9 @@ void GL_APIENTRY EGLImageTargetRenderbufferStorageOESContextANGLE(GLeglContext c
     }
 }
 
-void GL_APIENTRY EGLImageTargetTexture2DOESContextANGLE(GLeglContext ctx,
-                                                        GLenum target,
-                                                        GLeglImageOES image)
+void GL_APIENTRY GL_EGLImageTargetTexture2DOESContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLeglImageOES image)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEGLImageTargetTexture2DOES,
@@ -15285,7 +15354,7 @@ void GL_APIENTRY EGLImageTargetTexture2DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY EnableContextANGLE(GLeglContext ctx, GLenum cap)
+void GL_APIENTRY GL_EnableContextANGLE(GLeglContext ctx, GLenum cap)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEnable, "context = %d, cap = %s", CID(context),
@@ -15308,7 +15377,7 @@ void GL_APIENTRY EnableContextANGLE(GLeglContext ctx, GLenum cap)
     }
 }
 
-void GL_APIENTRY EnableClientStateContextANGLE(GLeglContext ctx, GLenum array)
+void GL_APIENTRY GL_EnableClientStateContextANGLE(GLeglContext ctx, GLenum array)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEnableClientState, "context = %d, array = %s", CID(context),
@@ -15333,7 +15402,7 @@ void GL_APIENTRY EnableClientStateContextANGLE(GLeglContext ctx, GLenum array)
     }
 }
 
-void GL_APIENTRY EnableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint index)
+void GL_APIENTRY GL_EnableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEnableVertexAttribArray, "context = %d, index = %u", CID(context), index);
@@ -15356,7 +15425,7 @@ void GL_APIENTRY EnableVertexAttribArrayContextANGLE(GLeglContext ctx, GLuint in
     }
 }
 
-void GL_APIENTRY EnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+void GL_APIENTRY GL_EnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEnablei, "context = %d, target = %s, index = %u", CID(context),
@@ -15379,7 +15448,7 @@ void GL_APIENTRY EnableiContextANGLE(GLeglContext ctx, GLenum target, GLuint ind
     }
 }
 
-void GL_APIENTRY EnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+void GL_APIENTRY GL_EnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEnableiEXT, "context = %d, target = %s, index = %u", CID(context),
@@ -15403,7 +15472,7 @@ void GL_APIENTRY EnableiEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint 
     }
 }
 
-void GL_APIENTRY EnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+void GL_APIENTRY GL_EnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEnableiOES, "context = %d, target = %s, index = %u", CID(context),
@@ -15427,7 +15496,7 @@ void GL_APIENTRY EnableiOESContextANGLE(GLeglContext ctx, GLenum target, GLuint 
     }
 }
 
-void GL_APIENTRY EndQueryContextANGLE(GLeglContext ctx, GLenum target)
+void GL_APIENTRY GL_EndQueryContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEndQuery, "context = %d, target = %s", CID(context),
@@ -15451,7 +15520,7 @@ void GL_APIENTRY EndQueryContextANGLE(GLeglContext ctx, GLenum target)
     }
 }
 
-void GL_APIENTRY EndQueryEXTContextANGLE(GLeglContext ctx, GLenum target)
+void GL_APIENTRY GL_EndQueryEXTContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEndQueryEXT, "context = %d, target = %s", CID(context),
@@ -15476,7 +15545,7 @@ void GL_APIENTRY EndQueryEXTContextANGLE(GLeglContext ctx, GLenum target)
     }
 }
 
-void GL_APIENTRY EndTransformFeedbackContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_EndTransformFeedbackContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLEndTransformFeedback, "context = %d", CID(context));
@@ -15498,7 +15567,7 @@ void GL_APIENTRY EndTransformFeedbackContextANGLE(GLeglContext ctx)
     }
 }
 
-GLsync GL_APIENTRY FenceSyncContextANGLE(GLeglContext ctx, GLenum condition, GLbitfield flags)
+GLsync GL_APIENTRY GL_FenceSyncContextANGLE(GLeglContext ctx, GLenum condition, GLbitfield flags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFenceSync, "context = %d, condition = %s, flags = %s", CID(context),
@@ -15530,7 +15599,7 @@ GLsync GL_APIENTRY FenceSyncContextANGLE(GLeglContext ctx, GLenum condition, GLb
     return returnValue;
 }
 
-void GL_APIENTRY FinishContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_FinishContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFinish, "context = %d", CID(context));
@@ -15552,7 +15621,7 @@ void GL_APIENTRY FinishContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY FinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
+void GL_APIENTRY GL_FinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFinishFenceNV, "context = %d, fence = %u", CID(context), fence);
@@ -15576,7 +15645,7 @@ void GL_APIENTRY FinishFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
     }
 }
 
-void GL_APIENTRY FlushContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_FlushContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFlush, "context = %d", CID(context));
@@ -15598,10 +15667,10 @@ void GL_APIENTRY FlushContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY FlushMappedBufferRangeContextANGLE(GLeglContext ctx,
-                                                    GLenum target,
-                                                    GLintptr offset,
-                                                    GLsizeiptr length)
+void GL_APIENTRY GL_FlushMappedBufferRangeContextANGLE(GLeglContext ctx,
+                                                       GLenum target,
+                                                       GLintptr offset,
+                                                       GLsizeiptr length)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFlushMappedBufferRange,
@@ -15628,10 +15697,10 @@ void GL_APIENTRY FlushMappedBufferRangeContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FlushMappedBufferRangeEXTContextANGLE(GLeglContext ctx,
-                                                       GLenum target,
-                                                       GLintptr offset,
-                                                       GLsizeiptr length)
+void GL_APIENTRY GL_FlushMappedBufferRangeEXTContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLintptr offset,
+                                                          GLsizeiptr length)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFlushMappedBufferRangeEXT,
@@ -15660,7 +15729,7 @@ void GL_APIENTRY FlushMappedBufferRangeEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FogfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_FogfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFogf, "context = %d, pname = %s, param = %f", CID(context),
@@ -15683,7 +15752,7 @@ void GL_APIENTRY FogfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
     }
 }
 
-void GL_APIENTRY FogfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_FogfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFogfv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "", CID(context),
@@ -15706,7 +15775,7 @@ void GL_APIENTRY FogfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat
     }
 }
 
-void GL_APIENTRY FogxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_FogxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFogx, "context = %d, pname = %s, param = 0x%X", CID(context),
@@ -15729,7 +15798,7 @@ void GL_APIENTRY FogxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
     }
 }
 
-void GL_APIENTRY FogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *param)
+void GL_APIENTRY GL_FogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFogxv, "context = %d, pname = %s, param = 0x%016" PRIxPTR "", CID(context),
@@ -15752,7 +15821,7 @@ void GL_APIENTRY FogxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed
     }
 }
 
-void GL_APIENTRY FramebufferFetchBarrierEXTContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_FramebufferFetchBarrierEXTContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferFetchBarrierEXT, "context = %d", CID(context));
@@ -15775,10 +15844,10 @@ void GL_APIENTRY FramebufferFetchBarrierEXTContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY FramebufferParameteriContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLenum pname,
-                                                   GLint param)
+void GL_APIENTRY GL_FramebufferParameteriContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLenum pname,
+                                                      GLint param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferParameteri, "context = %d, target = %s, pname = %s, param = %d",
@@ -15803,11 +15872,11 @@ void GL_APIENTRY FramebufferParameteriContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferRenderbufferContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLenum attachment,
-                                                     GLenum renderbuffertarget,
-                                                     GLuint renderbuffer)
+void GL_APIENTRY GL_FramebufferRenderbufferContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLenum attachment,
+                                                        GLenum renderbuffertarget,
+                                                        GLuint renderbuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferRenderbuffer,
@@ -15839,11 +15908,11 @@ void GL_APIENTRY FramebufferRenderbufferContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferRenderbufferOESContextANGLE(GLeglContext ctx,
-                                                        GLenum target,
-                                                        GLenum attachment,
-                                                        GLenum renderbuffertarget,
-                                                        GLuint renderbuffer)
+void GL_APIENTRY GL_FramebufferRenderbufferOESContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLenum attachment,
+                                                           GLenum renderbuffertarget,
+                                                           GLuint renderbuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferRenderbufferOES,
@@ -15875,11 +15944,11 @@ void GL_APIENTRY FramebufferRenderbufferOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferTextureContextANGLE(GLeglContext ctx,
-                                                GLenum target,
-                                                GLenum attachment,
-                                                GLuint texture,
-                                                GLint level)
+void GL_APIENTRY GL_FramebufferTextureContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLenum attachment,
+                                                   GLuint texture,
+                                                   GLint level)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTexture,
@@ -15908,12 +15977,12 @@ void GL_APIENTRY FramebufferTextureContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferTexture2DContextANGLE(GLeglContext ctx,
-                                                  GLenum target,
-                                                  GLenum attachment,
-                                                  GLenum textarget,
-                                                  GLuint texture,
-                                                  GLint level)
+void GL_APIENTRY GL_FramebufferTexture2DContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLenum attachment,
+                                                     GLenum textarget,
+                                                     GLuint texture,
+                                                     GLint level)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTexture2D,
@@ -15945,13 +16014,13 @@ void GL_APIENTRY FramebufferTexture2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx,
-                                                                GLenum target,
-                                                                GLenum attachment,
-                                                                GLenum textarget,
-                                                                GLuint texture,
-                                                                GLint level,
-                                                                GLsizei samples)
+void GL_APIENTRY GL_FramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                                   GLenum target,
+                                                                   GLenum attachment,
+                                                                   GLenum textarget,
+                                                                   GLuint texture,
+                                                                   GLint level,
+                                                                   GLsizei samples)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTexture2DMultisampleEXT,
@@ -15985,12 +16054,12 @@ void GL_APIENTRY FramebufferTexture2DMultisampleEXTContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLenum attachment,
-                                                     GLenum textarget,
-                                                     GLuint texture,
-                                                     GLint level)
+void GL_APIENTRY GL_FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLenum attachment,
+                                                        GLenum textarget,
+                                                        GLuint texture,
+                                                        GLint level)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTexture2DOES,
@@ -16022,13 +16091,13 @@ void GL_APIENTRY FramebufferTexture2DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferTexture3DOESContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLenum attachment,
-                                                     GLenum textarget,
-                                                     GLuint texture,
-                                                     GLint level,
-                                                     GLint zoffset)
+void GL_APIENTRY GL_FramebufferTexture3DOESContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLenum attachment,
+                                                        GLenum textarget,
+                                                        GLuint texture,
+                                                        GLint level,
+                                                        GLint zoffset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTexture3DOES,
@@ -16062,11 +16131,11 @@ void GL_APIENTRY FramebufferTexture3DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferTextureEXTContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLenum attachment,
-                                                   GLuint texture,
-                                                   GLint level)
+void GL_APIENTRY GL_FramebufferTextureEXTContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLenum attachment,
+                                                      GLuint texture,
+                                                      GLint level)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTextureEXT,
@@ -16095,12 +16164,12 @@ void GL_APIENTRY FramebufferTextureEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferTextureLayerContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLenum attachment,
-                                                     GLuint texture,
-                                                     GLint level,
-                                                     GLint layer)
+void GL_APIENTRY GL_FramebufferTextureLayerContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLenum attachment,
+                                                        GLuint texture,
+                                                        GLint level,
+                                                        GLint layer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTextureLayer,
@@ -16129,13 +16198,13 @@ void GL_APIENTRY FramebufferTextureLayerContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx,
-                                                            GLenum target,
-                                                            GLenum attachment,
-                                                            GLuint texture,
-                                                            GLint level,
-                                                            GLint baseViewIndex,
-                                                            GLsizei numViews)
+void GL_APIENTRY GL_FramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx,
+                                                               GLenum target,
+                                                               GLenum attachment,
+                                                               GLuint texture,
+                                                               GLint level,
+                                                               GLint baseViewIndex,
+                                                               GLsizei numViews)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFramebufferTextureMultiviewOVR,
@@ -16168,7 +16237,7 @@ void GL_APIENTRY FramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FrontFaceContextANGLE(GLeglContext ctx, GLenum mode)
+void GL_APIENTRY GL_FrontFaceContextANGLE(GLeglContext ctx, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFrontFace, "context = %d, mode = %s", CID(context),
@@ -16191,13 +16260,13 @@ void GL_APIENTRY FrontFaceContextANGLE(GLeglContext ctx, GLenum mode)
     }
 }
 
-void GL_APIENTRY FrustumfContextANGLE(GLeglContext ctx,
-                                      GLfloat l,
-                                      GLfloat r,
-                                      GLfloat b,
-                                      GLfloat t,
-                                      GLfloat n,
-                                      GLfloat f)
+void GL_APIENTRY GL_FrustumfContextANGLE(GLeglContext ctx,
+                                         GLfloat l,
+                                         GLfloat r,
+                                         GLfloat b,
+                                         GLfloat t,
+                                         GLfloat n,
+                                         GLfloat f)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFrustumf, "context = %d, l = %f, r = %f, b = %f, t = %f, n = %f, f = %f",
@@ -16221,13 +16290,13 @@ void GL_APIENTRY FrustumfContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY FrustumxContextANGLE(GLeglContext ctx,
-                                      GLfixed l,
-                                      GLfixed r,
-                                      GLfixed b,
-                                      GLfixed t,
-                                      GLfixed n,
-                                      GLfixed f)
+void GL_APIENTRY GL_FrustumxContextANGLE(GLeglContext ctx,
+                                         GLfixed l,
+                                         GLfixed r,
+                                         GLfixed b,
+                                         GLfixed t,
+                                         GLfixed n,
+                                         GLfixed f)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLFrustumx,
@@ -16252,7 +16321,7 @@ void GL_APIENTRY FrustumxContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GenBuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *buffers)
+void GL_APIENTRY GL_GenBuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *buffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenBuffers, "context = %d, n = %d, buffers = 0x%016" PRIxPTR "", CID(context),
@@ -16277,7 +16346,7 @@ void GL_APIENTRY GenBuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *buf
     }
 }
 
-void GL_APIENTRY GenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fences)
+void GL_APIENTRY GL_GenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fences)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenFencesNV, "context = %d, n = %d, fences = 0x%016" PRIxPTR "", CID(context),
@@ -16302,7 +16371,7 @@ void GL_APIENTRY GenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fe
     }
 }
 
-void GL_APIENTRY GenFramebuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *framebuffers)
+void GL_APIENTRY GL_GenFramebuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *framebuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenFramebuffers, "context = %d, n = %d, framebuffers = 0x%016" PRIxPTR "",
@@ -16327,7 +16396,9 @@ void GL_APIENTRY GenFramebuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint
     }
 }
 
-void GL_APIENTRY GenFramebuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *framebuffers)
+void GL_APIENTRY GL_GenFramebuffersOESContextANGLE(GLeglContext ctx,
+                                                   GLsizei n,
+                                                   GLuint *framebuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenFramebuffersOES, "context = %d, n = %d, framebuffers = 0x%016" PRIxPTR "",
@@ -16352,7 +16423,7 @@ void GL_APIENTRY GenFramebuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GLu
     }
 }
 
-void GL_APIENTRY GenProgramPipelinesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *pipelines)
+void GL_APIENTRY GL_GenProgramPipelinesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *pipelines)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenProgramPipelines, "context = %d, n = %d, pipelines = 0x%016" PRIxPTR "",
@@ -16377,7 +16448,9 @@ void GL_APIENTRY GenProgramPipelinesContextANGLE(GLeglContext ctx, GLsizei n, GL
     }
 }
 
-void GL_APIENTRY GenProgramPipelinesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *pipelines)
+void GL_APIENTRY GL_GenProgramPipelinesEXTContextANGLE(GLeglContext ctx,
+                                                       GLsizei n,
+                                                       GLuint *pipelines)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenProgramPipelinesEXT, "context = %d, n = %d, pipelines = 0x%016" PRIxPTR "",
@@ -16402,7 +16475,7 @@ void GL_APIENTRY GenProgramPipelinesEXTContextANGLE(GLeglContext ctx, GLsizei n,
     }
 }
 
-void GL_APIENTRY GenQueriesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
+void GL_APIENTRY GL_GenQueriesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenQueries, "context = %d, n = %d, ids = 0x%016" PRIxPTR "", CID(context), n,
@@ -16426,7 +16499,7 @@ void GL_APIENTRY GenQueriesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids
     }
 }
 
-void GL_APIENTRY GenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
+void GL_APIENTRY GL_GenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenQueriesEXT, "context = %d, n = %d, ids = 0x%016" PRIxPTR "", CID(context),
@@ -16451,7 +16524,7 @@ void GL_APIENTRY GenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *
     }
 }
 
-void GL_APIENTRY GenRenderbuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *renderbuffers)
+void GL_APIENTRY GL_GenRenderbuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuint *renderbuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenRenderbuffers, "context = %d, n = %d, renderbuffers = 0x%016" PRIxPTR "",
@@ -16476,7 +16549,9 @@ void GL_APIENTRY GenRenderbuffersContextANGLE(GLeglContext ctx, GLsizei n, GLuin
     }
 }
 
-void GL_APIENTRY GenRenderbuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *renderbuffers)
+void GL_APIENTRY GL_GenRenderbuffersOESContextANGLE(GLeglContext ctx,
+                                                    GLsizei n,
+                                                    GLuint *renderbuffers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenRenderbuffersOES, "context = %d, n = %d, renderbuffers = 0x%016" PRIxPTR "",
@@ -16501,7 +16576,7 @@ void GL_APIENTRY GenRenderbuffersOESContextANGLE(GLeglContext ctx, GLsizei n, GL
     }
 }
 
-void GL_APIENTRY GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint *samplers)
+void GL_APIENTRY GL_GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint *samplers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenSamplers, "context = %d, count = %d, samplers = 0x%016" PRIxPTR "",
@@ -16526,7 +16601,7 @@ void GL_APIENTRY GenSamplersContextANGLE(GLeglContext ctx, GLsizei count, GLuint
     }
 }
 
-void GL_APIENTRY GenSemaphoresEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *semaphores)
+void GL_APIENTRY GL_GenSemaphoresEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *semaphores)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenSemaphoresEXT, "context = %d, n = %d, semaphores = 0x%016" PRIxPTR "",
@@ -16551,7 +16626,7 @@ void GL_APIENTRY GenSemaphoresEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuin
     }
 }
 
-void GL_APIENTRY GenTexturesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *textures)
+void GL_APIENTRY GL_GenTexturesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *textures)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenTextures, "context = %d, n = %d, textures = 0x%016" PRIxPTR "",
@@ -16576,7 +16651,7 @@ void GL_APIENTRY GenTexturesContextANGLE(GLeglContext ctx, GLsizei n, GLuint *te
     }
 }
 
-void GL_APIENTRY GenTransformFeedbacksContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
+void GL_APIENTRY GL_GenTransformFeedbacksContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenTransformFeedbacks, "context = %d, n = %d, ids = 0x%016" PRIxPTR "",
@@ -16601,7 +16676,7 @@ void GL_APIENTRY GenTransformFeedbacksContextANGLE(GLeglContext ctx, GLsizei n, 
     }
 }
 
-void GL_APIENTRY GenVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, GLuint *arrays)
+void GL_APIENTRY GL_GenVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, GLuint *arrays)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenVertexArrays, "context = %d, n = %d, arrays = 0x%016" PRIxPTR "",
@@ -16626,7 +16701,7 @@ void GL_APIENTRY GenVertexArraysContextANGLE(GLeglContext ctx, GLsizei n, GLuint
     }
 }
 
-void GL_APIENTRY GenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *arrays)
+void GL_APIENTRY GL_GenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLuint *arrays)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenVertexArraysOES, "context = %d, n = %d, arrays = 0x%016" PRIxPTR "",
@@ -16651,7 +16726,7 @@ void GL_APIENTRY GenVertexArraysOESContextANGLE(GLeglContext ctx, GLsizei n, GLu
     }
 }
 
-void GL_APIENTRY GenerateMipmapContextANGLE(GLeglContext ctx, GLenum target)
+void GL_APIENTRY GL_GenerateMipmapContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenerateMipmap, "context = %d, target = %s", CID(context),
@@ -16676,7 +16751,7 @@ void GL_APIENTRY GenerateMipmapContextANGLE(GLeglContext ctx, GLenum target)
     }
 }
 
-void GL_APIENTRY GenerateMipmapOESContextANGLE(GLeglContext ctx, GLenum target)
+void GL_APIENTRY GL_GenerateMipmapOESContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGenerateMipmapOES, "context = %d, target = %s", CID(context),
@@ -16701,14 +16776,14 @@ void GL_APIENTRY GenerateMipmapOESContextANGLE(GLeglContext ctx, GLenum target)
     }
 }
 
-void GL_APIENTRY GetActiveAttribContextANGLE(GLeglContext ctx,
-                                             GLuint program,
-                                             GLuint index,
-                                             GLsizei bufSize,
-                                             GLsizei *length,
-                                             GLint *size,
-                                             GLenum *type,
-                                             GLchar *name)
+void GL_APIENTRY GL_GetActiveAttribContextANGLE(GLeglContext ctx,
+                                                GLuint program,
+                                                GLuint index,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLint *size,
+                                                GLenum *type,
+                                                GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetActiveAttrib,
@@ -16738,14 +16813,14 @@ void GL_APIENTRY GetActiveAttribContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetActiveUniformContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLuint index,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLint *size,
-                                              GLenum *type,
-                                              GLchar *name)
+void GL_APIENTRY GL_GetActiveUniformContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLuint index,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLint *size,
+                                                 GLenum *type,
+                                                 GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetActiveUniform,
@@ -16775,12 +16850,12 @@ void GL_APIENTRY GetActiveUniformContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetActiveUniformBlockNameContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLuint uniformBlockIndex,
-                                                       GLsizei bufSize,
-                                                       GLsizei *length,
-                                                       GLchar *uniformBlockName)
+void GL_APIENTRY GL_GetActiveUniformBlockNameContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLuint uniformBlockIndex,
+                                                          GLsizei bufSize,
+                                                          GLsizei *length,
+                                                          GLchar *uniformBlockName)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(
@@ -16813,11 +16888,11 @@ void GL_APIENTRY GetActiveUniformBlockNameContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetActiveUniformBlockivContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLuint uniformBlockIndex,
-                                                     GLenum pname,
-                                                     GLint *params)
+void GL_APIENTRY GL_GetActiveUniformBlockivContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLuint uniformBlockIndex,
+                                                        GLenum pname,
+                                                        GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetActiveUniformBlockiv,
@@ -16847,12 +16922,12 @@ void GL_APIENTRY GetActiveUniformBlockivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetActiveUniformsivContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLsizei uniformCount,
-                                                 const GLuint *uniformIndices,
-                                                 GLenum pname,
-                                                 GLint *params)
+void GL_APIENTRY GL_GetActiveUniformsivContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLsizei uniformCount,
+                                                    const GLuint *uniformIndices,
+                                                    GLenum pname,
+                                                    GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetActiveUniformsiv,
@@ -16883,11 +16958,11 @@ void GL_APIENTRY GetActiveUniformsivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetAttachedShadersContextANGLE(GLeglContext ctx,
-                                                GLuint program,
-                                                GLsizei maxCount,
-                                                GLsizei *count,
-                                                GLuint *shaders)
+void GL_APIENTRY GL_GetAttachedShadersContextANGLE(GLeglContext ctx,
+                                                   GLuint program,
+                                                   GLsizei maxCount,
+                                                   GLsizei *count,
+                                                   GLuint *shaders)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetAttachedShaders,
@@ -16917,9 +16992,9 @@ void GL_APIENTRY GetAttachedShadersContextANGLE(GLeglContext ctx,
     }
 }
 
-GLint GL_APIENTRY GetAttribLocationContextANGLE(GLeglContext ctx,
-                                                GLuint program,
-                                                const GLchar *name)
+GLint GL_APIENTRY GL_GetAttribLocationContextANGLE(GLeglContext ctx,
+                                                   GLuint program,
+                                                   const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetAttribLocation, "context = %d, program = %u, name = 0x%016" PRIxPTR "",
@@ -16951,10 +17026,10 @@ GLint GL_APIENTRY GetAttribLocationContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY GetBooleani_vContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLuint index,
-                                           GLboolean *data)
+void GL_APIENTRY GL_GetBooleani_vContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLuint index,
+                                              GLboolean *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBooleani_v,
@@ -16979,7 +17054,7 @@ void GL_APIENTRY GetBooleani_vContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBooleanvContextANGLE(GLeglContext ctx, GLenum pname, GLboolean *data)
+void GL_APIENTRY GL_GetBooleanvContextANGLE(GLeglContext ctx, GLenum pname, GLboolean *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBooleanv, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -17002,10 +17077,10 @@ void GL_APIENTRY GetBooleanvContextANGLE(GLeglContext ctx, GLenum pname, GLboole
     }
 }
 
-void GL_APIENTRY GetBufferParameteri64vContextANGLE(GLeglContext ctx,
-                                                    GLenum target,
-                                                    GLenum pname,
-                                                    GLint64 *params)
+void GL_APIENTRY GL_GetBufferParameteri64vContextANGLE(GLeglContext ctx,
+                                                       GLenum target,
+                                                       GLenum pname,
+                                                       GLint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBufferParameteri64v,
@@ -17032,10 +17107,10 @@ void GL_APIENTRY GetBufferParameteri64vContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBufferParameterivContextANGLE(GLeglContext ctx,
-                                                  GLenum target,
-                                                  GLenum pname,
-                                                  GLint *params)
+void GL_APIENTRY GL_GetBufferParameterivContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLenum pname,
+                                                     GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBufferParameteriv,
@@ -17062,10 +17137,10 @@ void GL_APIENTRY GetBufferParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBufferPointervContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLenum pname,
-                                               void **params)
+void GL_APIENTRY GL_GetBufferPointervContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLenum pname,
+                                                  void **params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBufferPointerv,
@@ -17092,10 +17167,10 @@ void GL_APIENTRY GetBufferPointervContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBufferPointervOESContextANGLE(GLeglContext ctx,
-                                                  GLenum target,
-                                                  GLenum pname,
-                                                  void **params)
+void GL_APIENTRY GL_GetBufferPointervOESContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLenum pname,
+                                                     void **params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBufferPointervOES,
@@ -17122,7 +17197,7 @@ void GL_APIENTRY GetBufferPointervOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetClipPlanefContextANGLE(GLeglContext ctx, GLenum plane, GLfloat *equation)
+void GL_APIENTRY GL_GetClipPlanefContextANGLE(GLeglContext ctx, GLenum plane, GLfloat *equation)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetClipPlanef, "context = %d, plane = %s, equation = 0x%016" PRIxPTR "",
@@ -17146,7 +17221,7 @@ void GL_APIENTRY GetClipPlanefContextANGLE(GLeglContext ctx, GLenum plane, GLflo
     }
 }
 
-void GL_APIENTRY GetClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, GLfixed *equation)
+void GL_APIENTRY GL_GetClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, GLfixed *equation)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetClipPlanex, "context = %d, plane = %s, equation = 0x%016" PRIxPTR "",
@@ -17170,15 +17245,15 @@ void GL_APIENTRY GetClipPlanexContextANGLE(GLeglContext ctx, GLenum plane, GLfix
     }
 }
 
-GLuint GL_APIENTRY GetDebugMessageLogContextANGLE(GLeglContext ctx,
-                                                  GLuint count,
-                                                  GLsizei bufSize,
-                                                  GLenum *sources,
-                                                  GLenum *types,
-                                                  GLuint *ids,
-                                                  GLenum *severities,
-                                                  GLsizei *lengths,
-                                                  GLchar *messageLog)
+GLuint GL_APIENTRY GL_GetDebugMessageLogContextANGLE(GLeglContext ctx,
+                                                     GLuint count,
+                                                     GLsizei bufSize,
+                                                     GLenum *sources,
+                                                     GLenum *types,
+                                                     GLuint *ids,
+                                                     GLenum *severities,
+                                                     GLsizei *lengths,
+                                                     GLchar *messageLog)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetDebugMessageLog,
@@ -17216,15 +17291,15 @@ GLuint GL_APIENTRY GetDebugMessageLogContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-GLuint GL_APIENTRY GetDebugMessageLogKHRContextANGLE(GLeglContext ctx,
-                                                     GLuint count,
-                                                     GLsizei bufSize,
-                                                     GLenum *sources,
-                                                     GLenum *types,
-                                                     GLuint *ids,
-                                                     GLenum *severities,
-                                                     GLsizei *lengths,
-                                                     GLchar *messageLog)
+GLuint GL_APIENTRY GL_GetDebugMessageLogKHRContextANGLE(GLeglContext ctx,
+                                                        GLuint count,
+                                                        GLsizei bufSize,
+                                                        GLenum *sources,
+                                                        GLenum *types,
+                                                        GLuint *ids,
+                                                        GLenum *severities,
+                                                        GLsizei *lengths,
+                                                        GLchar *messageLog)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetDebugMessageLogKHR,
@@ -17263,7 +17338,7 @@ GLuint GL_APIENTRY GetDebugMessageLogKHRContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-GLenum GL_APIENTRY GetErrorContextANGLE(GLeglContext ctx)
+GLenum GL_APIENTRY GL_GetErrorContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetError, "context = %d", CID(context));
@@ -17292,10 +17367,10 @@ GLenum GL_APIENTRY GetErrorContextANGLE(GLeglContext ctx)
     return returnValue;
 }
 
-void GL_APIENTRY GetFenceivNVContextANGLE(GLeglContext ctx,
-                                          GLuint fence,
-                                          GLenum pname,
-                                          GLint *params)
+void GL_APIENTRY GL_GetFenceivNVContextANGLE(GLeglContext ctx,
+                                             GLuint fence,
+                                             GLenum pname,
+                                             GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFenceivNV,
@@ -17321,7 +17396,7 @@ void GL_APIENTRY GetFenceivNVContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetFixedvContextANGLE(GLeglContext ctx, GLenum pname, GLfixed *params)
+void GL_APIENTRY GL_GetFixedvContextANGLE(GLeglContext ctx, GLenum pname, GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFixedv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -17344,7 +17419,7 @@ void GL_APIENTRY GetFixedvContextANGLE(GLeglContext ctx, GLenum pname, GLfixed *
     }
 }
 
-void GL_APIENTRY GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *data)
+void GL_APIENTRY GL_GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFloatv, "context = %d, pname = %s, data = 0x%016" PRIxPTR "", CID(context),
@@ -17367,9 +17442,9 @@ void GL_APIENTRY GetFloatvContextANGLE(GLeglContext ctx, GLenum pname, GLfloat *
     }
 }
 
-GLint GL_APIENTRY GetFragDataIndexEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  const GLchar *name)
+GLint GL_APIENTRY GL_GetFragDataIndexEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFragDataIndexEXT, "context = %d, program = %u, name = 0x%016" PRIxPTR "",
@@ -17401,9 +17476,9 @@ GLint GL_APIENTRY GetFragDataIndexEXTContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-GLint GL_APIENTRY GetFragDataLocationContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  const GLchar *name)
+GLint GL_APIENTRY GL_GetFragDataLocationContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFragDataLocation, "context = %d, program = %u, name = 0x%016" PRIxPTR "",
@@ -17435,11 +17510,11 @@ GLint GL_APIENTRY GetFragDataLocationContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY GetFramebufferAttachmentParameterivContextANGLE(GLeglContext ctx,
-                                                                 GLenum target,
-                                                                 GLenum attachment,
-                                                                 GLenum pname,
-                                                                 GLint *params)
+void GL_APIENTRY GL_GetFramebufferAttachmentParameterivContextANGLE(GLeglContext ctx,
+                                                                    GLenum target,
+                                                                    GLenum attachment,
+                                                                    GLenum pname,
+                                                                    GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFramebufferAttachmentParameteriv,
@@ -17469,11 +17544,11 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivContextANGLE(GLeglContext ct
     }
 }
 
-void GL_APIENTRY GetFramebufferAttachmentParameterivOESContextANGLE(GLeglContext ctx,
-                                                                    GLenum target,
-                                                                    GLenum attachment,
-                                                                    GLenum pname,
-                                                                    GLint *params)
+void GL_APIENTRY GL_GetFramebufferAttachmentParameterivOESContextANGLE(GLeglContext ctx,
+                                                                       GLenum target,
+                                                                       GLenum attachment,
+                                                                       GLenum pname,
+                                                                       GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFramebufferAttachmentParameterivOES,
@@ -17503,10 +17578,10 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivOESContextANGLE(GLeglContext
     }
 }
 
-void GL_APIENTRY GetFramebufferParameterivContextANGLE(GLeglContext ctx,
-                                                       GLenum target,
-                                                       GLenum pname,
-                                                       GLint *params)
+void GL_APIENTRY GL_GetFramebufferParameterivContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLenum pname,
+                                                          GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFramebufferParameteriv,
@@ -17533,7 +17608,7 @@ void GL_APIENTRY GetFramebufferParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-GLenum GL_APIENTRY GetGraphicsResetStatusContextANGLE(GLeglContext ctx)
+GLenum GL_APIENTRY GL_GetGraphicsResetStatusContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetGraphicsResetStatus, "context = %d", CID(context));
@@ -17563,7 +17638,7 @@ GLenum GL_APIENTRY GetGraphicsResetStatusContextANGLE(GLeglContext ctx)
     return returnValue;
 }
 
-GLenum GL_APIENTRY GetGraphicsResetStatusEXTContextANGLE(GLeglContext ctx)
+GLenum GL_APIENTRY GL_GetGraphicsResetStatusEXTContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetGraphicsResetStatusEXT, "context = %d", CID(context));
@@ -17595,10 +17670,10 @@ GLenum GL_APIENTRY GetGraphicsResetStatusEXTContextANGLE(GLeglContext ctx)
     return returnValue;
 }
 
-void GL_APIENTRY GetInteger64i_vContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLuint index,
-                                             GLint64 *data)
+void GL_APIENTRY GL_GetInteger64i_vContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLuint index,
+                                                GLint64 *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetInteger64i_v,
@@ -17623,7 +17698,7 @@ void GL_APIENTRY GetInteger64i_vContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
+void GL_APIENTRY GL_GetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetInteger64v, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -17647,7 +17722,7 @@ void GL_APIENTRY GetInteger64vContextANGLE(GLeglContext ctx, GLenum pname, GLint
     }
 }
 
-void GL_APIENTRY GetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
+void GL_APIENTRY GL_GetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint64 *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetInteger64vEXT, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -17671,10 +17746,10 @@ void GL_APIENTRY GetInteger64vEXTContextANGLE(GLeglContext ctx, GLenum pname, GL
     }
 }
 
-void GL_APIENTRY GetIntegeri_vContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLuint index,
-                                           GLint *data)
+void GL_APIENTRY GL_GetIntegeri_vContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLuint index,
+                                              GLint *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetIntegeri_v,
@@ -17699,7 +17774,7 @@ void GL_APIENTRY GetIntegeri_vContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetIntegervContextANGLE(GLeglContext ctx, GLenum pname, GLint *data)
+void GL_APIENTRY GL_GetIntegervContextANGLE(GLeglContext ctx, GLenum pname, GLint *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetIntegerv, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -17722,12 +17797,12 @@ void GL_APIENTRY GetIntegervContextANGLE(GLeglContext ctx, GLenum pname, GLint *
     }
 }
 
-void GL_APIENTRY GetInternalformativContextANGLE(GLeglContext ctx,
-                                                 GLenum target,
-                                                 GLenum internalformat,
-                                                 GLenum pname,
-                                                 GLsizei bufSize,
-                                                 GLint *params)
+void GL_APIENTRY GL_GetInternalformativContextANGLE(GLeglContext ctx,
+                                                    GLenum target,
+                                                    GLenum internalformat,
+                                                    GLenum pname,
+                                                    GLsizei bufSize,
+                                                    GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetInternalformativ,
@@ -17757,10 +17832,10 @@ void GL_APIENTRY GetInternalformativContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetLightfvContextANGLE(GLeglContext ctx,
-                                        GLenum light,
-                                        GLenum pname,
-                                        GLfloat *params)
+void GL_APIENTRY GL_GetLightfvContextANGLE(GLeglContext ctx,
+                                           GLenum light,
+                                           GLenum pname,
+                                           GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetLightfv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -17786,10 +17861,10 @@ void GL_APIENTRY GetLightfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetLightxvContextANGLE(GLeglContext ctx,
-                                        GLenum light,
-                                        GLenum pname,
-                                        GLfixed *params)
+void GL_APIENTRY GL_GetLightxvContextANGLE(GLeglContext ctx,
+                                           GLenum light,
+                                           GLenum pname,
+                                           GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetLightxv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -17815,10 +17890,10 @@ void GL_APIENTRY GetLightxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetMaterialfvContextANGLE(GLeglContext ctx,
-                                           GLenum face,
-                                           GLenum pname,
-                                           GLfloat *params)
+void GL_APIENTRY GL_GetMaterialfvContextANGLE(GLeglContext ctx,
+                                              GLenum face,
+                                              GLenum pname,
+                                              GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetMaterialfv,
@@ -17845,10 +17920,10 @@ void GL_APIENTRY GetMaterialfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetMaterialxvContextANGLE(GLeglContext ctx,
-                                           GLenum face,
-                                           GLenum pname,
-                                           GLfixed *params)
+void GL_APIENTRY GL_GetMaterialxvContextANGLE(GLeglContext ctx,
+                                              GLenum face,
+                                              GLenum pname,
+                                              GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetMaterialxv,
@@ -17875,10 +17950,10 @@ void GL_APIENTRY GetMaterialxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
-                                                           GLuint memoryObject,
-                                                           GLenum pname,
-                                                           GLint *params)
+void GL_APIENTRY GL_GetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
+                                                              GLuint memoryObject,
+                                                              GLenum pname,
+                                                              GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetMemoryObjectParameterivEXT,
@@ -17907,10 +17982,10 @@ void GL_APIENTRY GetMemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetMultisamplefvContextANGLE(GLeglContext ctx,
-                                              GLenum pname,
-                                              GLuint index,
-                                              GLfloat *val)
+void GL_APIENTRY GL_GetMultisamplefvContextANGLE(GLeglContext ctx,
+                                                 GLenum pname,
+                                                 GLuint index,
+                                                 GLfloat *val)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetMultisamplefv,
@@ -17935,12 +18010,12 @@ void GL_APIENTRY GetMultisamplefvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetObjectLabelContextANGLE(GLeglContext ctx,
-                                            GLenum identifier,
-                                            GLuint name,
-                                            GLsizei bufSize,
-                                            GLsizei *length,
-                                            GLchar *label)
+void GL_APIENTRY GL_GetObjectLabelContextANGLE(GLeglContext ctx,
+                                               GLenum identifier,
+                                               GLuint name,
+                                               GLsizei bufSize,
+                                               GLsizei *length,
+                                               GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetObjectLabel,
@@ -17969,12 +18044,12 @@ void GL_APIENTRY GetObjectLabelContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetObjectLabelEXTContextANGLE(GLeglContext ctx,
-                                               GLenum type,
-                                               GLuint object,
-                                               GLsizei bufSize,
-                                               GLsizei *length,
-                                               GLchar *label)
+void GL_APIENTRY GL_GetObjectLabelEXTContextANGLE(GLeglContext ctx,
+                                                  GLenum type,
+                                                  GLuint object,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetObjectLabelEXT,
@@ -18003,12 +18078,12 @@ void GL_APIENTRY GetObjectLabelEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetObjectLabelKHRContextANGLE(GLeglContext ctx,
-                                               GLenum identifier,
-                                               GLuint name,
-                                               GLsizei bufSize,
-                                               GLsizei *length,
-                                               GLchar *label)
+void GL_APIENTRY GL_GetObjectLabelKHRContextANGLE(GLeglContext ctx,
+                                                  GLenum identifier,
+                                                  GLuint name,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetObjectLabelKHR,
@@ -18037,11 +18112,11 @@ void GL_APIENTRY GetObjectLabelKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetObjectPtrLabelContextANGLE(GLeglContext ctx,
-                                               const void *ptr,
-                                               GLsizei bufSize,
-                                               GLsizei *length,
-                                               GLchar *label)
+void GL_APIENTRY GL_GetObjectPtrLabelContextANGLE(GLeglContext ctx,
+                                                  const void *ptr,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetObjectPtrLabel,
@@ -18067,11 +18142,11 @@ void GL_APIENTRY GetObjectPtrLabelContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
-                                                  const void *ptr,
-                                                  GLsizei bufSize,
-                                                  GLsizei *length,
-                                                  GLchar *label)
+void GL_APIENTRY GL_GetObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
+                                                     const void *ptr,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetObjectPtrLabelKHR,
@@ -18097,7 +18172,7 @@ void GL_APIENTRY GetObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetPointervContextANGLE(GLeglContext ctx, GLenum pname, void **params)
+void GL_APIENTRY GL_GetPointervContextANGLE(GLeglContext ctx, GLenum pname, void **params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetPointerv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -18121,7 +18196,7 @@ void GL_APIENTRY GetPointervContextANGLE(GLeglContext ctx, GLenum pname, void **
     }
 }
 
-void GL_APIENTRY GetPointervKHRContextANGLE(GLeglContext ctx, GLenum pname, void **params)
+void GL_APIENTRY GL_GetPointervKHRContextANGLE(GLeglContext ctx, GLenum pname, void **params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetPointervKHR, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -18145,12 +18220,12 @@ void GL_APIENTRY GetPointervKHRContextANGLE(GLeglContext ctx, GLenum pname, void
     }
 }
 
-void GL_APIENTRY GetProgramBinaryContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLenum *binaryFormat,
-                                              void *binary)
+void GL_APIENTRY GL_GetProgramBinaryContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLenum *binaryFormat,
+                                                 void *binary)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramBinary,
@@ -18180,12 +18255,12 @@ void GL_APIENTRY GetProgramBinaryContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramBinaryOESContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLsizei bufSize,
-                                                 GLsizei *length,
-                                                 GLenum *binaryFormat,
-                                                 void *binary)
+void GL_APIENTRY GL_GetProgramBinaryOESContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLsizei bufSize,
+                                                    GLsizei *length,
+                                                    GLenum *binaryFormat,
+                                                    void *binary)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramBinaryOES,
@@ -18215,11 +18290,11 @@ void GL_APIENTRY GetProgramBinaryOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramInfoLogContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLsizei bufSize,
-                                               GLsizei *length,
-                                               GLchar *infoLog)
+void GL_APIENTRY GL_GetProgramInfoLogContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLsizei bufSize,
+                                                  GLsizei *length,
+                                                  GLchar *infoLog)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramInfoLog,
@@ -18248,11 +18323,11 @@ void GL_APIENTRY GetProgramInfoLogContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramInterfaceivContextANGLE(GLeglContext ctx,
-                                                   GLuint program,
-                                                   GLenum programInterface,
-                                                   GLenum pname,
-                                                   GLint *params)
+void GL_APIENTRY GL_GetProgramInterfaceivContextANGLE(GLeglContext ctx,
+                                                      GLuint program,
+                                                      GLenum programInterface,
+                                                      GLenum pname,
+                                                      GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramInterfaceiv,
@@ -18282,11 +18357,11 @@ void GL_APIENTRY GetProgramInterfaceivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramPipelineInfoLogContextANGLE(GLeglContext ctx,
-                                                       GLuint pipeline,
-                                                       GLsizei bufSize,
-                                                       GLsizei *length,
-                                                       GLchar *infoLog)
+void GL_APIENTRY GL_GetProgramPipelineInfoLogContextANGLE(GLeglContext ctx,
+                                                          GLuint pipeline,
+                                                          GLsizei bufSize,
+                                                          GLsizei *length,
+                                                          GLchar *infoLog)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramPipelineInfoLog,
@@ -18315,11 +18390,11 @@ void GL_APIENTRY GetProgramPipelineInfoLogContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramPipelineInfoLogEXTContextANGLE(GLeglContext ctx,
-                                                          GLuint pipeline,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLchar *infoLog)
+void GL_APIENTRY GL_GetProgramPipelineInfoLogEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint pipeline,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLchar *infoLog)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramPipelineInfoLogEXT,
@@ -18348,10 +18423,10 @@ void GL_APIENTRY GetProgramPipelineInfoLogEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramPipelineivContextANGLE(GLeglContext ctx,
-                                                  GLuint pipeline,
-                                                  GLenum pname,
-                                                  GLint *params)
+void GL_APIENTRY GL_GetProgramPipelineivContextANGLE(GLeglContext ctx,
+                                                     GLuint pipeline,
+                                                     GLenum pname,
+                                                     GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramPipelineiv,
@@ -18377,10 +18452,10 @@ void GL_APIENTRY GetProgramPipelineivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramPipelineivEXTContextANGLE(GLeglContext ctx,
-                                                     GLuint pipeline,
-                                                     GLenum pname,
-                                                     GLint *params)
+void GL_APIENTRY GL_GetProgramPipelineivEXTContextANGLE(GLeglContext ctx,
+                                                        GLuint pipeline,
+                                                        GLenum pname,
+                                                        GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramPipelineivEXT,
@@ -18407,10 +18482,10 @@ void GL_APIENTRY GetProgramPipelineivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-GLuint GL_APIENTRY GetProgramResourceIndexContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLenum programInterface,
-                                                       const GLchar *name)
+GLuint GL_APIENTRY GL_GetProgramResourceIndexContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLenum programInterface,
+                                                          const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramResourceIndex,
@@ -18447,10 +18522,10 @@ GLuint GL_APIENTRY GetProgramResourceIndexContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-GLint GL_APIENTRY GetProgramResourceLocationContextANGLE(GLeglContext ctx,
-                                                         GLuint program,
-                                                         GLenum programInterface,
-                                                         const GLchar *name)
+GLint GL_APIENTRY GL_GetProgramResourceLocationContextANGLE(GLeglContext ctx,
+                                                            GLuint program,
+                                                            GLenum programInterface,
+                                                            const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramResourceLocation,
@@ -18489,10 +18564,10 @@ GLint GL_APIENTRY GetProgramResourceLocationContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-GLint GL_APIENTRY GetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ctx,
-                                                                 GLuint program,
-                                                                 GLenum programInterface,
-                                                                 const GLchar *name)
+GLint GL_APIENTRY GL_GetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ctx,
+                                                                    GLuint program,
+                                                                    GLenum programInterface,
+                                                                    const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramResourceLocationIndexEXT,
@@ -18532,13 +18607,13 @@ GLint GL_APIENTRY GetProgramResourceLocationIndexEXTContextANGLE(GLeglContext ct
     return returnValue;
 }
 
-void GL_APIENTRY GetProgramResourceNameContextANGLE(GLeglContext ctx,
-                                                    GLuint program,
-                                                    GLenum programInterface,
-                                                    GLuint index,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    GLchar *name)
+void GL_APIENTRY GL_GetProgramResourceNameContextANGLE(GLeglContext ctx,
+                                                       GLuint program,
+                                                       GLenum programInterface,
+                                                       GLuint index,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramResourceName,
@@ -18569,15 +18644,15 @@ void GL_APIENTRY GetProgramResourceNameContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramResourceivContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLenum programInterface,
-                                                  GLuint index,
-                                                  GLsizei propCount,
-                                                  const GLenum *props,
-                                                  GLsizei bufSize,
-                                                  GLsizei *length,
-                                                  GLint *params)
+void GL_APIENTRY GL_GetProgramResourceivContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLenum programInterface,
+                                                     GLuint index,
+                                                     GLsizei propCount,
+                                                     const GLenum *props,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramResourceiv,
@@ -18609,10 +18684,10 @@ void GL_APIENTRY GetProgramResourceivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramivContextANGLE(GLeglContext ctx,
-                                          GLuint program,
-                                          GLenum pname,
-                                          GLint *params)
+void GL_APIENTRY GL_GetProgramivContextANGLE(GLeglContext ctx,
+                                             GLuint program,
+                                             GLenum pname,
+                                             GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramiv,
@@ -18636,10 +18711,10 @@ void GL_APIENTRY GetProgramivContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetQueryObjecti64vEXTContextANGLE(GLeglContext ctx,
-                                                   GLuint id,
-                                                   GLenum pname,
-                                                   GLint64 *params)
+void GL_APIENTRY GL_GetQueryObjecti64vEXTContextANGLE(GLeglContext ctx,
+                                                      GLuint id,
+                                                      GLenum pname,
+                                                      GLint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjecti64vEXT,
@@ -18663,10 +18738,10 @@ void GL_APIENTRY GetQueryObjecti64vEXTContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetQueryObjectivEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint id,
-                                                 GLenum pname,
-                                                 GLint *params)
+void GL_APIENTRY GL_GetQueryObjectivEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint id,
+                                                    GLenum pname,
+                                                    GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjectivEXT,
@@ -18690,10 +18765,10 @@ void GL_APIENTRY GetQueryObjectivEXTContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetQueryObjectui64vEXTContextANGLE(GLeglContext ctx,
-                                                    GLuint id,
-                                                    GLenum pname,
-                                                    GLuint64 *params)
+void GL_APIENTRY GL_GetQueryObjectui64vEXTContextANGLE(GLeglContext ctx,
+                                                       GLuint id,
+                                                       GLenum pname,
+                                                       GLuint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjectui64vEXT,
@@ -18719,10 +18794,10 @@ void GL_APIENTRY GetQueryObjectui64vEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetQueryObjectuivContextANGLE(GLeglContext ctx,
-                                               GLuint id,
-                                               GLenum pname,
-                                               GLuint *params)
+void GL_APIENTRY GL_GetQueryObjectuivContextANGLE(GLeglContext ctx,
+                                                  GLuint id,
+                                                  GLenum pname,
+                                                  GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjectuiv,
@@ -18748,10 +18823,10 @@ void GL_APIENTRY GetQueryObjectuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetQueryObjectuivEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint id,
-                                                  GLenum pname,
-                                                  GLuint *params)
+void GL_APIENTRY GL_GetQueryObjectuivEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint id,
+                                                     GLenum pname,
+                                                     GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjectuivEXT,
@@ -18777,10 +18852,10 @@ void GL_APIENTRY GetQueryObjectuivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetQueryivContextANGLE(GLeglContext ctx,
-                                        GLenum target,
-                                        GLenum pname,
-                                        GLint *params)
+void GL_APIENTRY GL_GetQueryivContextANGLE(GLeglContext ctx,
+                                           GLenum target,
+                                           GLenum pname,
+                                           GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryiv,
@@ -18807,10 +18882,10 @@ void GL_APIENTRY GetQueryivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetQueryivEXTContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLenum pname,
-                                           GLint *params)
+void GL_APIENTRY GL_GetQueryivEXTContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLenum pname,
+                                              GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryivEXT,
@@ -18837,10 +18912,10 @@ void GL_APIENTRY GetQueryivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetRenderbufferParameterivContextANGLE(GLeglContext ctx,
-                                                        GLenum target,
-                                                        GLenum pname,
-                                                        GLint *params)
+void GL_APIENTRY GL_GetRenderbufferParameterivContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLenum pname,
+                                                           GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetRenderbufferParameteriv,
@@ -18866,10 +18941,10 @@ void GL_APIENTRY GetRenderbufferParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetRenderbufferParameterivOESContextANGLE(GLeglContext ctx,
-                                                           GLenum target,
-                                                           GLenum pname,
-                                                           GLint *params)
+void GL_APIENTRY GL_GetRenderbufferParameterivOESContextANGLE(GLeglContext ctx,
+                                                              GLenum target,
+                                                              GLenum pname,
+                                                              GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetRenderbufferParameterivOES,
@@ -18895,10 +18970,10 @@ void GL_APIENTRY GetRenderbufferParameterivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIivContextANGLE(GLeglContext ctx,
-                                                    GLuint sampler,
-                                                    GLenum pname,
-                                                    GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterIivContextANGLE(GLeglContext ctx,
+                                                       GLuint sampler,
+                                                       GLenum pname,
+                                                       GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterIiv,
@@ -18924,10 +18999,10 @@ void GL_APIENTRY GetSamplerParameterIivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
-                                                       GLuint sampler,
-                                                       GLenum pname,
-                                                       GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                          GLuint sampler,
+                                                          GLenum pname,
+                                                          GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterIivOES,
@@ -18955,10 +19030,10 @@ void GL_APIENTRY GetSamplerParameterIivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIuivContextANGLE(GLeglContext ctx,
-                                                     GLuint sampler,
-                                                     GLenum pname,
-                                                     GLuint *params)
+void GL_APIENTRY GL_GetSamplerParameterIuivContextANGLE(GLeglContext ctx,
+                                                        GLuint sampler,
+                                                        GLenum pname,
+                                                        GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterIuiv,
@@ -18984,10 +19059,10 @@ void GL_APIENTRY GetSamplerParameterIuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
-                                                        GLuint sampler,
-                                                        GLenum pname,
-                                                        GLuint *params)
+void GL_APIENTRY GL_GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                           GLuint sampler,
+                                                           GLenum pname,
+                                                           GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterIuivOES,
@@ -19015,10 +19090,10 @@ void GL_APIENTRY GetSamplerParameterIuivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterfvContextANGLE(GLeglContext ctx,
-                                                   GLuint sampler,
-                                                   GLenum pname,
-                                                   GLfloat *params)
+void GL_APIENTRY GL_GetSamplerParameterfvContextANGLE(GLeglContext ctx,
+                                                      GLuint sampler,
+                                                      GLenum pname,
+                                                      GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterfv,
@@ -19044,10 +19119,10 @@ void GL_APIENTRY GetSamplerParameterfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterivContextANGLE(GLeglContext ctx,
-                                                   GLuint sampler,
-                                                   GLenum pname,
-                                                   GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterivContextANGLE(GLeglContext ctx,
+                                                      GLuint sampler,
+                                                      GLenum pname,
+                                                      GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameteriv,
@@ -19073,10 +19148,10 @@ void GL_APIENTRY GetSamplerParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
-                                                           GLuint semaphore,
-                                                           GLenum pname,
-                                                           GLuint64 *params)
+void GL_APIENTRY GL_GetSemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
+                                                              GLuint semaphore,
+                                                              GLenum pname,
+                                                              GLuint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSemaphoreParameterui64vEXT,
@@ -19104,11 +19179,11 @@ void GL_APIENTRY GetSemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetShaderInfoLogContextANGLE(GLeglContext ctx,
-                                              GLuint shader,
-                                              GLsizei bufSize,
-                                              GLsizei *length,
-                                              GLchar *infoLog)
+void GL_APIENTRY GL_GetShaderInfoLogContextANGLE(GLeglContext ctx,
+                                                 GLuint shader,
+                                                 GLsizei bufSize,
+                                                 GLsizei *length,
+                                                 GLchar *infoLog)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetShaderInfoLog,
@@ -19137,11 +19212,11 @@ void GL_APIENTRY GetShaderInfoLogContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetShaderPrecisionFormatContextANGLE(GLeglContext ctx,
-                                                      GLenum shadertype,
-                                                      GLenum precisiontype,
-                                                      GLint *range,
-                                                      GLint *precision)
+void GL_APIENTRY GL_GetShaderPrecisionFormatContextANGLE(GLeglContext ctx,
+                                                         GLenum shadertype,
+                                                         GLenum precisiontype,
+                                                         GLint *range,
+                                                         GLint *precision)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetShaderPrecisionFormat,
@@ -19171,11 +19246,11 @@ void GL_APIENTRY GetShaderPrecisionFormatContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetShaderSourceContextANGLE(GLeglContext ctx,
-                                             GLuint shader,
-                                             GLsizei bufSize,
-                                             GLsizei *length,
-                                             GLchar *source)
+void GL_APIENTRY GL_GetShaderSourceContextANGLE(GLeglContext ctx,
+                                                GLuint shader,
+                                                GLsizei bufSize,
+                                                GLsizei *length,
+                                                GLchar *source)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetShaderSource,
@@ -19203,10 +19278,10 @@ void GL_APIENTRY GetShaderSourceContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetShaderivContextANGLE(GLeglContext ctx,
-                                         GLuint shader,
-                                         GLenum pname,
-                                         GLint *params)
+void GL_APIENTRY GL_GetShaderivContextANGLE(GLeglContext ctx,
+                                            GLuint shader,
+                                            GLenum pname,
+                                            GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetShaderiv,
@@ -19230,7 +19305,7 @@ void GL_APIENTRY GetShaderivContextANGLE(GLeglContext ctx,
     {}
 }
 
-const GLubyte *GL_APIENTRY GetStringContextANGLE(GLeglContext ctx, GLenum name)
+const GLubyte *GL_APIENTRY GL_GetStringContextANGLE(GLeglContext ctx, GLenum name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetString, "context = %d, name = %s", CID(context),
@@ -19260,7 +19335,7 @@ const GLubyte *GL_APIENTRY GetStringContextANGLE(GLeglContext ctx, GLenum name)
     return returnValue;
 }
 
-const GLubyte *GL_APIENTRY GetStringiContextANGLE(GLeglContext ctx, GLenum name, GLuint index)
+const GLubyte *GL_APIENTRY GL_GetStringiContextANGLE(GLeglContext ctx, GLenum name, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetStringi, "context = %d, name = %s, index = %u", CID(context),
@@ -19290,12 +19365,12 @@ const GLubyte *GL_APIENTRY GetStringiContextANGLE(GLeglContext ctx, GLenum name,
     return returnValue;
 }
 
-void GL_APIENTRY GetSyncivContextANGLE(GLeglContext ctx,
-                                       GLsync sync,
-                                       GLenum pname,
-                                       GLsizei bufSize,
-                                       GLsizei *length,
-                                       GLint *values)
+void GL_APIENTRY GL_GetSyncivContextANGLE(GLeglContext ctx,
+                                          GLsync sync,
+                                          GLenum pname,
+                                          GLsizei bufSize,
+                                          GLsizei *length,
+                                          GLint *values)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSynciv,
@@ -19320,10 +19395,10 @@ void GL_APIENTRY GetSyncivContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetTexEnvfvContextANGLE(GLeglContext ctx,
-                                         GLenum target,
-                                         GLenum pname,
-                                         GLfloat *params)
+void GL_APIENTRY GL_GetTexEnvfvContextANGLE(GLeglContext ctx,
+                                            GLenum target,
+                                            GLenum pname,
+                                            GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexEnvfv,
@@ -19351,10 +19426,10 @@ void GL_APIENTRY GetTexEnvfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexEnvivContextANGLE(GLeglContext ctx,
-                                         GLenum target,
-                                         GLenum pname,
-                                         GLint *params)
+void GL_APIENTRY GL_GetTexEnvivContextANGLE(GLeglContext ctx,
+                                            GLenum target,
+                                            GLenum pname,
+                                            GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexEnviv,
@@ -19382,10 +19457,10 @@ void GL_APIENTRY GetTexEnvivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexEnvxvContextANGLE(GLeglContext ctx,
-                                         GLenum target,
-                                         GLenum pname,
-                                         GLfixed *params)
+void GL_APIENTRY GL_GetTexEnvxvContextANGLE(GLeglContext ctx,
+                                            GLenum target,
+                                            GLenum pname,
+                                            GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexEnvxv,
@@ -19413,10 +19488,10 @@ void GL_APIENTRY GetTexEnvxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexGenfvOESContextANGLE(GLeglContext ctx,
-                                            GLenum coord,
-                                            GLenum pname,
-                                            GLfloat *params)
+void GL_APIENTRY GL_GetTexGenfvOESContextANGLE(GLeglContext ctx,
+                                               GLenum coord,
+                                               GLenum pname,
+                                               GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexGenfvOES,
@@ -19442,10 +19517,10 @@ void GL_APIENTRY GetTexGenfvOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexGenivOESContextANGLE(GLeglContext ctx,
-                                            GLenum coord,
-                                            GLenum pname,
-                                            GLint *params)
+void GL_APIENTRY GL_GetTexGenivOESContextANGLE(GLeglContext ctx,
+                                               GLenum coord,
+                                               GLenum pname,
+                                               GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexGenivOES,
@@ -19471,10 +19546,10 @@ void GL_APIENTRY GetTexGenivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexGenxvOESContextANGLE(GLeglContext ctx,
-                                            GLenum coord,
-                                            GLenum pname,
-                                            GLfixed *params)
+void GL_APIENTRY GL_GetTexGenxvOESContextANGLE(GLeglContext ctx,
+                                               GLenum coord,
+                                               GLenum pname,
+                                               GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexGenxvOES,
@@ -19500,11 +19575,11 @@ void GL_APIENTRY GetTexGenxvOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterfvContextANGLE(GLeglContext ctx,
-                                                    GLenum target,
-                                                    GLint level,
-                                                    GLenum pname,
-                                                    GLfloat *params)
+void GL_APIENTRY GL_GetTexLevelParameterfvContextANGLE(GLeglContext ctx,
+                                                       GLenum target,
+                                                       GLint level,
+                                                       GLenum pname,
+                                                       GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexLevelParameterfv,
@@ -19533,11 +19608,11 @@ void GL_APIENTRY GetTexLevelParameterfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterivContextANGLE(GLeglContext ctx,
-                                                    GLenum target,
-                                                    GLint level,
-                                                    GLenum pname,
-                                                    GLint *params)
+void GL_APIENTRY GL_GetTexLevelParameterivContextANGLE(GLeglContext ctx,
+                                                       GLenum target,
+                                                       GLint level,
+                                                       GLenum pname,
+                                                       GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexLevelParameteriv,
@@ -19566,10 +19641,10 @@ void GL_APIENTRY GetTexLevelParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterIivContextANGLE(GLeglContext ctx,
-                                                GLenum target,
-                                                GLenum pname,
-                                                GLint *params)
+void GL_APIENTRY GL_GetTexParameterIivContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLenum pname,
+                                                   GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterIiv,
@@ -19596,10 +19671,10 @@ void GL_APIENTRY GetTexParameterIivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterIivOESContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLenum pname,
-                                                   GLint *params)
+void GL_APIENTRY GL_GetTexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLenum pname,
+                                                      GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterIivOES,
@@ -19626,10 +19701,10 @@ void GL_APIENTRY GetTexParameterIivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterIuivContextANGLE(GLeglContext ctx,
-                                                 GLenum target,
-                                                 GLenum pname,
-                                                 GLuint *params)
+void GL_APIENTRY GL_GetTexParameterIuivContextANGLE(GLeglContext ctx,
+                                                    GLenum target,
+                                                    GLenum pname,
+                                                    GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterIuiv,
@@ -19656,10 +19731,10 @@ void GL_APIENTRY GetTexParameterIuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
-                                                    GLenum target,
-                                                    GLenum pname,
-                                                    GLuint *params)
+void GL_APIENTRY GL_GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                       GLenum target,
+                                                       GLenum pname,
+                                                       GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterIuivOES,
@@ -19686,10 +19761,10 @@ void GL_APIENTRY GetTexParameterIuivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterfvContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLenum pname,
-                                               GLfloat *params)
+void GL_APIENTRY GL_GetTexParameterfvContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLenum pname,
+                                                  GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterfv,
@@ -19716,10 +19791,10 @@ void GL_APIENTRY GetTexParameterfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterivContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLenum pname,
-                                               GLint *params)
+void GL_APIENTRY GL_GetTexParameterivContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLenum pname,
+                                                  GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameteriv,
@@ -19746,10 +19821,10 @@ void GL_APIENTRY GetTexParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterxvContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLenum pname,
-                                               GLfixed *params)
+void GL_APIENTRY GL_GetTexParameterxvContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLenum pname,
+                                                  GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterxv,
@@ -19776,14 +19851,14 @@ void GL_APIENTRY GetTexParameterxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTransformFeedbackVaryingContextANGLE(GLeglContext ctx,
-                                                         GLuint program,
-                                                         GLuint index,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLsizei *size,
-                                                         GLenum *type,
-                                                         GLchar *name)
+void GL_APIENTRY GL_GetTransformFeedbackVaryingContextANGLE(GLeglContext ctx,
+                                                            GLuint program,
+                                                            GLuint index,
+                                                            GLsizei bufSize,
+                                                            GLsizei *length,
+                                                            GLsizei *size,
+                                                            GLenum *type,
+                                                            GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTransformFeedbackVarying,
@@ -19814,11 +19889,11 @@ void GL_APIENTRY GetTransformFeedbackVaryingContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTranslatedShaderSourceANGLEContextANGLE(GLeglContext ctx,
-                                                            GLuint shader,
-                                                            GLsizei bufsize,
-                                                            GLsizei *length,
-                                                            GLchar *source)
+void GL_APIENTRY GL_GetTranslatedShaderSourceANGLEContextANGLE(GLeglContext ctx,
+                                                               GLuint shader,
+                                                               GLsizei bufsize,
+                                                               GLsizei *length,
+                                                               GLchar *source)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTranslatedShaderSourceANGLE,
@@ -19847,9 +19922,9 @@ void GL_APIENTRY GetTranslatedShaderSourceANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-GLuint GL_APIENTRY GetUniformBlockIndexContextANGLE(GLeglContext ctx,
-                                                    GLuint program,
-                                                    const GLchar *uniformBlockName)
+GLuint GL_APIENTRY GL_GetUniformBlockIndexContextANGLE(GLeglContext ctx,
+                                                       GLuint program,
+                                                       const GLchar *uniformBlockName)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformBlockIndex,
@@ -19884,11 +19959,11 @@ GLuint GL_APIENTRY GetUniformBlockIndexContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY GetUniformIndicesContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLsizei uniformCount,
-                                               const GLchar *const *uniformNames,
-                                               GLuint *uniformIndices)
+void GL_APIENTRY GL_GetUniformIndicesContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLsizei uniformCount,
+                                                  const GLchar *const *uniformNames,
+                                                  GLuint *uniformIndices)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformIndices,
@@ -19917,9 +19992,9 @@ void GL_APIENTRY GetUniformIndicesContextANGLE(GLeglContext ctx,
     }
 }
 
-GLint GL_APIENTRY GetUniformLocationContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 const GLchar *name)
+GLint GL_APIENTRY GL_GetUniformLocationContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformLocation, "context = %d, program = %u, name = 0x%016" PRIxPTR "",
@@ -19951,10 +20026,10 @@ GLint GL_APIENTRY GetUniformLocationContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY GetUniformfvContextANGLE(GLeglContext ctx,
-                                          GLuint program,
-                                          GLint location,
-                                          GLfloat *params)
+void GL_APIENTRY GL_GetUniformfvContextANGLE(GLeglContext ctx,
+                                             GLuint program,
+                                             GLint location,
+                                             GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformfv,
@@ -19981,10 +20056,10 @@ void GL_APIENTRY GetUniformfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetUniformivContextANGLE(GLeglContext ctx,
-                                          GLuint program,
-                                          GLint location,
-                                          GLint *params)
+void GL_APIENTRY GL_GetUniformivContextANGLE(GLeglContext ctx,
+                                             GLuint program,
+                                             GLint location,
+                                             GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformiv,
@@ -20011,10 +20086,10 @@ void GL_APIENTRY GetUniformivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetUniformuivContextANGLE(GLeglContext ctx,
-                                           GLuint program,
-                                           GLint location,
-                                           GLuint *params)
+void GL_APIENTRY GL_GetUniformuivContextANGLE(GLeglContext ctx,
+                                              GLuint program,
+                                              GLint location,
+                                              GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformuiv,
@@ -20041,7 +20116,7 @@ void GL_APIENTRY GetUniformuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetUnsignedBytevEXTContextANGLE(GLeglContext ctx, GLenum pname, GLubyte *data)
+void GL_APIENTRY GL_GetUnsignedBytevEXTContextANGLE(GLeglContext ctx, GLenum pname, GLubyte *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUnsignedBytevEXT, "context = %d, pname = %s, data = 0x%016" PRIxPTR "",
@@ -20065,10 +20140,10 @@ void GL_APIENTRY GetUnsignedBytevEXTContextANGLE(GLeglContext ctx, GLenum pname,
     }
 }
 
-void GL_APIENTRY GetUnsignedBytei_vEXTContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLuint index,
-                                                   GLubyte *data)
+void GL_APIENTRY GL_GetUnsignedBytei_vEXTContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLuint index,
+                                                      GLubyte *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUnsignedBytei_vEXT,
@@ -20093,10 +20168,10 @@ void GL_APIENTRY GetUnsignedBytei_vEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribIivContextANGLE(GLeglContext ctx,
-                                                GLuint index,
-                                                GLenum pname,
-                                                GLint *params)
+void GL_APIENTRY GL_GetVertexAttribIivContextANGLE(GLeglContext ctx,
+                                                   GLuint index,
+                                                   GLenum pname,
+                                                   GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribIiv,
@@ -20121,10 +20196,10 @@ void GL_APIENTRY GetVertexAttribIivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribIuivContextANGLE(GLeglContext ctx,
-                                                 GLuint index,
-                                                 GLenum pname,
-                                                 GLuint *params)
+void GL_APIENTRY GL_GetVertexAttribIuivContextANGLE(GLeglContext ctx,
+                                                    GLuint index,
+                                                    GLenum pname,
+                                                    GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribIuiv,
@@ -20149,10 +20224,10 @@ void GL_APIENTRY GetVertexAttribIuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribPointervContextANGLE(GLeglContext ctx,
-                                                     GLuint index,
-                                                     GLenum pname,
-                                                     void **pointer)
+void GL_APIENTRY GL_GetVertexAttribPointervContextANGLE(GLeglContext ctx,
+                                                        GLuint index,
+                                                        GLenum pname,
+                                                        void **pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribPointerv,
@@ -20177,10 +20252,10 @@ void GL_APIENTRY GetVertexAttribPointervContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribfvContextANGLE(GLeglContext ctx,
-                                               GLuint index,
-                                               GLenum pname,
-                                               GLfloat *params)
+void GL_APIENTRY GL_GetVertexAttribfvContextANGLE(GLeglContext ctx,
+                                                  GLuint index,
+                                                  GLenum pname,
+                                                  GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribfv,
@@ -20205,10 +20280,10 @@ void GL_APIENTRY GetVertexAttribfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribivContextANGLE(GLeglContext ctx,
-                                               GLuint index,
-                                               GLenum pname,
-                                               GLint *params)
+void GL_APIENTRY GL_GetVertexAttribivContextANGLE(GLeglContext ctx,
+                                                  GLuint index,
+                                                  GLenum pname,
+                                                  GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribiv,
@@ -20233,11 +20308,11 @@ void GL_APIENTRY GetVertexAttribivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformfvContextANGLE(GLeglContext ctx,
-                                           GLuint program,
-                                           GLint location,
-                                           GLsizei bufSize,
-                                           GLfloat *params)
+void GL_APIENTRY GL_GetnUniformfvContextANGLE(GLeglContext ctx,
+                                              GLuint program,
+                                              GLint location,
+                                              GLsizei bufSize,
+                                              GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformfv,
@@ -20266,11 +20341,11 @@ void GL_APIENTRY GetnUniformfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformfvEXTContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLsizei bufSize,
-                                              GLfloat *params)
+void GL_APIENTRY GL_GetnUniformfvEXTContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLsizei bufSize,
+                                                 GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformfvEXT,
@@ -20299,11 +20374,11 @@ void GL_APIENTRY GetnUniformfvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformivContextANGLE(GLeglContext ctx,
-                                           GLuint program,
-                                           GLint location,
-                                           GLsizei bufSize,
-                                           GLint *params)
+void GL_APIENTRY GL_GetnUniformivContextANGLE(GLeglContext ctx,
+                                              GLuint program,
+                                              GLint location,
+                                              GLsizei bufSize,
+                                              GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformiv,
@@ -20332,11 +20407,11 @@ void GL_APIENTRY GetnUniformivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformivEXTContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLsizei bufSize,
-                                              GLint *params)
+void GL_APIENTRY GL_GetnUniformivEXTContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLsizei bufSize,
+                                                 GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformivEXT,
@@ -20365,11 +20440,11 @@ void GL_APIENTRY GetnUniformivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformuivContextANGLE(GLeglContext ctx,
-                                            GLuint program,
-                                            GLint location,
-                                            GLsizei bufSize,
-                                            GLuint *params)
+void GL_APIENTRY GL_GetnUniformuivContextANGLE(GLeglContext ctx,
+                                               GLuint program,
+                                               GLint location,
+                                               GLsizei bufSize,
+                                               GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformuiv,
@@ -20398,7 +20473,7 @@ void GL_APIENTRY GetnUniformuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
+void GL_APIENTRY GL_HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLHint, "context = %d, target = %s, mode = %s", CID(context),
@@ -20422,11 +20497,11 @@ void GL_APIENTRY HintContextANGLE(GLeglContext ctx, GLenum target, GLenum mode)
     }
 }
 
-void GL_APIENTRY ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
-                                               GLuint memory,
-                                               GLuint64 size,
-                                               GLenum handleType,
-                                               GLint fd)
+void GL_APIENTRY GL_ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
+                                                  GLuint memory,
+                                                  GLuint64 size,
+                                                  GLenum handleType,
+                                                  GLint fd)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLImportMemoryFdEXT,
@@ -20456,10 +20531,10 @@ void GL_APIENTRY ImportMemoryFdEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint semaphore,
-                                                  GLenum handleType,
-                                                  GLint fd)
+void GL_APIENTRY GL_ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint semaphore,
+                                                     GLenum handleType,
+                                                     GLint fd)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLImportSemaphoreFdEXT, "context = %d, semaphore = %u, handleType = %s, fd = %d",
@@ -20487,9 +20562,9 @@ void GL_APIENTRY ImportSemaphoreFdEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY InsertEventMarkerEXTContextANGLE(GLeglContext ctx,
-                                                  GLsizei length,
-                                                  const GLchar *marker)
+void GL_APIENTRY GL_InsertEventMarkerEXTContextANGLE(GLeglContext ctx,
+                                                     GLsizei length,
+                                                     const GLchar *marker)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     // Don't run the EVENT() macro on the EXT_debug_marker entry points.
@@ -20515,10 +20590,10 @@ void GL_APIENTRY InsertEventMarkerEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY InvalidateFramebufferContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLsizei numAttachments,
-                                                   const GLenum *attachments)
+void GL_APIENTRY GL_InvalidateFramebufferContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLsizei numAttachments,
+                                                      const GLenum *attachments)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLInvalidateFramebuffer,
@@ -20546,14 +20621,14 @@ void GL_APIENTRY InvalidateFramebufferContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY InvalidateSubFramebufferContextANGLE(GLeglContext ctx,
-                                                      GLenum target,
-                                                      GLsizei numAttachments,
-                                                      const GLenum *attachments,
-                                                      GLint x,
-                                                      GLint y,
-                                                      GLsizei width,
-                                                      GLsizei height)
+void GL_APIENTRY GL_InvalidateSubFramebufferContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLsizei numAttachments,
+                                                         const GLenum *attachments,
+                                                         GLint x,
+                                                         GLint y,
+                                                         GLsizei width,
+                                                         GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLInvalidateSubFramebuffer,
@@ -20583,7 +20658,7 @@ void GL_APIENTRY InvalidateSubFramebufferContextANGLE(GLeglContext ctx,
     }
 }
 
-GLboolean GL_APIENTRY IsBufferContextANGLE(GLeglContext ctx, GLuint buffer)
+GLboolean GL_APIENTRY GL_IsBufferContextANGLE(GLeglContext ctx, GLuint buffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsBuffer, "context = %d, buffer = %u", CID(context), buffer);
@@ -20613,7 +20688,7 @@ GLboolean GL_APIENTRY IsBufferContextANGLE(GLeglContext ctx, GLuint buffer)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsEnabledContextANGLE(GLeglContext ctx, GLenum cap)
+GLboolean GL_APIENTRY GL_IsEnabledContextANGLE(GLeglContext ctx, GLenum cap)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsEnabled, "context = %d, cap = %s", CID(context),
@@ -20643,7 +20718,7 @@ GLboolean GL_APIENTRY IsEnabledContextANGLE(GLeglContext ctx, GLenum cap)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsEnablediContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+GLboolean GL_APIENTRY GL_IsEnablediContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsEnabledi, "context = %d, target = %s, index = %u", CID(context),
@@ -20674,7 +20749,7 @@ GLboolean GL_APIENTRY IsEnablediContextANGLE(GLeglContext ctx, GLenum target, GL
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsEnablediEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+GLboolean GL_APIENTRY GL_IsEnablediEXTContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsEnablediEXT, "context = %d, target = %s, index = %u", CID(context),
@@ -20705,7 +20780,7 @@ GLboolean GL_APIENTRY IsEnablediEXTContextANGLE(GLeglContext ctx, GLenum target,
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsEnablediOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
+GLboolean GL_APIENTRY GL_IsEnablediOESContextANGLE(GLeglContext ctx, GLenum target, GLuint index)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsEnablediOES, "context = %d, target = %s, index = %u", CID(context),
@@ -20736,7 +20811,7 @@ GLboolean GL_APIENTRY IsEnablediOESContextANGLE(GLeglContext ctx, GLenum target,
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
+GLboolean GL_APIENTRY GL_IsFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsFenceNV, "context = %d, fence = %u", CID(context), fence);
@@ -20766,7 +20841,7 @@ GLboolean GL_APIENTRY IsFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsFramebufferContextANGLE(GLeglContext ctx, GLuint framebuffer)
+GLboolean GL_APIENTRY GL_IsFramebufferContextANGLE(GLeglContext ctx, GLuint framebuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsFramebuffer, "context = %d, framebuffer = %u", CID(context), framebuffer);
@@ -20797,7 +20872,7 @@ GLboolean GL_APIENTRY IsFramebufferContextANGLE(GLeglContext ctx, GLuint framebu
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsFramebufferOESContextANGLE(GLeglContext ctx, GLuint framebuffer)
+GLboolean GL_APIENTRY GL_IsFramebufferOESContextANGLE(GLeglContext ctx, GLuint framebuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsFramebufferOES, "context = %d, framebuffer = %u", CID(context), framebuffer);
@@ -20828,7 +20903,7 @@ GLboolean GL_APIENTRY IsFramebufferOESContextANGLE(GLeglContext ctx, GLuint fram
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsMemoryObjectEXTContextANGLE(GLeglContext ctx, GLuint memoryObject)
+GLboolean GL_APIENTRY GL_IsMemoryObjectEXTContextANGLE(GLeglContext ctx, GLuint memoryObject)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsMemoryObjectEXT, "context = %d, memoryObject = %u", CID(context),
@@ -20861,7 +20936,7 @@ GLboolean GL_APIENTRY IsMemoryObjectEXTContextANGLE(GLeglContext ctx, GLuint mem
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsProgramContextANGLE(GLeglContext ctx, GLuint program)
+GLboolean GL_APIENTRY GL_IsProgramContextANGLE(GLeglContext ctx, GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsProgram, "context = %d, program = %u", CID(context), program);
@@ -20891,7 +20966,7 @@ GLboolean GL_APIENTRY IsProgramContextANGLE(GLeglContext ctx, GLuint program)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
+GLboolean GL_APIENTRY GL_IsProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsProgramPipeline, "context = %d, pipeline = %u", CID(context), pipeline);
@@ -20923,7 +20998,7 @@ GLboolean GL_APIENTRY IsProgramPipelineContextANGLE(GLeglContext ctx, GLuint pip
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pipeline)
+GLboolean GL_APIENTRY GL_IsProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pipeline)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsProgramPipelineEXT, "context = %d, pipeline = %u", CID(context), pipeline);
@@ -20955,7 +21030,7 @@ GLboolean GL_APIENTRY IsProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint 
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsQueryContextANGLE(GLeglContext ctx, GLuint id)
+GLboolean GL_APIENTRY GL_IsQueryContextANGLE(GLeglContext ctx, GLuint id)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsQuery, "context = %d, id = %u", CID(context), id);
@@ -20985,7 +21060,7 @@ GLboolean GL_APIENTRY IsQueryContextANGLE(GLeglContext ctx, GLuint id)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsQueryEXTContextANGLE(GLeglContext ctx, GLuint id)
+GLboolean GL_APIENTRY GL_IsQueryEXTContextANGLE(GLeglContext ctx, GLuint id)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsQueryEXT, "context = %d, id = %u", CID(context), id);
@@ -21015,7 +21090,7 @@ GLboolean GL_APIENTRY IsQueryEXTContextANGLE(GLeglContext ctx, GLuint id)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsRenderbufferContextANGLE(GLeglContext ctx, GLuint renderbuffer)
+GLboolean GL_APIENTRY GL_IsRenderbufferContextANGLE(GLeglContext ctx, GLuint renderbuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsRenderbuffer, "context = %d, renderbuffer = %u", CID(context), renderbuffer);
@@ -21046,7 +21121,7 @@ GLboolean GL_APIENTRY IsRenderbufferContextANGLE(GLeglContext ctx, GLuint render
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsRenderbufferOESContextANGLE(GLeglContext ctx, GLuint renderbuffer)
+GLboolean GL_APIENTRY GL_IsRenderbufferOESContextANGLE(GLeglContext ctx, GLuint renderbuffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsRenderbufferOES, "context = %d, renderbuffer = %u", CID(context),
@@ -21079,7 +21154,7 @@ GLboolean GL_APIENTRY IsRenderbufferOESContextANGLE(GLeglContext ctx, GLuint ren
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaphore)
+GLboolean GL_APIENTRY GL_IsSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaphore)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsSemaphoreEXT, "context = %d, semaphore = %u", CID(context), semaphore);
@@ -21110,7 +21185,7 @@ GLboolean GL_APIENTRY IsSemaphoreEXTContextANGLE(GLeglContext ctx, GLuint semaph
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsSamplerContextANGLE(GLeglContext ctx, GLuint sampler)
+GLboolean GL_APIENTRY GL_IsSamplerContextANGLE(GLeglContext ctx, GLuint sampler)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsSampler, "context = %d, sampler = %u", CID(context), sampler);
@@ -21140,7 +21215,7 @@ GLboolean GL_APIENTRY IsSamplerContextANGLE(GLeglContext ctx, GLuint sampler)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsShaderContextANGLE(GLeglContext ctx, GLuint shader)
+GLboolean GL_APIENTRY GL_IsShaderContextANGLE(GLeglContext ctx, GLuint shader)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsShader, "context = %d, shader = %u", CID(context), shader);
@@ -21170,7 +21245,7 @@ GLboolean GL_APIENTRY IsShaderContextANGLE(GLeglContext ctx, GLuint shader)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsSyncContextANGLE(GLeglContext ctx, GLsync sync)
+GLboolean GL_APIENTRY GL_IsSyncContextANGLE(GLeglContext ctx, GLsync sync)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsSync, "context = %d, sync = 0x%016" PRIxPTR "", CID(context),
@@ -21200,7 +21275,7 @@ GLboolean GL_APIENTRY IsSyncContextANGLE(GLeglContext ctx, GLsync sync)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsTextureContextANGLE(GLeglContext ctx, GLuint texture)
+GLboolean GL_APIENTRY GL_IsTextureContextANGLE(GLeglContext ctx, GLuint texture)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsTexture, "context = %d, texture = %u", CID(context), texture);
@@ -21230,7 +21305,7 @@ GLboolean GL_APIENTRY IsTextureContextANGLE(GLeglContext ctx, GLuint texture)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsTransformFeedbackContextANGLE(GLeglContext ctx, GLuint id)
+GLboolean GL_APIENTRY GL_IsTransformFeedbackContextANGLE(GLeglContext ctx, GLuint id)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsTransformFeedback, "context = %d, id = %u", CID(context), id);
@@ -21262,7 +21337,7 @@ GLboolean GL_APIENTRY IsTransformFeedbackContextANGLE(GLeglContext ctx, GLuint i
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
+GLboolean GL_APIENTRY GL_IsVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsVertexArray, "context = %d, array = %u", CID(context), array);
@@ -21293,7 +21368,7 @@ GLboolean GL_APIENTRY IsVertexArrayContextANGLE(GLeglContext ctx, GLuint array)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY IsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
+GLboolean GL_APIENTRY GL_IsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLIsVertexArrayOES, "context = %d, array = %u", CID(context), array);
@@ -21324,11 +21399,11 @@ GLboolean GL_APIENTRY IsVertexArrayOESContextANGLE(GLeglContext ctx, GLuint arra
     return returnValue;
 }
 
-void GL_APIENTRY LabelObjectEXTContextANGLE(GLeglContext ctx,
-                                            GLenum type,
-                                            GLuint object,
-                                            GLsizei length,
-                                            const GLchar *label)
+void GL_APIENTRY GL_LabelObjectEXTContextANGLE(GLeglContext ctx,
+                                               GLenum type,
+                                               GLuint object,
+                                               GLsizei length,
+                                               const GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLabelObjectEXT,
@@ -21354,7 +21429,7 @@ void GL_APIENTRY LabelObjectEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY LightModelfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_LightModelfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightModelf, "context = %d, pname = %s, param = %f", CID(context),
@@ -21378,7 +21453,7 @@ void GL_APIENTRY LightModelfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat
     }
 }
 
-void GL_APIENTRY LightModelfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_LightModelfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightModelfv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -21402,7 +21477,7 @@ void GL_APIENTRY LightModelfvContextANGLE(GLeglContext ctx, GLenum pname, const 
     }
 }
 
-void GL_APIENTRY LightModelxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_LightModelxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightModelx, "context = %d, pname = %s, param = 0x%X", CID(context),
@@ -21426,7 +21501,7 @@ void GL_APIENTRY LightModelxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed
     }
 }
 
-void GL_APIENTRY LightModelxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *param)
+void GL_APIENTRY GL_LightModelxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightModelxv, "context = %d, pname = %s, param = 0x%016" PRIxPTR "",
@@ -21450,7 +21525,7 @@ void GL_APIENTRY LightModelxvContextANGLE(GLeglContext ctx, GLenum pname, const 
     }
 }
 
-void GL_APIENTRY LightfContextANGLE(GLeglContext ctx, GLenum light, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_LightfContextANGLE(GLeglContext ctx, GLenum light, GLenum pname, GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightf, "context = %d, light = %s, pname = %s, param = %f", CID(context),
@@ -21476,10 +21551,10 @@ void GL_APIENTRY LightfContextANGLE(GLeglContext ctx, GLenum light, GLenum pname
     }
 }
 
-void GL_APIENTRY LightfvContextANGLE(GLeglContext ctx,
-                                     GLenum light,
-                                     GLenum pname,
-                                     const GLfloat *params)
+void GL_APIENTRY GL_LightfvContextANGLE(GLeglContext ctx,
+                                        GLenum light,
+                                        GLenum pname,
+                                        const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightfv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -21505,7 +21580,7 @@ void GL_APIENTRY LightfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY LightxContextANGLE(GLeglContext ctx, GLenum light, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_LightxContextANGLE(GLeglContext ctx, GLenum light, GLenum pname, GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightx, "context = %d, light = %s, pname = %s, param = 0x%X", CID(context),
@@ -21531,10 +21606,10 @@ void GL_APIENTRY LightxContextANGLE(GLeglContext ctx, GLenum light, GLenum pname
     }
 }
 
-void GL_APIENTRY LightxvContextANGLE(GLeglContext ctx,
-                                     GLenum light,
-                                     GLenum pname,
-                                     const GLfixed *params)
+void GL_APIENTRY GL_LightxvContextANGLE(GLeglContext ctx,
+                                        GLenum light,
+                                        GLenum pname,
+                                        const GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLightxv, "context = %d, light = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -21560,7 +21635,7 @@ void GL_APIENTRY LightxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY LineWidthContextANGLE(GLeglContext ctx, GLfloat width)
+void GL_APIENTRY GL_LineWidthContextANGLE(GLeglContext ctx, GLfloat width)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLineWidth, "context = %d, width = %f", CID(context), width);
@@ -21582,7 +21657,7 @@ void GL_APIENTRY LineWidthContextANGLE(GLeglContext ctx, GLfloat width)
     }
 }
 
-void GL_APIENTRY LineWidthxContextANGLE(GLeglContext ctx, GLfixed width)
+void GL_APIENTRY GL_LineWidthxContextANGLE(GLeglContext ctx, GLfixed width)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLineWidthx, "context = %d, width = 0x%X", CID(context), width);
@@ -21604,7 +21679,7 @@ void GL_APIENTRY LineWidthxContextANGLE(GLeglContext ctx, GLfixed width)
     }
 }
 
-void GL_APIENTRY LinkProgramContextANGLE(GLeglContext ctx, GLuint program)
+void GL_APIENTRY GL_LinkProgramContextANGLE(GLeglContext ctx, GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLinkProgram, "context = %d, program = %u", CID(context), program);
@@ -21628,7 +21703,7 @@ void GL_APIENTRY LinkProgramContextANGLE(GLeglContext ctx, GLuint program)
     }
 }
 
-void GL_APIENTRY LoadIdentityContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_LoadIdentityContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLoadIdentity, "context = %d", CID(context));
@@ -21650,7 +21725,7 @@ void GL_APIENTRY LoadIdentityContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY LoadMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
+void GL_APIENTRY GL_LoadMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLoadMatrixf, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -21673,7 +21748,7 @@ void GL_APIENTRY LoadMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
     }
 }
 
-void GL_APIENTRY LoadMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
+void GL_APIENTRY GL_LoadMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLoadMatrixx, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -21696,7 +21771,7 @@ void GL_APIENTRY LoadMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
     }
 }
 
-void GL_APIENTRY LoadPaletteFromModelViewMatrixOESContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_LoadPaletteFromModelViewMatrixOESContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLoadPaletteFromModelViewMatrixOES, "context = %d", CID(context));
@@ -21719,7 +21794,7 @@ void GL_APIENTRY LoadPaletteFromModelViewMatrixOESContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY LogicOpContextANGLE(GLeglContext ctx, GLenum opcode)
+void GL_APIENTRY GL_LogicOpContextANGLE(GLeglContext ctx, GLenum opcode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLogicOp, "context = %d, opcode = %s", CID(context),
@@ -21743,7 +21818,7 @@ void GL_APIENTRY LogicOpContextANGLE(GLeglContext ctx, GLenum opcode)
     }
 }
 
-void *GL_APIENTRY MapBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLenum access)
+void *GL_APIENTRY GL_MapBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLenum access)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMapBufferOES, "context = %d, target = %s, access = %s", CID(context),
@@ -21776,11 +21851,11 @@ void *GL_APIENTRY MapBufferOESContextANGLE(GLeglContext ctx, GLenum target, GLen
     return returnValue;
 }
 
-void *GL_APIENTRY MapBufferRangeContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLintptr offset,
-                                             GLsizeiptr length,
-                                             GLbitfield access)
+void *GL_APIENTRY GL_MapBufferRangeContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLintptr offset,
+                                                GLsizeiptr length,
+                                                GLbitfield access)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMapBufferRange,
@@ -21816,11 +21891,11 @@ void *GL_APIENTRY MapBufferRangeContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void *GL_APIENTRY MapBufferRangeEXTContextANGLE(GLeglContext ctx,
-                                                GLenum target,
-                                                GLintptr offset,
-                                                GLsizeiptr length,
-                                                GLbitfield access)
+void *GL_APIENTRY GL_MapBufferRangeEXTContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLintptr offset,
+                                                   GLsizeiptr length,
+                                                   GLbitfield access)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMapBufferRangeEXT,
@@ -21857,7 +21932,10 @@ void *GL_APIENTRY MapBufferRangeEXTContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY MaterialfContextANGLE(GLeglContext ctx, GLenum face, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_MaterialfContextANGLE(GLeglContext ctx,
+                                          GLenum face,
+                                          GLenum pname,
+                                          GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMaterialf, "context = %d, face = %s, pname = %s, param = %f", CID(context),
@@ -21883,10 +21961,10 @@ void GL_APIENTRY MaterialfContextANGLE(GLeglContext ctx, GLenum face, GLenum pna
     }
 }
 
-void GL_APIENTRY MaterialfvContextANGLE(GLeglContext ctx,
-                                        GLenum face,
-                                        GLenum pname,
-                                        const GLfloat *params)
+void GL_APIENTRY GL_MaterialfvContextANGLE(GLeglContext ctx,
+                                           GLenum face,
+                                           GLenum pname,
+                                           const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMaterialfv, "context = %d, face = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -21912,7 +21990,10 @@ void GL_APIENTRY MaterialfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MaterialxContextANGLE(GLeglContext ctx, GLenum face, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_MaterialxContextANGLE(GLeglContext ctx,
+                                          GLenum face,
+                                          GLenum pname,
+                                          GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMaterialx, "context = %d, face = %s, pname = %s, param = 0x%X", CID(context),
@@ -21938,10 +22019,10 @@ void GL_APIENTRY MaterialxContextANGLE(GLeglContext ctx, GLenum face, GLenum pna
     }
 }
 
-void GL_APIENTRY MaterialxvContextANGLE(GLeglContext ctx,
-                                        GLenum face,
-                                        GLenum pname,
-                                        const GLfixed *param)
+void GL_APIENTRY GL_MaterialxvContextANGLE(GLeglContext ctx,
+                                           GLenum face,
+                                           GLenum pname,
+                                           const GLfixed *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMaterialxv, "context = %d, face = %s, pname = %s, param = 0x%016" PRIxPTR "",
@@ -21967,11 +22048,11 @@ void GL_APIENTRY MaterialxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MatrixIndexPointerOESContextANGLE(GLeglContext ctx,
-                                                   GLint size,
-                                                   GLenum type,
-                                                   GLsizei stride,
-                                                   const void *pointer)
+void GL_APIENTRY GL_MatrixIndexPointerOESContextANGLE(GLeglContext ctx,
+                                                      GLint size,
+                                                      GLenum type,
+                                                      GLsizei stride,
+                                                      const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMatrixIndexPointerOES,
@@ -21997,7 +22078,7 @@ void GL_APIENTRY MatrixIndexPointerOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
+void GL_APIENTRY GL_MatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMatrixMode, "context = %d, mode = %s", CID(context),
@@ -22021,7 +22102,7 @@ void GL_APIENTRY MatrixModeContextANGLE(GLeglContext ctx, GLenum mode)
     }
 }
 
-void GL_APIENTRY MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count)
+void GL_APIENTRY GL_MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuint count)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMaxShaderCompilerThreadsKHR, "context = %d, count = %u", CID(context), count);
@@ -22044,7 +22125,7 @@ void GL_APIENTRY MaxShaderCompilerThreadsKHRContextANGLE(GLeglContext ctx, GLuin
     }
 }
 
-void GL_APIENTRY MemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers)
+void GL_APIENTRY GL_MemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMemoryBarrier, "context = %d, barriers = %s", CID(context),
@@ -22067,7 +22148,7 @@ void GL_APIENTRY MemoryBarrierContextANGLE(GLeglContext ctx, GLbitfield barriers
     }
 }
 
-void GL_APIENTRY MemoryBarrierByRegionContextANGLE(GLeglContext ctx, GLbitfield barriers)
+void GL_APIENTRY GL_MemoryBarrierByRegionContextANGLE(GLeglContext ctx, GLbitfield barriers)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMemoryBarrierByRegion, "context = %d, barriers = %s", CID(context),
@@ -22091,10 +22172,10 @@ void GL_APIENTRY MemoryBarrierByRegionContextANGLE(GLeglContext ctx, GLbitfield 
     }
 }
 
-void GL_APIENTRY MemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
-                                                        GLuint memoryObject,
-                                                        GLenum pname,
-                                                        const GLint *params)
+void GL_APIENTRY GL_MemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint memoryObject,
+                                                           GLenum pname,
+                                                           const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMemoryObjectParameterivEXT,
@@ -22123,7 +22204,7 @@ void GL_APIENTRY MemoryObjectParameterivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
+void GL_APIENTRY GL_MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMinSampleShading, "context = %d, value = %f", CID(context), value);
@@ -22145,7 +22226,7 @@ void GL_APIENTRY MinSampleShadingContextANGLE(GLeglContext ctx, GLfloat value)
     }
 }
 
-void GL_APIENTRY MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value)
+void GL_APIENTRY GL_MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMinSampleShadingOES, "context = %d, value = %f", CID(context), value);
@@ -22168,7 +22249,7 @@ void GL_APIENTRY MinSampleShadingOESContextANGLE(GLeglContext ctx, GLfloat value
     }
 }
 
-void GL_APIENTRY MultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
+void GL_APIENTRY GL_MultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultMatrixf, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -22191,7 +22272,7 @@ void GL_APIENTRY MultMatrixfContextANGLE(GLeglContext ctx, const GLfloat *m)
     }
 }
 
-void GL_APIENTRY MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
+void GL_APIENTRY GL_MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultMatrixx, "context = %d, m = 0x%016" PRIxPTR "", CID(context),
@@ -22214,13 +22295,13 @@ void GL_APIENTRY MultMatrixxContextANGLE(GLeglContext ctx, const GLfixed *m)
     }
 }
 
-void GL_APIENTRY MultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
-                                                            GLenum mode,
-                                                            const GLsizei *count,
-                                                            GLenum type,
-                                                            const void *const *indices,
-                                                            GLsizei primcount,
-                                                            const GLint *basevertex)
+void GL_APIENTRY GL_MultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
+                                                               GLenum mode,
+                                                               const GLsizei *count,
+                                                               GLenum type,
+                                                               const void *const *indices,
+                                                               GLsizei primcount,
+                                                               const GLint *basevertex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiDrawElementsBaseVertexEXT,
@@ -22253,12 +22334,12 @@ void GL_APIENTRY MultiDrawElementsBaseVertexEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MultiTexCoord4fContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLfloat s,
-                                             GLfloat t,
-                                             GLfloat r,
-                                             GLfloat q)
+void GL_APIENTRY GL_MultiTexCoord4fContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLfloat s,
+                                                GLfloat t,
+                                                GLfloat r,
+                                                GLfloat q)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiTexCoord4f, "context = %d, target = %s, s = %f, t = %f, r = %f, q = %f",
@@ -22282,12 +22363,12 @@ void GL_APIENTRY MultiTexCoord4fContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MultiTexCoord4xContextANGLE(GLeglContext ctx,
-                                             GLenum texture,
-                                             GLfixed s,
-                                             GLfixed t,
-                                             GLfixed r,
-                                             GLfixed q)
+void GL_APIENTRY GL_MultiTexCoord4xContextANGLE(GLeglContext ctx,
+                                                GLenum texture,
+                                                GLfixed s,
+                                                GLfixed t,
+                                                GLfixed r,
+                                                GLfixed q)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiTexCoord4x,
@@ -22312,12 +22393,12 @@ void GL_APIENTRY MultiTexCoord4xContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY NamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx,
-                                                           GLuint buffer,
-                                                           GLintptr offset,
-                                                           GLsizeiptr size,
-                                                           GLeglClientBufferEXT clientBuffer,
-                                                           GLbitfield flags)
+void GL_APIENTRY GL_NamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx,
+                                                              GLuint buffer,
+                                                              GLintptr offset,
+                                                              GLsizeiptr size,
+                                                              GLeglClientBufferEXT clientBuffer,
+                                                              GLbitfield flags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLNamedBufferStorageExternalEXT,
@@ -22347,7 +22428,7 @@ void GL_APIENTRY NamedBufferStorageExternalEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Normal3fContextANGLE(GLeglContext ctx, GLfloat nx, GLfloat ny, GLfloat nz)
+void GL_APIENTRY GL_Normal3fContextANGLE(GLeglContext ctx, GLfloat nx, GLfloat ny, GLfloat nz)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLNormal3f, "context = %d, nx = %f, ny = %f, nz = %f", CID(context), nx, ny, nz);
@@ -22369,7 +22450,7 @@ void GL_APIENTRY Normal3fContextANGLE(GLeglContext ctx, GLfloat nx, GLfloat ny, 
     }
 }
 
-void GL_APIENTRY Normal3xContextANGLE(GLeglContext ctx, GLfixed nx, GLfixed ny, GLfixed nz)
+void GL_APIENTRY GL_Normal3xContextANGLE(GLeglContext ctx, GLfixed nx, GLfixed ny, GLfixed nz)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLNormal3x, "context = %d, nx = 0x%X, ny = 0x%X, nz = 0x%X", CID(context), nx,
@@ -22392,10 +22473,10 @@ void GL_APIENTRY Normal3xContextANGLE(GLeglContext ctx, GLfixed nx, GLfixed ny, 
     }
 }
 
-void GL_APIENTRY NormalPointerContextANGLE(GLeglContext ctx,
-                                           GLenum type,
-                                           GLsizei stride,
-                                           const void *pointer)
+void GL_APIENTRY GL_NormalPointerContextANGLE(GLeglContext ctx,
+                                              GLenum type,
+                                              GLsizei stride,
+                                              const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLNormalPointer,
@@ -22421,11 +22502,11 @@ void GL_APIENTRY NormalPointerContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ObjectLabelContextANGLE(GLeglContext ctx,
-                                         GLenum identifier,
-                                         GLuint name,
-                                         GLsizei length,
-                                         const GLchar *label)
+void GL_APIENTRY GL_ObjectLabelContextANGLE(GLeglContext ctx,
+                                            GLenum identifier,
+                                            GLuint name,
+                                            GLsizei length,
+                                            const GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLObjectLabel,
@@ -22451,11 +22532,11 @@ void GL_APIENTRY ObjectLabelContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ObjectLabelKHRContextANGLE(GLeglContext ctx,
-                                            GLenum identifier,
-                                            GLuint name,
-                                            GLsizei length,
-                                            const GLchar *label)
+void GL_APIENTRY GL_ObjectLabelKHRContextANGLE(GLeglContext ctx,
+                                               GLenum identifier,
+                                               GLuint name,
+                                               GLsizei length,
+                                               const GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLObjectLabelKHR,
@@ -22481,10 +22562,10 @@ void GL_APIENTRY ObjectLabelKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ObjectPtrLabelContextANGLE(GLeglContext ctx,
-                                            const void *ptr,
-                                            GLsizei length,
-                                            const GLchar *label)
+void GL_APIENTRY GL_ObjectPtrLabelContextANGLE(GLeglContext ctx,
+                                               const void *ptr,
+                                               GLsizei length,
+                                               const GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLObjectPtrLabel,
@@ -22509,10 +22590,10 @@ void GL_APIENTRY ObjectPtrLabelContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
-                                               const void *ptr,
-                                               GLsizei length,
-                                               const GLchar *label)
+void GL_APIENTRY GL_ObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
+                                                  const void *ptr,
+                                                  GLsizei length,
+                                                  const GLchar *label)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLObjectPtrLabelKHR,
@@ -22537,13 +22618,13 @@ void GL_APIENTRY ObjectPtrLabelKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY OrthofContextANGLE(GLeglContext ctx,
-                                    GLfloat l,
-                                    GLfloat r,
-                                    GLfloat b,
-                                    GLfloat t,
-                                    GLfloat n,
-                                    GLfloat f)
+void GL_APIENTRY GL_OrthofContextANGLE(GLeglContext ctx,
+                                       GLfloat l,
+                                       GLfloat r,
+                                       GLfloat b,
+                                       GLfloat t,
+                                       GLfloat n,
+                                       GLfloat f)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLOrthof, "context = %d, l = %f, r = %f, b = %f, t = %f, n = %f, f = %f",
@@ -22566,13 +22647,13 @@ void GL_APIENTRY OrthofContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY OrthoxContextANGLE(GLeglContext ctx,
-                                    GLfixed l,
-                                    GLfixed r,
-                                    GLfixed b,
-                                    GLfixed t,
-                                    GLfixed n,
-                                    GLfixed f)
+void GL_APIENTRY GL_OrthoxContextANGLE(GLeglContext ctx,
+                                       GLfixed l,
+                                       GLfixed r,
+                                       GLfixed b,
+                                       GLfixed t,
+                                       GLfixed n,
+                                       GLfixed f)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLOrthox,
@@ -22596,7 +22677,7 @@ void GL_APIENTRY OrthoxContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY PatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
+void GL_APIENTRY GL_PatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPatchParameteri, "context = %d, pname = %s, value = %d", CID(context),
@@ -22620,7 +22701,7 @@ void GL_APIENTRY PatchParameteriContextANGLE(GLeglContext ctx, GLenum pname, GLi
     }
 }
 
-void GL_APIENTRY PatchParameteriEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
+void GL_APIENTRY GL_PatchParameteriEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPatchParameteriEXT, "context = %d, pname = %s, value = %d", CID(context),
@@ -22644,7 +22725,7 @@ void GL_APIENTRY PatchParameteriEXTContextANGLE(GLeglContext ctx, GLenum pname, 
     }
 }
 
-void GL_APIENTRY PauseTransformFeedbackContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_PauseTransformFeedbackContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPauseTransformFeedback, "context = %d", CID(context));
@@ -22666,7 +22747,7 @@ void GL_APIENTRY PauseTransformFeedbackContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY PixelStoreiContextANGLE(GLeglContext ctx, GLenum pname, GLint param)
+void GL_APIENTRY GL_PixelStoreiContextANGLE(GLeglContext ctx, GLenum pname, GLint param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPixelStorei, "context = %d, pname = %s, param = %d", CID(context),
@@ -22690,7 +22771,7 @@ void GL_APIENTRY PixelStoreiContextANGLE(GLeglContext ctx, GLenum pname, GLint p
     }
 }
 
-void GL_APIENTRY PointParameterfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_PointParameterfContextANGLE(GLeglContext ctx, GLenum pname, GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPointParameterf, "context = %d, pname = %s, param = %f", CID(context),
@@ -22715,7 +22796,9 @@ void GL_APIENTRY PointParameterfContextANGLE(GLeglContext ctx, GLenum pname, GLf
     }
 }
 
-void GL_APIENTRY PointParameterfvContextANGLE(GLeglContext ctx, GLenum pname, const GLfloat *params)
+void GL_APIENTRY GL_PointParameterfvContextANGLE(GLeglContext ctx,
+                                                 GLenum pname,
+                                                 const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPointParameterfv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -22740,7 +22823,7 @@ void GL_APIENTRY PointParameterfvContextANGLE(GLeglContext ctx, GLenum pname, co
     }
 }
 
-void GL_APIENTRY PointParameterxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_PointParameterxContextANGLE(GLeglContext ctx, GLenum pname, GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPointParameterx, "context = %d, pname = %s, param = 0x%X", CID(context),
@@ -22765,7 +22848,9 @@ void GL_APIENTRY PointParameterxContextANGLE(GLeglContext ctx, GLenum pname, GLf
     }
 }
 
-void GL_APIENTRY PointParameterxvContextANGLE(GLeglContext ctx, GLenum pname, const GLfixed *params)
+void GL_APIENTRY GL_PointParameterxvContextANGLE(GLeglContext ctx,
+                                                 GLenum pname,
+                                                 const GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPointParameterxv, "context = %d, pname = %s, params = 0x%016" PRIxPTR "",
@@ -22790,7 +22875,7 @@ void GL_APIENTRY PointParameterxvContextANGLE(GLeglContext ctx, GLenum pname, co
     }
 }
 
-void GL_APIENTRY PointSizeContextANGLE(GLeglContext ctx, GLfloat size)
+void GL_APIENTRY GL_PointSizeContextANGLE(GLeglContext ctx, GLfloat size)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPointSize, "context = %d, size = %f", CID(context), size);
@@ -22812,10 +22897,10 @@ void GL_APIENTRY PointSizeContextANGLE(GLeglContext ctx, GLfloat size)
     }
 }
 
-void GL_APIENTRY PointSizePointerOESContextANGLE(GLeglContext ctx,
-                                                 GLenum type,
-                                                 GLsizei stride,
-                                                 const void *pointer)
+void GL_APIENTRY GL_PointSizePointerOESContextANGLE(GLeglContext ctx,
+                                                    GLenum type,
+                                                    GLsizei stride,
+                                                    const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPointSizePointerOES,
@@ -22841,7 +22926,7 @@ void GL_APIENTRY PointSizePointerOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY PointSizexContextANGLE(GLeglContext ctx, GLfixed size)
+void GL_APIENTRY GL_PointSizexContextANGLE(GLeglContext ctx, GLfixed size)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPointSizex, "context = %d, size = 0x%X", CID(context), size);
@@ -22863,7 +22948,7 @@ void GL_APIENTRY PointSizexContextANGLE(GLeglContext ctx, GLfixed size)
     }
 }
 
-void GL_APIENTRY PolygonOffsetContextANGLE(GLeglContext ctx, GLfloat factor, GLfloat units)
+void GL_APIENTRY GL_PolygonOffsetContextANGLE(GLeglContext ctx, GLfloat factor, GLfloat units)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPolygonOffset, "context = %d, factor = %f, units = %f", CID(context), factor,
@@ -22887,7 +22972,7 @@ void GL_APIENTRY PolygonOffsetContextANGLE(GLeglContext ctx, GLfloat factor, GLf
     }
 }
 
-void GL_APIENTRY PolygonOffsetxContextANGLE(GLeglContext ctx, GLfixed factor, GLfixed units)
+void GL_APIENTRY GL_PolygonOffsetxContextANGLE(GLeglContext ctx, GLfixed factor, GLfixed units)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPolygonOffsetx, "context = %d, factor = 0x%X, units = 0x%X", CID(context),
@@ -22911,7 +22996,7 @@ void GL_APIENTRY PolygonOffsetxContextANGLE(GLeglContext ctx, GLfixed factor, GL
     }
 }
 
-void GL_APIENTRY PopDebugGroupContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_PopDebugGroupContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPopDebugGroup, "context = %d", CID(context));
@@ -22933,7 +23018,7 @@ void GL_APIENTRY PopDebugGroupContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY PopDebugGroupKHRContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_PopDebugGroupKHRContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPopDebugGroupKHR, "context = %d", CID(context));
@@ -22955,7 +23040,7 @@ void GL_APIENTRY PopDebugGroupKHRContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY PopGroupMarkerEXTContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_PopGroupMarkerEXTContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     // Don't run the EVENT() macro on the EXT_debug_marker entry points.
@@ -22979,7 +23064,7 @@ void GL_APIENTRY PopGroupMarkerEXTContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY PopMatrixContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_PopMatrixContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPopMatrix, "context = %d", CID(context));
@@ -23001,15 +23086,15 @@ void GL_APIENTRY PopMatrixContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY PrimitiveBoundingBoxContextANGLE(GLeglContext ctx,
-                                                  GLfloat minX,
-                                                  GLfloat minY,
-                                                  GLfloat minZ,
-                                                  GLfloat minW,
-                                                  GLfloat maxX,
-                                                  GLfloat maxY,
-                                                  GLfloat maxZ,
-                                                  GLfloat maxW)
+void GL_APIENTRY GL_PrimitiveBoundingBoxContextANGLE(GLeglContext ctx,
+                                                     GLfloat minX,
+                                                     GLfloat minY,
+                                                     GLfloat minZ,
+                                                     GLfloat minW,
+                                                     GLfloat maxX,
+                                                     GLfloat maxY,
+                                                     GLfloat maxZ,
+                                                     GLfloat maxW)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPrimitiveBoundingBox,
@@ -23037,11 +23122,11 @@ void GL_APIENTRY PrimitiveBoundingBoxContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramBinaryContextANGLE(GLeglContext ctx,
-                                           GLuint program,
-                                           GLenum binaryFormat,
-                                           const void *binary,
-                                           GLsizei length)
+void GL_APIENTRY GL_ProgramBinaryContextANGLE(GLeglContext ctx,
+                                              GLuint program,
+                                              GLenum binaryFormat,
+                                              const void *binary,
+                                              GLsizei length)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramBinary,
@@ -23070,11 +23155,11 @@ void GL_APIENTRY ProgramBinaryContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramBinaryOESContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLenum binaryFormat,
-                                              const void *binary,
-                                              GLint length)
+void GL_APIENTRY GL_ProgramBinaryOESContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLenum binaryFormat,
+                                                 const void *binary,
+                                                 GLint length)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramBinaryOES,
@@ -23103,10 +23188,10 @@ void GL_APIENTRY ProgramBinaryOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramParameteriContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLenum pname,
-                                               GLint value)
+void GL_APIENTRY GL_ProgramParameteriContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLenum pname,
+                                                  GLint value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramParameteri, "context = %d, program = %u, pname = %s, value = %d",
@@ -23131,10 +23216,10 @@ void GL_APIENTRY ProgramParameteriContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramParameteriEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLenum pname,
-                                                  GLint value)
+void GL_APIENTRY GL_ProgramParameteriEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLenum pname,
+                                                     GLint value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramParameteriEXT, "context = %d, program = %u, pname = %s, value = %d",
@@ -23159,10 +23244,10 @@ void GL_APIENTRY ProgramParameteriEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1fContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLfloat v0)
+void GL_APIENTRY GL_ProgramUniform1fContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLfloat v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1f, "context = %d, program = %u, location = %d, v0 = %f",
@@ -23188,10 +23273,10 @@ void GL_APIENTRY ProgramUniform1fContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1fEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLfloat v0)
+void GL_APIENTRY GL_ProgramUniform1fEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLfloat v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1fEXT, "context = %d, program = %u, location = %d, v0 = %f",
@@ -23218,11 +23303,11 @@ void GL_APIENTRY ProgramUniform1fEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1fvContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform1fvContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1fv,
@@ -23251,11 +23336,11 @@ void GL_APIENTRY ProgramUniform1fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1fvEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform1fvEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1fvEXT,
@@ -23284,10 +23369,10 @@ void GL_APIENTRY ProgramUniform1fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1iContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLint v0)
+void GL_APIENTRY GL_ProgramUniform1iContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLint v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1i, "context = %d, program = %u, location = %d, v0 = %d",
@@ -23313,10 +23398,10 @@ void GL_APIENTRY ProgramUniform1iContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1iEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLint v0)
+void GL_APIENTRY GL_ProgramUniform1iEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLint v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1iEXT, "context = %d, program = %u, location = %d, v0 = %d",
@@ -23343,11 +23428,11 @@ void GL_APIENTRY ProgramUniform1iEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1ivContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLint *value)
+void GL_APIENTRY GL_ProgramUniform1ivContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1iv,
@@ -23376,11 +23461,11 @@ void GL_APIENTRY ProgramUniform1ivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1ivEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLint *value)
+void GL_APIENTRY GL_ProgramUniform1ivEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1ivEXT,
@@ -23409,10 +23494,10 @@ void GL_APIENTRY ProgramUniform1ivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1uiContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLuint v0)
+void GL_APIENTRY GL_ProgramUniform1uiContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLuint v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1ui, "context = %d, program = %u, location = %d, v0 = %u",
@@ -23438,10 +23523,10 @@ void GL_APIENTRY ProgramUniform1uiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1uiEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLuint v0)
+void GL_APIENTRY GL_ProgramUniform1uiEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLuint v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1uiEXT, "context = %d, program = %u, location = %d, v0 = %u",
@@ -23469,11 +23554,11 @@ void GL_APIENTRY ProgramUniform1uiEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1uivContextANGLE(GLeglContext ctx,
-                                                GLuint program,
-                                                GLint location,
-                                                GLsizei count,
-                                                const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform1uivContextANGLE(GLeglContext ctx,
+                                                   GLuint program,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1uiv,
@@ -23502,11 +23587,11 @@ void GL_APIENTRY ProgramUniform1uivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform1uivEXTContextANGLE(GLeglContext ctx,
-                                                   GLuint program,
-                                                   GLint location,
-                                                   GLsizei count,
-                                                   const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform1uivEXTContextANGLE(GLeglContext ctx,
+                                                      GLuint program,
+                                                      GLint location,
+                                                      GLsizei count,
+                                                      const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform1uivEXT,
@@ -23535,11 +23620,11 @@ void GL_APIENTRY ProgramUniform1uivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2fContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLfloat v0,
-                                              GLfloat v1)
+void GL_APIENTRY GL_ProgramUniform2fContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLfloat v0,
+                                                 GLfloat v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2f,
@@ -23568,11 +23653,11 @@ void GL_APIENTRY ProgramUniform2fContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2fEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLfloat v0,
-                                                 GLfloat v1)
+void GL_APIENTRY GL_ProgramUniform2fEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLfloat v0,
+                                                    GLfloat v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2fEXT,
@@ -23601,11 +23686,11 @@ void GL_APIENTRY ProgramUniform2fEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2fvContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform2fvContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2fv,
@@ -23634,11 +23719,11 @@ void GL_APIENTRY ProgramUniform2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2fvEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform2fvEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2fvEXT,
@@ -23667,8 +23752,11 @@ void GL_APIENTRY ProgramUniform2fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY
-ProgramUniform2iContextANGLE(GLeglContext ctx, GLuint program, GLint location, GLint v0, GLint v1)
+void GL_APIENTRY GL_ProgramUniform2iContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLint v0,
+                                                 GLint v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2i,
@@ -23697,11 +23785,11 @@ ProgramUniform2iContextANGLE(GLeglContext ctx, GLuint program, GLint location, G
     }
 }
 
-void GL_APIENTRY ProgramUniform2iEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLint v0,
-                                                 GLint v1)
+void GL_APIENTRY GL_ProgramUniform2iEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLint v0,
+                                                    GLint v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2iEXT,
@@ -23730,11 +23818,11 @@ void GL_APIENTRY ProgramUniform2iEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2ivContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLint *value)
+void GL_APIENTRY GL_ProgramUniform2ivContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2iv,
@@ -23763,11 +23851,11 @@ void GL_APIENTRY ProgramUniform2ivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2ivEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLint *value)
+void GL_APIENTRY GL_ProgramUniform2ivEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2ivEXT,
@@ -23796,11 +23884,11 @@ void GL_APIENTRY ProgramUniform2ivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2uiContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLuint v0,
-                                               GLuint v1)
+void GL_APIENTRY GL_ProgramUniform2uiContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLuint v0,
+                                                  GLuint v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2ui,
@@ -23829,11 +23917,11 @@ void GL_APIENTRY ProgramUniform2uiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2uiEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLuint v0,
-                                                  GLuint v1)
+void GL_APIENTRY GL_ProgramUniform2uiEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLuint v0,
+                                                     GLuint v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2uiEXT,
@@ -23862,11 +23950,11 @@ void GL_APIENTRY ProgramUniform2uiEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2uivContextANGLE(GLeglContext ctx,
-                                                GLuint program,
-                                                GLint location,
-                                                GLsizei count,
-                                                const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform2uivContextANGLE(GLeglContext ctx,
+                                                   GLuint program,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2uiv,
@@ -23895,11 +23983,11 @@ void GL_APIENTRY ProgramUniform2uivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform2uivEXTContextANGLE(GLeglContext ctx,
-                                                   GLuint program,
-                                                   GLint location,
-                                                   GLsizei count,
-                                                   const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform2uivEXTContextANGLE(GLeglContext ctx,
+                                                      GLuint program,
+                                                      GLint location,
+                                                      GLsizei count,
+                                                      const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform2uivEXT,
@@ -23928,12 +24016,12 @@ void GL_APIENTRY ProgramUniform2uivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3fContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLfloat v0,
-                                              GLfloat v1,
-                                              GLfloat v2)
+void GL_APIENTRY GL_ProgramUniform3fContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLfloat v0,
+                                                 GLfloat v1,
+                                                 GLfloat v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3f,
@@ -23962,12 +24050,12 @@ void GL_APIENTRY ProgramUniform3fContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3fEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLfloat v0,
-                                                 GLfloat v1,
-                                                 GLfloat v2)
+void GL_APIENTRY GL_ProgramUniform3fEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLfloat v0,
+                                                    GLfloat v1,
+                                                    GLfloat v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3fEXT,
@@ -23996,11 +24084,11 @@ void GL_APIENTRY ProgramUniform3fEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3fvContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform3fvContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3fv,
@@ -24029,11 +24117,11 @@ void GL_APIENTRY ProgramUniform3fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3fvEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform3fvEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3fvEXT,
@@ -24062,12 +24150,12 @@ void GL_APIENTRY ProgramUniform3fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3iContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLint v0,
-                                              GLint v1,
-                                              GLint v2)
+void GL_APIENTRY GL_ProgramUniform3iContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLint v0,
+                                                 GLint v1,
+                                                 GLint v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3i,
@@ -24096,12 +24184,12 @@ void GL_APIENTRY ProgramUniform3iContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3iEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLint v0,
-                                                 GLint v1,
-                                                 GLint v2)
+void GL_APIENTRY GL_ProgramUniform3iEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLint v0,
+                                                    GLint v1,
+                                                    GLint v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3iEXT,
@@ -24130,11 +24218,11 @@ void GL_APIENTRY ProgramUniform3iEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3ivContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLint *value)
+void GL_APIENTRY GL_ProgramUniform3ivContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3iv,
@@ -24163,11 +24251,11 @@ void GL_APIENTRY ProgramUniform3ivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3ivEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLint *value)
+void GL_APIENTRY GL_ProgramUniform3ivEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3ivEXT,
@@ -24196,12 +24284,12 @@ void GL_APIENTRY ProgramUniform3ivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3uiContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLuint v0,
-                                               GLuint v1,
-                                               GLuint v2)
+void GL_APIENTRY GL_ProgramUniform3uiContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLuint v0,
+                                                  GLuint v1,
+                                                  GLuint v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3ui,
@@ -24230,12 +24318,12 @@ void GL_APIENTRY ProgramUniform3uiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3uiEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLuint v0,
-                                                  GLuint v1,
-                                                  GLuint v2)
+void GL_APIENTRY GL_ProgramUniform3uiEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLuint v0,
+                                                     GLuint v1,
+                                                     GLuint v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3uiEXT,
@@ -24264,11 +24352,11 @@ void GL_APIENTRY ProgramUniform3uiEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3uivContextANGLE(GLeglContext ctx,
-                                                GLuint program,
-                                                GLint location,
-                                                GLsizei count,
-                                                const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform3uivContextANGLE(GLeglContext ctx,
+                                                   GLuint program,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3uiv,
@@ -24297,11 +24385,11 @@ void GL_APIENTRY ProgramUniform3uivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform3uivEXTContextANGLE(GLeglContext ctx,
-                                                   GLuint program,
-                                                   GLint location,
-                                                   GLsizei count,
-                                                   const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform3uivEXTContextANGLE(GLeglContext ctx,
+                                                      GLuint program,
+                                                      GLint location,
+                                                      GLsizei count,
+                                                      const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform3uivEXT,
@@ -24330,13 +24418,13 @@ void GL_APIENTRY ProgramUniform3uivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4fContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLfloat v0,
-                                              GLfloat v1,
-                                              GLfloat v2,
-                                              GLfloat v3)
+void GL_APIENTRY GL_ProgramUniform4fContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLfloat v0,
+                                                 GLfloat v1,
+                                                 GLfloat v2,
+                                                 GLfloat v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4f,
@@ -24365,13 +24453,13 @@ void GL_APIENTRY ProgramUniform4fContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4fEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLfloat v0,
-                                                 GLfloat v1,
-                                                 GLfloat v2,
-                                                 GLfloat v3)
+void GL_APIENTRY GL_ProgramUniform4fEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLfloat v0,
+                                                    GLfloat v1,
+                                                    GLfloat v2,
+                                                    GLfloat v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4fEXT,
@@ -24400,11 +24488,11 @@ void GL_APIENTRY ProgramUniform4fEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4fvContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform4fvContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4fv,
@@ -24433,11 +24521,11 @@ void GL_APIENTRY ProgramUniform4fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4fvEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniform4fvEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4fvEXT,
@@ -24466,13 +24554,13 @@ void GL_APIENTRY ProgramUniform4fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4iContextANGLE(GLeglContext ctx,
-                                              GLuint program,
-                                              GLint location,
-                                              GLint v0,
-                                              GLint v1,
-                                              GLint v2,
-                                              GLint v3)
+void GL_APIENTRY GL_ProgramUniform4iContextANGLE(GLeglContext ctx,
+                                                 GLuint program,
+                                                 GLint location,
+                                                 GLint v0,
+                                                 GLint v1,
+                                                 GLint v2,
+                                                 GLint v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4i,
@@ -24501,13 +24589,13 @@ void GL_APIENTRY ProgramUniform4iContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4iEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLint location,
-                                                 GLint v0,
-                                                 GLint v1,
-                                                 GLint v2,
-                                                 GLint v3)
+void GL_APIENTRY GL_ProgramUniform4iEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLint location,
+                                                    GLint v0,
+                                                    GLint v1,
+                                                    GLint v2,
+                                                    GLint v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4iEXT,
@@ -24536,11 +24624,11 @@ void GL_APIENTRY ProgramUniform4iEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4ivContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLsizei count,
-                                               const GLint *value)
+void GL_APIENTRY GL_ProgramUniform4ivContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLsizei count,
+                                                  const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4iv,
@@ -24569,11 +24657,11 @@ void GL_APIENTRY ProgramUniform4ivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4ivEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLsizei count,
-                                                  const GLint *value)
+void GL_APIENTRY GL_ProgramUniform4ivEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLsizei count,
+                                                     const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4ivEXT,
@@ -24602,13 +24690,13 @@ void GL_APIENTRY ProgramUniform4ivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4uiContextANGLE(GLeglContext ctx,
-                                               GLuint program,
-                                               GLint location,
-                                               GLuint v0,
-                                               GLuint v1,
-                                               GLuint v2,
-                                               GLuint v3)
+void GL_APIENTRY GL_ProgramUniform4uiContextANGLE(GLeglContext ctx,
+                                                  GLuint program,
+                                                  GLint location,
+                                                  GLuint v0,
+                                                  GLuint v1,
+                                                  GLuint v2,
+                                                  GLuint v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4ui,
@@ -24637,13 +24725,13 @@ void GL_APIENTRY ProgramUniform4uiContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4uiEXTContextANGLE(GLeglContext ctx,
-                                                  GLuint program,
-                                                  GLint location,
-                                                  GLuint v0,
-                                                  GLuint v1,
-                                                  GLuint v2,
-                                                  GLuint v3)
+void GL_APIENTRY GL_ProgramUniform4uiEXTContextANGLE(GLeglContext ctx,
+                                                     GLuint program,
+                                                     GLint location,
+                                                     GLuint v0,
+                                                     GLuint v1,
+                                                     GLuint v2,
+                                                     GLuint v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4uiEXT,
@@ -24672,11 +24760,11 @@ void GL_APIENTRY ProgramUniform4uiEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4uivContextANGLE(GLeglContext ctx,
-                                                GLuint program,
-                                                GLint location,
-                                                GLsizei count,
-                                                const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform4uivContextANGLE(GLeglContext ctx,
+                                                   GLuint program,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4uiv,
@@ -24705,11 +24793,11 @@ void GL_APIENTRY ProgramUniform4uivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniform4uivEXTContextANGLE(GLeglContext ctx,
-                                                   GLuint program,
-                                                   GLint location,
-                                                   GLsizei count,
-                                                   const GLuint *value)
+void GL_APIENTRY GL_ProgramUniform4uivEXTContextANGLE(GLeglContext ctx,
+                                                      GLuint program,
+                                                      GLint location,
+                                                      GLsizei count,
+                                                      const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniform4uivEXT,
@@ -24738,12 +24826,12 @@ void GL_APIENTRY ProgramUniform4uivEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2fvContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLint location,
-                                                     GLsizei count,
-                                                     GLboolean transpose,
-                                                     const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2fvContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLint location,
+                                                        GLsizei count,
+                                                        GLboolean transpose,
+                                                        const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix2fv,
@@ -24774,12 +24862,12 @@ void GL_APIENTRY ProgramUniformMatrix2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2fvEXTContextANGLE(GLeglContext ctx,
-                                                        GLuint program,
-                                                        GLint location,
-                                                        GLsizei count,
-                                                        GLboolean transpose,
-                                                        const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2fvEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint program,
+                                                           GLint location,
+                                                           GLsizei count,
+                                                           GLboolean transpose,
+                                                           const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix2fvEXT,
@@ -24810,12 +24898,12 @@ void GL_APIENTRY ProgramUniformMatrix2fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2x3fvContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLint location,
-                                                       GLsizei count,
-                                                       GLboolean transpose,
-                                                       const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2x3fvContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLint location,
+                                                          GLsizei count,
+                                                          GLboolean transpose,
+                                                          const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix2x3fv,
@@ -24846,12 +24934,12 @@ void GL_APIENTRY ProgramUniformMatrix2x3fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2x3fvEXTContextANGLE(GLeglContext ctx,
-                                                          GLuint program,
-                                                          GLint location,
-                                                          GLsizei count,
-                                                          GLboolean transpose,
-                                                          const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2x3fvEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint program,
+                                                             GLint location,
+                                                             GLsizei count,
+                                                             GLboolean transpose,
+                                                             const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix2x3fvEXT,
@@ -24882,12 +24970,12 @@ void GL_APIENTRY ProgramUniformMatrix2x3fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2x4fvContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLint location,
-                                                       GLsizei count,
-                                                       GLboolean transpose,
-                                                       const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2x4fvContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLint location,
+                                                          GLsizei count,
+                                                          GLboolean transpose,
+                                                          const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix2x4fv,
@@ -24918,12 +25006,12 @@ void GL_APIENTRY ProgramUniformMatrix2x4fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix2x4fvEXTContextANGLE(GLeglContext ctx,
-                                                          GLuint program,
-                                                          GLint location,
-                                                          GLsizei count,
-                                                          GLboolean transpose,
-                                                          const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix2x4fvEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint program,
+                                                             GLint location,
+                                                             GLsizei count,
+                                                             GLboolean transpose,
+                                                             const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix2x4fvEXT,
@@ -24954,12 +25042,12 @@ void GL_APIENTRY ProgramUniformMatrix2x4fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3fvContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLint location,
-                                                     GLsizei count,
-                                                     GLboolean transpose,
-                                                     const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3fvContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLint location,
+                                                        GLsizei count,
+                                                        GLboolean transpose,
+                                                        const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix3fv,
@@ -24990,12 +25078,12 @@ void GL_APIENTRY ProgramUniformMatrix3fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3fvEXTContextANGLE(GLeglContext ctx,
-                                                        GLuint program,
-                                                        GLint location,
-                                                        GLsizei count,
-                                                        GLboolean transpose,
-                                                        const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3fvEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint program,
+                                                           GLint location,
+                                                           GLsizei count,
+                                                           GLboolean transpose,
+                                                           const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix3fvEXT,
@@ -25026,12 +25114,12 @@ void GL_APIENTRY ProgramUniformMatrix3fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3x2fvContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLint location,
-                                                       GLsizei count,
-                                                       GLboolean transpose,
-                                                       const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3x2fvContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLint location,
+                                                          GLsizei count,
+                                                          GLboolean transpose,
+                                                          const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix3x2fv,
@@ -25062,12 +25150,12 @@ void GL_APIENTRY ProgramUniformMatrix3x2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3x2fvEXTContextANGLE(GLeglContext ctx,
-                                                          GLuint program,
-                                                          GLint location,
-                                                          GLsizei count,
-                                                          GLboolean transpose,
-                                                          const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3x2fvEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint program,
+                                                             GLint location,
+                                                             GLsizei count,
+                                                             GLboolean transpose,
+                                                             const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix3x2fvEXT,
@@ -25098,12 +25186,12 @@ void GL_APIENTRY ProgramUniformMatrix3x2fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3x4fvContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLint location,
-                                                       GLsizei count,
-                                                       GLboolean transpose,
-                                                       const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3x4fvContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLint location,
+                                                          GLsizei count,
+                                                          GLboolean transpose,
+                                                          const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix3x4fv,
@@ -25134,12 +25222,12 @@ void GL_APIENTRY ProgramUniformMatrix3x4fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix3x4fvEXTContextANGLE(GLeglContext ctx,
-                                                          GLuint program,
-                                                          GLint location,
-                                                          GLsizei count,
-                                                          GLboolean transpose,
-                                                          const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix3x4fvEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint program,
+                                                             GLint location,
+                                                             GLsizei count,
+                                                             GLboolean transpose,
+                                                             const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix3x4fvEXT,
@@ -25170,12 +25258,12 @@ void GL_APIENTRY ProgramUniformMatrix3x4fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4fvContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLint location,
-                                                     GLsizei count,
-                                                     GLboolean transpose,
-                                                     const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4fvContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLint location,
+                                                        GLsizei count,
+                                                        GLboolean transpose,
+                                                        const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix4fv,
@@ -25206,12 +25294,12 @@ void GL_APIENTRY ProgramUniformMatrix4fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4fvEXTContextANGLE(GLeglContext ctx,
-                                                        GLuint program,
-                                                        GLint location,
-                                                        GLsizei count,
-                                                        GLboolean transpose,
-                                                        const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4fvEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint program,
+                                                           GLint location,
+                                                           GLsizei count,
+                                                           GLboolean transpose,
+                                                           const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix4fvEXT,
@@ -25242,12 +25330,12 @@ void GL_APIENTRY ProgramUniformMatrix4fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4x2fvContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLint location,
-                                                       GLsizei count,
-                                                       GLboolean transpose,
-                                                       const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4x2fvContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLint location,
+                                                          GLsizei count,
+                                                          GLboolean transpose,
+                                                          const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix4x2fv,
@@ -25278,12 +25366,12 @@ void GL_APIENTRY ProgramUniformMatrix4x2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4x2fvEXTContextANGLE(GLeglContext ctx,
-                                                          GLuint program,
-                                                          GLint location,
-                                                          GLsizei count,
-                                                          GLboolean transpose,
-                                                          const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4x2fvEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint program,
+                                                             GLint location,
+                                                             GLsizei count,
+                                                             GLboolean transpose,
+                                                             const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix4x2fvEXT,
@@ -25314,12 +25402,12 @@ void GL_APIENTRY ProgramUniformMatrix4x2fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4x3fvContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLint location,
-                                                       GLsizei count,
-                                                       GLboolean transpose,
-                                                       const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4x3fvContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLint location,
+                                                          GLsizei count,
+                                                          GLboolean transpose,
+                                                          const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix4x3fv,
@@ -25350,12 +25438,12 @@ void GL_APIENTRY ProgramUniformMatrix4x3fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ProgramUniformMatrix4x3fvEXTContextANGLE(GLeglContext ctx,
-                                                          GLuint program,
-                                                          GLint location,
-                                                          GLsizei count,
-                                                          GLboolean transpose,
-                                                          const GLfloat *value)
+void GL_APIENTRY GL_ProgramUniformMatrix4x3fvEXTContextANGLE(GLeglContext ctx,
+                                                             GLuint program,
+                                                             GLint location,
+                                                             GLsizei count,
+                                                             GLboolean transpose,
+                                                             const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProgramUniformMatrix4x3fvEXT,
@@ -25386,11 +25474,11 @@ void GL_APIENTRY ProgramUniformMatrix4x3fvEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY PushDebugGroupContextANGLE(GLeglContext ctx,
-                                            GLenum source,
-                                            GLuint id,
-                                            GLsizei length,
-                                            const GLchar *message)
+void GL_APIENTRY GL_PushDebugGroupContextANGLE(GLeglContext ctx,
+                                               GLenum source,
+                                               GLuint id,
+                                               GLsizei length,
+                                               const GLchar *message)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPushDebugGroup,
@@ -25416,11 +25504,11 @@ void GL_APIENTRY PushDebugGroupContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY PushDebugGroupKHRContextANGLE(GLeglContext ctx,
-                                               GLenum source,
-                                               GLuint id,
-                                               GLsizei length,
-                                               const GLchar *message)
+void GL_APIENTRY GL_PushDebugGroupKHRContextANGLE(GLeglContext ctx,
+                                                  GLenum source,
+                                                  GLuint id,
+                                                  GLsizei length,
+                                                  const GLchar *message)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPushDebugGroupKHR,
@@ -25446,9 +25534,9 @@ void GL_APIENTRY PushDebugGroupKHRContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY PushGroupMarkerEXTContextANGLE(GLeglContext ctx,
-                                                GLsizei length,
-                                                const GLchar *marker)
+void GL_APIENTRY GL_PushGroupMarkerEXTContextANGLE(GLeglContext ctx,
+                                                   GLsizei length,
+                                                   const GLchar *marker)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     // Don't run the EVENT() macro on the EXT_debug_marker entry points.
@@ -25474,7 +25562,7 @@ void GL_APIENTRY PushGroupMarkerEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY PushMatrixContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_PushMatrixContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLPushMatrix, "context = %d", CID(context));
@@ -25496,7 +25584,7 @@ void GL_APIENTRY PushMatrixContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY QueryCounterEXTContextANGLE(GLeglContext ctx, GLuint id, GLenum target)
+void GL_APIENTRY GL_QueryCounterEXTContextANGLE(GLeglContext ctx, GLuint id, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLQueryCounterEXT, "context = %d, id = %u, target = %s", CID(context), id,
@@ -25522,9 +25610,9 @@ void GL_APIENTRY QueryCounterEXTContextANGLE(GLeglContext ctx, GLuint id, GLenum
     }
 }
 
-GLbitfield GL_APIENTRY QueryMatrixxOESContextANGLE(GLeglContext ctx,
-                                                   GLfixed *mantissa,
-                                                   GLint *exponent)
+GLbitfield GL_APIENTRY GL_QueryMatrixxOESContextANGLE(GLeglContext ctx,
+                                                      GLfixed *mantissa,
+                                                      GLint *exponent)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLQueryMatrixxOES,
@@ -25556,7 +25644,7 @@ GLbitfield GL_APIENTRY QueryMatrixxOESContextANGLE(GLeglContext ctx,
     return returnValue;
 }
 
-void GL_APIENTRY ReadBufferContextANGLE(GLeglContext ctx, GLenum src)
+void GL_APIENTRY GL_ReadBufferContextANGLE(GLeglContext ctx, GLenum src)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLReadBuffer, "context = %d, src = %s", CID(context),
@@ -25579,14 +25667,14 @@ void GL_APIENTRY ReadBufferContextANGLE(GLeglContext ctx, GLenum src)
     }
 }
 
-void GL_APIENTRY ReadPixelsContextANGLE(GLeglContext ctx,
-                                        GLint x,
-                                        GLint y,
-                                        GLsizei width,
-                                        GLsizei height,
-                                        GLenum format,
-                                        GLenum type,
-                                        void *pixels)
+void GL_APIENTRY GL_ReadPixelsContextANGLE(GLeglContext ctx,
+                                           GLint x,
+                                           GLint y,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLenum format,
+                                           GLenum type,
+                                           void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLReadPixels,
@@ -25613,15 +25701,15 @@ void GL_APIENTRY ReadPixelsContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ReadnPixelsContextANGLE(GLeglContext ctx,
-                                         GLint x,
-                                         GLint y,
-                                         GLsizei width,
-                                         GLsizei height,
-                                         GLenum format,
-                                         GLenum type,
-                                         GLsizei bufSize,
-                                         void *data)
+void GL_APIENTRY GL_ReadnPixelsContextANGLE(GLeglContext ctx,
+                                            GLint x,
+                                            GLint y,
+                                            GLsizei width,
+                                            GLsizei height,
+                                            GLenum format,
+                                            GLenum type,
+                                            GLsizei bufSize,
+                                            void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLReadnPixels,
@@ -25650,15 +25738,15 @@ void GL_APIENTRY ReadnPixelsContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ReadnPixelsEXTContextANGLE(GLeglContext ctx,
-                                            GLint x,
-                                            GLint y,
-                                            GLsizei width,
-                                            GLsizei height,
-                                            GLenum format,
-                                            GLenum type,
-                                            GLsizei bufSize,
-                                            void *data)
+void GL_APIENTRY GL_ReadnPixelsEXTContextANGLE(GLeglContext ctx,
+                                               GLint x,
+                                               GLint y,
+                                               GLsizei width,
+                                               GLsizei height,
+                                               GLenum format,
+                                               GLenum type,
+                                               GLsizei bufSize,
+                                               void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLReadnPixelsEXT,
@@ -25687,7 +25775,7 @@ void GL_APIENTRY ReadnPixelsEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ReleaseShaderCompilerContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_ReleaseShaderCompilerContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLReleaseShaderCompiler, "context = %d", CID(context));
@@ -25709,11 +25797,11 @@ void GL_APIENTRY ReleaseShaderCompilerContextANGLE(GLeglContext ctx)
     }
 }
 
-void GL_APIENTRY RenderbufferStorageContextANGLE(GLeglContext ctx,
-                                                 GLenum target,
-                                                 GLenum internalformat,
-                                                 GLsizei width,
-                                                 GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageContextANGLE(GLeglContext ctx,
+                                                    GLenum target,
+                                                    GLenum internalformat,
+                                                    GLsizei width,
+                                                    GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRenderbufferStorage,
@@ -25741,12 +25829,12 @@ void GL_APIENTRY RenderbufferStorageContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY RenderbufferStorageMultisampleContextANGLE(GLeglContext ctx,
-                                                            GLenum target,
-                                                            GLsizei samples,
-                                                            GLenum internalformat,
-                                                            GLsizei width,
-                                                            GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageMultisampleContextANGLE(GLeglContext ctx,
+                                                               GLenum target,
+                                                               GLsizei samples,
+                                                               GLenum internalformat,
+                                                               GLsizei width,
+                                                               GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRenderbufferStorageMultisample,
@@ -25774,12 +25862,12 @@ void GL_APIENTRY RenderbufferStorageMultisampleContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY RenderbufferStorageMultisampleANGLEContextANGLE(GLeglContext ctx,
-                                                                 GLenum target,
-                                                                 GLsizei samples,
-                                                                 GLenum internalformat,
-                                                                 GLsizei width,
-                                                                 GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                                    GLenum target,
+                                                                    GLsizei samples,
+                                                                    GLenum internalformat,
+                                                                    GLsizei width,
+                                                                    GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRenderbufferStorageMultisampleANGLE,
@@ -25807,12 +25895,12 @@ void GL_APIENTRY RenderbufferStorageMultisampleANGLEContextANGLE(GLeglContext ct
     }
 }
 
-void GL_APIENTRY RenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
-                                                               GLenum target,
-                                                               GLsizei samples,
-                                                               GLenum internalformat,
-                                                               GLsizei width,
-                                                               GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                                  GLenum target,
+                                                                  GLsizei samples,
+                                                                  GLenum internalformat,
+                                                                  GLsizei width,
+                                                                  GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRenderbufferStorageMultisampleEXT,
@@ -25841,11 +25929,11 @@ void GL_APIENTRY RenderbufferStorageMultisampleEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY RenderbufferStorageOESContextANGLE(GLeglContext ctx,
-                                                    GLenum target,
-                                                    GLenum internalformat,
-                                                    GLsizei width,
-                                                    GLsizei height)
+void GL_APIENTRY GL_RenderbufferStorageOESContextANGLE(GLeglContext ctx,
+                                                       GLenum target,
+                                                       GLenum internalformat,
+                                                       GLsizei width,
+                                                       GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRenderbufferStorageOES,
@@ -25873,7 +25961,7 @@ void GL_APIENTRY RenderbufferStorageOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ResumeTransformFeedbackContextANGLE(GLeglContext ctx)
+void GL_APIENTRY GL_ResumeTransformFeedbackContextANGLE(GLeglContext ctx)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLResumeTransformFeedback, "context = %d", CID(context));
@@ -25896,7 +25984,7 @@ void GL_APIENTRY ResumeTransformFeedbackContextANGLE(GLeglContext ctx)
 }
 
 void GL_APIENTRY
-RotatefContextANGLE(GLeglContext ctx, GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
+GL_RotatefContextANGLE(GLeglContext ctx, GLfloat angle, GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRotatef, "context = %d, angle = %f, x = %f, y = %f, z = %f", CID(context),
@@ -25920,7 +26008,7 @@ RotatefContextANGLE(GLeglContext ctx, GLfloat angle, GLfloat x, GLfloat y, GLflo
 }
 
 void GL_APIENTRY
-RotatexContextANGLE(GLeglContext ctx, GLfixed angle, GLfixed x, GLfixed y, GLfixed z)
+GL_RotatexContextANGLE(GLeglContext ctx, GLfixed angle, GLfixed x, GLfixed y, GLfixed z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRotatex, "context = %d, angle = 0x%X, x = 0x%X, y = 0x%X, z = 0x%X",
@@ -25943,7 +26031,7 @@ RotatexContextANGLE(GLeglContext ctx, GLfixed angle, GLfixed x, GLfixed y, GLfix
     }
 }
 
-void GL_APIENTRY SampleCoverageContextANGLE(GLeglContext ctx, GLfloat value, GLboolean invert)
+void GL_APIENTRY GL_SampleCoverageContextANGLE(GLeglContext ctx, GLfloat value, GLboolean invert)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSampleCoverage, "context = %d, value = %f, invert = %s", CID(context), value,
@@ -25967,7 +26055,7 @@ void GL_APIENTRY SampleCoverageContextANGLE(GLeglContext ctx, GLfloat value, GLb
     }
 }
 
-void GL_APIENTRY SampleCoveragexContextANGLE(GLeglContext ctx, GLclampx value, GLboolean invert)
+void GL_APIENTRY GL_SampleCoveragexContextANGLE(GLeglContext ctx, GLclampx value, GLboolean invert)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSampleCoveragex, "context = %d, value = 0x%X, invert = %s", CID(context),
@@ -25991,7 +26079,7 @@ void GL_APIENTRY SampleCoveragexContextANGLE(GLeglContext ctx, GLclampx value, G
     }
 }
 
-void GL_APIENTRY SampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask)
+void GL_APIENTRY GL_SampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSampleMaski, "context = %d, maskNumber = %u, mask = %s", CID(context),
@@ -26015,10 +26103,10 @@ void GL_APIENTRY SampleMaskiContextANGLE(GLeglContext ctx, GLuint maskNumber, GL
     }
 }
 
-void GL_APIENTRY SamplerParameterIivContextANGLE(GLeglContext ctx,
-                                                 GLuint sampler,
-                                                 GLenum pname,
-                                                 const GLint *param)
+void GL_APIENTRY GL_SamplerParameterIivContextANGLE(GLeglContext ctx,
+                                                    GLuint sampler,
+                                                    GLenum pname,
+                                                    const GLint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterIiv,
@@ -26044,10 +26132,10 @@ void GL_APIENTRY SamplerParameterIivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
-                                                    GLuint sampler,
-                                                    GLenum pname,
-                                                    const GLint *param)
+void GL_APIENTRY GL_SamplerParameterIivOESContextANGLE(GLeglContext ctx,
+                                                       GLuint sampler,
+                                                       GLenum pname,
+                                                       const GLint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterIivOES,
@@ -26073,10 +26161,10 @@ void GL_APIENTRY SamplerParameterIivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterIuivContextANGLE(GLeglContext ctx,
-                                                  GLuint sampler,
-                                                  GLenum pname,
-                                                  const GLuint *param)
+void GL_APIENTRY GL_SamplerParameterIuivContextANGLE(GLeglContext ctx,
+                                                     GLuint sampler,
+                                                     GLenum pname,
+                                                     const GLuint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterIuiv,
@@ -26102,10 +26190,10 @@ void GL_APIENTRY SamplerParameterIuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
-                                                     GLuint sampler,
-                                                     GLenum pname,
-                                                     const GLuint *param)
+void GL_APIENTRY GL_SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                        GLuint sampler,
+                                                        GLenum pname,
+                                                        const GLuint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterIuivOES,
@@ -26131,10 +26219,10 @@ void GL_APIENTRY SamplerParameterIuivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterfContextANGLE(GLeglContext ctx,
-                                               GLuint sampler,
-                                               GLenum pname,
-                                               GLfloat param)
+void GL_APIENTRY GL_SamplerParameterfContextANGLE(GLeglContext ctx,
+                                                  GLuint sampler,
+                                                  GLenum pname,
+                                                  GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterf, "context = %d, sampler = %u, pname = %s, param = %f",
@@ -26159,10 +26247,10 @@ void GL_APIENTRY SamplerParameterfContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterfvContextANGLE(GLeglContext ctx,
-                                                GLuint sampler,
-                                                GLenum pname,
-                                                const GLfloat *param)
+void GL_APIENTRY GL_SamplerParameterfvContextANGLE(GLeglContext ctx,
+                                                   GLuint sampler,
+                                                   GLenum pname,
+                                                   const GLfloat *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterfv,
@@ -26188,10 +26276,10 @@ void GL_APIENTRY SamplerParameterfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameteriContextANGLE(GLeglContext ctx,
-                                               GLuint sampler,
-                                               GLenum pname,
-                                               GLint param)
+void GL_APIENTRY GL_SamplerParameteriContextANGLE(GLeglContext ctx,
+                                                  GLuint sampler,
+                                                  GLenum pname,
+                                                  GLint param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameteri, "context = %d, sampler = %u, pname = %s, param = %d",
@@ -26216,10 +26304,10 @@ void GL_APIENTRY SamplerParameteriContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterivContextANGLE(GLeglContext ctx,
-                                                GLuint sampler,
-                                                GLenum pname,
-                                                const GLint *param)
+void GL_APIENTRY GL_SamplerParameterivContextANGLE(GLeglContext ctx,
+                                                   GLuint sampler,
+                                                   GLenum pname,
+                                                   const GLint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameteriv,
@@ -26245,7 +26333,7 @@ void GL_APIENTRY SamplerParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ScalefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_ScalefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLScalef, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -26267,7 +26355,7 @@ void GL_APIENTRY ScalefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfl
     }
 }
 
-void GL_APIENTRY ScalexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfixed z)
+void GL_APIENTRY GL_ScalexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfixed z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLScalex, "context = %d, x = 0x%X, y = 0x%X, z = 0x%X", CID(context), x, y, z);
@@ -26290,7 +26378,7 @@ void GL_APIENTRY ScalexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfi
 }
 
 void GL_APIENTRY
-ScissorContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei height)
+GL_ScissorContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLScissor, "context = %d, x = %d, y = %d, width = %d, height = %d", CID(context),
@@ -26314,10 +26402,10 @@ ScissorContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei h
     }
 }
 
-void GL_APIENTRY SemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
-                                                        GLuint semaphore,
-                                                        GLenum pname,
-                                                        const GLuint64 *params)
+void GL_APIENTRY GL_SemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
+                                                           GLuint semaphore,
+                                                           GLenum pname,
+                                                           const GLuint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSemaphoreParameterui64vEXT,
@@ -26345,7 +26433,7 @@ void GL_APIENTRY SemaphoreParameterui64vEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum condition)
+void GL_APIENTRY GL_SetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum condition)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSetFenceNV, "context = %d, fence = %u, condition = %s", CID(context), fence,
@@ -26370,7 +26458,7 @@ void GL_APIENTRY SetFenceNVContextANGLE(GLeglContext ctx, GLuint fence, GLenum c
     }
 }
 
-void GL_APIENTRY ShadeModelContextANGLE(GLeglContext ctx, GLenum mode)
+void GL_APIENTRY GL_ShadeModelContextANGLE(GLeglContext ctx, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLShadeModel, "context = %d, mode = %s", CID(context),
@@ -26394,12 +26482,12 @@ void GL_APIENTRY ShadeModelContextANGLE(GLeglContext ctx, GLenum mode)
     }
 }
 
-void GL_APIENTRY ShaderBinaryContextANGLE(GLeglContext ctx,
-                                          GLsizei count,
-                                          const GLuint *shaders,
-                                          GLenum binaryformat,
-                                          const void *binary,
-                                          GLsizei length)
+void GL_APIENTRY GL_ShaderBinaryContextANGLE(GLeglContext ctx,
+                                             GLsizei count,
+                                             const GLuint *shaders,
+                                             GLenum binaryformat,
+                                             const void *binary,
+                                             GLsizei length)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLShaderBinary,
@@ -26429,11 +26517,11 @@ void GL_APIENTRY ShaderBinaryContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ShaderSourceContextANGLE(GLeglContext ctx,
-                                          GLuint shader,
-                                          GLsizei count,
-                                          const GLchar *const *string,
-                                          const GLint *length)
+void GL_APIENTRY GL_ShaderSourceContextANGLE(GLeglContext ctx,
+                                             GLuint shader,
+                                             GLsizei count,
+                                             const GLchar *const *string,
+                                             const GLint *length)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLShaderSource,
@@ -26460,13 +26548,13 @@ void GL_APIENTRY ShaderSourceContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SignalSemaphoreEXTContextANGLE(GLeglContext ctx,
-                                                GLuint semaphore,
-                                                GLuint numBufferBarriers,
-                                                const GLuint *buffers,
-                                                GLuint numTextureBarriers,
-                                                const GLuint *textures,
-                                                const GLenum *dstLayouts)
+void GL_APIENTRY GL_SignalSemaphoreEXTContextANGLE(GLeglContext ctx,
+                                                   GLuint semaphore,
+                                                   GLuint numBufferBarriers,
+                                                   const GLuint *buffers,
+                                                   GLuint numTextureBarriers,
+                                                   const GLuint *textures,
+                                                   const GLenum *dstLayouts)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSignalSemaphoreEXT,
@@ -26500,7 +26588,7 @@ void GL_APIENTRY SignalSemaphoreEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY StencilFuncContextANGLE(GLeglContext ctx, GLenum func, GLint ref, GLuint mask)
+void GL_APIENTRY GL_StencilFuncContextANGLE(GLeglContext ctx, GLenum func, GLint ref, GLuint mask)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLStencilFunc, "context = %d, func = %s, ref = %d, mask = %u", CID(context),
@@ -26524,8 +26612,11 @@ void GL_APIENTRY StencilFuncContextANGLE(GLeglContext ctx, GLenum func, GLint re
     }
 }
 
-void GL_APIENTRY
-StencilFuncSeparateContextANGLE(GLeglContext ctx, GLenum face, GLenum func, GLint ref, GLuint mask)
+void GL_APIENTRY GL_StencilFuncSeparateContextANGLE(GLeglContext ctx,
+                                                    GLenum face,
+                                                    GLenum func,
+                                                    GLint ref,
+                                                    GLuint mask)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLStencilFuncSeparate, "context = %d, face = %s, func = %s, ref = %d, mask = %u",
@@ -26550,7 +26641,7 @@ StencilFuncSeparateContextANGLE(GLeglContext ctx, GLenum face, GLenum func, GLin
     }
 }
 
-void GL_APIENTRY StencilMaskContextANGLE(GLeglContext ctx, GLuint mask)
+void GL_APIENTRY GL_StencilMaskContextANGLE(GLeglContext ctx, GLuint mask)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLStencilMask, "context = %d, mask = %u", CID(context), mask);
@@ -26572,7 +26663,7 @@ void GL_APIENTRY StencilMaskContextANGLE(GLeglContext ctx, GLuint mask)
     }
 }
 
-void GL_APIENTRY StencilMaskSeparateContextANGLE(GLeglContext ctx, GLenum face, GLuint mask)
+void GL_APIENTRY GL_StencilMaskSeparateContextANGLE(GLeglContext ctx, GLenum face, GLuint mask)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLStencilMaskSeparate, "context = %d, face = %s, mask = %u", CID(context),
@@ -26596,7 +26687,7 @@ void GL_APIENTRY StencilMaskSeparateContextANGLE(GLeglContext ctx, GLenum face, 
     }
 }
 
-void GL_APIENTRY StencilOpContextANGLE(GLeglContext ctx, GLenum fail, GLenum zfail, GLenum zpass)
+void GL_APIENTRY GL_StencilOpContextANGLE(GLeglContext ctx, GLenum fail, GLenum zfail, GLenum zpass)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLStencilOp, "context = %d, fail = %s, zfail = %s, zpass = %s", CID(context),
@@ -26622,11 +26713,11 @@ void GL_APIENTRY StencilOpContextANGLE(GLeglContext ctx, GLenum fail, GLenum zfa
     }
 }
 
-void GL_APIENTRY StencilOpSeparateContextANGLE(GLeglContext ctx,
-                                               GLenum face,
-                                               GLenum sfail,
-                                               GLenum dpfail,
-                                               GLenum dppass)
+void GL_APIENTRY GL_StencilOpSeparateContextANGLE(GLeglContext ctx,
+                                                  GLenum face,
+                                                  GLenum sfail,
+                                                  GLenum dpfail,
+                                                  GLenum dppass)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLStencilOpSeparate,
@@ -26654,7 +26745,7 @@ void GL_APIENTRY StencilOpSeparateContextANGLE(GLeglContext ctx,
     }
 }
 
-GLboolean GL_APIENTRY TestFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
+GLboolean GL_APIENTRY GL_TestFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTestFenceNV, "context = %d, fence = %u", CID(context), fence);
@@ -26684,10 +26775,10 @@ GLboolean GL_APIENTRY TestFenceNVContextANGLE(GLeglContext ctx, GLuint fence)
     return returnValue;
 }
 
-void GL_APIENTRY TexBufferContextANGLE(GLeglContext ctx,
-                                       GLenum target,
-                                       GLenum internalformat,
-                                       GLuint buffer)
+void GL_APIENTRY GL_TexBufferContextANGLE(GLeglContext ctx,
+                                          GLenum target,
+                                          GLenum internalformat,
+                                          GLuint buffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexBuffer, "context = %d, target = %s, internalformat = %s, buffer = %u",
@@ -26714,10 +26805,10 @@ void GL_APIENTRY TexBufferContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexBufferEXTContextANGLE(GLeglContext ctx,
-                                          GLenum target,
-                                          GLenum internalformat,
-                                          GLuint buffer)
+void GL_APIENTRY GL_TexBufferEXTContextANGLE(GLeglContext ctx,
+                                             GLenum target,
+                                             GLenum internalformat,
+                                             GLuint buffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexBufferEXT, "context = %d, target = %s, internalformat = %s, buffer = %u",
@@ -26746,10 +26837,10 @@ void GL_APIENTRY TexBufferEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexBufferOESContextANGLE(GLeglContext ctx,
-                                          GLenum target,
-                                          GLenum internalformat,
-                                          GLuint buffer)
+void GL_APIENTRY GL_TexBufferOESContextANGLE(GLeglContext ctx,
+                                             GLenum target,
+                                             GLenum internalformat,
+                                             GLuint buffer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexBufferOES, "context = %d, target = %s, internalformat = %s, buffer = %u",
@@ -26778,12 +26869,12 @@ void GL_APIENTRY TexBufferOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexBufferRangeContextANGLE(GLeglContext ctx,
-                                            GLenum target,
-                                            GLenum internalformat,
-                                            GLuint buffer,
-                                            GLintptr offset,
-                                            GLsizeiptr size)
+void GL_APIENTRY GL_TexBufferRangeContextANGLE(GLeglContext ctx,
+                                               GLenum target,
+                                               GLenum internalformat,
+                                               GLuint buffer,
+                                               GLintptr offset,
+                                               GLsizeiptr size)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexBufferRange,
@@ -26814,12 +26905,12 @@ void GL_APIENTRY TexBufferRangeContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexBufferRangeEXTContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLenum internalformat,
-                                               GLuint buffer,
-                                               GLintptr offset,
-                                               GLsizeiptr size)
+void GL_APIENTRY GL_TexBufferRangeEXTContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLenum internalformat,
+                                                  GLuint buffer,
+                                                  GLintptr offset,
+                                                  GLsizeiptr size)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexBufferRangeEXT,
@@ -26850,12 +26941,12 @@ void GL_APIENTRY TexBufferRangeEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexBufferRangeOESContextANGLE(GLeglContext ctx,
-                                               GLenum target,
-                                               GLenum internalformat,
-                                               GLuint buffer,
-                                               GLintptr offset,
-                                               GLsizeiptr size)
+void GL_APIENTRY GL_TexBufferRangeOESContextANGLE(GLeglContext ctx,
+                                                  GLenum target,
+                                                  GLenum internalformat,
+                                                  GLuint buffer,
+                                                  GLintptr offset,
+                                                  GLsizeiptr size)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexBufferRangeOES,
@@ -26886,11 +26977,11 @@ void GL_APIENTRY TexBufferRangeOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexCoordPointerContextANGLE(GLeglContext ctx,
-                                             GLint size,
-                                             GLenum type,
-                                             GLsizei stride,
-                                             const void *pointer)
+void GL_APIENTRY GL_TexCoordPointerContextANGLE(GLeglContext ctx,
+                                                GLint size,
+                                                GLenum type,
+                                                GLsizei stride,
+                                                const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexCoordPointer,
@@ -26917,7 +27008,10 @@ void GL_APIENTRY TexCoordPointerContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexEnvfContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_TexEnvfContextANGLE(GLeglContext ctx,
+                                        GLenum target,
+                                        GLenum pname,
+                                        GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexEnvf, "context = %d, target = %s, pname = %s, param = %f", CID(context),
@@ -26944,10 +27038,10 @@ void GL_APIENTRY TexEnvfContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
     }
 }
 
-void GL_APIENTRY TexEnvfvContextANGLE(GLeglContext ctx,
-                                      GLenum target,
-                                      GLenum pname,
-                                      const GLfloat *params)
+void GL_APIENTRY GL_TexEnvfvContextANGLE(GLeglContext ctx,
+                                         GLenum target,
+                                         GLenum pname,
+                                         const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexEnvfv, "context = %d, target = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -26974,7 +27068,7 @@ void GL_APIENTRY TexEnvfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexEnviContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLint param)
+void GL_APIENTRY GL_TexEnviContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLint param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexEnvi, "context = %d, target = %s, pname = %s, param = %d", CID(context),
@@ -27001,10 +27095,10 @@ void GL_APIENTRY TexEnviContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
     }
 }
 
-void GL_APIENTRY TexEnvivContextANGLE(GLeglContext ctx,
-                                      GLenum target,
-                                      GLenum pname,
-                                      const GLint *params)
+void GL_APIENTRY GL_TexEnvivContextANGLE(GLeglContext ctx,
+                                         GLenum target,
+                                         GLenum pname,
+                                         const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexEnviv, "context = %d, target = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -27031,7 +27125,10 @@ void GL_APIENTRY TexEnvivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexEnvxContextANGLE(GLeglContext ctx, GLenum target, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_TexEnvxContextANGLE(GLeglContext ctx,
+                                        GLenum target,
+                                        GLenum pname,
+                                        GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexEnvx, "context = %d, target = %s, pname = %s, param = 0x%X", CID(context),
@@ -27058,10 +27155,10 @@ void GL_APIENTRY TexEnvxContextANGLE(GLeglContext ctx, GLenum target, GLenum pna
     }
 }
 
-void GL_APIENTRY TexEnvxvContextANGLE(GLeglContext ctx,
-                                      GLenum target,
-                                      GLenum pname,
-                                      const GLfixed *params)
+void GL_APIENTRY GL_TexEnvxvContextANGLE(GLeglContext ctx,
+                                         GLenum target,
+                                         GLenum pname,
+                                         const GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexEnvxv, "context = %d, target = %s, pname = %s, params = 0x%016" PRIxPTR "",
@@ -27088,7 +27185,10 @@ void GL_APIENTRY TexEnvxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexGenfOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum pname, GLfloat param)
+void GL_APIENTRY GL_TexGenfOESContextANGLE(GLeglContext ctx,
+                                           GLenum coord,
+                                           GLenum pname,
+                                           GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexGenfOES, "context = %d, coord = %s, pname = %s, param = %f", CID(context),
@@ -27113,10 +27213,10 @@ void GL_APIENTRY TexGenfOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
     }
 }
 
-void GL_APIENTRY TexGenfvOESContextANGLE(GLeglContext ctx,
-                                         GLenum coord,
-                                         GLenum pname,
-                                         const GLfloat *params)
+void GL_APIENTRY GL_TexGenfvOESContextANGLE(GLeglContext ctx,
+                                            GLenum coord,
+                                            GLenum pname,
+                                            const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexGenfvOES,
@@ -27142,7 +27242,10 @@ void GL_APIENTRY TexGenfvOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexGeniOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum pname, GLint param)
+void GL_APIENTRY GL_TexGeniOESContextANGLE(GLeglContext ctx,
+                                           GLenum coord,
+                                           GLenum pname,
+                                           GLint param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexGeniOES, "context = %d, coord = %s, pname = %s, param = %d", CID(context),
@@ -27167,10 +27270,10 @@ void GL_APIENTRY TexGeniOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
     }
 }
 
-void GL_APIENTRY TexGenivOESContextANGLE(GLeglContext ctx,
-                                         GLenum coord,
-                                         GLenum pname,
-                                         const GLint *params)
+void GL_APIENTRY GL_TexGenivOESContextANGLE(GLeglContext ctx,
+                                            GLenum coord,
+                                            GLenum pname,
+                                            const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexGenivOES,
@@ -27196,7 +27299,10 @@ void GL_APIENTRY TexGenivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexGenxOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum pname, GLfixed param)
+void GL_APIENTRY GL_TexGenxOESContextANGLE(GLeglContext ctx,
+                                           GLenum coord,
+                                           GLenum pname,
+                                           GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexGenxOES, "context = %d, coord = %s, pname = %s, param = 0x%X", CID(context),
@@ -27221,10 +27327,10 @@ void GL_APIENTRY TexGenxOESContextANGLE(GLeglContext ctx, GLenum coord, GLenum p
     }
 }
 
-void GL_APIENTRY TexGenxvOESContextANGLE(GLeglContext ctx,
-                                         GLenum coord,
-                                         GLenum pname,
-                                         const GLfixed *params)
+void GL_APIENTRY GL_TexGenxvOESContextANGLE(GLeglContext ctx,
+                                            GLenum coord,
+                                            GLenum pname,
+                                            const GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexGenxvOES,
@@ -27250,16 +27356,16 @@ void GL_APIENTRY TexGenxvOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexImage2DContextANGLE(GLeglContext ctx,
-                                        GLenum target,
-                                        GLint level,
-                                        GLint internalformat,
-                                        GLsizei width,
-                                        GLsizei height,
-                                        GLint border,
-                                        GLenum format,
-                                        GLenum type,
-                                        const void *pixels)
+void GL_APIENTRY GL_TexImage2DContextANGLE(GLeglContext ctx,
+                                           GLenum target,
+                                           GLint level,
+                                           GLint internalformat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLint border,
+                                           GLenum format,
+                                           GLenum type,
+                                           const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexImage2D,
@@ -27291,17 +27397,17 @@ void GL_APIENTRY TexImage2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
-                                        GLenum target,
-                                        GLint level,
-                                        GLint internalformat,
-                                        GLsizei width,
-                                        GLsizei height,
-                                        GLsizei depth,
-                                        GLint border,
-                                        GLenum format,
-                                        GLenum type,
-                                        const void *pixels)
+void GL_APIENTRY GL_TexImage3DContextANGLE(GLeglContext ctx,
+                                           GLenum target,
+                                           GLint level,
+                                           GLint internalformat,
+                                           GLsizei width,
+                                           GLsizei height,
+                                           GLsizei depth,
+                                           GLint border,
+                                           GLenum format,
+                                           GLenum type,
+                                           const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexImage3D,
@@ -27333,17 +27439,17 @@ void GL_APIENTRY TexImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexImage3DOESContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLint level,
-                                           GLenum internalformat,
-                                           GLsizei width,
-                                           GLsizei height,
-                                           GLsizei depth,
-                                           GLint border,
-                                           GLenum format,
-                                           GLenum type,
-                                           const void *pixels)
+void GL_APIENTRY GL_TexImage3DOESContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLint level,
+                                              GLenum internalformat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLsizei depth,
+                                              GLint border,
+                                              GLenum format,
+                                              GLenum type,
+                                              const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexImage3DOES,
@@ -27377,10 +27483,10 @@ void GL_APIENTRY TexImage3DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterIivContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLenum pname,
-                                             const GLint *params)
+void GL_APIENTRY GL_TexParameterIivContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLenum pname,
+                                                const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterIiv,
@@ -27407,10 +27513,10 @@ void GL_APIENTRY TexParameterIivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
-                                                GLenum target,
-                                                GLenum pname,
-                                                const GLint *params)
+void GL_APIENTRY GL_TexParameterIivOESContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLenum pname,
+                                                   const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterIivOES,
@@ -27437,10 +27543,10 @@ void GL_APIENTRY TexParameterIivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterIuivContextANGLE(GLeglContext ctx,
-                                              GLenum target,
-                                              GLenum pname,
-                                              const GLuint *params)
+void GL_APIENTRY GL_TexParameterIuivContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLenum pname,
+                                                 const GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterIuiv,
@@ -27467,10 +27573,10 @@ void GL_APIENTRY TexParameterIuivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterIuivOESContextANGLE(GLeglContext ctx,
-                                                 GLenum target,
-                                                 GLenum pname,
-                                                 const GLuint *params)
+void GL_APIENTRY GL_TexParameterIuivOESContextANGLE(GLeglContext ctx,
+                                                    GLenum target,
+                                                    GLenum pname,
+                                                    const GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterIuivOES,
@@ -27497,10 +27603,10 @@ void GL_APIENTRY TexParameterIuivOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterfContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLenum pname,
-                                           GLfloat param)
+void GL_APIENTRY GL_TexParameterfContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLenum pname,
+                                              GLfloat param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterf, "context = %d, target = %s, pname = %s, param = %f",
@@ -27526,10 +27632,10 @@ void GL_APIENTRY TexParameterfContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterfvContextANGLE(GLeglContext ctx,
-                                            GLenum target,
-                                            GLenum pname,
-                                            const GLfloat *params)
+void GL_APIENTRY GL_TexParameterfvContextANGLE(GLeglContext ctx,
+                                               GLenum target,
+                                               GLenum pname,
+                                               const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterfv,
@@ -27556,10 +27662,10 @@ void GL_APIENTRY TexParameterfvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameteriContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLenum pname,
-                                           GLint param)
+void GL_APIENTRY GL_TexParameteriContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLenum pname,
+                                              GLint param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameteri, "context = %d, target = %s, pname = %s, param = %d",
@@ -27585,10 +27691,10 @@ void GL_APIENTRY TexParameteriContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterivContextANGLE(GLeglContext ctx,
-                                            GLenum target,
-                                            GLenum pname,
-                                            const GLint *params)
+void GL_APIENTRY GL_TexParameterivContextANGLE(GLeglContext ctx,
+                                               GLenum target,
+                                               GLenum pname,
+                                               const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameteriv,
@@ -27615,10 +27721,10 @@ void GL_APIENTRY TexParameterivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterxContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLenum pname,
-                                           GLfixed param)
+void GL_APIENTRY GL_TexParameterxContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLenum pname,
+                                              GLfixed param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterx, "context = %d, target = %s, pname = %s, param = 0x%X",
@@ -27644,10 +27750,10 @@ void GL_APIENTRY TexParameterxContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterxvContextANGLE(GLeglContext ctx,
-                                            GLenum target,
-                                            GLenum pname,
-                                            const GLfixed *params)
+void GL_APIENTRY GL_TexParameterxvContextANGLE(GLeglContext ctx,
+                                               GLenum target,
+                                               GLenum pname,
+                                               const GLfixed *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterxv,
@@ -27674,11 +27780,11 @@ void GL_APIENTRY TexParameterxvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage1DEXTContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLsizei levels,
-                                             GLenum internalformat,
-                                             GLsizei width)
+void GL_APIENTRY GL_TexStorage1DEXTContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLsizei levels,
+                                                GLenum internalformat,
+                                                GLsizei width)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage1DEXT,
@@ -27705,12 +27811,12 @@ void GL_APIENTRY TexStorage1DEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage2DContextANGLE(GLeglContext ctx,
-                                          GLenum target,
-                                          GLsizei levels,
-                                          GLenum internalformat,
-                                          GLsizei width,
-                                          GLsizei height)
+void GL_APIENTRY GL_TexStorage2DContextANGLE(GLeglContext ctx,
+                                             GLenum target,
+                                             GLsizei levels,
+                                             GLenum internalformat,
+                                             GLsizei width,
+                                             GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage2D,
@@ -27739,12 +27845,12 @@ void GL_APIENTRY TexStorage2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage2DEXTContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLsizei levels,
-                                             GLenum internalformat,
-                                             GLsizei width,
-                                             GLsizei height)
+void GL_APIENTRY GL_TexStorage2DEXTContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLsizei levels,
+                                                GLenum internalformat,
+                                                GLsizei width,
+                                                GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage2DEXT,
@@ -27773,13 +27879,13 @@ void GL_APIENTRY TexStorage2DEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage2DMultisampleContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLsizei samples,
-                                                     GLenum internalformat,
-                                                     GLsizei width,
-                                                     GLsizei height,
-                                                     GLboolean fixedsamplelocations)
+void GL_APIENTRY GL_TexStorage2DMultisampleContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLsizei samples,
+                                                        GLenum internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLboolean fixedsamplelocations)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage2DMultisample,
@@ -27812,13 +27918,13 @@ void GL_APIENTRY TexStorage2DMultisampleContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage3DContextANGLE(GLeglContext ctx,
-                                          GLenum target,
-                                          GLsizei levels,
-                                          GLenum internalformat,
-                                          GLsizei width,
-                                          GLsizei height,
-                                          GLsizei depth)
+void GL_APIENTRY GL_TexStorage3DContextANGLE(GLeglContext ctx,
+                                             GLenum target,
+                                             GLsizei levels,
+                                             GLenum internalformat,
+                                             GLsizei width,
+                                             GLsizei height,
+                                             GLsizei depth)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage3D,
@@ -27848,13 +27954,13 @@ void GL_APIENTRY TexStorage3DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage3DEXTContextANGLE(GLeglContext ctx,
-                                             GLenum target,
-                                             GLsizei levels,
-                                             GLenum internalformat,
-                                             GLsizei width,
-                                             GLsizei height,
-                                             GLsizei depth)
+void GL_APIENTRY GL_TexStorage3DEXTContextANGLE(GLeglContext ctx,
+                                                GLenum target,
+                                                GLsizei levels,
+                                                GLenum internalformat,
+                                                GLsizei width,
+                                                GLsizei height,
+                                                GLsizei depth)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage3DEXT,
@@ -27884,14 +27990,14 @@ void GL_APIENTRY TexStorage3DEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage3DMultisampleContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLsizei samples,
-                                                     GLenum internalformat,
-                                                     GLsizei width,
-                                                     GLsizei height,
-                                                     GLsizei depth,
-                                                     GLboolean fixedsamplelocations)
+void GL_APIENTRY GL_TexStorage3DMultisampleContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLsizei samples,
+                                                        GLenum internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLsizei depth,
+                                                        GLboolean fixedsamplelocations)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage3DMultisample,
@@ -27924,14 +28030,14 @@ void GL_APIENTRY TexStorage3DMultisampleContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
-                                                        GLenum target,
-                                                        GLsizei samples,
-                                                        GLenum internalformat,
-                                                        GLsizei width,
-                                                        GLsizei height,
-                                                        GLsizei depth,
-                                                        GLboolean fixedsamplelocations)
+void GL_APIENTRY GL_TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLsizei samples,
+                                                           GLenum internalformat,
+                                                           GLsizei width,
+                                                           GLsizei height,
+                                                           GLsizei depth,
+                                                           GLboolean fixedsamplelocations)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage3DMultisampleOES,
@@ -27964,14 +28070,14 @@ void GL_APIENTRY TexStorage3DMultisampleOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorageMem2DEXTContextANGLE(GLeglContext ctx,
-                                                GLenum target,
-                                                GLsizei levels,
-                                                GLenum internalFormat,
-                                                GLsizei width,
-                                                GLsizei height,
-                                                GLuint memory,
-                                                GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem2DEXTContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLsizei levels,
+                                                   GLenum internalFormat,
+                                                   GLsizei width,
+                                                   GLsizei height,
+                                                   GLuint memory,
+                                                   GLuint64 offset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorageMem2DEXT,
@@ -28005,15 +28111,15 @@ void GL_APIENTRY TexStorageMem2DEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorageMem2DMultisampleEXTContextANGLE(GLeglContext ctx,
-                                                           GLenum target,
-                                                           GLsizei samples,
-                                                           GLenum internalFormat,
-                                                           GLsizei width,
-                                                           GLsizei height,
-                                                           GLboolean fixedSampleLocations,
-                                                           GLuint memory,
-                                                           GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem2DMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                              GLenum target,
+                                                              GLsizei samples,
+                                                              GLenum internalFormat,
+                                                              GLsizei width,
+                                                              GLsizei height,
+                                                              GLboolean fixedSampleLocations,
+                                                              GLuint memory,
+                                                              GLuint64 offset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorageMem2DMultisampleEXT,
@@ -28047,15 +28153,15 @@ void GL_APIENTRY TexStorageMem2DMultisampleEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorageMem3DEXTContextANGLE(GLeglContext ctx,
-                                                GLenum target,
-                                                GLsizei levels,
-                                                GLenum internalFormat,
-                                                GLsizei width,
-                                                GLsizei height,
-                                                GLsizei depth,
-                                                GLuint memory,
-                                                GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem3DEXTContextANGLE(GLeglContext ctx,
+                                                   GLenum target,
+                                                   GLsizei levels,
+                                                   GLenum internalFormat,
+                                                   GLsizei width,
+                                                   GLsizei height,
+                                                   GLsizei depth,
+                                                   GLuint memory,
+                                                   GLuint64 offset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorageMem3DEXT,
@@ -28089,16 +28195,16 @@ void GL_APIENTRY TexStorageMem3DEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorageMem3DMultisampleEXTContextANGLE(GLeglContext ctx,
-                                                           GLenum target,
-                                                           GLsizei samples,
-                                                           GLenum internalFormat,
-                                                           GLsizei width,
-                                                           GLsizei height,
-                                                           GLsizei depth,
-                                                           GLboolean fixedSampleLocations,
-                                                           GLuint memory,
-                                                           GLuint64 offset)
+void GL_APIENTRY GL_TexStorageMem3DMultisampleEXTContextANGLE(GLeglContext ctx,
+                                                              GLenum target,
+                                                              GLsizei samples,
+                                                              GLenum internalFormat,
+                                                              GLsizei width,
+                                                              GLsizei height,
+                                                              GLsizei depth,
+                                                              GLboolean fixedSampleLocations,
+                                                              GLuint memory,
+                                                              GLuint64 offset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorageMem3DMultisampleEXT,
@@ -28134,16 +28240,16 @@ void GL_APIENTRY TexStorageMem3DMultisampleEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexSubImage2DContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLint level,
-                                           GLint xoffset,
-                                           GLint yoffset,
-                                           GLsizei width,
-                                           GLsizei height,
-                                           GLenum format,
-                                           GLenum type,
-                                           const void *pixels)
+void GL_APIENTRY GL_TexSubImage2DContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLint level,
+                                              GLint xoffset,
+                                              GLint yoffset,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLenum format,
+                                              GLenum type,
+                                              const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexSubImage2D,
@@ -28175,18 +28281,18 @@ void GL_APIENTRY TexSubImage2DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexSubImage3DContextANGLE(GLeglContext ctx,
-                                           GLenum target,
-                                           GLint level,
-                                           GLint xoffset,
-                                           GLint yoffset,
-                                           GLint zoffset,
-                                           GLsizei width,
-                                           GLsizei height,
-                                           GLsizei depth,
-                                           GLenum format,
-                                           GLenum type,
-                                           const void *pixels)
+void GL_APIENTRY GL_TexSubImage3DContextANGLE(GLeglContext ctx,
+                                              GLenum target,
+                                              GLint level,
+                                              GLint xoffset,
+                                              GLint yoffset,
+                                              GLint zoffset,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLsizei depth,
+                                              GLenum format,
+                                              GLenum type,
+                                              const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexSubImage3D,
@@ -28219,18 +28325,18 @@ void GL_APIENTRY TexSubImage3DContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexSubImage3DOESContextANGLE(GLeglContext ctx,
-                                              GLenum target,
-                                              GLint level,
-                                              GLint xoffset,
-                                              GLint yoffset,
-                                              GLint zoffset,
-                                              GLsizei width,
-                                              GLsizei height,
-                                              GLsizei depth,
-                                              GLenum format,
-                                              GLenum type,
-                                              const void *pixels)
+void GL_APIENTRY GL_TexSubImage3DOESContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLint level,
+                                                 GLint xoffset,
+                                                 GLint yoffset,
+                                                 GLint zoffset,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLsizei depth,
+                                                 GLenum format,
+                                                 GLenum type,
+                                                 const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexSubImage3DOES,
@@ -28263,11 +28369,11 @@ void GL_APIENTRY TexSubImage3DOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TransformFeedbackVaryingsContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLsizei count,
-                                                       const GLchar *const *varyings,
-                                                       GLenum bufferMode)
+void GL_APIENTRY GL_TransformFeedbackVaryingsContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLsizei count,
+                                                          const GLchar *const *varyings,
+                                                          GLenum bufferMode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTransformFeedbackVaryings,
@@ -28296,7 +28402,7 @@ void GL_APIENTRY TransformFeedbackVaryingsContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TranslatefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfloat z)
+void GL_APIENTRY GL_TranslatefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTranslatef, "context = %d, x = %f, y = %f, z = %f", CID(context), x, y, z);
@@ -28318,7 +28424,7 @@ void GL_APIENTRY TranslatefContextANGLE(GLeglContext ctx, GLfloat x, GLfloat y, 
     }
 }
 
-void GL_APIENTRY TranslatexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfixed z)
+void GL_APIENTRY GL_TranslatexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, GLfixed z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTranslatex, "context = %d, x = 0x%X, y = 0x%X, z = 0x%X", CID(context), x, y,
@@ -28341,7 +28447,7 @@ void GL_APIENTRY TranslatexContextANGLE(GLeglContext ctx, GLfixed x, GLfixed y, 
     }
 }
 
-void GL_APIENTRY Uniform1fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0)
+void GL_APIENTRY GL_Uniform1fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform1f, "context = %d, location = %d, v0 = %f", CID(context), location, v0);
@@ -28365,10 +28471,10 @@ void GL_APIENTRY Uniform1fContextANGLE(GLeglContext ctx, GLint location, GLfloat
     }
 }
 
-void GL_APIENTRY Uniform1fvContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLfloat *value)
+void GL_APIENTRY GL_Uniform1fvContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform1fv,
@@ -28394,7 +28500,7 @@ void GL_APIENTRY Uniform1fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Uniform1iContextANGLE(GLeglContext ctx, GLint location, GLint v0)
+void GL_APIENTRY GL_Uniform1iContextANGLE(GLeglContext ctx, GLint location, GLint v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform1i, "context = %d, location = %d, v0 = %d", CID(context), location, v0);
@@ -28418,10 +28524,10 @@ void GL_APIENTRY Uniform1iContextANGLE(GLeglContext ctx, GLint location, GLint v
     }
 }
 
-void GL_APIENTRY Uniform1ivContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLint *value)
+void GL_APIENTRY GL_Uniform1ivContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform1iv,
@@ -28447,7 +28553,7 @@ void GL_APIENTRY Uniform1ivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Uniform1uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0)
+void GL_APIENTRY GL_Uniform1uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform1ui, "context = %d, location = %d, v0 = %u", CID(context), location,
@@ -28472,10 +28578,10 @@ void GL_APIENTRY Uniform1uiContextANGLE(GLeglContext ctx, GLint location, GLuint
     }
 }
 
-void GL_APIENTRY Uniform1uivContextANGLE(GLeglContext ctx,
-                                         GLint location,
-                                         GLsizei count,
-                                         const GLuint *value)
+void GL_APIENTRY GL_Uniform1uivContextANGLE(GLeglContext ctx,
+                                            GLint location,
+                                            GLsizei count,
+                                            const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform1uiv,
@@ -28501,7 +28607,7 @@ void GL_APIENTRY Uniform1uivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Uniform2fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1)
+void GL_APIENTRY GL_Uniform2fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform2f, "context = %d, location = %d, v0 = %f, v1 = %f", CID(context),
@@ -28526,10 +28632,10 @@ void GL_APIENTRY Uniform2fContextANGLE(GLeglContext ctx, GLint location, GLfloat
     }
 }
 
-void GL_APIENTRY Uniform2fvContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLfloat *value)
+void GL_APIENTRY GL_Uniform2fvContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform2fv,
@@ -28555,7 +28661,7 @@ void GL_APIENTRY Uniform2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Uniform2iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1)
+void GL_APIENTRY GL_Uniform2iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform2i, "context = %d, location = %d, v0 = %d, v1 = %d", CID(context),
@@ -28580,10 +28686,10 @@ void GL_APIENTRY Uniform2iContextANGLE(GLeglContext ctx, GLint location, GLint v
     }
 }
 
-void GL_APIENTRY Uniform2ivContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLint *value)
+void GL_APIENTRY GL_Uniform2ivContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform2iv,
@@ -28609,7 +28715,7 @@ void GL_APIENTRY Uniform2ivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Uniform2uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1)
+void GL_APIENTRY GL_Uniform2uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform2ui, "context = %d, location = %d, v0 = %u, v1 = %u", CID(context),
@@ -28634,10 +28740,10 @@ void GL_APIENTRY Uniform2uiContextANGLE(GLeglContext ctx, GLint location, GLuint
     }
 }
 
-void GL_APIENTRY Uniform2uivContextANGLE(GLeglContext ctx,
-                                         GLint location,
-                                         GLsizei count,
-                                         const GLuint *value)
+void GL_APIENTRY GL_Uniform2uivContextANGLE(GLeglContext ctx,
+                                            GLint location,
+                                            GLsizei count,
+                                            const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform2uiv,
@@ -28664,7 +28770,7 @@ void GL_APIENTRY Uniform2uivContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-Uniform3fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
+GL_Uniform3fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1, GLfloat v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform3f, "context = %d, location = %d, v0 = %f, v1 = %f, v2 = %f",
@@ -28689,10 +28795,10 @@ Uniform3fContextANGLE(GLeglContext ctx, GLint location, GLfloat v0, GLfloat v1, 
     }
 }
 
-void GL_APIENTRY Uniform3fvContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLfloat *value)
+void GL_APIENTRY GL_Uniform3fvContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform3fv,
@@ -28719,7 +28825,7 @@ void GL_APIENTRY Uniform3fvContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-Uniform3iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLint v2)
+GL_Uniform3iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLint v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform3i, "context = %d, location = %d, v0 = %d, v1 = %d, v2 = %d",
@@ -28744,10 +28850,10 @@ Uniform3iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLin
     }
 }
 
-void GL_APIENTRY Uniform3ivContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLint *value)
+void GL_APIENTRY GL_Uniform3ivContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform3iv,
@@ -28774,7 +28880,7 @@ void GL_APIENTRY Uniform3ivContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-Uniform3uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, GLuint v2)
+GL_Uniform3uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, GLuint v2)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform3ui, "context = %d, location = %d, v0 = %u, v1 = %u, v2 = %u",
@@ -28799,10 +28905,10 @@ Uniform3uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, G
     }
 }
 
-void GL_APIENTRY Uniform3uivContextANGLE(GLeglContext ctx,
-                                         GLint location,
-                                         GLsizei count,
-                                         const GLuint *value)
+void GL_APIENTRY GL_Uniform3uivContextANGLE(GLeglContext ctx,
+                                            GLint location,
+                                            GLsizei count,
+                                            const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform3uiv,
@@ -28828,12 +28934,12 @@ void GL_APIENTRY Uniform3uivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Uniform4fContextANGLE(GLeglContext ctx,
-                                       GLint location,
-                                       GLfloat v0,
-                                       GLfloat v1,
-                                       GLfloat v2,
-                                       GLfloat v3)
+void GL_APIENTRY GL_Uniform4fContextANGLE(GLeglContext ctx,
+                                          GLint location,
+                                          GLfloat v0,
+                                          GLfloat v1,
+                                          GLfloat v2,
+                                          GLfloat v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform4f, "context = %d, location = %d, v0 = %f, v1 = %f, v2 = %f, v3 = %f",
@@ -28858,10 +28964,10 @@ void GL_APIENTRY Uniform4fContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY Uniform4fvContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLfloat *value)
+void GL_APIENTRY GL_Uniform4fvContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform4fv,
@@ -28888,7 +28994,7 @@ void GL_APIENTRY Uniform4fvContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-Uniform4iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
+GL_Uniform4iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLint v2, GLint v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform4i, "context = %d, location = %d, v0 = %d, v1 = %d, v2 = %d, v3 = %d",
@@ -28913,10 +29019,10 @@ Uniform4iContextANGLE(GLeglContext ctx, GLint location, GLint v0, GLint v1, GLin
     }
 }
 
-void GL_APIENTRY Uniform4ivContextANGLE(GLeglContext ctx,
-                                        GLint location,
-                                        GLsizei count,
-                                        const GLint *value)
+void GL_APIENTRY GL_Uniform4ivContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLsizei count,
+                                           const GLint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform4iv,
@@ -28942,8 +29048,12 @@ void GL_APIENTRY Uniform4ivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY
-Uniform4uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+void GL_APIENTRY GL_Uniform4uiContextANGLE(GLeglContext ctx,
+                                           GLint location,
+                                           GLuint v0,
+                                           GLuint v1,
+                                           GLuint v2,
+                                           GLuint v3)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform4ui, "context = %d, location = %d, v0 = %u, v1 = %u, v2 = %u, v3 = %u",
@@ -28968,10 +29078,10 @@ Uniform4uiContextANGLE(GLeglContext ctx, GLint location, GLuint v0, GLuint v1, G
     }
 }
 
-void GL_APIENTRY Uniform4uivContextANGLE(GLeglContext ctx,
-                                         GLint location,
-                                         GLsizei count,
-                                         const GLuint *value)
+void GL_APIENTRY GL_Uniform4uivContextANGLE(GLeglContext ctx,
+                                            GLint location,
+                                            GLsizei count,
+                                            const GLuint *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniform4uiv,
@@ -28997,10 +29107,10 @@ void GL_APIENTRY Uniform4uivContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformBlockBindingContextANGLE(GLeglContext ctx,
-                                                 GLuint program,
-                                                 GLuint uniformBlockIndex,
-                                                 GLuint uniformBlockBinding)
+void GL_APIENTRY GL_UniformBlockBindingContextANGLE(GLeglContext ctx,
+                                                    GLuint program,
+                                                    GLuint uniformBlockIndex,
+                                                    GLuint uniformBlockBinding)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformBlockBinding,
@@ -29028,11 +29138,11 @@ void GL_APIENTRY UniformBlockBindingContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix2fvContextANGLE(GLeglContext ctx,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix2fvContextANGLE(GLeglContext ctx,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix2fv,
@@ -29060,11 +29170,11 @@ void GL_APIENTRY UniformMatrix2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix2x3fvContextANGLE(GLeglContext ctx,
-                                                GLint location,
-                                                GLsizei count,
-                                                GLboolean transpose,
-                                                const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix2x3fvContextANGLE(GLeglContext ctx,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   GLboolean transpose,
+                                                   const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix2x3fv,
@@ -29092,11 +29202,11 @@ void GL_APIENTRY UniformMatrix2x3fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix2x4fvContextANGLE(GLeglContext ctx,
-                                                GLint location,
-                                                GLsizei count,
-                                                GLboolean transpose,
-                                                const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix2x4fvContextANGLE(GLeglContext ctx,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   GLboolean transpose,
+                                                   const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix2x4fv,
@@ -29124,11 +29234,11 @@ void GL_APIENTRY UniformMatrix2x4fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix3fvContextANGLE(GLeglContext ctx,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix3fvContextANGLE(GLeglContext ctx,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix3fv,
@@ -29156,11 +29266,11 @@ void GL_APIENTRY UniformMatrix3fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix3x2fvContextANGLE(GLeglContext ctx,
-                                                GLint location,
-                                                GLsizei count,
-                                                GLboolean transpose,
-                                                const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix3x2fvContextANGLE(GLeglContext ctx,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   GLboolean transpose,
+                                                   const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix3x2fv,
@@ -29188,11 +29298,11 @@ void GL_APIENTRY UniformMatrix3x2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix3x4fvContextANGLE(GLeglContext ctx,
-                                                GLint location,
-                                                GLsizei count,
-                                                GLboolean transpose,
-                                                const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix3x4fvContextANGLE(GLeglContext ctx,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   GLboolean transpose,
+                                                   const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix3x4fv,
@@ -29220,11 +29330,11 @@ void GL_APIENTRY UniformMatrix3x4fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix4fvContextANGLE(GLeglContext ctx,
-                                              GLint location,
-                                              GLsizei count,
-                                              GLboolean transpose,
-                                              const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix4fvContextANGLE(GLeglContext ctx,
+                                                 GLint location,
+                                                 GLsizei count,
+                                                 GLboolean transpose,
+                                                 const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix4fv,
@@ -29252,11 +29362,11 @@ void GL_APIENTRY UniformMatrix4fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix4x2fvContextANGLE(GLeglContext ctx,
-                                                GLint location,
-                                                GLsizei count,
-                                                GLboolean transpose,
-                                                const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix4x2fvContextANGLE(GLeglContext ctx,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   GLboolean transpose,
+                                                   const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix4x2fv,
@@ -29284,11 +29394,11 @@ void GL_APIENTRY UniformMatrix4x2fvContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UniformMatrix4x3fvContextANGLE(GLeglContext ctx,
-                                                GLint location,
-                                                GLsizei count,
-                                                GLboolean transpose,
-                                                const GLfloat *value)
+void GL_APIENTRY GL_UniformMatrix4x3fvContextANGLE(GLeglContext ctx,
+                                                   GLint location,
+                                                   GLsizei count,
+                                                   GLboolean transpose,
+                                                   const GLfloat *value)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUniformMatrix4x3fv,
@@ -29316,7 +29426,7 @@ void GL_APIENTRY UniformMatrix4x3fvContextANGLE(GLeglContext ctx,
     }
 }
 
-GLboolean GL_APIENTRY UnmapBufferContextANGLE(GLeglContext ctx, GLenum target)
+GLboolean GL_APIENTRY GL_UnmapBufferContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUnmapBuffer, "context = %d, target = %s", CID(context),
@@ -29348,7 +29458,7 @@ GLboolean GL_APIENTRY UnmapBufferContextANGLE(GLeglContext ctx, GLenum target)
     return returnValue;
 }
 
-GLboolean GL_APIENTRY UnmapBufferOESContextANGLE(GLeglContext ctx, GLenum target)
+GLboolean GL_APIENTRY GL_UnmapBufferOESContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUnmapBufferOES, "context = %d, target = %s", CID(context),
@@ -29380,7 +29490,7 @@ GLboolean GL_APIENTRY UnmapBufferOESContextANGLE(GLeglContext ctx, GLenum target
     return returnValue;
 }
 
-void GL_APIENTRY UseProgramContextANGLE(GLeglContext ctx, GLuint program)
+void GL_APIENTRY GL_UseProgramContextANGLE(GLeglContext ctx, GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUseProgram, "context = %d, program = %u", CID(context), program);
@@ -29404,10 +29514,10 @@ void GL_APIENTRY UseProgramContextANGLE(GLeglContext ctx, GLuint program)
     }
 }
 
-void GL_APIENTRY UseProgramStagesContextANGLE(GLeglContext ctx,
-                                              GLuint pipeline,
-                                              GLbitfield stages,
-                                              GLuint program)
+void GL_APIENTRY GL_UseProgramStagesContextANGLE(GLeglContext ctx,
+                                                 GLuint pipeline,
+                                                 GLbitfield stages,
+                                                 GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUseProgramStages, "context = %d, pipeline = %u, stages = %s, program = %u",
@@ -29436,10 +29546,10 @@ void GL_APIENTRY UseProgramStagesContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY UseProgramStagesEXTContextANGLE(GLeglContext ctx,
-                                                 GLuint pipeline,
-                                                 GLbitfield stages,
-                                                 GLuint program)
+void GL_APIENTRY GL_UseProgramStagesEXTContextANGLE(GLeglContext ctx,
+                                                    GLuint pipeline,
+                                                    GLbitfield stages,
+                                                    GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLUseProgramStagesEXT, "context = %d, pipeline = %u, stages = %s, program = %u",
@@ -29468,7 +29578,7 @@ void GL_APIENTRY UseProgramStagesEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ValidateProgramContextANGLE(GLeglContext ctx, GLuint program)
+void GL_APIENTRY GL_ValidateProgramContextANGLE(GLeglContext ctx, GLuint program)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLValidateProgram, "context = %d, program = %u", CID(context), program);
@@ -29492,7 +29602,7 @@ void GL_APIENTRY ValidateProgramContextANGLE(GLeglContext ctx, GLuint program)
     }
 }
 
-void GL_APIENTRY ValidateProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
+void GL_APIENTRY GL_ValidateProgramPipelineContextANGLE(GLeglContext ctx, GLuint pipeline)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLValidateProgramPipeline, "context = %d, pipeline = %u", CID(context),
@@ -29517,7 +29627,7 @@ void GL_APIENTRY ValidateProgramPipelineContextANGLE(GLeglContext ctx, GLuint pi
     }
 }
 
-void GL_APIENTRY ValidateProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pipeline)
+void GL_APIENTRY GL_ValidateProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pipeline)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLValidateProgramPipelineEXT, "context = %d, pipeline = %u", CID(context),
@@ -29542,7 +29652,7 @@ void GL_APIENTRY ValidateProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint
     }
 }
 
-void GL_APIENTRY VertexAttrib1fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x)
+void GL_APIENTRY GL_VertexAttrib1fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib1f, "context = %d, index = %u, x = %f", CID(context), index, x);
@@ -29564,7 +29674,7 @@ void GL_APIENTRY VertexAttrib1fContextANGLE(GLeglContext ctx, GLuint index, GLfl
     }
 }
 
-void GL_APIENTRY VertexAttrib1fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
+void GL_APIENTRY GL_VertexAttrib1fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib1fv, "context = %d, index = %u, v = 0x%016" PRIxPTR "",
@@ -29588,7 +29698,7 @@ void GL_APIENTRY VertexAttrib1fvContextANGLE(GLeglContext ctx, GLuint index, con
     }
 }
 
-void GL_APIENTRY VertexAttrib2fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y)
+void GL_APIENTRY GL_VertexAttrib2fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib2f, "context = %d, index = %u, x = %f, y = %f", CID(context),
@@ -29612,7 +29722,7 @@ void GL_APIENTRY VertexAttrib2fContextANGLE(GLeglContext ctx, GLuint index, GLfl
     }
 }
 
-void GL_APIENTRY VertexAttrib2fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
+void GL_APIENTRY GL_VertexAttrib2fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib2fv, "context = %d, index = %u, v = 0x%016" PRIxPTR "",
@@ -29637,7 +29747,7 @@ void GL_APIENTRY VertexAttrib2fvContextANGLE(GLeglContext ctx, GLuint index, con
 }
 
 void GL_APIENTRY
-VertexAttrib3fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y, GLfloat z)
+GL_VertexAttrib3fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y, GLfloat z)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib3f, "context = %d, index = %u, x = %f, y = %f, z = %f",
@@ -29661,7 +29771,7 @@ VertexAttrib3fContextANGLE(GLeglContext ctx, GLuint index, GLfloat x, GLfloat y,
     }
 }
 
-void GL_APIENTRY VertexAttrib3fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
+void GL_APIENTRY GL_VertexAttrib3fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib3fv, "context = %d, index = %u, v = 0x%016" PRIxPTR "",
@@ -29685,12 +29795,12 @@ void GL_APIENTRY VertexAttrib3fvContextANGLE(GLeglContext ctx, GLuint index, con
     }
 }
 
-void GL_APIENTRY VertexAttrib4fContextANGLE(GLeglContext ctx,
-                                            GLuint index,
-                                            GLfloat x,
-                                            GLfloat y,
-                                            GLfloat z,
-                                            GLfloat w)
+void GL_APIENTRY GL_VertexAttrib4fContextANGLE(GLeglContext ctx,
+                                               GLuint index,
+                                               GLfloat x,
+                                               GLfloat y,
+                                               GLfloat z,
+                                               GLfloat w)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib4f, "context = %d, index = %u, x = %f, y = %f, z = %f, w = %f",
@@ -29714,7 +29824,7 @@ void GL_APIENTRY VertexAttrib4fContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY VertexAttrib4fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
+void GL_APIENTRY GL_VertexAttrib4fvContextANGLE(GLeglContext ctx, GLuint index, const GLfloat *v)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttrib4fv, "context = %d, index = %u, v = 0x%016" PRIxPTR "",
@@ -29738,9 +29848,9 @@ void GL_APIENTRY VertexAttrib4fvContextANGLE(GLeglContext ctx, GLuint index, con
     }
 }
 
-void GL_APIENTRY VertexAttribBindingContextANGLE(GLeglContext ctx,
-                                                 GLuint attribindex,
-                                                 GLuint bindingindex)
+void GL_APIENTRY GL_VertexAttribBindingContextANGLE(GLeglContext ctx,
+                                                    GLuint attribindex,
+                                                    GLuint bindingindex)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribBinding, "context = %d, attribindex = %u, bindingindex = %u",
@@ -29764,7 +29874,7 @@ void GL_APIENTRY VertexAttribBindingContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY VertexAttribDivisorContextANGLE(GLeglContext ctx, GLuint index, GLuint divisor)
+void GL_APIENTRY GL_VertexAttribDivisorContextANGLE(GLeglContext ctx, GLuint index, GLuint divisor)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribDivisor, "context = %d, index = %u, divisor = %u", CID(context),
@@ -29788,9 +29898,9 @@ void GL_APIENTRY VertexAttribDivisorContextANGLE(GLeglContext ctx, GLuint index,
     }
 }
 
-void GL_APIENTRY VertexAttribDivisorANGLEContextANGLE(GLeglContext ctx,
-                                                      GLuint index,
-                                                      GLuint divisor)
+void GL_APIENTRY GL_VertexAttribDivisorANGLEContextANGLE(GLeglContext ctx,
+                                                         GLuint index,
+                                                         GLuint divisor)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribDivisorANGLE, "context = %d, index = %u, divisor = %u",
@@ -29814,7 +29924,9 @@ void GL_APIENTRY VertexAttribDivisorANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY VertexAttribDivisorEXTContextANGLE(GLeglContext ctx, GLuint index, GLuint divisor)
+void GL_APIENTRY GL_VertexAttribDivisorEXTContextANGLE(GLeglContext ctx,
+                                                       GLuint index,
+                                                       GLuint divisor)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribDivisorEXT, "context = %d, index = %u, divisor = %u", CID(context),
@@ -29838,12 +29950,12 @@ void GL_APIENTRY VertexAttribDivisorEXTContextANGLE(GLeglContext ctx, GLuint ind
     }
 }
 
-void GL_APIENTRY VertexAttribFormatContextANGLE(GLeglContext ctx,
-                                                GLuint attribindex,
-                                                GLint size,
-                                                GLenum type,
-                                                GLboolean normalized,
-                                                GLuint relativeoffset)
+void GL_APIENTRY GL_VertexAttribFormatContextANGLE(GLeglContext ctx,
+                                                   GLuint attribindex,
+                                                   GLint size,
+                                                   GLenum type,
+                                                   GLboolean normalized,
+                                                   GLuint relativeoffset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribFormat,
@@ -29874,7 +29986,7 @@ void GL_APIENTRY VertexAttribFormatContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-VertexAttribI4iContextANGLE(GLeglContext ctx, GLuint index, GLint x, GLint y, GLint z, GLint w)
+GL_VertexAttribI4iContextANGLE(GLeglContext ctx, GLuint index, GLint x, GLint y, GLint z, GLint w)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribI4i, "context = %d, index = %u, x = %d, y = %d, z = %d, w = %d",
@@ -29898,7 +30010,7 @@ VertexAttribI4iContextANGLE(GLeglContext ctx, GLuint index, GLint x, GLint y, GL
     }
 }
 
-void GL_APIENTRY VertexAttribI4ivContextANGLE(GLeglContext ctx, GLuint index, const GLint *v)
+void GL_APIENTRY GL_VertexAttribI4ivContextANGLE(GLeglContext ctx, GLuint index, const GLint *v)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribI4iv, "context = %d, index = %u, v = 0x%016" PRIxPTR "",
@@ -29922,8 +30034,12 @@ void GL_APIENTRY VertexAttribI4ivContextANGLE(GLeglContext ctx, GLuint index, co
     }
 }
 
-void GL_APIENTRY
-VertexAttribI4uiContextANGLE(GLeglContext ctx, GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
+void GL_APIENTRY GL_VertexAttribI4uiContextANGLE(GLeglContext ctx,
+                                                 GLuint index,
+                                                 GLuint x,
+                                                 GLuint y,
+                                                 GLuint z,
+                                                 GLuint w)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribI4ui, "context = %d, index = %u, x = %u, y = %u, z = %u, w = %u",
@@ -29947,7 +30063,7 @@ VertexAttribI4uiContextANGLE(GLeglContext ctx, GLuint index, GLuint x, GLuint y,
     }
 }
 
-void GL_APIENTRY VertexAttribI4uivContextANGLE(GLeglContext ctx, GLuint index, const GLuint *v)
+void GL_APIENTRY GL_VertexAttribI4uivContextANGLE(GLeglContext ctx, GLuint index, const GLuint *v)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribI4uiv, "context = %d, index = %u, v = 0x%016" PRIxPTR "",
@@ -29971,11 +30087,11 @@ void GL_APIENTRY VertexAttribI4uivContextANGLE(GLeglContext ctx, GLuint index, c
     }
 }
 
-void GL_APIENTRY VertexAttribIFormatContextANGLE(GLeglContext ctx,
-                                                 GLuint attribindex,
-                                                 GLint size,
-                                                 GLenum type,
-                                                 GLuint relativeoffset)
+void GL_APIENTRY GL_VertexAttribIFormatContextANGLE(GLeglContext ctx,
+                                                    GLuint attribindex,
+                                                    GLint size,
+                                                    GLenum type,
+                                                    GLuint relativeoffset)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribIFormat,
@@ -30003,12 +30119,12 @@ void GL_APIENTRY VertexAttribIFormatContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY VertexAttribIPointerContextANGLE(GLeglContext ctx,
-                                                  GLuint index,
-                                                  GLint size,
-                                                  GLenum type,
-                                                  GLsizei stride,
-                                                  const void *pointer)
+void GL_APIENTRY GL_VertexAttribIPointerContextANGLE(GLeglContext ctx,
+                                                     GLuint index,
+                                                     GLint size,
+                                                     GLenum type,
+                                                     GLsizei stride,
+                                                     const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribIPointer,
@@ -30038,13 +30154,13 @@ void GL_APIENTRY VertexAttribIPointerContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY VertexAttribPointerContextANGLE(GLeglContext ctx,
-                                                 GLuint index,
-                                                 GLint size,
-                                                 GLenum type,
-                                                 GLboolean normalized,
-                                                 GLsizei stride,
-                                                 const void *pointer)
+void GL_APIENTRY GL_VertexAttribPointerContextANGLE(GLeglContext ctx,
+                                                    GLuint index,
+                                                    GLint size,
+                                                    GLenum type,
+                                                    GLboolean normalized,
+                                                    GLsizei stride,
+                                                    const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexAttribPointer,
@@ -30074,9 +30190,9 @@ void GL_APIENTRY VertexAttribPointerContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY VertexBindingDivisorContextANGLE(GLeglContext ctx,
-                                                  GLuint bindingindex,
-                                                  GLuint divisor)
+void GL_APIENTRY GL_VertexBindingDivisorContextANGLE(GLeglContext ctx,
+                                                     GLuint bindingindex,
+                                                     GLuint divisor)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexBindingDivisor, "context = %d, bindingindex = %u, divisor = %u",
@@ -30100,11 +30216,11 @@ void GL_APIENTRY VertexBindingDivisorContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY VertexPointerContextANGLE(GLeglContext ctx,
-                                           GLint size,
-                                           GLenum type,
-                                           GLsizei stride,
-                                           const void *pointer)
+void GL_APIENTRY GL_VertexPointerContextANGLE(GLeglContext ctx,
+                                              GLint size,
+                                              GLenum type,
+                                              GLsizei stride,
+                                              const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLVertexPointer,
@@ -30132,7 +30248,7 @@ void GL_APIENTRY VertexPointerContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-ViewportContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei height)
+GL_ViewportContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei height)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLViewport, "context = %d, x = %d, y = %d, width = %d, height = %d",
@@ -30156,13 +30272,13 @@ ViewportContextANGLE(GLeglContext ctx, GLint x, GLint y, GLsizei width, GLsizei 
     }
 }
 
-void GL_APIENTRY WaitSemaphoreEXTContextANGLE(GLeglContext ctx,
-                                              GLuint semaphore,
-                                              GLuint numBufferBarriers,
-                                              const GLuint *buffers,
-                                              GLuint numTextureBarriers,
-                                              const GLuint *textures,
-                                              const GLenum *srcLayouts)
+void GL_APIENTRY GL_WaitSemaphoreEXTContextANGLE(GLeglContext ctx,
+                                                 GLuint semaphore,
+                                                 GLuint numBufferBarriers,
+                                                 const GLuint *buffers,
+                                                 GLuint numTextureBarriers,
+                                                 const GLuint *textures,
+                                                 const GLenum *srcLayouts)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLWaitSemaphoreEXT,
@@ -30196,10 +30312,10 @@ void GL_APIENTRY WaitSemaphoreEXTContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY WaitSyncContextANGLE(GLeglContext ctx,
-                                      GLsync sync,
-                                      GLbitfield flags,
-                                      GLuint64 timeout)
+void GL_APIENTRY GL_WaitSyncContextANGLE(GLeglContext ctx,
+                                         GLsync sync,
+                                         GLbitfield flags,
+                                         GLuint64 timeout)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLWaitSync, "context = %d, sync = 0x%016" PRIxPTR ", flags = %s, timeout = %llu",
@@ -30225,11 +30341,11 @@ void GL_APIENTRY WaitSyncContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY WeightPointerOESContextANGLE(GLeglContext ctx,
-                                              GLint size,
-                                              GLenum type,
-                                              GLsizei stride,
-                                              const void *pointer)
+void GL_APIENTRY GL_WeightPointerOESContextANGLE(GLeglContext ctx,
+                                                 GLint size,
+                                                 GLenum type,
+                                                 GLsizei stride,
+                                                 const void *pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLWeightPointerOES,
@@ -30255,10 +30371,10 @@ void GL_APIENTRY WeightPointerOESContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY BindUniformLocationCHROMIUMContextANGLE(GLeglContext ctx,
-                                                         GLuint program,
-                                                         GLint location,
-                                                         const GLchar *name)
+void GL_APIENTRY GL_BindUniformLocationCHROMIUMContextANGLE(GLeglContext ctx,
+                                                            GLuint program,
+                                                            GLint location,
+                                                            const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLBindUniformLocationCHROMIUM,
@@ -30287,7 +30403,7 @@ void GL_APIENTRY BindUniformLocationCHROMIUMContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CoverageModulationCHROMIUMContextANGLE(GLeglContext ctx, GLenum components)
+void GL_APIENTRY GL_CoverageModulationCHROMIUMContextANGLE(GLeglContext ctx, GLenum components)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCoverageModulationCHROMIUM, "context = %d, components = %s", CID(context),
@@ -30311,17 +30427,17 @@ void GL_APIENTRY CoverageModulationCHROMIUMContextANGLE(GLeglContext ctx, GLenum
     }
 }
 
-void GL_APIENTRY CopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
-                                                 GLuint sourceId,
-                                                 GLint sourceLevel,
-                                                 GLenum destTarget,
-                                                 GLuint destId,
-                                                 GLint destLevel,
-                                                 GLint internalFormat,
-                                                 GLenum destType,
-                                                 GLboolean unpackFlipY,
-                                                 GLboolean unpackPremultiplyAlpha,
-                                                 GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
+                                                    GLuint sourceId,
+                                                    GLint sourceLevel,
+                                                    GLenum destTarget,
+                                                    GLuint destId,
+                                                    GLint destLevel,
+                                                    GLint internalFormat,
+                                                    GLenum destType,
+                                                    GLboolean unpackFlipY,
+                                                    GLboolean unpackPremultiplyAlpha,
+                                                    GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyTextureCHROMIUM,
@@ -30361,21 +30477,21 @@ void GL_APIENTRY CopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopySubTextureCHROMIUMContextANGLE(GLeglContext ctx,
-                                                    GLuint sourceId,
-                                                    GLint sourceLevel,
-                                                    GLenum destTarget,
-                                                    GLuint destId,
-                                                    GLint destLevel,
-                                                    GLint xoffset,
-                                                    GLint yoffset,
-                                                    GLint x,
-                                                    GLint y,
-                                                    GLint width,
-                                                    GLint height,
-                                                    GLboolean unpackFlipY,
-                                                    GLboolean unpackPremultiplyAlpha,
-                                                    GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopySubTextureCHROMIUMContextANGLE(GLeglContext ctx,
+                                                       GLuint sourceId,
+                                                       GLint sourceLevel,
+                                                       GLenum destTarget,
+                                                       GLuint destId,
+                                                       GLint destLevel,
+                                                       GLint xoffset,
+                                                       GLint yoffset,
+                                                       GLint x,
+                                                       GLint y,
+                                                       GLint width,
+                                                       GLint height,
+                                                       GLboolean unpackFlipY,
+                                                       GLboolean unpackPremultiplyAlpha,
+                                                       GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopySubTextureCHROMIUM,
@@ -30415,9 +30531,9 @@ void GL_APIENTRY CopySubTextureCHROMIUMContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
-                                                           GLuint sourceId,
-                                                           GLuint destId)
+void GL_APIENTRY GL_CompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
+                                                              GLuint sourceId,
+                                                              GLuint destId)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedCopyTextureCHROMIUM, "context = %d, sourceId = %u, destId = %u",
@@ -30445,7 +30561,7 @@ void GL_APIENTRY CompressedCopyTextureCHROMIUMContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY RequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
+void GL_APIENTRY GL_RequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLRequestExtensionANGLE, "context = %d, name = 0x%016" PRIxPTR "", CID(context),
@@ -30469,7 +30585,7 @@ void GL_APIENTRY RequestExtensionANGLEContextANGLE(GLeglContext ctx, const GLcha
     }
 }
 
-void GL_APIENTRY DisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
+void GL_APIENTRY GL_DisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLchar *name)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDisableExtensionANGLE, "context = %d, name = 0x%016" PRIxPTR "", CID(context),
@@ -30493,11 +30609,11 @@ void GL_APIENTRY DisableExtensionANGLEContextANGLE(GLeglContext ctx, const GLcha
     }
 }
 
-void GL_APIENTRY GetBooleanvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                    GLenum pname,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    GLboolean *params)
+void GL_APIENTRY GL_GetBooleanvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                       GLenum pname,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       GLboolean *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBooleanvRobustANGLE,
@@ -30525,12 +30641,12 @@ void GL_APIENTRY GetBooleanvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                             GLenum target,
-                                                             GLenum pname,
-                                                             GLsizei bufSize,
-                                                             GLsizei *length,
-                                                             GLint *params)
+void GL_APIENTRY GL_GetBufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                GLenum target,
+                                                                GLenum pname,
+                                                                GLsizei bufSize,
+                                                                GLsizei *length,
+                                                                GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBufferParameterivRobustANGLE,
@@ -30561,11 +30677,11 @@ void GL_APIENTRY GetBufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetFloatvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                  GLenum pname,
-                                                  GLsizei bufSize,
-                                                  GLsizei *length,
-                                                  GLfloat *params)
+void GL_APIENTRY GL_GetFloatvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                     GLenum pname,
+                                                     GLsizei bufSize,
+                                                     GLsizei *length,
+                                                     GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFloatvRobustANGLE,
@@ -30592,13 +30708,13 @@ void GL_APIENTRY GetFloatvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                            GLenum target,
-                                                                            GLenum attachment,
-                                                                            GLenum pname,
-                                                                            GLsizei bufSize,
-                                                                            GLsizei *length,
-                                                                            GLint *params)
+void GL_APIENTRY GL_GetFramebufferAttachmentParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                               GLenum target,
+                                                                               GLenum attachment,
+                                                                               GLenum pname,
+                                                                               GLsizei bufSize,
+                                                                               GLsizei *length,
+                                                                               GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFramebufferAttachmentParameterivRobustANGLE,
@@ -30630,11 +30746,11 @@ void GL_APIENTRY GetFramebufferAttachmentParameterivRobustANGLEContextANGLE(GLeg
     }
 }
 
-void GL_APIENTRY GetIntegervRobustANGLEContextANGLE(GLeglContext ctx,
-                                                    GLenum pname,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    GLint *data)
+void GL_APIENTRY GL_GetIntegervRobustANGLEContextANGLE(GLeglContext ctx,
+                                                       GLenum pname,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       GLint *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetIntegervRobustANGLE,
@@ -30661,12 +30777,12 @@ void GL_APIENTRY GetIntegervRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetProgramivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLenum pname,
-                                                     GLsizei bufSize,
-                                                     GLsizei *length,
-                                                     GLint *params)
+void GL_APIENTRY GL_GetProgramivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLenum pname,
+                                                        GLsizei bufSize,
+                                                        GLsizei *length,
+                                                        GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramivRobustANGLE,
@@ -30694,12 +30810,12 @@ void GL_APIENTRY GetProgramivRobustANGLEContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetRenderbufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                   GLenum target,
-                                                                   GLenum pname,
-                                                                   GLsizei bufSize,
-                                                                   GLsizei *length,
-                                                                   GLint *params)
+void GL_APIENTRY GL_GetRenderbufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                      GLenum target,
+                                                                      GLenum pname,
+                                                                      GLsizei bufSize,
+                                                                      GLsizei *length,
+                                                                      GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetRenderbufferParameterivRobustANGLE,
@@ -30729,12 +30845,12 @@ void GL_APIENTRY GetRenderbufferParameterivRobustANGLEContextANGLE(GLeglContext 
     }
 }
 
-void GL_APIENTRY GetShaderivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                    GLuint shader,
-                                                    GLenum pname,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    GLint *params)
+void GL_APIENTRY GL_GetShaderivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                       GLuint shader,
+                                                       GLenum pname,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetShaderivRobustANGLE,
@@ -30762,12 +30878,12 @@ void GL_APIENTRY GetShaderivRobustANGLEContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetTexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                          GLenum target,
-                                                          GLenum pname,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLfloat *params)
+void GL_APIENTRY GL_GetTexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                             GLenum target,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterfvRobustANGLE,
@@ -30798,12 +30914,12 @@ void GL_APIENTRY GetTexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                          GLenum target,
-                                                          GLenum pname,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLint *params)
+void GL_APIENTRY GL_GetTexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                             GLenum target,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterivRobustANGLE,
@@ -30834,12 +30950,12 @@ void GL_APIENTRY GetTexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLint location,
-                                                     GLsizei bufSize,
-                                                     GLsizei *length,
-                                                     GLfloat *params)
+void GL_APIENTRY GL_GetUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLint location,
+                                                        GLsizei bufSize,
+                                                        GLsizei *length,
+                                                        GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformfvRobustANGLE,
@@ -30869,12 +30985,12 @@ void GL_APIENTRY GetUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetUniformivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                     GLuint program,
-                                                     GLint location,
-                                                     GLsizei bufSize,
-                                                     GLsizei *length,
-                                                     GLint *params)
+void GL_APIENTRY GL_GetUniformivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                        GLuint program,
+                                                        GLint location,
+                                                        GLsizei bufSize,
+                                                        GLsizei *length,
+                                                        GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformivRobustANGLE,
@@ -30904,12 +31020,12 @@ void GL_APIENTRY GetUniformivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                          GLuint index,
-                                                          GLenum pname,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLfloat *params)
+void GL_APIENTRY GL_GetVertexAttribfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                             GLuint index,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribfvRobustANGLE,
@@ -30938,12 +31054,12 @@ void GL_APIENTRY GetVertexAttribfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                          GLuint index,
-                                                          GLenum pname,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLint *params)
+void GL_APIENTRY GL_GetVertexAttribivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                             GLuint index,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribivRobustANGLE,
@@ -30972,12 +31088,12 @@ void GL_APIENTRY GetVertexAttribivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribPointervRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                GLuint index,
-                                                                GLenum pname,
-                                                                GLsizei bufSize,
-                                                                GLsizei *length,
-                                                                void **pointer)
+void GL_APIENTRY GL_GetVertexAttribPointervRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                   GLuint index,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   GLsizei *length,
+                                                                   void **pointer)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribPointervRobustANGLE,
@@ -31006,18 +31122,18 @@ void GL_APIENTRY GetVertexAttribPointervRobustANGLEContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY ReadPixelsRobustANGLEContextANGLE(GLeglContext ctx,
-                                                   GLint x,
-                                                   GLint y,
-                                                   GLsizei width,
-                                                   GLsizei height,
-                                                   GLenum format,
-                                                   GLenum type,
-                                                   GLsizei bufSize,
-                                                   GLsizei *length,
-                                                   GLsizei *columns,
-                                                   GLsizei *rows,
-                                                   void *pixels)
+void GL_APIENTRY GL_ReadPixelsRobustANGLEContextANGLE(GLeglContext ctx,
+                                                      GLint x,
+                                                      GLint y,
+                                                      GLsizei width,
+                                                      GLsizei height,
+                                                      GLenum format,
+                                                      GLenum type,
+                                                      GLsizei bufSize,
+                                                      GLsizei *length,
+                                                      GLsizei *columns,
+                                                      GLsizei *rows,
+                                                      void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLReadPixelsRobustANGLE,
@@ -31050,17 +31166,17 @@ void GL_APIENTRY ReadPixelsRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLint level,
-                                                   GLint internalformat,
-                                                   GLsizei width,
-                                                   GLsizei height,
-                                                   GLint border,
-                                                   GLenum format,
-                                                   GLenum type,
-                                                   GLsizei bufSize,
-                                                   const void *pixels)
+void GL_APIENTRY GL_TexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLint level,
+                                                      GLint internalformat,
+                                                      GLsizei width,
+                                                      GLsizei height,
+                                                      GLint border,
+                                                      GLenum format,
+                                                      GLenum type,
+                                                      GLsizei bufSize,
+                                                      const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexImage2DRobustANGLE,
@@ -31093,11 +31209,11 @@ void GL_APIENTRY TexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                       GLenum target,
-                                                       GLenum pname,
-                                                       GLsizei bufSize,
-                                                       const GLfloat *params)
+void GL_APIENTRY GL_TexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLenum pname,
+                                                          GLsizei bufSize,
+                                                          const GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterfvRobustANGLE,
@@ -31126,11 +31242,11 @@ void GL_APIENTRY TexParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                       GLenum target,
-                                                       GLenum pname,
-                                                       GLsizei bufSize,
-                                                       const GLint *params)
+void GL_APIENTRY GL_TexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLenum pname,
+                                                          GLsizei bufSize,
+                                                          const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterivRobustANGLE,
@@ -31159,17 +31275,17 @@ void GL_APIENTRY TexParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLenum target,
-                                                      GLint level,
-                                                      GLint xoffset,
-                                                      GLint yoffset,
-                                                      GLsizei width,
-                                                      GLsizei height,
-                                                      GLenum format,
-                                                      GLenum type,
-                                                      GLsizei bufSize,
-                                                      const void *pixels)
+void GL_APIENTRY GL_TexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLint level,
+                                                         GLint xoffset,
+                                                         GLint yoffset,
+                                                         GLsizei width,
+                                                         GLsizei height,
+                                                         GLenum format,
+                                                         GLenum type,
+                                                         GLsizei bufSize,
+                                                         const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexSubImage2DRobustANGLE,
@@ -31202,18 +31318,18 @@ void GL_APIENTRY TexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLint level,
-                                                   GLint internalformat,
-                                                   GLsizei width,
-                                                   GLsizei height,
-                                                   GLsizei depth,
-                                                   GLint border,
-                                                   GLenum format,
-                                                   GLenum type,
-                                                   GLsizei bufSize,
-                                                   const void *pixels)
+void GL_APIENTRY GL_TexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLint level,
+                                                      GLint internalformat,
+                                                      GLsizei width,
+                                                      GLsizei height,
+                                                      GLsizei depth,
+                                                      GLint border,
+                                                      GLenum format,
+                                                      GLenum type,
+                                                      GLsizei bufSize,
+                                                      const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexImage3DRobustANGLE,
@@ -31247,19 +31363,19 @@ void GL_APIENTRY TexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLenum target,
-                                                      GLint level,
-                                                      GLint xoffset,
-                                                      GLint yoffset,
-                                                      GLint zoffset,
-                                                      GLsizei width,
-                                                      GLsizei height,
-                                                      GLsizei depth,
-                                                      GLenum format,
-                                                      GLenum type,
-                                                      GLsizei bufSize,
-                                                      const void *pixels)
+void GL_APIENTRY GL_TexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLint level,
+                                                         GLint xoffset,
+                                                         GLint yoffset,
+                                                         GLint zoffset,
+                                                         GLsizei width,
+                                                         GLsizei height,
+                                                         GLsizei depth,
+                                                         GLenum format,
+                                                         GLenum type,
+                                                         GLsizei bufSize,
+                                                         const void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(
@@ -31294,16 +31410,16 @@ void GL_APIENTRY TexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                             GLenum target,
-                                                             GLint level,
-                                                             GLenum internalformat,
-                                                             GLsizei width,
-                                                             GLsizei height,
-                                                             GLint border,
-                                                             GLsizei imageSize,
-                                                             GLsizei dataSize,
-                                                             const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                GLenum target,
+                                                                GLint level,
+                                                                GLenum internalformat,
+                                                                GLsizei width,
+                                                                GLsizei height,
+                                                                GLint border,
+                                                                GLsizei imageSize,
+                                                                GLsizei dataSize,
+                                                                const GLvoid *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexImage2DRobustANGLE,
@@ -31336,17 +31452,17 @@ void GL_APIENTRY CompressedTexImage2DRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                GLenum target,
-                                                                GLint level,
-                                                                GLsizei xoffset,
-                                                                GLsizei yoffset,
-                                                                GLsizei width,
-                                                                GLsizei height,
-                                                                GLenum format,
-                                                                GLsizei imageSize,
-                                                                GLsizei dataSize,
-                                                                const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                   GLenum target,
+                                                                   GLint level,
+                                                                   GLsizei xoffset,
+                                                                   GLsizei yoffset,
+                                                                   GLsizei width,
+                                                                   GLsizei height,
+                                                                   GLenum format,
+                                                                   GLsizei imageSize,
+                                                                   GLsizei dataSize,
+                                                                   const GLvoid *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexSubImage2DRobustANGLE,
@@ -31379,17 +31495,17 @@ void GL_APIENTRY CompressedTexSubImage2DRobustANGLEContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY CompressedTexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                             GLenum target,
-                                                             GLint level,
-                                                             GLenum internalformat,
-                                                             GLsizei width,
-                                                             GLsizei height,
-                                                             GLsizei depth,
-                                                             GLint border,
-                                                             GLsizei imageSize,
-                                                             GLsizei dataSize,
-                                                             const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                GLenum target,
+                                                                GLint level,
+                                                                GLenum internalformat,
+                                                                GLsizei width,
+                                                                GLsizei height,
+                                                                GLsizei depth,
+                                                                GLint border,
+                                                                GLsizei imageSize,
+                                                                GLsizei dataSize,
+                                                                const GLvoid *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexImage3DRobustANGLE,
@@ -31422,19 +31538,19 @@ void GL_APIENTRY CompressedTexImage3DRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CompressedTexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                GLenum target,
-                                                                GLint level,
-                                                                GLint xoffset,
-                                                                GLint yoffset,
-                                                                GLint zoffset,
-                                                                GLsizei width,
-                                                                GLsizei height,
-                                                                GLsizei depth,
-                                                                GLenum format,
-                                                                GLsizei imageSize,
-                                                                GLsizei dataSize,
-                                                                const GLvoid *data)
+void GL_APIENTRY GL_CompressedTexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                   GLenum target,
+                                                                   GLint level,
+                                                                   GLint xoffset,
+                                                                   GLint yoffset,
+                                                                   GLint zoffset,
+                                                                   GLsizei width,
+                                                                   GLsizei height,
+                                                                   GLsizei depth,
+                                                                   GLenum format,
+                                                                   GLsizei imageSize,
+                                                                   GLsizei dataSize,
+                                                                   const GLvoid *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCompressedTexSubImage3DRobustANGLE,
@@ -31470,12 +31586,12 @@ void GL_APIENTRY CompressedTexSubImage3DRobustANGLEContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY GetQueryivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                   GLenum target,
-                                                   GLenum pname,
-                                                   GLsizei bufSize,
-                                                   GLsizei *length,
-                                                   GLint *params)
+void GL_APIENTRY GL_GetQueryivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLenum pname,
+                                                      GLsizei bufSize,
+                                                      GLsizei *length,
+                                                      GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryivRobustANGLE,
@@ -31506,12 +31622,12 @@ void GL_APIENTRY GetQueryivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetQueryObjectuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                          GLuint id,
-                                                          GLenum pname,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          GLuint *params)
+void GL_APIENTRY GL_GetQueryObjectuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                             GLuint id,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjectuivRobustANGLE,
@@ -31541,12 +31657,12 @@ void GL_APIENTRY GetQueryObjectuivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBufferPointervRobustANGLEContextANGLE(GLeglContext ctx,
-                                                          GLenum target,
-                                                          GLenum pname,
-                                                          GLsizei bufSize,
-                                                          GLsizei *length,
-                                                          void **params)
+void GL_APIENTRY GL_GetBufferPointervRobustANGLEContextANGLE(GLeglContext ctx,
+                                                             GLenum target,
+                                                             GLenum pname,
+                                                             GLsizei bufSize,
+                                                             GLsizei *length,
+                                                             void **params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBufferPointervRobustANGLE,
@@ -31577,12 +31693,12 @@ void GL_APIENTRY GetBufferPointervRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetIntegeri_vRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLenum target,
-                                                      GLuint index,
-                                                      GLsizei bufSize,
-                                                      GLsizei *length,
-                                                      GLint *data)
+void GL_APIENTRY GL_GetIntegeri_vRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLuint index,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLint *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetIntegeri_vRobustANGLE,
@@ -31611,13 +31727,13 @@ void GL_APIENTRY GetIntegeri_vRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetInternalformativRobustANGLEContextANGLE(GLeglContext ctx,
-                                                            GLenum target,
-                                                            GLenum internalformat,
-                                                            GLenum pname,
-                                                            GLsizei bufSize,
-                                                            GLsizei *length,
-                                                            GLint *params)
+void GL_APIENTRY GL_GetInternalformativRobustANGLEContextANGLE(GLeglContext ctx,
+                                                               GLenum target,
+                                                               GLenum internalformat,
+                                                               GLenum pname,
+                                                               GLsizei bufSize,
+                                                               GLsizei *length,
+                                                               GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetInternalformativRobustANGLE,
@@ -31649,12 +31765,12 @@ void GL_APIENTRY GetInternalformativRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribIivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                           GLuint index,
-                                                           GLenum pname,
-                                                           GLsizei bufSize,
-                                                           GLsizei *length,
-                                                           GLint *params)
+void GL_APIENTRY GL_GetVertexAttribIivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                              GLuint index,
+                                                              GLenum pname,
+                                                              GLsizei bufSize,
+                                                              GLsizei *length,
+                                                              GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribIivRobustANGLE,
@@ -31683,12 +31799,12 @@ void GL_APIENTRY GetVertexAttribIivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetVertexAttribIuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                            GLuint index,
-                                                            GLenum pname,
-                                                            GLsizei bufSize,
-                                                            GLsizei *length,
-                                                            GLuint *params)
+void GL_APIENTRY GL_GetVertexAttribIuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                               GLuint index,
+                                                               GLenum pname,
+                                                               GLsizei bufSize,
+                                                               GLsizei *length,
+                                                               GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetVertexAttribIuivRobustANGLE,
@@ -31717,12 +31833,12 @@ void GL_APIENTRY GetVertexAttribIuivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLuint program,
-                                                      GLint location,
-                                                      GLsizei bufSize,
-                                                      GLsizei *length,
-                                                      GLuint *params)
+void GL_APIENTRY GL_GetUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLuint program,
+                                                         GLint location,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetUniformuivRobustANGLE,
@@ -31752,13 +31868,13 @@ void GL_APIENTRY GetUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetActiveUniformBlockivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                GLuint program,
-                                                                GLuint uniformBlockIndex,
-                                                                GLenum pname,
-                                                                GLsizei bufSize,
-                                                                GLsizei *length,
-                                                                GLint *params)
+void GL_APIENTRY GL_GetActiveUniformBlockivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                   GLuint program,
+                                                                   GLuint uniformBlockIndex,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   GLsizei *length,
+                                                                   GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetActiveUniformBlockivRobustANGLE,
@@ -31791,11 +31907,11 @@ void GL_APIENTRY GetActiveUniformBlockivRobustANGLEContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY GetInteger64vRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLenum pname,
-                                                      GLsizei bufSize,
-                                                      GLsizei *length,
-                                                      GLint64 *data)
+void GL_APIENTRY GL_GetInteger64vRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum pname,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLint64 *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetInteger64vRobustANGLE,
@@ -31823,12 +31939,12 @@ void GL_APIENTRY GetInteger64vRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetInteger64i_vRobustANGLEContextANGLE(GLeglContext ctx,
-                                                        GLenum target,
-                                                        GLuint index,
-                                                        GLsizei bufSize,
-                                                        GLsizei *length,
-                                                        GLint64 *data)
+void GL_APIENTRY GL_GetInteger64i_vRobustANGLEContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLuint index,
+                                                           GLsizei bufSize,
+                                                           GLsizei *length,
+                                                           GLint64 *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetInteger64i_vRobustANGLE,
@@ -31857,12 +31973,12 @@ void GL_APIENTRY GetInteger64i_vRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBufferParameteri64vRobustANGLEContextANGLE(GLeglContext ctx,
-                                                               GLenum target,
-                                                               GLenum pname,
-                                                               GLsizei bufSize,
-                                                               GLsizei *length,
-                                                               GLint64 *params)
+void GL_APIENTRY GL_GetBufferParameteri64vRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                  GLenum target,
+                                                                  GLenum pname,
+                                                                  GLsizei bufSize,
+                                                                  GLsizei *length,
+                                                                  GLint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBufferParameteri64vRobustANGLE,
@@ -31893,11 +32009,11 @@ void GL_APIENTRY GetBufferParameteri64vRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                           GLuint sampler,
-                                                           GLuint pname,
-                                                           GLsizei bufSize,
-                                                           const GLint *param)
+void GL_APIENTRY GL_SamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                              GLuint sampler,
+                                                              GLuint pname,
+                                                              GLsizei bufSize,
+                                                              const GLint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterivRobustANGLE,
@@ -31925,11 +32041,11 @@ void GL_APIENTRY SamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                           GLuint sampler,
-                                                           GLenum pname,
-                                                           GLsizei bufSize,
-                                                           const GLfloat *param)
+void GL_APIENTRY GL_SamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                              GLuint sampler,
+                                                              GLenum pname,
+                                                              GLsizei bufSize,
+                                                              const GLfloat *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterfvRobustANGLE,
@@ -31958,12 +32074,12 @@ void GL_APIENTRY SamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                              GLuint sampler,
-                                                              GLenum pname,
-                                                              GLsizei bufSize,
-                                                              GLsizei *length,
-                                                              GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                 GLuint sampler,
+                                                                 GLenum pname,
+                                                                 GLsizei bufSize,
+                                                                 GLsizei *length,
+                                                                 GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterivRobustANGLE,
@@ -31993,12 +32109,12 @@ void GL_APIENTRY GetSamplerParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                              GLuint sampler,
-                                                              GLenum pname,
-                                                              GLsizei bufSize,
-                                                              GLsizei *length,
-                                                              GLfloat *params)
+void GL_APIENTRY GL_GetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                 GLuint sampler,
+                                                                 GLenum pname,
+                                                                 GLsizei bufSize,
+                                                                 GLsizei *length,
+                                                                 GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterfvRobustANGLE,
@@ -32028,12 +32144,12 @@ void GL_APIENTRY GetSamplerParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                  GLenum target,
-                                                                  GLenum pname,
-                                                                  GLsizei bufSize,
-                                                                  GLsizei *length,
-                                                                  GLint *params)
+void GL_APIENTRY GL_GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                     GLenum target,
+                                                                     GLenum pname,
+                                                                     GLsizei bufSize,
+                                                                     GLsizei *length,
+                                                                     GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetFramebufferParameterivRobustANGLE,
@@ -32063,13 +32179,13 @@ void GL_APIENTRY GetFramebufferParameterivRobustANGLEContextANGLE(GLeglContext c
     }
 }
 
-void GL_APIENTRY GetProgramInterfaceivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                              GLuint program,
-                                                              GLenum programInterface,
-                                                              GLenum pname,
-                                                              GLsizei bufSize,
-                                                              GLsizei *length,
-                                                              GLint *params)
+void GL_APIENTRY GL_GetProgramInterfaceivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                 GLuint program,
+                                                                 GLenum programInterface,
+                                                                 GLenum pname,
+                                                                 GLsizei bufSize,
+                                                                 GLsizei *length,
+                                                                 GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetProgramInterfaceivRobustANGLE,
@@ -32102,12 +32218,12 @@ void GL_APIENTRY GetProgramInterfaceivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetBooleani_vRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLenum target,
-                                                      GLuint index,
-                                                      GLsizei bufSize,
-                                                      GLsizei *length,
-                                                      GLboolean *data)
+void GL_APIENTRY GL_GetBooleani_vRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum target,
+                                                         GLuint index,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLboolean *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetBooleani_vRobustANGLE,
@@ -32136,12 +32252,12 @@ void GL_APIENTRY GetBooleani_vRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetMultisamplefvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                         GLenum pname,
-                                                         GLuint index,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLfloat *val)
+void GL_APIENTRY GL_GetMultisamplefvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                            GLenum pname,
+                                                            GLuint index,
+                                                            GLsizei bufSize,
+                                                            GLsizei *length,
+                                                            GLfloat *val)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetMultisamplefvRobustANGLE,
@@ -32170,13 +32286,13 @@ void GL_APIENTRY GetMultisamplefvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                               GLenum target,
-                                                               GLint level,
-                                                               GLenum pname,
-                                                               GLsizei bufSize,
-                                                               GLsizei *length,
-                                                               GLint *params)
+void GL_APIENTRY GL_GetTexLevelParameterivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                  GLenum target,
+                                                                  GLint level,
+                                                                  GLenum pname,
+                                                                  GLsizei bufSize,
+                                                                  GLsizei *length,
+                                                                  GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexLevelParameterivRobustANGLE,
@@ -32208,13 +32324,13 @@ void GL_APIENTRY GetTexLevelParameterivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                               GLenum target,
-                                                               GLint level,
-                                                               GLenum pname,
-                                                               GLsizei bufSize,
-                                                               GLsizei *length,
-                                                               GLfloat *params)
+void GL_APIENTRY GL_GetTexLevelParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                  GLenum target,
+                                                                  GLint level,
+                                                                  GLenum pname,
+                                                                  GLsizei bufSize,
+                                                                  GLsizei *length,
+                                                                  GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexLevelParameterfvRobustANGLE,
@@ -32246,11 +32362,11 @@ void GL_APIENTRY GetTexLevelParameterfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetPointervRobustANGLERobustANGLEContextANGLE(GLeglContext ctx,
-                                                               GLenum pname,
-                                                               GLsizei bufSize,
-                                                               GLsizei *length,
-                                                               void **params)
+void GL_APIENTRY GL_GetPointervRobustANGLERobustANGLEContextANGLE(GLeglContext ctx,
+                                                                  GLenum pname,
+                                                                  GLsizei bufSize,
+                                                                  GLsizei *length,
+                                                                  void **params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetPointervRobustANGLERobustANGLE,
@@ -32279,18 +32395,18 @@ void GL_APIENTRY GetPointervRobustANGLERobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ReadnPixelsRobustANGLEContextANGLE(GLeglContext ctx,
-                                                    GLint x,
-                                                    GLint y,
-                                                    GLsizei width,
-                                                    GLsizei height,
-                                                    GLenum format,
-                                                    GLenum type,
-                                                    GLsizei bufSize,
-                                                    GLsizei *length,
-                                                    GLsizei *columns,
-                                                    GLsizei *rows,
-                                                    void *data)
+void GL_APIENTRY GL_ReadnPixelsRobustANGLEContextANGLE(GLeglContext ctx,
+                                                       GLint x,
+                                                       GLint y,
+                                                       GLsizei width,
+                                                       GLsizei height,
+                                                       GLenum format,
+                                                       GLenum type,
+                                                       GLsizei bufSize,
+                                                       GLsizei *length,
+                                                       GLsizei *columns,
+                                                       GLsizei *rows,
+                                                       void *data)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLReadnPixelsRobustANGLE,
@@ -32323,12 +32439,12 @@ void GL_APIENTRY ReadnPixelsRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLuint program,
-                                                      GLint location,
-                                                      GLsizei bufSize,
-                                                      GLsizei *length,
-                                                      GLfloat *params)
+void GL_APIENTRY GL_GetnUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLuint program,
+                                                         GLint location,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformfvRobustANGLE,
@@ -32358,12 +32474,12 @@ void GL_APIENTRY GetnUniformfvRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                      GLuint program,
-                                                      GLint location,
-                                                      GLsizei bufSize,
-                                                      GLsizei *length,
-                                                      GLint *params)
+void GL_APIENTRY GL_GetnUniformivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                         GLuint program,
+                                                         GLint location,
+                                                         GLsizei bufSize,
+                                                         GLsizei *length,
+                                                         GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformivRobustANGLE,
@@ -32393,12 +32509,12 @@ void GL_APIENTRY GetnUniformivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetnUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                       GLuint program,
-                                                       GLint location,
-                                                       GLsizei bufSize,
-                                                       GLsizei *length,
-                                                       GLuint *params)
+void GL_APIENTRY GL_GetnUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                          GLuint program,
+                                                          GLint location,
+                                                          GLsizei bufSize,
+                                                          GLsizei *length,
+                                                          GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetnUniformuivRobustANGLE,
@@ -32428,11 +32544,11 @@ void GL_APIENTRY GetnUniformuivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                        GLenum target,
-                                                        GLenum pname,
-                                                        GLsizei bufSize,
-                                                        const GLint *params)
+void GL_APIENTRY GL_TexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                           GLenum target,
+                                                           GLenum pname,
+                                                           GLsizei bufSize,
+                                                           const GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterIivRobustANGLE,
@@ -32461,11 +32577,11 @@ void GL_APIENTRY TexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                         GLenum target,
-                                                         GLenum pname,
-                                                         GLsizei bufSize,
-                                                         const GLuint *params)
+void GL_APIENTRY GL_TexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                            GLenum target,
+                                                            GLenum pname,
+                                                            GLsizei bufSize,
+                                                            const GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexParameterIuivRobustANGLE,
@@ -32494,12 +32610,12 @@ void GL_APIENTRY TexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                           GLenum target,
-                                                           GLenum pname,
-                                                           GLsizei bufSize,
-                                                           GLsizei *length,
-                                                           GLint *params)
+void GL_APIENTRY GL_GetTexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                              GLenum target,
+                                                              GLenum pname,
+                                                              GLsizei bufSize,
+                                                              GLsizei *length,
+                                                              GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterIivRobustANGLE,
@@ -32530,12 +32646,12 @@ void GL_APIENTRY GetTexParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                            GLenum target,
-                                                            GLenum pname,
-                                                            GLsizei bufSize,
-                                                            GLsizei *length,
-                                                            GLuint *params)
+void GL_APIENTRY GL_GetTexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                               GLenum target,
+                                                               GLenum pname,
+                                                               GLsizei bufSize,
+                                                               GLsizei *length,
+                                                               GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexParameterIuivRobustANGLE,
@@ -32566,11 +32682,11 @@ void GL_APIENTRY GetTexParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                            GLuint sampler,
-                                                            GLenum pname,
-                                                            GLsizei bufSize,
-                                                            const GLint *param)
+void GL_APIENTRY GL_SamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                               GLuint sampler,
+                                                               GLenum pname,
+                                                               GLsizei bufSize,
+                                                               const GLint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterIivRobustANGLE,
@@ -32599,11 +32715,11 @@ void GL_APIENTRY SamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                             GLuint sampler,
-                                                             GLenum pname,
-                                                             GLsizei bufSize,
-                                                             const GLuint *param)
+void GL_APIENTRY GL_SamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                GLuint sampler,
+                                                                GLenum pname,
+                                                                GLsizei bufSize,
+                                                                const GLuint *param)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSamplerParameterIuivRobustANGLE,
@@ -32632,12 +32748,12 @@ void GL_APIENTRY SamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                               GLuint sampler,
-                                                               GLenum pname,
-                                                               GLsizei bufSize,
-                                                               GLsizei *length,
-                                                               GLint *params)
+void GL_APIENTRY GL_GetSamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                  GLuint sampler,
+                                                                  GLenum pname,
+                                                                  GLsizei bufSize,
+                                                                  GLsizei *length,
+                                                                  GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterIivRobustANGLE,
@@ -32667,12 +32783,12 @@ void GL_APIENTRY GetSamplerParameterIivRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetSamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                                GLuint sampler,
-                                                                GLenum pname,
-                                                                GLsizei bufSize,
-                                                                GLsizei *length,
-                                                                GLuint *params)
+void GL_APIENTRY GL_GetSamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                                   GLuint sampler,
+                                                                   GLenum pname,
+                                                                   GLsizei bufSize,
+                                                                   GLsizei *length,
+                                                                   GLuint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetSamplerParameterIuivRobustANGLE,
@@ -32702,12 +32818,12 @@ void GL_APIENTRY GetSamplerParameterIuivRobustANGLEContextANGLE(GLeglContext ctx
     }
 }
 
-void GL_APIENTRY GetQueryObjectivRobustANGLEContextANGLE(GLeglContext ctx,
-                                                         GLuint id,
-                                                         GLenum pname,
-                                                         GLsizei bufSize,
-                                                         GLsizei *length,
-                                                         GLint *params)
+void GL_APIENTRY GL_GetQueryObjectivRobustANGLEContextANGLE(GLeglContext ctx,
+                                                            GLuint id,
+                                                            GLenum pname,
+                                                            GLsizei bufSize,
+                                                            GLsizei *length,
+                                                            GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjectivRobustANGLE,
@@ -32735,12 +32851,12 @@ void GL_APIENTRY GetQueryObjectivRobustANGLEContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetQueryObjecti64vRobustANGLEContextANGLE(GLeglContext ctx,
-                                                           GLuint id,
-                                                           GLenum pname,
-                                                           GLsizei bufSize,
-                                                           GLsizei *length,
-                                                           GLint64 *params)
+void GL_APIENTRY GL_GetQueryObjecti64vRobustANGLEContextANGLE(GLeglContext ctx,
+                                                              GLuint id,
+                                                              GLenum pname,
+                                                              GLsizei bufSize,
+                                                              GLsizei *length,
+                                                              GLint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjecti64vRobustANGLE,
@@ -32768,12 +32884,12 @@ void GL_APIENTRY GetQueryObjecti64vRobustANGLEContextANGLE(GLeglContext ctx,
     {}
 }
 
-void GL_APIENTRY GetQueryObjectui64vRobustANGLEContextANGLE(GLeglContext ctx,
-                                                            GLuint id,
-                                                            GLenum pname,
-                                                            GLsizei bufSize,
-                                                            GLsizei *length,
-                                                            GLuint64 *params)
+void GL_APIENTRY GL_GetQueryObjectui64vRobustANGLEContextANGLE(GLeglContext ctx,
+                                                               GLuint id,
+                                                               GLenum pname,
+                                                               GLsizei bufSize,
+                                                               GLsizei *length,
+                                                               GLuint64 *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetQueryObjectui64vRobustANGLE,
@@ -32803,17 +32919,17 @@ void GL_APIENTRY GetQueryObjectui64vRobustANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopyTexture3DANGLEContextANGLE(GLeglContext ctx,
-                                                GLuint sourceId,
-                                                GLint sourceLevel,
-                                                GLenum destTarget,
-                                                GLuint destId,
-                                                GLint destLevel,
-                                                GLint internalFormat,
-                                                GLenum destType,
-                                                GLboolean unpackFlipY,
-                                                GLboolean unpackPremultiplyAlpha,
-                                                GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopyTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                   GLuint sourceId,
+                                                   GLint sourceLevel,
+                                                   GLenum destTarget,
+                                                   GLuint destId,
+                                                   GLint destLevel,
+                                                   GLint internalFormat,
+                                                   GLenum destType,
+                                                   GLboolean unpackFlipY,
+                                                   GLboolean unpackPremultiplyAlpha,
+                                                   GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopyTexture3DANGLE,
@@ -32853,24 +32969,24 @@ void GL_APIENTRY CopyTexture3DANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY CopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
-                                                   GLuint sourceId,
-                                                   GLint sourceLevel,
-                                                   GLenum destTarget,
-                                                   GLuint destId,
-                                                   GLint destLevel,
-                                                   GLint xoffset,
-                                                   GLint yoffset,
-                                                   GLint zoffset,
-                                                   GLint x,
-                                                   GLint y,
-                                                   GLint z,
-                                                   GLint width,
-                                                   GLint height,
-                                                   GLint depth,
-                                                   GLboolean unpackFlipY,
-                                                   GLboolean unpackPremultiplyAlpha,
-                                                   GLboolean unpackUnmultiplyAlpha)
+void GL_APIENTRY GL_CopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
+                                                      GLuint sourceId,
+                                                      GLint sourceLevel,
+                                                      GLenum destTarget,
+                                                      GLuint destId,
+                                                      GLint destLevel,
+                                                      GLint xoffset,
+                                                      GLint yoffset,
+                                                      GLint zoffset,
+                                                      GLint x,
+                                                      GLint y,
+                                                      GLint z,
+                                                      GLint width,
+                                                      GLint height,
+                                                      GLint depth,
+                                                      GLboolean unpackFlipY,
+                                                      GLboolean unpackPremultiplyAlpha,
+                                                      GLboolean unpackUnmultiplyAlpha)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLCopySubTexture3DANGLE,
@@ -32914,13 +33030,13 @@ void GL_APIENTRY CopySubTexture3DANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
-                                                          GLenum target,
-                                                          GLsizei samples,
-                                                          GLenum internalformat,
-                                                          GLsizei width,
-                                                          GLsizei height,
-                                                          GLboolean fixedsamplelocations)
+void GL_APIENTRY GL_TexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                             GLenum target,
+                                                             GLsizei samples,
+                                                             GLenum internalformat,
+                                                             GLsizei width,
+                                                             GLsizei height,
+                                                             GLboolean fixedsamplelocations)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorage2DMultisampleANGLE,
@@ -32953,11 +33069,11 @@ void GL_APIENTRY TexStorage2DMultisampleANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
-                                                         GLenum target,
-                                                         GLint level,
-                                                         GLenum pname,
-                                                         GLint *params)
+void GL_APIENTRY GL_GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
+                                                            GLenum target,
+                                                            GLint level,
+                                                            GLenum pname,
+                                                            GLint *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexLevelParameterivANGLE,
@@ -32986,11 +33102,11 @@ void GL_APIENTRY GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
-                                                         GLenum target,
-                                                         GLint level,
-                                                         GLenum pname,
-                                                         GLfloat *params)
+void GL_APIENTRY GL_GetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
+                                                            GLenum target,
+                                                            GLint level,
+                                                            GLenum pname,
+                                                            GLfloat *params)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexLevelParameterfvANGLE,
@@ -33019,11 +33135,11 @@ void GL_APIENTRY GetTexLevelParameterfvANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MultiDrawArraysANGLEContextANGLE(GLeglContext ctx,
-                                                  GLenum mode,
-                                                  const GLint *firsts,
-                                                  const GLsizei *counts,
-                                                  GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawArraysANGLEContextANGLE(GLeglContext ctx,
+                                                     GLenum mode,
+                                                     const GLint *firsts,
+                                                     const GLsizei *counts,
+                                                     GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiDrawArraysANGLE,
@@ -33053,12 +33169,12 @@ void GL_APIENTRY MultiDrawArraysANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
-                                                           GLenum mode,
-                                                           const GLint *firsts,
-                                                           const GLsizei *counts,
-                                                           const GLsizei *instanceCounts,
-                                                           GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
+                                                              GLenum mode,
+                                                              const GLint *firsts,
+                                                              const GLsizei *counts,
+                                                              const GLsizei *instanceCounts,
+                                                              GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiDrawArraysInstancedANGLE,
@@ -33089,12 +33205,12 @@ void GL_APIENTRY MultiDrawArraysInstancedANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MultiDrawElementsANGLEContextANGLE(GLeglContext ctx,
-                                                    GLenum mode,
-                                                    const GLsizei *counts,
-                                                    GLenum type,
-                                                    const GLvoid *const *indices,
-                                                    GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawElementsANGLEContextANGLE(GLeglContext ctx,
+                                                       GLenum mode,
+                                                       const GLsizei *counts,
+                                                       GLenum type,
+                                                       const GLvoid *const *indices,
+                                                       GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiDrawElementsANGLE,
@@ -33125,13 +33241,13 @@ void GL_APIENTRY MultiDrawElementsANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
-                                                             GLenum mode,
-                                                             const GLsizei *counts,
-                                                             GLenum type,
-                                                             const GLvoid *const *indices,
-                                                             const GLsizei *instanceCounts,
-                                                             GLsizei drawcount)
+void GL_APIENTRY GL_MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
+                                                                GLenum mode,
+                                                                const GLsizei *counts,
+                                                                GLenum type,
+                                                                const GLvoid *const *indices,
+                                                                const GLsizei *instanceCounts,
+                                                                GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiDrawElementsInstancedANGLE,
@@ -33165,12 +33281,12 @@ void GL_APIENTRY MultiDrawElementsInstancedANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
-                                                                  GLenum mode,
-                                                                  GLint first,
-                                                                  GLsizei count,
-                                                                  GLsizei instanceCount,
-                                                                  GLuint baseInstance)
+void GL_APIENTRY GL_DrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                                     GLenum mode,
+                                                                     GLint first,
+                                                                     GLsizei count,
+                                                                     GLsizei instanceCount,
+                                                                     GLuint baseInstance)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawArraysInstancedBaseInstanceANGLE,
@@ -33201,14 +33317,14 @@ void GL_APIENTRY DrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext c
 }
 
 void GL_APIENTRY
-DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
-                                                             GLenum mode,
-                                                             GLsizei count,
-                                                             GLenum type,
-                                                             const GLvoid *indices,
-                                                             GLsizei instanceCounts,
-                                                             GLint baseVertex,
-                                                             GLuint baseInstance)
+GL_DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                                GLenum mode,
+                                                                GLsizei count,
+                                                                GLenum type,
+                                                                const GLvoid *indices,
+                                                                GLsizei instanceCounts,
+                                                                GLint baseVertex,
+                                                                GLuint baseInstance)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDrawElementsInstancedBaseVertexBaseInstanceANGLE,
@@ -33244,13 +33360,13 @@ DrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
-                                                      GLenum mode,
-                                                      const GLint *firsts,
-                                                      const GLsizei *counts,
-                                                      const GLsizei *instanceCounts,
-                                                      const GLuint *baseInstances,
-                                                      GLsizei drawcount)
+GL_MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                         GLenum mode,
+                                                         const GLint *firsts,
+                                                         const GLsizei *counts,
+                                                         const GLsizei *instanceCounts,
+                                                         const GLuint *baseInstances,
+                                                         GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiDrawArraysInstancedBaseInstanceANGLE,
@@ -33283,15 +33399,15 @@ MultiDrawArraysInstancedBaseInstanceANGLEContextANGLE(GLeglContext ctx,
 }
 
 void GL_APIENTRY
-MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
-                                                                  GLenum mode,
-                                                                  const GLsizei *counts,
-                                                                  GLenum type,
-                                                                  const GLvoid *const *indices,
-                                                                  const GLsizei *instanceCounts,
-                                                                  const GLint *baseVertices,
-                                                                  const GLuint *baseInstances,
-                                                                  GLsizei drawcount)
+GL_MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext ctx,
+                                                                     GLenum mode,
+                                                                     const GLsizei *counts,
+                                                                     GLenum type,
+                                                                     const GLvoid *const *indices,
+                                                                     const GLsizei *instanceCounts,
+                                                                     const GLint *baseVertices,
+                                                                     const GLuint *baseInstances,
+                                                                     GLsizei drawcount)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLMultiDrawElementsInstancedBaseVertexBaseInstanceANGLE,
@@ -33328,10 +33444,10 @@ MultiDrawElementsInstancedBaseVertexBaseInstanceANGLEContextANGLE(GLeglContext c
     }
 }
 
-void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
-                                                   GLenum pname,
-                                                   GLuint index,
-                                                   GLfloat *val)
+void GL_APIENTRY GL_GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
+                                                      GLenum pname,
+                                                      GLuint index,
+                                                      GLfloat *val)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetMultisamplefvANGLE,
@@ -33356,7 +33472,9 @@ void GL_APIENTRY GetMultisamplefvANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY SampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumber, GLbitfield mask)
+void GL_APIENTRY GL_SampleMaskiANGLEContextANGLE(GLeglContext ctx,
+                                                 GLuint maskNumber,
+                                                 GLbitfield mask)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLSampleMaskiANGLE, "context = %d, maskNumber = %u, mask = %s", CID(context),
@@ -33380,7 +33498,7 @@ void GL_APIENTRY SampleMaskiANGLEContextANGLE(GLeglContext ctx, GLuint maskNumbe
     }
 }
 
-void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
+void GL_APIENTRY GL_ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLProvokingVertexANGLE, "context = %d, mode = %s", CID(context),
@@ -33405,7 +33523,7 @@ void GL_APIENTRY ProvokingVertexANGLEContextANGLE(GLeglContext ctx, GLenum mode)
     }
 }
 
-void GL_APIENTRY LoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum current, GLenum other)
+void GL_APIENTRY GL_LoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum current, GLenum other)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLLoseContextCHROMIUM, "context = %d, current = %s, other = %s", CID(context),
@@ -33432,15 +33550,15 @@ void GL_APIENTRY LoseContextCHROMIUMContextANGLE(GLeglContext ctx, GLenum curren
     }
 }
 
-void GL_APIENTRY TexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
-                                                     GLenum target,
-                                                     GLint level,
-                                                     GLint internalformat,
-                                                     GLsizei width,
-                                                     GLsizei height,
-                                                     GLint border,
-                                                     GLenum format,
-                                                     GLenum type)
+void GL_APIENTRY GL_TexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
+                                                        GLenum target,
+                                                        GLint level,
+                                                        GLint internalformat,
+                                                        GLsizei width,
+                                                        GLsizei height,
+                                                        GLint border,
+                                                        GLenum format,
+                                                        GLenum type)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexImage2DExternalANGLE,
@@ -33473,7 +33591,7 @@ void GL_APIENTRY TexImage2DExternalANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target)
+void GL_APIENTRY GL_InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum target)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLInvalidateTextureANGLE, "context = %d, target = %s", CID(context),
@@ -33498,12 +33616,12 @@ void GL_APIENTRY InvalidateTextureANGLEContextANGLE(GLeglContext ctx, GLenum tar
     }
 }
 
-void GL_APIENTRY GetTexImageANGLEContextANGLE(GLeglContext ctx,
-                                              GLenum target,
-                                              GLint level,
-                                              GLenum format,
-                                              GLenum type,
-                                              void *pixels)
+void GL_APIENTRY GL_GetTexImageANGLEContextANGLE(GLeglContext ctx,
+                                                 GLenum target,
+                                                 GLint level,
+                                                 GLenum format,
+                                                 GLenum type,
+                                                 void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexImageANGLE,
@@ -33534,11 +33652,11 @@ void GL_APIENTRY GetTexImageANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
-                                                       GLenum target,
-                                                       GLenum format,
-                                                       GLenum type,
-                                                       void *pixels)
+void GL_APIENTRY GL_GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLenum format,
+                                                          GLenum type,
+                                                          void *pixels)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetRenderbufferImageANGLE,
@@ -33567,16 +33685,16 @@ void GL_APIENTRY GetRenderbufferImageANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorageMemFlags2DANGLEContextANGLE(GLeglContext ctx,
-                                                       GLenum target,
-                                                       GLsizei levels,
-                                                       GLenum internalFormat,
-                                                       GLsizei width,
-                                                       GLsizei height,
-                                                       GLuint memory,
-                                                       GLuint64 offset,
-                                                       GLbitfield createFlags,
-                                                       GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags2DANGLEContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLsizei levels,
+                                                          GLenum internalFormat,
+                                                          GLsizei width,
+                                                          GLsizei height,
+                                                          GLuint memory,
+                                                          GLuint64 offset,
+                                                          GLbitfield createFlags,
+                                                          GLbitfield usageFlags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorageMemFlags2DANGLE,
@@ -33612,17 +33730,17 @@ void GL_APIENTRY TexStorageMemFlags2DANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorageMemFlags2DMultisampleANGLEContextANGLE(GLeglContext ctx,
-                                                                  GLenum target,
-                                                                  GLsizei samples,
-                                                                  GLenum internalFormat,
-                                                                  GLsizei width,
-                                                                  GLsizei height,
-                                                                  GLboolean fixedSampleLocations,
-                                                                  GLuint memory,
-                                                                  GLuint64 offset,
-                                                                  GLbitfield createFlags,
-                                                                  GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags2DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                                     GLenum target,
+                                                                     GLsizei samples,
+                                                                     GLenum internalFormat,
+                                                                     GLsizei width,
+                                                                     GLsizei height,
+                                                                     GLboolean fixedSampleLocations,
+                                                                     GLuint memory,
+                                                                     GLuint64 offset,
+                                                                     GLbitfield createFlags,
+                                                                     GLbitfield usageFlags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(
@@ -33662,17 +33780,17 @@ void GL_APIENTRY TexStorageMemFlags2DMultisampleANGLEContextANGLE(GLeglContext c
     }
 }
 
-void GL_APIENTRY TexStorageMemFlags3DANGLEContextANGLE(GLeglContext ctx,
-                                                       GLenum target,
-                                                       GLsizei levels,
-                                                       GLenum internalFormat,
-                                                       GLsizei width,
-                                                       GLsizei height,
-                                                       GLsizei depth,
-                                                       GLuint memory,
-                                                       GLuint64 offset,
-                                                       GLbitfield createFlags,
-                                                       GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags3DANGLEContextANGLE(GLeglContext ctx,
+                                                          GLenum target,
+                                                          GLsizei levels,
+                                                          GLenum internalFormat,
+                                                          GLsizei width,
+                                                          GLsizei height,
+                                                          GLsizei depth,
+                                                          GLuint memory,
+                                                          GLuint64 offset,
+                                                          GLbitfield createFlags,
+                                                          GLbitfield usageFlags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorageMemFlags3DANGLE,
@@ -33709,18 +33827,18 @@ void GL_APIENTRY TexStorageMemFlags3DANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY TexStorageMemFlags3DMultisampleANGLEContextANGLE(GLeglContext ctx,
-                                                                  GLenum target,
-                                                                  GLsizei samples,
-                                                                  GLenum internalFormat,
-                                                                  GLsizei width,
-                                                                  GLsizei height,
-                                                                  GLsizei depth,
-                                                                  GLboolean fixedSampleLocations,
-                                                                  GLuint memory,
-                                                                  GLuint64 offset,
-                                                                  GLbitfield createFlags,
-                                                                  GLbitfield usageFlags)
+void GL_APIENTRY GL_TexStorageMemFlags3DMultisampleANGLEContextANGLE(GLeglContext ctx,
+                                                                     GLenum target,
+                                                                     GLsizei samples,
+                                                                     GLenum internalFormat,
+                                                                     GLsizei width,
+                                                                     GLsizei height,
+                                                                     GLsizei depth,
+                                                                     GLboolean fixedSampleLocations,
+                                                                     GLuint memory,
+                                                                     GLuint64 offset,
+                                                                     GLbitfield createFlags,
+                                                                     GLbitfield usageFlags)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLTexStorageMemFlags3DMultisampleANGLE,
@@ -33760,11 +33878,11 @@ void GL_APIENTRY TexStorageMemFlags3DMultisampleANGLEContextANGLE(GLeglContext c
     }
 }
 
-void GL_APIENTRY ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
-                                                           GLuint memory,
-                                                           GLuint64 size,
-                                                           GLenum handleType,
-                                                           GLuint handle)
+void GL_APIENTRY GL_ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
+                                                              GLuint memory,
+                                                              GLuint64 size,
+                                                              GLenum handleType,
+                                                              GLuint handle)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLImportMemoryZirconHandleANGLE,
@@ -33794,10 +33912,10 @@ void GL_APIENTRY ImportMemoryZirconHandleANGLEContextANGLE(GLeglContext ctx,
     }
 }
 
-void GL_APIENTRY ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
-                                                              GLuint semaphore,
-                                                              GLenum handleType,
-                                                              GLuint handle)
+void GL_APIENTRY GL_ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
+                                                                 GLuint semaphore,
+                                                                 GLenum handleType,
+                                                                 GLuint handle)
 {
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLImportSemaphoreZirconHandleANGLE,
@@ -33825,4 +33943,5 @@ void GL_APIENTRY ImportSemaphoreZirconHandleANGLEContextANGLE(GLeglContext ctx,
         GenerateContextLostErrorOnContext(context);
     }
 }
-}  // namespace gl
+
+}  // extern "C"
