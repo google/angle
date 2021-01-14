@@ -3139,16 +3139,10 @@ angle::Result BufferHelper::init(ContextVk *contextVk,
         createInfo = &modifiedCreateInfo;
     }
 
-    const VkMemoryPropertyFlags requiredFlags =
-        memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+    VkMemoryPropertyFlags requiredFlags =
+        (memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
     VkMemoryPropertyFlags preferredFlags =
         (memoryPropertyFlags & (~VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT));
-    // If we want host visible memory, also ask for cached.  This can make a big difference for data
-    // upload.
-    if (requiredFlags != 0)
-    {
-        preferredFlags |= VK_MEMORY_PROPERTY_HOST_CACHED_BIT;
-    }
 
     const Allocator &allocator = renderer->getAllocator();
     bool persistentlyMapped    = renderer->getFeatures().persistentlyMappedBuffers.enabled;
