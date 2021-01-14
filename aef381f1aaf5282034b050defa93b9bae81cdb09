@@ -54,6 +54,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18cedd6a_31e7811f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1483077
+      },
+      "writtenOn": "2021-01-14T17:32:40Z",
+      "side": 1,
+      "message": "Looking at this, pow(2.0f, x) is because x can be negative, so pow(2, -2) returns 0.25. I still went ahead and optimised out the repeated pow() calls, but before doing so I added unit tests for the two 999E5 conversions (they were missing) then optimised them (verifying with the unit tests). In the original code both conversions had widening to double in, now removed (one triggered VS2019, the other was being cast as a byproduct).\n\nThe added unit test assume the original versions were correct (since they\u0027ve been around for quite some time).",
+      "parentUuid": "62cec88e_4846ae03",
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd252a9a_808534b4",
@@ -115,6 +133,30 @@
       "side": 1,
       "message": "AUTHORS just has the company name, CONTRIBUTORS has a section for your company + all company members. You\u0027ll see if you look at the file. Just follow the pattern.",
       "parentUuid": "d5309add_fd5763bc",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 11
+      },
+      "revId": "aef381f1aaf5282034b050defa93b9bae81cdb09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00c9c0b4_3414846f",
+        "filename": "AUTHORS",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1483077
+      },
+      "writtenOn": "2021-01-14T17:32:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a5a107d_9ac3cae7",
       "range": {
         "startLine": 39,
         "startChar": 0,
