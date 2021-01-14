@@ -34,6 +34,24 @@
       "parentUuid": "f259a818_8d114e6a",
       "revId": "fc087ef7356051e976bcf12511180e44cf029053",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8374062d_eb5f7947",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-01-14T18:34:20Z",
+      "side": 1,
+      "message": "Hmm, thinking about it a bit more if we ended up in a non-COHERENT memory type due to this, I already see that ANGLE includes code to flush, so maybe it\u0027s not that?",
+      "parentUuid": "882e6619_74757f37",
+      "revId": "fc087ef7356051e976bcf12511180e44cf029053",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
