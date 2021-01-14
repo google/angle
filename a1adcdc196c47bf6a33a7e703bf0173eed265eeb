@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9155818a_339ce273",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1167,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-14T19:51:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "214234e4_0b4c8955",
+      "range": {
+        "startLine": 1167,
+        "startChar": 11,
+        "endLine": 1167,
+        "endChar": 39
+      },
+      "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dafda636_b08c7bac",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-01-14T16:12:25Z",
       "side": 1,
       "message": "While this is only used in relation to XFB in this CL, that may not always be the case.\n\nSince PPOs can have graphics and compute programs bound at the same time, it\u0027s probably worth clearing the Compute bit also, or asserting it isn\u0027t set in the first place.",
+      "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "478080d9_99da7ccd",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1169,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-14T19:51:29Z",
+      "side": 1,
+      "message": "Done. Cleared Compute just to be sure.",
+      "parentUuid": "dafda636_b08c7bac",
       "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -75,6 +117,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "070629b4_23c631b4",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-14T19:51:29Z",
+      "side": 1,
+      "message": "Added a static_assert.",
+      "parentUuid": "8fb73e00_1fafcaf4",
+      "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8338f7fa_b94dfa56",
@@ -88,6 +148,24 @@
       "writtenOn": "2021-01-14T16:12:25Z",
       "side": 1,
       "message": "Why is ShaderType::Vertex used here, rather than getLinkedTransformFeedbackStage()?",
+      "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ad390e6_a076f90c",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 7
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-14T19:51:29Z",
+      "side": 1,
+      "message": "Because transform feedback on non-vertex are not supported yet. It\u0027s the same check in vulkan/ currently. A few CLs later, these are fixed when xfb is enabled for tess/geom.",
+      "parentUuid": "8338f7fa_b94dfa56",
       "revId": "a1adcdc196c47bf6a33a7e703bf0173eed265eeb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
