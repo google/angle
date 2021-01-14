@@ -16,6 +16,29 @@
       "message": "PTAL. This change by itself doesn\u0027t enable any tests, though there are already parts of RewriteStructSamplers that have become noop.\n\nTests pass on Linux and Android. Windows took forever to compile before I uploaded PS#5. If any failures show up from webgl tests for example, they would be corner cases to handle.\n\nThe change is good for review nevertheless.",
       "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc83d20f_6a81c08e",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 814,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-14T21:52:09Z",
+      "side": 1,
+      "message": "nit: functions before members",
+      "range": {
+        "startLine": 814,
+        "startChar": 4,
+        "endLine": 814,
+        "endChar": 22
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
