@@ -421,8 +421,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     bool emulateSeamfulCubeMapSampling() const { return mEmulateSeamfulCubeMapSampling; }
 
-    bool useOldRewriteStructSamplers() const { return mUseOldRewriteStructSamplers; }
-
     const gl::Debug &getDebug() const { return mState.getDebug(); }
     const gl::OverlayType *getOverlay() const { return mState.getOverlay(); }
 
@@ -832,7 +830,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void flushGpuEvents(double nextSyncGpuTimestampS, double nextSyncCpuTimestampS);
     void handleDeviceLost();
     bool shouldEmulateSeamfulCubeMapSampling() const;
-    bool shouldUseOldRewriteStructSamplers() const;
     void clearAllGarbage();
     bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
@@ -951,10 +948,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // Whether this context should do seamful cube map sampling emulation.
     bool mEmulateSeamfulCubeMapSampling;
-
-    // Whether this context should use the old version of the
-    // RewriteStructSamplers pass.
-    bool mUseOldRewriteStructSamplers;
 
     angle::PackedEnumMap<PipelineType, DriverUniformsDescriptorSet> mDriverUniforms;
 

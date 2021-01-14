@@ -305,9 +305,7 @@ const ShCompileOptions SH_TAKE_VIDEO_TEXTURE_AS_EXTERNAL_OES = UINT64_C(1) << 45
 // If requested, validates the AST after every transformation.  Useful for debugging.
 const ShCompileOptions SH_VALIDATE_AST = UINT64_C(1) << 46;
 
-// Use old version of RewriteStructSamplers, which doesn't produce as many
-// sampler arrays in parameters. This causes a few tests to pass on Android.
-const ShCompileOptions SH_USE_OLD_REWRITE_STRUCT_SAMPLERS = UINT64_C(1) << 47;
+// Bit 47 is available
 
 // This flag works around a inconsistent behavior in Mac AMD driver where gl_VertexID doesn't
 // include base vertex value. It replaces gl_VertexID with (gl_VertexID + angle_BaseVertex)

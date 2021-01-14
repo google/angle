@@ -55,8 +55,8 @@
 // Android failures
 
 // Dynamic indexing features not supported on Qualcomm
-2703 VULKAN ANDROID : KHR-GLES32.core.gpu_shader5.atomic_counters_array_indexing = FAIL
-2703 VULKAN ANDROID : KHR-GLES32.core.gpu_shader5.images_array_indexing = FAIL
+5435 VULKAN ANDROID : KHR-GLES32.core.gpu_shader5.atomic_counters_array_indexing = FAIL
+5435 VULKAN ANDROID : KHR-GLES32.core.gpu_shader5.images_array_indexing = FAIL
 
 // Texture buffer failures
 5392 VULKAN ANDROID : KHR-GLES32.core.texture_buffer.texture_buffer_active_uniform_validation_compute_shader = FAIL

@@ -24,6 +24,7 @@
 #include "compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.h"
+#include "compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteAtomicCounters.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteCubeMapSamplersAs2DArray.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteDfdy.h"
@@ -812,21 +813,9 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             return false;
         }
 
-        bool rewriteStructSamplersResult;
         int removedUniformsCount;
 
-        if (compileOptions & SH_USE_OLD_REWRITE_STRUCT_SAMPLERS)
-        {
-            rewriteStructSamplersResult =
-                RewriteStructSamplersOld(this, root, &getSymbolTable(), &removedUniformsCount);
-        }
-        else
-        {
-            rewriteStructSamplersResult =
-                RewriteStructSamplers(this, root, &getSymbolTable(), &removedUniformsCount);
-        }
-
-        if (!rewriteStructSamplersResult)
+        if (!RewriteStructSamplers(this, root, &getSymbolTable(), &removedUniformsCount))
         {
             return false;
         }
@@ -839,6 +828,15 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         {
             return false;
         }
+    }
+
+    // Replace array of array of opaque uniforms with a flattened array.  This is run after
+    // MonomorphizeUnsupportedFunctionsInVulkanGLSL and RewriteStructSamplers so that it's not
+    // possible for an array of array of opaque type to be partially subscripted and passed to a
+    // function.
+    if (!RewriteArrayOfArrayOfOpaqueUniforms(this, root, &getSymbolTable()))
+    {
+        return false;
     }
 
     // Rewrite samplerCubes as sampler2DArrays.  This must be done after rewriting struct samplers

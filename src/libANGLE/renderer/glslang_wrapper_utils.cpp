@@ -138,21 +138,9 @@ void GlslangWarmup()
 // array (except for the innermost dimension).  When assigning decorations (set/binding/etc), only
 // the indices corresponding to the first element of the array should be specified.  This function
 // is used to skip the other indices.
-//
-// If useOldRewriteStructSamplers, there are multiple samplers extracted out of struct arrays
-// though, so the above only applies to the sampler array defined in the struct.
-bool UniformNameIsIndexZero(const std::string &name, bool excludeCheckForOwningStructArrays)
+bool UniformNameIsIndexZero(const std::string &name)
 {
     size_t lastBracketClose = 0;
-
-    if (excludeCheckForOwningStructArrays)
-    {
-        size_t lastDot = name.find_last_of('.');
-        if (lastDot != std::string::npos)
-        {
-            lastBracketClose = lastDot;
-        }
-    }
 
     while (true)
     {
@@ -998,18 +986,15 @@ void AssignTextureBindings(const GlslangSourceOptions &options,
     {
         const gl::LinkedUniform &samplerUniform = uniforms[uniformIndex];
 
-        if (!options.useOldRewriteStructSamplers &&
-            gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
+        if (gl::SamplerNameContainsNonZeroArrayElement(samplerUniform.name))
         {
             continue;
         }
 
-        if (UniformNameIsIndexZero(samplerUniform.name, options.useOldRewriteStructSamplers))
+        if (UniformNameIsIndexZero(samplerUniform.name))
         {
             // Samplers in structs are extracted and renamed.
-            const std::string samplerName = options.useOldRewriteStructSamplers
-                                                ? GetMappedSamplerNameOld(samplerUniform.name)
-                                                : GlslangGetMappedSamplerName(samplerUniform.name);
+            const std::string samplerName = GlslangGetMappedSamplerName(samplerUniform.name);
 
             // TODO: http://anglebug.com/4523: All uniforms should be active
             if (programExecutable.hasLinkedShaderStage(shaderType) &&
@@ -3774,7 +3759,7 @@ bool GetImageNameWithoutIndices(std::string *name)
         return true;
     }
 
-    if (!UniformNameIsIndexZero(*name, false))
+    if (!UniformNameIsIndexZero(*name))
     {
         return false;
     }
@@ -3782,25 +3767,6 @@ bool GetImageNameWithoutIndices(std::string *name)
     // Strip all indices
     *name = name->substr(0, name->find('['));
     return true;
-}
-
-std::string GetMappedSamplerNameOld(const std::string &originalName)
-{
-    std::string samplerName = gl::ParseResourceName(originalName, nullptr);
-
-    // Samplers in structs are extracted.
-    std::replace(samplerName.begin(), samplerName.end(), '.', '_');
-
-    // Samplers in arrays of structs are also extracted.
-    std::replace(samplerName.begin(), samplerName.end(), '[', '_');
-    samplerName.erase(std::remove(samplerName.begin(), samplerName.end(), ']'), samplerName.end());
-
-    if (MappedSamplerNameNeedsUserDefinedPrefix(originalName))
-    {
-        samplerName = sh::kUserDefinedNamePrefix + samplerName;
-    }
-
-    return samplerName;
 }
 
 std::string GlslangGetMappedSamplerName(const std::string &originalName)

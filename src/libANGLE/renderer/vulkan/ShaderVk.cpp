@@ -58,11 +58,6 @@ std::shared_ptr<WaitableCompileEvent> ShaderVk::compile(const gl::Context *conte
         compileOptions |= SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING;
     }
 
-    if (contextVk->useOldRewriteStructSamplers())
-    {
-        compileOptions |= SH_USE_OLD_REWRITE_STRUCT_SAMPLERS;
-    }
-
     if (!contextVk->getFeatures().enablePrecisionQualifiers.enabled)
     {
         compileOptions |= SH_IGNORE_PRECISION_QUALIFIERS;

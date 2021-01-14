@@ -103,9 +103,6 @@
 // Fails to link the shader program on Pixel2 and Pixel2 XL
 3588 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8.samples_*.mask_* = FAIL
 
-// Android uses "old" sampler rewrite that doesn't support array of arrays
-2703 VULKAN ANDROID : KHR-GLES31.core.arrays_of_arrays.* = SKIP
-
 // Failing on Android with SwiftShader
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-bvec4 = FAIL
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-ivec4 = FAIL

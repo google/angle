@@ -392,7 +392,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mFlipYForCurrentSurface(false),
       mIsAnyHostVisibleBufferWritten(false),
       mEmulateSeamfulCubeMapSampling(false),
-      mUseOldRewriteStructSamplers(false),
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
       mGpuEventsEnabled(false),
@@ -654,8 +653,6 @@ angle::Result ContextVk::initialize()
 #endif
 
     mEmulateSeamfulCubeMapSampling = shouldEmulateSeamfulCubeMapSampling();
-
-    mUseOldRewriteStructSamplers = shouldUseOldRewriteStructSamplers();
 
     // Assign initial command buffers from queue
     mOutsideRenderPassCommands = mRenderer->getCommandBufferHelper(false);
@@ -4578,11 +4575,6 @@ bool ContextVk::shouldEmulateSeamfulCubeMapSampling() const
     }
 
     return true;
-}
-
-bool ContextVk::shouldUseOldRewriteStructSamplers() const
-{
-    return mRenderer->getFeatures().forceOldRewriteStructSamplers.enabled;
 }
 
 angle::Result ContextVk::onBufferReleaseToExternal(const vk::BufferHelper &buffer)

@@ -28,7 +28,6 @@ GlslangSourceOptions GlslangWrapperVk::CreateSourceOptions(const angle::Features
 {
     GlslangSourceOptions options;
 
-    options.useOldRewriteStructSamplers = features.forceOldRewriteStructSamplers.enabled;
     options.supportsTransformFeedbackExtension =
         features.supportsTransformFeedbackExtension.enabled;
     options.emulateTransformFeedback = features.emulateTransformFeedback.enabled;

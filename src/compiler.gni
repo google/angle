@@ -321,6 +321,8 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h",
   "src/compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.cpp",
   "src/compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.h",
+  "src/compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.cpp",
+  "src/compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteAtomicCounters.cpp",
   "src/compiler/translator/tree_ops/vulkan/RewriteAtomicCounters.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteCubeMapSamplersAs2DArray.cpp",
@@ -331,7 +333,6 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteStructSamplers.cpp",
   "src/compiler/translator/tree_ops/vulkan/RewriteStructSamplers.h",
-  "src/compiler/translator/tree_ops/vulkan/RewriteStructSamplersOld.cpp",
 ]
 if (is_android) {
   angle_translator_sources += [

@@ -3273,7 +3273,7 @@ TEST_P(GLSLTest_ES31, AtomicCounterArrayLength)
 precision mediump float;
 layout(local_size_x=1) in;
 
-layout(binding = 0) uniform atomic_uint ac1[2][3];
+layout(binding = 0) uniform atomic_uint ac1[2][3][4];
 uniform uint testSideEffectValue;
 
 layout(binding = 1, std140) buffer Result
@@ -3288,11 +3288,19 @@ void main() {
         passed = false;
     }
     uint value = 0u;
-    if (ac1[(value = testSideEffectValue)].length() != 3)
+    if (ac1[value = testSideEffectValue].length() != 3)
     {
         passed = false;
     }
     if (value != testSideEffectValue)
+    {
+        passed = false;
+    }
+    if (ac1[1][value = testSideEffectValue + 1u].length() != 4)
+    {
+        passed = false;
+    }
+    if (value != testSideEffectValue + 1u)
     {
         passed = false;
     }
@@ -3329,9 +3337,10 @@ void main() {
                  GL_STATIC_DRAW);
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, shaderStorageBuffer);
 
-    GLint uniformLocation = glGetUniformLocation(program.get(), "testSideEffectValue");
+    GLint uniformLocation = glGetUniformLocation(program, "testSideEffectValue");
     EXPECT_NE(uniformLocation, -1);
-    glUniform1i(uniformLocation, kUniformTestValue);
+    glUniform1ui(uniformLocation, kUniformTestValue);
+    EXPECT_GL_NO_ERROR();
 
     glDispatchCompute(1, 1, 1);
 
@@ -3402,10 +3411,6 @@ void main()
 // Test that inactive samplers in structs don't cause any errors.
 TEST_P(GLSLTest_ES31, InactiveSamplersInStructCS)
 {
-    // While the sampler is being extracted and declared outside of the struct, it's not removed
-    // from the struct definition.  http://anglebug.com/4211
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsMetal());
-
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 struct S
@@ -3532,10 +3537,6 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysBlockBasicType)
 // Test that arrays of arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, ArraysOfArraysSampler)
 {
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision mediump float;\n"
@@ -3587,10 +3588,6 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysImage)
 {
     // http://anglebug.com/5072
     ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
-
-    // anglebug.com/2703 - QC doesn't support arrays of image as parameters,
-    // so image array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     // Fails on D3D due to mistranslation.
     ANGLE_SKIP_TEST_IF(IsD3D());
@@ -3706,10 +3703,6 @@ TEST_P(GLSLTest_ES31, StructArraySampler)
 // Test that arrays of arrays of samplers inside structs work as expected.
 TEST_P(GLSLTest_ES31, StructArrayArraySampler)
 {
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision mediump float;\n"
@@ -3760,10 +3753,6 @@ TEST_P(GLSLTest_ES31, StructArrayArraySampler)
 // Test that an array of structs with arrays of arrays of samplers works.
 TEST_P(GLSLTest_ES31, ArrayStructArrayArraySampler)
 {
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 2 * (2 * 2 + 2 * 2));
@@ -3832,10 +3821,6 @@ TEST_P(GLSLTest_ES31, ArrayStructArrayArraySampler)
 // Test that a complex chain of structs and arrays of samplers works as expected.
 TEST_P(GLSLTest_ES31, ComplexStructArraySampler)
 {
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 2 * 3 * (2 + 3));
@@ -3921,10 +3906,6 @@ TEST_P(GLSLTest_ES31, ComplexStructArraySampler)
 
 TEST_P(GLSLTest_ES31, ArraysOfArraysStructDifferentTypesSampler)
 {
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 3 * (2 + 2));
@@ -4001,9 +3982,7 @@ TEST_P(GLSLTest_ES31, ParameterArraysOfArraysSampler)
 {
     // anglebug.com/3832 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision mediump float;\n"
@@ -4063,9 +4042,7 @@ TEST_P(GLSLTest_ES31, ParameterStructArrayArraySampler)
 {
     // anglebug.com/3832 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision mediump float;\n"
@@ -4126,9 +4103,7 @@ TEST_P(GLSLTest_ES31, ParameterArrayArrayStructArrayArraySampler)
 {
     // anglebug.com/3832 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 3 * 2 * 2 * 2);
@@ -4202,10 +4177,6 @@ TEST_P(GLSLTest_ES31, ParameterArrayArrayStructArrayArraySampler)
 // Test that 3D arrays with sub-arrays passed as parameters works as expected.
 TEST_P(GLSLTest_ES31, ParameterArrayArrayArraySampler)
 {
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     GLint numTextures;
     glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &numTextures);
     ANGLE_SKIP_TEST_IF(numTextures < 2 * 3 * 4 + 4);
@@ -4343,10 +4314,6 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysNameCollisionSampler)
 // Test that regular arrays are unmodified.
 TEST_P(GLSLTest_ES31, BasicTypeArrayAndArrayOfSampler)
 {
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     constexpr char kFS[] =
         "#version 310 es\n"
         "precision mediump sampler2D;\n"
@@ -5475,9 +5442,6 @@ TEST_P(GLSLTest, StructWithSamplerArrayAsFunctionArg)
 {
     // Shader failed to compile on Nexus devices. http://anglebug.com/2114
     ANGLE_SKIP_TEST_IF(IsNexus5X() && IsAdreno() && IsOpenGLES());
-
-    // TODO(jmadill): Fix on Android/vulkan if possible. http://anglebug.com/2703
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     constexpr char kFS[] =
         "precision mediump float;\n"
@@ -7656,10 +7620,6 @@ TEST_P(GLSLTest, MemoryExhaustedTest)
 // Test that inactive samplers in structs don't cause any errors.
 TEST_P(GLSLTest, InactiveSamplersInStruct)
 {
-    // While the sampler is being extracted and declared outside of the struct, it's not removed
-    // from the struct definition.  http://anglebug.com/4211
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsMetal());
-
     constexpr char kVS[] = R"(attribute vec4 a_position;
 void main() {
   gl_Position = a_position;
@@ -8533,10 +8493,6 @@ TEST_P(GLSLTest_ES31, MixOfResourcesAsFunctionArgs)
     // anglebug.com/3832 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     constexpr char kComputeShader[] = R"(#version 310 es
 layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
 
@@ -8644,10 +8600,6 @@ TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerAsFunctionParameterIndexedWithSideEff
     // anglebug.com/3832 - no sampler array params on Android
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
-    // anglebug.com/2703 - QC doesn't support arrays of samplers as parameters,
-    // so sampler array of array handling is disabled
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     // Skip if EXT_gpu_shader5 is not enabled.
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_gpu_shader5"));
 
@@ -8710,6 +8662,446 @@ void main(void)
     const std::array<GLColor, 6> kTextureData = {
         GLColor(0, 0, 0, 0),  GLColor(127, 0, 0, 0), GLColor(255, 0, 0, 0),
         GLColor(31, 0, 0, 0), GLColor(63, 0, 0, 0),  GLColor(191, 0, 0, 0),
+    };
+    GLTexture textures[2][3];
+
+    for (int dim1 = 0; dim1 < 2; ++dim1)
+    {
+        for (int dim2 = 0; dim2 < 3; ++dim2)
+        {
+            int textureUnit = dim1 * 3 + dim2;
+            glActiveTexture(GL_TEXTURE0 + textureUnit);
+            glBindTexture(GL_TEXTURE_2D, textures[dim1][dim2]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         &kTextureData[textureUnit]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+            std::stringstream uniformName;
+            uniformName << "smplr[" << dim1 << "][" << dim2 << "]";
+            GLint samplerLocation = glGetUniformLocation(program, uniformName.str().c_str());
+            EXPECT_NE(samplerLocation, -1);
+            glUniform1i(samplerLocation, textureUnit);
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // read back
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
+    EXPECT_EQ(ptr[0], 1u);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
+// Test that array of array of samplers can be indexed correctly with dynamic indices.
+TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerDynamicIndex)
+{
+    // Skip if EXT_gpu_shader5 is not enabled.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_gpu_shader5"));
+
+    int maxTextureImageUnits = 0;
+    glGetIntegerv(GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits);
+    ANGLE_SKIP_TEST_IF(maxTextureImageUnits < 24);
+
+    // anglebug.com/3832 - no sampler array params on Android
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // http://anglebug.com/5546
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsOpenGL());
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+#extension GL_EXT_gpu_shader5 : require
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 1, std430) buffer Output {
+  uint success;
+} outbuf;
+
+uniform sampler2D smplr[2][3][4];
+layout(binding=0) uniform atomic_uint ac;
+
+bool sampler1DAndAtomicCounter(uvec4 sExpect, in sampler2D s[4], in atomic_uint a, uint aExpect)
+{
+    uvec4 sResult = uvec4(uint(texture(s[0], vec2(0.5, 0.5)).x * 255.0),
+                          uint(texture(s[1], vec2(0.5, 0.5)).x * 255.0),
+                          uint(texture(s[2], vec2(0.5, 0.5)).x * 255.0),
+                          uint(texture(s[3], vec2(0.5, 0.5)).x * 255.0));
+    uint aResult = atomicCounter(a);
+
+    return sExpect == sResult && aExpect == aResult;
+}
+
+bool sampler3DAndAtomicCounter(in sampler2D s[2][3][4], uint aInitial, in atomic_uint a)
+{
+    bool success = true;
+    // [0][0]
+    success = sampler1DAndAtomicCounter(uvec4(0, 8, 16, 24),
+                    s[atomicCounterIncrement(ac)][0], a, aInitial + 1u) && success;
+    // [1][0]
+    success = sampler1DAndAtomicCounter(uvec4(96, 104, 112, 120),
+                    s[atomicCounterIncrement(ac)][0], a, aInitial + 2u) && success;
+    // [0][1]
+    success = sampler1DAndAtomicCounter(uvec4(32, 40, 48, 56),
+                    s[0][atomicCounterIncrement(ac) - 1u], a, aInitial + 3u) && success;
+    // [0][2]
+    success = sampler1DAndAtomicCounter(uvec4(64, 72, 80, 88),
+                    s[0][atomicCounterIncrement(ac) - 1u], a, aInitial + 4u) && success;
+    // [1][1]
+    success = sampler1DAndAtomicCounter(uvec4(128, 136, 144, 152),
+                    s[1][atomicCounterIncrement(ac) - 3u], a, aInitial + 5u) && success;
+    // [1][2]
+    uint acValue = atomicCounterIncrement(ac);  // Returns 5
+    success = sampler1DAndAtomicCounter(uvec4(160, 168, 176, 184),
+                    s[acValue - 4u][atomicCounterIncrement(ac) - 4u], a, aInitial + 7u) && success;
+
+    return success;
+}
+
+void main(void)
+{
+    outbuf.success = uint(sampler3DAndAtomicCounter(smplr, 0u, ac));
+}
+)";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    unsigned int outputInitData = 0x12345678u;
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(outputInitData), &outputInitData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    unsigned int acData = 0u;
+    GLBuffer atomicCounterBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicCounterBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(acData), &acData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicCounterBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    const std::array<GLColor, 24> kTextureData = {
+        GLColor(0, 0, 0, 0),   GLColor(8, 0, 0, 0),   GLColor(16, 0, 0, 0),  GLColor(24, 0, 0, 0),
+        GLColor(32, 0, 0, 0),  GLColor(40, 0, 0, 0),  GLColor(48, 0, 0, 0),  GLColor(56, 0, 0, 0),
+        GLColor(64, 0, 0, 0),  GLColor(72, 0, 0, 0),  GLColor(80, 0, 0, 0),  GLColor(88, 0, 0, 0),
+        GLColor(96, 0, 0, 0),  GLColor(104, 0, 0, 0), GLColor(112, 0, 0, 0), GLColor(120, 0, 0, 0),
+        GLColor(128, 0, 0, 0), GLColor(136, 0, 0, 0), GLColor(144, 0, 0, 0), GLColor(152, 0, 0, 0),
+        GLColor(160, 0, 0, 0), GLColor(168, 0, 0, 0), GLColor(176, 0, 0, 0), GLColor(184, 0, 0, 0),
+    };
+    GLTexture textures[2][3][4];
+
+    for (int dim1 = 0; dim1 < 2; ++dim1)
+    {
+        for (int dim2 = 0; dim2 < 3; ++dim2)
+        {
+            for (int dim3 = 0; dim3 < 4; ++dim3)
+            {
+                int textureUnit = (dim1 * 3 + dim2) * 4 + dim3;
+                glActiveTexture(GL_TEXTURE0 + textureUnit);
+                glBindTexture(GL_TEXTURE_2D, textures[dim1][dim2][dim3]);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                             &kTextureData[textureUnit]);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+                std::stringstream uniformName;
+                uniformName << "smplr[" << dim1 << "][" << dim2 << "][" << dim3 << "]";
+                GLint samplerLocation = glGetUniformLocation(program, uniformName.str().c_str());
+                EXPECT_NE(samplerLocation, -1);
+                glUniform1i(samplerLocation, textureUnit);
+            }
+        }
+    }
+    ASSERT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // read back
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
+    EXPECT_EQ(ptr[0], 1u);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
+// Test that array of array of samplers can be indexed correctly with dynamic indices.  Uses
+// samplers in structs.
+TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerInStructDynamicIndex)
+{
+    // Skip if EXT_gpu_shader5 is not enabled.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_gpu_shader5"));
+
+    int maxTextureImageUnits = 0;
+    glGetIntegerv(GL_MAX_COMPUTE_TEXTURE_IMAGE_UNITS, &maxTextureImageUnits);
+    ANGLE_SKIP_TEST_IF(maxTextureImageUnits < 24);
+
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
+    // anglebug.com/3832 - no sampler array params on Android
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // http://anglebug.com/5546
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsOpenGL());
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+#extension GL_EXT_gpu_shader5 : require
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 1, std430) buffer Output {
+  uint success;
+} outbuf;
+
+struct I
+{
+    uint index;
+};
+
+struct S
+{
+    sampler2D smplr[4];
+    I nested;
+};
+
+struct T
+{
+    S nested[3];
+    uint tIndex;
+};
+
+uniform T u[2];
+
+uint getValue(in sampler2D s)
+{
+    return uint(texture(s, vec2(0.5, 0.5)).x * 255.0);
+}
+
+bool sampler1DTest(uvec4 sExpect, in sampler2D s[4])
+{
+    uvec4 sResult = uvec4(getValue(s[0]), getValue(s[1]),
+                          getValue(s[2]), getValue(s[3]));
+
+    return sExpect == sResult;
+}
+
+bool samplerTest(T t, uint N)
+{
+    // u[N].tIndex == 0 + N*4
+    // u[N].nested[0].nested.index == 1 + N*4
+    // u[N].nested[1].nested.index == 2 + N*4
+    // u[N].nested[2].nested.index == 3 + N*4
+
+    uvec4 colorOffset = N * 3u * 4u * uvec4(8);
+
+    bool success = true;
+    // [N][0]
+    success = sampler1DTest(uvec4(0, 8, 16, 24) + colorOffset,
+                    t.nested[t.nested[0].nested.index - t.tIndex - 1u].smplr) && success;
+    // [N][1]
+    success = sampler1DTest(uvec4(32, 40, 48, 56) + colorOffset,
+                    t.nested[t.nested[1].nested.index - t.tIndex - 1u].smplr) && success;
+    // [N][2]
+    success = sampler1DTest(uvec4(64, 72, 80, 88) + colorOffset,
+                    t.nested[t.nested[2].nested.index - t.tIndex - 1u].smplr) && success;
+
+    return success;
+}
+
+bool uniformTest(T t, uint N)
+{
+    // Also verify that expressions that involve structs-with-samplers are correct when not
+    // referecing the sampler.
+
+    bool success = true;
+    success = (t.nested[0].nested.index - t.tIndex == 1u) && success;
+    success = (t.nested[1].nested.index - t.tIndex == 2u) && success;
+    success = (t.nested[2].nested.index - t.tIndex == 3u) && success;
+
+    success = (t.nested[t.nested[0].nested.index - t.tIndex - 1u].nested.index - t.tIndex == 1u)
+                && success;
+    success = (t.nested[t.nested[0].nested.index - t.tIndex     ].nested.index - t.tIndex == 2u)
+                && success;
+    success = (t.nested[t.nested[0].nested.index - t.tIndex + 1u].nested.index - t.tIndex == 3u)
+                && success;
+
+    success = (t.nested[
+                          t.nested[
+                                     t.nested[2].nested.index - t.tIndex - 1u  // 2
+                                  ].nested.index - t.tIndex - 2u               // 1
+                       ].nested.index - t.tIndex                               // 2
+                == 2u) && success;
+
+    return success;
+}
+
+void main(void)
+{
+    bool success = samplerTest(u[0], 0u) && samplerTest(u[1], 1u)
+                    && uniformTest(u[0], 0u) && uniformTest(u[1], 1u);
+    outbuf.success = uint(success);
+}
+)";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    unsigned int outputInitData = 0x12345678u;
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(outputInitData), &outputInitData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    const std::array<GLColor, 24> kTextureData = {
+        GLColor(0, 0, 0, 0),   GLColor(8, 0, 0, 0),   GLColor(16, 0, 0, 0),  GLColor(24, 0, 0, 0),
+        GLColor(32, 0, 0, 0),  GLColor(40, 0, 0, 0),  GLColor(48, 0, 0, 0),  GLColor(56, 0, 0, 0),
+        GLColor(64, 0, 0, 0),  GLColor(72, 0, 0, 0),  GLColor(80, 0, 0, 0),  GLColor(88, 0, 0, 0),
+        GLColor(96, 0, 0, 0),  GLColor(104, 0, 0, 0), GLColor(112, 0, 0, 0), GLColor(120, 0, 0, 0),
+        GLColor(128, 0, 0, 0), GLColor(136, 0, 0, 0), GLColor(144, 0, 0, 0), GLColor(152, 0, 0, 0),
+        GLColor(160, 0, 0, 0), GLColor(168, 0, 0, 0), GLColor(176, 0, 0, 0), GLColor(184, 0, 0, 0),
+    };
+    GLTexture textures[2][3][4];
+
+    for (int dim1 = 0; dim1 < 2; ++dim1)
+    {
+        for (int dim2 = 0; dim2 < 3; ++dim2)
+        {
+            for (int dim3 = 0; dim3 < 4; ++dim3)
+            {
+                int textureUnit = (dim1 * 3 + dim2) * 4 + dim3;
+                glActiveTexture(GL_TEXTURE0 + textureUnit);
+                glBindTexture(GL_TEXTURE_2D, textures[dim1][dim2][dim3]);
+                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                             &kTextureData[textureUnit]);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+                std::stringstream uniformName;
+                uniformName << "u[" << dim1 << "].nested[" << dim2 << "].smplr[" << dim3 << "]";
+                GLint samplerLocation = glGetUniformLocation(program, uniformName.str().c_str());
+                EXPECT_NE(samplerLocation, -1);
+                glUniform1i(samplerLocation, textureUnit);
+            }
+
+            std::stringstream uniformName;
+            uniformName << "u[" << dim1 << "].nested[" << dim2 << "].nested.index";
+            GLint nestedIndexLocation = glGetUniformLocation(program, uniformName.str().c_str());
+            EXPECT_NE(nestedIndexLocation, -1);
+            glUniform1ui(nestedIndexLocation, dim1 * 4 + dim2 + 1);
+        }
+
+        std::stringstream uniformName;
+        uniformName << "u[" << dim1 << "].tIndex";
+        GLint indexLocation = glGetUniformLocation(program, uniformName.str().c_str());
+        EXPECT_NE(indexLocation, -1);
+        glUniform1ui(indexLocation, dim1 * 4);
+    }
+    ASSERT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // read back
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(outputInitData), GL_MAP_READ_BIT));
+    EXPECT_EQ(ptr[0], 1u);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
+// Test that array of array of samplers work when indexed with an expression that's derived from an
+// array of array of samplers.
+TEST_P(GLSLTest_ES31, ArrayOfArrayOfSamplerIndexedWithArrayOfArrayOfSamplers)
+{
+    // Skip if EXT_gpu_shader5 is not enabled.
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_gpu_shader5"));
+
+    // anglebug.com/3832 - no sampler array params on Android
+    ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+#extension GL_EXT_gpu_shader5 : require
+
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+layout(binding = 1, std430) buffer Output {
+  uint success;
+} outbuf;
+
+uniform sampler2D smplr[2][3];
+
+uint getValue(in sampler2D s)
+{
+    return uint(texture(s, vec2(0.5, 0.5)).x * 255.0);
+}
+
+bool runTest(in sampler2D s[2][3])
+{
+    // s[0][0] should contain 2
+    // s[0][1] should contain 0
+    // s[0][2] should contain 1
+    // s[1][0] should contain 1
+    // s[1][1] should contain 2
+    // s[1][2] should contain 0
+
+    uint result = getValue(
+                       s[
+                           getValue(
+                                s[
+                                    getValue(s[0][1])   // 0
+                                ][
+                                    getValue(s[0][0])   // 2
+                                ]
+                           )                      // s[0][2] -> 1
+                       ][
+                           getValue(
+                                s[
+                                    getValue(s[1][0])   // 1
+                                ][
+                                    getValue(s[1][1])   // 2
+                                ]
+                           )                      // s[1][2] -> 0
+                       ]
+                  );                      // s[1][0] -> 1
+
+    return result == 1u;
+}
+
+void main(void)
+{
+    outbuf.success = uint(runTest(smplr));
+}
+)";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    unsigned int outputInitData = 0x12345678u;
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(outputInitData), &outputInitData, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    const std::array<GLColor, 6> kTextureData = {
+        GLColor(2, 0, 0, 0), GLColor(0, 0, 0, 0), GLColor(1, 0, 0, 0),
+        GLColor(1, 0, 0, 0), GLColor(2, 0, 0, 0), GLColor(0, 0, 0, 0),
     };
     GLTexture textures[2][3];
 

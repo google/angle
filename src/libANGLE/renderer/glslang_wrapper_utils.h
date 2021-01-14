@@ -47,7 +47,6 @@ struct GlslangProgramInterfaceInfo
 
 struct GlslangSourceOptions
 {
-    bool useOldRewriteStructSamplers        = false;
     bool supportsTransformFeedbackExtension = false;
     bool emulateTransformFeedback           = false;
     bool emulateBresenhamLines              = false;
@@ -159,7 +158,6 @@ void GlslangRelease();
 bool GetImageNameWithoutIndices(std::string *name);
 
 // Get the mapped sampler name after the source is transformed by GlslangGetShaderSource()
-std::string GetMappedSamplerNameOld(const std::string &originalName);
 std::string GlslangGetMappedSamplerName(const std::string &originalName);
 std::string GetXfbBufferName(const uint32_t bufferIndex);
 

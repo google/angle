@@ -255,14 +255,6 @@ struct FeaturesVk : FeatureSetBase
         "Seamful cube map emulation misbehaves on some drivers, so it's disallowed", &members,
         "http://anglebug.com/3243"};
 
-    // Qualcomm and SwiftShader shader compiler doesn't support sampler arrays as parameters, so
-    // revert to old RewriteStructSamplers behavior, which produces fewer.
-    Feature forceOldRewriteStructSamplers = {
-        "forceOldRewriteStructSamplers", FeatureCategory::VulkanWorkarounds,
-        "Some shader compilers don't support sampler arrays as parameters, so revert to old "
-        "RewriteStructSamplers behavior, which produces fewer.",
-        &members, "http://anglebug.com/2703"};
-
     // Vulkan considers vertex attribute accesses to count up to the last multiple of the stride.
     // This additional access supports AMD's robust buffer access implementation.
     // AMDVLK in particular will return incorrect values when the vertex access extends into the
