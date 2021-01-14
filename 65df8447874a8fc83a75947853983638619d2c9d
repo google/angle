@@ -92,6 +92,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8b085e3c_99dec3d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-14T14:43:34Z",
+      "side": 1,
+      "message": "public_headers is for making your own framework where other people are going to consume your headers after you ship your framework. the build works without the gn check passing, gn check is just some gn special tool to make sure your build dependencies are set up correctly so if you modify a file it forces the dependencies to rebuild correctly, and that they are visible to one another legally.\n\npublic_deps would fix the issue, see the error message:\n\nDependency chain (there may also be others):\n\n  //third_party/angle/src/tests:angle_unittests_arch_executable_sources --\u003e\n  //third_party/angle:libfeature_support --\u003e\n  //third_party/angle:libfeature_support_framework+bundle --\u003e\n  //third_party/angle:libfeature_support_framework --\u003e\n  //third_party/angle:libfeature_support_framework_signed_bundle --\u003e\n  //third_party/angle:libfeature_support_framework_shared_library --[private]--\u003e\n  //third_party/angle:libfeature_support_framework_arch_shared_library --[private]--\u003e\n  //third_party/angle:libfeature_support_framework_arch_shared_library_sources\n\nthe non-private are public-deps and the [private] are just normal deps. It\u0027s a bug because your \u0027deps\u0027 are first-level dependencies in the unit tests and this check is failing. i.e. deps does absolutely nothing with this gn template rule for gn check.",
+      "parentUuid": "088af6d8_dc2bb5fe",
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "743b712f_1f1aab91",
         "filename": "gni/angle.gni",
         "patchSetId": 1
