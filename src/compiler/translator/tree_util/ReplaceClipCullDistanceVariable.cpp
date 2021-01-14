@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ReplaceClipDistanceVariable.cpp: Find any references to gl_ClipDistance or gl_CullDistance
+// ReplaceClipCullDistanceVariable.cpp: Find any references to gl_ClipDistance or gl_CullDistance
 // and replace it with ANGLEClipDistance or ANGLECullDistance.
 //
 
-#include "compiler/translator/tree_util/ReplaceClipDistanceVariable.h"
+#include "compiler/translator/tree_util/ReplaceClipCullDistanceVariable.h"
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"

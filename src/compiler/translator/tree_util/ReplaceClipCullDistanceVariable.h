@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ReplaceClipDistanceVariable.h: Find any references to gl_ClipDistance or gl_CullDistance and
+// ReplaceClipCullDistanceVariable.h: Find any references to gl_ClipDistance or gl_CullDistance and
 // replace it with ANGLEClipDistance or ANGLECullDistance.
 //
 
-#ifndef COMPILER_TRANSLATOR_TREEUTIL_REPLACECLIPDISTANCEVARIABLE_H_
-#define COMPILER_TRANSLATOR_TREEUTIL_REPLACECLIPDISTANCEVARIABLE_H_
+#ifndef COMPILER_TRANSLATOR_TREEUTIL_REPLACECLIPCULLDISTANCEVARIABLE_H_
+#define COMPILER_TRANSLATOR_TREEUTIL_REPLACECLIPCULLDISTANCEVARIABLE_H_
 
 #include "GLSLANG/ShaderLang.h"
 #include "common/angleutils.h"
