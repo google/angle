@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6f7f6cd_00e8428a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-14T21:50:28Z",
+      "side": 1,
+      "message": "PTAL. This change by itself doesn\u0027t enable any tests, though there are already parts of RewriteStructSamplers that have become noop.\n\nTests pass on Linux and Android. Windows took forever to compile before I uploaded PS#5. If any failures show up from webgl tests for example, they would be corner cases to handle.\n\nThe change is good for review nevertheless.",
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
