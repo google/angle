@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6f5a9ac_f1f6d5ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-01-14T20:16:50Z",
+      "side": 1,
+      "message": "GoB is rejecting me pushing a PS on top of this change:\n\n ! [remote rejected]     HEAD -\u003e refs/for/master (cannot add patch set to 2461460.)\nerror: failed to push some refs to \u0027sso://chromium/angle/angle\n\nSo I will abandon and change the Change-Id.",
+      "revId": "77a4a1fea5cc7b2f05c5fbbabca1da3b825896a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
