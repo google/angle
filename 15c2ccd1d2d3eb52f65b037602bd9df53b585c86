@@ -16,6 +16,24 @@
       "message": "Great! Thank you for the tests. Landing.",
       "revId": "15c2ccd1d2d3eb52f65b037602bd9df53b585c86",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3dd685cb_a5c95eca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1483077
+      },
+      "writtenOn": "2021-01-14T20:03:25Z",
+      "side": 1,
+      "message": "The Mac builder seems to have failed with:\n\n\"there are \u003e\u003d 5 test suites with unexpected results and it most likely indicates a problem with the CL\"",
+      "parentUuid": "a3f9af3f_42949fcc",
+      "revId": "15c2ccd1d2d3eb52f65b037602bd9df53b585c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
