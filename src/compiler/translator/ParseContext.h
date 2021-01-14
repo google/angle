@@ -557,6 +557,11 @@ class TParseContext : angle::NonCopyable
     bool checkUnsizedArrayConstructorArgumentDimensionality(const TIntermSequence &arguments,
                                                             TType type,
                                                             const TSourceLoc &line);
+
+    void checkCombinedClipCullDistanceIsValid(const TSourceLoc &line,
+                                              const ImmutableString &identifier,
+                                              const int arraySize);
+
     // Check texture offset is within range.
     void checkSingleTextureOffset(const TSourceLoc &line,
                                   const TConstantUnion *values,

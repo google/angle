@@ -188,8 +188,11 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->OES_texture_buffer                          = 0;
     resources->EXT_texture_buffer                          = 0;
     resources->OES_sample_variables                        = 0;
+    resources->EXT_clip_cull_distance                      = 0;
 
-    resources->MaxClipDistances = 0;
+    resources->MaxClipDistances                = 8;
+    resources->MaxCullDistances                = 8;
+    resources->MaxCombinedClipAndCullDistances = 8;
 
     // Disable highp precision in fragment shader by default.
     resources->FragmentPrecisionHigh = 0;

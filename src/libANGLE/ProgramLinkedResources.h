@@ -265,9 +265,16 @@ bool LinkValidateShaderInterfaceMatching(const std::vector<sh::ShaderVariable> &
                                          int inputShaderVersion,
                                          bool isSeparable,
                                          InfoLog &infoLog);
-bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &vertexVaryings,
-                                 const std::vector<sh::ShaderVariable> &fragmentVaryings,
-                                 int vertexShaderVersion,
+bool LinkValidateBuiltInVaryingsInvariant(const std::vector<sh::ShaderVariable> &vertexVaryings,
+                                          const std::vector<sh::ShaderVariable> &fragmentVaryings,
+                                          int vertexShaderVersion,
+                                          InfoLog &infoLog);
+bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &inputVaryings,
+                                 const std::vector<sh::ShaderVariable> &outputVaryings,
+                                 ShaderType inputShaderType,
+                                 ShaderType outputShaderType,
+                                 int inputShaderVersion,
+                                 int outputShaderVersion,
                                  InfoLog &infoLog);
 LinkMismatchError LinkValidateProgramVariables(const sh::ShaderVariable &variable1,
                                                const sh::ShaderVariable &variable2,

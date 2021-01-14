@@ -161,6 +161,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::OES_sample_variables] = EBhUndefined;
     }
+    if (resources.EXT_clip_cull_distance)
+    {
+        extBehavior[TExtension::EXT_clip_cull_distance] = EBhUndefined;
+    }
 }
 
 void ResetExtensionBehavior(const ShBuiltInResources &resources,

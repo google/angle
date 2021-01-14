@@ -198,6 +198,7 @@ class CollectVariablesTraverser : public TIntermTraverser
     // Vertex Shader and Geometry Shader builtins
     bool mPositionAdded;
     bool mClipDistanceAdded;
+    bool mCullDistanceAdded;
 
     // Fragment Shader builtins
     bool mPointCoordAdded;
@@ -271,6 +272,7 @@ CollectVariablesTraverser::CollectVariablesTraverser(
       mBaseInstanceAdded(false),
       mPositionAdded(false),
       mClipDistanceAdded(false),
+      mCullDistanceAdded(false),
       mPointCoordAdded(false),
       mFrontFacingAdded(false),
       mHelperInvocationAdded(false),
@@ -658,6 +660,9 @@ void CollectVariablesTraverser::visitSymbol(TIntermSymbol *symbol)
                 return;
             case EvqSampleMask:
                 recordBuiltInFragmentOutputUsed(symbol->variable(), &mSampleMaskAdded);
+                return;
+            case EvqCullDistance:
+                recordBuiltInVaryingUsed(symbol->variable(), &mCullDistanceAdded, mOutputVaryings);
                 return;
             default:
                 break;

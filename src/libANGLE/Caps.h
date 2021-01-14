@@ -707,6 +707,9 @@ struct Extensions
 
     // GL_EXT_YUV_target
     bool yuvTargetEXT = false;
+
+    // GL_EXT_clip_cull_distance
+    bool clipCullDistanceEXT = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct
@@ -935,7 +938,9 @@ struct Caps
     GLuint subPixelBits = 4;
 
     // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
-    GLuint maxClipDistances = 0;
+    GLuint maxClipDistances                = 0;
+    GLuint maxCullDistances                = 0;
+    GLuint maxCombinedClipAndCullDistances = 0;
 
     // GLES1 emulation: Caps for ES 1.1. Taken from Table 6.20 / 6.22 in the OpenGL ES 1.1 spec.
     GLuint maxMultitextureUnits                 = 0;

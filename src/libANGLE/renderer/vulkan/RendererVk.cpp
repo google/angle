@@ -1389,6 +1389,8 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     enabledFeatures.features.sampleRateShading = mPhysicalDeviceFeatures.sampleRateShading;
     // Used to support depth clears through draw calls.
     enabledFeatures.features.depthClamp = mPhysicalDeviceFeatures.depthClamp;
+    // Used to support EXT_clip_cull_distance
+    enabledFeatures.features.shaderCullDistance = mPhysicalDeviceFeatures.shaderCullDistance;
 
     if (!vk::CommandBuffer::ExecutesInline())
     {

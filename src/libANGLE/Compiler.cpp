@@ -151,6 +151,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     // GL_EXT_YUV_target
     mResources.EXT_YUV_target = extensions.yuvTargetEXT;
 
+    // GL_EXT_clip_cull_distance
+    mResources.EXT_clip_cull_distance = extensions.clipCullDistanceEXT;
+
     // GLSL ES 3.0 constants
     mResources.MaxVertexOutputVectors  = caps.maxVertexOutputComponents / 4;
     mResources.MaxFragmentInputVectors = caps.maxFragmentInputComponents / 4;
@@ -162,7 +165,9 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     mResources.MaxDualSourceDrawBuffers = extensions.maxDualSourceDrawBuffers;
 
     // APPLE_clip_distance/EXT_clip_cull_distance
-    mResources.MaxClipDistances = caps.maxClipDistances;
+    mResources.MaxClipDistances                = caps.maxClipDistances;
+    mResources.MaxCullDistances                = caps.maxCullDistances;
+    mResources.MaxCombinedClipAndCullDistances = caps.maxCombinedClipAndCullDistances;
 
     // OES_sample_variables
     mResources.OES_sample_variables = extensions.sampleVariablesOES;

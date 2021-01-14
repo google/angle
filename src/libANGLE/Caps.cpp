@@ -1052,6 +1052,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_YUV_target"] = enableableExtension(&Extensions::yuvTargetEXT);
         map["GL_OES_shader_io_blocks"] = enableableExtension(&Extensions::shaderIoBlocksOES);
         map["GL_EXT_shader_io_blocks"] = enableableExtension(&Extensions::shaderIoBlocksEXT);
+        map["GL_EXT_clip_cull_distance"] = enableableExtension(&Extensions::clipCullDistanceEXT);
         // GLES1 extensions
         map["GL_OES_point_size_array"] = enableableExtension(&Extensions::pointSizeArrayOES);
         map["GL_OES_texture_cube_map"] = enableableExtension(&Extensions::textureCubeMapOES);

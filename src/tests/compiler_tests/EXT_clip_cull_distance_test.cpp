@@ -112,6 +112,32 @@ const char VertexShaderCompileFails4[] =
         gl_CullDistance[gl_MaxCullDistances] = dot(aPosition, uPlane);
     })";
 
+const char VertexShaderCompileFails5[] =
+    R"(
+    uniform vec4 uPlane;
+
+    attribute vec4 aPosition;
+
+    void main()
+    {
+        gl_Position = aPosition;
+        gl_CullDistance[0] = 0.0;
+    })";
+
+const char VertexShaderCompileFailes6[] =
+    R"(
+    uniform vec4 uPlane;
+
+    attribute vec4 aPosition;
+
+    varying float gl_ClipDistance[1];
+
+    void main()
+    {
+        gl_Position = aPosition;
+        gl_ClipDistance[0] = 0.0;
+    })";
+
 // Shader using gl_ClipDistance and gl_CullDistance
 const char FragmentShaderCompileSucceeds1[] =
     R"(
@@ -369,6 +395,12 @@ TEST_P(EXTClipCullDistanceForFragmentShaderCompileFailureTest, CompileFails)
 }
 #endif
 
+INSTANTIATE_TEST_SUITE_P(IncorrectESSL100Shaders,
+                         EXTClipCullDistanceForVertexShaderCompileFailureTest,
+                         Combine(Values(SH_GLES2_SPEC),
+                                 Values(sh::ESSLVersion100),
+                                 Values(VertexShaderCompileFails5, VertexShaderCompileFailes6)));
+
 INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
                          EXTClipCullDistanceForVertexShaderTest,
                          Combine(Values(SH_GLES3_SPEC),
@@ -376,7 +408,7 @@ INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
                                  Values(VertexShaderCompileSucceeds1,
                                         VertexShaderCompileSucceeds2)));
 
-INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
+INSTANTIATE_TEST_SUITE_P(IncorrectESSL300Shaders,
                          EXTClipCullDistanceForVertexShaderCompileFailureTest,
                          Combine(Values(SH_GLES3_SPEC),
                                  Values(sh::ESSLVersion300),
@@ -385,7 +417,7 @@ INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
                                         VertexShaderCompileFails3,
                                         VertexShaderCompileFails4)));
 
-INSTANTIATE_TEST_SUITE_P(IncorrectESSL300Shaders,
+INSTANTIATE_TEST_SUITE_P(CorrectESSL300Shaders,
                          EXTClipCullDistanceForFragmentShaderTest,
                          Combine(Values(SH_GLES3_SPEC),
                                  Values(sh::ESSLVersion300),

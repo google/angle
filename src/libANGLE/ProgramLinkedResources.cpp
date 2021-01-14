@@ -1759,17 +1759,11 @@ void AddProgramVariableParentPrefix(const std::string &parentName, std::string *
     }
 }
 
-bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &vertexVaryings,
-                                 const std::vector<sh::ShaderVariable> &fragmentVaryings,
-                                 int vertexShaderVersion,
-                                 InfoLog &infoLog)
+bool LinkValidateBuiltInVaryingsInvariant(const std::vector<sh::ShaderVariable> &vertexVaryings,
+                                          const std::vector<sh::ShaderVariable> &fragmentVaryings,
+                                          int vertexShaderVersion,
+                                          InfoLog &infoLog)
 {
-    if (vertexShaderVersion != 100)
-    {
-        // Only ESSL 1.0 has restrictions on matching input and output invariance
-        return true;
-    }
-
     bool glPositionIsInvariant   = false;
     bool glPointSizeIsInvariant  = false;
     bool glFragCoordIsInvariant  = false;
@@ -1824,6 +1818,71 @@ bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &vertexVa
         return false;
     }
 
+    return true;
+}
+
+bool LinkValidateBuiltInVaryings(const std::vector<sh::ShaderVariable> &outputVaryings,
+                                 const std::vector<sh::ShaderVariable> &inputVaryings,
+                                 ShaderType outputShaderType,
+                                 ShaderType inputShaderType,
+                                 int outputShaderVersion,
+                                 int inputShaderVersion,
+                                 InfoLog &infoLog)
+{
+    ASSERT(outputShaderVersion == inputShaderVersion);
+
+    // Only ESSL 1.0 has restrictions on matching input and output invariance
+    if (inputShaderVersion == 100 && outputShaderType == ShaderType::Vertex &&
+        inputShaderType == ShaderType::Fragment)
+    {
+        return LinkValidateBuiltInVaryingsInvariant(outputVaryings, inputVaryings,
+                                                    outputShaderVersion, infoLog);
+    }
+
+    uint32_t sizeClipDistance = 0;
+    uint32_t sizeCullDistance = 0;
+
+    for (const sh::ShaderVariable &varying : outputVaryings)
+    {
+        if (!varying.isBuiltIn())
+        {
+            continue;
+        }
+        if (varying.name.compare("gl_ClipDistance") == 0)
+        {
+            sizeClipDistance = varying.getOutermostArraySize();
+        }
+        else if (varying.name.compare("gl_CullDistance") == 0)
+        {
+            sizeCullDistance = varying.getOutermostArraySize();
+        }
+    }
+
+    for (const sh::ShaderVariable &varying : inputVaryings)
+    {
+        if (!varying.isBuiltIn())
+        {
+            continue;
+        }
+        if (varying.name.compare("gl_ClipDistance") == 0)
+        {
+            if (sizeClipDistance != varying.getOutermostArraySize())
+            {
+                infoLog << "If either shader redeclares the built-in arrays gl_ClipDistance[] the "
+                           "array must have the same size in both shaders.";
+                return false;
+            }
+        }
+        else if (varying.name.compare("gl_CullDistance") == 0)
+        {
+            if (sizeCullDistance != varying.getOutermostArraySize())
+            {
+                infoLog << "If either shader redeclares the built-in arrays gl_CullDistance[] the "
+                           "array must have the same size in both shaders.";
+                return false;
+            }
+        }
+    }
     return true;
 }
 }  // namespace gl

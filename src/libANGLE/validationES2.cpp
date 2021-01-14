@@ -711,8 +711,8 @@ bool ValidCap(const Context *context, GLenum cap, bool queryOnly)
         case GL_CLIP_DISTANCE5_EXT:
         case GL_CLIP_DISTANCE6_EXT:
         case GL_CLIP_DISTANCE7_EXT:
-            if (context->getClientVersion() >= Version(2, 0) &&
-                context->getExtensions().clipDistanceAPPLE)
+            if (context->getExtensions().clipDistanceAPPLE ||
+                context->getExtensions().clipCullDistanceEXT)
             {
                 return true;
             }

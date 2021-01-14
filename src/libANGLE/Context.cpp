@@ -1858,6 +1858,12 @@ void Context::getIntegervImpl(GLenum pname, GLint *params) const
                 *params = mState.mCaps.maxClipPlanes;
             }
             break;
+        case GL_MAX_CULL_DISTANCES_EXT:
+            *params = mState.mCaps.maxCullDistances;
+            break;
+        case GL_MAX_COMBINED_CLIP_AND_CULL_DISTANCES_EXT:
+            *params = mState.mCaps.maxCombinedClipAndCullDistances;
+            break;
         // GLES1 emulation: Vertex attribute queries
         case GL_VERTEX_ARRAY_BUFFER_BINDING:
         case GL_NORMAL_ARRAY_BUFFER_BINDING:
@@ -3203,6 +3209,7 @@ Extensions Context::generateSupportedExtensions() const
         supportedExtensions.framebufferObjectOES  = true;
         supportedExtensions.parallelShaderCompile = false;
         supportedExtensions.texture3DOES          = false;
+        supportedExtensions.clipDistanceAPPLE     = false;
     }
 
     if (getClientVersion() < ES_3_0)
@@ -3246,6 +3253,9 @@ Extensions Context::generateSupportedExtensions() const
 
         // GL_EXT_YUV_target requires ESSL3
         supportedExtensions.yuvTargetEXT = false;
+
+        // GL_EXT_clip_cull_distance requires ESSL3
+        supportedExtensions.clipCullDistanceEXT = false;
     }
 
     if (getClientVersion() < ES_3_1)

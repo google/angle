@@ -630,6 +630,18 @@ bool TParseContext::checkCanBeLValue(const TSourceLoc &line, const char *op, TIn
         case EvqSamplePosition:
             message = "can't modify gl_SamplePosition";
             break;
+        case EvqClipDistance:
+            if (mShaderType == GL_FRAGMENT_SHADER)
+            {
+                message = "can't modify gl_ClipDistance in a fragment shader";
+            }
+            break;
+        case EvqCullDistance:
+            if (mShaderType == GL_FRAGMENT_SHADER)
+            {
+                message = "can't modify gl_CullDistance in a fragment shader";
+            }
+            break;
         default:
             //
             // Type that can't be written to?
@@ -1280,6 +1292,36 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         else
         {
             error(line, "redeclaration of gl_ClipDistance with size > gl_MaxClipDistances",
+                  identifier);
+            return false;
+        }
+    }
+    else if (type->isArray() && identifier == "gl_CullDistance")
+    {
+        // gl_CullDistance can be redeclared with smaller size than gl_MaxCullDistances
+        const TVariable *maxCullDistances = static_cast<const TVariable *>(
+            symbolTable.findBuiltIn(ImmutableString("gl_MaxCullDistances"), mShaderVersion));
+        if (!maxCullDistances)
+        {
+            // Unsupported extension
+            needsReservedCheck = true;
+        }
+        else if (type->isArrayOfArrays())
+        {
+            error(line, "redeclaration of gl_CullDistance as an array of arrays", identifier);
+            return false;
+        }
+        else if (static_cast<int>(type->getOutermostArraySize()) <=
+                 maxCullDistances->getConstPointer()->getIConst())
+        {
+            if (const TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
+            {
+                needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->extension());
+            }
+        }
+        else
+        {
+            error(line, "redeclaration of gl_CullDistance with size > gl_MaxCullDistances",
                   identifier);
             return false;
         }

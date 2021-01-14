@@ -104,6 +104,8 @@ void GetBuiltInResourcesFromCaps(const gl::Caps &caps, TBuiltInResource *outBuil
     outBuiltInResources->maxVertexUniformVectors          = caps.maxVertexUniformVectors;
     outBuiltInResources->maxClipDistances                 = caps.maxClipDistances;
     outBuiltInResources->maxSamples                       = caps.maxSamples;
+    outBuiltInResources->maxCullDistances                 = caps.maxCullDistances;
+    outBuiltInResources->maxCombinedClipAndCullDistances  = caps.maxCombinedClipAndCullDistances;
 }
 
 // Run at startup to warm up glslang's internals to avoid hitches on first shader compile.

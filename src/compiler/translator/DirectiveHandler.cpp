@@ -185,6 +185,24 @@ void TDirectiveHandler::handleExtension(const angle::pp::SourceLocation &loc,
                 iter->second = behaviorVal;
             }
         }
+        // GL_APPLE_clip_distance is implicitly enabled when GL_EXT_clip_cull_distance is enabled
+        else if (name == "GL_EXT_clip_cull_distance")
+        {
+            // This extension only can be enabled on greater than ESSL 300
+            if (mShaderVersion < 300)
+            {
+                mDiagnostics.error(loc, "extension can be enabled on greater than ESSL 300",
+                                   name.c_str());
+                return;
+            }
+
+            constexpr char kAPPLEClipDistanceEXTName[] = "GL_APPLE_clip_distance";
+            iter = mExtensionBehavior.find(GetExtensionByName(kAPPLEClipDistanceEXTName));
+            if (iter != mExtensionBehavior.end())
+            {
+                iter->second = behaviorVal;
+            }
+        }
         return;
     }
 

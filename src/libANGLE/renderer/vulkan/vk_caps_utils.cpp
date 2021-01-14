@@ -942,10 +942,36 @@ void RendererVk::ensureCapsInitialized() const
     }
 
     // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
-    if (mPhysicalDeviceFeatures.shaderClipDistance && limitsVk.maxClipDistances >= 8)
+    // From the EXT_clip_cull_distance extension spec:
+    //
+    // > Modify Section 7.2, "Built-In Constants" (p. 126)
+    // >
+    // > const mediump int gl_MaxClipDistances = 8;
+    // > const mediump int gl_MaxCullDistances = 8;
+    // > const mediump int gl_MaxCombinedClipAndCullDistances = 8;
+    constexpr uint32_t kMaxClipDistancePerSpec                = 8;
+    constexpr uint32_t kMaxCullDistancePerSpec                = 8;
+    constexpr uint32_t kMaxCombinedClipAndCullDistancePerSpec = 8;
+
+    // TODO: http://anglebug.com/5466
+    // After implementing EXT_geometry_shader, EXT_clip_cull_distance should be additionally
+    // implemented to support the geometry shader. Until then, EXT_clip_cull_distance is enabled
+    // only in the experimental cases.
+    if (mPhysicalDeviceFeatures.shaderClipDistance &&
+        limitsVk.maxClipDistances >= kMaxClipDistancePerSpec)
     {
         mNativeExtensions.clipDistanceAPPLE = true;
-        mNativeCaps.maxClipDistances        = limitsVk.maxClipDistances;
+        mNativeCaps.maxClipDistances =
+            std::min<GLuint>(limitsVk.maxClipDistances, gl::IMPLEMENTATION_MAX_CLIP_DISTANCES);
+
+        if (mPhysicalDeviceFeatures.shaderCullDistance &&
+            limitsVk.maxCullDistances >= kMaxCullDistancePerSpec &&
+            limitsVk.maxCombinedClipAndCullDistances >= kMaxCombinedClipAndCullDistancePerSpec)
+        {
+            mNativeExtensions.clipCullDistanceEXT       = true;
+            mNativeCaps.maxCullDistances                = limitsVk.maxCullDistances;
+            mNativeCaps.maxCombinedClipAndCullDistances = limitsVk.maxCombinedClipAndCullDistances;
+        }
     }
 }
 
