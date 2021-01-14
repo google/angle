@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02b9da00_3118b677",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-14T21:53:52Z",
+      "side": 1,
+      "message": "PTAL\n\nThere\u0027s a large part of RewriteAtomicCounters now obsolete, but I\u0027ll redo that as a follow up.",
+      "revId": "c37a8c15d97886f838bac8b29601d822e0aa3462",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
