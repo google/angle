@@ -1,6 +1,75 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "30a25c73_39922197",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T21:58:26Z",
+      "side": 1,
+      "message": "I think this should have _android_ in the name to make it clear this doesn\u0027t work on desktop.\n\nAlso wondering if we expand this to include fuzz factor in the future (which uses absolute instead of root mean squared), will the name still make sense.\n\nMaybe generate_android_image_diff_scores.py?",
+      "range": {
+        "startLine": 7,
+        "startChar": 7,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d749832_1e93509b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T21:58:26Z",
+      "side": 1,
+      "message": "double slashes creeping in here?",
+      "range": {
+        "startLine": 51,
+        "startChar": 37,
+        "endLine": 51,
+        "endChar": 39
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01cbe7f6_69831011",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T21:58:26Z",
+      "side": 1,
+      "message": "We\u0027ll want a new bug",
+      "range": {
+        "startLine": 54,
+        "startChar": 6,
+        "endLine": 54,
+        "endChar": 22
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "2cdd6626_5bbc7f7c",
@@ -14,6 +83,23 @@
       "writtenOn": "2021-01-14T21:39:52Z",
       "side": 1,
       "message": "PTAL",
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3bf4feb_b148bd58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T21:58:26Z",
+      "side": 1,
+      "message": "Looks good Tim, just nits on the naming.",
       "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

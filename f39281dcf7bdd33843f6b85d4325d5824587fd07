@@ -145,6 +145,30 @@
       },
       "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f7e5721_b2483607",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T21:58:26Z",
+      "side": 1,
+      "message": "Looks good.",
+      "parentUuid": "ccc4c8b6_691e6198",
+      "range": {
+        "startLine": 134,
+        "startChar": 0,
+        "endLine": 143,
+        "endChar": 38
+      },
+      "revId": "f39281dcf7bdd33843f6b85d4325d5824587fd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
