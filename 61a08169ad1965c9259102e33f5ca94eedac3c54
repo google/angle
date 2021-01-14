@@ -74,6 +74,23 @@
       "parentUuid": "012a3818_ca2a2ec7",
       "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e958216_68979aeb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-14T22:35:09Z",
+      "side": 1,
+      "message": "Wouldn\u0027t it be cool if we could embed this automatically in the trace meta?",
+      "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
