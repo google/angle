@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "45bf618e_65df24e4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T22:21:17Z",
+      "side": 1,
+      "message": "If you want to land this trace as is, we note in the commit message if it wasn\u0027t a stock trace.  Take the following CL for instance:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2521180",
+      "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7bf7e896_7303b13a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T22:21:17Z",
+      "side": 1,
+      "message": "New bug needed",
+      "range": {
+        "startLine": 10,
+        "startChar": 18,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "012a3818_ca2a2ec7",
@@ -14,6 +54,24 @@
       "writtenOn": "2021-01-14T21:43:21Z",
       "side": 1,
       "message": "Capturing this trace requires hacking CaptureMidExecutionSetup():\n\n            // Check for supported textures\n            ASSERT(index.getType() \u003d\u003d gl::TextureType::_2D ||\n                   index.getType() \u003d\u003d gl::TextureType::_3D ||\n                   index.getType() \u003d\u003d gl::TextureType::_2DArray ||\n                   index.getType() \u003d\u003d gl::TextureType::CubeMap ||\n                   index.getType() \u003d\u003d gl::TextureType::External);  \u003c\u003c--- add this\n\nIt doesn\u0027t actually use the external texture, since we generate an error when it tries to bind the texture, so the trace looks fine.   We\u0027ll need to add support for EGLImages and external textures to get a new capture without the hack.",
+      "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98bc2a6a_3a0c2b26",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-14T22:21:17Z",
+      "side": 1,
+      "message": "For external EGL images, we create a stub to handle calls to it, returning nothing at the moment:\n\n        case EntryPoint::GLEGLImageTargetTexture2DOES:\n        {\n            // We don\u0027t support reading EGLImages. Instead, just pull from a tiny null texture.\n            // TODO (anglebug.com/4964): Read back the image data and populate the texture.\n            std::vector\u003cuint8_t\u003e pixelData \u003d {0, 0, 0, 0};\n            call \u003d CaptureTexSubImage2D(context-\u003egetState(), true, gl::TextureTarget::_2D, 0, 0, 0,\n                                        1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixelData.data());\n            break;\n        }\n\nThis has worked so far because none of our traces have actually displayed something read from an EGLImage.  I think it was required to get a full trace of COD:Mobile.\n\nJamie, can you think of anything else we need to set up in MEC to future proof this a bit?  Otherwise, maybe this is fine with a comment addition saying \"Hey, we don\u0027t actually support external textures yet\".",
+      "parentUuid": "012a3818_ca2a2ec7",
       "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
