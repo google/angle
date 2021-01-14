@@ -16,6 +16,23 @@
       "message": "Fails as expected on Intel bots. Will pass after driver update.\n\nCTS expectations CL: https://chromium-review.googlesource.com/c/chromium/src/+/2627370",
       "revId": "62d4ccaefa6c8b29ecb476d87e9fd878039fd578",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb65dc67_edffdf47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-01-14T23:26:16Z",
+      "side": 1,
+      "message": "lgtm\n\nHave CQ\u0027d your Chromium-side CL https://chromium-review.googlesource.com/2627370 adding the suppression.\n",
+      "revId": "62d4ccaefa6c8b29ecb476d87e9fd878039fd578",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
