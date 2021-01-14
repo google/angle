@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f1574ab3_af77d9a6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-14T22:11:24Z",
+      "side": 1,
+      "message": "seems like it could work just fine on desktop with a few tweaks. I\u0027d almost want to call it compare_trace_output.py or something. the comparison algorithm (RMSE) isn\u0027t really important, the benefit is comparing angle vs another implementation.",
+      "parentUuid": "30a25c73_39922197",
+      "range": {
+        "startLine": 7,
+        "startChar": 7,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0d749832_1e93509b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
@@ -100,6 +124,52 @@
       "writtenOn": "2021-01-14T21:58:26Z",
       "side": 1,
       "message": "Looks good Tim, just nits on the naming.",
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe0df4d5_bdabac53",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-14T22:11:24Z",
+      "side": 1,
+      "message": "can you use the test_runner harness instead of use render_test_output_dir? this directory can and will change.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb79eb6d_238feff5",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-14T22:11:24Z",
+      "side": 1,
+      "message": "can you use the same naming style as our other scripts?",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 28
+      },
       "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
