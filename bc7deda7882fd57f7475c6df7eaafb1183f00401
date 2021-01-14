@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "666b3687_dc0ae2bb",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-14T19:53:22Z",
+      "side": 1,
+      "message": "Regression test would be nice for that",
+      "parentUuid": "55981d48_200d84d2",
+      "range": {
+        "startLine": 549,
+        "startChar": 68,
+        "endLine": 549,
+        "endChar": 95
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0623d89f_4a862e75",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 6
