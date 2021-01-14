@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3477e52d_96e5c27f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-14T22:39:59Z",
+      "side": 1,
+      "message": "PTAL. Step 1 of fixing the script. Working on getting it running on a bot.",
+      "revId": "f04c1dba725a219b3c8d8f9dcbbf89b40ca578d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
