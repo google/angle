@@ -34,6 +34,24 @@
       "parentUuid": "a3f9af3f_42949fcc",
       "revId": "15c2ccd1d2d3eb52f65b037602bd9df53b585c86",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8aea3b1_d198b5d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1483077
+      },
+      "writtenOn": "2021-01-15T15:24:02Z",
+      "side": 1,
+      "message": "I don\u0027t think the Mac failure is due to anything I added. The two runs failed on different steps:\n\nhttps://ci.chromium.org/ui/p/chromium/builders/try/mac-angle-rel/13388\nhttps://ci.chromium.org/ui/p/chromium/builders/try/mac-angle-rel/13395\n\nThey both failed on Intel GPUs and both took over 40 mins. Building locally I can\u0027t pass either build_angle_gles1_conform_tests or internal_gles2_conform_tests as build flags, so I can\u0027t verify myself. Running other tests on an *unpatched* HEAD on a Mac Mini with Intel GPU and 10.15 (which I\u0027m guessing is the same setup) I see quite a few errors, e.g.:\n\n\u0027angle_deqp_egl_tests\u0027\ndEQP-EGL.functional.fence_sync.invalid.create_invalid_display\nNo results file specified.\n\nSignal 6:\nBacktrace:\n    angle::Handler(int) (+0x2c)\n    _sigtramp (+0x1d)\n\n\u0027angle_deqp_gles3_tests\u0027\n[----------] Global test environment tear-down\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 44198 tests from 1 test suite ran. (688179 ms total)\n[  PASSED  ] 44185 tests.\n[  FAILED  ] 13 tests, listed below:\n(snip)\n\nSince I can\u0027t do the \u0027dry run CQ\u0027 myself (I don\u0027t see the button?) I\u0027m out of options.",
+      "parentUuid": "3dd685cb_a5c95eca",
+      "revId": "15c2ccd1d2d3eb52f65b037602bd9df53b585c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
