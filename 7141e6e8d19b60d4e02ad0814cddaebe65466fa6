@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54aab5ab_6adb5c7b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T04:00:34Z",
+      "side": 1,
+      "message": "Here you go!\n\n(Need an eye to make sure I didn\u0027t accidentally flip any condition)",
+      "revId": "7141e6e8d19b60d4e02ad0814cddaebe65466fa6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
