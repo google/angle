@@ -890,8 +890,6 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
 // Tests that saving and loading a program attached with computer shader.
 TEST_P(ProgramBinaryES31Test, ProgramBinaryWithAtomicCounterComputeShader)
 {
-    // http://anglebug.com/4092
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
     // We can't run the test if no program binary formats are supported.
     GLint binaryFormatCount = 0;
     glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);

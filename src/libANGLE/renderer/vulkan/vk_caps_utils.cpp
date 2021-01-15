@@ -1016,12 +1016,8 @@ bool CanSupportGPUShader5EXT(const VkPhysicalDeviceFeatures &features)
     //   textureGatherOffsets family of functions.
     // - shaderSampledImageArrayDynamicIndexing and shaderUniformBufferArrayDynamicIndexing:
     //   dynamically uniform indices for samplers and uniform buffers.
-    // - shaderStorageBufferArrayDynamicIndexing: While EXT_gpu_shader5 doesn't require dynamically
-    //   uniform indices on storage buffers, we need it as we emulate atomic counter buffers with
-    //   storage buffers (and atomic counter buffers *can* be indexed in that way).
     return features.shaderImageGatherExtended && features.shaderSampledImageArrayDynamicIndexing &&
-           features.shaderUniformBufferArrayDynamicIndexing &&
-           features.shaderStorageBufferArrayDynamicIndexing;
+           features.shaderUniformBufferArrayDynamicIndexing;
 }
 
 }  // namespace vk

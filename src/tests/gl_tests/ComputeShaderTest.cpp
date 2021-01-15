@@ -401,10 +401,6 @@ TEST_P(ComputeShaderTest, BufferImageBuffer)
     // See http://anglebug.com/3536
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     constexpr char kCS0[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(binding = 0, offset = 4) uniform atomic_uint ac[2];
@@ -475,10 +471,6 @@ TEST_P(ComputeShaderTest, ImageAtomicCounterBuffer)
 {
     // Flaky hang. http://anglebug.com/3636
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsDesktopOpenGL());
-
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     constexpr char kCS0[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
@@ -3933,10 +3925,6 @@ void main()
 TEST_P(ComputeShaderTest, DispatchConvertVertexDispatch)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_vertex_type_10_10_10_2"));
-
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     constexpr uint32_t kVertexCount = 6;
 

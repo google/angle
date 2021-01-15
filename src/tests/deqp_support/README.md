@@ -46,7 +46,7 @@ the name.  Examples:
     1442 OPENGL : dEQP-GLES31.functional.separate_shader.* = SKIP
     1442 D3D11 : dEQP-GLES31.functional.separate_shader.* = SKIP
 
-    // Bug in older drivers:
+    // Unsupported feature:
     3726 VULKAN ANDROID : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.*atomic_counter* = FAIL
 
     // Failing test in Nvidia's OpenGL implementation on windows:

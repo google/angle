@@ -3265,10 +3265,6 @@ TEST_P(GLSLTest_ES31, AtomicCounterArrayLength)
     // http://anglebug.com/3782
     ANGLE_SKIP_TEST_IF(IsOpenGL());
 
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     constexpr char kCS[] = R"(#version 310 es
 precision mediump float;
 layout(local_size_x=1) in;

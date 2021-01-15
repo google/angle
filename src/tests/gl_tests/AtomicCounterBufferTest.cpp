@@ -115,10 +115,6 @@ TEST_P(AtomicCounterBufferTest31, OffsetNotAllSpecifiedWithSameValue)
 // Tests atomic counter reads using compute shaders. Used as a confidence check for the translator.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterReadCompute)
 {
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     // Skipping due to a bug on the Adreno OpenGLES Android driver.
     // http://anglebug.com/2925
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsAdreno() && IsOpenGLES());
@@ -148,10 +144,6 @@ void main()
 // Test atomic counter read.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterRead)
 {
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
     // http://anglebug.com/1729
     ANGLE_SKIP_TEST_IF(IsD3D11());
@@ -191,11 +183,7 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRangeRead)
 {
     // Skipping due to a bug on the Qualcomm driver.
     // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsNexus5X());
-
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
 
     // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
     // http://anglebug.com/1729
@@ -245,10 +233,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRangeRead)
 // there are bugs in how we count valid bindings.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRepeatedBindUnbind)
 {
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     // Skipping test while we work on enabling atomic counter buffer support in th D3D renderer.
     // http://anglebug.com/1729
     ANGLE_SKIP_TEST_IF(IsD3D11());
@@ -319,10 +303,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterBufferRepeatedBindUnbind)
 // Test atomic counter increment and decrement.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 {
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     constexpr char kCS[] =
         "#version 310 es\n"
         "layout(local_size_x=1, local_size_y=1, local_size_z=1) in;\n"
@@ -364,10 +344,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterIncrementAndDecrement)
 // Tests multiple atomic counter buffers.
 TEST_P(AtomicCounterBufferTest31, AtomicCounterMultipleBuffers)
 {
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
-
     GLint maxAtomicCounterBuffers = 0;
     glGetIntegerv(GL_MAX_COMPUTE_ATOMIC_COUNTER_BUFFERS, &maxAtomicCounterBuffers);
     constexpr unsigned int kBufferCount = 3;
@@ -429,10 +405,6 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterArrayOfArray)
 
     // Intel's Windows OpenGL driver crashes in this test.  http://anglebug.com/3791
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
-
-    // Skipping due to a bug on the Qualcomm Vulkan Android driver.
-    // http://anglebug.com/3726
-    ANGLE_SKIP_TEST_IF(IsAndroid() && IsVulkan());
 
     constexpr char kCS[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;

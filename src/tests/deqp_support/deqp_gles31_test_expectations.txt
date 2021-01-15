@@ -217,25 +217,8 @@
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.points_8_samples = FAIL
 4110 ANDROID VULKAN : dEQP-GLES31.functional.shaders.helper_invocation.value.triangles_max_samples = FAIL
 
-// Passing on recent drivers:
-3726 VULKAN ANDROID : dEQP-GLES31.functional.ssbo.layout.* = FAIL
-3726 VULKAN ANDROID : dEQP-GLES31.functional.synchronization.inter_call.without_memory_barrier.*atomic_counter* = FAIL
-3726 VULKAN ANDROID : dEQP-GLES31.functional.compute.basic.atomic_counter* = FAIL
-
 // Seem to trigger LowMemoryKiller when run in a certain sequence
 5185 VULKAN ANDROID : dEQP-GLES31.functional.atomic_counter.* = SKIP
-
-// Arrays of atomic counters not supported on Android (lacking Vulkan feature)
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_literal_vertex = FAIL
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_literal_fragment = FAIL
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_literal_compute = FAIL
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_vertex = FAIL
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_fragment = FAIL
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.const_expression_compute = FAIL
-
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.*uniform_vertex = FAIL
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.*uniform_fragment = FAIL
-3881 VULKAN ANDROID : dEQP-GLES31.functional.shaders.opaque_type_indexing.atomic_counter.*uniform_compute = FAIL
 
 // SSBO synchronization:
 4097 VULKAN PIXEL2ORXL : dEQP-GLES31.functional.synchronization.in_invocation.ssbo_alias_overwrite = FAIL
