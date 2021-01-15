@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "efa75356_deb79161",
+        "filename": "src/common/android_tls.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T13:50:45Z",
+      "side": 1,
+      "message": "nit: having a function named Android inside an android namespace is redundant, you can eliminate either the extra naming or the namespace. suggestion: get rid of the namespace.",
+      "range": {
+        "startLine": 86,
+        "startChar": 26,
+        "endLine": 86,
+        "endChar": 46
+      },
+      "revId": "3a458630702b1fdb25f8fd5c97b3b8f86a4e2410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "abd03053_bf3ad1fc",
         "filename": "src/common/android_tls.h",
         "patchSetId": 2
@@ -31,6 +54,29 @@
       "writtenOn": "2021-01-15T04:40:29Z",
       "side": 1,
       "message": "How about?\n\n    #else\n        UNREACHABLE();",
+      "revId": "3a458630702b1fdb25f8fd5c97b3b8f86a4e2410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ecc8707_e602f859",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T13:50:45Z",
+      "side": 1,
+      "message": "nit: I don\u0027t think you need this.",
+      "range": {
+        "startLine": 41,
+        "startChar": 19,
+        "endLine": 41,
+        "endChar": 25
+      },
       "revId": "3a458630702b1fdb25f8fd5c97b3b8f86a4e2410",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
