@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38938e03_28aacef9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-15T19:52:35Z",
+      "side": 1,
+      "message": "LGTM.  Jamie, do we need to consider anything other than the size when clearing it out?",
+      "revId": "f138078139d6dd4bb69b977933695520e0bf6d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
