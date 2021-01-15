@@ -16,6 +16,46 @@
       "message": "PTAL. Step 1 of fixing the script. Working on getting it running on a bot.",
       "revId": "f04c1dba725a219b3c8d8f9dcbbf89b40ca578d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4c301a9_cc9a9fcb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T01:37:16Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "f04c1dba725a219b3c8d8f9dcbbf89b40ca578d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "582c5bb6_d2c85f4c",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T01:37:16Z",
+      "side": 1,
+      "message": "typo: process",
+      "range": {
+        "startLine": 184,
+        "startChar": 33,
+        "endLine": 184,
+        "endChar": 40
+      },
+      "revId": "f04c1dba725a219b3c8d8f9dcbbf89b40ca578d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
