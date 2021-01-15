@@ -110,6 +110,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "62eacc01_3c42fae4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-15T15:25:18Z",
+      "side": 1,
+      "message": "Given that https://chromium-review.googlesource.com/c/chromium/src/+/2626423 was rejected, I still think this is our best option.\n\nWe could also go with the suggestion made in https://chromium-review.googlesource.com/c/chromium/src/+/2626423 to split our headers into a separate target. The drawback is that targets depending on a shared library will also have to depend on the headers target. Having just the shared library depend on the headers won\u0027t work, since targets that depend on ios_framework_bundle will only have private dependency on the shared library.\n\nThere is also a hacky one-line solution, going contrary to the rejection reason in https://chromium-review.googlesource.com/c/chromium/src/+/2626423 - instead of adding\n        public_deps +\u003d [ \":${internal_target_name}_framework_headers\" ]\nadd\n        public_deps +\u003d [ \":${internal_target_name}_arch_shared_library_sources\" ]",
+      "parentUuid": "8b085e3c_99dec3d5",
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "743b712f_1f1aab91",
         "filename": "gni/angle.gni",
         "patchSetId": 1
