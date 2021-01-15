@@ -33,6 +33,24 @@
       "message": "What\u0027s the expected behavior of eglMakeCurrent when given the same context that\u0027s already bound?\n\nIn other words, should this instead be at the top of the file and say \"if (mIsCurrent) { return egl::NoError(); }\", i.e. no-op it?",
       "revId": "cddec6c0445d8b2b76fcd748968f1c11d9a85243",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c0867f5_098e4009",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 697,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-15T19:12:39Z",
+      "side": 1,
+      "message": "eglMakeCurrent() could be called with only surfaces changed.\nIn that case, the makeCurrent() will be called with different surfaces, so we just check it here, and do the unsetDefaultFramebuffer().",
+      "parentUuid": "bcb5a006_65e4ae1f",
+      "revId": "cddec6c0445d8b2b76fcd748968f1c11d9a85243",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
