@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4309f4d4_62947600",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T23:34:21Z",
+      "side": 1,
+      "message": "I went with \"compare_android_trace_output.py\" for now, since it currently only supports Android.   If desktop is added at some point, we can update it then, but a lot of these apps don\u0027t even run desktop due to missing extensions (like compressed textures).",
+      "parentUuid": "f1574ab3_af77d9a6",
+      "range": {
+        "startLine": 7,
+        "startChar": 7,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0d749832_1e93509b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
@@ -61,6 +85,30 @@
       "writtenOn": "2021-01-14T21:58:26Z",
       "side": 1,
       "message": "double slashes creeping in here?",
+      "range": {
+        "startLine": 51,
+        "startChar": 37,
+        "endLine": 51,
+        "endChar": 39
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d1d5bc9_6e2eca73",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T23:34:21Z",
+      "side": 1,
+      "message": "This comes from the output directory having a trailing slash when the script is invoked:\n\n    ~/code/chromium/src$ third_party/angle/scripts/generate_rmse_scores.py \\\n    fifa_mobile out/Performance/ \\  \u003c\u003c--- this guy\n    --serials 2f2d09f64d10ffc0 96071FFAZ0007C\n\nIt doesn\u0027t hurt anything so it\u0027s not worth adding any extra code to try and handle it if it\u0027s there.",
+      "parentUuid": "0d749832_1e93509b",
       "range": {
         "startLine": 51,
         "startChar": 37,
@@ -84,6 +132,30 @@
       "writtenOn": "2021-01-14T21:58:26Z",
       "side": 1,
       "message": "We\u0027ll want a new bug",
+      "range": {
+        "startLine": 54,
+        "startChar": 6,
+        "endLine": 54,
+        "endChar": 22
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64af00d0_bcffbfca",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T23:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01cbe7f6_69831011",
       "range": {
         "startLine": 54,
         "startChar": 6,
@@ -153,6 +225,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c54366b3_e917fd7e",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T23:34:21Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you mean with this comment (what is the test_runner harness directory?).   This directory is a parameter that\u0027s passed to angle_perftests and was taken from here:\nhttps://docs.google.com/document/d/1bY-Z7W2vMOUdDgWm_5Xx46tzxWkOeZ23Nw5-LR_q80Y/edit#heading\u003dh.h4bsx6nzgjwq\n\nWhat directory do you want to use instead?",
+      "parentUuid": "fe0df4d5_bdabac53",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb79eb6d_238feff5",
         "filename": "scripts/generate_rmse_scores.py",
         "patchSetId": 7
@@ -164,6 +260,54 @@
       "writtenOn": "2021-01-14T22:11:24Z",
       "side": 1,
       "message": "can you use the same naming style as our other scripts?",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 28
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4837d3e2_eef55fa2",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T23:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb79eb6d_238feff5",
+      "range": {
+        "startLine": 21,
+        "startChar": 4,
+        "endLine": 21,
+        "endChar": 28
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0da03cc8_944acfb5",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T23:34:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb79eb6d_238feff5",
       "range": {
         "startLine": 21,
         "startChar": 4,
