@@ -16,6 +16,23 @@
       "message": "Hi,Jamie,Shahbaz,Geoff. It\u0027s the implementation to compress pipelineCache. Please review.\nDisign doc: https://docs.google.com/document/d/1bxUU7tDy8kO4eMAXYv9c7IP0_xdupYSfdFLcI4IheLk/edit#heading\u003dh.8i8f2fpm9qkd",
       "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae9afb17_d6e7cf1a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2214,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-15T06:40:27Z",
+      "side": 1,
+      "message": "Just like the comments here. There is no good way to query the limit size of android. One limitation is the maxValueSize 64k, the other is the total maxSize 2M. Is it possible to add the implementation of querying android\u0027s actual limit size in ANGLE later? Because the user may enlarge or delete the limit size in app\u0027s testing or using. If so, the compression and decompression here will be needless.",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
