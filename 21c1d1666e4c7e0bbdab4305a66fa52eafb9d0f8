@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6b05669_fa94e8eb",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 880,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:32:27Z",
+      "side": 1,
+      "message": "This is the prevalent style across translator/. I\u0027ll make a follow up change to clean this up everywhere.",
+      "parentUuid": "f2e427c7_b9c8fb90",
+      "range": {
+        "startLine": 880,
+        "startChar": 29,
+        "endLine": 880,
+        "endChar": 69
+      },
+      "revId": "21c1d1666e4c7e0bbdab4305a66fa52eafb9d0f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4211d39b_81ddd364",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-01-13T20:39:10Z",
       "side": 1,
       "message": "we should probably make sure we don\u0027t do GS/TS/ES 3.2 without the XFB ext.",
+      "range": {
+        "startLine": 94,
+        "startChar": 55,
+        "endLine": 94,
+        "endChar": 62
+      },
+      "revId": "21c1d1666e4c7e0bbdab4305a66fa52eafb9d0f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73af4bbb_7e56c49d",
+        "filename": "src/libANGLE/renderer/vulkan/ShaderVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:32:27Z",
+      "side": 1,
+      "message": "This CL already makes geometry shaders conditional to XFB ext, that should block ES3.2 too.",
+      "parentUuid": "4211d39b_81ddd364",
       "range": {
         "startLine": 94,
         "startChar": 55,
