@@ -48,6 +48,11 @@ struct hash<egl::BlobCacheKey>
 namespace egl
 {
 
+bool CompressBlobCacheData(angle::MemoryBuffer *cacheData, angle::MemoryBuffer *compressedData);
+bool DecompressBlobCacheData(const uint8_t *compressedData,
+                             const size_t compressedSize,
+                             angle::MemoryBuffer *uncompressedData);
+
 class BlobCache final : angle::NonCopyable
 {
   public:
