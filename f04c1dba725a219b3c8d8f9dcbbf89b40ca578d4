@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "391a1ee0_d5d8b5f4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-15T02:10:16Z",
+      "side": 1,
+      "message": "separate",
+      "range": {
+        "startLine": 9,
+        "startChar": 53,
+        "endLine": 9,
+        "endChar": 61
+      },
+      "revId": "f04c1dba725a219b3c8d8f9dcbbf89b40ca578d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3477e52d_96e5c27f",
@@ -31,6 +54,23 @@
       "writtenOn": "2021-01-15T01:37:16Z",
       "side": 1,
       "message": "LGTM",
+      "revId": "f04c1dba725a219b3c8d8f9dcbbf89b40ca578d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c17c159_775de00a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-15T02:10:16Z",
+      "side": 1,
+      "message": "Typo in CL message, otherwise LGTM, thanks for pushing on this Jamie.",
       "revId": "f04c1dba725a219b3c8d8f9dcbbf89b40ca578d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
