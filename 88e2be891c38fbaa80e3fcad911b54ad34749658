@@ -177,6 +177,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c36614c_bc73ebb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:29:25Z",
+      "side": 1,
+      "message": "I agree. There are many cleanups I have in mind for this code, it\u0027s a matter of finding time to slowly work through them. I have some ideas about encapsulation here, and how to manage that with a single-pass transformation.",
+      "parentUuid": "b07227c0_52148b11",
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "336ac0ed_aecbbf31",
@@ -200,6 +218,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c43b725e_4a6d7587",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:29:25Z",
+      "side": 1,
+      "message": "Renamed to PreFragment in parent CL.",
+      "parentUuid": "336ac0ed_aecbbf31",
+      "range": {
+        "startLine": 120,
+        "startChar": 44,
+        "endLine": 120,
+        "endChar": 63
+      },
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d51a9e07_09e6fb90",
@@ -213,6 +255,30 @@
       "writtenOn": "2021-01-07T20:04:00Z",
       "side": 1,
       "message": "just make this a helper, it overlaps with my work too.",
+      "range": {
+        "startLine": 688,
+        "startChar": 0,
+        "endLine": 691,
+        "endChar": 73
+      },
+      "revId": "88e2be891c38fbaa80e3fcad911b54ad34749658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "504e012e_d6a8e018",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:29:25Z",
+      "side": 1,
+      "message": "Done in parent CL.",
+      "parentUuid": "d51a9e07_09e6fb90",
       "range": {
         "startLine": 688,
         "startChar": 0,
