@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5247c9bd_9c28680c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:26:14Z",
+      "side": 1,
+      "message": "Writing it is equally hard :(",
+      "parentUuid": "fa723846_b3a38ac1",
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc83d20f_6a81c08e",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-01-14T21:52:09Z",
       "side": 1,
       "message": "nit: functions before members",
+      "range": {
+        "startLine": 814,
+        "startChar": 4,
+        "endLine": 814,
+        "endChar": 22
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5961227b_9cc70820",
+        "filename": "src/compiler/translator/IntermNode.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 814,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:26:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc83d20f_6a81c08e",
       "range": {
         "startLine": 814,
         "startChar": 4,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d620343_31fcd6ff",
+        "filename": "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:26:14Z",
+      "side": 1,
+      "message": "Only samplers can be in a struct.",
+      "parentUuid": "4e05a049_0257e811",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 9
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "15682795_ca1aebb2",
@@ -98,6 +164,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54f5c927_a8f736cd",
+        "filename": "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:26:14Z",
+      "side": 1,
+      "message": "Could be atomic counters too, but it\u0027s a don\u0027t care since isAtomicCounter will replace this regardless.\n\nChanged the name to use OpaqueType.",
+      "parentUuid": "15682795_ca1aebb2",
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "35d3b403_d80c5e8e",
@@ -111,6 +195,30 @@
       "writtenOn": "2021-01-15T02:16:47Z",
       "side": 1,
       "message": "What\u0027s the difference between these two?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 31
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f170336_74b8dd59",
+        "filename": "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:26:14Z",
+      "side": 1,
+      "message": "Assuming:\n\n    struct S\n    {\n        sampler2D smplr;\n        vec4 data;\n    };\n\n    uniform S s;\n\nThe first is f(s.smplr), the second is f(s).  We don\u0027t transform f(s.data).\n\nThe second in particular says that we aren\u0027t just doing this transformation when it\u0027s the sampler that\u0027s indexed, but also when the whole struct is passed, even if the function doesn\u0027t use the sampler inside that function.  This allows RewriteStructSampler to not have to deal with function rewriting.",
+      "parentUuid": "35d3b403_d80c5e8e",
       "range": {
         "startLine": 9,
         "startChar": 0,
@@ -144,6 +252,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42bc488f_5c95819a",
+        "filename": "src/compiler/translator/tree_util/ReplaceVariable.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:26:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "180b084c_76b298d0",
+      "range": {
+        "startLine": 80,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 39
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "370aa74b_feaf5150",
@@ -157,6 +289,30 @@
       "writtenOn": "2021-01-15T02:16:47Z",
       "side": 1,
       "message": "nit: is not enabled",
+      "range": {
+        "startLine": 8638,
+        "startChar": 31,
+        "endLine": 8638,
+        "endChar": 41
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06e45fc0_6b17da83",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 8638,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T03:26:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "370aa74b_feaf5150",
       "range": {
         "startLine": 8638,
         "startChar": 31,
