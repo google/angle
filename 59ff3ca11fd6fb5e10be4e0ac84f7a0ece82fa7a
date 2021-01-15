@@ -18,6 +18,138 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74483206_3014f1a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "Thanks Amy. Please find some detailed comments below.",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "647b17b6_9c83abb9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2068,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: if you pass the mPhysicalDeviceProperties to this function it can also be local static.",
+      "range": {
+        "startLine": 2068,
+        "startChar": 17,
+        "endLine": 2068,
+        "endChar": 47
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3bb743e_f6def469",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2169,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "Because this function uses no member variables, it can be a private static function in this file, in the anonymous namespace {} block at the top of the file. This encapsulates the function in a smaller scope which is a bit cleaner.",
+      "range": {
+        "startLine": 2169,
+        "startChar": 17,
+        "endLine": 2169,
+        "endChar": 40
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "572be883_cc28efeb",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2200,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "if you pass the mPhysicalDeviceProperties in here it can also be local static.",
+      "range": {
+        "startLine": 2200,
+        "startChar": 17,
+        "endLine": 2200,
+        "endChar": 48
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f13c9a91_9f301b37",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2210,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: larger",
+      "range": {
+        "startLine": 2210,
+        "startChar": 40,
+        "endLine": 2210,
+        "endChar": 46
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "356e88c7_ad1e5d4b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2210,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: use the named constant here.",
+      "range": {
+        "startLine": 2210,
+        "startChar": 52,
+        "endLine": 2210,
+        "endChar": 56
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ae9afb17_d6e7cf1a",
@@ -31,6 +163,277 @@
       "writtenOn": "2021-01-15T06:40:27Z",
       "side": 1,
       "message": "Just like the comments here. There is no good way to query the limit size of android. One limitation is the maxValueSize 64k, the other is the total maxSize 2M. Is it possible to add the implementation of querying android\u0027s actual limit size in ANGLE later? Because the user may enlarge or delete the limit size in app\u0027s testing or using. If so, the compression and decompression here will be needless.",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d02a371a_a892b746",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2214,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "Sounds fine. Is this an Android platform limitation? We can potentially raise this with the Android folks.\n\nSuggest you make this a static constexpr and call it kMaxBlobCacheSize.",
+      "parentUuid": "ae9afb17_d6e7cf1a",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20ff4e89_eba4aeb9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2223,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: I\u0027d suggest making this const and assigning and declaring it in the same line.",
+      "range": {
+        "startLine": 2223,
+        "startChar": 4,
+        "endLine": 2223,
+        "endChar": 14
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "919e617d_61585333",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "I don\u0027t understand this line, it should be \"1\" always and do nothing.",
+      "range": {
+        "startLine": 2224,
+        "startChar": 38,
+        "endLine": 2225,
+        "endChar": 64
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c83a577b_1db505c7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2227,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 2226,
+        "startChar": 54,
+        "endLine": 2227,
+        "endChar": 53
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "713ee449_d2ebfd13",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2229,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: I\u0027d suggest defining int chunkIndex here to be cleaner.",
+      "range": {
+        "startLine": 2229,
+        "startChar": 9,
+        "endLine": 2229,
+        "endChar": 19
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "395637fd_126fa80a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2248,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: if (!resize)\n{\n   return false;\n}\n\n...\n\nor generate an error as described below.",
+      "range": {
+        "startLine": 2237,
+        "startChar": 0,
+        "endLine": 2248,
+        "endChar": 9
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46833521_904a35ec",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2259,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "looks like this can also be private static.",
+      "range": {
+        "startLine": 2259,
+        "startChar": 28,
+        "endLine": 2259,
+        "endChar": 29
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99de1106_9f573653",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2272,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: if (!...)\n{\n   return false;\n}\n\n...",
+      "range": {
+        "startLine": 2270,
+        "startChar": 0,
+        "endLine": 2272,
+        "endChar": 5
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2296b6b2_527b4be1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2284,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "this should generate an error. recommend returning angle::Result and using ANGLE_VK_CHECK here, and returning Continue on early exit/success.",
+      "range": {
+        "startLine": 2281,
+        "startChar": 0,
+        "endLine": 2284,
+        "endChar": 9
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07091a89_72329e8e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2295,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "similarly:\n\nif (!)\n{\n    return false;\n}\n\n...",
+      "range": {
+        "startLine": 2293,
+        "startChar": 11,
+        "endLine": 2295,
+        "endChar": 13
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb361838_be95057e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2319,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "nit: memorybuffer for error handling.",
+      "range": {
+        "startLine": 2319,
+        "startChar": 13,
+        "endLine": 2319,
+        "endChar": 19
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d856dcee_dbbd52b9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2403,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:14:33Z",
+      "side": 1,
+      "message": "make this ANGLE_VK_CHECK. If there\u0027s a \"false\" then something very bad happened.\n\nAlternately make compressAndStore return angle::Result and process the error inside compressAndStore.",
+      "range": {
+        "startLine": 2403,
+        "startChar": 4,
+        "endLine": 2403,
+        "endChar": 7
+      },
       "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
