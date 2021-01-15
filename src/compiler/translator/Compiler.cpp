@@ -316,7 +316,7 @@ bool TCompiler::shouldRunLoopAndIndexingValidation(ShCompileOptions compileOptio
     // validate loop and indexing as well (to verify that the shader only uses minimal functionality
     // of ESSL 1.00 as in Appendix A of the spec).
     return (IsWebGLBasedSpec(mShaderSpec) && mShaderVersion == 100) ||
-           (compileOptions & SH_VALIDATE_LOOP_INDEXING);
+           (compileOptions & SH_VALIDATE_LOOP_INDEXING) != 0;
 }
 
 bool TCompiler::Init(const ShBuiltInResources &resources)
@@ -359,7 +359,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
     // If gl_DrawID is not supported, remove it from the available extensions
     // Currently we only allow emulation of gl_DrawID
-    const bool glDrawIDSupported = (compileOptions & SH_EMULATE_GL_DRAW_ID) != 0u;
+    const bool glDrawIDSupported = (compileOptions & SH_EMULATE_GL_DRAW_ID) != 0;
     if (!glDrawIDSupported)
     {
         auto it = mExtensionBehavior.find(TExtension::ANGLE_multi_draw);
@@ -370,7 +370,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
     }
 
     const bool glBaseVertexBaseInstanceSupported =
-        (compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0u;
+        (compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0;
     if (!glBaseVertexBaseInstanceSupported)
     {
         auto it = mExtensionBehavior.find(TExtension::ANGLE_base_vertex_base_instance);
@@ -382,7 +382,7 @@ TIntermBlock *TCompiler::compileTreeImpl(const char *const shaderStrings[],
 
     // First string is path of source file if flag is set. The actual source follows.
     size_t firstSource = 0;
-    if (compileOptions & SH_SOURCE_PATH)
+    if ((compileOptions & SH_SOURCE_PATH) != 0)
     {
         mSourcePath = shaderStrings[0];
         ++firstSource;
@@ -525,7 +525,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                     ShCompileOptions compileOptions)
 {
     // Disallow expressions deemed too complex.
-    if ((compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY) && !limitExpressionComplexity(root))
+    if ((compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY) != 0 && !limitExpressionComplexity(root))
     {
         return false;
     }
@@ -563,10 +563,11 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     // We need to generate globals early if we have non constant initializers enabled
-    bool initializeLocalsAndGlobals =
-        (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) && !IsOutputHLSL(getOutputType());
-    bool canUseLoopsToInitialize = !(compileOptions & SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES);
-    bool highPrecisionSupported  = mShaderVersion > 100 || mShaderType != GL_FRAGMENT_SHADER ||
+    bool initializeLocalsAndGlobals = (compileOptions & SH_INITIALIZE_UNINITIALIZED_LOCALS) != 0 &&
+                                      !IsOutputHLSL(getOutputType());
+    bool canUseLoopsToInitialize =
+        (compileOptions & SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES) == 0;
+    bool highPrecisionSupported = mShaderVersion > 100 || mShaderType != GL_FRAGMENT_SHADER ||
                                   mResources.FragmentPrecisionHigh == 1;
     bool enableNonConstantInitializers = IsExtensionEnabled(
         mExtensionBehavior, TExtension::EXT_shader_non_constant_global_initializers);
@@ -583,7 +584,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    if ((compileOptions & SH_LIMIT_CALL_STACK_DEPTH) && !checkCallDepth())
+    if ((compileOptions & SH_LIMIT_CALL_STACK_DEPTH) != 0 && !checkCallDepth())
     {
         return false;
     }
@@ -596,7 +597,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    if (!(compileOptions & SH_DONT_PRUNE_UNUSED_FUNCTIONS))
+    if ((compileOptions & SH_DONT_PRUNE_UNUSED_FUNCTIONS) == 0)
     {
         pruneUnusedFunctions(root);
     }
@@ -637,12 +638,12 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     // Clamping uniform array bounds needs to happen after validateLimitations pass.
-    if (compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS)
+    if ((compileOptions & SH_CLAMP_INDIRECT_ARRAY_BOUNDS) != 0)
     {
         mArrayBoundsClamper.MarkIndirectArrayBoundsForClamping(root);
     }
 
-    if ((compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) &&
+    if ((compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) != 0 &&
         (parseContext.isExtensionEnabled(TExtension::OVR_multiview2) ||
          parseContext.isExtensionEnabled(TExtension::OVR_multiview)) &&
         getShaderType() != GL_COMPUTE_SHADER)
@@ -655,7 +656,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     // This pass might emit short circuits so keep it before the short circuit unfolding
-    if (compileOptions & SH_REWRITE_DO_WHILE_LOOPS)
+    if ((compileOptions & SH_REWRITE_DO_WHILE_LOOPS) != 0)
     {
         if (!RewriteDoWhile(this, root, &mSymbolTable))
         {
@@ -663,7 +664,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION)
+    if ((compileOptions & SH_ADD_AND_TRUE_TO_LOOP_CONDITION) != 0)
     {
         if (!AddAndTrueToLoopCondition(this, root))
         {
@@ -671,7 +672,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_UNFOLD_SHORT_CIRCUIT)
+    if ((compileOptions & SH_UNFOLD_SHORT_CIRCUIT) != 0)
     {
         if (!UnfoldShortCircuitAST(this, root))
         {
@@ -679,7 +680,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_REMOVE_POW_WITH_CONSTANT_EXPONENT)
+    if ((compileOptions & SH_REMOVE_POW_WITH_CONSTANT_EXPONENT) != 0)
     {
         if (!RemovePow(this, root, &mSymbolTable))
         {
@@ -687,7 +688,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_REGENERATE_STRUCT_NAMES)
+    if ((compileOptions & SH_REGENERATE_STRUCT_NAMES) != 0)
     {
         if (!RegenerateStructNames(this, root, &mSymbolTable))
         {
@@ -698,7 +699,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (mShaderType == GL_VERTEX_SHADER &&
         IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw))
     {
-        if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0u)
+        if ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0)
         {
             if (!EmulateGLDrawID(this, root, &mSymbolTable, &mUniforms,
                                  shouldCollectVariables(compileOptions)))
@@ -711,11 +712,11 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if (mShaderType == GL_VERTEX_SHADER &&
         IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_base_vertex_base_instance))
     {
-        if ((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0u)
+        if ((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0)
         {
-            if (!EmulateGLBaseVertexBaseInstance(this, root, &mSymbolTable, &mUniforms,
-                                                 shouldCollectVariables(compileOptions),
-                                                 compileOptions & SH_ADD_BASE_VERTEX_TO_VERTEX_ID))
+            if (!EmulateGLBaseVertexBaseInstance(
+                    this, root, &mSymbolTable, &mUniforms, shouldCollectVariables(compileOptions),
+                    (compileOptions & SH_ADD_BASE_VERTEX_TO_VERTEX_ID) != 0))
             {
                 return false;
             }
@@ -733,7 +734,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    int simplifyScalarized = (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS)
+    int simplifyScalarized = (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS) != 0
                                  ? IntermNodePatternMatcher::kScalarizedVecOrMatConstructor
                                  : 0;
 
@@ -792,7 +793,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     GetGlobalPoolAllocator()->unlock();
     mBuiltInFunctionEmulator.markBuiltInFunctionsForEmulation(root);
 
-    if (compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS)
+    if ((compileOptions & SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS) != 0)
     {
         if (!ScalarizeVecAndMatConstructorArgs(this, root, mShaderType, highPrecisionSupported,
                                                &mSymbolTable))
@@ -801,7 +802,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP)
+    if ((compileOptions & SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP) != 0)
     {
         if (!ForceShaderPrecisionToMediump(root, &mSymbolTable, mShaderType))
         {
@@ -818,14 +819,14 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                          mExtensionBehavior);
         collectInterfaceBlocks();
         mVariablesCollected = true;
-        if (compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS)
+        if ((compileOptions & SH_USE_UNUSED_STANDARD_SHARED_BLOCKS) != 0)
         {
             if (!useAllMembersInUnusedStandardAndSharedBlocks(root))
             {
                 return false;
             }
         }
-        if (compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS)
+        if ((compileOptions & SH_ENFORCE_PACKING_RESTRICTIONS) != 0)
         {
             int maxUniformVectors = GetMaxUniformVectorsForShaderType(mShaderType, mResources);
             // Returns true if, after applying the packing rules in the GLSL ES 1.00.17 spec
@@ -836,7 +837,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-        if ((compileOptions & SH_INIT_OUTPUT_VARIABLES) && (mShaderType != GL_COMPUTE_SHADER))
+        if ((compileOptions & SH_INIT_OUTPUT_VARIABLES) != 0 && mShaderType != GL_COMPUTE_SHADER)
         {
             if (!initializeOutputVariables(root))
             {
@@ -859,7 +860,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     // It may have been already initialized among other output variables, in that case we don't
     // need to initialize it twice.
     if (mShaderType == GL_VERTEX_SHADER && !mGLPositionInitialized &&
-        ((compileOptions & SH_INIT_GL_POSITION) || (mOutputType == SH_GLSL_COMPATIBILITY_OUTPUT)))
+        ((compileOptions & SH_INIT_GL_POSITION) != 0 ||
+         mOutputType == SH_GLSL_COMPATIBILITY_OUTPUT))
     {
         if (!initializeGLPosition(root))
         {
@@ -910,7 +912,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (getShaderType() == GL_VERTEX_SHADER && (compileOptions & SH_CLAMP_POINT_SIZE))
+    if (getShaderType() == GL_VERTEX_SHADER && (compileOptions & SH_CLAMP_POINT_SIZE) != 0)
     {
         if (!ClampPointSize(this, root, mResources.MaxPointSize, &getSymbolTable()))
         {
@@ -918,7 +920,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (getShaderType() == GL_FRAGMENT_SHADER && (compileOptions & SH_CLAMP_FRAG_DEPTH))
+    if (getShaderType() == GL_FRAGMENT_SHADER && (compileOptions & SH_CLAMP_FRAG_DEPTH) != 0)
     {
         if (!ClampFragDepth(this, root, &getSymbolTable()))
         {
@@ -926,7 +928,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED)
+    if ((compileOptions & SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED) != 0)
     {
         if (!sh::RewriteRepeatedAssignToSwizzled(this, root))
         {
@@ -934,7 +936,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_REWRITE_VECTOR_SCALAR_ARITHMETIC)
+    if ((compileOptions & SH_REWRITE_VECTOR_SCALAR_ARITHMETIC) != 0)
     {
         if (!VectorizeVectorScalarArithmetic(this, root, &getSymbolTable()))
         {
@@ -942,7 +944,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         }
     }
 
-    if (compileOptions & SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR)
+    if ((compileOptions & SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR) != 0)
     {
         if (!sh::RemoveDynamicIndexingOfSwizzledVector(this, root, &getSymbolTable(), nullptr))
         {
@@ -951,7 +953,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     }
 
     mEarlyFragmentTestsOptimized = false;
-    if (compileOptions & SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION)
+    if ((compileOptions & SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION) != 0)
     {
         if (mShaderVersion <= 300 && mShaderType == GL_FRAGMENT_SHADER &&
             !isEarlyFragmentTestsSpecified())
@@ -989,12 +991,12 @@ bool TCompiler::compile(const char *const shaderStrings[],
 
     if (root)
     {
-        if (compileOptions & SH_INTERMEDIATE_TREE)
+        if ((compileOptions & SH_INTERMEDIATE_TREE) != 0)
         {
             OutputTree(root, mInfoSink.info);
         }
 
-        if (compileOptions & SH_OBJECT_CODE)
+        if ((compileOptions & SH_OBJECT_CODE) != 0)
         {
             PerformanceDiagnostics perfDiagnostics(&mDiagnostics);
             if (!translate(root, compileOptions, &perfDiagnostics))
@@ -1007,11 +1009,11 @@ bool TCompiler::compile(const char *const shaderStrings[],
         {
             bool lookForDrawID =
                 IsExtensionEnabled(mExtensionBehavior, TExtension::ANGLE_multi_draw) &&
-                ((compileOptions & SH_EMULATE_GL_DRAW_ID) != 0u);
+                (compileOptions & SH_EMULATE_GL_DRAW_ID) != 0;
             bool lookForBaseVertexBaseInstance =
                 IsExtensionEnabled(mExtensionBehavior,
                                    TExtension::ANGLE_base_vertex_base_instance) &&
-                ((compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0u);
+                (compileOptions & SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE) != 0;
 
             if (lookForDrawID || lookForBaseVertexBaseInstance)
             {
@@ -1504,7 +1506,7 @@ const BuiltInFunctionEmulator &TCompiler::getBuiltInFunctionEmulator() const
 
 void TCompiler::writePragma(ShCompileOptions compileOptions)
 {
-    if (!(compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL))
+    if ((compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) == 0)
     {
         TInfoSinkBase &sink = mInfoSink.obj;
         if (mPragma.stdgl.invariantAll)
@@ -1562,12 +1564,12 @@ void EmitMultiviewGLSL(const TCompiler &compiler,
         return;
 
     const bool isVertexShader = (compiler.getShaderType() == GL_VERTEX_SHADER);
-    if (compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW)
+    if ((compileOptions & SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW) != 0)
     {
         // Emit ARB_shader_viewport_layer_array/NV_viewport_array2 in a vertex shader if the
         // SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER option is set and the
         // OVR_multiview(2) extension is requested.
-        if (isVertexShader && (compileOptions & SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER))
+        if (isVertexShader && (compileOptions & SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER) != 0)
         {
             sink << "#if defined(GL_ARB_shader_viewport_layer_array)\n"
                  << "#extension GL_ARB_shader_viewport_layer_array : require\n"

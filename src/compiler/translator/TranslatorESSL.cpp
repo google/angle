@@ -21,7 +21,7 @@ TranslatorESSL::TranslatorESSL(sh::GLenum type, ShShaderSpec spec)
 void TranslatorESSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                                  ShCompileOptions compileOptions)
 {
-    if (compileOptions & SH_EMULATE_ATAN2_FLOAT_FUNCTION)
+    if ((compileOptions & SH_EMULATE_ATAN2_FLOAT_FUNCTION) != 0)
     {
         InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(emu);
     }

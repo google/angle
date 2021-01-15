@@ -25,17 +25,17 @@ TranslatorGLSL::TranslatorGLSL(sh::GLenum type, ShShaderSpec spec, ShShaderOutpu
 void TranslatorGLSL::initBuiltInFunctionEmulator(BuiltInFunctionEmulator *emu,
                                                  ShCompileOptions compileOptions)
 {
-    if (compileOptions & SH_EMULATE_ABS_INT_FUNCTION)
+    if ((compileOptions & SH_EMULATE_ABS_INT_FUNCTION) != 0)
     {
         InitBuiltInAbsFunctionEmulatorForGLSLWorkarounds(emu, getShaderType());
     }
 
-    if (compileOptions & SH_EMULATE_ISNAN_FLOAT_FUNCTION)
+    if ((compileOptions & SH_EMULATE_ISNAN_FLOAT_FUNCTION) != 0)
     {
         InitBuiltInIsnanFunctionEmulatorForGLSLWorkarounds(emu, getShaderVersion());
     }
 
-    if (compileOptions & SH_EMULATE_ATAN2_FLOAT_FUNCTION)
+    if ((compileOptions & SH_EMULATE_ATAN2_FLOAT_FUNCTION) != 0)
     {
         InitBuiltInAtanFunctionEmulatorForGLSLWorkarounds(emu);
     }
@@ -234,7 +234,7 @@ bool TranslatorGLSL::shouldFlattenPragmaStdglInvariantAll()
 
 bool TranslatorGLSL::shouldCollectVariables(ShCompileOptions compileOptions)
 {
-    return (compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) ||
+    return (compileOptions & SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL) != 0 ||
            TCompiler::shouldCollectVariables(compileOptions);
 }
 

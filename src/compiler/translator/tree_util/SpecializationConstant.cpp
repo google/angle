@@ -270,7 +270,7 @@ void SpecConst::outputLayoutString(TInfoSinkBase &sink) const
 
 TIntermSymbol *SpecConst::getLineRasterEmulation()
 {
-    if (!(mCompileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION))
+    if ((mCompileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION) == 0)
     {
         return nullptr;
     }
@@ -291,7 +291,7 @@ TIntermSymbol *SpecConst::getFlipRotation()
 
 TIntermTyped *SpecConst::getMultiplierXForDFdx()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -302,7 +302,7 @@ TIntermTyped *SpecConst::getMultiplierXForDFdx()
 
 TIntermTyped *SpecConst::getMultiplierYForDFdx()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -313,7 +313,7 @@ TIntermTyped *SpecConst::getMultiplierYForDFdx()
 
 TIntermTyped *SpecConst::getMultiplierXForDFdy()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -324,7 +324,7 @@ TIntermTyped *SpecConst::getMultiplierXForDFdy()
 
 TIntermTyped *SpecConst::getMultiplierYForDFdy()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -335,7 +335,7 @@ TIntermTyped *SpecConst::getMultiplierYForDFdy()
 
 TIntermTyped *SpecConst::getFragRotationMatrix()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -345,7 +345,7 @@ TIntermTyped *SpecConst::getFragRotationMatrix()
 
 TIntermTyped *SpecConst::getHalfRenderAreaRotationMatrix()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -355,7 +355,7 @@ TIntermTyped *SpecConst::getHalfRenderAreaRotationMatrix()
 
 TIntermTyped *SpecConst::getFlipXY()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -365,7 +365,7 @@ TIntermTyped *SpecConst::getFlipXY()
 
 TIntermTyped *SpecConst::getNegFlipXY()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -375,7 +375,7 @@ TIntermTyped *SpecConst::getNegFlipXY()
 
 TIntermTyped *SpecConst::getFlipY()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -385,7 +385,7 @@ TIntermTyped *SpecConst::getFlipY()
 
 TIntermTyped *SpecConst::getNegFlipY()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -395,7 +395,7 @@ TIntermTyped *SpecConst::getNegFlipY()
 
 TIntermTyped *SpecConst::getFragRotationMultiplyFlipXY()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
@@ -443,7 +443,7 @@ TIntermSymbol *SpecConst::getDrawableHeight()
 
 TIntermBinary *SpecConst::getHalfRenderArea()
 {
-    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) == 0)
     {
         return nullptr;
     }
