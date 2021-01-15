@@ -3822,8 +3822,8 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
     // Record the data, indexed by textureID and level
     GLint level = call.params.getParam("level", ParamType::TGLint, 1).value.GLintVal;
     std::vector<uint8_t> &levelData =
-        context->getShareGroup()->getFrameCaptureShared()->getTextureLevelCacheLocation(
-            texture, targetPacked, level);
+        context->getShareGroup()->getFrameCaptureShared()->getCachedTextureLevelData(
+            texture, targetPacked, level, call.entryPoint);
 
     // Unpack the various pixel rectangle parameters.
     ASSERT(widthParamOffset != -1);
@@ -3901,6 +3901,7 @@ void FrameCapture::captureCompressedTextureData(const gl::Context *context, cons
             GLint y           = yindex + yoffset;
             GLint pixelOffset = zindex * pixelDepthPitch + yindex * pixelRowPitch;
             GLint levelOffset = z * levelDepthPitch + y * levelRowPitch + xoffset * pixelBytes;
+            ASSERT(static_cast<size_t>(levelOffset + pixelRowPitch) <= levelData.size());
             memcpy(&levelData[levelOffset], &pixelData[pixelOffset], pixelRowPitch);
         }
     }
@@ -4721,17 +4722,28 @@ const std::vector<uint8_t> &FrameCaptureShared::retrieveCachedTextureLevel(gl::T
     return capturedTextureLevel;
 }
 
-std::vector<uint8_t> &FrameCaptureShared::getTextureLevelCacheLocation(gl::Texture *texture,
-                                                                       gl::TextureTarget target,
-                                                                       GLint level)
+std::vector<uint8_t> &FrameCaptureShared::getCachedTextureLevelData(gl::Texture *texture,
+                                                                    gl::TextureTarget target,
+                                                                    GLint level,
+                                                                    EntryPoint entryPoint)
 {
     auto foundTextureLevels = mCachedTextureLevelData.find(texture->id());
-    if (foundTextureLevels == mCachedTextureLevelData.end())
+    if (foundTextureLevels == mCachedTextureLevelData.end() ||
+        entryPoint == EntryPoint::GLCompressedTexImage2D ||
+        entryPoint == EntryPoint::GLCompressedTexImage3D)
     {
-        // If we haven't cached this texture, initialize the texture ID data.
+        // Delete the cached entry (if it exists) in case the caller is respecifying the texture.
+        mCachedTextureLevelData.erase(texture->id());
+
+        // Initialize the texture ID data.
         auto emplaceResult = mCachedTextureLevelData.emplace(texture->id(), TextureLevels());
         ASSERT(emplaceResult.second);
         foundTextureLevels = emplaceResult.first;
+    }
+    else
+    {
+        ASSERT(entryPoint == EntryPoint::GLCompressedTexSubImage2D ||
+               entryPoint == EntryPoint::GLCompressedTexSubImage3D);
     }
 
     TextureLevels &foundLevels         = foundTextureLevels->second;
