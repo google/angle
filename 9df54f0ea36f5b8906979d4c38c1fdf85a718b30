@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b7a5113_51129c0b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T05:42:21Z",
+      "side": 1,
+      "message": "Gonna take advantage of the green build and submit this trivial change. TBR Jonah.",
+      "revId": "9df54f0ea36f5b8906979d4c38c1fdf85a718b30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
