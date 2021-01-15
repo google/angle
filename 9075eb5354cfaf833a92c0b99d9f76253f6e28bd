@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "254bdada_914c476a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-01-15T16:20:11Z",
+      "side": 1,
+      "message": "I don\u0027t appear to have CQ+1 privs. Anyway to get them?",
+      "revId": "9075eb5354cfaf833a92c0b99d9f76253f6e28bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
