@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa723846_b3a38ac1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T02:16:47Z",
+      "side": 1,
+      "message": "Reading this AST code is rough, so I\u0027m leaning pretty hard on CQ catching any issues.",
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc83d20f_6a81c08e",
@@ -36,6 +53,115 @@
         "startChar": 4,
         "endLine": 814,
         "endChar": 22
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e05a049_0257e811",
+        "filename": "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T02:16:47Z",
+      "side": 1,
+      "message": "How do we know the uniform is a sampler?",
+      "range": {
+        "startLine": 77,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 9
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15682795_ca1aebb2",
+        "filename": "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 321,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T02:16:47Z",
+      "side": 1,
+      "message": "How do you know the array is of samplers/images?",
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35d3b403_d80c5e8e",
+        "filename": "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T02:16:47Z",
+      "side": 1,
+      "message": "What\u0027s the difference between these two?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 31
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "180b084c_76b298d0",
+        "filename": "src/compiler/translator/tree_util/ReplaceVariable.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T02:16:47Z",
+      "side": 1,
+      "message": "nit: asBinary",
+      "range": {
+        "startLine": 80,
+        "startChar": 16,
+        "endLine": 80,
+        "endChar": 39
+      },
+      "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "370aa74b_feaf5150",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 8638,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T02:16:47Z",
+      "side": 1,
+      "message": "nit: is not enabled",
+      "range": {
+        "startLine": 8638,
+        "startChar": 31,
+        "endLine": 8638,
+        "endChar": 41
       },
       "revId": "f26ecf105b0102b289611804bb4f489528e1d56a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
