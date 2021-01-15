@@ -1282,14 +1282,11 @@ Error Display::makeCurrent(gl::Context *previousContext,
     // If the context is changing we need to update the reference counts. If it's not, e.g. just
     // changing the surfaces leave the reference count alone. Otherwise the reference count might go
     // to zero even though we know we are not done with the context.
-    bool updateRefCount = context != previousContext;
-    if (previousContext != nullptr)
+    bool contextChanged = context != previousContext;
+    if (previousContext != nullptr && contextChanged)
     {
         ANGLE_TRY(previousContext->unMakeCurrent(this));
-        if (updateRefCount)
-        {
-            ANGLE_TRY(releaseContext(previousContext));
-        }
+        ANGLE_TRY(releaseContext(previousContext));
     }
 
     ANGLE_TRY(mImplementation->makeCurrent(this, drawSurface, readSurface, context));
@@ -1297,7 +1294,7 @@ Error Display::makeCurrent(gl::Context *previousContext,
     if (context != nullptr)
     {
         ANGLE_TRY(context->makeCurrent(this, drawSurface, readSurface));
-        if (updateRefCount)
+        if (contextChanged)
         {
             context->addRef();
         }

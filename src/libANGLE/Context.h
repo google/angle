@@ -771,6 +771,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     mutable size_t mRefCount;
 
     OverlayType mOverlay;
+
+    bool mIsCurrent = false;
 };
 
 // Thread-local current valid context bound to the thread.
