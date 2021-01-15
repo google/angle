@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "626ed1e4_3b96d3ed",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 5
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T14:19:35Z",
+      "side": 0,
+      "message": "nice!",
+      "range": {
+        "startLine": 173,
+        "startChar": 12,
+        "endLine": 173,
+        "endChar": 20
+      },
+      "revId": "ac5cb69914b03d714ea8f0a162e6a1bbe6c0c290",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
