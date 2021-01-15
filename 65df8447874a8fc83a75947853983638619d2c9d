@@ -266,6 +266,30 @@
       },
       "revId": "65df8447874a8fc83a75947853983638619d2c9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d252c09_3018da5e",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-15T15:45:30Z",
+      "side": 1,
+      "message": "Bleh, I should go back and fix https://chromium-review.googlesource.com/c/angle/angle/+/1385533",
+      "parentUuid": "18e45779_94b938a9",
+      "range": {
+        "startLine": 524,
+        "startChar": 17,
+        "endLine": 524,
+        "endChar": 46
+      },
+      "revId": "65df8447874a8fc83a75947853983638619d2c9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
