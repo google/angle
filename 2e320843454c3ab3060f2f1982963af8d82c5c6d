@@ -16,6 +16,23 @@
       "message": "comments have been addressed - PTAL",
       "revId": "2e320843454c3ab3060f2f1982963af8d82c5c6d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80242a36_d06c4b15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-15T04:50:17Z",
+      "side": 1,
+      "message": "Re-LGTM.\n\nAre there any deqp tests that get run with this? We do expose geometry shaders on the bots, and I\u0027m surprised there are no failures.",
+      "revId": "2e320843454c3ab3060f2f1982963af8d82c5c6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
