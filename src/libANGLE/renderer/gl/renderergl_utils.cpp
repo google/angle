@@ -66,6 +66,14 @@ VendorID GetVendorID(const FunctionsGL *functions)
     {
         return VENDOR_ID_INTEL;
     }
+    else if (nativeVendorString.find("Imagination") != std::string::npos)
+    {
+        return VENDOR_ID_POWERVR;
+    }
+    else if (nativeVendorString.find("Vivante") != std::string::npos)
+    {
+        return VENDOR_ID_VIVANTE;
+    }
     else
     {
         return VENDOR_ID_UNKNOWN;

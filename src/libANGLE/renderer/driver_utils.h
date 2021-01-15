@@ -31,6 +31,7 @@ enum VendorID : uint32_t
     VENDOR_ID_QUALCOMM = 0x5143,
     VENDOR_ID_SAMSUNG  = 0x144D,
     VENDOR_ID_VMWARE   = 0x15AD,
+    VENDOR_ID_VIVANTE  = 0x9999,
 };
 
 enum AndroidDeviceID : uint32_t
@@ -90,6 +91,11 @@ inline bool IsVMWare(uint32_t vendorId)
 inline bool IsSamsung(uint32_t vendorId)
 {
     return vendorId == VENDOR_ID_SAMSUNG;
+}
+
+inline bool IsVivante(uint32_t vendorId)
+{
+    return vendorId == VENDOR_ID_VIVANTE;
 }
 
 inline bool IsNexus5X(uint32_t vendorId, uint32_t deviceId)
