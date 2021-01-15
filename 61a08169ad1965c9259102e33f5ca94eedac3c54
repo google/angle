@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "270f6119_076f3353",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T20:26:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "45bf618e_65df24e4",
+      "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7bf7e896_7303b13a",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-01-14T22:21:17Z",
       "side": 1,
       "message": "New bug needed",
+      "range": {
+        "startLine": 10,
+        "startChar": 18,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "61a08169ad1965c9259102e33f5ca94eedac3c54",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eca5eac0_2ec839ba",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-15T20:26:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bf7e896_7303b13a",
       "range": {
         "startLine": 10,
         "startChar": 18,
