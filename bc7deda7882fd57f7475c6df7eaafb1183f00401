@@ -73,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "434cbb8c_f2d27560",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-01-16T02:45:47Z",
+      "side": 1,
+      "message": "I can move it into the executable. @Shabi I\u0027m not quite sure what you mean by a regression test. How would that look/is there something similar I can look at?",
+      "parentUuid": "666b3687_dc0ae2bb",
+      "range": {
+        "startLine": 549,
+        "startChar": 68,
+        "endLine": 549,
+        "endChar": 95
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0623d89f_4a862e75",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 6
@@ -84,6 +108,30 @@
       "writtenOn": "2021-01-13T20:51:05Z",
       "side": 1,
       "message": "why is 1 the default? comments/concerns?",
+      "range": {
+        "startLine": 601,
+        "startChar": 15,
+        "endLine": 601,
+        "endChar": 32
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02e5597a_5cba82ed",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-01-16T02:45:47Z",
+      "side": 1,
+      "message": "This is for the secondary output locations. The specific value of 1 is stated in the vkspec:\n```\nFragment outputs identified with an Index of zero are directed to the first input of the blending unit associated with the corresponding Location. Outputs identified with an Index of one are directed to the second input of the corresponding blending unit.\n```",
+      "parentUuid": "0623d89f_4a862e75",
       "range": {
         "startLine": 601,
         "startChar": 15,
