@@ -800,8 +800,6 @@ const char kXfbEmulationBufferBlockName[]        = "ANGLEXfbBuffer";
 const char kXfbEmulationBufferName[]             = "ANGLEXfb";
 const char kXfbEmulationBufferFieldName[]        = "xfbOut";
 
-const char kXfbExtensionPositionOutName[] = "ANGLEXfbPosition";
-
 }  // namespace vk
 
 }  // namespace sh

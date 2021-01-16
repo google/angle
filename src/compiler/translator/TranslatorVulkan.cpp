@@ -479,48 +479,6 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
     return compiler->validateAST(root);
 }
 
-ANGLE_NO_DISCARD bool AddXfbExtensionSupport(TCompiler *compiler,
-                                             TIntermBlock *root,
-                                             TSymbolTable *symbolTable,
-                                             const DriverUniform *driverUniforms)
-{
-    // Generate the following output varying declaration used to capture transform feedback output
-    // from gl_Position, as it can't be captured directly due to changes that are applied to it for
-    // clip-space correction and pre-rotation.
-    //
-    //     out vec4 ANGLEXfbPosition;
-
-    const TType *vec4Type = nullptr;
-
-    switch (compiler->getShaderType())
-    {
-        case GL_VERTEX_SHADER:
-            vec4Type = StaticType::Get<EbtFloat, EbpHigh, EvqVertexOut, 4, 1>();
-            break;
-        case GL_TESS_EVALUATION_SHADER_EXT:
-            vec4Type = StaticType::Get<EbtFloat, EbpHigh, EvqTessEvaluationOut, 4, 1>();
-            break;
-        case GL_GEOMETRY_SHADER_EXT:
-            vec4Type = StaticType::Get<EbtFloat, EbpHigh, EvqGeometryOut, 4, 1>();
-            break;
-        default:
-            UNREACHABLE();
-    }
-
-    TVariable *varyingVar =
-        new TVariable(symbolTable, ImmutableString(vk::kXfbExtensionPositionOutName), vec4Type,
-                      SymbolType::AngleInternal);
-
-    TIntermDeclaration *varyingDecl = new TIntermDeclaration();
-    varyingDecl->appendDeclarator(new TIntermSymbol(varyingVar));
-
-    // Insert the varying declaration before the first function.
-    const size_t firstFunctionIndex = FindFirstFunctionDefinitionIndex(root);
-    root->insertChildNodes(firstFunctionIndex, {varyingDecl});
-
-    return compiler->validateAST(root);
-}
-
 ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
                                                 ShCompileOptions compileOptions,
                                                 TIntermBlock *root,
@@ -925,14 +883,8 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
     if (gl::ShaderTypeSupportsTransformFeedback(packedShaderType))
     {
-        if (compileOptions & SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE)
-        {
-            // Add support code for transform feedback extension.
-            if (!AddXfbExtensionSupport(this, root, &getSymbolTable(), driverUniforms))
-            {
-                return false;
-            }
-        }
+        // Add a macro to declare transform feedback buffers.
+        sink << "@@ XFB-DECL @@\n\n";
 
         // Append a macro for transform feedback substitution prior to modifying depth.
         if (!AppendTransformFeedbackOutputToMain(this, root, &getSymbolTable()))
