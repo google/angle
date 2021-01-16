@@ -225,7 +225,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
     // Initialize unused varying outputs to avoid spirv-cross dead-code removing them in later
     // stage. Only do this if SH_INIT_OUTPUT_VARIABLES is not specified.
     if ((getShaderType() == GL_VERTEX_SHADER || getShaderType() == GL_GEOMETRY_SHADER_EXT) &&
-        !(compileOptions & SH_INIT_OUTPUT_VARIABLES))
+        (compileOptions & SH_INIT_OUTPUT_VARIABLES) == 0)
     {
         InitVariableList list;
         for (const sh::ShaderVariable &var : mOutputVaryings)

@@ -372,7 +372,7 @@ OutputHLSL::OutputHLSL(sh::GLenum shaderType,
         new AtomicCounterFunctionHLSL((compileOptions & SH_FORCE_ATOMIC_VALUE_RESOLUTION) != 0);
 
     unsigned int firstUniformRegister =
-        ((compileOptions & SH_SKIP_D3D_CONSTANT_REGISTER_ZERO) != 0) ? 1u : 0u;
+        (compileOptions & SH_SKIP_D3D_CONSTANT_REGISTER_ZERO) != 0 ? 1u : 0u;
     mResourcesHLSL = new ResourcesHLSL(mStructureHLSL, outputType, uniforms, firstUniformRegister);
 
     if (mOutputType == SH_HLSL_3_0_OUTPUT)
@@ -3204,7 +3204,7 @@ void OutputHLSL::outputTriplet(TInfoSinkBase &out,
 
 void OutputHLSL::outputLineDirective(TInfoSinkBase &out, int line)
 {
-    if ((mCompileOptions & SH_LINE_DIRECTIVES) && (line > 0))
+    if ((mCompileOptions & SH_LINE_DIRECTIVES) != 0 && line > 0)
     {
         out << "\n";
         out << "#line " << line;

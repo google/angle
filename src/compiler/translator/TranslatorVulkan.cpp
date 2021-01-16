@@ -543,7 +543,7 @@ ANGLE_NO_DISCARD bool InsertFragCoordCorrection(TCompiler *compiler,
     }
 
     TIntermTyped *fragRotation = nullptr;
-    if (compileOptions & SH_ADD_PRE_ROTATION)
+    if ((compileOptions & SH_ADD_PRE_ROTATION) != 0)
     {
         fragRotation = specConst->getFragRotationMatrix();
         if (!fragRotation)
@@ -810,7 +810,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
     // Rewrite samplerCubes as sampler2DArrays.  This must be done after rewriting struct samplers
     // as it doesn't expect that.
-    if (compileOptions & SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING)
+    if ((compileOptions & SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING) != 0)
     {
         if (!RewriteCubeMapSamplersAs2DArray(this, root, &getSymbolTable(),
                                              getShaderType() == GL_FRAGMENT_SHADER))
@@ -923,7 +923,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
     if (gl::ShaderTypeSupportsTransformFeedback(packedShaderType))
     {
-        if (compileOptions & SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE)
+        if ((compileOptions & SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE) != 0)
         {
             // Add support code for transform feedback extension.
             if (!AddXfbExtensionSupport(this, root, &getSymbolTable(), driverUniforms))
@@ -933,7 +933,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         }
 
         // Append a macro for transform feedback substitution prior to modifying depth.
-        if (compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE)
+        if ((compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE) != 0)
         {
             if (!AppendTransformFeedbackOutputToMain(this, root, &getSymbolTable()))
             {
@@ -977,7 +977,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 }
             }
 
-            if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
+            if ((compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION) != 0)
             {
                 if (!AddBresenhamEmulationFS(this, compileOptions, sink, root, &getSymbolTable(),
                                              specConst, driverUniforms, usesFragCoord))
@@ -988,7 +988,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
             bool hasGLFragColor  = false;
             bool hasGLFragData   = false;
-            bool usePreRotation  = compileOptions & SH_ADD_PRE_ROTATION;
+            bool usePreRotation  = (compileOptions & SH_ADD_PRE_ROTATION) != 0;
             bool hasGLSampleMask = false;
 
             for (const ShaderVariable &outputVar : mOutputVariables)
@@ -1103,7 +1103,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
 
         case gl::ShaderType::Vertex:
         {
-            if (compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION)
+            if ((compileOptions & SH_ADD_BRESENHAM_LINE_RASTER_EMULATION) != 0)
             {
                 if (!AddBresenhamEmulationVS(this, root, &getSymbolTable(), specConst,
                                              driverUniforms))
@@ -1112,7 +1112,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 }
             }
 
-            if (compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE)
+            if ((compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE) != 0)
             {
                 // Add support code for transform feedback emulation.  Only applies to vertex shader
                 // as tessellation and geometry shader transform feedback capture require
@@ -1191,7 +1191,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     if (!emulatePrecisionIfNeeded(root, sink, &precisionEmulation, SH_GLSL_VULKAN_OUTPUT))
         return false;
 
-    bool enablePrecision = ((compileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0);
+    bool enablePrecision = (compileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0;
 
     TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
                                  getNameMap(), &getSymbolTable(), getShaderType(),
@@ -1200,7 +1200,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 
     SpecConst specConst(&getSymbolTable(), compileOptions);
 
-    if (compileOptions & SH_USE_SPECIALIZATION_CONSTANT)
+    if ((compileOptions & SH_USE_SPECIALIZATION_CONSTANT) != 0)
     {
         DriverUniform driverUniforms;
         if (!translateImpl(root, compileOptions, perfDiagnostics, &specConst, &driverUniforms,
