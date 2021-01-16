@@ -34,7 +34,6 @@ class SpecConst
     TIntermTyped *getMultiplierYForDFdx();
     TIntermTyped *getMultiplierXForDFdy();
     TIntermTyped *getMultiplierYForDFdy();
-    TIntermTyped *getPreRotationMatrix();
     TIntermTyped *getFragRotationMatrix();
     TIntermTyped *getFlipXY();
     TIntermTyped *getNegFlipXY();

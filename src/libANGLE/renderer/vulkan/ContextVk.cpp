@@ -95,9 +95,6 @@ struct GraphicsDriverUniformsExtended
     std::array<float, 2> negFlipXY;
     std::array<int32_t, 2> padding;
 
-    // Used to pre-rotate gl_Position for swapchain images on Android (a mat2, which is padded to
-    // the size of two vec4's).
-    std::array<float, 8> preRotation;
     // Used to pre-rotate gl_FragCoord for swapchain images on Android (a mat2, which is padded to
     // the size of two vec4's).
     std::array<float, 8> fragRotation;
@@ -191,31 +188,12 @@ bool IsRenderPassStartedAndUsesImage(const vk::CommandBufferHelper &renderPassCo
 }
 
 // When an Android surface is rotated differently than the device's native orientation, ANGLE must
-// rotate gl_Position in the vertex shader and gl_FragCoord in the fragment shader.  The following
-// are the rotation matrices used.
+// rotate gl_Position in the last pre-rasterization shader and gl_FragCoord in the fragment shader.
+// Rotation of gl_Position is done in SPIR-V.  The following are the rotation matrices for the
+// fragment shader.
 //
 // Note: these are mat2's that are appropriately padded (4 floats per row).
 using PreRotationMatrixValues = std::array<float, 8>;
-constexpr angle::PackedEnumMap<rx::SurfaceRotation,
-                               PreRotationMatrixValues,
-                               angle::EnumSize<rx::SurfaceRotation>()>
-    kPreRotationMatrices = {
-        {{rx::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotation::Rotated90Degrees,
-          {{0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotation::Rotated180Degrees,
-          {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotation::Rotated270Degrees,
-          {{0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotation::FlippedIdentity,
-          {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotation::FlippedRotated90Degrees,
-          {{0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotation::FlippedRotated180Degrees,
-          {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
-         {rx::SurfaceRotation::FlippedRotated270Degrees,
-          {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}}}};
-
 constexpr angle::PackedEnumMap<rx::SurfaceRotation,
                                PreRotationMatrixValues,
                                angle::EnumSize<rx::SurfaceRotation>()>
@@ -3215,9 +3193,15 @@ void ContextVk::updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageB
     bool yFlipped =
         isViewportFlipEnabledForDrawFBO() && usageBits.test(sh::vk::SpecConstUsage::YFlip);
 
+    // usageBits are only set when specialization constants are used.  With gl_Position pre-rotation
+    // handled by the SPIR-V transformer, we need to have this information even when the driver
+    // uniform path is taken to pre-rotate everything else.
+    const bool programUsesRotation = usageBits.test(sh::vk::SpecConstUsage::Rotation) ||
+                                     getFeatures().forceDriverUniformOverSpecConst.enabled;
+
     // If program is not using rotation at all, we force it to use the Identity or FlippedIdentity
     // slot to improve the program cache hit rate
-    if (!usageBits.test(sh::vk::SpecConstUsage::Rotation))
+    if (!programUsesRotation)
     {
         rotationAndFlip = yFlipped ? SurfaceRotation::FlippedIdentity : SurfaceRotation::Identity;
     }
@@ -3842,9 +3826,6 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
         driverUniformsExt->halfRenderArea = {halfRenderAreaWidth, halfRenderAreaHeight};
         driverUniformsExt->flipXY         = {flipX, flipY};
         driverUniformsExt->negFlipXY      = {flipX, -flipY};
-        memcpy(&driverUniformsExt->preRotation,
-               &kPreRotationMatrices[mCurrentRotationDrawFramebuffer],
-               sizeof(PreRotationMatrixValues));
         memcpy(&driverUniformsExt->fragRotation,
                &kFragRotationMatrices[mCurrentRotationDrawFramebuffer],
                sizeof(PreRotationMatrixValues));
