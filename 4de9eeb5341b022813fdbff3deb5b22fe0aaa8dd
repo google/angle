@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe277f47_c89105a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-16T23:14:48Z",
+      "side": 1,
+      "message": "Lifted one too many GL suppressions. Vulkan tests are green.",
+      "revId": "4de9eeb5341b022813fdbff3deb5b22fe0aaa8dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
