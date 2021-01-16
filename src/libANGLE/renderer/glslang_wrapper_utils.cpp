@@ -59,9 +59,7 @@ namespace rx
 {
 namespace
 {
-constexpr char kXfbDeclMarker[]    = "@@ XFB-DECL @@";
-constexpr char kXfbOutMarker[]     = "@@ XFB-OUT @@;";
-constexpr char kXfbBuiltInPrefix[] = "xfbANGLE";
+constexpr char kXfbOutMarker[] = "@@ XFB-OUT @@;";
 
 template <size_t N>
 constexpr size_t ConstStrLen(const char (&)[N])
@@ -288,30 +286,22 @@ ShaderInterfaceVariableInfo *SetXfbInfo(ShaderInterfaceVariableInfoMap *infoMap,
 }
 
 std::string SubstituteTransformFeedbackMarkers(const std::string &originalSource,
-                                               const std::string &xfbDecl,
                                                const std::string &xfbOut)
 {
-    const size_t xfbDeclMarkerStart = originalSource.find(kXfbDeclMarker);
-    const size_t xfbDeclMarkerEnd   = xfbDeclMarkerStart + ConstStrLen(kXfbDeclMarker);
-
-    const size_t xfbOutMarkerStart = originalSource.find(kXfbOutMarker, xfbDeclMarkerStart);
+    const size_t xfbOutMarkerStart = originalSource.find(kXfbOutMarker);
     const size_t xfbOutMarkerEnd   = xfbOutMarkerStart + ConstStrLen(kXfbOutMarker);
 
     // The shader is the following form:
     //
     // ..part1..
-    // @@ XFB-DECL @@
-    // ..part2..
     // @@ XFB-OUT @@;
-    // ..part3..
+    // ..part2..
     //
-    // Construct the string by concatenating these five pieces, replacing the markers with the given
-    // values.
+    // Construct the string by concatenating these three pieces, replacing the marker with the given
+    // value.
     std::string result;
 
-    result.append(&originalSource[0], &originalSource[xfbDeclMarkerStart]);
-    result.append(xfbDecl);
-    result.append(&originalSource[xfbDeclMarkerEnd], &originalSource[xfbOutMarkerStart]);
+    result.append(&originalSource[0], &originalSource[xfbOutMarkerStart]);
     result.append(xfbOut);
     result.append(&originalSource[xfbOutMarkerEnd], &originalSource[originalSource.size()]);
 
@@ -393,6 +383,50 @@ void AssignTransformFeedbackEmulationBindings(gl::ShaderType shaderType,
     }
 }
 
+void AssignTransformFeedbackExtensionLocations(gl::ShaderType shaderType,
+                                               const gl::ProgramState &programState,
+                                               bool isTransformFeedbackStage,
+                                               GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                               ShaderInterfaceVariableInfoMap *variableInfoMapOut)
+{
+    // The only varying that requires additional resources is gl_Position, as it's indirectly
+    // captured through ANGLEXfbPosition.
+
+    const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
+        programState.getLinkedTransformFeedbackVaryings();
+
+    bool capturesPosition = false;
+
+    if (isTransformFeedbackStage)
+    {
+        for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
+        {
+            const gl::TransformFeedbackVarying &tfVarying = tfVaryings[varyingIndex];
+            const std::string &tfVaryingName              = tfVarying.mappedName;
+
+            if (tfVaryingName == "gl_Position")
+            {
+                ASSERT(tfVarying.isBuiltIn());
+                capturesPosition = true;
+                break;
+            }
+        }
+    }
+
+    if (capturesPosition)
+    {
+        AddLocationInfo(variableInfoMapOut, shaderType, sh::vk::kXfbExtensionPositionOutName,
+                        programInterfaceInfo->locationsUsedForXfbExtension, 0, 0, 0);
+        ++programInterfaceInfo->locationsUsedForXfbExtension;
+    }
+    else
+    {
+        // Make sure this varying is removed from the other stages, or if position is not captured
+        // at all.
+        variableInfoMapOut->add(shaderType, sh::vk::kXfbExtensionPositionOutName);
+    }
+}
+
 void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &options,
                                                gl::ShaderType shaderType,
                                                const gl::ProgramState &programState,
@@ -449,7 +483,7 @@ void GenerateTransformFeedbackEmulationOutputs(const GlslangSourceOptions &optio
     }
     xfbOut << "}\n";
 
-    *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, "", xfbOut.str());
+    *vertexShader = SubstituteTransformFeedbackMarkers(*vertexShader, xfbOut.str());
 }
 
 bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool allowFields)
@@ -485,14 +519,11 @@ bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool 
 // Calculates XFB layout qualifier arguments for each tranform feedback varying.  Stores calculated
 // values for the SPIR-V transformation.
 void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programState,
-                                               const gl::VaryingPacking &varyingPacking,
-                                               std::string *xfbShaderSource,
-                                               uint32_t *locationsUsedForXfbExtensionOut)
+                                               std::string *xfbShaderSource)
 {
     const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
         programState.getLinkedTransformFeedbackVaryings();
 
-    std::string xfbDecl;
     std::string xfbOut;
 
     for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
@@ -504,25 +535,14 @@ void GenerateTransformFeedbackExtensionOutputs(const gl::ProgramState &programSt
         {
             ASSERT(tfVarying.isBuiltIn());
 
-            // For gl_Position, create a copy of the builtin so xfb qualifiers could be added to
-            // that instead.  gl_Position is modified by the shader (to account for Vulkan depth
-            // clip space and prerotation), so it cannot be captured directly.
-            //
-            // The rest of the builtins are captured by decorating gl_PerVertex directly.
-            uint32_t xfbVaryingLocation =
-                varyingPacking.getMaxSemanticIndex() + ++(*locationsUsedForXfbExtensionOut);
-
-            std::string xfbVaryingName = kXfbBuiltInPrefix + tfVaryingName;
-
-            // Add declaration and initialization code for the new varying.
-            std::string varyingType = gl::GetGLSLTypeString(tfVarying.type);
-            xfbDecl += "layout(location = " + Str(xfbVaryingLocation) + ") out " + varyingType +
-                       " " + xfbVaryingName + ";\n";
-            xfbOut += xfbVaryingName + " = " + tfVaryingName + ";\n";
+            // Add initialization code for the position varying.
+            xfbOut = sh::vk::kXfbExtensionPositionOutName;
+            xfbOut += " = " + tfVaryingName + ";\n";
+            break;
         }
     }
 
-    *xfbShaderSource = SubstituteTransformFeedbackMarkers(*xfbShaderSource, xfbDecl, xfbOut);
+    *xfbShaderSource = SubstituteTransformFeedbackMarkers(*xfbShaderSource, xfbOut);
 }
 
 void AssignAttributeLocations(const gl::ProgramExecutable &programExecutable,
@@ -707,7 +727,6 @@ void AssignVaryingLocations(const GlslangSourceOptions &options,
 // values for the SPIR-V transformation.
 void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &programExecutable,
                                                 const gl::VaryingPacking &varyingPacking,
-                                                uint32_t locationsUsedForXfbExtension,
                                                 const gl::ShaderType shaderType,
                                                 ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
@@ -717,12 +736,9 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
     const bool isInterleaved =
         programExecutable.getTransformFeedbackBufferMode() == GL_INTERLEAVED_ATTRIBS;
 
-    std::string xfbDecl;
-    std::string xfbOut;
-    uint32_t currentOffset          = 0;
-    uint32_t currentStride          = 0;
-    uint32_t bufferIndex            = 0;
-    uint32_t currentBuiltinLocation = 0;
+    uint32_t currentOffset = 0;
+    uint32_t currentStride = 0;
+    uint32_t bufferIndex   = 0;
 
     for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
     {
@@ -749,15 +765,8 @@ void AssignTransformFeedbackExtensionQualifiers(const gl::ProgramExecutable &pro
         {
             if (tfVarying.name == "gl_Position")
             {
-                uint32_t xfbVaryingLocation = currentBuiltinLocation++;
-                std::string xfbVaryingName  = kXfbBuiltInPrefix + tfVarying.mappedName;
-
-                ASSERT(xfbVaryingLocation < locationsUsedForXfbExtension);
-
-                AddLocationInfo(variableInfoMapOut, shaderType, xfbVaryingName, xfbVaryingLocation,
-                                ShaderInterfaceVariableInfo::kInvalid, 0, 0);
-                SetXfbInfo(variableInfoMapOut, shaderType, xfbVaryingName, -1, bufferIndex,
-                           currentOffset, currentStride);
+                SetXfbInfo(variableInfoMapOut, shaderType, sh::vk::kXfbExtensionPositionOutName, -1,
+                           bufferIndex, currentOffset, currentStride);
             }
             else
             {
@@ -4354,6 +4363,15 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
         const gl::VaryingPacking &inputPacking  = varyingPacking.getInputPacking(shaderType);
         const gl::VaryingPacking &outputPacking = varyingPacking.getOutputPacking(shaderType);
 
+        // Assign location to varyings generated for transform feedback capture
+        if (options.supportsTransformFeedbackExtension &&
+            gl::ShaderTypeSupportsTransformFeedback(shaderType))
+        {
+            AssignTransformFeedbackExtensionLocations(shaderType, programState,
+                                                      isTransformFeedbackStage,
+                                                      programInterfaceInfo, variableInfoMapOut);
+        }
+
         // Assign varying locations.
         if (shaderType != gl::ShaderType::Vertex)
         {
@@ -4366,13 +4384,13 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
                                    programInterfaceInfo, variableInfoMapOut);
         }
 
+        // Assign qualifiers to all varyings captured by transform feedback
         if (!programExecutable.getLinkedTransformFeedbackVaryings().empty() &&
             options.supportsTransformFeedbackExtension &&
             (shaderType == programExecutable.getLinkedTransformFeedbackStage()))
         {
-            AssignTransformFeedbackExtensionQualifiers(
-                programExecutable, outputPacking,
-                programInterfaceInfo->locationsUsedForXfbExtension, shaderType, variableInfoMapOut);
+            AssignTransformFeedbackExtensionQualifiers(programExecutable, outputPacking, shaderType,
+                                                       variableInfoMapOut);
         }
     }
 
@@ -4413,9 +4431,7 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
         {
             if (options.supportsTransformFeedbackExtension)
             {
-                GenerateTransformFeedbackExtensionOutputs(
-                    programState, resources.varyingPacking.getOutputPacking(xfbStage), xfbSource,
-                    &programInterfaceInfo->locationsUsedForXfbExtension);
+                GenerateTransformFeedbackExtensionOutputs(programState, xfbSource);
             }
             else if (options.emulateTransformFeedback)
             {
@@ -4426,25 +4442,25 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
             }
             else
             {
-                *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "", "");
+                *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "");
             }
         }
         else
         {
-            *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "", "");
+            *xfbSource = SubstituteTransformFeedbackMarkers(*xfbSource, "");
         }
     }
 
     std::string *tessEvalSources = &(*shaderSourcesOut)[gl::ShaderType::TessEvaluation];
     if (xfbStage > gl::ShaderType::TessEvaluation && !tessEvalSources->empty())
     {
-        *tessEvalSources = SubstituteTransformFeedbackMarkers(*tessEvalSources, "", "");
+        *tessEvalSources = SubstituteTransformFeedbackMarkers(*tessEvalSources, "");
     }
 
     std::string *vertexSource = &(*shaderSourcesOut)[gl::ShaderType::Vertex];
     if (xfbStage > gl::ShaderType::Vertex && !vertexSource->empty())
     {
-        *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "", "");
+        *vertexSource = SubstituteTransformFeedbackMarkers(*vertexSource, "");
     }
 
     gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
