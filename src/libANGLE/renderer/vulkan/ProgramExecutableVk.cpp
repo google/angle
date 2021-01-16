@@ -28,15 +28,12 @@ bool ValidateTransformedSpirV(ContextVk *contextVk,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::ShaderMap<SpirvBlob> &spirvBlobs)
 {
-    const gl::ShaderType lastPreFragmentStage = gl::GetLastPreFragmentStage(linkedShaderStages);
-
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
         GlslangSpirvOptions options;
         options.shaderType               = shaderType;
-        options.preRotation              = SurfaceRotation::FlippedRotated90Degrees;
         options.removeDebugInfo          = true;
-        options.isTransformFeedbackStage = shaderType == lastPreFragmentStage;
+        options.isTransformFeedbackStage = shaderType == gl::ShaderType::Vertex;
 
         SpirvBlob transformed;
         if (GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
@@ -120,7 +117,6 @@ ProgramInfo::~ProgramInfo() = default;
 
 angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
                                        const gl::ShaderType shaderType,
-                                       bool isLastPreFragmentStage,
                                        const ShaderInfo &shaderInfo,
                                        ProgramTransformOptions optionBits,
                                        const ShaderInterfaceVariableInfoMap &variableInfoMap)
@@ -135,12 +131,7 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     options.removeEarlyFragmentTestsOptimization =
         shaderType == gl::ShaderType::Fragment && optionBits.removeEarlyFragmentTestsOptimization;
     options.removeDebugInfo          = !contextVk->getRenderer()->getEnableValidationLayers();
-    options.isTransformFeedbackStage = isLastPreFragmentStage;
-
-    if (isLastPreFragmentStage)
-    {
-        options.preRotation = static_cast<SurfaceRotation>(optionBits.surfaceRotation);
-    }
+    options.isTransformFeedbackStage = shaderType == gl::ShaderType::Vertex;
 
     ANGLE_TRY(GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
                                                originalSpirvBlob, &transformedSpirvBlob));
@@ -698,18 +689,14 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
     mTransformOptions.surfaceRotation           = ToUnderlying(desc.getSurfaceRotation());
 
     // This must be called after mTransformOptions have been set.
-    ProgramInfo &programInfo                  = getGraphicsProgramInfo(mTransformOptions);
-    const gl::ShaderBitSet linkedShaderStages = glExecutable->getLinkedShaderStages();
-    const gl::ShaderType lastPreFragmentStage = gl::GetLastPreFragmentStage(linkedShaderStages);
-
-    for (const gl::ShaderType shaderType : linkedShaderStages)
+    ProgramInfo &programInfo = getGraphicsProgramInfo(mTransformOptions);
+    for (const gl::ShaderType shaderType : glExecutable->getLinkedShaderStages())
     {
         ProgramVk *programVk = getShaderProgram(glState, shaderType);
         if (programVk)
         {
-            ANGLE_TRY(programVk->initGraphicsShaderProgram(
-                contextVk, shaderType, shaderType == lastPreFragmentStage, mTransformOptions,
-                &programInfo, mVariableInfoMap));
+            ANGLE_TRY(programVk->initGraphicsShaderProgram(contextVk, shaderType, mTransformOptions,
+                                                           &programInfo, mVariableInfoMap));
         }
     }
 

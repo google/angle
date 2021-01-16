@@ -44,6 +44,7 @@ class DriverUniform
     virtual TIntermBinary *getFlipXYRef() const { return nullptr; }
     virtual TIntermBinary *getNegFlipXYRef() const { return nullptr; }
     virtual TIntermBinary *getFragRotationMatrixRef() const { return nullptr; }
+    virtual TIntermBinary *getPreRotationMatrixRef() const { return nullptr; }
     virtual TIntermBinary *getHalfRenderAreaRef() const { return nullptr; }
     virtual TIntermSwizzle *getNegFlipYRef() const { return nullptr; }
 
@@ -64,6 +65,7 @@ class DriverUniformExtended : public DriverUniform
     TIntermBinary *getFlipXYRef() const override;
     TIntermBinary *getNegFlipXYRef() const override;
     TIntermBinary *getFragRotationMatrixRef() const override;
+    TIntermBinary *getPreRotationMatrixRef() const override;
     TIntermBinary *getHalfRenderAreaRef() const override;
     TIntermSwizzle *getNegFlipYRef() const override;
 

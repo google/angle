@@ -305,6 +305,39 @@ ANGLE_NO_DISCARD bool AppendVertexShaderDepthCorrectionToMain(TCompiler *compile
     return RunAtTheEndOfShader(compiler, root, assignment, symbolTable);
 }
 
+// This operation performs Android pre-rotation and y-flip.  For Android (and potentially other
+// platforms), the device may rotate, such that the orientation of the application is rotated
+// relative to the native orientation of the device.  This is corrected in part by multiplying
+// gl_Position by a mat2.
+// The equations reduce to an expression:
+//
+//     gl_Position.xy = gl_Position.xy * preRotation
+ANGLE_NO_DISCARD bool AppendPreRotation(TCompiler *compiler,
+                                        TIntermBlock *root,
+                                        TSymbolTable *symbolTable,
+                                        SpecConst *specConst,
+                                        const DriverUniform *driverUniforms)
+{
+    TIntermTyped *preRotationRef = specConst->getPreRotationMatrix();
+    if (!preRotationRef)
+    {
+        preRotationRef = driverUniforms->getPreRotationMatrixRef();
+    }
+    TIntermSymbol *glPos         = new TIntermSymbol(BuiltInVariable::gl_Position());
+    TVector<int> swizzleOffsetXY = {0, 1};
+    TIntermSwizzle *glPosXY      = new TIntermSwizzle(glPos, swizzleOffsetXY);
+
+    // Create the expression "(gl_Position.xy * preRotation)"
+    TIntermBinary *zRotated = new TIntermBinary(EOpMatrixTimesVector, preRotationRef, glPosXY);
+
+    // Create the assignment "gl_Position.xy = (gl_Position.xy * preRotation)"
+    TIntermBinary *assignment =
+        new TIntermBinary(TOperator::EOpAssign, glPosXY->deepCopy(), zRotated);
+
+    // Append the assignment as a statement at the end of the shader.
+    return RunAtTheEndOfShader(compiler, root, assignment, symbolTable);
+}
+
 ANGLE_NO_DISCARD bool AppendTransformFeedbackOutputToMain(TCompiler *compiler,
                                                           TIntermBlock *root,
                                                           TSymbolTable *symbolTable)
@@ -1120,6 +1153,11 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 return false;
             }
             if (!AppendVertexShaderDepthCorrectionToMain(this, root, &getSymbolTable()))
+            {
+                return false;
+            }
+            if ((compileOptions & SH_ADD_PRE_ROTATION) != 0 &&
+                !AppendPreRotation(this, root, &getSymbolTable(), specConst, driverUniforms))
             {
                 return false;
             }

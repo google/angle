@@ -148,13 +148,11 @@ class ProgramVk : public ProgramImpl
     ANGLE_INLINE angle::Result initGraphicsShaderProgram(
         ContextVk *contextVk,
         const gl::ShaderType shaderType,
-        bool isLastPreFragmentStage,
         ProgramTransformOptions optionBits,
         ProgramInfo *programInfo,
         const ShaderInterfaceVariableInfoMap &variableInfoMap)
     {
-        return initProgram(contextVk, shaderType, isLastPreFragmentStage, optionBits, programInfo,
-                           variableInfoMap);
+        return initProgram(contextVk, shaderType, optionBits, programInfo, variableInfoMap);
     }
 
     ANGLE_INLINE angle::Result initComputeProgram(
@@ -163,7 +161,7 @@ class ProgramVk : public ProgramImpl
         const ShaderInterfaceVariableInfoMap &variableInfoMap)
     {
         ProgramTransformOptions optionBits = {};
-        return initProgram(contextVk, gl::ShaderType::Compute, false, optionBits, programInfo,
+        return initProgram(contextVk, gl::ShaderType::Compute, optionBits, programInfo,
                            variableInfoMap);
     }
 
@@ -196,7 +194,6 @@ class ProgramVk : public ProgramImpl
 
     ANGLE_INLINE angle::Result initProgram(ContextVk *contextVk,
                                            const gl::ShaderType shaderType,
-                                           bool isLastPreFragmentStage,
                                            ProgramTransformOptions optionBits,
                                            ProgramInfo *programInfo,
                                            const ShaderInterfaceVariableInfoMap &variableInfoMap)
@@ -207,8 +204,8 @@ class ProgramVk : public ProgramImpl
         // specialization constants.
         if (!programInfo->valid(shaderType))
         {
-            ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, isLastPreFragmentStage,
-                                               mOriginalShaderInfo, optionBits, variableInfoMap));
+            ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, mOriginalShaderInfo,
+                                               optionBits, variableInfoMap));
         }
         ASSERT(programInfo->valid(shaderType));
 

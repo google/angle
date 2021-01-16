@@ -12,7 +12,6 @@
 #include <functional>
 
 #include "libANGLE/renderer/ProgramImpl.h"
-#include "libANGLE/renderer/renderer_utils.h"
 
 namespace rx
 {
@@ -57,7 +56,6 @@ struct GlslangSourceOptions
 struct GlslangSpirvOptions
 {
     gl::ShaderType shaderType                 = gl::ShaderType::InvalidEnum;
-    SurfaceRotation preRotation               = SurfaceRotation::Identity;
     bool removeEarlyFragmentTestsOptimization = false;
     bool removeDebugInfo                      = false;
     bool isTransformFeedbackStage             = false;

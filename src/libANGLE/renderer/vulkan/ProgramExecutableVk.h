@@ -67,7 +67,6 @@ class ProgramInfo final : angle::NonCopyable
 
     angle::Result initProgram(ContextVk *contextVk,
                               const gl::ShaderType shaderType,
-                              bool isLastPreFragmentStage,
                               const ShaderInfo &shaderInfo,
                               ProgramTransformOptions optionBits,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap);

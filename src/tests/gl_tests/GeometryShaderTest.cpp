@@ -1348,6 +1348,9 @@ TEST_P(GeometryShaderTest, Prerotation)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
 
+    // http://anglebug.com/5478
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
     constexpr char kVS[] = R"(#version 310 es
 void main()
 {

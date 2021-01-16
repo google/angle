@@ -36,6 +36,7 @@ constexpr const char kNumSamples[]             = "numSamples";
 constexpr const char kHalfRenderArea[] = "halfRenderArea";
 constexpr const char kFlipXY[]         = "flipXY";
 constexpr const char kNegFlipXY[]      = "negFlipXY";
+constexpr const char kPreRotation[]    = "preRotation";
 constexpr const char kFragRotation[]   = "fragRotation";
 }  // anonymous namespace
 
@@ -217,15 +218,17 @@ TFieldList *DriverUniformExtended::createUniformFields(TSymbolTable *symbolTable
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 
-    constexpr size_t kNumGraphicsDriverUniformsExt = 4;
+    constexpr size_t kNumGraphicsDriverUniformsExt = 5;
     constexpr std::array<const char *, kNumGraphicsDriverUniformsExt>
-        kGraphicsDriverUniformNamesExt = {{kHalfRenderArea, kFlipXY, kNegFlipXY, kFragRotation}};
+        kGraphicsDriverUniformNamesExt = {
+            {kHalfRenderArea, kFlipXY, kNegFlipXY, kPreRotation, kFragRotation}};
 
     const std::array<TType *, kNumGraphicsDriverUniformsExt> kDriverUniformTypesExt = {{
         new TType(EbtFloat, 2),
         new TType(EbtFloat, 2),
         new TType(EbtFloat, 2),
         // NOTE: There's a vec2 gap here that can be used in the future
+        new TType(EbtFloat, 2, 2),
         new TType(EbtFloat, 2, 2),
     }};
 
@@ -263,6 +266,11 @@ TIntermSwizzle *DriverUniformExtended::getNegFlipYRef() const
 TIntermBinary *DriverUniformExtended::getFragRotationMatrixRef() const
 {
     return createDriverUniformRef(kFragRotation);
+}
+
+TIntermBinary *DriverUniformExtended::getPreRotationMatrixRef() const
+{
+    return createDriverUniformRef(kPreRotation);
 }
 
 TIntermBinary *DriverUniformExtended::getHalfRenderAreaRef() const

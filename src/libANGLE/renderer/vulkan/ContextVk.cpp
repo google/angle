@@ -95,6 +95,9 @@ struct GraphicsDriverUniformsExtended
     std::array<float, 2> negFlipXY;
     std::array<int32_t, 2> padding;
 
+    // Used to pre-rotate gl_Position for swapchain images on Android (a mat2, which is padded to
+    // the size of two vec4's).
+    std::array<float, 8> preRotation;
     // Used to pre-rotate gl_FragCoord for swapchain images on Android (a mat2, which is padded to
     // the size of two vec4's).
     std::array<float, 8> fragRotation;
@@ -188,12 +191,31 @@ bool IsRenderPassStartedAndUsesImage(const vk::CommandBufferHelper &renderPassCo
 }
 
 // When an Android surface is rotated differently than the device's native orientation, ANGLE must
-// rotate gl_Position in the last pre-rasterization shader and gl_FragCoord in the fragment shader.
-// Rotation of gl_Position is done in SPIR-V.  The following are the rotation matrices for the
-// fragment shader.
+// rotate gl_Position in the vertex shader and gl_FragCoord in the fragment shader.  The following
+// are the rotation matrices used.
 //
 // Note: these are mat2's that are appropriately padded (4 floats per row).
 using PreRotationMatrixValues = std::array<float, 8>;
+constexpr angle::PackedEnumMap<rx::SurfaceRotation,
+                               PreRotationMatrixValues,
+                               angle::EnumSize<rx::SurfaceRotation>()>
+    kPreRotationMatrices = {
+        {{rx::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::Rotated90Degrees,
+          {{0.0f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::Rotated180Degrees,
+          {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::Rotated270Degrees,
+          {{0.0f, 1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::FlippedIdentity,
+          {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::FlippedRotated90Degrees,
+          {{0.0f, -1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::FlippedRotated180Degrees,
+          {{-1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f}}},
+         {rx::SurfaceRotation::FlippedRotated270Degrees,
+          {{0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f}}}}};
+
 constexpr angle::PackedEnumMap<rx::SurfaceRotation,
                                PreRotationMatrixValues,
                                angle::EnumSize<rx::SurfaceRotation>()>
@@ -3823,6 +3845,9 @@ angle::Result ContextVk::handleDirtyGraphicsDriverUniforms(const gl::Context *co
         driverUniformsExt->halfRenderArea = {halfRenderAreaWidth, halfRenderAreaHeight};
         driverUniformsExt->flipXY         = {flipX, flipY};
         driverUniformsExt->negFlipXY      = {flipX, -flipY};
+        memcpy(&driverUniformsExt->preRotation,
+               &kPreRotationMatrices[mCurrentRotationDrawFramebuffer],
+               sizeof(PreRotationMatrixValues));
         memcpy(&driverUniformsExt->fragRotation,
                &kFragRotationMatrices[mCurrentRotationDrawFramebuffer],
                sizeof(PreRotationMatrixValues));
