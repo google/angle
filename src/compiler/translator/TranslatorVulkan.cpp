@@ -935,12 +935,9 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         }
 
         // Append a macro for transform feedback substitution prior to modifying depth.
-        if (compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE)
+        if (!AppendTransformFeedbackOutputToMain(this, root, &getSymbolTable()))
         {
-            if (!AppendTransformFeedbackOutputToMain(this, root, &getSymbolTable()))
-            {
-                return false;
-            }
+            return false;
         }
     }
 
