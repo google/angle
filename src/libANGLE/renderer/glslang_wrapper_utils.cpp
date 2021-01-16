@@ -1189,8 +1189,6 @@ class SpirvTransformerBase : angle::NonCopyable
                                  const angle::FixedVector<uint32_t, 4> &constituents);
     void writeCompositeExtract(uint32_t id, uint32_t typeId, uint32_t compositeId, uint32_t field);
     void writeConstant(uint32_t id, uint32_t typeId, uint32_t value);
-    void writeFAdd(uint32_t id, uint32_t typeId, uint32_t operand1, uint32_t operand2);
-    void writeFMul(uint32_t id, uint32_t typeId, uint32_t operand1, uint32_t operand2);
     void writeFNegate(uint32_t id, uint32_t typeId, uint32_t operand);
     void writeLoad(uint32_t id, uint32_t typeId, uint32_t pointerId);
     void writeMemberDecorate(uint32_t typeId, uint32_t member, uint32_t decoration, uint32_t value);
@@ -1396,56 +1394,6 @@ void SpirvTransformerBase::writeConstant(uint32_t id, uint32_t typeId, uint32_t 
     constant[kValueIndex]  = value;
 
     copyInstruction(constant.data(), kConstantInstructionLength);
-}
-
-void SpirvTransformerBase::writeFAdd(uint32_t id,
-                                     uint32_t typeId,
-                                     uint32_t operand1,
-                                     uint32_t operand2)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpFAdd
-    constexpr size_t kTypeIdIndex           = 1;
-    constexpr size_t kIdIndex               = 2;
-    constexpr size_t kOperand1Index         = 3;
-    constexpr size_t kOperand2Index         = 4;
-    constexpr size_t kFAddInstructionLength = 5;
-
-    std::array<uint32_t, kFAddInstructionLength> fAdd = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(fAdd.data(), spv::OpFAdd);
-    SetSpirvInstructionLength(fAdd.data(), kFAddInstructionLength);
-    fAdd[kTypeIdIndex]   = typeId;
-    fAdd[kIdIndex]       = id;
-    fAdd[kOperand1Index] = operand1;
-    fAdd[kOperand2Index] = operand2;
-
-    copyInstruction(fAdd.data(), kFAddInstructionLength);
-}
-
-void SpirvTransformerBase::writeFMul(uint32_t id,
-                                     uint32_t typeId,
-                                     uint32_t operand1,
-                                     uint32_t operand2)
-{
-    // SPIR-V 1.0 Section 3.32 Instructions, OpFMul
-    constexpr size_t kTypeIdIndex           = 1;
-    constexpr size_t kIdIndex               = 2;
-    constexpr size_t kOperand1Index         = 3;
-    constexpr size_t kOperand2Index         = 4;
-    constexpr size_t kFMulInstructionLength = 5;
-
-    std::array<uint32_t, kFMulInstructionLength> fMul = {};
-
-    // Fill the fields.
-    SetSpirvInstructionOp(fMul.data(), spv::OpFMul);
-    SetSpirvInstructionLength(fMul.data(), kFMulInstructionLength);
-    fMul[kTypeIdIndex]   = typeId;
-    fMul[kIdIndex]       = id;
-    fMul[kOperand1Index] = operand1;
-    fMul[kOperand2Index] = operand2;
-
-    copyInstruction(fMul.data(), kFMulInstructionLength);
 }
 
 void SpirvTransformerBase::writeFNegate(uint32_t id, uint32_t typeId, uint32_t operand)
@@ -1719,7 +1667,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     void writeInputPreamble();
     void writeOutputPrologue();
     void preRotateXY(uint32_t xId, uint32_t yId, uint32_t *rotatedXIdOut, uint32_t *rotatedYIdOut);
-    void transformZToVulkanClipSpace(uint32_t zId, uint32_t wId, uint32_t *correctedZIdOut);
 
     // Special flags:
     GlslangSpirvOptions mOptions;
@@ -1778,7 +1725,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     // - mVec4OutTypePointerId: id of OpTypePointer Output %mVec4ID
     // - mIntId: id of OpTypeInt 32 1
     // - mInt0Id: id of OpConstant %mIntID 0
-    // - mFloatHalfId: id of OpConstant %mFloatId 0.5f
     // - mOutputPerVertexTypePointerId: id of OpTypePointer Output %mOutputPerVertex.typeId
     // - mOutputPerVertexId: id of OpVariable %mOutputPerVertexTypePointerId Output
     //
@@ -1787,7 +1733,6 @@ class SpirvTransformer final : public SpirvTransformerBase
     uint32_t mVec4OutTypePointerId         = 0;
     uint32_t mIntId                        = 0;
     uint32_t mInt0Id                       = 0;
-    uint32_t mFloatHalfId                  = 0;
     uint32_t mOutputPerVertexTypePointerId = 0;
     uint32_t mOutputPerVertexId            = 0;
 };
@@ -2011,9 +1956,8 @@ void SpirvTransformer::transformInstruction()
 // present in the original shader need to be done here.
 void SpirvTransformer::writePendingDeclarations()
 {
-    // Pre-rotation and transformation of depth to Vulkan clip space require declarations that may
-    // not necessarily be in the shader.
-    if (IsRotationIdentity(mOptions.preRotation) && !mOptions.transformPositionToVulkanClipSpace)
+    // Currently, only pre-rotation requires declarations that may not necessarily be in the shader.
+    if (IsRotationIdentity(mOptions.preRotation))
     {
         return;
     }
@@ -2045,12 +1989,6 @@ void SpirvTransformer::writePendingDeclarations()
     ASSERT(mInt0Id == 0);
     mInt0Id = getNewId();
     writeConstant(mInt0Id, mIntId, 0);
-
-    constexpr uint32_t kFloatHalfAsUint = 0x3F00'0000;
-
-    ASSERT(mFloatHalfId == 0);
-    mFloatHalfId = getNewId();
-    writeConstant(mFloatHalfId, mFloatId, kFloatHalfAsUint);
 }
 
 // Called by transformInstruction to insert necessary instructions for casting varyings.
@@ -2118,22 +2056,13 @@ void SpirvTransformer::writeOutputPrologue()
         }
     }
 
-    // Transform gl_Position to account for prerotation and Vulkan clip space if necessary.
-    if (mOutputPerVertexId == 0 ||
-        (IsRotationIdentity(mOptions.preRotation) && !mOptions.transformPositionToVulkanClipSpace))
+    // Transform gl_Position to account for prerotation if necessary.
+    if (mOutputPerVertexId == 0 || IsRotationIdentity(mOptions.preRotation))
     {
         return;
     }
 
-    // In GL the viewport transformation is slightly different - see the GL 2.0 spec section "2.12.1
-    // Controlling the Viewport".  In Vulkan the corresponding spec section is currently "23.4.
-    // Coordinate Transformations".  The following transformation needs to be done:
-    //
-    //     z_vk = 0.5 * (w_gl + z_gl)
-    //
-    // where z_vk is the depth output of a Vulkan geometry-stage shader and z_gl is the same for GL.
-
-    // Generate the following SPIR-V for prerotation and depth transformation:
+    // Generate the following SPIR-V for prerotation:
     //
     //     // Create an access chain to output gl_PerVertex.gl_Position, which is always at index 0.
     //     %PositionPointer = OpAccessChain %mVec4OutTypePointerId %mOutputPerVertexId %mInt0Id
@@ -2145,18 +2074,12 @@ void SpirvTransformer::writeOutputPrologue()
     //     %y = OpCompositeExtract %mFloatId %Position 1
     //     %z = OpCompositeExtract %mFloatId %Position 2
     //     %w = OpCompositeExtract %mFloatId %Position 3
-    //
     //     // Transform %x and %y based on pre-rotation.  This could include swapping the two ids
     //     // (in the transformer, no need to generate SPIR-V instructions for that), and/or
     //     // negating either component.  To negate a component, the following instruction is used:
     //     (optional:) %negated = OpFNegate %mFloatId %component
-    //
-    //     // Transform %z if necessary, based on the above formula.
-    //     %zPlusW = OpFAdd %mFloatId %z %w
-    //     %correctedZ = OpFMul %mFloatId %zPlusW %mFloatHalfId
-    //
-    //     // Create the rotated gl_Position from the rotated x and y and corrected z components.
-    //     %RotatedPosition = OpCompositeConstruct %mVec4Id %rotatedX %rotatedY %correctedZ %w
+    //     // Create the rotated gl_Position from the rotated x and y components.
+    //     %RotatedPosition = OpCompositeConstruct %mVec4Id %rotatedX %rotatedY %z %w
     //     // Store the results back in gl_Position
     //     OpStore %PositionPointer %RotatedPosition
     //
@@ -2179,11 +2102,7 @@ void SpirvTransformer::writeOutputPrologue()
     uint32_t rotatedYId = 0;
     preRotateXY(xId, yId, &rotatedXId, &rotatedYId);
 
-    uint32_t correctedZId = 0;
-    transformZToVulkanClipSpace(zId, wId, &correctedZId);
-
-    writeCompositeConstruct(rotatedPositionId, mVec4Id,
-                            {rotatedXId, rotatedYId, correctedZId, wId});
+    writeCompositeConstruct(rotatedPositionId, mVec4Id, {rotatedXId, rotatedYId, zId, wId});
     writeStore(positionPointerId, rotatedPositionId);
 }
 
@@ -2229,26 +2148,6 @@ void SpirvTransformer::preRotateXY(uint32_t xId,
         default:
             UNREACHABLE();
     }
-}
-
-void SpirvTransformer::transformZToVulkanClipSpace(uint32_t zId,
-                                                   uint32_t wId,
-                                                   uint32_t *correctedZIdOut)
-{
-    if (!mOptions.transformPositionToVulkanClipSpace)
-    {
-        *correctedZIdOut = zId;
-        return;
-    }
-
-    const uint32_t zPlusWId = getNewId();
-    *correctedZIdOut        = getNewId();
-
-    // %zPlusW = OpFAdd %mFloatId %z %w
-    writeFAdd(zPlusWId, mFloatId, zId, wId);
-
-    // %correctedZ = OpFMul %mFloatId %zPlusW %mFloatHalfId
-    writeFMul(*correctedZIdOut, mFloatId, zPlusWId, mFloatHalfId);
 }
 
 void SpirvTransformer::visitDecorate(const uint32_t *instruction)

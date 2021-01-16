@@ -265,6 +265,46 @@ ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
     return ReplaceVariableWithTyped(compiler, root, depthRangeVar, angleEmulatedDepthRangeRef);
 }
 
+// This operation performs the viewport depth translation needed by Vulkan. In GL the viewport
+// transformation is slightly different - see the GL 2.0 spec section "2.12.1 Controlling the
+// Viewport". In Vulkan the corresponding spec section is currently "23.4. Coordinate
+// Transformations".
+// The equations reduce to an expression:
+//
+//     z_vk = 0.5 * (w_gl + z_gl)
+//
+// where z_vk is the depth output of a Vulkan vertex shader and z_gl is the same for GL.
+ANGLE_NO_DISCARD bool AppendVertexShaderDepthCorrectionToMain(TCompiler *compiler,
+                                                              TIntermBlock *root,
+                                                              TSymbolTable *symbolTable)
+{
+    // Create a symbol reference to "gl_Position"
+    const TVariable *position  = BuiltInVariable::gl_Position();
+    TIntermSymbol *positionRef = new TIntermSymbol(position);
+
+    // Create a swizzle to "gl_Position.z"
+    TVector<int> swizzleOffsetZ = {2};
+    TIntermSwizzle *positionZ   = new TIntermSwizzle(positionRef, swizzleOffsetZ);
+
+    // Create a constant "0.5"
+    TIntermConstantUnion *oneHalf = CreateFloatNode(0.5f);
+
+    // Create a swizzle to "gl_Position.w"
+    TVector<int> swizzleOffsetW = {3};
+    TIntermSwizzle *positionW   = new TIntermSwizzle(positionRef->deepCopy(), swizzleOffsetW);
+
+    // Create the expression "(gl_Position.z + gl_Position.w) * 0.5".
+    TIntermBinary *zPlusW     = new TIntermBinary(EOpAdd, positionZ, positionW);
+    TIntermBinary *halfZPlusW = new TIntermBinary(EOpMul, zPlusW, oneHalf);
+
+    // Create the assignment "gl_Position.z = (gl_Position.z + gl_Position.w) * 0.5"
+    TIntermTyped *positionZLHS = positionZ->deepCopy();
+    TIntermBinary *assignment  = new TIntermBinary(TOperator::EOpAssign, positionZLHS, halfZPlusW);
+
+    // Append the assignment as a statement at the end of the shader.
+    return RunAtTheEndOfShader(compiler, root, assignment, symbolTable);
+}
+
 ANGLE_NO_DISCARD bool AppendTransformFeedbackOutputToMain(TCompiler *compiler,
                                                           TIntermBlock *root,
                                                           TSymbolTable *symbolTable)
@@ -1079,18 +1119,10 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             {
                 return false;
             }
-
-            // Work around a bug in SwiftShader where missing gl_Position causes an assertion error.
-            // This code appends gl_Position = gl_Position; to the end of the shader.
-            // b/176161380
-            TIntermSymbol *position = new TIntermSymbol(BuiltInVariable::gl_Position());
-            TIntermBinary *assignment =
-                new TIntermBinary(TOperator::EOpAssign, position, position->deepCopy());
-            if (!RunAtTheEndOfShader(this, root, assignment, &getSymbolTable()))
+            if (!AppendVertexShaderDepthCorrectionToMain(this, root, &getSymbolTable()))
             {
                 return false;
             }
-
             break;
         }
 
