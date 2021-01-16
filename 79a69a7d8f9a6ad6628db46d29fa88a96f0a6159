@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d6e30ad_9a4754cf",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3860,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-16T01:29:02Z",
+      "side": 1,
+      "message": "Are these std::max() calls necessary with the rx::roundUp() calls beforehand?   Seems like we\u0027d need one or the other, but not both.",
+      "range": {
+        "startLine": 3860,
+        "startChar": 18,
+        "endLine": 3860,
+        "endChar": 54
+      },
+      "revId": "79a69a7d8f9a6ad6628db46d29fa88a96f0a6159",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
