@@ -11,6 +11,7 @@
 // - Partially subscripted array of array of samplers
 // - Partially subscripted array of array of images
 // - Atomic counters
+// - samplerCube variables when emulating ES2's cube map sampling
 //
 // This transformation basically duplicates such functions, removes the
 // sampler/image/atomic_counter parameters and uses the opaque uniforms used by the caller.
@@ -19,16 +20,17 @@
 #define COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONSINVULKANGLSL_H_
 
 #include "common/angleutils.h"
+#include "compiler/translator/Compiler.h"
 
 namespace sh
 {
-class TCompiler;
 class TIntermBlock;
 class TSymbolTable;
 
 ANGLE_NO_DISCARD bool MonomorphizeUnsupportedFunctionsInVulkanGLSL(TCompiler *compiler,
                                                                    TIntermBlock *root,
-                                                                   TSymbolTable *symbolTable);
+                                                                   TSymbolTable *symbolTable,
+                                                                   ShCompileOptions compileOptions);
 }  // namespace sh
 
 #endif  // COMPILER_TRANSLATOR_TREEOPS_VULKAN_MONOMORPHIZEUNSUPPORTEDFUNCTIONSINVULKANGLSL_H_

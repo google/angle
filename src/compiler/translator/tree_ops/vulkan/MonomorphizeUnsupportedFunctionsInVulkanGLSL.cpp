@@ -239,9 +239,11 @@ class MonomorphizeTraverser final : public TIntermTraverser
   public:
     explicit MonomorphizeTraverser(TCompiler *compiler,
                                    TSymbolTable *symbolTable,
+                                   ShCompileOptions compileOptions,
                                    FunctionMap *functionMap)
         : TIntermTraverser(true, false, false, symbolTable),
           mCompiler(compiler),
+          mCompileOptions(compileOptions),
           mFunctionMap(functionMap)
     {}
 
@@ -314,17 +316,21 @@ class MonomorphizeTraverser final : public TIntermTraverser
             // - If the opaque uniform is an array of array of sampler or image, and it's partially
             //   subscripted (i.e. the function itself expects an array), or
             // - The opaque uniform is an atomic counter
+            // - The opaque uniform is a samplerCube and ES2's cube sampling emulation is requested.
             //
             const TType &type = uniform->getType();
             const bool isArrayOfArrayOfSamplerOrImage =
                 (type.isSampler() || type.isImage()) && type.isArrayOfArrays();
             const bool isParameterArrayOfOpaqueType = funcArgument->getType().isArray();
             const bool isAtomicCounter              = type.isAtomicCounter();
+            const bool isSamplerCubeEmulation =
+                type.isSamplerCube() &&
+                (mCompileOptions & SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING) != 0;
 
             if (!(isStructContainingSamplers ||
                   (isSamplerInStruct && isParameterArrayOfOpaqueType) ||
                   (isArrayOfArrayOfSamplerOrImage && isParameterArrayOfOpaqueType) ||
-                  isAtomicCounter))
+                  isAtomicCounter || isSamplerCubeEmulation))
             {
                 continue;
             }
@@ -375,6 +381,7 @@ class MonomorphizeTraverser final : public TIntermTraverser
     }
 
     TCompiler *mCompiler;
+    ShCompileOptions mCompileOptions;
     bool mAnyMonomorphized = false;
 
     // Map of original to monomorphized functions.
@@ -491,7 +498,8 @@ void SortDeclarations(TIntermBlock *root)
 
 bool MonomorphizeUnsupportedFunctionsInVulkanGLSL(TCompiler *compiler,
                                                   TIntermBlock *root,
-                                                  TSymbolTable *symbolTable)
+                                                  TSymbolTable *symbolTable,
+                                                  ShCompileOptions compileOptions)
 {
     // First, sort out the declarations such that all non-function declarations are placed before
     // function definitions.  This way when the function is replaced with one that references said
@@ -503,7 +511,7 @@ bool MonomorphizeUnsupportedFunctionsInVulkanGLSL(TCompiler *compiler,
         FunctionMap functionMap;
         InitializeFunctionMap(root, &functionMap);
 
-        MonomorphizeTraverser monomorphizer(compiler, symbolTable, &functionMap);
+        MonomorphizeTraverser monomorphizer(compiler, symbolTable, compileOptions, &functionMap);
         root->traverse(&monomorphizer);
 
         if (!monomorphizer.getAnyMonomorphized())

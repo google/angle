@@ -772,7 +772,8 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     // - It dramatically simplifies future transformations w.r.t to samplers in structs, array of
     //   arrays of opaque types, atomic counters etc.
     // - Avoids the need for shader*ArrayDynamicIndexing Vulkan features.
-    if (!MonomorphizeUnsupportedFunctionsInVulkanGLSL(this, root, &getSymbolTable()))
+    if (!MonomorphizeUnsupportedFunctionsInVulkanGLSL(this, root, &getSymbolTable(),
+                                                      compileOptions))
     {
         return false;
     }
