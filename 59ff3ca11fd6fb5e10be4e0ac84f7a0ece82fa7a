@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c5c3f9a_550595fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-17T07:25:52Z",
+      "side": 1,
+      "message": "I wonder if this could be moved to the front-end, in BlobCache.cpp itself.\n\nRight now MemoryProgramCache::putProgram() calls gzip, and hands the program to BlobCache. Now we call gzip here too then hand to BlobCache.\n\nWhy not have BlobCache call gzip itself, and chunk up the data if needs be? Then everybody can benefit and we won\u0027t have this duplication of logic (compress / decompress).\n\nNot blocking the change though, if that\u0027s out of the scope of your work.",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "647b17b6_9c83abb9",
@@ -53,6 +70,29 @@
         "startChar": 17,
         "endLine": 2068,
         "endChar": 47
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c5a53cc_c3676cdd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2078,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-17T07:25:52Z",
+      "side": 1,
+      "message": "nit: \"chunk index\" is not just \"for good measure\"",
+      "range": {
+        "startLine": 2078,
+        "startChar": 49,
+        "endLine": 2078,
+        "endChar": 66
       },
       "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -221,6 +261,30 @@
       "writtenOn": "2021-01-15T14:14:33Z",
       "side": 1,
       "message": "I don\u0027t understand this line, it should be \"1\" always and do nothing.",
+      "range": {
+        "startLine": 2224,
+        "startChar": 38,
+        "endLine": 2225,
+        "endChar": 64
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d00b7d3_03977e0f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-17T07:25:52Z",
+      "side": 1,
+      "message": "It\u0027s roundUp(x, y) / y, so not 1.\n\nWe have a helper for this actually: UnsignedCeilDivide",
+      "parentUuid": "919e617d_61585333",
       "range": {
         "startLine": 2224,
         "startChar": 38,
