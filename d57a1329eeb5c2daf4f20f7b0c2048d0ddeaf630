@@ -16,6 +16,138 @@
       "message": "Hi Geoff, PTAL. Thanks",
       "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9f4d917_09db6b2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-18T16:38:54Z",
+      "side": 1,
+      "message": "LGTM with a few nits",
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48c99a2b_819495ce",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 2735,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-18T16:38:54Z",
+      "side": 1,
+      "message": "ANGLE tries to respond to all queries entirely with frontend state. We can track if the context is external by looking at the attributes in the Context constructor and storing that as a member.\n\nYou can then remove the method from ContextImpl.",
+      "range": {
+        "startLine": 2735,
+        "startChar": 4,
+        "endLine": 2735,
+        "endChar": 41
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72e7d2d2_eca13879",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-18T16:38:54Z",
+      "side": 1,
+      "message": "nit: If this is only valid for the default framebuffer, call it updateDefaultFramebufferID?",
+      "range": {
+        "startLine": 1320,
+        "startChar": 20,
+        "endLine": 1320,
+        "endChar": 39
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cee27e5_548ad2fb",
+        "filename": "src/libANGLE/renderer/gl/egl/ContextEGL.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-18T16:38:54Z",
+      "side": 1,
+      "message": "nit: ANGLE avoids default parameters whenever possible. Should be very few callsites though.",
+      "range": {
+        "startLine": 27,
+        "startChar": 35,
+        "endLine": 27,
+        "endChar": 47
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99fa858a_64807a9c",
+        "filename": "src/libANGLE/renderer/gl/egl/RendererEGL.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-18T16:38:54Z",
+      "side": 1,
+      "message": "Same nit about default parameters.",
+      "range": {
+        "startLine": 27,
+        "startChar": 38,
+        "endLine": 27,
+        "endChar": 46
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06f83938_02c57dd8",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-18T16:38:54Z",
+      "side": 1,
+      "message": "mEGL-\u003e*version is the EGL version (probably 1.4) which will probably cause issues. I\u0027d just leave this with just the EGL_NONE or possibly context version 2.0 hardcoded (Android will always return the highest supported context version if you request 2.0).",
+      "range": {
+        "startLine": 464,
+        "startChar": 19,
+        "endLine": 465,
+        "endChar": 85
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
