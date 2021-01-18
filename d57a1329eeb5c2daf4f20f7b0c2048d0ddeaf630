@@ -129,6 +129,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "728025a8_ac056cf6",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-18T17:17:38Z",
+      "side": 1,
+      "message": "Nit: These (and below) could go outside the if",
+      "range": {
+        "startLine": 365,
+        "startChar": 0,
+        "endLine": 366,
+        "endChar": 61
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dfef42c_676802ab",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-18T17:17:38Z",
+      "side": 1,
+      "message": "Nit: a bit redundant since this is just the branch condition",
+      "range": {
+        "startLine": 378,
+        "startChar": 0,
+        "endLine": 378,
+        "endChar": 53
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "06f83938_02c57dd8",
         "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
         "patchSetId": 21
