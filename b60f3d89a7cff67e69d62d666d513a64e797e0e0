@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5321e309_bf1413cf",
+        "filename": "src/libANGLE/Program.h",
+        "patchSetId": 58
+      },
+      "lineNbr": 418,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-18T22:06:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "79b801f8_18a154a0",
+      "range": {
+        "startLine": 418,
+        "startChar": 7,
+        "endLine": 418,
+        "endChar": 12
+      },
+      "revId": "b60f3d89a7cff67e69d62d666d513a64e797e0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c507f01_61beb037",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-01-18T21:31:22Z",
       "side": 1,
       "message": "may be a comment describing why line rasterization is being checked for tess?",
+      "range": {
+        "startLine": 944,
+        "startChar": 54,
+        "endLine": 944,
+        "endChar": 97
+      },
+      "revId": "b60f3d89a7cff67e69d62d666d513a64e797e0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a93c9f17_f0f8dc08",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 58
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-18T22:06:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c507f01_61beb037",
       "range": {
         "startLine": 944,
         "startChar": 54,
