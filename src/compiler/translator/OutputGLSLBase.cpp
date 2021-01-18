@@ -1404,7 +1404,8 @@ void TOutputGLSLBase::declareInterfaceBlock(const TType &type)
     const TFieldList &fields = interfaceBlock->fields();
     for (const TField *field : fields)
     {
-        if (!IsShaderIoBlock(type.getQualifier()))
+        if (!IsShaderIoBlock(type.getQualifier()) && type.getQualifier() != EvqPatchIn &&
+            type.getQualifier() != EvqPatchOut)
         {
             writeFieldLayoutQualifier(field);
         }
@@ -1470,6 +1471,40 @@ void WriteGeometryShaderLayoutQualifiers(TInfoSinkBase &out,
             out << "max_vertices = " << maxVertices;
         }
         out << ") out;\n";
+    }
+}
+
+void WriteTessControlShaderLayoutQualifiers(TInfoSinkBase &out, int inputVertices)
+{
+    if (inputVertices != 0)
+    {
+        out << "layout (vertices = " << inputVertices << ") out;\n";
+    }
+}
+
+void WriteTessEvaluationShaderLayoutQualifiers(TInfoSinkBase &out,
+                                               sh::TLayoutTessEvaluationType inputPrimitive,
+                                               sh::TLayoutTessEvaluationType inputVertexSpacing,
+                                               sh::TLayoutTessEvaluationType inputOrdering,
+                                               sh::TLayoutTessEvaluationType inputPoint)
+{
+    if (inputPrimitive != EtetUndefined)
+    {
+        out << "layout (";
+        out << getTessEvaluationShaderTypeString(inputPrimitive);
+        if (inputVertexSpacing != EtetUndefined)
+        {
+            out << ", " << getTessEvaluationShaderTypeString(inputVertexSpacing);
+        }
+        if (inputOrdering != EtetUndefined)
+        {
+            out << ", " << getTessEvaluationShaderTypeString(inputOrdering);
+        }
+        if (inputPoint != EtetUndefined)
+        {
+            out << ", " << getTessEvaluationShaderTypeString(inputPoint);
+        }
+        out << ") in;\n";
     }
 }
 

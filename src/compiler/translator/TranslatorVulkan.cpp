@@ -171,6 +171,8 @@ constexpr ImmutableString kFlippedFragCoordName  = ImmutableString("flippedFragC
 
 constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
     {gl::ShaderType::Vertex, vk::kDefaultUniformsNameVS},
+    {gl::ShaderType::TessControl, vk::kDefaultUniformsNameTCS},
+    {gl::ShaderType::TessEvaluation, vk::kDefaultUniformsNameTES},
     {gl::ShaderType::Geometry, vk::kDefaultUniformsNameGS},
     {gl::ShaderType::Fragment, vk::kDefaultUniformsNameFS},
     {gl::ShaderType::Compute, vk::kDefaultUniformsNameCS},
@@ -1153,6 +1155,22 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             WriteGeometryShaderLayoutQualifiers(
                 sink, getGeometryShaderInputPrimitiveType(), getGeometryShaderInvocations(),
                 getGeometryShaderOutputPrimitiveType(), maxVertices);
+            break;
+        }
+
+        case gl::ShaderType::TessControl:
+        {
+            WriteTessControlShaderLayoutQualifiers(sink, getTessControlShaderOutputVertices());
+            break;
+        }
+
+        case gl::ShaderType::TessEvaluation:
+        {
+            WriteTessEvaluationShaderLayoutQualifiers(
+                sink, getTessEvaluationShaderInputPrimitiveType(),
+                getTessEvaluationShaderInputVertexSpacingType(),
+                getTessEvaluationShaderInputOrderingType(),
+                getTessEvaluationShaderInputPointType());
             break;
         }
 

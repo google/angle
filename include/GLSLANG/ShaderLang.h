@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 250
+#define ANGLE_SH_VERSION 251
 
 enum ShShaderSpec
 {
@@ -789,11 +789,20 @@ const std::set<std::string> *GetUsedImage2DFunctionNames(const ShHandle handle);
 bool HasValidGeometryShaderInputPrimitiveType(const ShHandle handle);
 bool HasValidGeometryShaderOutputPrimitiveType(const ShHandle handle);
 bool HasValidGeometryShaderMaxVertices(const ShHandle handle);
+bool HasValidTessGenMode(const ShHandle handle);
+bool HasValidTessGenSpacing(const ShHandle handle);
+bool HasValidTessGenVertexOrder(const ShHandle handle);
+bool HasValidTessGenPointMode(const ShHandle handle);
 GLenum GetGeometryShaderInputPrimitiveType(const ShHandle handle);
 GLenum GetGeometryShaderOutputPrimitiveType(const ShHandle handle);
 int GetGeometryShaderInvocations(const ShHandle handle);
 int GetGeometryShaderMaxVertices(const ShHandle handle);
 unsigned int GetShaderSharedMemorySize(const ShHandle handle);
+int GetTessControlShaderVertices(const ShHandle handle);
+GLenum GetTessGenMode(const ShHandle handle);
+GLenum GetTessGenSpacing(const ShHandle handle);
+GLenum GetTessGenVertexOrder(const ShHandle handle);
+GLenum GetTessGenPointMode(const ShHandle handle);
 
 //
 // Helper function to identify specs that are based on the WebGL spec.

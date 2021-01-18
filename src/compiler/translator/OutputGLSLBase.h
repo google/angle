@@ -129,6 +129,14 @@ void WriteGeometryShaderLayoutQualifiers(TInfoSinkBase &out,
                                          sh::TLayoutPrimitiveType outputPrimitive,
                                          int maxVertices);
 
+void WriteTessControlShaderLayoutQualifiers(TInfoSinkBase &out, int inputVertices);
+
+void WriteTessEvaluationShaderLayoutQualifiers(TInfoSinkBase &out,
+                                               sh::TLayoutTessEvaluationType inputPrimitive,
+                                               sh::TLayoutTessEvaluationType inputVertexSpacing,
+                                               sh::TLayoutTessEvaluationType inputOrdering,
+                                               sh::TLayoutTessEvaluationType inputPoint);
+
 bool NeedsToWriteLayoutQualifier(const TType &type);
 
 }  // namespace sh

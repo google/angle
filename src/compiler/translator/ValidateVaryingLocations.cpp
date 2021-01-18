@@ -116,6 +116,22 @@ int GetLocationCount(const TIntermSymbol *varying, bool ignoreVaryingArraySize)
     return elementLocationCount * varyingType.getArraySizeProduct();
 }
 
+bool ShouldIgnoreVaryingArraySize(TQualifier qualifier, GLenum shaderType)
+{
+    bool isVaryingIn = IsShaderIn(qualifier) && qualifier != EvqPatchIn;
+
+    switch (shaderType)
+    {
+        case GL_GEOMETRY_SHADER:
+        case GL_TESS_EVALUATION_SHADER:
+            return isVaryingIn;
+        case GL_TESS_CONTROL_SHADER:
+            return (IsShaderOut(qualifier) && qualifier != EvqPatchOut) || isVaryingIn;
+        default:
+            return false;
+    }
+}
+
 struct SymbolAndField
 {
     const TIntermSymbol *symbol;
@@ -159,9 +175,9 @@ void MarkVaryingLocations(TDiagnostics *diagnostics,
 
 using VaryingVector = std::vector<const TIntermSymbol *>;
 
-void ValidateShaderInterface(TDiagnostics *diagnostics,
-                             VaryingVector &varyingVector,
-                             bool ignoreVaryingArraySize)
+void ValidateShaderInterfaceAndAssignLocations(TDiagnostics *diagnostics,
+                                               const VaryingVector &varyingVector,
+                                               GLenum shaderType)
 {
     // Location conflicts can only happen when there are two or more varyings in varyingVector.
     if (varyingVector.size() <= 1)
@@ -175,6 +191,9 @@ void ValidateShaderInterface(TDiagnostics *diagnostics,
         const TType &varyingType = varying->getType();
         const int location       = varyingType.getLayoutQualifier().location;
         ASSERT(location >= 0);
+
+        bool ignoreVaryingArraySize =
+            ShouldIgnoreVaryingArraySize(varying->getQualifier(), shaderType);
 
         // A varying is either:
         //
@@ -318,9 +337,9 @@ void ValidateVaryingLocationsTraverser::validate(TDiagnostics *diagnostics)
 {
     ASSERT(diagnostics);
 
-    ValidateShaderInterface(diagnostics, mInputVaryingsWithLocation,
-                            mShaderType == GL_GEOMETRY_SHADER_EXT);
-    ValidateShaderInterface(diagnostics, mOutputVaryingsWithLocation, false);
+    ValidateShaderInterfaceAndAssignLocations(diagnostics, mInputVaryingsWithLocation, mShaderType);
+    ValidateShaderInterfaceAndAssignLocations(diagnostics, mOutputVaryingsWithLocation,
+                                              mShaderType);
 }
 
 }  // anonymous namespace
@@ -329,8 +348,7 @@ unsigned int CalculateVaryingLocationCount(TIntermSymbol *varying, GLenum shader
 {
     const TType &varyingType          = varying->getType();
     const TQualifier qualifier        = varyingType.getQualifier();
-    const bool isShaderIn             = IsShaderIn(qualifier);
-    const bool ignoreVaryingArraySize = isShaderIn && shaderType == GL_GEOMETRY_SHADER_EXT;
+    const bool ignoreVaryingArraySize = ShouldIgnoreVaryingArraySize(qualifier, shaderType);
 
     if (varyingType.isInterfaceBlock())
     {

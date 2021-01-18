@@ -51,6 +51,7 @@ ShaderVariable::ShaderVariable(GLenum typeIn)
       interpolation(INTERPOLATION_SMOOTH),
       isInvariant(false),
       isShaderIOBlock(false),
+      isPatch(false),
       texelFetchStaticUse(false),
       flattenedOffsetInParentArrays(-1)
 {}
@@ -87,6 +88,7 @@ ShaderVariable::ShaderVariable(const ShaderVariable &other)
       interpolation(other.interpolation),
       isInvariant(other.isInvariant),
       isShaderIOBlock(other.isShaderIOBlock),
+      isPatch(other.isPatch),
       texelFetchStaticUse(other.texelFetchStaticUse),
       flattenedOffsetInParentArrays(other.flattenedOffsetInParentArrays)
 {}
@@ -117,6 +119,7 @@ ShaderVariable &ShaderVariable::operator=(const ShaderVariable &other)
     interpolation                 = other.interpolation;
     isInvariant                   = other.isInvariant;
     isShaderIOBlock               = other.isShaderIOBlock;
+    isPatch                       = other.isPatch;
     texelFetchStaticUse           = other.texelFetchStaticUse;
     return *this;
 }
@@ -133,7 +136,7 @@ bool ShaderVariable::operator==(const ShaderVariable &other) const
         offset != other.offset || readonly != other.readonly || writeonly != other.writeonly ||
         index != other.index || yuv != other.yuv || interpolation != other.interpolation ||
         isInvariant != other.isInvariant || isShaderIOBlock != other.isShaderIOBlock ||
-        texelFetchStaticUse != other.texelFetchStaticUse)
+        isPatch != other.isPatch || texelFetchStaticUse != other.texelFetchStaticUse)
     {
         return false;
     }
@@ -444,7 +447,7 @@ bool ShaderVariable::isSameVaryingAtLinkTime(const ShaderVariable &other, int sh
     return ShaderVariable::isSameVariableAtLinkTime(other, false, false) &&
            InterpolationTypesMatch(interpolation, other.interpolation) &&
            (shaderVersion >= 300 || isInvariant == other.isInvariant) &&
-           location == other.location &&
+           (isPatch == other.isPatch) && location == other.location &&
            (isSameNameAtLinkTime(other) || (shaderVersion >= 310 && location >= 0));
 }
 

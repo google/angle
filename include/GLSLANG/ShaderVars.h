@@ -201,6 +201,8 @@ struct ShaderVariable
     InterpolationType interpolation;
     bool isInvariant;
     bool isShaderIOBlock;
+    bool isPatch;
+
     // Decide whether two varyings are the same at shader link time,
     // assuming they are from consecutive shader stages.
     // Invariance needs to match only in ESSL1. Relevant spec sections:

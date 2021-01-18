@@ -26,7 +26,6 @@ namespace sh
 
 namespace
 {
-
 bool IsInterpolationIn(TQualifier qualifier)
 {
     switch (qualifier)
@@ -42,6 +41,20 @@ bool IsInterpolationIn(TQualifier qualifier)
     }
 }
 
+bool IsInterpolationOut(TQualifier qualifier)
+{
+    switch (qualifier)
+    {
+        case EvqSmoothOut:
+        case EvqFlatOut:
+        case EvqNoPerspectiveOut:
+        case EvqCentroidOut:
+        case EvqSampleOut:
+            return true;
+        default:
+            return false;
+    }
+}
 }  // anonymous namespace
 
 float NumericLexFloat32OutOfRangeToInfinity(const std::string &str)
@@ -554,6 +567,7 @@ bool IsVaryingOut(TQualifier qualifier)
         case EvqTessControlOut:
         case EvqTessEvaluationOut:
         case EvqSampleOut:
+        case EvqPatchOut:
             return true;
 
         default:
@@ -577,6 +591,7 @@ bool IsVaryingIn(TQualifier qualifier)
         case EvqTessControlIn:
         case EvqTessEvaluationIn:
         case EvqSampleIn:
+        case EvqPatchIn:
             return true;
 
         default:
@@ -597,12 +612,34 @@ bool IsGeometryShaderInput(GLenum shaderType, TQualifier qualifier)
            ((shaderType == GL_GEOMETRY_SHADER_EXT) && IsInterpolationIn(qualifier));
 }
 
+bool IsTessellationControlShaderInput(GLenum shaderType, TQualifier qualifier)
+{
+    return qualifier == EvqTessControlIn ||
+           ((shaderType == GL_TESS_CONTROL_SHADER) && IsInterpolationIn(qualifier));
+}
+
+bool IsTessellationControlShaderOutput(GLenum shaderType, TQualifier qualifier)
+{
+    return qualifier == EvqTessControlOut ||
+           ((shaderType == GL_TESS_CONTROL_SHADER) && IsInterpolationOut(qualifier));
+}
+
+bool IsTessellationEvaluationShaderInput(GLenum shaderType, TQualifier qualifier)
+{
+    return qualifier == EvqTessEvaluationIn ||
+           ((shaderType == GL_TESS_EVALUATION_SHADER) && IsInterpolationIn(qualifier));
+}
+
 InterpolationType GetInterpolationType(TQualifier qualifier)
 {
     switch (qualifier)
     {
         case EvqFlatIn:
         case EvqFlatOut:
+        // The auxiliary storage qualifier patch is not used for interpolation
+        // it is a compile-time error to use interpolation qualifiers with patch
+        case EvqPatchIn:
+        case EvqPatchOut:
             return INTERPOLATION_FLAT;
 
         case EvqNoPerspectiveIn:
@@ -617,6 +654,10 @@ InterpolationType GetInterpolationType(TQualifier qualifier)
         case EvqVaryingOut:
         case EvqGeometryIn:
         case EvqGeometryOut:
+        case EvqTessControlIn:
+        case EvqTessControlOut:
+        case EvqTessEvaluationIn:
+        case EvqTessEvaluationOut:
             return INTERPOLATION_SMOOTH;
 
         case EvqCentroidIn:

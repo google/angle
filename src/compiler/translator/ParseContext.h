@@ -177,7 +177,7 @@ class TParseContext : angle::NonCopyable
     // Done only for empty declarations.
     void emptyDeclarationErrorCheck(const TType &type, const TSourceLoc &location);
 
-    void checkLayoutQualifierSupported(const TSourceLoc &location,
+    bool checkLayoutQualifierSupported(const TSourceLoc &location,
                                        const ImmutableString &layoutQualifierName,
                                        int versionRequired);
     bool checkWorkGroupSizeIsNotSpecified(const TSourceLoc &location,
@@ -380,6 +380,10 @@ class TParseContext : angle::NonCopyable
                           const TSourceLoc &intValueLine,
                           const std::string &intValueString,
                           int *numMaxVertices);
+    void parseVertices(int intValue,
+                       const TSourceLoc &intValueLine,
+                       const std::string &intValueString,
+                       int *numVertices);
     void parseIndexLayoutQualifier(int intValue,
                                    const TSourceLoc &intValueLine,
                                    const std::string &intValueString,
@@ -464,6 +468,23 @@ class TParseContext : angle::NonCopyable
     TLayoutPrimitiveType getGeometryShaderOutputPrimitiveType() const
     {
         return mGeometryShaderOutputPrimitiveType;
+    }
+    int getTessControlShaderOutputVertices() const { return mTessControlShaderOutputVertices; }
+    TLayoutTessEvaluationType getTessEvaluationShaderInputPrimitiveType() const
+    {
+        return mTessEvaluationShaderInputPrimitiveType;
+    }
+    TLayoutTessEvaluationType getTessEvaluationShaderInputVertexSpacingType() const
+    {
+        return mTessEvaluationShaderInputVertexSpacingType;
+    }
+    TLayoutTessEvaluationType getTessEvaluationShaderInputOrderingType() const
+    {
+        return mTessEvaluationShaderInputOrderingType;
+    }
+    TLayoutTessEvaluationType getTessEvaluationShaderInputPointType() const
+    {
+        return mTessEvaluationShaderInputPointType;
     }
 
     ShShaderOutput getOutputType() const { return mOutputType; }
@@ -574,6 +595,11 @@ class TParseContext : angle::NonCopyable
                                                  const ImmutableString &token,
                                                  TType *type);
 
+    // Similar, for tessellation shaders.
+    void checkTessellationShaderUnsizedArraysAndSetSize(const TSourceLoc &location,
+                                                        const ImmutableString &token,
+                                                        TType *type);
+
     // Will size any unsized array type so unsized arrays won't need to be taken into account
     // further along the line in parsing.
     void checkIsNotUnsizedArray(const TSourceLoc &line,
@@ -615,6 +641,9 @@ class TParseContext : angle::NonCopyable
     bool parseGeometryShaderInputLayoutQualifier(const TTypeQualifier &typeQualifier);
     bool parseGeometryShaderOutputLayoutQualifier(const TTypeQualifier &typeQualifier);
     void setGeometryShaderInputArraySize(unsigned int inputArraySize, const TSourceLoc &line);
+
+    bool parseTessControlShaderOutputLayoutQualifier(const TTypeQualifier &typeQualifier);
+    bool parseTessEvaluationShaderInputLayoutQualifier(const TTypeQualifier &typeQualifier);
 
     // Set to true when the last/current declarator list was started with an empty declaration. The
     // non-empty declaration error check will need to be performed if the empty declaration is
@@ -680,6 +709,13 @@ class TParseContext : angle::NonCopyable
     int mMaxGeometryShaderInvocations;
     int mMaxGeometryShaderMaxVertices;
     unsigned int mGeometryInputArraySize;
+
+    int mMaxPatchVertices;
+    int mTessControlShaderOutputVertices;
+    TLayoutTessEvaluationType mTessEvaluationShaderInputPrimitiveType;
+    TLayoutTessEvaluationType mTessEvaluationShaderInputVertexSpacingType;
+    TLayoutTessEvaluationType mTessEvaluationShaderInputOrderingType;
+    TLayoutTessEvaluationType mTessEvaluationShaderInputPointType;
 
     // Track when we add new scope for func body in ESSL 1.00 spec
     bool mFunctionBodyNewScope;
