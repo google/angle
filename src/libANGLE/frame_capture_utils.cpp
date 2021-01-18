@@ -36,8 +36,23 @@ namespace angle
 namespace
 {
 
-template <typename T>
-void SerializeColor(gl::BinaryOutputStream *bos, const Color<T> &color)
+void SerializeColorF(gl::BinaryOutputStream *bos, const ColorF &color)
+{
+    bos->writeFloat(color.red);
+    bos->writeFloat(color.green);
+    bos->writeFloat(color.blue);
+    bos->writeFloat(color.alpha);
+}
+
+void SerializeColorI(gl::BinaryOutputStream *bos, const ColorI &color)
+{
+    bos->writeInt(color.red);
+    bos->writeInt(color.green);
+    bos->writeInt(color.blue);
+    bos->writeInt(color.alpha);
+}
+
+void SerializeColorUI(gl::BinaryOutputStream *bos, const ColorUI &color)
 {
     bos->writeInt(color.red);
     bos->writeInt(color.green);
@@ -219,8 +234,8 @@ void SerializeRasterizerState(gl::BinaryOutputStream *bos,
     bos->writeEnum(rasterizerState.cullMode);
     bos->writeInt(rasterizerState.frontFace);
     bos->writeBool(rasterizerState.polygonOffsetFill);
-    bos->writeInt(rasterizerState.polygonOffsetFactor);
-    bos->writeInt(rasterizerState.polygonOffsetUnits);
+    bos->writeFloat(rasterizerState.polygonOffsetFactor);
+    bos->writeFloat(rasterizerState.polygonOffsetUnits);
     bos->writeBool(rasterizerState.pointDrawMode);
     bos->writeBool(rasterizerState.multiSample);
     bos->writeBool(rasterizerState.rasterizerDiscard);
@@ -277,10 +292,10 @@ void SerializeVertexAttribCurrentValueData(
            vertexAttribCurrentValueData.Type == gl::VertexAttribType::UnsignedInt);
     if (vertexAttribCurrentValueData.Type == gl::VertexAttribType::Float)
     {
-        bos->writeInt(vertexAttribCurrentValueData.Values.FloatValues[0]);
-        bos->writeInt(vertexAttribCurrentValueData.Values.FloatValues[1]);
-        bos->writeInt(vertexAttribCurrentValueData.Values.FloatValues[2]);
-        bos->writeInt(vertexAttribCurrentValueData.Values.FloatValues[3]);
+        bos->writeFloat(vertexAttribCurrentValueData.Values.FloatValues[0]);
+        bos->writeFloat(vertexAttribCurrentValueData.Values.FloatValues[1]);
+        bos->writeFloat(vertexAttribCurrentValueData.Values.FloatValues[2]);
+        bos->writeFloat(vertexAttribCurrentValueData.Values.FloatValues[3]);
     }
     else if (vertexAttribCurrentValueData.Type == gl::VertexAttribType::Int)
     {
@@ -337,17 +352,17 @@ void SerializeGLContextStates(gl::BinaryOutputStream *bos, const gl::State &stat
     bos->writeInt(state.getClientMajorVersion());
     bos->writeInt(state.getClientMinorVersion());
 
-    SerializeColor(bos, state.getColorClearValue());
-    bos->writeInt(state.getDepthClearValue());
+    SerializeColorF(bos, state.getColorClearValue());
+    bos->writeFloat(state.getDepthClearValue());
     bos->writeInt(state.getStencilClearValue());
     SerializeRasterizerState(bos, state.getRasterizerState());
     bos->writeBool(state.isScissorTestEnabled());
     SerializeRectangle(bos, state.getScissor());
     SerializeBlendStateExt(bos, state.getBlendStateExt());
-    SerializeColor(bos, state.getBlendColor());
+    SerializeColorF(bos, state.getBlendColor());
     bos->writeBool(state.isSampleAlphaToCoverageEnabled());
     bos->writeBool(state.isSampleCoverageEnabled());
-    bos->writeInt(state.getSampleCoverageValue());
+    bos->writeFloat(state.getSampleCoverageValue());
     bos->writeBool(state.getSampleCoverageInvert());
     bos->writeBool(state.isSampleMaskEnabled());
     bos->writeInt(state.getMaxSampleMaskWords());
@@ -359,15 +374,15 @@ void SerializeGLContextStates(gl::BinaryOutputStream *bos, const gl::State &stat
     SerializeDepthStencilState(bos, state.getDepthStencilState());
     bos->writeInt(state.getStencilRef());
     bos->writeInt(state.getStencilBackRef());
-    bos->writeInt(state.getLineWidth());
+    bos->writeFloat(state.getLineWidth());
     bos->writeInt(state.getGenerateMipmapHint());
     bos->writeInt(state.getTextureFilteringHint());
     bos->writeInt(state.getFragmentShaderDerivativeHint());
     bos->writeBool(state.isBindGeneratesResourceEnabled());
     bos->writeBool(state.areClientArraysEnabled());
     SerializeRectangle(bos, state.getViewport());
-    bos->writeInt(state.getNearPlane());
-    bos->writeInt(state.getFarPlane());
+    bos->writeFloat(state.getNearPlane());
+    bos->writeFloat(state.getFarPlane());
     if (state.getReadFramebuffer())
     {
         bos->writeInt(state.getReadFramebuffer()->id().value);
@@ -477,15 +492,15 @@ void SerializeColorGeneric(gl::BinaryOutputStream *bos, const ColorGeneric &colo
     bos->writeEnum(colorGeneric.type);
     if (colorGeneric.type == ColorGeneric::Type::Float)
     {
-        SerializeColor(bos, colorGeneric.colorF);
+        SerializeColorF(bos, colorGeneric.colorF);
     }
     else if (colorGeneric.type == ColorGeneric::Type::Int)
     {
-        SerializeColor(bos, colorGeneric.colorI);
+        SerializeColorI(bos, colorGeneric.colorI);
     }
     else
     {
-        SerializeColor(bos, colorGeneric.colorUI);
+        SerializeColorUI(bos, colorGeneric.colorUI);
     }
 }
 
@@ -496,9 +511,9 @@ void SerializeSamplerState(gl::BinaryOutputStream *bos, const gl::SamplerState &
     bos->writeInt(samplerState.getWrapS());
     bos->writeInt(samplerState.getWrapT());
     bos->writeInt(samplerState.getWrapR());
-    bos->writeInt(samplerState.getMaxAnisotropy());
-    bos->writeInt(samplerState.getMinLod());
-    bos->writeInt(samplerState.getMaxLod());
+    bos->writeFloat(samplerState.getMaxAnisotropy());
+    bos->writeFloat(samplerState.getMinLod());
+    bos->writeFloat(samplerState.getMaxLod());
     bos->writeInt(samplerState.getCompareMode());
     bos->writeInt(samplerState.getCompareFunc());
     bos->writeInt(samplerState.getSRGBDecode());
