@@ -684,9 +684,9 @@ void SerializeShader(gl::BinaryOutputStream *bos, gl::Shader *shader)
     bos->writeInt(shader->getHandle().value);
     bos->writeInt(shader->getRefCount());
     bos->writeBool(shader->isFlaggedForDeletion());
-    // does not serialize mType because it is already serialized in SerializeShaderState
+    // Do not serialize mType because it is already serialized in SerializeShaderState.
     bos->writeString(shader->getInfoLogString());
-    bos->writeString(shader->getCompilerResourcesString());
+    // Do not serialize compiler resources string because it can vary between test modes.
     bos->writeInt(shader->getCurrentMaxComputeWorkGroupInvocations());
     bos->writeInt(shader->getMaxComputeSharedMemory());
 }

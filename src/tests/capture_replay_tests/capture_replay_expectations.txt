@@ -74,7 +74,6 @@ OcclusionQueriesTest.*
 PBOExtensionTest.*
 PixmapTest.Clearing/ES2_Vulkan
 SemaphoreTest.SemaphoreShouldBeSemaphore/ES2_Vulkan
-SimpleOperationTest.DrawQuad/ES2_Vulkan
 SRGBFramebufferTest.Validation/ES2_Vulkan
 StateChangeRenderTest.GenerateMipmap/ES2_Vulkan
 SyncQueriesTest.*
