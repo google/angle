@@ -3135,12 +3135,6 @@ angle::Result ContextVk::onMakeCurrent(const gl::Context *context)
 angle::Result ContextVk::onUnMakeCurrent(const gl::Context *context)
 {
     ANGLE_TRY(flushImpl(nullptr));
-    // TODO(courtneygo): Clean this up. b/170328907 b/170329600
-    if (mRenderer->getFeatures().asyncCommandQueue.enabled)
-    {
-        ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::onUnMakeCurrent");
-        ANGLE_TRY(mRenderer->finishAllWork(this));
-    }
     mCurrentWindowSurface = nullptr;
     return angle::Result::Continue;
 }

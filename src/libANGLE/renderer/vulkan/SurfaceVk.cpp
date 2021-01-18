@@ -1480,6 +1480,7 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
     ContextVk *contextVk = vk::GetImpl(context);
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
 
+    // TODO(jmadill): Expose in CommandQueueInterface, or manage in CommandQueue. b/172704839
     if (contextVk->getFeatures().asyncCommandQueue.enabled)
     {
         VkResult result = contextVk->getRenderer()->getLastPresentResult(mSwapchain);

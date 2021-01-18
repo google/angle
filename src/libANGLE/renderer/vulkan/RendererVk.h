@@ -303,20 +303,6 @@ class RendererVk : angle::NonCopyable
     SamplerYcbcrConversionCache &getYuvConversionCache() { return mYuvConversionCache; }
     vk::ActiveHandleCounter &getActiveHandleCounts() { return mActiveHandleCounts; }
 
-    // TODO(jmadill): Remove. b/172704839
-    angle::Result waitForCommandProcessorIdle(vk::Context *context)
-    {
-        ASSERT(getFeatures().asyncCommandQueue.enabled);
-        return mCommandProcessor.waitForWorkComplete(context);
-    }
-
-    // TODO(jmadill): Remove. b/172704839
-    angle::Result finishAllWork(vk::Context *context)
-    {
-        ASSERT(getFeatures().asyncCommandQueue.enabled);
-        return mCommandProcessor.finishAllWork(context);
-    }
-
     bool getEnableValidationLayers() const { return mEnableValidationLayers; }
 
     vk::ResourceSerialFactory &getResourceSerialFactory() { return mResourceSerialFactory; }
