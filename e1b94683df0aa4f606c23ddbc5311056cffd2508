@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec655fed_b922c56b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-18T21:16:57Z",
+      "side": 1,
+      "message": "http://crrev.com/c/2568234",
+      "range": {
+        "startLine": 13,
+        "startChar": 34,
+        "endLine": 13,
+        "endChar": 59
+      },
+      "revId": "e1b94683df0aa4f606c23ddbc5311056cffd2508",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
