@@ -56,6 +56,7 @@ enum class RestrictedTraceID
 {
     angry_birds_2_1500,
     arena_of_valor,
+    asphalt_8,
     brawl_stars,
     candy_crush_500,
     clash_of_clans,
