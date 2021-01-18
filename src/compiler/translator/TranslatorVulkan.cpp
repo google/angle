@@ -1148,17 +1148,6 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 return false;
             }
 
-            // Work around a bug in SwiftShader where missing gl_Position causes an assertion error.
-            // This code appends gl_Position = gl_Position; to the end of the shader.
-            // b/176161380
-            TIntermSymbol *position = new TIntermSymbol(BuiltInVariable::gl_Position());
-            TIntermBinary *assignment =
-                new TIntermBinary(TOperator::EOpAssign, position, position->deepCopy());
-            if (!RunAtTheEndOfShader(this, root, assignment, &getSymbolTable()))
-            {
-                return false;
-            }
-
             break;
         }
 
