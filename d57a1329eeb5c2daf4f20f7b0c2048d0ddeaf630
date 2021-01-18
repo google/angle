@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b03e11b2_37c818ac",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 2735,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-18T18:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48c99a2b_819495ce",
+      "range": {
+        "startLine": 2735,
+        "startChar": 4,
+        "endLine": 2735,
+        "endChar": 41
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72e7d2d2_eca13879",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-01-18T16:38:54Z",
       "side": 1,
       "message": "nit: If this is only valid for the default framebuffer, call it updateDefaultFramebufferID?",
+      "range": {
+        "startLine": 1320,
+        "startChar": 20,
+        "endLine": 1320,
+        "endChar": 39
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf6dfe79_fc3f4735",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1320,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-18T18:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "72e7d2d2_eca13879",
       "range": {
         "startLine": 1320,
         "startChar": 20,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3b26f6c_daffccd0",
+        "filename": "src/libANGLE/renderer/gl/egl/ContextEGL.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-18T18:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cee27e5_548ad2fb",
+      "range": {
+        "startLine": 27,
+        "startChar": 35,
+        "endLine": 27,
+        "endChar": 47
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99fa858a_64807a9c",
@@ -117,6 +189,30 @@
       "writtenOn": "2021-01-18T16:38:54Z",
       "side": 1,
       "message": "Same nit about default parameters.",
+      "range": {
+        "startLine": 27,
+        "startChar": 38,
+        "endLine": 27,
+        "endChar": 46
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a231237c_fb31cd27",
+        "filename": "src/libANGLE/renderer/gl/egl/RendererEGL.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-18T18:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99fa858a_64807a9c",
       "range": {
         "startLine": 27,
         "startChar": 38,
@@ -150,6 +246,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d123fd22_d6bc343c",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-18T18:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "728025a8_ac056cf6",
+      "range": {
+        "startLine": 365,
+        "startChar": 0,
+        "endLine": 366,
+        "endChar": 61
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5dfef42c_676802ab",
@@ -173,6 +293,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df59369d_95358812",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 378,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-18T18:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5dfef42c_676802ab",
+      "range": {
+        "startLine": 378,
+        "startChar": 0,
+        "endLine": 378,
+        "endChar": 53
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "06f83938_02c57dd8",
@@ -186,6 +330,30 @@
       "writtenOn": "2021-01-18T16:38:54Z",
       "side": 1,
       "message": "mEGL-\u003e*version is the EGL version (probably 1.4) which will probably cause issues. I\u0027d just leave this with just the EGL_NONE or possibly context version 2.0 hardcoded (Android will always return the highest supported context version if you request 2.0).",
+      "range": {
+        "startLine": 464,
+        "startChar": 19,
+        "endLine": 465,
+        "endChar": 85
+      },
+      "revId": "d57a1329eeb5c2daf4f20f7b0c2048d0ddeaf630",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20f8f170_6c5c32cd",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 465,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-18T18:00:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06f83938_02c57dd8",
       "range": {
         "startLine": 464,
         "startChar": 19,
