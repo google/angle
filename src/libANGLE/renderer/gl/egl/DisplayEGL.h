@@ -73,6 +73,10 @@ class DisplayEGL : public DisplayGL
     egl::Error restoreLostDevice(const egl::Display *display) override;
 
     bool isValidNativeWindow(EGLNativeWindowType window) const override;
+    egl::Error validateClientBuffer(const egl::Config *configuration,
+                                    EGLenum buftype,
+                                    EGLClientBuffer clientBuffer,
+                                    const egl::AttributeMap &attribs) const override;
 
     egl::Error waitClient(const gl::Context *context) override;
     egl::Error waitNative(const gl::Context *context, EGLint engine) override;
@@ -100,7 +104,9 @@ class DisplayEGL : public DisplayGL
                                                          EGLClientBuffer buffer,
                                                          const egl::AttributeMap &attribs) override;
 
-  protected:
+  private:
+    const char *getEGLPath() const;
+
     egl::Error initializeContext(EGLContext shareContext,
                                  const egl::AttributeMap &eglAttributes,
                                  EGLContext *outContext,
@@ -108,7 +114,10 @@ class DisplayEGL : public DisplayGL
 
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
 
-    egl::Error createRenderer(EGLContext shareContext, std::shared_ptr<RendererEGL> *outRenderer);
+    egl::Error createRenderer(EGLContext shareContext,
+                              bool makeNewContextCurrent,
+                              bool isExternalContext,
+                              std::shared_ptr<RendererEGL> *outRenderer);
 
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
@@ -123,8 +132,8 @@ class DisplayEGL : public DisplayGL
                                     const U &defaultValue) const;
 
     std::shared_ptr<RendererEGL> mRenderer;
-    FunctionsEGLDL *mEGL;
-    EGLConfig mConfig;
+    FunctionsEGLDL *mEGL = nullptr;
+    EGLConfig mConfig    = EGL_NO_CONFIG_KHR;
     egl::AttributeMap mDisplayAttributes;
     std::vector<EGLint> mConfigAttribList;
 
@@ -143,8 +152,14 @@ class DisplayEGL : public DisplayGL
 
     std::map<EGLint, EGLint> mConfigIds;
 
-    bool mHasEXTCreateContextRobustness;
-    bool mHasNVRobustnessVideoMemoryPurge;
+    bool mHasEXTCreateContextRobustness   = false;
+    bool mHasNVRobustnessVideoMemoryPurge = false;
+
+    bool mVirtualizedContexts = false;
+
+    bool mSupportsSurfaceless = false;
+
+    EGLSurface mMockPbuffer = EGL_NO_SURFACE;
 };
 
 }  // namespace rx
