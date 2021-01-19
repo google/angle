@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "340d497b_af0ace87",
+        "filename": "src/libANGLE/ErrorStrings.h",
+        "patchSetId": 60
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T15:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cf050d7c_57ca6ad1",
+      "range": {
+        "startLine": 469,
+        "startChar": 72,
+        "endLine": 469,
+        "endChar": 79
+      },
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9ed36759_cc504e2e",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-01-19T04:34:00Z",
       "side": 1,
       "message": "Something\u0027s probably not right here. Can there be an array of array situation? Like say some VS output is an array, so TCS input becomes array of array. Then you treat TCS input as not array and suddenly they don\u0027t match.\n\nProbably should do something like:\n\n    size_t variable1ArrayDims \u003d variable1.arrayDimensionCount();\n    size_t variable2IsArrayDims \u003d variable2.arrayDimensionCount();\n    if (treatVariable1AsNonArray)\n    {\n        ASSERT(variable1ArrayDims \u003e 0);\n        --variable1IsArrayDims;\n    }\n    if (treatVariable2AsNonArray)\n    {\n        ASSERT(variable2IsArrayDims \u003e ));\n        --variable2IsArrayDims;\n    }\n    if (variable1IsArrayDims !\u003d variable2IsArrayDims)",
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c316486e_28ac78a3",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 1690,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T15:39:18Z",
+      "side": 1,
+      "message": "Could you describe this situation in http://anglebug.com/5557 ? I left a TODO to investigate. I\u0027m not sure varyings can be AoA. Maybe IO Blocks?",
+      "parentUuid": "9ed36759_cc504e2e",
       "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -75,6 +117,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb257e6c_c556e863",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 2209,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T15:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8888b2b_b01b0ccb",
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b1f055e6_19a3bd2a",
@@ -88,6 +148,30 @@
       "writtenOn": "2021-01-19T04:34:00Z",
       "side": 1,
       "message": "nit: Either move in or above EXTENDED (I thought there wasn\u0027t enough space already?)",
+      "range": {
+        "startLine": 653,
+        "startChar": 8,
+        "endLine": 653,
+        "endChar": 32
+      },
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb350f1d_80d15e0e",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 60
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T15:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1f055e6_19a3bd2a",
       "range": {
         "startLine": 653,
         "startChar": 8,
@@ -133,6 +217,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "728b5072_a2caf074",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T15:39:18Z",
+      "side": 1,
+      "message": "Done. Turns out none of this code was used so I just moved it to another temporary patch that I\u0027ll abandon. See http://crrev.com/c/2637417",
+      "parentUuid": "71be9355_5d3d41e1",
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2a3e4d5_548523ce",
@@ -150,6 +252,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a8b617a_5072973a",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 4512,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T15:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2a3e4d5_548523ce",
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c3f0d320_bbdef443",
@@ -163,6 +283,30 @@
       "writtenOn": "2021-01-19T04:34:00Z",
       "side": 1,
       "message": "Super nit: Suggest \"don\u0027t\" instead of \"can\u0027t\" (also above for GS). Supporting line raster\u0027s varying is pretty much identical to xfb position varying (so not like we _can\u0027t_ do it, we just don\u0027t want it).",
+      "range": {
+        "startLine": 944,
+        "startChar": 10,
+        "endLine": 944,
+        "endChar": 15
+      },
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "903731a2_823b48fb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 944,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T15:39:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3f0d320_bbdef443",
       "range": {
         "startLine": 944,
         "startChar": 10,
