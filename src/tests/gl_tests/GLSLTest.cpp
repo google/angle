@@ -3662,6 +3662,139 @@ TEST_P(GLSLTest_ES31, ArraysOfArraysImage)
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+// Test that multiple arrays of arrays of images work as expected.
+TEST_P(GLSLTest_ES31, ConsecutiveArraysOfArraysImage)
+{
+    swapBuffers();
+    // http://anglebug.com/5072
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsLinux() && IsOpenGL());
+
+    // Fails on D3D due to mistranslation.
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    constexpr GLsizei kImage1Layers = 3;
+    constexpr GLsizei kImage1Rows   = 2;
+    constexpr GLsizei kImage1Cols   = 1;
+    constexpr GLsizei kImage2Rows   = 2;
+    constexpr GLsizei kImage2Cols   = 4;
+
+    constexpr GLsizei kImage1Units = kImage1Layers * kImage1Rows * kImage1Cols;
+    constexpr GLsizei kImage2Units = kImage2Rows * kImage2Cols;
+    constexpr GLsizei kImage3Units = 1;
+
+    constexpr GLsizei kTotalImageCount = kImage1Units + kImage2Units + kImage3Units;
+
+    GLint maxTextures, maxComputeImageUniforms;
+    glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &maxTextures);
+    glGetIntegerv(GL_MAX_COMPUTE_IMAGE_UNIFORMS, &maxComputeImageUniforms);
+    ANGLE_SKIP_TEST_IF(maxTextures < kTotalImageCount);
+    ANGLE_SKIP_TEST_IF(maxComputeImageUniforms < kTotalImageCount);
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+        layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+        layout(binding = 0, r32ui) uniform highp readonly uimage2D image1[3][2][1];
+        layout(binding = 6, r32ui) uniform highp readonly uimage2D image2[2][4];
+        layout(binding = 14, r32ui) uniform highp readonly uimage2D image3;
+        layout(binding = 0, std430) buffer Output {
+            uint image_value;
+        } outbuf;
+
+        void main(void)
+        {
+            outbuf.image_value = uint(0.0);
+
+            outbuf.image_value += imageLoad(image1[0][0][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image1[0][1][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image1[1][0][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image1[1][1][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image1[2][0][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image1[2][1][0], ivec2(0, 0)).x;
+
+            outbuf.image_value += imageLoad(image2[0][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image2[0][1], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image2[0][2], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image2[0][3], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image2[1][0], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image2[1][1], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image2[1][2], ivec2(0, 0)).x;
+            outbuf.image_value += imageLoad(image2[1][3], ivec2(0, 0)).x;
+
+            outbuf.image_value += imageLoad(image3, ivec2(0, 0)).x;
+        })";
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    constexpr GLuint kOutputInitData = 10;
+    GLBuffer outputBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, outputBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kOutputInitData), &kOutputInitData,
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, outputBuffer);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr GLsizei kImage1Binding = 0;
+    constexpr GLsizei kImage2Binding = kImage1Binding + kImage1Units;
+    constexpr GLsizei kImage3Binding = kImage2Binding + kImage2Units;
+
+    constexpr GLuint kImage1Data = 13;
+    GLTexture images1[kImage1Layers][kImage1Rows][kImage1Cols];
+    for (int layer = 0; layer < kImage1Layers; layer++)
+    {
+        for (int row = 0; row < kImage1Rows; row++)
+        {
+            for (int col = 0; col < kImage1Cols; col++)
+            {
+                glBindTexture(GL_TEXTURE_2D, images1[layer][row][col]);
+                glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+                glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                                &kImage1Data);
+                glBindImageTexture(kImage1Binding + (layer * kImage1Rows + row) * kImage1Cols + col,
+                                   images1[layer][row][col], 0, GL_FALSE, 0, GL_READ_ONLY,
+                                   GL_R32UI);
+                EXPECT_GL_NO_ERROR();
+            }
+        }
+    }
+
+    constexpr GLuint kImage2Data = 17;
+    GLTexture images2[kImage2Rows][kImage2Cols];
+    for (int row = 0; row < kImage2Rows; row++)
+    {
+        for (int col = 0; col < kImage2Cols; col++)
+        {
+            glBindTexture(GL_TEXTURE_2D, images2[row][col]);
+            glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+            glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                            &kImage2Data);
+            glBindImageTexture(kImage2Binding + row * kImage2Cols + col, images2[row][col], 0,
+                               GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+            EXPECT_GL_NO_ERROR();
+        }
+    }
+
+    constexpr GLuint kImage3Data = 19;
+    GLTexture image3;
+    glBindTexture(GL_TEXTURE_2D, image3);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, 1, 1);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RED_INTEGER, GL_UNSIGNED_INT, &kImage3Data);
+    glBindImageTexture(kImage3Binding, image3, 0, GL_FALSE, 0, GL_READ_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+
+    // read back
+    const GLuint *ptr = reinterpret_cast<const GLuint *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kOutputInitData), GL_MAP_READ_BIT));
+    EXPECT_EQ(*ptr,
+              kImage1Data * kImage1Units + kImage2Data * kImage2Units + kImage3Data * kImage3Units);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Test that structs containing arrays of samplers work as expected.
 TEST_P(GLSLTest_ES31, StructArraySampler)
 {
