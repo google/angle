@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67640939_ee0adee9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-19T19:03:34Z",
+      "side": 1,
+      "message": "+2 with CQ fixes, since it looks like they may be related.",
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85ee94c6_7807218d",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-19T19:03:34Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 464,
+        "startChar": 58,
+        "endLine": 464,
+        "endChar": 66
+      },
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1faf82ab_12262271",
+        "filename": "src/compiler/translator/tree_ops/vulkan/RewriteR32fImages.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-19T19:03:34Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 360,
+        "startChar": 11,
+        "endLine": 360,
+        "endChar": 17
+      },
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d93338bd_4b604167",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3797,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-19T19:03:34Z",
+      "side": 1,
+      "message": "Is this necessary?",
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
