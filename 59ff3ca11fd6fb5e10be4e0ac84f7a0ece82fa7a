@@ -69,6 +69,60 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "403ff37d_833bb536",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "Thanks Shahbaz, It\u0027s a good idea to implement some functions in blobcache.cpp. I have moved basic compress and decompress functions to blobcache.cpp in new patchset. Should I replace the logic in MemoryProgramCache with new added function?",
+      "parentUuid": "1c5c3f9a_550595fb",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f76b35f2_5635ffa1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "Thanks Jamie.",
+      "parentUuid": "74483206_3014f1a6",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df54c6de_fb0d8f0b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "Thanks,Shahbaz 👍",
+      "parentUuid": "d619f3c3_c8d9c9cc",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "647b17b6_9c83abb9",
@@ -128,6 +182,30 @@
       "writtenOn": "2021-01-15T14:14:33Z",
       "side": 1,
       "message": "Because this function uses no member variables, it can be a private static function in this file, in the anonymous namespace {} block at the top of the file. This encapsulates the function in a smaller scope which is a bit cleaner.",
+      "range": {
+        "startLine": 2169,
+        "startChar": 17,
+        "endLine": 2169,
+        "endChar": 40
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53968665_117b6318",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2169,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "Hi Jamie, basic compress and decompress function have been moved to BlobCache.cpp. Do you agree with this change?",
+      "parentUuid": "e3bb743e_f6def469",
       "range": {
         "startLine": 2169,
         "startChar": 17,
@@ -262,6 +340,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9db2a115_6354c2c6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2214,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "\" Is this an Android platform limitation? \"\nYes, Jamie, you can check the limitation in https://android.googlesource.com/platform/frameworks/native/+/master/opengl/libs/EGL/egl_cache.cpp\n\"\n// Cache size limits.\nstatic const size_t maxKeySize \u003d 12 * 1024;\nstatic const size_t maxValueSize \u003d 64 * 1024;\nstatic const size_t maxTotalSize \u003d 2 * 1024 * 1024;\n\"",
+      "parentUuid": "673e60d2_8bd970f0",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "20ff4e89_eba4aeb9",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -332,6 +428,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "626eac05_2f911a25",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "replace roundUp with UnsignedCeilDivide.",
+      "parentUuid": "2d00b7d3_03977e0f",
+      "range": {
+        "startLine": 2224,
+        "startChar": 38,
+        "endLine": 2225,
+        "endChar": 64
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c83a577b_1db505c7",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -366,6 +486,30 @@
       "writtenOn": "2021-01-15T14:14:33Z",
       "side": 1,
       "message": "nit: I\u0027d suggest defining int chunkIndex here to be cleaner.",
+      "range": {
+        "startLine": 2229,
+        "startChar": 9,
+        "endLine": 2229,
+        "endChar": 19
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fdf762e2_753776e3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2229,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "To decrease the \"memcpy\" operation, replace the data type from \"int\" to \"uint8_t\".\nThen I can set chunkIndex and numChunks by:\n\"\nkeyData.data()[0] \u003d chunkIndex;\nkeyData.data()[1] \u003d numChunks;\n\"",
+      "parentUuid": "713ee449_d2ebfd13",
       "range": {
         "startLine": 2229,
         "startChar": 9,
@@ -470,6 +614,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e738c172_70938df3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2284,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "Static compressAndStorePipelineCacheVk() and getAndDecompressPipelineCacheVk() function return angle::Result now.\nBasic compress and decompress function have been moved to BlobCache.cpp. Should I add  ANGLE_VK_CHECK in BlobCache.cpp?",
+      "parentUuid": "2296b6b2_527b4be1",
+      "range": {
+        "startLine": 2281,
+        "startChar": 0,
+        "endLine": 2284,
+        "endChar": 9
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "07091a89_72329e8e",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
@@ -504,6 +672,30 @@
       "writtenOn": "2021-01-15T14:14:33Z",
       "side": 1,
       "message": "nit: memorybuffer for error handling.",
+      "range": {
+        "startLine": 2319,
+        "startChar": 13,
+        "endLine": 2319,
+        "endChar": 19
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0486314e_81447223",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2319,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-19T13:47:19Z",
+      "side": 1,
+      "message": "replace:\nangle::MemoryBuffer uncompressedData;\nif (!uncompressedData.resize(uncompressedSize))\n{\n   ANGLE_VK_CHECK(display, false, VK_ERROR_INITIALIZATION_FAILED);\n   return angle::Result::Continue;\n}",
+      "parentUuid": "eb361838_be95057e",
       "range": {
         "startLine": 2319,
         "startChar": 13,
