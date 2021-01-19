@@ -214,6 +214,9 @@ TEST_P(TransformFeedbackTest, RecordAndDraw)
     // Fails on Mac GL drivers. http://anglebug.com/4992
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
 
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -291,6 +294,9 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
 
     // anglebug.com/5429
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -450,6 +456,9 @@ TEST_P(TransformFeedbackTest, ClearWhileRecordingDoesNotContribute)
     // anglebug.com/5434
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     auto clear = []() {
         glColorMask(GL_FALSE, GL_FALSE, GL_TRUE, GL_FALSE);
         glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -489,6 +498,9 @@ TEST_P(TransformFeedbackTest, CopyWhileRecordingDoesNotContribute)
     // anglebug.com/5434
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
 
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     auto copy = []() {
         GLTexture texture;
         glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, 1, 1, 0);
@@ -525,6 +537,9 @@ TEST_P(TransformFeedbackTest, BlitWhileRecordingDoesNotContribute)
 
     // anglebug.com/5434
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsOpenGLES());
+
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     auto blit = []() {
         GLFramebuffer dstFbo;
@@ -2234,6 +2249,9 @@ TEST_P(TransformFeedbackTest, OverrunWithPauseAndResume)
     // Fails on Windows Intel GL drivers. http://anglebug.com/4697
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsWindows());
 
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
         -1.0f, 1.0f, 0.5f, 1.0f, 1.0f,  -1.0f, 0.5f, 1.0f, 1.0f, 1.0f,  0.5f, 1.0f,
@@ -2280,6 +2298,9 @@ TEST_P(TransformFeedbackTest, OverrunWithMultiplePauseAndResume)
 
     // Crashes on Mac Intel GL drivers. http://anglebug.com/4992
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     const std::vector<GLfloat> vertices = {
         -1.0f, 1.0f, 0.5f, 1.0f, -1.0f, -1.0f, 0.5f, 1.0f, 1.0f, -1.0f, 0.5f, 1.0f,
@@ -2400,6 +2421,9 @@ TEST_P(TransformFeedbackTest, DrawWithoutTransformFeedbackThenWith)
     // Fails on Mac Intel GL drivers. http://anglebug.com/4992
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
 
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     constexpr char kVS[] =
         R"(#version 300 es
 in float in_value;
@@ -2492,6 +2516,9 @@ TEST_P(TransformFeedbackTest, RecordAndDrawWithScissorTest)
     // http://crbug.com/1135841
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOSX());
 
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthMask(GL_TRUE);
@@ -2572,6 +2599,9 @@ class TransformFeedbackWithDepthBufferTest : public TransformFeedbackTest
 
 TEST_P(TransformFeedbackWithDepthBufferTest, RecordAndDrawWithDepthWriteEnabled)
 {
+    // crbug.com/1167763
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glDepthMask(GL_TRUE);
