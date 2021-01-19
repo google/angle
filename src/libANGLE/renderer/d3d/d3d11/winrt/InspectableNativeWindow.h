@@ -18,7 +18,6 @@
 #include <EGL/eglplatform.h>
 
 #include <windows.applicationmodel.core.h>
-#undef GetCurrentTime
 #include <windows.ui.xaml.h>
 #include <windows.ui.xaml.media.dxinterop.h>
 #include <wrl.h>
