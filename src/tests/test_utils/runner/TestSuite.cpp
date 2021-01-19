@@ -427,8 +427,7 @@ class TestEventListener : public testing::EmptyTestEventListener
         mTestResults->currentTestTimer.stop();
         const testing::TestResult &resultIn = *testInfo.result();
         UpdateCurrentTestResult(resultIn, mTestResults);
-        mTestResults->currentTest        = TestIdentifier();
-        mTestResults->currentTestTimeout = 0.0;
+        mTestResults->currentTest = TestIdentifier();
     }
 
     void OnTestProgramEnd(const testing::UnitTest &testProgramInfo) override
