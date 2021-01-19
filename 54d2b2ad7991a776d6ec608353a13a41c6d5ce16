@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5443671e_129956da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-19T06:07:20Z",
+      "side": 1,
+      "message": "This app actually works now with the compressed texture fixes.  Will land the trace after the fix.",
+      "revId": "54d2b2ad7991a776d6ec608353a13a41c6d5ce16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
