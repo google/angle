@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0a83e41_1fb60919",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T19:11:42Z",
+      "side": 1,
+      "message": "Why does currentTestTimeout race but not currentTest?",
+      "range": {
+        "startLine": 430,
+        "startChar": 22,
+        "endLine": 430,
+        "endChar": 33
+      },
+      "revId": "feb470cc4cb08ee168dcd49065c304b79f8b1b24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
