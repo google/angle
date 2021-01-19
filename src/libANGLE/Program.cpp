@@ -4753,7 +4753,7 @@ angle::Result Program::deserialize(const Context *context,
         0)
     {
         infoLog << "Invalid program binary version.";
-        return angle::Result::Incomplete;
+        return angle::Result::Stop;
     }
 
     int majorVersion = stream.readInt<int>();
@@ -4762,7 +4762,7 @@ angle::Result Program::deserialize(const Context *context,
         minorVersion != context->getClientMinorVersion())
     {
         infoLog << "Cannot load program binaries across different ES context versions.";
-        return angle::Result::Incomplete;
+        return angle::Result::Stop;
     }
 
     mState.mExecutable->load(&stream);
@@ -4874,7 +4874,7 @@ angle::Result Program::deserialize(const Context *context,
         context->getFrontendFeatures().disableProgramCachingForTransformFeedback.enabled)
     {
         infoLog << "Current driver does not support transform feedback in binary programs.";
-        return angle::Result::Incomplete;
+        return angle::Result::Stop;
     }
 
     ASSERT(mState.mExecutable->mLinkedTransformFeedbackVaryings.empty());
