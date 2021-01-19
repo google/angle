@@ -68,8 +68,8 @@ class Traverser : public TIntermTraverser
         TIntermDeclaration *structDeclaration = new TIntermDeclaration;
         structDeclaration->appendDeclarator(structDeclarator);
 
-        TIntermSequence *newSequence = new TIntermSequence;
-        newSequence->push_back(structDeclaration);
+        TIntermSequence newSequence;
+        newSequence.push_back(structDeclaration);
 
         // uniform <structName> <structUniformName>;
         TIntermSymbol *asSymbol = declarator->getAsSymbolNode();
@@ -84,10 +84,11 @@ class Traverser : public TIntermTraverser
             TIntermSymbol *newSymbol = new TIntermSymbol(newVar);
             namedDecl->appendDeclarator(newSymbol);
 
-            newSequence->push_back(namedDecl);
+            newSequence.push_back(namedDecl);
         }
 
-        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), decl, *newSequence);
+        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), decl,
+                                        std::move(newSequence));
     }
 };
 }  // anonymous namespace

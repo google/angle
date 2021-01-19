@@ -229,10 +229,11 @@ ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
     TIntermBinary *plusPivot   = new TIntermBinary(EOpAdd, inverseXY, pivot->deepCopy());
 
     // Create the corrected variable and copy the value of the original builtin.
-    TIntermSequence *sequence = new TIntermSequence();
-    sequence->push_back(builtinRef->deepCopy());
-    TIntermAggregate *aggregate = TIntermAggregate::CreateConstructor(builtin->getType(), sequence);
-    TIntermBinary *assignment   = new TIntermBinary(EOpInitialize, flippedBuiltinRef, aggregate);
+    TIntermSequence sequence;
+    sequence.push_back(builtinRef->deepCopy());
+    TIntermAggregate *aggregate =
+        TIntermAggregate::CreateConstructor(builtin->getType(), &sequence);
+    TIntermBinary *assignment = new TIntermBinary(EOpInitialize, flippedBuiltinRef, aggregate);
 
     // Create an assignment to the replaced variable's .xy.
     TIntermSwizzle *correctedXY =
@@ -293,12 +294,12 @@ TVariable *AddANGLEPositionVaryingDeclaration(TIntermBlock *root,
     TIntermDeclaration *varyingDecl  = new TIntermDeclaration;
     varyingDecl->appendDeclarator(varyingDeclarator);
 
-    TIntermSequence *insertSequence = new TIntermSequence;
-    insertSequence->push_back(varyingDecl);
+    TIntermSequence insertSequence;
+    insertSequence.push_back(varyingDecl);
 
     // Insert the declarations before Main.
     size_t mainIndex = FindMainIndex(root);
-    root->insertChildNodes(mainIndex, *insertSequence);
+    root->insertChildNodes(mainIndex, insertSequence);
 
     return varyingVar;
 }

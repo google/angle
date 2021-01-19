@@ -150,9 +150,9 @@ bool Traverser::visitUnaryWithRotation(Visit visit, TIntermUnary *node)
         TIntermBinary *rotatedFlipXY = new TIntermBinary(EOpMul, flipXY, halfRotationMat);
         const TType *vec2Type        = StaticType::GetBasic<EbtFloat, 2>();
         TIntermSymbol *tmpRotFlipXY = new TIntermSymbol(CreateTempVariable(mSymbolTable, vec2Type));
-        TIntermSequence *tmpDecl    = new TIntermSequence;
-        tmpDecl->push_back(CreateTempInitDeclarationNode(&tmpRotFlipXY->variable(), rotatedFlipXY));
-        insertStatementsInParentBlock(*tmpDecl);
+        TIntermSequence tmpDecl;
+        tmpDecl.push_back(CreateTempInitDeclarationNode(&tmpRotFlipXY->variable(), rotatedFlipXY));
+        insertStatementsInParentBlock(tmpDecl);
 
         // Get the .x and .y swizzles to use as multipliers
         TVector<int> swizzleOffsetX = {0};

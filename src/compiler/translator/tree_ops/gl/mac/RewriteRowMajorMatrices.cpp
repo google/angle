@@ -116,13 +116,14 @@ TIntermSymbol *CopyToTempVariable(TSymbolTable *symbolTable,
 
 TIntermAggregate *CreateStructCopyCall(const TFunction *copyFunc, TIntermTyped *expression)
 {
-    return TIntermAggregate::CreateFunctionCall(*copyFunc, new TIntermSequence({expression}));
+    TIntermSequence args = {expression};
+    return TIntermAggregate::CreateFunctionCall(*copyFunc, &args);
 }
 
 TIntermTyped *CreateTransposeCall(TSymbolTable *symbolTable, TIntermTyped *expression)
 {
-    return CreateBuiltInFunctionCallNode("transpose", new TIntermSequence({expression}),
-                                         *symbolTable, 300);
+    TIntermSequence args = {expression};
+    return CreateBuiltInFunctionCallNode("transpose", &args, *symbolTable, 300);
 }
 
 TOperator GetIndex(TSymbolTable *symbolTable,

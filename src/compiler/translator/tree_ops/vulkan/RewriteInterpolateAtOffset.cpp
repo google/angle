@@ -94,9 +94,9 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
     const TIntermSequence *sequence = node->getSequence();
     ASSERT(sequence->size() == 2u);
 
-    TIntermSequence *interpolateAtOffsetArguments = new TIntermSequence();
+    TIntermSequence interpolateAtOffsetArguments;
     // interpolant node
-    interpolateAtOffsetArguments->push_back(sequence->at(0));
+    interpolateAtOffsetArguments.push_back(sequence->at(0));
     // offset
     TIntermTyped *offsetNode = sequence->at(1)->getAsTyped();
     ASSERT(offsetNode->getType() == *(StaticType::GetBasic<EbtFloat, 2>()));
@@ -124,10 +124,10 @@ bool Traverser::visitAggregate(Visit visit, TIntermAggregate *node)
 
     TIntermBinary *correctedOffset = new TIntermBinary(EOpMul, offsetNode, rotatedXY);
     correctedOffset->setLine(offsetNode->getLine());
-    interpolateAtOffsetArguments->push_back(correctedOffset);
+    interpolateAtOffsetArguments.push_back(correctedOffset);
 
     TIntermTyped *interpolateAtOffsetNode = CreateBuiltInFunctionCallNode(
-        "interpolateAtOffset", interpolateAtOffsetArguments, *symbolTable, shaderVersion);
+        "interpolateAtOffset", &interpolateAtOffsetArguments, *symbolTable, shaderVersion);
     interpolateAtOffsetNode->setLine(node->getLine());
 
     // Replace the old node by this new node.

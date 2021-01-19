@@ -88,7 +88,7 @@ ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
         return true;
     }
 
-    TIntermSequence *insertSequence = new TIntermSequence;
+    TIntermSequence insertSequence;
 
     for (const sh::ShaderVariable &var : unusedVars)
     {
@@ -96,18 +96,19 @@ ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
         const TIntermSymbol *symbol = FindSymbolNode(root, var.name);
         ASSERT(symbol);
 
-        TIntermSequence *initCode = CreateInitCode(symbol, false, false, symbolTable);
+        TIntermSequence initCode;
+        CreateInitCode(symbol, false, false, &initCode, symbolTable);
 
-        insertSequence->insert(insertSequence->end(), initCode->begin(), initCode->end());
+        insertSequence.insert(insertSequence.end(), initCode.begin(), initCode.end());
     }
 
-    if (insertSequence)
+    if (!insertSequence.empty())
     {
         TIntermFunctionDefinition *main = FindMain(root);
         TIntermSequence *mainSequence   = main->getBody()->getSequence();
 
         // Insert init code at the start of main()
-        mainSequence->insert(mainSequence->begin(), insertSequence->begin(), insertSequence->end());
+        mainSequence->insert(mainSequence->begin(), insertSequence.begin(), insertSequence.end());
     }
 
     return true;
@@ -320,10 +321,10 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
     // {
     //      ANGLEWriteSampleMask(ANGLEUniforms.coverageMask);
     // }
-    TIntermSequence *args = new TIntermSequence;
-    args->push_back(coverageMask);
+    TIntermSequence args;
+    args.push_back(coverageMask);
     TIntermAggregate *callSampleMaskWriteFunc =
-        TIntermAggregate::CreateFunctionCall(*sampleMaskWriteFunc, args);
+        TIntermAggregate::CreateFunctionCall(*sampleMaskWriteFunc, &args);
     TIntermBlock *callBlock = new TIntermBlock;
     callBlock->appendStatement(callSampleMaskWriteFunc);
 
@@ -359,14 +360,14 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertRasterizerDiscardLogic(TIntermBlock
     TIntermSymbol *positionRef = new TIntermSymbol(position);
 
     // Create vec4(-3, -3, -3, 1):
-    auto vec4Type             = new TType(EbtFloat, 4);
-    TIntermSequence *vec4Args = new TIntermSequence();
-    vec4Args->push_back(CreateFloatNode(-3.0f));
-    vec4Args->push_back(CreateFloatNode(-3.0f));
-    vec4Args->push_back(CreateFloatNode(-3.0f));
-    vec4Args->push_back(CreateFloatNode(1.0f));
+    auto vec4Type = new TType(EbtFloat, 4);
+    TIntermSequence vec4Args;
+    vec4Args.push_back(CreateFloatNode(-3.0f));
+    vec4Args.push_back(CreateFloatNode(-3.0f));
+    vec4Args.push_back(CreateFloatNode(-3.0f));
+    vec4Args.push_back(CreateFloatNode(1.0f));
     TIntermAggregate *constVarConstructor =
-        TIntermAggregate::CreateConstructor(*vec4Type, vec4Args);
+        TIntermAggregate::CreateConstructor(*vec4Type, &vec4Args);
 
     // Create the assignment "gl_Position = vec4(-3, -3, -3, 1)"
     TIntermBinary *assignment =

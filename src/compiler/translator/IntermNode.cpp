@@ -1054,9 +1054,9 @@ TIntermAggregate::TIntermAggregate(const TIntermAggregate &node)
 
 TIntermAggregate *TIntermAggregate::shallowCopy() const
 {
-    TIntermSequence *copySeq = new TIntermSequence();
-    copySeq->insert(copySeq->begin(), getSequence()->begin(), getSequence()->end());
-    TIntermAggregate *copyNode = new TIntermAggregate(mFunction, mType, mOp, copySeq);
+    TIntermSequence copySeq;
+    copySeq.insert(copySeq.begin(), getSequence()->begin(), getSequence()->end());
+    TIntermAggregate *copyNode = new TIntermAggregate(mFunction, mType, mOp, &copySeq);
     copyNode->setLine(mLine);
     return copyNode;
 }

@@ -57,18 +57,18 @@ bool RemovePowTraverser::visitAggregate(Visit visit, TIntermAggregate *node)
         TIntermTyped *x = node->getSequence()->at(0)->getAsTyped();
         TIntermTyped *y = node->getSequence()->at(1)->getAsTyped();
 
-        TIntermSequence *logArgs = new TIntermSequence();
-        logArgs->push_back(x);
-        TIntermTyped *log = CreateBuiltInFunctionCallNode("log2", logArgs, *mSymbolTable, 100);
+        TIntermSequence logArgs;
+        logArgs.push_back(x);
+        TIntermTyped *log = CreateBuiltInFunctionCallNode("log2", &logArgs, *mSymbolTable, 100);
         log->setLine(node->getLine());
 
         TOperator op       = TIntermBinary::GetMulOpBasedOnOperands(y->getType(), log->getType());
         TIntermBinary *mul = new TIntermBinary(op, y, log);
         mul->setLine(node->getLine());
 
-        TIntermSequence *expArgs = new TIntermSequence();
-        expArgs->push_back(mul);
-        TIntermTyped *exp = CreateBuiltInFunctionCallNode("exp2", expArgs, *mSymbolTable, 100);
+        TIntermSequence expArgs;
+        expArgs.push_back(mul);
+        TIntermTyped *exp = CreateBuiltInFunctionCallNode("exp2", &expArgs, *mSymbolTable, 100);
         exp->setLine(node->getLine());
 
         queueReplacement(exp, OriginalNode::IS_DROPPED);

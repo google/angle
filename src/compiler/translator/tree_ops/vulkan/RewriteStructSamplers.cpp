@@ -354,7 +354,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
             return false;
         }
 
-        TIntermSequence *newSequence = new TIntermSequence;
+        TIntermSequence newSequence;
 
         if (type.isStructSpecifier())
         {
@@ -363,7 +363,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
             const TStructure *structure = type.getStruct();
             ASSERT(structure && mStructureMap.find(structure) == mStructureMap.end());
 
-            stripStructSpecifierSamplers(structure, newSequence);
+            stripStructSpecifierSamplers(structure, &newSequence);
         }
         else
         {
@@ -373,7 +373,7 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
             // version first.
             if (mStructureMap.find(structure) == mStructureMap.end())
             {
-                stripStructSpecifierSamplers(structure, newSequence);
+                stripStructSpecifierSamplers(structure, &newSequence);
             }
 
             // Then, extract the samplers from the struct and create global-scope variables instead.
@@ -382,10 +382,11 @@ class RewriteStructSamplersTraverser final : public TIntermTraverser
             const TVariable &variable = asSymbol->variable();
             ASSERT(variable.symbolType() != SymbolType::Empty);
 
-            extractStructSamplerUniforms(variable, structure, newSequence);
+            extractStructSamplerUniforms(variable, structure, &newSequence);
         }
 
-        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), decl, *newSequence);
+        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), decl,
+                                        std::move(newSequence));
 
         return false;
     }
