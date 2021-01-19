@@ -22,6 +22,30 @@
       },
       "revId": "feb470cc4cb08ee168dcd49065c304b79f8b1b24",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "149e51c5_29b1777e",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-19T19:40:18Z",
+      "side": 1,
+      "message": "There isn\u0027t really a race, everything is guarded by mutex.\nBut if currentTestTimeout is reset in the end of a test, the watchdog has a chance to wake up in a wrong state - current test ran longer than 0.",
+      "parentUuid": "b0a83e41_1fb60919",
+      "range": {
+        "startLine": 430,
+        "startChar": 22,
+        "endLine": 430,
+        "endChar": 33
+      },
+      "revId": "feb470cc4cb08ee168dcd49065c304b79f8b1b24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
