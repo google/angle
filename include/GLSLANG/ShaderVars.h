@@ -100,6 +100,8 @@ struct ShaderVariable
     unsigned int getExternalSize() const;
 
     bool isStruct() const { return !fields.empty(); }
+    const std::string &getStructName() const { return structName; }
+    void setStructName(const std::string &newName) { structName = newName; }
 
     // All of the shader's variables are described using nested data
     // structures. This is needed in order to disambiguate similar looking
