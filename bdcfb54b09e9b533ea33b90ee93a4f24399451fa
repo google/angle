@@ -117,6 +117,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "71be9355_5d3d41e1",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T04:53:31Z",
+      "side": 1,
+      "message": "By the way, this section is revised as the wording was not precise in some cases: https://gitlab.khronos.org/vulkan/vulkan/-/merge_requests/3999/diffs?view\u003dparallel#diff-content-441625542d9e7fefe1448006a1c3f773f7db4bf8",
+      "parentUuid": "733b9980_ed2c8e2a",
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a2a3e4d5_548523ce",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 60
