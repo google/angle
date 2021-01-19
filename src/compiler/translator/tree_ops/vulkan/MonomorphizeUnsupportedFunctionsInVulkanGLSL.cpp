@@ -432,7 +432,8 @@ class UpdateFunctionsDefinitionsTraverser final : public TIntermTraverser
             replacement.push_back(new TIntermFunctionPrototype(
                 monomorphizedDefinition->getFunctionPrototype()->getFunction()));
         }
-        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node, replacement);
+        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
+                                        std::move(replacement));
     }
 
     bool visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node) override
@@ -461,7 +462,8 @@ class UpdateFunctionsDefinitionsTraverser final : public TIntermTraverser
         {
             replacement.push_back(monomorphizedDefinition);
         }
-        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node, replacement);
+        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
+                                        std::move(replacement));
 
         return false;
     }

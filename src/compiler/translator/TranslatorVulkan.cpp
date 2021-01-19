@@ -84,7 +84,7 @@ class DeclareStructTypesTraverser : public TIntermTraverser
                 // Remove the struct specifier declaration from the tree so it isn't parsed again.
                 TIntermSequence emptyReplacement;
                 mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
-                                                emptyReplacement);
+                                                std::move(emptyReplacement));
             }
         }
 
@@ -141,7 +141,7 @@ class DeclareDefaultUniformsTraverser : public TIntermTraverser
                 // Remove the uniform declaration from the tree so it isn't parsed again.
                 TIntermSequence emptyReplacement;
                 mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
-                                                emptyReplacement);
+                                                std::move(emptyReplacement));
             }
 
             mInDefaultUniform = false;

@@ -315,7 +315,7 @@ bool RewriteExpressionsWithShaderStorageBlockTraverser::visitAggregate(Visit vis
         {
             insertions.insert(insertions.end(), readBackToSSBOs.begin(), readBackToSSBOs.end());
         }
-        mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(parentBlock, node, insertions));
+        mMultiReplacements.emplace_back(parentBlock, node, std::move(insertions));
     }
     else
     {

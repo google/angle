@@ -80,7 +80,7 @@ bool RewriteAssignToSwizzledTraverser::visitBinary(Visit, TIntermBinary *node)
         TIntermBinary *lastAssign =
             new TIntermBinary(EOpAssign, node->getLeft(), rightAssignmentTargetCopy);
         replacements.push_back(lastAssign);
-        mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(parentBlock, node, replacements));
+        mMultiReplacements.emplace_back(parentBlock, node, std::move(replacements));
         mDidRewrite = true;
         return false;
     }

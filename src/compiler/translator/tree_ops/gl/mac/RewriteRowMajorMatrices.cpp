@@ -633,7 +633,8 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
 
         // Replace the interface block definition with the new one, prepending any new struct
         // definitions.
-        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node, newDeclarations);
+        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
+                                        std::move(newDeclarations));
     }
 
     bool convertNamelessInterfaceBlockField(TIntermSymbol *symbol)

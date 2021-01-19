@@ -77,8 +77,8 @@ bool WrapSwitchStatementsInBlocksTraverser::visitSwitch(Visit, TIntermSwitch *no
             // This is a simple declaration like: "float f;"
             // Remove the declaration from inside the switch and put it in the wrapping block.
             TIntermSequence emptyReplacement;
-            mMultiReplacements.push_back(NodeReplaceWithMultipleEntry(
-                node->getStatementList(), declaration, emptyReplacement));
+            mMultiReplacements.emplace_back(node->getStatementList(), declaration,
+                                            std::move(emptyReplacement));
 
             declarationInBlock->appendDeclarator(declaratorAsSymbol->deepCopy());
             // The declaration can't be the last statement inside the switch since unused variables

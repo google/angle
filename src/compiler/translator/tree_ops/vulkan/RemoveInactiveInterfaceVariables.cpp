@@ -129,7 +129,8 @@ bool RemoveInactiveInterfaceVariablesTraverser::visitDeclaration(Visit visit,
     if (removeDeclaration)
     {
         TIntermSequence emptySequence;
-        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node, emptySequence);
+        mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
+                                        std::move(emptySequence));
     }
 
     return false;

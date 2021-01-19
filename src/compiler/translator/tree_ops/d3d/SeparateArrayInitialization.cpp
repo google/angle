@@ -73,8 +73,7 @@ bool SeparateArrayInitTraverser::visitDeclaration(Visit, TIntermDeclaration *nod
             replacementAssignment->setLine(symbol->getLine());
             replacements.push_back(replacementAssignment);
 
-            mMultiReplacements.push_back(
-                NodeReplaceWithMultipleEntry(parentBlock, node, replacements));
+            mMultiReplacements.emplace_back(parentBlock, node, std::move(replacements));
         }
     }
     return false;

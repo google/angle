@@ -202,7 +202,8 @@ class RewriteAtomicCountersTraverser : public TIntermTraverser
         {
             ASSERT(type.getQualifier() == EvqUniform);
             TIntermSequence emptySequence;
-            mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node, emptySequence);
+            mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
+                                            std::move(emptySequence));
 
             return false;
         }

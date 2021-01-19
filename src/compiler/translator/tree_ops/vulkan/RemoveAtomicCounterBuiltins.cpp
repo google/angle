@@ -48,7 +48,8 @@ class RemoveAtomicCounterBuiltinsTraverser : public TIntermTraverser
             // Vulkan does not support atomic counters, so if this builtin finds its way here,
             // we need to remove it.
             TIntermSequence emptySequence;
-            mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node, emptySequence);
+            mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
+                                            std::move(emptySequence));
             return true;
         }
 
