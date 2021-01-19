@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7088688_68616725",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3586,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-01-19T17:44:35Z",
+      "side": 1,
+      "message": "Thanks for the test, the test is well written! Since the test passes, I guess this is correct. To educate myself, in your test example, Lets say image2[2][1], \n   imageUniform.parentArrayIndex() \u003d\u003d 2*4+1 \u003d\u003d 9\n   arraySize \u003d 1?\nThe part I am a bit confused here is arraySize, what exactly is arraySizes[0]?",
+      "range": {
+        "startLine": 3586,
+        "startChar": 52,
+        "endLine": 3586,
+        "endChar": 96
+      },
+      "revId": "7fe9b7188bd0932d117675709fb32b887a898e50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
