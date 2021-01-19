@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04c00a4c_0a2bcd85",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T04:02:05Z",
+      "side": 1,
+      "message": "Nice. Feel free to take advantage of the green run to submit. All comments can be follow up.",
+      "revId": "b5778ad59557009b12eb28e36791ac279463db55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8a1b63e_c1ab77e9",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 708,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T04:02:05Z",
+      "side": 1,
+      "message": "Is it possible otherwise? Could turn into ASSERT",
+      "range": {
+        "startLine": 708,
+        "startChar": 20,
+        "endLine": 708,
+        "endChar": 70
+      },
+      "revId": "b5778ad59557009b12eb28e36791ac279463db55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da0447eb_d8cf8137",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T04:02:05Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 720,
+        "startChar": 20,
+        "endLine": 720,
+        "endChar": 70
+      },
+      "revId": "b5778ad59557009b12eb28e36791ac279463db55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e702578_4ea61c22",
+        "filename": "src/compiler/translator/CollectVariables.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 819,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T04:02:05Z",
+      "side": 1,
+      "message": "Probably needs to be done for GS out too, or just not done at all? For GS it can be 0 (I think) and it doesn\u0027t look like that causes any issues.",
+      "revId": "b5778ad59557009b12eb28e36791ac279463db55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b11ac88b_7a77f20d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T04:02:05Z",
+      "side": 1,
+      "message": "nit: move before Geometry for nicer ordering",
+      "revId": "b5778ad59557009b12eb28e36791ac279463db55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69f49066_170ec367",
+        "filename": "src/compiler/translator/ValidateBarrierFunctionCall.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T04:02:05Z",
+      "side": 1,
+      "message": "This should probably also check loops.",
+      "revId": "b5778ad59557009b12eb28e36791ac279463db55",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
