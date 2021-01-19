@@ -45,6 +45,7 @@ class FunctionsEGL
                             EGLConfig *configs,
                             EGLint config_size,
                             EGLint *num_config) const;
+    EGLBoolean getConfigs(EGLConfig *configs, EGLint config_size, EGLint *num_config) const;
     EGLBoolean getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value) const;
     EGLSurface getCurrentSurface(EGLint readdraw) const;
     EGLContext createContext(EGLConfig config,

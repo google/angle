@@ -901,7 +901,7 @@ Error Display::initialize()
     if (mConfigSet.size() == 0)
     {
         mImplementation->terminate();
-        return EglNotInitialized();
+        return EglNotInitialized() << "No configs were generated.";
     }
 
     // OpenGL ES1 is implemented in the frontend, explicitly add ES1 support to all configs

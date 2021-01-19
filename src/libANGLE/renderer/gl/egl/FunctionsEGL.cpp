@@ -45,6 +45,7 @@ struct FunctionsEGL::EGLDispatchTable
           destroyContextPtr(nullptr),
           destroySurfacePtr(nullptr),
           getConfigAttribPtr(nullptr),
+          getConfigsPtr(nullptr),
           getCurrentSurfacePtr(nullptr),
           getDisplayPtr(nullptr),
           getErrorPtr(nullptr),
@@ -96,6 +97,7 @@ struct FunctionsEGL::EGLDispatchTable
     PFNEGLDESTROYCONTEXTPROC destroyContextPtr;
     PFNEGLDESTROYSURFACEPROC destroySurfacePtr;
     PFNEGLGETCONFIGATTRIBPROC getConfigAttribPtr;
+    PFNEGLGETCONFIGSPROC getConfigsPtr;
     PFNEGLGETCURRENTSURFACEPROC getCurrentSurfacePtr;
     PFNEGLGETDISPLAYPROC getDisplayPtr;
     PFNEGLGETERRORPROC getErrorPtr;
@@ -176,6 +178,7 @@ egl::Error FunctionsEGL::initialize(EGLNativeDisplayType nativeDisplay)
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->destroyContextPtr, eglDestroyContext);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->destroySurfacePtr, eglDestroySurface);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getConfigAttribPtr, eglGetConfigAttrib);
+    ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getConfigsPtr, eglGetConfigs);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getCurrentSurfacePtr, eglGetCurrentSurface);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getDisplayPtr, eglGetDisplay);
     ANGLE_GET_PROC_OR_ERROR(&mFnPtrs->getErrorPtr, eglGetError);
@@ -336,6 +339,13 @@ EGLBoolean FunctionsEGL::chooseConfig(EGLint const *attribList,
                                       EGLint *numConfig) const
 {
     return mFnPtrs->chooseConfigPtr(mEGLDisplay, attribList, configs, configSize, numConfig);
+}
+
+EGLBoolean FunctionsEGL::getConfigs(EGLConfig *configs,
+                                    EGLint config_size,
+                                    EGLint *num_config) const
+{
+    return mFnPtrs->getConfigsPtr(mEGLDisplay, configs, config_size, num_config);
 }
 
 EGLBoolean FunctionsEGL::getConfigAttrib(EGLConfig config, EGLint attribute, EGLint *value) const

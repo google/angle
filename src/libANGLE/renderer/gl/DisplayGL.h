@@ -39,6 +39,11 @@ class DisplayGL : public DisplayImpl
                            EGLenum target,
                            const egl::AttributeMap &attribs) override;
 
+    SurfaceImpl *createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                               EGLenum buftype,
+                                               EGLClientBuffer clientBuffer,
+                                               const egl::AttributeMap &attribs) override;
+
     StreamProducerImpl *createStreamProducerD3DTexture(egl::Stream::ConsumerType consumerType,
                                                        const egl::AttributeMap &attribs) override;
 

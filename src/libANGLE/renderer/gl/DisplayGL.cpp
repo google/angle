@@ -87,6 +87,15 @@ ImageImpl *DisplayGL::createImage(const egl::ImageState &state,
     return nullptr;
 }
 
+SurfaceImpl *DisplayGL::createPbufferFromClientBuffer(const egl::SurfaceState &state,
+                                                      EGLenum buftype,
+                                                      EGLClientBuffer clientBuffer,
+                                                      const egl::AttributeMap &attribs)
+{
+    UNIMPLEMENTED();
+    return nullptr;
+}
+
 StreamProducerImpl *DisplayGL::createStreamProducerD3DTexture(
     egl::Stream::ConsumerType consumerType,
     const egl::AttributeMap &attribs)

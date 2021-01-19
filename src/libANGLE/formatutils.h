@@ -16,6 +16,7 @@
 #include "angle_gl.h"
 #include "common/android_util.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/Config.h"
 #include "libANGLE/Error.h"
 #include "libANGLE/Version.h"
 #include "libANGLE/VertexAttribute.h"
@@ -292,6 +293,9 @@ typedef angle::HashMap<GLenum, angle::HashMap<GLenum, InternalFormat>> InternalF
 const InternalFormatInfoMap &GetInternalFormatMap();
 
 int GetAndroidHardwareBufferFormatFromChannelSizes(const egl::AttributeMap &attribMap);
+
+GLenum GetConfigColorBufferFormat(const egl::Config *config);
+GLenum GetConfigDepthStencilBufferFormat(const egl::Config *config);
 
 ANGLE_INLINE int GetNativeVisualID(const InternalFormat &internalFormat)
 {
