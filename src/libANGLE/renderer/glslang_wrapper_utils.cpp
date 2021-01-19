@@ -1929,9 +1929,6 @@ void SpirvTransformer::transformInstruction()
         // Look at global declaration opcodes.
         switch (opCode)
         {
-            case spv::OpSourceContinued:
-            case spv::OpSource:
-            case spv::OpSourceExtension:
             case spv::OpName:
             case spv::OpMemberName:
             case spv::OpString:
