@@ -1417,8 +1417,6 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     bool flipX                          = false;
     bool flipY                          = false;
     bool noClip                         = false;
-    bool noFlip                         = false;
-    bool disableFlippingBlitWithCommand = false;
 
     UtilsVk::BlitResolveParameters params;
     params.stretch[0] = static_cast<float>(stretch[0]);
@@ -1441,9 +1439,6 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                         dstFramebufferFlippedY, isResolve, &flipX, &flipY, isDefault, &params);
 
         noClip = blitArea == destColorArea && stretch[0] == 1.0f && stretch[1] == 1.0f;
-        noFlip = !flipX && !flipY;
-        disableFlippingBlitWithCommand =
-            renderer->getFeatures().disableFlippingBlitWithCommand.enabled;
 
         // Multisampled images are not allowed to have mips.
         ASSERT(!isColorResolve || readRenderTarget->getLevelIndex() == gl::LevelIndex(0));
@@ -1458,9 +1453,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         // https://gitlab.khronos.org/vulkan/vulkan/-/issues/3490)
         //
         // For simplicity, we either blit all render targets with a Vulkan command, or none.
-        bool canBlitWithCommand =
-            !isColorResolve && noClip && (noFlip || !disableFlippingBlitWithCommand) &&
-            HasSrcBlitFeature(renderer, readRenderTarget) && rotation == SurfaceRotation::Identity;
+        bool canBlitWithCommand = !isColorResolve && noClip &&
+                                  HasSrcBlitFeature(renderer, readRenderTarget) &&
+                                  rotation == SurfaceRotation::Identity;
 
         // If we need to reinterpret the colorspace of the read RenderTarget then the blit must be
         // done through a shader
@@ -1594,17 +1589,14 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                         &flipY, isDefault, &params);
 
         noClip = blitArea == destArea && stretch[0] == 1.0f && stretch[1] == 1.0f;
-        noFlip = !flipX && !flipY;
-        disableFlippingBlitWithCommand =
-            renderer->getFeatures().disableFlippingBlitWithCommand.enabled;
+        const bool noFlip = !flipX && !flipY;
 
         // Multisampled images are not allowed to have mips.
         ASSERT(!isDepthStencilResolve || readRenderTarget->getLevelIndex() == gl::LevelIndex(0));
 
         // Similarly, only blit if there's been no clipping or rotating.
         bool canBlitWithCommand =
-            !isDepthStencilResolve && noClip && (noFlip || !disableFlippingBlitWithCommand) &&
-            HasSrcBlitFeature(renderer, readRenderTarget) &&
+            !isDepthStencilResolve && noClip && HasSrcBlitFeature(renderer, readRenderTarget) &&
             HasDstBlitFeature(renderer, drawRenderTarget) && rotation == SurfaceRotation::Identity;
         bool areChannelsBlitCompatible =
             AreSrcAndDstDepthStencilChannelsBlitCompatible(readRenderTarget, drawRenderTarget);

@@ -272,12 +272,6 @@ struct FeaturesVk : FeatureSetBase
         &members,
     };
 
-    FeatureInfo disableFlippingBlitWithCommand = {
-        "disableFlippingBlitWithCommand",
-        FeatureCategory::VulkanWorkarounds,
-        &members,
-    };
-
     FeatureInfo avoidInvisibleWindowSwapchainRecreate = {
         "avoidInvisibleWindowSwapchainRecreate",
         FeatureCategory::VulkanWorkarounds,

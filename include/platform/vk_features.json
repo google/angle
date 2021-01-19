@@ -331,14 +331,6 @@
             "issue": "http://anglebug.com/42262115"
         },
         {
-            "name": "disable_flipping_blit_with_command",
-            "category": "Workarounds",
-            "description": [
-                "vkCmdBlitImage with flipped coordinates blits incorrectly."
-            ],
-            "issue": "http://anglebug.com/42262161"
-        },
-        {
             "name": "avoid_invisible_window_swapchain_recreate",
             "category": "Workarounds",
             "description": [

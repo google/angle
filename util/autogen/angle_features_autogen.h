@@ -91,7 +91,6 @@ enum class Feature
     DisableClipControl,
     DisableDepthStencilResolveThroughAttachment,
     DisableDrawBuffersIndexed,
-    DisableFlippingBlitWithCommand,
     DisableGPUSwitchingSupport,
     DisableMetalOnNvidia,
     DisableMSAASampleCount1,
