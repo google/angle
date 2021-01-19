@@ -392,12 +392,11 @@ egl::Error DisplayAndroid::makeCurrent(egl::Display *display,
         return DisplayGL::makeCurrent(display, drawSurface, readSurface, context);
     }
 
-    // The context should never change when context virtualization is being used, even when a null
-    // context is being bound.
-    if (mVirtualizedContexts)
+    // The context should never change when context virtualization is being used unless binding a
+    // null context.
+    if (mVirtualizedContexts && newContext != EGL_NO_CONTEXT)
     {
-        ASSERT(newContext == EGL_NO_CONTEXT || currentContext.context == EGL_NO_CONTEXT ||
-               newContext == currentContext.context);
+        ASSERT(currentContext.context == EGL_NO_CONTEXT || newContext == currentContext.context);
 
         newContext = mRenderer->getContext();
 
