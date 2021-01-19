@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d7c91d6_b7bcdd28",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T14:46:57Z",
+      "side": 1,
+      "message": "LGTM.",
+      "revId": "62b7c7df01d438d5a57ffce2584a733c43836669",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "067f0a94_5d8b3031",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3851,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-19T14:46:57Z",
+      "side": 1,
+      "message": "nit: can we call this blockWidth instead of widthScale? same with heightScale.",
+      "range": {
+        "startLine": 3851,
+        "startChar": 8,
+        "endLine": 3851,
+        "endChar": 18
+      },
+      "revId": "62b7c7df01d438d5a57ffce2584a733c43836669",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
