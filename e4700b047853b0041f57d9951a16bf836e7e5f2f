@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78c766d0_ba6b9c5d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T16:52:29Z",
+      "side": 1,
+      "message": "Finally got around to address this. I need a change in chromium in between this one and the next one for the rename to be possible.",
+      "revId": "e4700b047853b0041f57d9951a16bf836e7e5f2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
