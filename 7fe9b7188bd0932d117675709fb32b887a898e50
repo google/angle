@@ -22,6 +22,30 @@
       },
       "revId": "7fe9b7188bd0932d117675709fb32b887a898e50",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50378508_76e3b0da",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3586,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T17:51:55Z",
+      "side": 1,
+      "message": "ShaderVariable::arraySizes has the outermost array size as the last element. So if you have `image[A][B][C][D]`, then `arraySizes` would be `{D, C, B, A}`. The image uniforms are in the form of `image[i][j][k]`, each of which is an array of size D.\n\nIn the above example, here `arraySize` is D, and `imageUniform.parentArrayIndex()` is `i*B*C + j*C + k`.",
+      "parentUuid": "e7088688_68616725",
+      "range": {
+        "startLine": 3586,
+        "startChar": 52,
+        "endLine": 3586,
+        "endChar": 96
+      },
+      "revId": "7fe9b7188bd0932d117675709fb32b887a898e50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
