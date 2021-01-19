@@ -448,11 +448,9 @@ void RendererVk::ensureCapsInitialized() const
         vk::GetTextureSRGBOverrideSupport(this, mNativeExtensions);
     mNativeExtensions.textureSRGBDecode = vk::GetTextureSRGBDecodeSupport(this);
 
-    // Vulkan natively supports io interface block.  This extension is not fully implemented yet
-    // however.  http://anglebug.com/3580
-    mNativeExtensions.shaderIoBlocksOES =
-        getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
-    mNativeExtensions.shaderIoBlocksEXT = mNativeExtensions.shaderIoBlocksOES;
+    // Vulkan natively supports io interface block.
+    mNativeExtensions.shaderIoBlocksOES = true;
+    mNativeExtensions.shaderIoBlocksEXT = true;
 
     mNativeExtensions.gpuShader5EXT = vk::CanSupportGPUShader5EXT(mPhysicalDeviceFeatures);
 
