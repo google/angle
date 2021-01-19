@@ -100,6 +100,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6287a004_418aa700",
+        "filename": "src/libANGLE/ProgramLinkedResources.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 1690,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T16:00:36Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "c316486e_28ac78a3",
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8888b2b_b01b0ccb",
@@ -231,6 +249,24 @@
       "side": 1,
       "message": "Done. Turns out none of this code was used so I just moved it to another temporary patch that I\u0027ll abandon. See http://crrev.com/c/2637417",
       "parentUuid": "71be9355_5d3d41e1",
+      "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83af441d_725ea7cd",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 60
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-19T16:00:36Z",
+      "side": 1,
+      "message": "👍",
+      "parentUuid": "728b5072_a2caf074",
       "revId": "bdcfb54b09e9b533ea33b90ee93a4f24399451fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
