@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54b543a6_122849b6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "I like this CL a lot: being able to break up the blob is great. Have a bunch of suggestions to make the code less error prone and validate the incoming data.",
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6db73605_45aac3cf",
@@ -82,6 +99,333 @@
         "startChar": 36,
         "endLine": 491,
         "endChar": 49
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db86ac7f_c0dd96d1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "I\u0027d add a:\n\n  constexpr size_t kBlobHeaderSize \u003d ...;",
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "183e8ade_59779917",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "Store in a size_t and validate that it doesn\u0027t overflow 8 bits.",
+      "range": {
+        "startLine": 507,
+        "startChar": 10,
+        "endLine": 507,
+        "endChar": 17
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cc4ea36_0784b176",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 508,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "kBlobHeaderSize",
+      "range": {
+        "startLine": 508,
+        "startChar": 78,
+        "endLine": 508,
+        "endChar": 97
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dab516b9_f2f35765",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "compressedOffset (or remove compressedOffset and use \"chunkIndex * chunkSize\" below)",
+      "range": {
+        "startLine": 516,
+        "startChar": 48,
+        "endLine": 516,
+        "endChar": 70
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3cc1558_ef9ea7ac",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 520,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "kBlobHeaderSize",
+      "range": {
+        "startLine": 520,
+        "startChar": 28,
+        "endLine": 520,
+        "endChar": 66
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "891197cf_bddc80d5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "We don\u0027t need to write chunkIndex because it\u0027s also in the key.  If you want to validate when you read the data back, you could write the number of remaining chunks instead.",
+      "range": {
+        "startLine": 525,
+        "startChar": 0,
+        "endLine": 526,
+        "endChar": 39
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d4553eb_92175017",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "kBlobHeaderSize",
+      "range": {
+        "startLine": 528,
+        "startChar": 32,
+        "endLine": 528,
+        "endChar": 70
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ab815ad_65293adf",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 550,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "Just call this keyData and re-use it in the loop. Saves memory.",
+      "range": {
+        "startLine": 550,
+        "startChar": 26,
+        "endLine": 550,
+        "endChar": 38
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec2d90a4_98ec0e2b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "Also add a:\n\n  constexpr size_t kBlobHeaderSize \u003d ...;",
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8eab63e_6af4ceec",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "Also check that keyData.size() \u003e\u003d kBlobHeaderSize",
+      "range": {
+        "startLine": 554,
+        "startChar": 47,
+        "endLine": 554,
+        "endChar": 48
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "838de352_13070fe1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "Remove this and use kBlobHeaderSize",
+      "range": {
+        "startLine": 561,
+        "startChar": 4,
+        "endLine": 561,
+        "endChar": 50
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10a3f6fc_6629c07b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 581,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "Also check that keyData.size() \u003e\u003d kBlobHeaderSize",
+      "range": {
+        "startLine": 581,
+        "startChar": 51,
+        "endLine": 581,
+        "endChar": 52
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31903c35_bdc67cba",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "kBlobHeaderSize",
+      "range": {
+        "startLine": 589,
+        "startChar": 40,
+        "endLine": 589,
+        "endChar": 50
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63fb7f2f_4ddc6987",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "Validate that compressedSize + chunkSize \u003c\u003d compressedData.size()",
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74e403dc_44b72989",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T19:31:31Z",
+      "side": 1,
+      "message": "kBlobHeaderSize",
+      "range": {
+        "startLine": 596,
+        "startChar": 72,
+        "endLine": 596,
+        "endChar": 82
       },
       "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
