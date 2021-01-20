@@ -51,6 +51,41 @@
       "parentUuid": "45e5f7e9_e7137df5",
       "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d80a1b1_e7add266",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T18:34:22Z",
+      "side": 1,
+      "message": "ping",
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f87db7d_dd6ef666",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T18:34:22Z",
+      "side": 1,
+      "message": "The difference between D3D11 and D3D12 in this respect is documented here: https://docs.microsoft.com/en-us/windows/win32/direct3d12/subresources#plane-slice\n\nIf you prefer I can change the enum to denote array slice instead of subresource index so it\u0027s more clear.",
+      "parentUuid": "d1b8c551_b50c1fdf",
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
