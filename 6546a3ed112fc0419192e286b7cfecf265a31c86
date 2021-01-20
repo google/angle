@@ -135,6 +135,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a276158b_22deedb4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:23:34Z",
+      "side": 1,
+      "message": "The associated issue is closed. Is this a Pixel driver bug? And is it fixed on the P4? If so we should open an issue to just update the test expectation once we upgrade.",
+      "parentUuid": "e26a1bcc_1600aa0e",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6eb027e3_5a962733",
