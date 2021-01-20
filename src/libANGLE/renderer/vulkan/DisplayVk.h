@@ -25,7 +25,7 @@ using ShareContextSet = std::set<ContextVk *>;
 class ShareGroupVk : public ShareGroupImpl
 {
   public:
-    ShareGroupVk() {}
+    ShareGroupVk();
     void onDestroy(const egl::Display *display) override;
 
     // PipelineLayoutCache and DescriptorSetLayoutCache can be shared between multiple threads
@@ -44,6 +44,10 @@ class ShareGroupVk : public ShareGroupImpl
         mResourceUseLists.emplace_back(std::move(resourceUseList));
     }
 
+    bool isSyncObjectPendingFlush() { return mSyncObjectPendingFlush; }
+    void setSyncObjectPendingFlush() { mSyncObjectPendingFlush = true; }
+    void clearSyncObjectPendingFlush() { mSyncObjectPendingFlush = false; }
+
   private:
     // ANGLE uses a PipelineLayout cache to store compatible pipeline layouts.
     PipelineLayoutCache mPipelineLayoutCache;
@@ -57,6 +61,8 @@ class ShareGroupVk : public ShareGroupImpl
     // List of resources currently used that need to be freed when any ContextVk in this
     // ShareGroupVk submits the next command.
     std::vector<vk::ResourceUseList> mResourceUseLists;
+
+    bool mSyncObjectPendingFlush;
 };
 
 class DisplayVk : public DisplayImpl, public vk::Context

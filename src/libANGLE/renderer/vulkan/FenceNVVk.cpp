@@ -34,8 +34,14 @@ angle::Result FenceNVVk::set(const gl::Context *context, GLenum condition)
 
 angle::Result FenceNVVk::test(const gl::Context *context, GLboolean *outFinished)
 {
+    ContextVk *contextVk = vk::GetImpl(context);
+    if (contextVk->getShareGroupVk()->isSyncObjectPendingFlush())
+    {
+        ANGLE_TRY(contextVk->flushImpl(nullptr));
+    }
+
     bool signaled = false;
-    ANGLE_TRY(mFenceSync.getStatus(vk::GetImpl(context), &signaled));
+    ANGLE_TRY(mFenceSync.getStatus(contextVk, &signaled));
 
     ASSERT(outFinished);
     *outFinished = signaled ? GL_TRUE : GL_FALSE;

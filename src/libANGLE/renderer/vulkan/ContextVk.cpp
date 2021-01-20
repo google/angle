@@ -373,7 +373,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mOutsideRenderPassCommands(nullptr),
       mRenderPassCommands(nullptr),
       mGpuEventsEnabled(false),
-      mSyncObjectPendingFlush(false),
       mEGLSyncObjectPendingFlush(false),
       mHasDeferredFlush(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
@@ -694,7 +693,8 @@ angle::Result ContextVk::flush(const gl::Context *context)
     // lands in the correct place within the command stream.
     // EGL sync objects can span across context share groups, so don't defer flushes if there's one
     // pending a flush.
-    if (mSyncObjectPendingFlush && context->isShared() && !mEGLSyncObjectPendingFlush)
+    if (getShareGroupVk()->isSyncObjectPendingFlush() && context->isShared() &&
+        !mEGLSyncObjectPendingFlush)
     {
         // Flush the commands to create a sync point in the command stream.
         ANGLE_TRY(flushCommandsAndEndRenderPass());
@@ -4278,8 +4278,8 @@ angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)
 
     // We must set this to false before calling flushCommandsAndEndRenderPass to prevent it from
     // calling back to flushImpl.
-    mHasDeferredFlush       = false;
-    mSyncObjectPendingFlush = false;
+    mHasDeferredFlush = false;
+    getShareGroupVk()->clearSyncObjectPendingFlush();
 
     ANGLE_TRY(flushCommandsAndEndRenderPass());
 

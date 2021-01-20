@@ -568,7 +568,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     const vk::PerfCounters &getPerfCounters() const { return mPerfCounters; }
     vk::PerfCounters &getPerfCounters() { return mPerfCounters; }
 
-    void onSyncHelperInitialize() { mSyncObjectPendingFlush = true; }
+    void onSyncHelperInitialize() { getShareGroupVk()->setSyncObjectPendingFlush(); }
     void onEGLSyncHelperInitialize() { mEGLSyncObjectPendingFlush = true; }
 
     // Implementation of MultisampleTextureInitializer
@@ -991,7 +991,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // Track SyncHelper object been added into secondary command buffer that has not been flushed to
     // vulkan.
-    bool mSyncObjectPendingFlush;
     bool mEGLSyncObjectPendingFlush;
     bool mHasDeferredFlush;
 

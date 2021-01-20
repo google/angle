@@ -230,9 +230,6 @@ TEST_P(FenceSyncTest, BasicQueries)
 // Test that basic usage works and doesn't generate errors or crash
 TEST_P(FenceSyncTest, BasicOperations)
 {
-    // TODO(http://anglebug.com/5425): glClientWaitSync() returns GL_TIMEOUT_EXPIRED
-    ANGLE_SKIP_TEST_IF(IsAMD() && IsD3D11());
-
     glClearColor(1.0f, 0.0f, 1.0f, 1.0f);
 
     GLsync sync = glFenceSync(GL_SYNC_GPU_COMMANDS_COMPLETE, 0);
@@ -241,17 +238,28 @@ TEST_P(FenceSyncTest, BasicOperations)
     glWaitSync(sync, 0, GL_TIMEOUT_IGNORED);
     EXPECT_GL_NO_ERROR();
 
+    GLsizei length         = 0;
+    GLint value            = 0;
+    unsigned int loopCount = 0;
+
     glFlush();
 
-    // Don't wait forever to make sure the test terminates
-    constexpr GLuint64 kTimeout = 1'000'000'000;  // 1 second
-    GLint value                 = 0;
+    // Use 'loopCount' to make sure the test doesn't get stuck in an infinite loop
+    while (value != GL_SIGNALED && loopCount <= 1000000)
+    {
+        loopCount++;
+
+        glGetSynciv(sync, GL_SYNC_STATUS, 1, &length, &value);
+        ASSERT_GL_NO_ERROR();
+    }
+
+    ASSERT_GLENUM_EQ(GL_SIGNALED, value);
+
     for (size_t i = 0; i < 20; i++)
     {
         glClear(GL_COLOR_BUFFER_BIT);
-        value = glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, kTimeout);
+        glClientWaitSync(sync, GL_SYNC_FLUSH_COMMANDS_BIT, GL_TIMEOUT_IGNORED);
         EXPECT_GL_NO_ERROR();
-        ASSERT_TRUE(value == GL_CONDITION_SATISFIED || value == GL_ALREADY_SIGNALED);
     }
 }
 
