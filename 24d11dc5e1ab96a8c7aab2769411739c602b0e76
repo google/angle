@@ -109,6 +109,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "095b0bd3_168e181b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T19:51:08Z",
+      "side": 1,
+      "message": "The meeting is pushed back, so let\u0027s just continue here for now.\n\nI talked with Jamie and maybe it\u0027s best to go back to the previous implementation, with some simplification and break the render pass as a first step. The idea is to implement it with subpass self-dependencies (as it was), but like this:\n\n----------------------------------------------------\nglUseProgram(programNonFetch)\ndraw1()\nglUseProgram(programFetch1)  // use input attachment 0\ndraw2()\nglUseProgram(programFetch2)  // use input attachment 1\ndraw3()\nglUseProgram(programFetch3)  // use input attachment 0, 2\ndraw4()\nglUseProgram(programNonFetch)\ndraw5()\n// etc\nflush()\n----------------------------------------------------\n\n- Instead of binding the descriptor set with only the input attachments that are used, bind it with all attachments.\n- Generate the following render passes:\n\n    begin RP, single subpass, no self dependency\n    bind(programNonFetch)\n    draw 1\n    end RP\n\n    begin RP, single subpass, self dependency with all attachments\n    bind all attachments as input attachments\n    bind(programFetch1)\n    draw 2\n    barrier\n    bind(programFetch2)\n    draw 3\n    barrier\n    bind(programFetch3)\n    draw 4\n    end RP\n\n    begin RP, single subpass, no self dependency\n    bind(programNonFetch)\n    draw 5\n    end RP\n\nThis way, right when `programFetch1` is encountered, break the render pass and start a new one. At this point you already know input attachments are going to be used so you can set up the descriptor sets and render pass description correctly (because you assume all attachments will end up being used as input attachments).\n\nThere are ideas on how to avoid breaking the render pass as well, but we can look into that as a follow up whenever the need arises.",
+      "parentUuid": "8c6619b5_35df6045",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
