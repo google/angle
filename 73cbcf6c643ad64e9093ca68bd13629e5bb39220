@@ -86,6 +86,156 @@
       "parentUuid": "d1b8c551_b50c1fdf",
       "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e11dfe4e_54076be7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T18:42:39Z",
+      "side": 1,
+      "message": "Ok, a few changes are needed because subresource allows selecting mip levels as well.\n\nNow I wonder if it makes more sense to add EGL_D3D_TEXTURE_ZOFFSET_ANGLE and EGL_D3D_TEXTURE_LEVEL_ANGLE instead. This would work for both D3D11 and D3D9, be more explicit and remove the need for any subresource -\u003e mip/array calculations.",
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ccec16e_c4dd2bdf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T18:42:39Z",
+      "side": 1,
+      "message": "Ok, right, they\u0027re selected by format, not array index.",
+      "parentUuid": "d1b8c551_b50c1fdf",
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "818a18eb_e8cc5b2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T18:42:39Z",
+      "side": 1,
+      "message": "I think it should be something like:\n\n   rtvDesc.Texture2DArray.MipSlice \u003d mSubresourceIndex % mipcount\n   rtvDesc.Texture2DArray.FirstArraySlice \u003d mSubresourceIndex / mipcount",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 75
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30af7256_2fa6d8b1",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T18:42:39Z",
+      "side": 1,
+      "message": "D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY",
+      "range": {
+        "startLine": 137,
+        "startChar": 59,
+        "endLine": 137,
+        "endChar": 93
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2cf955ec_93b97a5d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T18:42:39Z",
+      "side": 1,
+      "message": "this should be mSubresourceIndex",
+      "range": {
+        "startLine": 147,
+        "startChar": 45,
+        "endLine": 147,
+        "endChar": 46
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f9fda33_2cada87a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T18:42:39Z",
+      "side": 1,
+      "message": "Same as above",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 75
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b872a66_68bb2503",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1563,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-20T18:42:39Z",
+      "side": 1,
+      "message": "desc.ArraySize * desc.MipLevels",
+      "range": {
+        "startLine": 1563,
+        "startChar": 34,
+        "endLine": 1563,
+        "endChar": 49
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
