@@ -166,6 +166,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8d3db56_df8651d3",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:06:14Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "02e5597a_5cba82ed",
+      "range": {
+        "startLine": 601,
+        "startChar": 15,
+        "endLine": 601,
+        "endChar": 32
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10e24b5b_1aa53b44",
