@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "555ff8b7_ee16f6db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T16:39:14Z",
+      "side": 1,
+      "message": "They are GL failures for the new tests. I delayed suppression to bundle with review feedback fixes.",
+      "parentUuid": "67640939_ee0adee9",
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "85ee94c6_7807218d",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-01-19T19:03:34Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 464,
+        "startChar": 58,
+        "endLine": 464,
+        "endChar": 66
+      },
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cce3c18b_b1478da6",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 464,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T16:39:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85ee94c6_7807218d",
       "range": {
         "startLine": 464,
         "startChar": 58,
@@ -64,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c6f5468_5ad53f0f",
+        "filename": "src/compiler/translator/tree_ops/vulkan/RewriteR32fImages.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T16:39:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1faf82ab_12262271",
+      "range": {
+        "startLine": 360,
+        "startChar": 11,
+        "endLine": 360,
+        "endChar": 17
+      },
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d93338bd_4b604167",
@@ -77,6 +143,24 @@
       "writtenOn": "2021-01-19T19:03:34Z",
       "side": 1,
       "message": "Is this necessary?",
+      "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "878b83d8_13883380",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3797,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T16:39:14Z",
+      "side": 1,
+      "message": "Leftover garbage sorry. I sometimes need to add this for renderdoc.",
+      "parentUuid": "d93338bd_4b604167",
       "revId": "cff708eb47eae032d4974332d8ce71b4fb0046a2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
