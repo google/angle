@@ -323,6 +323,17 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
+    if (param.testID == RestrictedTraceID::efootball_pes_2021)
+    {
+        // TODO(https://anglebug.com/5517) Linux+Intel and Pixel 2 generate "Framebuffer is
+        // incomplete" errors with the Vulkan backend.
+        if (param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
+            ((IsLinux() && IsIntel()) || IsPixel2()))
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

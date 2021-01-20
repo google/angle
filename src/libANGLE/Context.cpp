@@ -3739,6 +3739,12 @@ void Context::initCaps()
                   "supported on some native drivers"
                << std::endl;
         mState.mExtensions.noperspectiveInterpolationNV = false;
+
+        // Nvidia's Vulkan driver only supports 4 draw buffers
+        constexpr GLint maxDrawBuffers = 4;
+        INFO() << "Limiting draw buffer count to " << maxDrawBuffers
+               << " while FrameCapture enabled" << std::endl;
+        ANGLE_LIMIT_CAP(mState.mCaps.maxDrawBuffers, maxDrawBuffers);
     }
 
     // Disable support for OES_get_program_binary

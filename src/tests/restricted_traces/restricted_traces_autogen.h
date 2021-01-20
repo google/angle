@@ -62,6 +62,7 @@ enum class RestrictedTraceID
     clash_of_clans,
     cod_mobile,
     dragon_ball_legends,
+    efootball_pes_2021,
     egypt_1500,
     fate_grand_order,
     fifa_mobile,
