@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b1294e0_de1739a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:21:37Z",
+      "side": 1,
+      "message": "Looking good, a few clean-up suggestions.",
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6db73605_45aac3cf",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:21:37Z",
+      "side": 1,
+      "message": "can you make this a non-member static method CompressBlobCacheData? it doesn\u0027t need to be part of blobcache.",
+      "range": {
+        "startLine": 172,
+        "startChar": 16,
+        "endLine": 172,
+        "endChar": 29
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e756a73_8ce2e0e1",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:21:37Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 203,
+        "startChar": 16,
+        "endLine": 203,
+        "endChar": 31
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9d50d29_03099671",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:21:37Z",
+      "side": 1,
+      "message": "same as below",
+      "range": {
+        "startLine": 491,
+        "startChar": 36,
+        "endLine": 491,
+        "endChar": 49
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc51fa28_f5b177db",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:21:37Z",
+      "side": 1,
+      "message": "can you make this a ANGLE_VK_CHECK as well? this is a serious error if it return false.",
+      "range": {
+        "startLine": 601,
+        "startChar": 34,
+        "endLine": 601,
+        "endChar": 49
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
