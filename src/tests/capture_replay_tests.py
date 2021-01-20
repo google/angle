@@ -54,6 +54,9 @@ REPLAY_BINARY = "capture_replay_tests"
 if platform == "win32":
     REPLAY_BINARY += ".exe"
 
+EXIT_SUCCESS = 0
+EXIT_FAILURE = 1
+
 switch_case_without_return_template = \
 """        case {case}:
             {namespace}::{call}({params});
@@ -864,14 +867,14 @@ def main(args):
         if returncode != 0:
             logging.error(output)
             child_processes_manager.KillAll()
-            return 1
+            return EXIT_FAILURE
         # run autoninja to build all tests
         returncode, output = child_processes_manager.RunAutoninjaProcess(
             capture_build_dir, args.test_suite, False)
         if returncode != 0:
             logging.error(output)
             child_processes_manager.KillAll()
-            return 1
+            return EXIT_FAILURE
         # get a list of tests
         test_path = os.path.join(capture_build_dir, args.test_suite)
         test_list = GetTestsListForFilter(test_path, args.gtest_filter)
@@ -977,18 +980,24 @@ def main(args):
             "Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d"
             % (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
                timedout_count))
+
+        retval = EXIT_SUCCESS
+
         if len(failed_tests):
             print("Comparison Failed tests:")
             for failed_test in sorted(failed_tests):
                 print("\t" + failed_test)
+            retval = EXIT_FAILURE
         if len(crashed_tests):
             print("Crashed tests:")
             for crashed_test in sorted(crashed_tests):
                 print("\t" + crashed_test)
+            retval = EXIT_FAILURE
         if len(compile_failed_tests):
             print("Compile failed tests:")
             for compile_failed_test in sorted(compile_failed_tests):
                 print("\t" + compile_failed_test)
+            retval = EXIT_FAILURE
         if len(skipped_tests):
             print("Skipped tests:")
             for skipped_test in sorted(skipped_tests):
@@ -997,6 +1006,7 @@ def main(args):
             print("Timeout tests:")
             for timeout_test in sorted(timed_out_tests):
                 print("\t" + timeout_test)
+            retval = EXIT_FAILURE
 
         # delete generated folders if --keep_temp_files flag is set to false
         if args.purge:
@@ -1004,8 +1014,12 @@ def main(args):
             DeleteTraceFolders(worker_count, trace_folder)
             if os.path.isdir(args.out_dir):
                 SafeDeleteFolder(args.out_dir)
+
+        return retval
+
     except KeyboardInterrupt:
         child_processes_manager.KillAll()
+        return EXIT_FAILURE
 
 
 if __name__ == "__main__":
