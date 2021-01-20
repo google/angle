@@ -63,6 +63,30 @@
       },
       "revId": "839c44ff5c76ec3dcb400197331e9e1f0c9738f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f93d6fb_eaf367b4",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-20T20:43:45Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "8646b3c9_f104805c",
+      "range": {
+        "startLine": 377,
+        "startChar": 0,
+        "endLine": 377,
+        "endChar": 69
+      },
+      "revId": "839c44ff5c76ec3dcb400197331e9e1f0c9738f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
