@@ -391,7 +391,7 @@ if (angle_standalone || build_with_chromium) {
       if (is_mac && angle_enable_metal) {
         # On macOS, compiling Metal shader sometimes takes very long time due to internal caching
         # mechanism. This hooking library is a way to bypass this caching mechanism.
-        deps += [ "$angle_root/src/libANGLE/renderer/metal/file_hooking:metal_shader_cache_file_hooking" ]
+        data_deps += [ "$angle_root/src/libANGLE/renderer/metal/file_hooking:metal_shader_cache_file_hooking" ]
       }
 
       if ((is_linux && !is_chromeos) ||
