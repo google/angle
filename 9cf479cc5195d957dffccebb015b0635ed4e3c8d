@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b9380da_6a6e1581",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-20T15:04:08Z",
+      "side": 1,
+      "message": "Hi Geoff \u0026 Jonah, PTAL. Thanks.",
+      "revId": "9cf479cc5195d957dffccebb015b0635ed4e3c8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
