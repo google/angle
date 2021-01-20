@@ -16,6 +16,52 @@
       "message": "PTAL\n\nUpdated to clear the cache entry for glCompressedTexImage calls, and it looks good with Klondike Adventures still.",
       "revId": "9afada108ebc71039bb6a4e24583e933dbe36451",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a36e416f_ad52955a",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4725,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:01:43Z",
+      "side": 1,
+      "message": "nit: this isn\u0027t just getting a location.. probably should update the name.",
+      "range": {
+        "startLine": 4725,
+        "startChar": 42,
+        "endLine": 4725,
+        "endChar": 70
+      },
+      "revId": "9afada108ebc71039bb6a4e24583e933dbe36451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b797980e_009cd670",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4742,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:01:43Z",
+      "side": 1,
+      "message": "nit: just to be pedantic can you \"else\" ASSERT the eps are the two supported subimage APIs? that prevents any surprises.",
+      "range": {
+        "startLine": 4742,
+        "startChar": 4,
+        "endLine": 4742,
+        "endChar": 5
+      },
+      "revId": "9afada108ebc71039bb6a4e24583e933dbe36451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
