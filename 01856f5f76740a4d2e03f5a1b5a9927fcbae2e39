@@ -16,6 +16,24 @@
       "message": "Tim, what you should do is delete the cache level on non-subimage calls. GL respecifies textures on non-subimage. I suspect your current solution has another different bug where some pixels would persist if the app calls TexImage with the same size.\n\nJust pass in a flag here like \"bool respecify\" or something like that.",
       "revId": "01856f5f76740a4d2e03f5a1b5a9927fcbae2e39",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1df36c1_1e3e8fb6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-20T00:30:07Z",
+      "side": 1,
+      "message": "I updated it to pass in the EntryPoint, so getTextureLevelCacheLocation() has the functions we\u0027re checking in the same place the cache entry is cleared to try and keep it a bit clearer why it\u0027s being done.\n\nLet me know what you think.",
+      "parentUuid": "5e71d741_309fe929",
+      "revId": "01856f5f76740a4d2e03f5a1b5a9927fcbae2e39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

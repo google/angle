@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0b198bf_bda1a071",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-20T00:30:07Z",
+      "side": 1,
+      "message": "PTAL\n\nUpdated to clear the cache entry for glCompressedTexImage calls, and it looks good with Klondike Adventures still.",
+      "revId": "9afada108ebc71039bb6a4e24583e933dbe36451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
