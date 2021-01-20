@@ -321,6 +321,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "232ce4f1_80b25020",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-20T16:17:06Z",
+      "side": 1,
+      "message": "The intent for the script was to just run it locally when creating new traces, not run it continuously, so there was no need to use a contract.",
+      "parentUuid": "89ffec68_a827f69b",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb79eb6d_238feff5",
         "filename": "scripts/generate_rmse_scores.py",
         "patchSetId": 7
