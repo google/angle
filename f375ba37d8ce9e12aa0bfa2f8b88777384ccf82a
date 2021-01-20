@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b48b8c8_b0b60b97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T16:28:37Z",
+      "side": 1,
+      "message": "This makes Context::programBinary behave differently. Could you make sure there are no issues there? Also, please make sure that chrome continues to load binaries from the cache (and not accidentally fail everytime).",
+      "revId": "f375ba37d8ce9e12aa0bfa2f8b88777384ccf82a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
