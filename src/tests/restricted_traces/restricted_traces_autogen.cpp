@@ -36,6 +36,7 @@
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
 #include "real_gangster_crime/real_gangster_crime_capture_context3.h"
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context2.h"
+#include "subway_surfers/subway_surfers_capture_context2.h"
 #include "temple_run_300/temple_run_300_capture_context1.h"
 #include "trex_200/trex_200_capture_context1.h"
 #include "whatsapp/whatsapp_capture_context1.h"
@@ -139,6 +140,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {saint_seiya_awakening::kReplayFrameStart, saint_seiya_awakening::kReplayFrameEnd,
       saint_seiya_awakening::kReplayDrawSurfaceWidth,
       saint_seiya_awakening::kReplayDrawSurfaceHeight, "saint_seiya_awakening"}},
+    {RestrictedTraceID::subway_surfers,
+     {subway_surfers::kReplayFrameStart, subway_surfers::kReplayFrameEnd,
+      subway_surfers::kReplayDrawSurfaceWidth, subway_surfers::kReplayDrawSurfaceHeight,
+      "subway_surfers"}},
     {RestrictedTraceID::temple_run_300,
      {temple_run_300::kReplayFrameStart, temple_run_300::kReplayFrameEnd,
       temple_run_300::kReplayDrawSurfaceWidth, temple_run_300::kReplayDrawSurfaceHeight,
@@ -243,6 +248,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::subway_surfers:
+            subway_surfers::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::ReplayContext1Frame(frameIndex);
             break;
@@ -343,6 +351,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::subway_surfers:
+            subway_surfers::ResetContext2Replay();
             break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::ResetContext1Replay();
@@ -445,6 +456,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetupContext2Replay();
             break;
+        case RestrictedTraceID::subway_surfers:
+            subway_surfers::SetupContext2Replay();
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetupContext1Replay();
             break;
@@ -546,6 +560,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::subway_surfers:
+            subway_surfers::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDir(dataDir);
             break;
@@ -646,6 +663,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::subway_surfers:
+            subway_surfers::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::temple_run_300:
             temple_run_300::SetBinaryDataDecompressCallback(callback);
