@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ef9d6c00_37cf7834",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-20T10:15:38Z",
+      "side": 1,
+      "message": "I implemented this using subpasses and resolved most of problems except for one Vulkan validation error. In the example below,\n----------------------------------------------------\nglUseProgram(programNonFetch)\ndraw1()\nglUseProgram(programFetch)\ndraw2()\nflush()\n----------------------------------------------------\nWhen the App switches fetch/nonfetch programs, ANGLE increases subpass number and  recreates renderPass, then updates objects which have renderPass(framebuffer, pipeline and so on) This must be done because Vulkan validation layer checks renderPass consistency for each objects.\n\nThe last problem I have is consistency between renderPass in the last bound pipeline and active renderpass received as a parameter in VkRenderPassBeginInfo. It causes a validation error in draw1. The active renderpass has 2 subpasses in a renderPass  because it is create with the descriptor at flush time. In other hand, renderPass in the last bound pipeline only has 1 subpasses.\n\nI don\u0027t think we can avoid it because Vulkan validation layer does not allow subpass number changes in a renderPass. In general, Vulkan application determine the number of subpasses in renderPass creation time. What do you think?",
+      "parentUuid": "4903c1a3_bd0e3d91",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
