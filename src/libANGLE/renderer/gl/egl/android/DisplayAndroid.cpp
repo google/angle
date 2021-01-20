@@ -354,25 +354,36 @@ egl::Error DisplayAndroid::makeCurrent(egl::Display *display,
 
     if (currentContext.isExternalContext || (context && context->isExternal()))
     {
-        ASSERT(currentContext.context == EGL_NO_CONTEXT);
         ASSERT(currentContext.surface == EGL_NO_SURFACE);
-
         if (!currentContext.isExternalContext)
         {
             // Switch to an ANGLE external context.
             ASSERT(context);
+            ASSERT(currentContext.context == EGL_NO_CONTEXT);
+            currentContext.context           = newContext;
             currentContext.isExternalContext = true;
 
             // We only support using external surface with external context.
             ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->isExternal());
+            ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->getSurface() == EGL_NO_SURFACE);
+        }
+        else if (context)
+        {
+            // Switch surface but not context.
+            ASSERT(currentContext.context == newContext);
+            ASSERT(newSurface == EGL_NO_SURFACE);
+            ASSERT(newContext != EGL_NO_CONTEXT);
+            // We only support using external surface with external context.
+            ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->isExternal());
+            ASSERT(GetImplAs<SurfaceEGL>(drawSurface)->getSurface() == EGL_NO_SURFACE);
         }
         else
         {
-            //  We don't support switching surfaces for external context.
-            ASSERT(!context);
             // Release the ANGLE external context.
-            ASSERT(newSurface == EGL_NO_CONTEXT);
-            ASSERT(newContext == EGL_NO_SURFACE);
+            ASSERT(newSurface == EGL_NO_SURFACE);
+            ASSERT(newContext == EGL_NO_CONTEXT);
+            ASSERT(currentContext.context != EGL_NO_CONTEXT);
+            currentContext.context           = EGL_NO_CONTEXT;
             currentContext.isExternalContext = false;
         }
 
