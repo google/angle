@@ -16,6 +16,24 @@
       "message": "this library was made shared library because it must be preloaded before any system libraries in order for the file API functions to be overriden. I don’t think making it static lib could override the API functions from system libs anymore.\n\nI think the “library not loaded” error you are facing could be solved by running “./angle_unittest” inside “out/Debug” folder instead of using relative path “out/Debug/angle_unnitest”.\n\nActually, angle_unittest doesn’t need to be linked against this file hooking lib directly. The file hooking lib just needs to be built and be available in the same folder as angle_unittest. I used gn’s “deps” property to enforce this, but it has side effect of forcing angle_unittest to be linked against this lib as well. If Jamie knows any gn options that enforce the above condition without making angle_unittest explicitly linked against the file hooking lib, it would be better.",
       "revId": "f74e3df18d2a1494299ee98ec6dd90e7d897b22a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "17d77237_ef65ab4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1240289
+      },
+      "writtenOn": "2021-01-20T13:30:42Z",
+      "side": 1,
+      "message": "Yes, it can be a data_deps, see: Patchset 2.",
+      "parentUuid": "b3327439_22ed00a5",
+      "revId": "f74e3df18d2a1494299ee98ec6dd90e7d897b22a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
