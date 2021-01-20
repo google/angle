@@ -170,6 +170,24 @@
       "parentUuid": "b285ccb9_47ea65f7",
       "revId": "f375ba37d8ce9e12aa0bfa2f8b88777384ccf82a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e274c1f_b575216e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T20:09:10Z",
+      "side": 1,
+      "message": "Maybe we should proceed as is and if it fails, plug the gap with more testing. Shabi did you want to do the second review?",
+      "parentUuid": "e8f05278_37e390c5",
+      "revId": "f375ba37d8ce9e12aa0bfa2f8b88777384ccf82a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
