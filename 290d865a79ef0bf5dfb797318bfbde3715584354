@@ -16,6 +16,24 @@
       "message": "oops, we ran out of dirty bit space. How do we tackle this?",
       "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "934b51f2_9cf9d269",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T17:24:01Z",
+      "side": 1,
+      "message": "Move to DIRTY_BIT_EXTENDED",
+      "parentUuid": "699c9b67_58b16f7c",
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
