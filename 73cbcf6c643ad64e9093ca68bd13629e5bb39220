@@ -146,6 +146,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdfe963f_662c3473",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T19:58:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "818a18eb_e8cc5b2b",
+      "range": {
+        "startLine": 131,
+        "startChar": 0,
+        "endLine": 132,
+        "endChar": 75
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30af7256_2fa6d8b1",
@@ -159,6 +183,30 @@
       "writtenOn": "2021-01-20T18:42:39Z",
       "side": 1,
       "message": "D3D11_RTV_DIMENSION_TEXTURE2DMSARRAY",
+      "range": {
+        "startLine": 137,
+        "startChar": 59,
+        "endLine": 137,
+        "endChar": 93
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f943222_a057ae0f",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T19:58:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30af7256_2fa6d8b1",
       "range": {
         "startLine": 137,
         "startChar": 59,
@@ -192,6 +240,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ea6f8c2_75f0640a",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T19:58:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2cf955ec_93b97a5d",
+      "range": {
+        "startLine": 147,
+        "startChar": 45,
+        "endLine": 147,
+        "endChar": 46
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f9fda33_2cada87a",
@@ -215,6 +287,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "acf26b75_b2b39e22",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/ExternalImageSiblingImpl11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T19:58:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f9fda33_2cada87a",
+      "range": {
+        "startLine": 169,
+        "startChar": 0,
+        "endLine": 171,
+        "endChar": 75
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1b872a66_68bb2503",
@@ -228,6 +324,30 @@
       "writtenOn": "2021-01-20T18:42:39Z",
       "side": 1,
       "message": "desc.ArraySize * desc.MipLevels",
+      "range": {
+        "startLine": 1563,
+        "startChar": 34,
+        "endLine": 1563,
+        "endChar": 49
+      },
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb53f96e_41c35e50",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1563,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T19:58:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b872a66_68bb2503",
       "range": {
         "startLine": 1563,
         "startChar": 34,
