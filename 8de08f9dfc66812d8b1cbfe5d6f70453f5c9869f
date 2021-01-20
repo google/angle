@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e04ed18d_67b0e604",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:13:57Z",
+      "side": 1,
+      "message": "We should be able to get it working trivially when we adapt the common path described below. Most apps work on some non-Android platform and it\u0027s useful for many reasons to have it accessible at least to try on Desktop. FWIW SwiftShader will eventually support all platforms too.",
+      "parentUuid": "4309f4d4_62947600",
+      "range": {
+        "startLine": 7,
+        "startChar": 7,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0d749832_1e93509b",
         "filename": "/COMMIT_MSG",
         "patchSetId": 7
@@ -237,6 +261,30 @@
       "side": 1,
       "message": "I\u0027m not sure what you mean with this comment (what is the test_runner harness directory?).   This directory is a parameter that\u0027s passed to angle_perftests and was taken from here:\nhttps://docs.google.com/document/d/1bY-Z7W2vMOUdDgWm_5Xx46tzxWkOeZ23Nw5-LR_q80Y/edit#heading\u003dh.h4bsx6nzgjwq\n\nWhat directory do you want to use instead?",
       "parentUuid": "fe0df4d5_bdabac53",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c0149e1_451c841b",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-20T15:13:57Z",
+      "side": 1,
+      "message": "See restricted_trace_gold_tests.py, this is how we run test executables from python:\n\ndef run_wrapper(args, cmd, env, stdoutfile\u003dNone):\n    if args.xvfb:\n        return xvfb.run_executable(cmd, env, stdoutfile\u003dstdoutfile)\n    else:\n        return test_env.run_command_with_output(cmd, env\u003denv, stdoutfile\u003dstdoutfile)\n\nEach executable gets a \"run wrapper\" on Android that takes the place of where the executable is on desktop: out/Debug/angle_end2end_tests or whatever. Inside that it calls android/test_runner.py. Both native and the wrapper angle_perftests take --render-test-output-dir which is a compatible alias for --screenshot-dir.\n\nHow come you ended up rolling your own implementation of this instead of basing on the existing work in capture_replay_tests.py?",
+      "parentUuid": "c54366b3_e917fd7e",
       "range": {
         "startLine": 17,
         "startChar": 0,
