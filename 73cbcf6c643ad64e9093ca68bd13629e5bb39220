@@ -33,6 +33,24 @@
       "message": "Subresources are used to select both the mip and array slice. See: https://docs.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-resources-subresources and https://docs.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11calcsubresource\n\nD3D11CalcSubresource is spec\u0027d to return MipSlice + (ArraySlice * MipLevels). If we want to follow that convention, we may want to remove the plane parameter and only use subresource for plane selection and mip selection.\n\nI think we talked about this before so I may be wrong and this can\u0027t represent everything we need.",
       "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1b8c551_b50c1fdf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1128437
+      },
+      "writtenOn": "2021-01-20T04:06:25Z",
+      "side": 1,
+      "message": "I think YUV planes cannot be accessed as subresources in D3D11 (unlike D3D12) i.e. they aren\u0027t considered as mip or array slices.",
+      "parentUuid": "45e5f7e9_e7137df5",
+      "revId": "73cbcf6c643ad64e9093ca68bd13629e5bb39220",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
