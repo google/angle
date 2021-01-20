@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56ae45de_406b6ad8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-20T05:22:14Z",
+      "side": 1,
+      "message": "No need for `static`, these are in an anonymous namespace.\n\nAlso, per style guide, please capitalize the first letter of static functions, i.e. Compute...\n\n(same for the functions below)",
+      "revId": "fcbece9796e6a4a573fa3cba63e32aa948061cb5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
