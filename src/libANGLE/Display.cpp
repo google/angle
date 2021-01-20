@@ -1437,6 +1437,14 @@ Error Display::destroyContext(const Thread *thread, gl::Context *context)
     Surface *currentReadSurface   = thread->getCurrentReadSurface();
     bool changeContextForDeletion = context != currentContext;
 
+    // For external context, we cannot change the current native context, and the API user should
+    // make sure the native context is current.
+    if (changeContextForDeletion && context->isExternal())
+    {
+        ASSERT(!currentContext);
+        changeContextForDeletion = false;
+    }
+
     // Make the context being deleted current during its deletion.  This allows it to delete
     // any resources it's holding.
     if (changeContextForDeletion)
