@@ -417,6 +417,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d0f66e3a_cf0f12e8",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T14:31:49Z",
+      "side": 1,
+      "message": "Tim, it really won\u0027t take much time to integrate my changes. Most of it would be removing code. I\u0027m sure you can make time for it. Contact me offline if you want more context.",
+      "parentUuid": "e9becb7a_a8f33c91",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb79eb6d_238feff5",
         "filename": "scripts/generate_rmse_scores.py",
         "patchSetId": 7
