@@ -243,6 +243,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f5941ab_484abe9b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-21T22:05:32Z",
+      "side": 1,
+      "message": "\u003e Could you please create a new bug and update the suppression line with that bug number?\n\nsorry, a clarification from shabi - which test regex were you talking about?",
+      "parentUuid": "85e2be62_6702c6a3",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6eb027e3_5a962733",
