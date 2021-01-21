@@ -181,6 +181,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ff671343_be423bf4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-21T05:54:25Z",
+      "side": 1,
+      "message": "Yeah, it doesn\u0027t. It\u0027s valid to have N input attachments bound with descriptors, while the shaders use any (or none) of them 😊. True with any resource type really.",
+      "parentUuid": "402069c6_1c475474",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
