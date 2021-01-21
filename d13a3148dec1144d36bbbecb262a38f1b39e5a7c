@@ -34,6 +34,24 @@
       "parentUuid": "57ba11e3_005f637e",
       "revId": "d13a3148dec1144d36bbbecb262a38f1b39e5a7c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7436044e_827c267d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-21T00:55:26Z",
+      "side": 1,
+      "message": "Different ANGLE backends seemed to be fine.\n\nI saw the \"Invalid program binary version\" warning when switching from the ToT build to ToT + cherry-pick of this CL. However I believe Chrome\u0027s update process deletes the cache so this should only occur on dev builds with ANGLE changes. I was able to reproduce it with a noop change in ANGLE.\n\nI think this is only an annoyance and not a huge issue, but I\u0027m not sure.",
+      "parentUuid": "452a1764_e64de820",
+      "revId": "d13a3148dec1144d36bbbecb262a38f1b39e5a7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
