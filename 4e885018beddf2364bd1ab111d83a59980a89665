@@ -63,6 +63,30 @@
       },
       "revId": "4e885018beddf2364bd1ab111d83a59980a89665",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40dac72b_05a1f2bb",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T19:01:08Z",
+      "side": 1,
+      "message": "Ack, Gotcha, BindBuffer doesn\u0027t capture indexed buffers, it only captures generic buffers. If you look in ANGLE\u0027s state tracking you can see there\u0027s a \"generic\" binding (BindBuffer) and indexed bindings (BindBufferRange). So below should capture the generic and the above should capture the indexed.",
+      "parentUuid": "36377ef4_57c24bea",
+      "range": {
+        "startLine": 2444,
+        "startChar": 0,
+        "endLine": 2449,
+        "endChar": 72
+      },
+      "revId": "4e885018beddf2364bd1ab111d83a59980a89665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
