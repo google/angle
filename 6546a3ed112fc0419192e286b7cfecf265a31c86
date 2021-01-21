@@ -189,6 +189,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "69019873_920c381b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-21T20:43:39Z",
+      "side": 1,
+      "message": "Actually it\u0027s possible these were failing due to reliance on dynamic indexing and my recent changes have fixed them. They seem to be passing on the bots now:\n\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8.samples_8.mask_zero\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8.samples_8.mask_1\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8.samples_8.mask_3\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8.samples_8.mask_5\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8.samples_8.mask_7\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8i.samples_8.mask_0\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8i.samples_8.mask_2\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8i.samples_8.mask_4\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8i.samples_8.mask_6\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_8.mask_zero\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_8.mask_1\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_8.mask_3\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_8.mask_5\n    Unexpected Passed Tests: KHR-GLES31.core.sample_variables.mask.rgba8ui.samples_8.mask_7\n\n\n\nNot sure of all of them pass now, or a subset. You could try removing this line and running the android deqp bots to verify.",
+      "parentUuid": "e79ae9e2_8547a846",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6eb027e3_5a962733",
