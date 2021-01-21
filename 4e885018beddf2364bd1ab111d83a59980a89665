@@ -39,6 +39,30 @@
       },
       "revId": "4e885018beddf2364bd1ab111d83a59980a89665",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36377ef4_57c24bea",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-21T18:27:55Z",
+      "side": 1,
+      "message": "These are necessary, since the one below only captures the single indexed UBO that\u0027s also bound with glBindBuffer(GL_UNIFORM_BUFFER).   However, it\u0027s possible for there to be multiple indexed UBOs bound, so we need to capture them all.\n\nAs you point out though, since this block captures all indexed UBOs, including any that are also bound with a normal glBindBuffer(), the batch below is redundant.   Removing those below works fine with \"World War Doh\" (which it was necessary to add it for) and \"eFootball PES 2021\"  (which needs all indexed buffers).",
+      "parentUuid": "5c177030_70a1fceb",
+      "range": {
+        "startLine": 2444,
+        "startChar": 0,
+        "endLine": 2449,
+        "endChar": 72
+      },
+      "revId": "4e885018beddf2364bd1ab111d83a59980a89665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
