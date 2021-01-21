@@ -153,6 +153,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e42aabe_c9960bc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-21T20:23:31Z",
+      "side": 1,
+      "message": "both pixel2 and pixel4 fail with the same error -\n\n*pixel2* -\n AdrenoVK-0: QUALCOMM build          : e883189, Ia11ce2d146\n AdrenoVK-0: Build Date              : 09/02/20\n AdrenoVK-0: Shader Compiler Version : EV031.31.04.00\n AdrenoVK-0: Local Branch            : gfx-adreno.lnx.2.0\n AdrenoVK-0: Remote Branch           : quic/gfx-adreno.lnx.2.0\n AdrenoVK-0: Remote Branch           : NONE\n AdrenoVK-0: Reconstruct Branch      : NOTHING\n AdrenoVK-0: Build Config            : S L 10.0.5 AArch64\n AdrenoVK-0: Driver Path             : /vendor/lib64/hw/vulkan.adreno.so\n ANGLE   : Version (2.1.611 git hash: e0119c3e5875), Renderer (Vulkan \n1.1.128(Adreno (TM) 540 (0x05040001)))\n AdrenoVK-0: Failed to link shaders.\n AdrenoVK-0: Info log: Assertion failed: (*mSymbolObjectMap)[gv] \u003d\u003d NULL\n ANGLE   : WARN: Debug.cpp:180 (insertMessage): GL error: HIGH: Internal Vulkan error (-13): Unknown vulkan error code.\n\n*pixel4* -\n AdrenoVK-0: QUALCOMM build          : f84f8da, Ie73904e3bd\n AdrenoVK-0: Build Date              : 06/24/20\n AdrenoVK-0: Shader Compiler Version : EV031.31.04.00\n AdrenoVK-0: Local Branch            : gfx-adreno.lnx.2.0\n AdrenoVK-0: Remote Branch           : quic/gfx-adreno.lnx.2.0\n AdrenoVK-0: Remote Branch           : NONE\n AdrenoVK-0: Reconstruct Branch      : NOTHING\n AdrenoVK-0: Build Config            : S P 10.0.4 AArch64\n AdrenoVK-0: Driver Path             : /vendor/lib64/hw/vulkan.adreno.so.original\n VSC     : @ 28518.147: [WO] tilt angle 89\n ANGLE   : Version (2.1.611 git hash: e0119c3e5875), Renderer (Vulkan 1.1.128(Adreno (TM) 640 (0x06040001)))\n AdrenoVK-0: Failed to link shaders.\n AdrenoVK-0: Info log: Assertion failed: (*mSymbolObjectMap)[gv] \u003d\u003d NULL\n ANGLE   : WARN: Debug.cpp:180 (insertMessage): GL error: HIGH: Internal Vulkan error (-13): Unknown vulkan error code.",
+      "parentUuid": "a276158b_22deedb4",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6eb027e3_5a962733",
