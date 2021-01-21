@@ -70,6 +70,9 @@ class FastVector final
     void push_back(const value_type &value);
     void push_back(value_type &&value);
 
+    template <typename... Args>
+    void emplace_back(Args &&... args);
+
     void pop_back();
 
     reference front();
@@ -288,9 +291,16 @@ ANGLE_INLINE void FastVector<T, N, Storage>::push_back(const value_type &value)
 template <class T, size_t N, class Storage>
 ANGLE_INLINE void FastVector<T, N, Storage>::push_back(value_type &&value)
 {
+    emplace_back(std::move(value));
+}
+
+template <class T, size_t N, class Storage>
+template <typename... Args>
+ANGLE_INLINE void FastVector<T, N, Storage>::emplace_back(Args &&... args)
+{
     if (mSize == mReservedSize)
         ensure_capacity(mSize + 1);
-    mData[mSize++] = std::move(value);
+    mData[mSize++] = std::move(T(std::forward<Args>(args)...));
 }
 
 template <class T, size_t N, class Storage>

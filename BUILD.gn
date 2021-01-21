@@ -685,6 +685,8 @@ if (angle_enable_vulkan || angle_enable_metal) {
     ]
     deps = [
       ":libANGLE_headers",
+      "$angle_root/src/common/spirv:angle_spirv_builder",
+      "$angle_root/src/common/spirv:angle_spirv_parser",
       "${angle_glslang_dir}:glslang_default_resource_limits_sources",
       "${angle_glslang_dir}:glslang_lib_sources",
       "${angle_spirv_headers_dir}:spv_headers",

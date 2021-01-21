@@ -115,6 +115,8 @@ generators = {
         'scripts/gen_proc_table.py',
     'restricted traces':
         'src/tests/restricted_traces/gen_restricted_traces.py',
+    'SPIR-V helpers':
+        'src/common/spirv/gen_spirv_builder_and_parser.py',
     'Static builtins':
         'src/compiler/translator/gen_builtin_symbols.py',
     'uniform type':
