@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4f7412f4_cc6a8c42",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T21:02:32Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 488,
+        "startChar": 72,
+        "endLine": 488,
+        "endChar": 77
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0adc6944_34fba047",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 2
@@ -36,6 +59,29 @@
         "startChar": 42,
         "endLine": 1197,
         "endChar": 78
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ea0535f_c7892b16",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1371,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T21:02:32Z",
+      "side": 1,
+      "message": "nit: avoid auto for trivial types as it hurts readability\n\nsee rules:\n\nhttps://google.github.io/styleguide/cppguide.html#Type_deduction",
+      "range": {
+        "startLine": 1371,
+        "startChar": 10,
+        "endLine": 1371,
+        "endChar": 15
       },
       "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -76,6 +122,52 @@
         "startChar": 0,
         "endLine": 1416,
         "endChar": 13
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "753b494b_146d59d5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1066,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T21:02:32Z",
+      "side": 1,
+      "message": "nit: no default arguments please.\n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/CodingStandard.md#other-c_features",
+      "range": {
+        "startLine": 1066,
+        "startChar": 60,
+        "endLine": 1066,
+        "endChar": 65
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5267c28_354fbd91",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1202,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T21:02:32Z",
+      "side": 1,
+      "message": "nit: pluralize\n\nwhy do we need both render area and framebuffer dimensions?",
+      "range": {
+        "startLine": 1202,
+        "startChar": 38,
+        "endLine": 1202,
+        "endChar": 40
       },
       "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
