@@ -2248,29 +2248,33 @@ void CaptureBufferBindingResetCalls(const gl::State &replayState,
     Capture(&bufferBindingCalls, CaptureBindBuffer(replayState, true, binding, id));
 }
 
-void CaptureBindIndexedBuffer(const gl::State &glState,
-                              gl::BufferBinding binding,
-                              const gl::BufferVector &indexedBuffers,
-                              const gl::BufferID bufferID,
-                              std::vector<CallCapture> *setupCalls)
+void CaptureIndexedBuffers(const gl::State &glState,
+                           const gl::BufferVector &indexedBuffers,
+                           gl::BufferBinding binding,
+                           std::vector<CallCapture> *setupCalls)
 {
     for (unsigned int index = 0; index < indexedBuffers.size(); ++index)
     {
-        if (bufferID.value == indexedBuffers[index].id().value)
-        {
-            GLintptr offset = indexedBuffers[index].getOffset();
-            GLsizeiptr size = indexedBuffers[index].getSize();
+        const gl::OffsetBindingPointer<gl::Buffer> &buffer = indexedBuffers[index];
 
-            // Context::bindBufferBase() calls Context::bindBufferRange() with size and offset = 0.
-            if ((offset == 0) && (size == 0))
-            {
-                Capture(setupCalls, CaptureBindBufferBase(glState, true, binding, index, bufferID));
-            }
-            else
-            {
-                Capture(setupCalls, CaptureBindBufferRange(glState, true, binding, index, bufferID,
-                                                           offset, size));
-            }
+        if (buffer.get() == nullptr)
+        {
+            continue;
+        }
+
+        GLintptr offset       = buffer.getOffset();
+        GLsizeiptr size       = buffer.getSize();
+        gl::BufferID bufferID = buffer.get()->id();
+
+        // Context::bindBufferBase() calls Context::bindBufferRange() with size and offset = 0.
+        if ((offset == 0) && (size == 0))
+        {
+            Capture(setupCalls, CaptureBindBufferBase(glState, true, binding, index, bufferID));
+        }
+        else
+        {
+            Capture(setupCalls,
+                    CaptureBindBufferRange(glState, true, binding, index, bufferID, offset, size));
         }
     }
 }
@@ -2418,13 +2422,21 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         cap(CaptureBindVertexArray(replayState, true, currentVertexArray->id()));
     }
 
-    // Capture Buffer bindings.
+    // Capture indexed buffer bindings.
     const gl::BufferVector &uniformIndexedBuffers =
         apiState.getOffsetBindingPointerUniformBuffers();
     const gl::BufferVector &atomicCounterIndexedBuffers =
         apiState.getOffsetBindingPointerAtomicCounterBuffers();
     const gl::BufferVector &shaderStorageIndexedBuffers =
         apiState.getOffsetBindingPointerShaderStorageBuffers();
+    CaptureIndexedBuffers(replayState, uniformIndexedBuffers, gl::BufferBinding::Uniform,
+                          setupCalls);
+    CaptureIndexedBuffers(replayState, atomicCounterIndexedBuffers,
+                          gl::BufferBinding::AtomicCounter, setupCalls);
+    CaptureIndexedBuffers(replayState, shaderStorageIndexedBuffers,
+                          gl::BufferBinding::ShaderStorage, setupCalls);
+
+    // Capture Buffer bindings.
     const gl::BoundBufferMap &boundBuffers = apiState.getBoundBuffersForCapture();
     for (gl::BufferBinding binding : angle::AllEnums<gl::BufferBinding>())
     {
@@ -2439,32 +2451,6 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             (!isArray && bufferID.value != 0))
         {
             cap(CaptureBindBuffer(replayState, true, binding, bufferID));
-
-            // Only the following buffer targets can be indexed:
-            // - GL_TRANSFORM_FEEDBACK_BUFFER
-            //   - Transform feedback is handled separately, since transform feedback buffers are
-            //   owned by the transform feedback object.
-            // - GL_UNIFORM_BUFFER
-            // - GL_ATOMIC_COUNTER_BUFFER
-            // - GL_SHADER_STORAGE_BUFFER
-            // Ignore all other binding types.
-            switch (binding)
-            {
-                case gl::BufferBinding::Uniform:
-                    CaptureBindIndexedBuffer(replayState, binding, uniformIndexedBuffers, bufferID,
-                                             setupCalls);
-                    break;
-                case gl::BufferBinding::AtomicCounter:
-                    CaptureBindIndexedBuffer(replayState, binding, atomicCounterIndexedBuffers,
-                                             bufferID, setupCalls);
-                    break;
-                case gl::BufferBinding::ShaderStorage:
-                    CaptureBindIndexedBuffer(replayState, binding, shaderStorageIndexedBuffers,
-                                             bufferID, setupCalls);
-                    break;
-                default:
-                    break;
-            }
         }
 
         // Restore all buffer bindings for Reset
@@ -2912,6 +2898,14 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         cap(CaptureLinkProgram(replayState, true, id));
         CaptureUpdateUniformLocations(program, setupCalls);
         CaptureUpdateUniformValues(replayState, context, program, setupCalls);
+
+        // Capture uniform block bindings for each program
+        for (unsigned int uniformBlockIndex = 0;
+             uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
+        {
+            GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
+            cap(CaptureUniformBlockBinding(replayState, true, id, uniformBlockIndex, blockBinding));
+        }
 
         resourceTracker->onShaderProgramAccess(id);
     }
