@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "862c1bd0_f87436c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:40:28Z",
+      "side": 1,
+      "message": "LGTM with new bug. Clearly a QC error of some kind.",
+      "revId": "35c8fec15b90e57ce162811e04565613bbf5caa8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
