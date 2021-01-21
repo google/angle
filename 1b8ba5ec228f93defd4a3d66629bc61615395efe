@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "681ec46b_06f81552",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-21T09:36:13Z",
+      "side": 1,
+      "message": "It\u0027s ready for code review. It is a workaround for fixing end2end test MultisampledRenderToTextureTest.DrawMultisampledDifferentSamples on Mali caused by the commit https://chromium-review.googlesource.com/c/angle/angle/+/2397206 \n\nThank you",
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
