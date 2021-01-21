@@ -16,6 +16,69 @@
       "message": "It\u0027s ready for code review. It is a workaround for fixing end2end test MultisampledRenderToTextureTest.DrawMultisampledDifferentSamples on Mali caused by the commit https://chromium-review.googlesource.com/c/angle/angle/+/2397206 \n\nThank you",
       "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0adc6944_34fba047",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1197,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-21T15:59:58Z",
+      "side": 1,
+      "message": "Please move this up before or after renderArea.",
+      "range": {
+        "startLine": 1197,
+        "startChar": 42,
+        "endLine": 1197,
+        "endChar": 78
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2172034_eb02a9ea",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-21T15:59:58Z",
+      "side": 1,
+      "message": "I\u0027d say just do this unconditionally. No need for all the flag passing.",
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d12c378_ac11a77c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1416,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-21T15:59:58Z",
+      "side": 1,
+      "message": "nit: Please make a helper at the top of the file",
+      "range": {
+        "startLine": 1382,
+        "startChar": 0,
+        "endLine": 1416,
+        "endChar": 13
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
