@@ -199,6 +199,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b30a79e2_e69a91a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-21T08:05:50Z",
+      "side": 1,
+      "message": "I\u0027ve encountered one problem. Pipeline layouts are created in program link time but framebuffer bind can be called later. How many input attachments should I bind to pipeline layout in this case?",
+      "parentUuid": "ff671343_be423bf4",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
