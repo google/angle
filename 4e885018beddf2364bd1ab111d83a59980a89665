@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "4e885018beddf2364bd1ab111d83a59980a89665",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c177030_70a1fceb",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T17:52:52Z",
+      "side": 1,
+      "message": "something is surprising me here since this code is duplicated with the below. I suspect it\u0027s because there\u0027s a difference in handling the generic and indexed bindings? Why do you need both this and the below indexed capture?",
+      "range": {
+        "startLine": 2444,
+        "startChar": 0,
+        "endLine": 2449,
+        "endChar": 72
+      },
+      "revId": "4e885018beddf2364bd1ab111d83a59980a89665",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
