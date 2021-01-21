@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a01b3abf_d4999907",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-21T12:42:45Z",
+      "side": 1,
+      "message": "Hi Jamie, I moved these two functions to egl namespace {} in BlobCache.cpp.",
+      "parentUuid": "6db73605_45aac3cf",
+      "range": {
+        "startLine": 172,
+        "startChar": 16,
+        "endLine": 172,
+        "endChar": 29
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9e756a73_8ce2e0e1",
         "filename": "src/libANGLE/BlobCache.cpp",
         "patchSetId": 9
@@ -192,6 +216,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ffb8ad78_ae3470ee",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-21T12:42:45Z",
+      "side": 1,
+      "message": "Replace \"chunkIndex * chunkSize\" with compressedOffset.\nAnd compressedOffset can\u0027t be removed because chunkSize may be changed in the last chunk and then can\u0027t be used to replace compressedOffset in\n\"memcpy(keyData.data() + kBlobHeaderSize, compressedData.data() + compressedOffset, chunkSize);\"",
+      "parentUuid": "dab516b9_f2f35765",
+      "range": {
+        "startLine": 516,
+        "startChar": 48,
+        "endLine": 516,
+        "endChar": 70
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c3cc1558_ef9ea7ac",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 9
@@ -226,6 +274,30 @@
       "writtenOn": "2021-01-20T19:31:31Z",
       "side": 1,
       "message": "We don\u0027t need to write chunkIndex because it\u0027s also in the key.  If you want to validate when you read the data back, you could write the number of remaining chunks instead.",
+      "range": {
+        "startLine": 525,
+        "startChar": 0,
+        "endLine": 526,
+        "endChar": 39
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "231e6b27_5d749561",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 526,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-21T12:42:45Z",
+      "side": 1,
+      "message": "Remove chunkIndex and add \"ASSERT(numChunks \u003c\u003d UINT8_MAX)\"",
+      "parentUuid": "891197cf_bddc80d5",
       "range": {
         "startLine": 525,
         "startChar": 0,
@@ -324,6 +396,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1a982c83_356472b6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-21T12:42:45Z",
+      "side": 1,
+      "message": "Add size check:\n\"\n    if (!display-\u003egetBlobCache()-\u003eget(display-\u003egetScratchBuffer(), chunkCacheHash, \u0026keyData,\n                                      \u0026keySize) || keyData.size() \u003c kBlobHeaderSize)\n\"",
+      "parentUuid": "b8eab63e_6af4ceec",
+      "range": {
+        "startLine": 554,
+        "startChar": 47,
+        "endLine": 554,
+        "endChar": 48
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "838de352_13070fe1",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 9
@@ -410,6 +506,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65cfd325_f8afb97e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-21T12:42:45Z",
+      "side": 1,
+      "message": "Changed condition:\n\"\nif (checkNumber !\u003d numChunks || compressedData.size() \u003c (compressedSize + chunkSize))\n\"",
+      "parentUuid": "63fb7f2f_4ddc6987",
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "74e403dc_44b72989",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 9
@@ -444,6 +558,30 @@
       "writtenOn": "2021-01-20T15:21:37Z",
       "side": 1,
       "message": "can you make this a ANGLE_VK_CHECK as well? this is a serious error if it return false.",
+      "range": {
+        "startLine": 601,
+        "startChar": 34,
+        "endLine": 601,
+        "endChar": 49
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a622144e_4e0485e9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-21T12:42:45Z",
+      "side": 1,
+      "message": "Hi Jamie, I add ANGLE_VK_CHECK after calling egl::DecompressBlobCacheData() and egl::CompressBlobCacheData(), is that right? Or I should set the CompressBlobCacheData/DecompressBlobCacheData to return angle::Result.",
+      "parentUuid": "cc51fa28_f5b177db",
       "range": {
         "startLine": 601,
         "startChar": 34,

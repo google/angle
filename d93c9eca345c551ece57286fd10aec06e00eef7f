@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a651b538_e1fc525c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-21T12:42:45Z",
+      "side": 1,
+      "message": "Thanks a lot Geoff,Jamie\n\nSome confusions about MemoryBuffer::resize().\nThe final compressed size is expectedCompressedSize assigned in zlib_internal::GzipCompressHelper(), not the value returned by  zlib_internal::GzipExpectedCompressedSize(). So It\u0027s needed to call resize() twice if compressedData.size() will be used later.\n1: Look into resize() function, it contains copy command and costs resources. Is it necessary to decrease calling resize() here and return the final expected size value to take the place of compressedData.size().\n2: If keeping the two resize(), is it necessary to optimize resize() function? When expectedCompressedSize is smaller than compressedData.size(), skip the malloc and only change the mSize in MemoryBuffer::resize().",
+      "revId": "d93c9eca345c551ece57286fd10aec06e00eef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
