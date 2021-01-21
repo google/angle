@@ -127,6 +127,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6f78915d_9f632438",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-21T01:27:56Z",
+      "side": 1,
+      "message": "\u003eInstead of binding the descriptor set with only the input attachments that are used, bind it with all attachments.\nThat\u0027s what ANGLE did in patchset8. It binds all input attachments to a subpass during Render pass creation then binds/updates input attachment descriptors later according to program state.\nThe remaining task is breaking the render pass when app switch the fetch/nonFetch program. Also I\u0027ll add more end2end tests for verification.",
+      "parentUuid": "095b0bd3_168e181b",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
