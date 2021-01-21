@@ -85,6 +85,10 @@ switch_statement_template = \
 test_trace_info_init_template = \
 """    {{
         "{namespace}",
+        {namespace}::kReplayContextClientMajorVersion,
+        {namespace}::kReplayContextClientMinorVersion,
+        {namespace}::kReplayPlatformType,
+        {namespace}::kReplayDeviceType,
         {namespace}::kReplayFrameStart,
         {namespace}::kReplayFrameEnd,
         {namespace}::kReplayDrawSurfaceWidth,
@@ -117,6 +121,10 @@ void SetBinaryDataDir(uint32_t test, const char *dataDir);
 
 struct TestTraceInfo {{
     std::string testName;
+    uint32_t replayContextMajorVersion;
+    uint32_t replayContextMinorVersion;
+    EGLint replayPlatformType;
+    EGLint replayDeviceType;
     uint32_t replayFrameStart;
     uint32_t replayFrameEnd;
     EGLint replayDrawSurfaceWidth;

@@ -1110,7 +1110,7 @@ void WriteCppReplay(bool compression,
 
 void WriteCppReplayIndexFiles(bool compression,
                               const std::string &outDir,
-                              const gl::ContextID contextId,
+                              const gl::Context *context,
                               const std::string &captureLabel,
                               uint32_t frameCount,
                               const SurfaceDimensions &drawSurfaceDimensions,
@@ -1119,11 +1119,12 @@ void WriteCppReplayIndexFiles(bool compression,
                               const HasResourceTypeMap &hasResourceType,
                               bool serializeStateEnabled,
                               bool writeResetContextCall,
-                              const egl::Config *config,
                               std::vector<uint8_t> &binaryData)
 {
-
-    size_t maxClientArraySize = MaxClientArraySize(clientArraySizes);
+    const gl::ContextID contextId       = context->id();
+    const egl::Config *config           = context->getConfig();
+    size_t maxClientArraySize           = MaxClientArraySize(clientArraySizes);
+    const egl::AttributeMap &attributes = context->getDisplay()->getAttributeMap();
 
     std::stringstream header;
     std::stringstream source;
@@ -1169,6 +1170,14 @@ void WriteCppReplayIndexFiles(bool compression,
         header << "_" << captureLabelUpper;
     }
     header << " " << ANGLE_REVISION << "\n";
+    header << "constexpr uint32_t kReplayContextClientMajorVersion = "
+           << context->getClientMajorVersion() << ";\n";
+    header << "constexpr uint32_t kReplayContextClientMinorVersion = "
+           << context->getClientMinorVersion() << ";\n";
+    header << "constexpr EGLint kReplayPlatformType = "
+           << attributes.getAsInt(EGL_PLATFORM_ANGLE_TYPE_ANGLE) << ";\n";
+    header << "constexpr EGLint kReplayDeviceType = "
+           << attributes.getAsInt(EGL_PLATFORM_ANGLE_DEVICE_TYPE_ANGLE) << ";\n";
     header << "constexpr uint32_t kReplayFrameStart = 1;\n";
     header << "constexpr uint32_t kReplayFrameEnd = " << frameCount << ";\n";
     header << "constexpr EGLint kReplayDrawSurfaceWidth = "
@@ -4432,10 +4441,10 @@ void FrameCapture::onEndFrame(const gl::Context *context)
         if (mFrameIndex == mCaptureEndFrame)
         {
             // Save the index files after the last frame.
-            WriteCppReplayIndexFiles(mCompression, mOutDirectory, context->id(), mCaptureLabel,
+            WriteCppReplayIndexFiles(mCompression, mOutDirectory, context, mCaptureLabel,
                                      getFrameCount(), mDrawSurfaceDimensions, mReadBufferSize,
                                      mClientArraySizes, mHasResourceType, mSerializeStateEnabled,
-                                     false, context->getConfig(), mBinaryData);
+                                     false, mBinaryData);
             if (!mBinaryData.empty())
             {
                 SaveBinaryData(mCompression, mOutDirectory, context->id(), mCaptureLabel,
@@ -4483,10 +4492,10 @@ void FrameCapture::onDestroyContext(const gl::Context *context)
         // It doesnt make sense to write the index files when no frame has been recorded
         mFrameIndex -= 1;
         mCaptureEndFrame = mFrameIndex;
-        WriteCppReplayIndexFiles(mCompression, mOutDirectory, context->id(), mCaptureLabel,
+        WriteCppReplayIndexFiles(mCompression, mOutDirectory, context, mCaptureLabel,
                                  getFrameCount(), mDrawSurfaceDimensions, mReadBufferSize,
                                  mClientArraySizes, mHasResourceType, mSerializeStateEnabled, true,
-                                 context->getConfig(), mBinaryData);
+                                 mBinaryData);
         if (!mBinaryData.empty())
         {
             SaveBinaryData(mCompression, mOutDirectory, context->id(), mCaptureLabel, mBinaryData);
