@@ -52,6 +52,24 @@
       "parentUuid": "452a1764_e64de820",
       "revId": "d13a3148dec1144d36bbbecb262a38f1b39e5a7c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "326d1024_482ce0fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1484987
+      },
+      "writtenOn": "2021-01-21T16:04:36Z",
+      "side": 1,
+      "message": "\"Invalid program binary version\" is triggered when the commit is different - so yeah, it would change after a cherry-pick (or a no-op change).\n\nEven if Chrome didn\u0027t delete the caches, I would expect this to properly fail and invalidate the cache on a per-binary basis.\n\nFair to say this looks good then?",
+      "parentUuid": "7436044e_827c267d",
+      "revId": "d13a3148dec1144d36bbbecb262a38f1b39e5a7c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
