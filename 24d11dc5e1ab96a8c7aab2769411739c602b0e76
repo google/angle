@@ -145,6 +145,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "145d1314_13bebe24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-21T02:54:44Z",
+      "side": 1,
+      "message": "\u003e then binds/updates input attachment descriptors later according to program state\n\nIsn\u0027t that unnecessary? If all attachments are bound as input attachment, then it doesn\u0027t matter if the program uses only a subset of them, as long as their input attachment index matches the color attachment index. If it doesn\u0027t, they can\u0027t use the same subpass.",
+      "parentUuid": "6f78915d_9f632438",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
