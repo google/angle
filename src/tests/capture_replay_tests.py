@@ -214,29 +214,33 @@ class SubProcess():
 class ChildProcessesManager():
 
     @classmethod
-    def _GetGnAndAutoninjaAbsolutePaths(self):
-        # get gn/autoninja absolute path because subprocess with shell=False doesn't look
-        # into the PATH environment variable on Windows
-        depot_tools_name = "depot_tools"
-        if platform == "win32":
-            paths = os.environ["PATH"].split(";")
-        else:
-            paths = os.environ["PATH"].split(":")
-        for path in paths:
-            if path.endswith(depot_tools_name):
-                if platform == "win32":
-                    return os.path.join(path, "gn.bat"), os.path.join(path, "autoninja.bat")
-                else:
-                    return os.path.join(path, "gn"), os.path.join(path, "autoninja")
-        logging.exception("No gn or autoninja found on system")
+    def _GetGnAndAutoninjaAbsolutePaths(self, depot_tools_path):
 
-    def __init__(self):
+        def find_depot_tools_from_env():
+            depot_tools_name = "depot_tools"
+            if platform == "win32":
+                paths = os.environ["PATH"].split(";")
+            else:
+                paths = os.environ["PATH"].split(":")
+            for path in paths:
+                if path.endswith(depot_tools_name):
+                    return path
+            logging.exception("No gn or autoninja found on system")
+
+        def bat(name):
+            return name + '.bat' if platform == "win32" else name
+
+        path = depot_tools_path if depot_tools_path else find_depot_tools_from_env()
+        return os.path.join(path, bat('gn')), os.path.join(path, bat('autoninja'))
+
+    def __init__(self, depot_tools_path):
         # a dictionary of Subprocess, with pid as key
         self.subprocesses = {}
         # list of Python multiprocess.Process handles
         self.workers = []
 
-        self._gn_path, self._autoninja_path = self._GetGnAndAutoninjaAbsolutePaths()
+        self._gn_path, self._autoninja_path = self._GetGnAndAutoninjaAbsolutePaths(
+            depot_tools_path)
 
     def CreateSubprocess(self, command, env=None, pipe_stdout=True):
         subprocess = SubProcess(command, env, pipe_stdout)
@@ -593,7 +597,7 @@ class TestBatch():
                    ("angle_with_capture_by_default", "false"),
                    ("angle_capture_replay_composite_file_id", str(composite_file_id))]
         if self.goma_dir:
-            gn_args.append(("goma_dir", self.goma_dir))
+            gn_args.append(('goma_dir', '"%s"' % self.goma_dir))
         returncode, output = child_processes_manager.RunGNGenProcess(replay_build_dir, gn_args,
                                                                      True)
         if returncode != 0:
@@ -762,7 +766,7 @@ def RunTests(args, worker_id, job_queue, trace_dir, result_list, message_queue):
     replay_build_dir = os.path.join(args.out_dir, 'Replay%d' % worker_id)
     replay_exec_path = os.path.join(replay_build_dir, REPLAY_BINARY)
 
-    child_processes_manager = ChildProcessesManager()
+    child_processes_manager = ChildProcessesManager(args.depot_tools_path)
     # used to differentiate between multiple composite files when there are multiple test batchs
     # running on the same worker and --deleted_trace is set to False
     composite_file_id = 1
@@ -843,7 +847,7 @@ def DeleteTraceFolders(folder_num, trace_folder):
 
 
 def main(args):
-    child_processes_manager = ChildProcessesManager()
+    child_processes_manager = ChildProcessesManager(args.depot_tools_path)
     try:
         start_time = time.time()
         # set the number of workers to be cpu_count - 1 (since the main process already takes up a
@@ -860,7 +864,7 @@ def main(args):
         gn_args = [("use_goma", str(args.use_goma).lower()),
                    ("angle_with_capture_by_default", "true")]
         if args.goma_dir:
-            gn_args.append(("goma_dir", args.goma_dir))
+            gn_args.append(('goma_dir', '"%s"' % args.goma_dir))
         capture_build_dir = os.path.normpath(r"%s/Capture" % args.out_dir)
         returncode, output = child_processes_manager.RunGNGenProcess(capture_build_dir, gn_args,
                                                                      False)
@@ -1075,6 +1079,7 @@ if __name__ == "__main__":
         default=DEFAULT_MAX_JOBS,
         type=int,
         help='Maximum number of test processes. Default is %d.' % DEFAULT_MAX_JOBS)
+    parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
     args = parser.parse_args()
     if platform == "win32":
         args.test_suite += ".exe"
