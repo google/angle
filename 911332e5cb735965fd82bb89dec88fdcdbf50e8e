@@ -82,6 +82,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "09f956d2_b2edddd8",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:28:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a01b3abf_d4999907",
+      "range": {
+        "startLine": 172,
+        "startChar": 16,
+        "endLine": 172,
+        "endChar": 29
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9e756a73_8ce2e0e1",
@@ -95,6 +119,30 @@
       "writtenOn": "2021-01-20T15:21:37Z",
       "side": 1,
       "message": "same here.",
+      "range": {
+        "startLine": 203,
+        "startChar": 16,
+        "endLine": 203,
+        "endChar": 31
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc3863dd_67d4668a",
+        "filename": "src/libANGLE/BlobCache.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:28:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9e756a73_8ce2e0e1",
       "range": {
         "startLine": 203,
         "startChar": 16,
@@ -582,6 +630,30 @@
       "side": 1,
       "message": "Hi Jamie, I add ANGLE_VK_CHECK after calling egl::DecompressBlobCacheData() and egl::CompressBlobCacheData(), is that right? Or I should set the CompressBlobCacheData/DecompressBlobCacheData to return angle::Result.",
       "parentUuid": "cc51fa28_f5b177db",
+      "range": {
+        "startLine": 601,
+        "startChar": 34,
+        "endLine": 601,
+        "endChar": 49
+      },
+      "revId": "911332e5cb735965fd82bb89dec88fdcdbf50e8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24c97ee0_b4921dcd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:28:33Z",
+      "side": 1,
+      "message": "Ack, ANGLE_VK_CHECK allows you to turn a bool into an application-visible error. LGTM",
+      "parentUuid": "a622144e_4e0485e9",
       "range": {
         "startLine": 601,
         "startChar": 34,

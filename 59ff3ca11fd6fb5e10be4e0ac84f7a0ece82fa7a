@@ -234,6 +234,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "095c9710_f993dade",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2169,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:28:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "53968665_117b6318",
+      "range": {
+        "startLine": 2169,
+        "startChar": 17,
+        "endLine": 2169,
+        "endChar": 40
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "572be883_cc28efeb",
@@ -370,6 +394,24 @@
       "side": 1,
       "message": "\" Is this an Android platform limitation? \"\nYes, Jamie, you can check the limitation in https://android.googlesource.com/platform/frameworks/native/+/master/opengl/libs/EGL/egl_cache.cpp\n\"\n// Cache size limits.\nstatic const size_t maxKeySize \u003d 12 * 1024;\nstatic const size_t maxValueSize \u003d 64 * 1024;\nstatic const size_t maxTotalSize \u003d 2 * 1024 * 1024;\n\"",
       "parentUuid": "673e60d2_8bd970f0",
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24d78686_f3ec74c4",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2214,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:28:33Z",
+      "side": 1,
+      "message": "Done, will follow up with the response from the Android graphics team.",
+      "parentUuid": "9db2a115_6354c2c6",
       "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -654,6 +696,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "484fed8b_20c8bfab",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2284,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:28:33Z",
+      "side": 1,
+      "message": "No, BlobCache doesn\u0027t have access to VK.",
+      "parentUuid": "e738c172_70938df3",
+      "range": {
+        "startLine": 2281,
+        "startChar": 0,
+        "endLine": 2284,
+        "endChar": 9
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "07091a89_72329e8e",
@@ -714,6 +780,30 @@
       "side": 1,
       "message": "replace:\nangle::MemoryBuffer uncompressedData;\nif (!uncompressedData.resize(uncompressedSize))\n{\n   ANGLE_VK_CHECK(display, false, VK_ERROR_INITIALIZATION_FAILED);\n   return angle::Result::Continue;\n}",
       "parentUuid": "eb361838_be95057e",
+      "range": {
+        "startLine": 2319,
+        "startChar": 13,
+        "endLine": 2319,
+        "endChar": 19
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ef9b2f0_5d264f84",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2319,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-21T20:28:33Z",
+      "side": 1,
+      "message": "Instead:\n\nANGLE_VK_CHECK(!uncompressedData.resize());\n\nYou want a flagrant error when memory can\u0027t be allocated.",
+      "parentUuid": "0486314e_81447223",
       "range": {
         "startLine": 2319,
         "startChar": 13,
