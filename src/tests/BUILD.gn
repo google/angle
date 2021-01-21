@@ -64,6 +64,10 @@ template("angle_common_test_utils") {
   assert(defined(invoker.angle_util))
   angle_source_set(target_name) {
     testonly = true
+    if (is_ios) {
+      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+      check_includes = false
+    }
     public_configs = [
       ":angle_common_test_utils_config",
       "$angle_root:library_name_config",
@@ -263,6 +267,10 @@ template("angle_perftests_common") {
 
   angle_source_set(target_name) {
     testonly = true
+    if (is_ios) {
+      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+      check_includes = false
+    }
     sources = [
       "../third_party/trace_event/trace_event.h",
       "perf_tests/ANGLEPerfTest.cpp",
