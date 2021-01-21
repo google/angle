@@ -163,6 +163,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "402069c6_1c475474",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-21T05:18:29Z",
+      "side": 1,
+      "message": "I thought mismatches between pipeline layout and actual shader code would cause problems(may be in the Vulkan validation layer). But in case shader uses subset of them, it seems to have no problem.",
+      "parentUuid": "145d1314_13bebe24",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "916cdc5c_2289cea9",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 8
