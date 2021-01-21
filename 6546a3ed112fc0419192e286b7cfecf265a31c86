@@ -261,6 +261,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5f708f5_e285aa1a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-21T22:23:30Z",
+      "side": 1,
+      "message": "This one:\n\n    3588 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8*.samples_*.mask_* \u003d FAIL\n\nMy suggestion is to remove it, and see if android deqp bots are happy. It may be that it\u0027s fixed with one of my changes that landed last week. If they still fail, create a new bug for that line.",
+      "parentUuid": "5f5941ab_484abe9b",
+      "revId": "6546a3ed112fc0419192e286b7cfecf265a31c86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6eb027e3_5a962733",
