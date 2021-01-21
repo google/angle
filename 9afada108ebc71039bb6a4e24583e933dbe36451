@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6fd2049f_288209c0",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4725,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-21T02:20:18Z",
+      "side": 1,
+      "message": "I went with \"getCachedTextureLevelData\", though admittedly that\u0027s not much different.\n\nSometimes we need to create new cached data, or recreate it, or just return what\u0027s already there.   Those are details that the caller doesn\u0027t really need to know or care about though, since they just want the data, so I\u0027m fine with either name.   Let me know which you like or if you have something better in mind.",
+      "parentUuid": "a36e416f_ad52955a",
+      "range": {
+        "startLine": 4725,
+        "startChar": 42,
+        "endLine": 4725,
+        "endChar": 70
+      },
+      "revId": "9afada108ebc71039bb6a4e24583e933dbe36451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b797980e_009cd670",
         "filename": "src/libANGLE/FrameCapture.cpp",
         "patchSetId": 3
@@ -54,6 +78,30 @@
       "writtenOn": "2021-01-20T15:01:43Z",
       "side": 1,
       "message": "nit: just to be pedantic can you \"else\" ASSERT the eps are the two supported subimage APIs? that prevents any surprises.",
+      "range": {
+        "startLine": 4742,
+        "startChar": 4,
+        "endLine": 4742,
+        "endChar": 5
+      },
+      "revId": "9afada108ebc71039bb6a4e24583e933dbe36451",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea45b0ff_a980abdf",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 4742,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-21T02:20:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b797980e_009cd670",
       "range": {
         "startLine": 4742,
         "startChar": 4,
