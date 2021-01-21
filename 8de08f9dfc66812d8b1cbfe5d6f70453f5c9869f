@@ -393,6 +393,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e9becb7a_a8f33c91",
+        "filename": "scripts/generate_rmse_scores.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-21T02:36:49Z",
+      "side": 1,
+      "message": "I didn\u0027t know about restricted_trace_gold_tests.py.   However, looking at that it\u0027s pretty far from what I\u0027m trying to accomplish here and much more complicated. \n\nI\u0027m not intending this to run on desktop and trying to distinguish between \u0027cp\u0027 or \u0027adb pull\u0027.   I just want to run some adb commands on Android devices and collect all the output so I can copy/paste stuff into a Google doc to make our lives a little easier when generating traces since we are planning on generating a lot more in the coming weeks.\n\nSince this works and it\u0027s a pain to keep copy/pasting the script when generating traces, I\u0027d prefer to just land this as-is and follow up with anything in a follow-on CL (like desktop support if you think that\u0027s useful).",
+      "parentUuid": "75ce8d69_8e9b16d2",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 29
+      },
+      "revId": "8de08f9dfc66812d8b1cbfe5d6f70453f5c9869f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bb79eb6d_238feff5",
         "filename": "scripts/generate_rmse_scores.py",
         "patchSetId": 7
