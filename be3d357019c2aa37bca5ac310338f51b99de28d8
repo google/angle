@@ -35,6 +35,40 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d8530b4_acc28f66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-22T21:03:23Z",
+      "side": 1,
+      "message": "I think this helps clean up the spir-v transformer code since it hides all the magic numbers and stuff.   Should make working in that code a bit less scary.",
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27dca5b5_b5299da2",
+        "filename": "src/common/spirv/gen_spirv_builder_and_parser.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-22T21:03:23Z",
+      "side": 1,
+      "message": "Should specify python3, since python 2 is deperecated.",
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2e86990f_4b3bc664",
@@ -77,6 +111,29 @@
         "startChar": 0,
         "endLine": 31,
         "endChar": 15
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c14e1474_ae8fbe0e",
+        "filename": "src/common/spirv/gen_spirv_builder_and_parser.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-22T21:03:23Z",
+      "side": 1,
+      "message": "Why the leading underscore on these parameters and variables?   What other names could these collide with?",
+      "range": {
+        "startLine": 98,
+        "startChar": 86,
+        "endLine": 98,
+        "endChar": 87
       },
       "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -225,6 +282,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0430e6e3_4a411d18",
+        "filename": "src/common/spirv/spirv_instruction_builder_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-22T21:03:23Z",
+      "side": 1,
+      "message": "These usually follow the pattern of substituting \"_\" for \"/\" and then removing \"_\" from the file names,  so to get the full path+filename this should be:\n\nCOMMON_SPIRV_SPIRVINSTRUCTIONBUILDERAUTOGEN_H_\n\nSame for the other header file.",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 51
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fc6e1b2b_adbde790",
         "filename": "src/common/spirv/spirv_instruction_parser_autogen.cpp",
         "patchSetId": 2
@@ -359,6 +439,29 @@
         "startChar": 17,
         "endLine": 17,
         "endChar": 27
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b33de953_034c11b0",
+        "filename": "src/common/spirv/spirv_types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-22T21:03:23Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 51,
+        "startChar": 65,
+        "endLine": 51,
+        "endChar": 74
       },
       "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
