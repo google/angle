@@ -16,6 +16,23 @@
       "message": "PTAL. I still am having issues on Linux, this seems to lets the test run but they get a \"comparison failure\". Not sure if they\u0027re all rendering black with xvfb or something like that.",
       "revId": "62f75c69769c653f497cd167865f2617038f4f8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "853fe901_04e4842e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-22T18:30:31Z",
+      "side": 1,
+      "message": "Thanks Jamie!",
+      "revId": "62f75c69769c653f497cd167865f2617038f4f8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
