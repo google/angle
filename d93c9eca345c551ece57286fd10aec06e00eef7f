@@ -70,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "278469c1_77c4b389",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T14:04:46Z",
+      "side": 1,
+      "message": "Yes, please mark all simple completed comments as Done. If there is an open question on the comment please leave it unresolved so we can see it in t he \"comments\" mode in Gerrit.",
+      "parentUuid": "423661e7_3e337fb1",
+      "revId": "d93c9eca345c551ece57286fd10aec06e00eef7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8615b3f0_4368accb",

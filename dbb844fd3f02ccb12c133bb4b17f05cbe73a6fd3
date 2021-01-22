@@ -16,6 +16,70 @@
       "message": "Thanks Jamie.\nIf there is no concern about resize(), I\u0027ll keep the present logic.",
       "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34234f6b_05941c1e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T14:04:46Z",
+      "side": 1,
+      "message": "There is one request remaining there.",
+      "parentUuid": "a2dbc877_612dd305",
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63219bc2_f4162807",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T14:04:46Z",
+      "side": 1,
+      "message": "nit: please change this to ANGLE_VK_CHECk(displayVk, keyData.resize, VK_ERROR)",
+      "range": {
+        "startLine": 522,
+        "startChar": 0,
+        "endLine": 527,
+        "endChar": 0
+      },
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d200518_7acb7e28",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T14:04:46Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 570,
+        "startChar": 23,
+        "endLine": 570,
+        "endChar": 24
+      },
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
