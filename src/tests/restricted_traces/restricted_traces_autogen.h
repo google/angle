@@ -67,6 +67,7 @@ enum class RestrictedTraceID
     fifa_mobile,
     free_fire,
     google_maps,
+    hearthstone,
     kartrider_rush,
     klondike_adventures,
     lego_legacy,

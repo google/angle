@@ -24,6 +24,7 @@
 #include "fifa_mobile/fifa_mobile_capture_context2.h"
 #include "free_fire/free_fire_capture_context1.h"
 #include "google_maps/google_maps_capture_context3.h"
+#include "hearthstone/hearthstone_capture_context2.h"
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
 #include "klondike_adventures/klondike_adventures_capture_context2.h"
 #include "lego_legacy/lego_legacy_capture_context2.h"
@@ -93,6 +94,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::google_maps,
      {google_maps::kReplayFrameStart, google_maps::kReplayFrameEnd,
       google_maps::kReplayDrawSurfaceWidth, google_maps::kReplayDrawSurfaceHeight, "google_maps"}},
+    {RestrictedTraceID::hearthstone,
+     {hearthstone::kReplayFrameStart, hearthstone::kReplayFrameEnd,
+      hearthstone::kReplayDrawSurfaceWidth, hearthstone::kReplayDrawSurfaceHeight, "hearthstone"}},
     {RestrictedTraceID::kartrider_rush,
      {kartrider_rush::kReplayFrameStart, kartrider_rush::kReplayFrameEnd,
       kartrider_rush::kReplayDrawSurfaceWidth, kartrider_rush::kReplayDrawSurfaceHeight,
@@ -212,6 +216,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::google_maps:
             google_maps::ReplayContext3Frame(frameIndex);
             break;
+        case RestrictedTraceID::hearthstone:
+            hearthstone::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::ReplayContext1Frame(frameIndex);
             break;
@@ -315,6 +322,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::google_maps:
             google_maps::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::hearthstone:
+            hearthstone::ResetContext2Replay();
             break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::ResetContext1Replay();
@@ -420,6 +430,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::google_maps:
             google_maps::SetupContext3Replay();
             break;
+        case RestrictedTraceID::hearthstone:
+            hearthstone::SetupContext2Replay();
+            break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::SetupContext1Replay();
             break;
@@ -524,6 +537,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::google_maps:
             google_maps::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::hearthstone:
+            hearthstone::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::SetBinaryDataDir(dataDir);
             break;
@@ -627,6 +643,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::google_maps:
             google_maps::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::hearthstone:
+            hearthstone::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::SetBinaryDataDecompressCallback(callback);
