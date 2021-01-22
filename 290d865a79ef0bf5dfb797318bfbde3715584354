@@ -34,6 +34,92 @@
       "parentUuid": "699c9b67_58b16f7c",
       "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c6fa028_e0035268",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T18:44:54Z",
+      "side": 1,
+      "message": "I don\u0027t see the updated extended dirty bit yet. One other comment about the duplicate state.",
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc8010c3_967ec775",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1054,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T18:44:54Z",
+      "side": 1,
+      "message": "needs update?",
+      "range": {
+        "startLine": 1054,
+        "startChar": 28,
+        "endLine": 1054,
+        "endChar": 50
+      },
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f93f25a2_c7ac2aea",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 3
+      },
+      "lineNbr": 1054,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T18:44:54Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 1054,
+        "startChar": 28,
+        "endLine": 1054,
+        "endChar": 50
+      },
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d0cbb78_be09ec97",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3284,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T18:44:54Z",
+      "side": 1,
+      "message": "I don\u0027t think you need to store this, it\u0027s the same as the front end.",
+      "range": {
+        "startLine": 3284,
+        "startChar": 4,
+        "endLine": 3284,
+        "endChar": 20
+      },
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
