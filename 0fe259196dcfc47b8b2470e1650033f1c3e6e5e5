@@ -51,6 +51,24 @@
       "parentUuid": "1c1c98ca_8bad51de",
       "revId": "0fe259196dcfc47b8b2470e1650033f1c3e6e5e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4d6be5c_4dd8d0a3",
+        "filename": "src/tests/restricted_traces/restricted_traces.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-22T17:14:55Z",
+      "side": 1,
+      "message": "Done. And I\u0027ll spend some time to fix our steps to avoid this in the future.",
+      "parentUuid": "eac1c7b7_92662fc5",
+      "revId": "0fe259196dcfc47b8b2470e1650033f1c3e6e5e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
