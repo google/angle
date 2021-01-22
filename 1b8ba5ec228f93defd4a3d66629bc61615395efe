@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00a21480_266fd2db",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-22T09:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f7412f4_cc6a8c42",
+      "range": {
+        "startLine": 488,
+        "startChar": 72,
+        "endLine": 488,
+        "endChar": 77
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0adc6944_34fba047",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-01-21T15:59:58Z",
       "side": 1,
       "message": "Please move this up before or after renderArea.",
+      "range": {
+        "startLine": 1197,
+        "startChar": 42,
+        "endLine": 1197,
+        "endChar": 78
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6dea4695_ac1014bb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1197,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-22T09:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0adc6944_34fba047",
       "range": {
         "startLine": 1197,
         "startChar": 42,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "abcce9e7_8f290da3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1371,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-22T09:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ea0535f_c7892b16",
+      "range": {
+        "startLine": 1371,
+        "startChar": 10,
+        "endLine": 1371,
+        "endChar": 15
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2172034_eb02a9ea",
@@ -100,6 +172,24 @@
       "writtenOn": "2021-01-21T15:59:58Z",
       "side": 1,
       "message": "I\u0027d say just do this unconditionally. No need for all the flag passing.",
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e916c3b_ac8fd844",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1380,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-22T09:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e2172034_eb02a9ea",
       "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -127,6 +217,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c508684_b067773c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1416,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-22T09:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d12c378_ac11a77c",
+      "range": {
+        "startLine": 1382,
+        "startChar": 0,
+        "endLine": 1416,
+        "endChar": 13
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "753b494b_146d59d5",
@@ -140,6 +254,30 @@
       "writtenOn": "2021-01-21T21:02:32Z",
       "side": 1,
       "message": "nit: no default arguments please.\n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/CodingStandard.md#other-c_features",
+      "range": {
+        "startLine": 1066,
+        "startChar": 60,
+        "endLine": 1066,
+        "endChar": 65
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "218ba7ba_df51c05a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1066,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-22T09:26:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "753b494b_146d59d5",
       "range": {
         "startLine": 1066,
         "startChar": 60,
