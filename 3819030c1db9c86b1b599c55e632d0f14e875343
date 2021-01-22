@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48bc452c_1c57c47b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T17:18:27Z",
+      "side": 1,
+      "message": "We actually have one bit still available in mAttachmentFormats.back(). Please revert the changes to this class and add a flag there. See `kResolveDepthFlag` etc below.\n\nWe may have to bite the bullet one day, but not today!",
+      "revId": "3819030c1db9c86b1b599c55e632d0f14e875343",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
