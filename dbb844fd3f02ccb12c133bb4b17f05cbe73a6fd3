@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2dbc877_612dd305",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-22T07:54:14Z",
+      "side": 1,
+      "message": "Thanks Jamie.\nIf there is no concern about resize(), I\u0027ll keep the present logic.",
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

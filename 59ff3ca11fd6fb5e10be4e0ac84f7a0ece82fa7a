@@ -816,6 +816,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d254e41a_72eb6134",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2319,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-22T07:54:14Z",
+      "side": 1,
+      "message": "Hi Jamie, basic decompress has been moved to BlobCache.cpp (can\u0027t use ANGLE_VK_CHECK).\nBut there are still resize() called in CompressAndStorePipelineCacheVk() and GetAndDecompressPipelineCacheVk().\nFor example:\n\"\n    // Allocate enough memory.\n    angle::MemoryBuffer compressedData;\n    if (!compressedData.resize(chunkSize * numChunks))\n    {\n        ANGLE_VK_CHECK(display, false, VK_ERROR_INITIALIZATION_FAILED);\n        return angle::Result::Continue;\n    }\n\"\nShould I change them to \"ANGLE_VK_CHECK(display, !compressedData.resize(chunkSize * numChunks),VK_ERROR_INITIALIZATION_FAILED);\"?\nMaybe it\u0027s better to return \"angle::Result::Continue\" like here to continue the following process?",
+      "parentUuid": "4ef9b2f0_5d264f84",
+      "range": {
+        "startLine": 2319,
+        "startChar": 13,
+        "endLine": 2319,
+        "endChar": 19
+      },
+      "revId": "59ff3ca11fd6fb5e10be4e0ac84f7a0ece82fa7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d856dcee_dbbd52b9",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 3
