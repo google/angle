@@ -171,6 +171,30 @@
       },
       "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d69d176_4aebdda3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1202,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-22T07:30:23Z",
+      "side": 1,
+      "message": "According to the spec about the vkGetRenderAreaGranularity, aligned render area\u0027s width ensures  renderArea.x+renderArea.width is equal to the width of the framebuffer, so I need the framebuffer\u0027s height and width.",
+      "parentUuid": "c5267c28_354fbd91",
+      "range": {
+        "startLine": 1202,
+        "startChar": 38,
+        "endLine": 1202,
+        "endChar": 40
+      },
+      "revId": "1b8ba5ec228f93defd4a3d66629bc61615395efe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
