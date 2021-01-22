@@ -53,6 +53,7 @@ DEFAULT_MAX_JOBS = 8
 REPLAY_BINARY = "capture_replay_tests"
 if platform == "win32":
     REPLAY_BINARY += ".exe"
+TRACE_FOLDER = "traces"
 
 EXIT_SUCCESS = 0
 EXIT_FAILURE = 1
@@ -250,27 +251,23 @@ class ChildProcessesManager():
         self._gn_path, self._autoninja_path = self._GetGnAndAutoninjaAbsolutePaths(
             depot_tools_path)
 
-    def CreateSubprocess(self, command, env=None, pipe_stdout=True):
+    def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
         subprocess = SubProcess(command, env, pipe_stdout)
         debug('Creating subprocess: %s with pid %d' % (' '.join(command), subprocess.Pid()))
         self.subprocesses[subprocess.Pid()] = subprocess
-        return subprocess.Pid()
-
-    def JoinSubprocess(self, subprocess_id, timeout=None):
-        assert subprocess_id in self.subprocesses
         try:
-            returncode, output = self.subprocesses[subprocess_id].Join(timeout)
-            self.RemoveSubprocess(subprocess_id)
+            returncode, output = self.subprocesses[subprocess.Pid()].Join(timeout)
+            self.RemoveSubprocess(subprocess.Pid())
             if returncode != 0:
                 return -1, output
             return returncode, output
         except KeyboardInterrupt:
             raise
         except subprocess.TimeoutExpired as e:
-            self.RemoveSubprocess(subprocess_id)
+            self.RemoveSubprocess(subprocess.Pid())
             return -2, str(e)
         except Exception as e:
-            self.RemoveSubprocess(subprocess_id)
+            self.RemoveSubprocess(subprocess.Pid())
             return -1, str(e)
 
     def RemoveSubprocess(self, subprocess_id):
@@ -311,13 +308,11 @@ class ChildProcessesManager():
         debug('Calling GN gen with %s' % str(gn_args))
         args_str = ' '.join(['%s=%s' % (k, v) for (k, v) in gn_args])
         cmd = [self._gn_path, 'gen', '--args=%s' % args_str, build_dir]
-        pid = self.CreateSubprocess(cmd, pipe_stdout=pipe_stdout)
-        return self.JoinSubprocess(pid)
+        return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
     def RunAutoninjaProcess(self, build_dir, target, pipe_stdout):
         cmd = [self._autoninja_path, '-C', build_dir, target]
-        pid = self.CreateSubprocess(cmd, pipe_stdout=pipe_stdout)
-        return self.JoinSubprocess(pid)
+        return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
 
 def GetTestsListForFilter(test_path, filter):
@@ -550,7 +545,12 @@ class TestBatch():
         self.verbose = verbose
         self.results = []
 
-    def RunWithCapture(self, test_exe_path, trace_folder_path, child_processes_manager):
+    def SetWorkerId(self, worker_id):
+        self.trace_dir = "%s%d" % (TRACE_FOLDER, worker_id)
+        self.trace_folder_path = os.path.join(REPLAY_SAMPLE_FOLDER, self.trace_dir)
+
+    def RunWithCapture(self, args, child_processes_manager):
+        test_exe_path = os.path.join(args.out_dir, 'Capture', args.test_suite)
 
         # set the static environment variables that do not change throughout the script run
         env = os.environ.copy()
@@ -558,16 +558,21 @@ class TestBatch():
         env['ANGLE_CAPTURE_SERIALIZE_STATE'] = '1'
         env['ANGLE_CAPTURE_ENABLED'] = '1'
 
-        info('Setting ANGLE_CAPTURE_OUT_DIR to %s' % trace_folder_path)
-        env['ANGLE_CAPTURE_OUT_DIR'] = trace_folder_path
+        info('Setting ANGLE_CAPTURE_OUT_DIR to %s' % self.trace_folder_path)
+        env['ANGLE_CAPTURE_OUT_DIR'] = self.trace_folder_path
 
         if not self.keep_temp_files:
-            ClearFolderContent(trace_folder_path)
+            ClearFolderContent(self.trace_folder_path)
         filt = ':'.join([test.full_test_name for test in self.tests])
-        cmd = [test_exe_path, '--gtest_filter=%s' % filt, '--angle-per-test-capture-label']
-        capture_proc_id = child_processes_manager.CreateSubprocess(cmd, env)
-        returncode, output = child_processes_manager.JoinSubprocess(capture_proc_id,
-                                                                    SUBPROCESS_TIMEOUT)
+
+        if args.xvfb:
+            cmd = ['vpython', 'testing/xvfb.py', test_exe_path]
+        else:
+            cmd = [test_exe_path]
+        cmd += ['--gtest_filter=%s' % filt, '--angle-per-test-capture-label']
+
+        returncode, output = child_processes_manager.RunSubprocess(
+            cmd, env, timeout=SUBPROCESS_TIMEOUT)
         if returncode == -1:
             self.results.append(GroupedResult(GroupedResult.Crashed, "", output, self.tests))
             return False
@@ -576,11 +581,11 @@ class TestBatch():
             return False
         return True
 
-    def RemoveTestsThatDoNotProduceAppropriateTraceFiles(self, trace_folder_path):
+    def RemoveTestsThatDoNotProduceAppropriateTraceFiles(self):
         continued_tests = []
         skipped_tests = []
         for test in self.tests:
-            if not test.CanRunReplay(trace_folder_path):
+            if not test.CanRunReplay(self.trace_folder_path):
                 skipped_tests.append(test)
             else:
                 continued_tests.append(test)
@@ -592,16 +597,16 @@ class TestBatch():
                     skipped_tests))
         return continued_tests
 
-    def BuildReplay(self, replay_build_dir, trace_dir, trace_folder_path, composite_file_id, tests,
-                    child_processes_manager):
+    def BuildReplay(self, replay_build_dir, composite_file_id, tests, child_processes_manager):
         # write gni file that holds all the traces files in a list
-        self.CreateGNIFile(trace_folder_path, composite_file_id, tests)
+        self.CreateGNIFile(composite_file_id, tests)
         # write header and cpp composite files, which glue the trace files with
         # CaptureReplayTests.cpp
-        self.CreateTestsCompositeFiles(trace_folder_path, composite_file_id, tests)
+        self.CreateTestsCompositeFiles(composite_file_id, tests)
+
         gn_args = [("use_goma", str(self.use_goma).lower()),
                    ("angle_build_capture_replay_tests", "true"),
-                   ("angle_capture_replay_test_trace_dir", '"%s"' % trace_dir),
+                   ("angle_capture_replay_test_trace_dir", '"%s"' % self.trace_dir),
                    ("angle_with_capture_by_default", "false"),
                    ("angle_capture_replay_composite_file_id", str(composite_file_id))]
         if self.goma_dir:
@@ -625,9 +630,9 @@ class TestBatch():
     def RunReplay(self, replay_exe_path, child_processes_manager, tests):
         env = os.environ.copy()
         env['ANGLE_CAPTURE_ENABLED'] = '0'
-        replay_proc_id = child_processes_manager.CreateSubprocess([replay_exe_path], env)
-        returncode, output = child_processes_manager.JoinSubprocess(replay_proc_id,
-                                                                    SUBPROCESS_TIMEOUT)
+        returncode, output = child_processes_manager.RunSubprocess([replay_exe_path],
+                                                                   env,
+                                                                   timeout=SUBPROCESS_TIMEOUT)
         if returncode == -1:
             self.results.append(
                 GroupedResult(GroupedResult.Crashed, "Replay run crashed", output, tests))
@@ -666,7 +671,7 @@ class TestBatch():
         self.tests.append(test)
 
     # gni file, which holds all the sources for a replay application
-    def CreateGNIFile(self, trace_folder_path, composite_file_id, tests):
+    def CreateGNIFile(self, composite_file_id, tests):
         capture_sources = []
         for test in tests:
             label = test.GetLabel()
@@ -676,13 +681,15 @@ class TestBatch():
             try:
                 # reads from {label}_capture_context1_files.txt and adds the traces files recorded
                 # in there to the list of trace files
-                f = open(os.path.join(trace_folder_path, label + trace_file_suffix + "_files.txt"))
+                f = open(
+                    os.path.join(self.trace_folder_path, label + trace_file_suffix + "_files.txt"))
                 trace_files += f.read().splitlines()
                 f.close()
             except IOError:
                 continue
             capture_sources += trace_files
-        f = open(os.path.join(trace_folder_path, "traces" + str(composite_file_id) + ".gni"), "w")
+        f = open(
+            os.path.join(self.trace_folder_path, "traces" + str(composite_file_id) + ".gni"), "w")
         f.write("generated_sources = [\n")
         # write the list of trace files to the gni file
         for filename in capture_sources:
@@ -691,10 +698,10 @@ class TestBatch():
         f.close()
 
     # header and cpp composite files, which glue the trace files with CaptureReplayTests.cpp
-    def CreateTestsCompositeFiles(self, trace_folder_path, composite_file_id, tests):
+    def CreateTestsCompositeFiles(self, composite_file_id, tests):
         # write CompositeTests header file
         h_filename = "CompositeTests" + str(composite_file_id) + ".h"
-        h_file = open(os.path.join(trace_folder_path, h_filename), "w")
+        h_file = open(os.path.join(self.trace_folder_path, h_filename), "w")
 
         include_header_template = '#include "{header_file_path}.h"\n'
         trace_headers = "".join([
@@ -706,8 +713,8 @@ class TestBatch():
 
         # write CompositeTests cpp file
         cpp_file = open(
-            os.path.join(trace_folder_path, "CompositeTests" + str(composite_file_id) + ".cpp"),
-            "w")
+            os.path.join(self.trace_folder_path,
+                         "CompositeTests" + str(composite_file_id) + ".cpp"), "w")
 
         test_trace_info_inits = "".join([
             test_trace_info_init_template.format(namespace=tests[i].GetLabel())
@@ -768,9 +775,7 @@ def SetCWDToAngleFolder():
     return cwd
 
 
-def RunTests(args, worker_id, job_queue, trace_dir, result_list, message_queue):
-    trace_folder_path = os.path.join(REPLAY_SAMPLE_FOLDER, trace_dir)
-    test_exec_path = os.path.join(args.out_dir, 'Capture', args.test_suite)
+def RunTests(args, worker_id, job_queue, result_list, message_queue):
     replay_build_dir = os.path.join(args.out_dir, 'Replay%d' % worker_id)
     replay_exec_path = os.path.join(replay_build_dir, REPLAY_BINARY)
 
@@ -783,20 +788,20 @@ def RunTests(args, worker_id, job_queue, trace_dir, result_list, message_queue):
             test_batch = job_queue.get()
             message_queue.put("Starting {} tests on worker {}. Unstarted jobs: {}".format(
                 len(test_batch.tests), worker_id, job_queue.qsize()))
-            success = test_batch.RunWithCapture(test_exec_path, trace_folder_path,
-                                                child_processes_manager)
+
+            test_batch.SetWorkerId(worker_id)
+
+            success = test_batch.RunWithCapture(args, child_processes_manager)
             if not success:
                 result_list.append(test_batch.GetResults())
                 message_queue.put(str(test_batch.GetResults()))
                 continue
-            continued_tests = test_batch.RemoveTestsThatDoNotProduceAppropriateTraceFiles(
-                trace_folder_path)
+            continued_tests = test_batch.RemoveTestsThatDoNotProduceAppropriateTraceFiles()
             if len(continued_tests) == 0:
                 result_list.append(test_batch.GetResults())
                 message_queue.put(str(test_batch.GetResults()))
                 continue
-            success = test_batch.BuildReplay(replay_build_dir, trace_dir, trace_folder_path,
-                                             composite_file_id, continued_tests,
+            success = test_batch.BuildReplay(replay_build_dir, composite_file_id, continued_tests,
                                              child_processes_manager)
             if test_batch.keep_temp_files:
                 composite_file_id += 1
@@ -837,18 +842,18 @@ def DeleteReplayBuildFolders(folder_num, replay_build_dir, trace_folder):
             SafeDeleteFolder(folder_name)
 
 
-def CreateTraceFolders(folder_num, trace_folder):
+def CreateTraceFolders(folder_num):
     for i in range(folder_num):
-        folder_name = trace_folder + str(i)
+        folder_name = TRACE_FOLDER + str(i)
         folder_path = os.path.join(REPLAY_SAMPLE_FOLDER, folder_name)
         if os.path.isdir(folder_path):
             shutil.rmtree(folder_path)
         os.makedirs(folder_path)
 
 
-def DeleteTraceFolders(folder_num, trace_folder):
+def DeleteTraceFolders(folder_num):
     for i in range(folder_num):
-        folder_name = trace_folder + str(i)
+        folder_name = TRACE_FOLDER + str(i)
         folder_path = os.path.join(REPLAY_SAMPLE_FOLDER, folder_name)
         if os.path.isdir(folder_path):
             SafeDeleteFolder(folder_path)
@@ -863,10 +868,8 @@ def main(args):
         # runs it. The worker closes down when there is no more job.
         worker_count = min(multiprocessing.cpu_count() - 1, args.max_jobs)
         cwd = SetCWDToAngleFolder()
-        # create traces and build folders
-        trace_folder = "traces"
 
-        CreateTraceFolders(worker_count, trace_folder)
+        CreateTraceFolders(worker_count)
         WriteAngleTraceGLHeader()
         # generate gn files
         gn_args = [("use_goma", str(args.use_goma).lower()),
@@ -934,9 +937,7 @@ def main(args):
         # spawning and starting up workers
         for worker_id in range(worker_count):
             proc = multiprocessing.Process(
-                target=RunTests,
-                args=(args, worker_id, job_queue, trace_folder + str(worker_id), result_list,
-                      message_queue))
+                target=RunTests, args=(args, worker_id, job_queue, result_list, message_queue))
             child_processes_manager.AddWorker(proc)
             proc.start()
 
@@ -1023,7 +1024,7 @@ def main(args):
         # delete generated folders if --keep_temp_files flag is set to false
         if args.purge:
             os.remove(os.path.join(REPLAY_SAMPLE_FOLDER, "angle_trace_gl.h"))
-            DeleteTraceFolders(worker_count, trace_folder)
+            DeleteTraceFolders(worker_count)
             if os.path.isdir(args.out_dir):
                 SafeDeleteFolder(args.out_dir)
 
@@ -1088,6 +1089,7 @@ if __name__ == "__main__":
         type=int,
         help='Maximum number of test processes. Default is %d.' % DEFAULT_MAX_JOBS)
     parser.add_argument('--depot-tools-path', default=None, help='Path to depot tools')
+    parser.add_argument('--xvfb', action='store_true', help='Run with xvfb.')
     args = parser.parse_args()
     if platform == "win32":
         args.test_suite += ".exe"
