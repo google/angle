@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50ae3d0e_b8d005fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-22T05:29:16Z",
+      "side": 1,
+      "message": "PTAL.  This app was held back by the compressed texture block size bug, which manifested in some pretty bizarre ways.  Tim noticed it was cleaned up now, so here we go.",
+      "revId": "0fe259196dcfc47b8b2470e1650033f1c3e6e5e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
