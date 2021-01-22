@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e910336f_d57faaae",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4756,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-01-22T07:03:03Z",
+      "side": 1,
+      "message": "This line fixes https://issuetracker.google.com/issues/175724612 - Seven Deadly Sins killed by Low Memory Killer (LMK).\n\nThank you for this fix!",
+      "revId": "ff5f715e5c4af1f2195da69c4b7bb03efa5a91f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
