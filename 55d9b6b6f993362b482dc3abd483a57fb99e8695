@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f0db005_495cff66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T16:46:11Z",
+      "side": 1,
+      "message": "Thank you Xinyi, this looks much better",
+      "revId": "55d9b6b6f993362b482dc3abd483a57fb99e8695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efdd85eb_1eb2797d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 747,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T16:46:11Z",
+      "side": 1,
+      "message": "No need to expose this. You can move this up to the \"anonymous\" namespace and remove from header.",
+      "range": {
+        "startLine": 747,
+        "startChar": 5,
+        "endLine": 747,
+        "endChar": 40
+      },
+      "revId": "55d9b6b6f993362b482dc3abd483a57fb99e8695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48b3a793_74493690",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1418,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T16:46:11Z",
+      "side": 1,
+      "message": "typo: area* ... beginning the render pass*.",
+      "range": {
+        "startLine": 1418,
+        "startChar": 24,
+        "endLine": 1418,
+        "endChar": 29
+      },
+      "revId": "55d9b6b6f993362b482dc3abd483a57fb99e8695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c9da2da_713306b9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 973,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T16:46:11Z",
+      "side": 1,
+      "message": "nit: we wrap to 100 chars.\n\nAlso, it seems that this is beneficial to tiling GPUs in general. If you agree, you can update the wording with s/Mali/tiling architectures/.",
+      "range": {
+        "startLine": 971,
+        "startChar": 0,
+        "endLine": 973,
+        "endChar": 31
+      },
+      "revId": "55d9b6b6f993362b482dc3abd483a57fb99e8695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29f0a8aa_e58ca542",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 974,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T16:46:11Z",
+      "side": 1,
+      "message": "nit: s/GetAligned/Align/",
+      "range": {
+        "startLine": 974,
+        "startChar": 5,
+        "endLine": 974,
+        "endChar": 15
+      },
+      "revId": "55d9b6b6f993362b482dc3abd483a57fb99e8695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78cd5c6a_82d6c062",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T16:46:11Z",
+      "side": 1,
+      "message": "nit: per style guide, please send non-const references as pointer.",
+      "range": {
+        "startLine": 977,
+        "startChar": 55,
+        "endLine": 977,
+        "endChar": 56
+      },
+      "revId": "55d9b6b6f993362b482dc3abd483a57fb99e8695",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
