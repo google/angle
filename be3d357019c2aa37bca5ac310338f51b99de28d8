@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3b47fed_ef6f51cb",
+        "filename": "src/common/spirv/gen_spirv_builder_and_parser.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T19:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e86990f_4b3bc664",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 15
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "21b26796_3a362819",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-01-22T18:24:13Z",
       "side": 1,
       "message": "suggest you make this into a common variable that you re-use (so you can get script_name/data_source_name/etc in a single table)",
+      "range": {
+        "startLine": 219,
+        "startChar": 18,
+        "endLine": 224,
+        "endChar": 44
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9349d4a_ca799cb1",
+        "filename": "src/common/spirv/gen_spirv_builder_and_parser.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T19:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21b26796_3a362819",
       "range": {
         "startLine": 219,
         "startChar": 18,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8933d3f6_acb81c17",
+        "filename": "src/common/spirv/spirv_instruction_builder_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T19:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "21e81422_9381cbdd",
+      "range": {
+        "startLine": 3,
+        "startChar": 5,
+        "endLine": 3,
+        "endChar": 6
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c5e90830_aaa0794e",
@@ -117,6 +189,30 @@
       "writtenOn": "2021-01-22T18:24:13Z",
       "side": 1,
       "message": "nit: can remove the extra {}",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 26,
+        "endChar": 5
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "829d8119_2cfccb74",
+        "filename": "src/common/spirv/spirv_instruction_builder_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T19:34:31Z",
+      "side": 1,
+      "message": "Done. Was using {{ ... }} but it didn\u0027t need format().",
+      "parentUuid": "c5e90830_aaa0794e",
       "range": {
         "startLine": 26,
         "startChar": 4,
@@ -150,6 +246,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1edcc70_5cecbd0f",
+        "filename": "src/common/spirv/spirv_instruction_parser_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T19:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc6e1b2b_adbde790",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 26
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26b858ce_43162123",
@@ -173,6 +293,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bab63f62_04b96657",
+        "filename": "src/common/spirv/spirv_instruction_parser_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T19:34:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26b858ce_43162123",
+      "range": {
+        "startLine": 3,
+        "startChar": 12,
+        "endLine": 3,
+        "endChar": 23
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1b212be0_42466001",
@@ -186,6 +330,30 @@
       "writtenOn": "2021-01-22T18:24:13Z",
       "side": 1,
       "message": "nit: not used.",
+      "range": {
+        "startLine": 17,
+        "startChar": 17,
+        "endLine": 17,
+        "endChar": 27
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3666deee_ab26e96b",
+        "filename": "src/common/spirv/spirv_instruction_parser_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-22T19:34:31Z",
+      "side": 1,
+      "message": "Done. Moved to spirv_types.h (forgot in pre-upload refactor)",
+      "parentUuid": "1b212be0_42466001",
       "range": {
         "startLine": 17,
         "startChar": 17,
