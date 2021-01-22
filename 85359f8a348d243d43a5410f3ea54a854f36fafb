@@ -33,6 +33,24 @@
       "message": "I understand the motivation for context version, but what do platform and device type get you? They are hard coded. Is that something you could pass in as a parameter and get different backends?",
       "revId": "85359f8a348d243d43a5410f3ea54a854f36fafb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3460c41e_aec9fa35",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-22T13:58:45Z",
+      "side": 1,
+      "message": "SwiftShader. I\u0027m using SwS on the bots because I don\u0027t know what kind of VMs they\u0027re set up with and if they have Vulkan available.",
+      "parentUuid": "921a1e84_b991e588",
+      "revId": "85359f8a348d243d43a5410f3ea54a854f36fafb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
