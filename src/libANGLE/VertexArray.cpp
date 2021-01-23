@@ -378,19 +378,21 @@ void VertexArray::setVertexAttribBinding(const Context *context,
 {
     ASSERT(attribIndex < getMaxAttribs() && bindingIndex < getMaxBindings());
 
-    if (mState.mVertexAttributes[attribIndex].bindingIndex != bindingIndex)
+    if (mState.mVertexAttributes[attribIndex].bindingIndex == bindingIndex)
     {
-        // In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable.
-        ASSERT(context->getClientVersion() >= ES_3_1);
-
-        mState.setAttribBinding(context, attribIndex, bindingIndex);
-
-        setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_BINDING);
-
-        // Update client attribs mask.
-        bool hasBuffer = mState.mVertexBindings[bindingIndex].getBuffer().get() != nullptr;
-        mState.mClientMemoryAttribsMask.set(attribIndex, !hasBuffer);
+        return;
     }
+
+    // In ES 3.0 contexts, the binding cannot change, hence the code below is unreachable.
+    ASSERT(context->getClientVersion() >= ES_3_1);
+
+    mState.setAttribBinding(context, attribIndex, bindingIndex);
+
+    setDirtyAttribBit(attribIndex, DIRTY_ATTRIB_BINDING);
+
+    // Update client attribs mask.
+    bool hasBuffer = mState.mVertexBindings[bindingIndex].getBuffer().get() != nullptr;
+    mState.mClientMemoryAttribsMask.set(attribIndex, !hasBuffer);
 }
 
 void VertexArray::setVertexBindingDivisor(size_t bindingIndex, GLuint divisor)
