@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25ffad8b_5bcd4a3c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-23T19:02:58Z",
+      "side": 1,
+      "message": "There is a subtle difference that was missed, it looks like on non-Android platforms there is a distinction between “GetGlobalContext” and “GetValidGlobalContext”.\nFrom the name it looks like it is just a validation check that is the difference between the 2 but they are in fact retrieving context from 2 different global objects.\n\nGetGlobalContext(…) gets it from the global thread object (gCurrentThread) while GetValidGlobalContext(…) gets it from the global context var (gCurrentValidContext).\nGiven that Android TLS based path doesn’t have this distinction there was in fact no gap that needed to be plugged (or put another way, we were accidentally fine)\n\nWe now have 2 paths –\n 1) just remove the part in Context.cpp where we reset Android TLS state to nullptr and land the change since the decoupling is beneficial\n\n 2) update just the comment in Context.cpp to say we are resetting just “gCurrentValidContext” and not the TLS (I am still unclear about the value add of setting gCurrentValidContext to nullptr)\n\nWDYT?",
+      "parentUuid": "b76ea691_5abb5af4",
+      "revId": "3a458630702b1fdb25f8fd5c97b3b8f86a4e2410",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "efa75356_deb79161",
