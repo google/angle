@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ce21528_12b2c470",
+        "filename": "src/libGLESv2/egl_stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-01-25T16:16:32Z",
+      "side": 0,
+      "message": "Mistake, fix",
+      "revId": "3c3b82abcf0a5c18b4d97ae49726045ce6d3b832",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
