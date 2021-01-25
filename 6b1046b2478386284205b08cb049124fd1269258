@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7cafdd0e_79b3a2e8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T14:37:39Z",
+      "side": 1,
+      "message": "nit: you can flatten this code by early-exiting here:\n\nif (height \u003d\u003d 0 || width \u003d\u003d 0)\n{\n    return;\n}\n\n...",
+      "range": {
+        "startLine": 451,
+        "startChar": 3,
+        "endLine": 452,
+        "endChar": 5
+      },
+      "revId": "6b1046b2478386284205b08cb049124fd1269258",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60ed2673_c86308c6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1413,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T14:37:39Z",
+      "side": 1,
+      "message": "nit: you can omit this. We don\u0027t generally ASSERT for vk::Context since it\u0027s used everywhere.",
+      "range": {
+        "startLine": 1413,
+        "startChar": 4,
+        "endLine": 1413,
+        "endChar": 31
+      },
+      "revId": "6b1046b2478386284205b08cb049124fd1269258",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8194c22_3a1257d1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T14:37:39Z",
+      "side": 1,
+      "message": "nit: looks like this is unused. you can remove it.",
+      "range": {
+        "startLine": 1414,
+        "startChar": 0,
+        "endLine": 1415,
+        "endChar": 78
+      },
+      "revId": "6b1046b2478386284205b08cb049124fd1269258",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
