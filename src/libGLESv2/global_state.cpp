@@ -99,7 +99,11 @@ void SetContextCurrent(Thread *thread, gl::Context *context)
     gCurrentThread->setCurrent(context);
     SetContextToAndroidOpenGLTLSSlot(context);
     gl::gCurrentValidContext = context;
+#if defined(ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL)
+    DirtyContextIfNeeded(context);
+#endif
 }
+
 }  // namespace egl
 
 namespace gl
