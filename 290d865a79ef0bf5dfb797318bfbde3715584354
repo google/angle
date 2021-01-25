@@ -192,6 +192,30 @@
       },
       "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2853e06d_164fc807",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3284,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T17:16:57Z",
+      "side": 1,
+      "message": "Doesn\u0027t seem needed as it\u0027s a straight up duplicate of the front end state.",
+      "parentUuid": "2abd8104_cabbb01e",
+      "range": {
+        "startLine": 3284,
+        "startChar": 4,
+        "endLine": 3284,
+        "endChar": 20
+      },
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
