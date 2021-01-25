@@ -135,6 +135,24 @@
       "parentUuid": "c163cd0f_4c83f710",
       "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd9961aa_6acf8f94",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-25T18:57:28Z",
+      "side": 1,
+      "message": "Yeah that sounds fine for now.",
+      "parentUuid": "a0993201_9a491dce",
+      "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
