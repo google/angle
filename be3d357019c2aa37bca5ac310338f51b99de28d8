@@ -71,6 +71,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c995ec82_b690c34b",
+        "filename": "src/common/spirv/gen_spirv_builder_and_parser.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-25T16:56:29Z",
+      "side": 1,
+      "message": "I did originally, but `./scripts/run_code_generation.py` didn\u0027t like it. It uses vpython which I believe is python2 (there\u0027s a vpython3 too).\n\nMaybe a separate task could be to have that script parse this line and select vpython or vpython3 and update our scripts.",
+      "parentUuid": "27dca5b5_b5299da2",
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2e86990f_4b3bc664",
         "filename": "src/common/spirv/gen_spirv_builder_and_parser.py",
         "patchSetId": 2
@@ -129,6 +147,30 @@
       "writtenOn": "2021-01-22T21:03:23Z",
       "side": 1,
       "message": "Why the leading underscore on these parameters and variables?   What other names could these collide with?",
+      "range": {
+        "startLine": 98,
+        "startChar": 86,
+        "endLine": 98,
+        "endChar": 87
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e3a2f2d_8efd6efa",
+        "filename": "src/common/spirv/gen_spirv_builder_and_parser.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-25T16:56:29Z",
+      "side": 1,
+      "message": "At least `length` collided with something in SPIR-V.\n\nI thought about prefixing the variables with ANGLE, but everything got way too verbose. This was the most readable IMO.",
+      "parentUuid": "c14e1474_ae8fbe0e",
       "range": {
         "startLine": 98,
         "startChar": 86,
@@ -303,6 +345,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9fc2af1_aad0faf8",
+        "filename": "src/common/spirv/spirv_instruction_builder_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-25T16:56:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0430e6e3_4a411d18",
+      "range": {
+        "startLine": 12,
+        "startChar": 8,
+        "endLine": 12,
+        "endChar": 51
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc6e1b2b_adbde790",
@@ -457,6 +523,30 @@
       "writtenOn": "2021-01-22T21:03:23Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 51,
+        "startChar": 65,
+        "endLine": 51,
+        "endChar": 74
+      },
+      "revId": "be3d357019c2aa37bca5ac310338f51b99de28d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6a132d6_f4bd5e13",
+        "filename": "src/common/spirv/spirv_types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-25T16:56:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b33de953_034c11b0",
       "range": {
         "startLine": 51,
         "startChar": 65,
