@@ -24,9 +24,7 @@ class StateManagerGL;
 class VertexArrayGL : public VertexArrayImpl
 {
   public:
-    VertexArrayGL(const gl::VertexArrayState &data,
-                  const FunctionsGL *functions,
-                  StateManagerGL *stateManager);
+    VertexArrayGL(const gl::VertexArrayState &data, GLuint id);
     ~VertexArrayGL() override;
 
     void destroy(const gl::Context *context) override;
@@ -53,10 +51,11 @@ class VertexArrayGL : public VertexArrayImpl
                             gl::VertexArray::DirtyAttribBitsArray *attribBits,
                             gl::VertexArray::DirtyBindingBitsArray *bindingBits) override;
 
-    void applyNumViewsToDivisor(int numViews);
-    void applyActiveAttribLocationsMask(const gl::AttributesMask &activeMask);
+    void applyNumViewsToDivisor(const gl::Context *context, int numViews);
+    void applyActiveAttribLocationsMask(const gl::Context *context,
+                                        const gl::AttributesMask &activeMask);
 
-    void validateState() const;
+    void validateState(const gl::Context *context) const;
 
   private:
     angle::Result syncDrawState(const gl::Context *context,
@@ -99,25 +98,23 @@ class VertexArrayGL : public VertexArrayImpl
                           size_t bindingIndex,
                           const gl::VertexArray::DirtyBindingBits &dirtyBindingBits);
 
-    void updateAttribEnabled(size_t attribIndex);
+    void updateAttribEnabled(const gl::Context *context, size_t attribIndex);
     void updateAttribPointer(const gl::Context *context, size_t attribIndex);
 
-    bool supportVertexAttribBinding() const;
+    bool supportVertexAttribBinding(const gl::Context *context) const;
 
-    void updateAttribFormat(size_t attribIndex);
-    void updateAttribBinding(size_t attribIndex);
+    void updateAttribFormat(const gl::Context *context, size_t attribIndex);
+    void updateAttribBinding(const gl::Context *context, size_t attribIndex);
     void updateBindingBuffer(const gl::Context *context, size_t bindingIndex);
-    void updateBindingDivisor(size_t bindingIndex);
+    void updateBindingDivisor(const gl::Context *context, size_t bindingIndex);
 
     void updateElementArrayBufferBinding(const gl::Context *context) const;
 
-    void callVertexAttribPointer(GLuint attribIndex,
+    void callVertexAttribPointer(const gl::Context *context,
+                                 GLuint attribIndex,
                                  const gl::VertexAttribute &attrib,
                                  GLsizei stride,
                                  GLintptr offset) const;
-
-    const FunctionsGL *mFunctions;
-    StateManagerGL *mStateManager;
 
     GLuint mVertexArrayID;
     int mAppliedNumViews;
