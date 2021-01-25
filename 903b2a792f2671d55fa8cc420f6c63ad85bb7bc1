@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfb936fc_8f6fe8bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T17:15:06Z",
+      "side": 1,
+      "message": "Can you add a regression test for this to help diagnose a fix that doesn\u0027t mess up the transition table?",
+      "revId": "903b2a792f2671d55fa8cc420f6c63ad85bb7bc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
