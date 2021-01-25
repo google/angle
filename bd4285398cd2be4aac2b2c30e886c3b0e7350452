@@ -99,6 +99,24 @@
       "parentUuid": "e6153781_91e5559d",
       "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c163cd0f_4c83f710",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-25T18:01:49Z",
+      "side": 1,
+      "message": "We should probably decouple the effect of the pipeline being deleted from the usage of transitions. Like the pointer inside vk::PipelineHelper can be set to null, while the transitions bits are still usable.\n\n@Jamie, yes, that\u0027s the only case the pipeline layout needs to be updated.",
+      "parentUuid": "bee984e1_7ac961f8",
+      "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
