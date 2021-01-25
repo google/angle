@@ -93,6 +93,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75d7f882_bfadae9f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 527,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-25T08:06:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "63219bc2_f4162807",
+      "range": {
+        "startLine": 522,
+        "startChar": 0,
+        "endLine": 527,
+        "endChar": 0
+      },
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d200518_7acb7e28",
@@ -106,6 +130,30 @@
       "writtenOn": "2021-01-22T14:04:46Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 570,
+        "startChar": 23,
+        "endLine": 570,
+        "endChar": 24
+      },
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8005b1bb_f1056903",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-25T08:06:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d200518_7acb7e28",
       "range": {
         "startLine": 570,
         "startChar": 23,
@@ -139,6 +187,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "979e0f51_75c327a5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-25T08:06:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a19cb3bf_06a4a07b",
+      "range": {
+        "startLine": 603,
+        "startChar": 0,
+        "endLine": 607,
+        "endChar": 5
+      },
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "55e8979f_1b267d81",
@@ -152,6 +224,30 @@
       "writtenOn": "2021-01-22T17:12:06Z",
       "side": 1,
       "message": "\"Use after free\" bug here. egl::BlobCache::Value doesn\u0027t copy the data, but stores a pointer. At end of scope, `MemoryBuffer` will free the memory.\n\nPlease instead of a `egl::BlobCache::Value` (and the unnecessary `dataSize`), pass in an `angle::MemoryBuffer` which gets filled by `DecompressBlobCacheData` directly.",
+      "range": {
+        "startLine": 610,
+        "startChar": 41,
+        "endLine": 610,
+        "endChar": 64
+      },
+      "revId": "dbb844fd3f02ccb12c133bb4b17f05cbe73a6fd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a56ef12f_bfb04f03",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 610,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-25T08:06:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55e8979f_1b267d81",
       "range": {
         "startLine": 610,
         "startChar": 41,

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f0918c2_6cd7ad7a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-01-25T08:06:03Z",
+      "side": 1,
+      "message": "Thanks Jamie,Geoff,Shahbaz \nYou guys are so patient. 👍",
+      "revId": "ff211fc27ee8e21b670176f256bc570c329f7b1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
