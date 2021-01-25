@@ -63,6 +63,24 @@
       "message": "CC Jamie. This is probably going to entirely thwart usage of GraphicsPipelineTransitionBits. We may need to rework ContextVk::handleDirtyGraphicsPipeline instead.",
       "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6153781_91e5559d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-25T17:17:53Z",
+      "side": 1,
+      "message": "To unblock Jason, we could `mCurrentGraphicsPipeline \u003d nullptr` in ContextVk::updateActiveTextures() for now:\n\n    if (haveImmutableSampler)\n    {\n        // TODO(http://anglebug.com/5033): This will recreate the descriptor pools each time, which\n        // will likely affect performance negatively.\n        ANGLE_TRY(mExecutable-\u003ecreatePipelineLayout(context, \u0026mActiveTextures));\n        invalidateCurrentGraphicsPipeline();\n\n        // TODO(new bug): rework ContextVk::handleDirtyGraphicsPipeline()\n        mCurrentGraphicsPipeline \u003d nullptr;\n    }\n\nThat keeps it to just the immutable sampler case which is the only way to into this bad state.   It\u0027s also not entirely without precedent, since ContextVk::onMakeCurrent() and ContextVk::invalidateProgramExecutableHelper() both do this extra step.",
+      "parentUuid": "2ab2a9a8_9b9bbc41",
+      "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
