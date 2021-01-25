@@ -81,6 +81,24 @@
       "parentUuid": "2ab2a9a8_9b9bbc41",
       "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bee984e1_7ac961f8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T17:20:15Z",
+      "side": 1,
+      "message": "I don\u0027t think Jason is blocked, he has a downstream copy that he can unblock himself with. We should use this review to find the right solution.\n\nIs this problem specific to immutable textures?",
+      "parentUuid": "e6153781_91e5559d",
+      "revId": "bd4285398cd2be4aac2b2c30e886c3b0e7350452",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
