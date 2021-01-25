@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee8e3daa_90cc223d",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T18:26:44Z",
+      "side": 1,
+      "message": "Ack, it allows us to bisect the serialization diffs in frame_capture_utils.cpp. I added a comment in the file.",
+      "parentUuid": "595a7159_0038b2a0",
+      "range": {
+        "startLine": 452,
+        "startChar": 0,
+        "endLine": 460,
+        "endChar": 6
+      },
+      "revId": "15a629f1c68ac841911400417651ca19b4c2c627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee60c038_a5d6ac9c",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a77f0b92_804a2cc5",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3980,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T18:26:44Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ee60c038_a5d6ac9c",
+      "range": {
+        "startLine": 3980,
+        "startChar": 4,
+        "endLine": 3980,
+        "endChar": 30
+      },
+      "revId": "15a629f1c68ac841911400417651ca19b4c2c627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b44b753b_d2d9aad6",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-01-25T17:38:32Z",
       "side": 1,
       "message": "Can you comment on why this was needed, or worked in the first place?",
+      "range": {
+        "startLine": 138,
+        "startChar": 12,
+        "endLine": 138,
+        "endChar": 19
+      },
+      "revId": "15a629f1c68ac841911400417651ca19b4c2c627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5e8d037_f2814499",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-25T18:26:44Z",
+      "side": 1,
+      "message": "Done, was for rdoc capture.",
+      "parentUuid": "b44b753b_d2d9aad6",
       "range": {
         "startLine": 138,
         "startChar": 12,
