@@ -2357,6 +2357,26 @@ void CaptureGenQueriesEXT_idsPacked(const State &glState,
     CaptureGenHandles(n, ids, paramCapture);
 }
 
+// For each of the GetQueryObject functions below, the spec states:
+//
+//  There may be an indeterminate delay before a query object's
+//  result value is available. If pname is QUERY_RESULT_AVAILABLE,
+//  FALSE is returned if such a delay would be required; otherwise
+//  TRUE is returned. It must always be true that if any query
+//  object returns a result available of TRUE, all queries of the
+//  same type issued prior to that query must also return TRUE.
+//  Repeatedly querying QUERY_RESULT_AVAILABLE for any given query
+//  object is guaranteed to return TRUE eventually.
+//
+//  If pname is QUERY_RESULT, then the query object's result value is
+//  returned as a single integer in params. If the value is so large
+//  in magnitude that it cannot be represented with the requested
+//  type, then the nearest value representable using the requested type
+//  is returned. Querying QUERY_RESULT for any given query object
+//  forces that query to complete within a finite amount of time.
+//
+// Thus, return a single value for each param.
+//
 void CaptureGetQueryObjecti64vEXT_params(const State &glState,
                                          bool isCallValid,
                                          QueryID id,
@@ -2364,7 +2384,7 @@ void CaptureGetQueryObjecti64vEXT_params(const State &glState,
                                          GLint64 *params,
                                          ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint64);
 }
 
 void CaptureGetInteger64vEXT_data(const State &glState,
@@ -2383,7 +2403,7 @@ void CaptureGetQueryObjectivEXT_params(const State &glState,
                                        GLint *params,
                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetQueryObjectui64vEXT_params(const State &glState,
@@ -2393,7 +2413,7 @@ void CaptureGetQueryObjectui64vEXT_params(const State &glState,
                                           GLuint64 *params,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLuint64);
 }
 
 void CaptureGetQueryObjectuivEXT_params(const State &glState,
