@@ -450,4 +450,13 @@ std::ostream &FmtHex(std::ostream &os, T value)
 #    define ANGLE_REENABLE_WEAK_TEMPLATE_VTABLES_WARNING
 #endif
 
+#if defined(__clang__)
+#    define ANGLE_DISABLE_UNUSED_FUNCTION_WARNING \
+        _Pragma("clang diagnostic push") _Pragma("clang diagnostic ignored \"-Wunused-function\"")
+#    define ANGLE_REENABLE_UNUSED_FUNCTION_WARNING _Pragma("clang diagnostic pop")
+#else
+#    define ANGLE_DISABLE_UNUSED_FUNCTION_WARNING
+#    define ANGLE_REENABLE_UNUSED_FUNCTION_WARNING
+#endif
+
 #endif  // COMMON_DEBUG_H_

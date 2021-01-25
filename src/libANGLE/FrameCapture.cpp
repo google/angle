@@ -3964,6 +3964,58 @@ void FrameCapture::maybeOverrideEntryPoint(const gl::Context *context, CallCaptu
     }
 }
 
+void FrameCapture::maybeCaptureDrawArraysClientData(const gl::Context *context,
+                                                    CallCapture &call,
+                                                    size_t instanceCount)
+{
+    if (!context->getStateCache().hasAnyActiveClientAttrib())
+    {
+        return;
+    }
+
+    // Get counts from paramBuffer.
+    GLint firstVertex =
+        call.params.getParamFlexName("first", "start", ParamType::TGLint, 1).value.GLintVal;
+    GLsizei drawCount = call.params.getParam("count", ParamType::TGLsizei, 2).value.GLsizeiVal;
+    captureClientArraySnapshot(context, firstVertex + drawCount, instanceCount);
+}
+
+void FrameCapture::maybeCaptureDrawElementsClientData(const gl::Context *context,
+                                                      CallCapture &call,
+                                                      size_t instanceCount)
+{
+    if (!context->getStateCache().hasAnyActiveClientAttrib())
+    {
+        return;
+    }
+
+    GLsizei count = call.params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
+    gl::DrawElementsType drawElementsType =
+        call.params.getParam("typePacked", ParamType::TDrawElementsType, 2)
+            .value.DrawElementsTypeVal;
+    const void *indices =
+        call.params.getParam("indices", ParamType::TvoidConstPointer, 3).value.voidConstPointerVal;
+
+    gl::IndexRange indexRange;
+
+    bool restart = context->getState().isPrimitiveRestartEnabled();
+
+    gl::Buffer *elementArrayBuffer = context->getState().getVertexArray()->getElementArrayBuffer();
+    if (elementArrayBuffer)
+    {
+        size_t offset = reinterpret_cast<size_t>(indices);
+        (void)elementArrayBuffer->getIndexRange(context, drawElementsType, offset, count, restart,
+                                                &indexRange);
+    }
+    else
+    {
+        indexRange = gl::ComputeIndexRange(drawElementsType, indices, count, restart);
+    }
+
+    // index starts from 0
+    captureClientArraySnapshot(context, indexRange.end + 1, instanceCount);
+}
+
 void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCapture &call)
 {
     switch (call.entryPoint)
@@ -4026,51 +4078,35 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
 
         case EntryPoint::GLDrawArrays:
         {
-            if (context->getStateCache().hasAnyActiveClientAttrib())
-            {
-                // Get counts from paramBuffer.
-                GLint firstVertex =
-                    call.params.getParam("first", ParamType::TGLint, 1).value.GLintVal;
-                GLsizei drawCount =
-                    call.params.getParam("count", ParamType::TGLsizei, 2).value.GLsizeiVal;
-                captureClientArraySnapshot(context, firstVertex + drawCount, 1);
-            }
+            maybeCaptureDrawArraysClientData(context, call, 1);
+            break;
+        }
+
+        case EntryPoint::GLDrawArraysInstanced:
+        case EntryPoint::GLDrawArraysInstancedANGLE:
+        case EntryPoint::GLDrawArraysInstancedEXT:
+        {
+            GLsizei instancecount =
+                call.params.getParamFlexName("instancecount", "primcount", ParamType::TGLsizei, 3)
+                    .value.GLsizeiVal;
+            maybeCaptureDrawArraysClientData(context, call, instancecount);
             break;
         }
 
         case EntryPoint::GLDrawElements:
         {
-            if (context->getStateCache().hasAnyActiveClientAttrib())
-            {
-                GLsizei count =
-                    call.params.getParam("count", ParamType::TGLsizei, 1).value.GLsizeiVal;
-                gl::DrawElementsType drawElementsType =
-                    call.params.getParam("typePacked", ParamType::TDrawElementsType, 2)
-                        .value.DrawElementsTypeVal;
-                const void *indices =
-                    call.params.getParam("indices", ParamType::TvoidConstPointer, 3)
-                        .value.voidConstPointerVal;
+            maybeCaptureDrawElementsClientData(context, call, 1);
+            break;
+        }
 
-                gl::IndexRange indexRange;
-
-                bool restart = context->getState().isPrimitiveRestartEnabled();
-
-                gl::Buffer *elementArrayBuffer =
-                    context->getState().getVertexArray()->getElementArrayBuffer();
-                if (elementArrayBuffer)
-                {
-                    size_t offset = reinterpret_cast<size_t>(indices);
-                    (void)elementArrayBuffer->getIndexRange(context, drawElementsType, offset,
-                                                            count, restart, &indexRange);
-                }
-                else
-                {
-                    indexRange = gl::ComputeIndexRange(drawElementsType, indices, count, restart);
-                }
-
-                // index starts from 0
-                captureClientArraySnapshot(context, indexRange.end + 1, 1);
-            }
+        case EntryPoint::GLDrawElementsInstanced:
+        case EntryPoint::GLDrawElementsInstancedANGLE:
+        case EntryPoint::GLDrawElementsInstancedEXT:
+        {
+            GLsizei instancecount =
+                call.params.getParamFlexName("instancecount", "primcount", ParamType::TGLsizei, 4)
+                    .value.GLsizeiVal;
+            maybeCaptureDrawElementsClientData(context, call, instancecount);
             break;
         }
 

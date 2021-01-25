@@ -30,6 +30,11 @@
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
 
+// Note: when diagnosing serialization comparison failures, you can disable the unused function
+// compiler warning to allow bisecting the comparison function. One first check is to disable
+// Framebuffer Attachment pixel comparison which includes the pixel contents of the default FBO.
+// ANGLE_DISABLE_UNUSED_FUNCTION_WARNING
+
 namespace angle
 {
 

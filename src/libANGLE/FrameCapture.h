@@ -349,6 +349,12 @@ class FrameCapture final : angle::NonCopyable
     void maybeOverrideEntryPoint(const gl::Context *context, CallCapture &call);
     void maybeCapturePreCallUpdates(const gl::Context *context, CallCapture &call);
     void maybeCapturePostCallUpdates(const gl::Context *context);
+    void maybeCaptureDrawArraysClientData(const gl::Context *context,
+                                          CallCapture &call,
+                                          size_t instanceCount);
+    void maybeCaptureDrawElementsClientData(const gl::Context *context,
+                                            CallCapture &call,
+                                            size_t instanceCount);
 
     static void ReplayCall(gl::Context *context,
                            ReplayContext *replayContext,

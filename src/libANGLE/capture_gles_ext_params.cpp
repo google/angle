@@ -174,7 +174,8 @@ void CaptureDrawElementsInstancedANGLE_indices(const State &glState,
                                                GLsizei primcount,
                                                ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
+                                paramCapture);
 }
 
 void CaptureDrawElementsBaseVertexEXT_indices(const State &glState,
@@ -2396,7 +2397,8 @@ void CaptureDrawElementsInstancedEXT_indices(const State &glState,
                                              GLsizei primcount,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
+                                paramCapture);
 }
 
 void CaptureCreateMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
