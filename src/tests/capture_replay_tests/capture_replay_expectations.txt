@@ -16,6 +16,8 @@ BindUniformLocationTest.SamplerLocation/*
 BindUniformLocationTest.UnusedUniformUpdate/*
 BindUniformLocationTest.UnusedUniformUpdateComplex/*
 BindUniformLocationTest.UseSamplerWhenUnusedUniforms/*
+ClearTest.Depth16Scissored/*
+ClearTest.InceptionScissorClears/*
 ClientArraysTest.*
 CopyTexImageTest.*
 CopyTextureTestWebGL.*
@@ -25,6 +27,7 @@ EGLContextASANTest.*
 EGLContextSharingTest.TextureLifetime/*
 FramebufferTest.MultiContextNoRenderingFeedbackLoops/*
 GetTexLevelParameterTest.ExtensionStringExposed/*
+GLSLTest.InactiveVaryingInVertexActiveInFragment/*
 InstancingTest.LineLoop/*
 MaxTextureSizeTest.*
 MultisampledRenderToTextureTest.FramebufferCompleteness/*
@@ -35,6 +38,7 @@ PbufferTest.TextureSizeReset/*
 RequestExtensionTest.ExtensionsDisabledByDefault/*
 RequestExtensionTest.Queries/*
 RobustBufferAccessBehaviorTest.DynamicBuffer/*
+SimpleStateChangeTest.DrawAndClearTextureRepeatedly/*
 SimpleStateChangeTest.RebindTranslatedAttribute/*
 Texture2DDepthTest.DepthTextureES2Compatibility/*
 TextureCubeTest.*
@@ -43,6 +47,10 @@ WebGL2ReadOutsideFramebufferTest.*
 WebGLDrawElementsTest.*
 WebGLGLSLTest.*
 WebGLReadOutsideFramebufferTest.*
+
+# Has undefined framebuffer pixels. This fails comparison checks.
+SimpleOperationTest.ClearAndSwap/*
+SimpleOperationTest.DrawQuadAndSwap/*
 
 # Crashed tests
 BlendMinMaxTest.*

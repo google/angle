@@ -965,8 +965,8 @@ def main(args):
         end_time = time.time()
 
         # print out results
-        print("\n\n\n")
-        print("Results:")
+        logging.info("\n\n\n")
+        logging.info("Results:")
         for test_batch_result in result_list:
             debug(str(test_batch_result))
             passed_count += len(test_batch_result.passes)
@@ -987,9 +987,9 @@ def main(args):
             for skipped_test in test_batch_result.skips:
                 skipped_tests.append(skipped_test)
 
-        print("\n\n")
-        print("Elapsed time: %.2lf seconds" % (end_time - start_time))
-        print(
+        logging.info("\n\n")
+        logging.info("Elapsed time: %.2lf seconds" % (end_time - start_time))
+        logging.info(
             "Passed: %d, Comparison Failed: %d, Crashed: %d, CompileFailed %d, Skipped: %d, Timeout: %d"
             % (passed_count, failed_count, crashed_count, compile_failed_count, skipped_count,
                timedout_count))
@@ -997,28 +997,28 @@ def main(args):
         retval = EXIT_SUCCESS
 
         if len(failed_tests):
-            print("Comparison Failed tests:")
+            logging.info("Comparison Failed tests:")
             for failed_test in sorted(failed_tests):
-                print("\t" + failed_test)
+                logging.info("  " + failed_test)
             retval = EXIT_FAILURE
         if len(crashed_tests):
-            print("Crashed tests:")
+            logging.info("Crashed tests:")
             for crashed_test in sorted(crashed_tests):
-                print("\t" + crashed_test)
+                logging.info("  " + crashed_test)
             retval = EXIT_FAILURE
         if len(compile_failed_tests):
-            print("Compile failed tests:")
+            logging.info("Compile failed tests:")
             for compile_failed_test in sorted(compile_failed_tests):
-                print("\t" + compile_failed_test)
+                logging.info("  " + compile_failed_test)
             retval = EXIT_FAILURE
         if len(skipped_tests):
-            print("Skipped tests:")
+            logging.info("Skipped tests:")
             for skipped_test in sorted(skipped_tests):
-                print("\t" + skipped_test)
+                logging.info("  " + skipped_test)
         if len(timed_out_tests):
-            print("Timeout tests:")
+            logging.info("Timeout tests:")
             for timeout_test in sorted(timed_out_tests):
-                print("\t" + timeout_test)
+                logging.info("  " + timeout_test)
             retval = EXIT_FAILURE
 
         # delete generated folders if --keep_temp_files flag is set to false
@@ -1028,6 +1028,10 @@ def main(args):
             if os.path.isdir(args.out_dir):
                 SafeDeleteFolder(args.out_dir)
 
+        # Try hard to ensure output is finished before ending the test.
+        logging.shutdown()
+        sys.stdout.flush()
+        time.sleep(2.0)
         return retval
 
     except KeyboardInterrupt:
