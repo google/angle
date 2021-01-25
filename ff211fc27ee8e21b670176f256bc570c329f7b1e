@@ -33,6 +33,23 @@
       "message": "looks good. Will let Shabi sign off.",
       "revId": "ff211fc27ee8e21b670176f256bc570c329f7b1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e61044f_64c538e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-25T16:46:24Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "ff211fc27ee8e21b670176f256bc570c329f7b1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
