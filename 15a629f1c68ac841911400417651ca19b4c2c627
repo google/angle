@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "911af659_5ad4358c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-25T17:38:32Z",
+      "side": 1,
+      "message": "This might be clearer if you refactored first, then added instance support, but LGTM otherwise.",
+      "revId": "15a629f1c68ac841911400417651ca19b4c2c627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "595a7159_0038b2a0",
+        "filename": "src/common/debug.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-25T17:38:32Z",
+      "side": 1,
+      "message": "How is this related to the fix?",
+      "range": {
+        "startLine": 452,
+        "startChar": 0,
+        "endLine": 460,
+        "endChar": 6
+      },
+      "revId": "15a629f1c68ac841911400417651ca19b4c2c627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee60c038_a5d6ac9c",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3980,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-25T17:38:32Z",
+      "side": 1,
+      "message": "Nice... this helper was all set up for instance count already.",
+      "range": {
+        "startLine": 3980,
+        "startChar": 4,
+        "endLine": 3980,
+        "endChar": 30
+      },
+      "revId": "15a629f1c68ac841911400417651ca19b4c2c627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b44b753b_d2d9aad6",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTests.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-25T17:38:32Z",
+      "side": 1,
+      "message": "Can you comment on why this was needed, or worked in the first place?",
+      "range": {
+        "startLine": 138,
+        "startChar": 12,
+        "endLine": 138,
+        "endChar": 19
+      },
+      "revId": "15a629f1c68ac841911400417651ca19b4c2c627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
