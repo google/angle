@@ -82,6 +82,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3eb127e_08b32138",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-26T22:59:34Z",
+      "side": 1,
+      "message": "I think there is no meaningful difference. I prefer to keep it as it is if you don\u0027t mind.",
+      "parentUuid": "2bd2b55e_a54c752a",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e2ce3e0_1257849a",
@@ -131,6 +149,24 @@
       "side": 1,
       "message": "Do you really need a barrier in that case?",
       "parentUuid": "cef4d6ce_5eef48e4",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbdcb6db_0dcf2229",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3701,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-26T22:59:34Z",
+      "side": 1,
+      "message": "I think user will add a barrier in front of draw call. And it will be same for the first draw call.",
+      "parentUuid": "154d17ab_a5181bf9",
       "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
