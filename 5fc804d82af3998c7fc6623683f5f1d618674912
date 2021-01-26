@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b9ac6b2_0c9bf93b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-01-26T16:32:44Z",
+      "side": 1,
+      "message": "I\u0027m using emulateTransformFeedback  flag as an option to completely remove XFB emulation code at link time even if there are markers inserted by TranslatorVulkan priorly during translating phase.\nIt might not be your original purpose of this flag. If you think another flag should be used instead, pls let me know.",
+      "revId": "5fc804d82af3998c7fc6623683f5f1d618674912",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
