@@ -26,7 +26,7 @@ Metal and MacOS, Chrome OS, and Fuchsia support.
 | Chrome OS    |                |                |               |   complete  |   planned   |             |
 | Android      |                |                |               |   complete  |   complete  |             |
 | GGP (Stadia) |                |                |               |             |   complete  |             |
-| Fuchsia      |                |                |               |             | in progress |             |
+| Fuchsia      |                |                |               |             |   complete  |             |
 
 ANGLE v1.0.772 was certified compliant by passing the OpenGL ES 2.0.3 conformance tests in October 2011.
 

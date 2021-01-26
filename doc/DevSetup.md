@@ -27,12 +27,10 @@ On Windows:
 On Linux:
 
  * Install package dependencies by running `install-build-deps.sh` later on.
- * Bison and flex are not needed as we only support generating the translator grammar on Windows.
 
 On MacOS:
 
  * [XCode](https://developer.apple.com/xcode/) for Clang and development files.
- * Bison and flex are not needed as we only support generating the translator grammar on Windows.
 
 ### Getting the source
 
