@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "643581fb_881a1910",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-26T02:08:19Z",
+      "side": 1,
+      "message": "Saves a whopping 3 pipeline rebinds on Manhattan. Not sure if it has any significant effect on any application, but it\u0027s a freebie at this point.",
+      "revId": "34441c5fdf14ff56ddb8ba08e0ce8ac40ae9f680",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
