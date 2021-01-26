@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10932a2f_cebcd898",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-26T03:00:25Z",
+      "side": 1,
+      "message": "SrgbWriteControlMode?",
+      "range": {
+        "startLine": 311,
+        "startChar": 30,
+        "endLine": 311,
+        "endChar": 50
+      },
+      "revId": "339aec1d866372f2183e7f55d87b1f6c60a483e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c971773d_250f2ece",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-26T03:00:25Z",
+      "side": 1,
+      "message": "Again, no need for this. You can take one bit from `mMaxIndex` (which can have a maximum value of 18+1).",
+      "range": {
+        "startLine": 1225,
+        "startChar": 0,
+        "endLine": 1227,
+        "endChar": 25
+      },
+      "revId": "339aec1d866372f2183e7f55d87b1f6c60a483e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
