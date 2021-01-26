@@ -156,6 +156,11 @@ config("constructor_and_destructor_warnings") {
 config("extra_warnings") {
   cflags = []
 
+  # Avoid failing builds for warnings enabled by Skia build.
+  if (defined(is_skia_standalone)) {
+    cflags += [ "-w" ]
+  }
+
   # Enable more default warnings on Windows.
   if (is_win) {
     cflags += [
