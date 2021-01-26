@@ -16,6 +16,46 @@
       "message": "Saves a whopping 3 pipeline rebinds on Manhattan. Not sure if it has any significant effect on any application, but it\u0027s a freebie at this point.",
       "revId": "34441c5fdf14ff56ddb8ba08e0ce8ac40ae9f680",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5f8b229_79f3d5c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-26T15:55:02Z",
+      "side": 1,
+      "message": "Good cleanup.",
+      "revId": "34441c5fdf14ff56ddb8ba08e0ce8ac40ae9f680",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b7df73ee_4c18c70d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-26T15:55:02Z",
+      "side": 1,
+      "message": "How did you figure out which bits should be added here and how can we maintain this list in the future?",
+      "range": {
+        "startLine": 469,
+        "startChar": 0,
+        "endLine": 488,
+        "endChar": 70
+      },
+      "revId": "34441c5fdf14ff56ddb8ba08e0ce8ac40ae9f680",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
