@@ -43,6 +43,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "9369007b_19dd44ec",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-26T22:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73d16833_b2d2a86c",
+      "range": {
+        "startLine": 375,
+        "startChar": 11,
+        "endLine": 375,
+        "endChar": 61
+      },
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "2bd2b55e_a54c752a",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 10
@@ -128,6 +152,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14a08a67_a78add6e",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1448,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-26T22:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d9beaa3_a6476120",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d9424c24_84f8901a",
@@ -151,6 +193,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2651f73e_92035bea",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1140,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-26T22:35:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d9424c24_84f8901a",
+      "range": {
+        "startLine": 1140,
+        "startChar": 64,
+        "endLine": 1140,
+        "endChar": 86
+      },
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be9a6a77_35611348",
@@ -164,6 +230,24 @@
       "writtenOn": "2021-01-26T03:25:43Z",
       "side": 1,
       "message": "This is the last bit I can squeeze from this class: You can remove `mHasDepthStencilAttachment` and use `(mAttachmentFormats[depthStencilAttachmentIndex()] \u0026 kDepthStencilFormatStorageMask) !\u003d angle::FormatID::NONE` instead. Then `mHasFramebufferFetch` can take its place.\n\nIf you ever needed to add yet another bit, we can think of undoing all these compressions, but the battle is not yet lost!",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da00a4b3_a8ea7373",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-26T22:35:48Z",
+      "side": 1,
+      "message": "not quite the same but it does fit",
+      "parentUuid": "be9a6a77_35611348",
       "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
