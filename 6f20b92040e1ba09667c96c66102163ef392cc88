@@ -33,6 +33,24 @@
       "message": "I\u0027m concerned about the changes to DestroyContext, and would appreciate any advice. The problem is that there is some context switching that happens in display-\u003edestroyContext that needs to result in dirtying state. I try to account for that here, which works fine it seems, but really feels like the wrong place to do this. Thoughts?",
       "revId": "6f20b92040e1ba09667c96c66102163ef392cc88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79b3983e_cc675525",
+        "filename": "src/libGLESv2/egl_stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-01-26T15:48:24Z",
+      "side": 1,
+      "message": "I think that this is OK because Display can\u0027t access the global current context but it does rely on knowing the internals of Display::destroyContext so I would add a comment explaining that.",
+      "parentUuid": "f9759d8f_91808ae7",
+      "revId": "6f20b92040e1ba09667c96c66102163ef392cc88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
