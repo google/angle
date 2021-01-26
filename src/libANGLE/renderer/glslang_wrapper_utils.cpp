@@ -3796,8 +3796,14 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
     AssignNonTextureBindings(options, programExecutable, shaderType, programInterfaceInfo,
                              variableInfoMapOut);
 
-    if (options.emulateTransformFeedback && gl::ShaderTypeSupportsTransformFeedback(shaderType))
+    if (options.supportsTransformFeedbackEmulation &&
+        gl::ShaderTypeSupportsTransformFeedback(shaderType))
     {
+        // If transform feedback emulation is not enabled, mark all transform feedback output
+        // buffers as inactive.
+        isTransformFeedbackStage =
+            isTransformFeedbackStage && options.enableTransformFeedbackEmulation;
+
         AssignTransformFeedbackEmulationBindings(shaderType, programState, isTransformFeedbackStage,
                                                  programInterfaceInfo, variableInfoMapOut);
     }
@@ -3821,9 +3827,10 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 
     // Write transform feedback output code for emulation path
     if (xfbStage == gl::ShaderType::Vertex && !xfbSource->empty() &&
-        options.emulateTransformFeedback)
+        options.supportsTransformFeedbackEmulation)
     {
-        if (!programState.getLinkedTransformFeedbackVaryings().empty())
+        if (options.enableTransformFeedbackEmulation &&
+            !programState.getLinkedTransformFeedbackVaryings().empty())
         {
             GenerateTransformFeedbackEmulationOutputs(options, xfbStage, programState,
                                                       programInterfaceInfo, xfbSource,

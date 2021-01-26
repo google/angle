@@ -51,7 +51,8 @@ struct GlslangProgramInterfaceInfo
 struct GlslangSourceOptions
 {
     bool supportsTransformFeedbackExtension = false;
-    bool emulateTransformFeedback           = false;
+    bool supportsTransformFeedbackEmulation = false;
+    bool enableTransformFeedbackEmulation   = false;
     bool emulateBresenhamLines              = false;
 };
 

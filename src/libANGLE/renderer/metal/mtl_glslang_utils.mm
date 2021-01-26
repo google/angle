@@ -414,12 +414,13 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
     GlslangProgramInterfaceInfo programInterfaceInfo;
     ResetGlslangProgramInterfaceInfo(&programInterfaceInfo);
 
-    options.emulateTransformFeedback = true;
+    options.supportsTransformFeedbackEmulation = true;
 
+    // This will generate shader source WITHOUT XFB emulated outputs.
     rx::GlslangGetShaderSource(options, programState, resources, &programInterfaceInfo,
                                shaderSourcesOut, variableInfoMapOut);
 
-    // Special version for XFB only
+    // This will generate vertex shader source WITH XFB emulated outputs.
     if (xfbOnlyShaderSourceOut && !programState.getLinkedTransformFeedbackVaryings().empty())
     {
         gl::Shader *glShader    = programState.getAttachedShader(gl::ShaderType::Vertex);
@@ -427,6 +428,8 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
 
         GlslangProgramInterfaceInfo xfbOnlyInterfaceInfo;
         ResetGlslangProgramInterfaceInfo(&xfbOnlyInterfaceInfo);
+
+        options.enableTransformFeedbackEmulation = true;
 
         rx::GlslangGenTransformFeedbackEmulationOutputs(
             options, programState, &xfbOnlyInterfaceInfo, xfbOnlyShaderSourceOut,
