@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "671d5967_7a794947",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-26T00:54:11Z",
+      "side": 1,
+      "message": "shabi - only thing addressed here is that now we break the RP and addition of end2end tests. Uploaded for feedback, will address remaining comments later\n\nMSAA fetch feature and end2end test have not been added here, want to tackle that in a follow up change, unless you guys have design concerns.",
+      "revId": "8a36d64ff268215f1b51fca9b4e1578174d13315",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
