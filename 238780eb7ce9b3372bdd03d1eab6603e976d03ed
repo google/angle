@@ -1,6 +1,7 @@
 {
   "comments": [
     {
+      "unresolved": true,
       "key": {
         "uuid": "fb2336b4_0dba8d4c",
         "filename": "/COMMIT_MSG",
@@ -20,10 +21,10 @@
         "endChar": 100
       },
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "c18652fb_7838e5f3",
         "filename": "/COMMIT_MSG",
@@ -44,10 +45,10 @@
         "endChar": 100
       },
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "c50591ce_6bfb2fbb",
         "filename": "/COMMIT_MSG",
@@ -68,10 +69,10 @@
         "endChar": 100
       },
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": false
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "3da57a57_86a01d66",
         "filename": "/COMMIT_MSG",
@@ -91,10 +92,34 @@
         "endChar": 40
       },
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb3e3bbc_95d330e7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-26T18:34:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3da57a57_86a01d66",
+      "range": {
+        "startLine": 48,
+        "startChar": 38,
+        "endLine": 48,
+        "endChar": 40
+      },
+      "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
       "key": {
         "uuid": "097b00c6_b2fe0f01",
         "filename": "/COMMIT_MSG",
@@ -114,10 +139,10 @@
         "endChar": 25
       },
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
       "key": {
         "uuid": "b4270662_127c4153",
         "filename": "/COMMIT_MSG",
@@ -138,10 +163,10 @@
         "endChar": 25
       },
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": true
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "d7be4476_1a4b7d44",
         "filename": "/COMMIT_MSG",
@@ -162,10 +187,10 @@
         "endChar": 25
       },
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": false
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "85a04da2_cd3ad9a5",
         "filename": "/PATCHSET_LEVEL",
@@ -179,10 +204,10 @@
       "side": 1,
       "message": "I updated the description with examples of the change.\n\nI also found another bug in the process that this will help fix:\nOn Windows, even when running on GL, vulkan, or swiftshader, we only report the D3D driver version to Chrome. This makes diagnosing crashes, implementing workarounds, or skipping tests on these backends much more difficult.\nAfter these changes we can modify Chrome to not use SystemInfo for driver version.",
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": false
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "f8800384_c89547dc",
         "filename": "/PATCHSET_LEVEL",
@@ -197,10 +222,10 @@
       "message": "There are definitely redundant entries in the new renderer descriptions. I\u0027ll clean this up so the actual vendor is reported instead of Google (except in the case of swiftshader) and I\u0027ll add GL_VERSION-like strings to the other backends",
       "parentUuid": "85a04da2_cd3ad9a5",
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": false
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
       "key": {
         "uuid": "30a3c267_f25e8170",
         "filename": "/PATCHSET_LEVEL",
@@ -214,8 +239,7 @@
       "side": 1,
       "message": "Thanks Jonah the examples are super helpful to review this change.",
       "revId": "238780eb7ce9b3372bdd03d1eab6603e976d03ed",
-      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba",
-      "unresolved": false
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
