@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75ce0f8a_cc1f83d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 25
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-26T15:30:04Z",
+      "side": 1,
+      "message": "This was already LGTM but it may be worth another look with the doc: https://docs.google.com/document/d/1p0dvrLlu8NKhO-RCU5gqlQ_LvcQj-ZqhvfwSk1n3Sz8/edit#",
+      "revId": "7dd791dae648a27665a4038aa0df34dbdc09bb6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "01f12a37_7cf119f6",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 3085,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-26T15:30:04Z",
+      "side": 1,
+      "message": "This is one of the changes since it was LGTM\u0027d",
+      "range": {
+        "startLine": 3078,
+        "startChar": 4,
+        "endLine": 3085,
+        "endChar": 45
+      },
+      "revId": "7dd791dae648a27665a4038aa0df34dbdc09bb6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "adeabbde_285423ed",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/Renderer11.cpp",
+        "patchSetId": 25
+      },
+      "lineNbr": 4289,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-01-26T15:30:04Z",
+      "side": 1,
+      "message": "Chrome needs a token in front of the version numbers, we could also use the vendor here. OpenGL drivers tend to say \"OpenGL [ES] \u003cversion\u003e\" so I thought D3D11 was relevant. Applies to other backends too.",
+      "range": {
+        "startLine": 4289,
+        "startChar": 0,
+        "endLine": 4289,
+        "endChar": 30
+      },
+      "revId": "7dd791dae648a27665a4038aa0df34dbdc09bb6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
