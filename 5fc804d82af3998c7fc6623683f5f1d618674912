@@ -16,6 +16,24 @@
       "message": "I\u0027m using emulateTransformFeedback  flag as an option to completely remove XFB emulation code at link time even if there are markers inserted by TranslatorVulkan priorly during translating phase.\nIt might not be your original purpose of this flag. If you think another flag should be used instead, pls let me know.",
       "revId": "5fc804d82af3998c7fc6623683f5f1d618674912",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "360450c4_77c8bf16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-26T17:46:39Z",
+      "side": 1,
+      "message": "Thanks for the fix Quyen. emulateTransformFeedback is a bit of a misnomer. I added a flag and did some renaming and applied your change on top: https://chromium-review.googlesource.com/c/angle/angle/+/2648636. I\u0027d appreciate if you could verify that locally.",
+      "parentUuid": "2b9ac6b2_0c9bf93b",
+      "revId": "5fc804d82af3998c7fc6623683f5f1d618674912",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
