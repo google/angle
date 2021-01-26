@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b78249c_14868e21",
+        "filename": "src/libANGLE/VertexArray.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-26T21:21:13Z",
+      "side": 1,
+      "message": "Removed this.",
+      "parentUuid": "13f77f8c_7e44ceb4",
+      "range": {
+        "startLine": 404,
+        "startChar": 0,
+        "endLine": 406,
+        "endChar": 15
+      },
+      "revId": "34441c5fdf14ff56ddb8ba08e0ce8ac40ae9f680",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b7df73ee_4c18c70d",
@@ -95,6 +119,30 @@
       "side": 1,
       "message": "Yeah might be worth commenting a bit more.",
       "parentUuid": "b7df73ee_4c18c70d",
+      "range": {
+        "startLine": 469,
+        "startChar": 0,
+        "endLine": 488,
+        "endChar": 70
+      },
+      "revId": "34441c5fdf14ff56ddb8ba08e0ce8ac40ae9f680",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "495b9f2a_0c046721",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-26T21:21:13Z",
+      "side": 1,
+      "message": "Done.\n\n- The bindings affect desc sets only.\n- Pack/unpack affects texture data upload only.\n- Clear color/etc affect clears only.\n- Current values affects vertex attributes only.",
+      "parentUuid": "c64b99c0_eb4e6261",
       "range": {
         "startLine": 469,
         "startChar": 0,
