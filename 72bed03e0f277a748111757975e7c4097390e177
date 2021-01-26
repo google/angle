@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a0e51ff_dc218b99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000770
+      },
+      "writtenOn": "2021-01-26T21:29:51Z",
+      "side": 1,
+      "message": "Hi Geoff, Since moving over to ANGLE\u0027s GN within Skia we\u0027ve been blocked on adding a new warnings on our build if ANGLE doesn\u0027t currently build without tripping the warning.",
+      "revId": "72bed03e0f277a748111757975e7c4097390e177",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
