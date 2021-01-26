@@ -33,6 +33,23 @@
       "message": "I actually have a concern. Temporary -2 so it doesn\u0027t go through while I write this.",
       "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e216a1c6_f57e9fa3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-26T17:16:56Z",
+      "side": 1,
+      "message": "Thinking about this more, I was wrong to suggest doing this unconditionally. There are a number of things that could go wrong, though some of these cases are currently impossible (so could use ASSERTs):\n\n- If loadOp\u003dClear, we shouldn\u0027t change the render area. We don\u0027t currently use loadOp\u003dclear with scissored clears, so this should be an ASSERT.\n- If loadOp\u003dDontCare, we shouldn\u0027t change the render area if it covers area that have well-defined values. This is currently impossible, as we only affect loadOp when invalidating the whole of an image level/layer. I don\u0027t think we can assert this, so at least needs a comment\n- If storeOp\u003dDontCare, we shouldn\u0027t change the render area. We actually keep the invalidate area in the render pass, so actually this should be more like \"if the expanded area is not covered by invalidate area, don\u0027t expand the render area\".\n- If loadOp\u003dDontCare and storeOp\u003dStore, we shouldn\u0027t change the render area.\n\nNote that with multisampled render to texture, it\u0027s the resolve attachment\u0027s loadOp/storeOp that should be looked at (the other one is permanently DontCare). Exception is stencilLoadOp/stencilStoreOp when EXT_shader_stencil_export is not present.\n\n---\n\nThis actually turns out to be very tricky. I\u0027m not sure with all the restrictions in place this would solve the \"readback\" issue you allude to in every case (even if it makes the particular test pass).\n\nCould you please provide more info (on the bug) as to which test exactly fails and where? The line number is already outdated. Also, what\u0027s the \"readback\" mechanism?",
+      "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
