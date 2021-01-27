@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ffcccb4_d67d5f3c",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T17:40:35Z",
+      "side": 1,
+      "message": "suggest you store this in angletypes.h and make it part of the front-end. You could even store it this way in the Context State.",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 0
+      },
+      "revId": "7ee0f82c1b77cd1ab02e967eae16374d840af075",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
