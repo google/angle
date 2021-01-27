@@ -1823,12 +1823,33 @@ bool ValidateCreateShaderProgramvBase(const Context *context,
                                       GLsizei count,
                                       const GLchar *const *strings)
 {
-    // GL_INVALID_ENUM is generated if type is not an accepted shader type.
-    if ((type != ShaderType::Vertex) && (type != ShaderType::Fragment) &&
-        (type != ShaderType::Compute))
+    switch (type)
     {
-        context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
-        return false;
+        case ShaderType::InvalidEnum:
+            context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
+            return false;
+        case ShaderType::Vertex:
+        case ShaderType::Fragment:
+        case ShaderType::Compute:
+            break;
+        case ShaderType::Geometry:
+            if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
+                return false;
+            }
+            break;
+        case ShaderType::TessControl:
+        case ShaderType::TessEvaluation:
+            if (!context->getExtensions().tessellationShaderEXT &&
+                context->getClientVersion() < ES_3_2)
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
+                return false;
+            }
+            break;
+        default:
+            UNREACHABLE();
     }
 
     // GL_INVALID_VALUE is generated if count is negative.
