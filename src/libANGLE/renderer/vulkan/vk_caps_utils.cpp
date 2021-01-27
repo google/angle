@@ -754,13 +754,15 @@ void RendererVk::ensureCapsInitialized() const
     // GL Images correspond to Vulkan Storage Images.
     const int32_t maxPerStageImages = LimitToInt(limitsVk.maxPerStageDescriptorStorageImages);
     const int32_t maxCombinedImages = LimitToInt(limitsVk.maxDescriptorSetStorageImages);
-
-    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Vertex] =
+    const int32_t maxVertexPipelineImages =
         mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxPerStageImages : 0;
+
+    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Vertex]         = maxVertexPipelineImages;
+    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::TessControl]    = maxVertexPipelineImages;
+    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::TessEvaluation] = maxVertexPipelineImages;
+    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Geometry]       = maxVertexPipelineImages;
     mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Fragment] =
         mPhysicalDeviceFeatures.fragmentStoresAndAtomics ? maxPerStageImages : 0;
-    mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Geometry] =
-        mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics ? maxPerStageImages : 0;
     mNativeCaps.maxShaderImageUniforms[gl::ShaderType::Compute] = maxPerStageImages;
 
     mNativeCaps.maxCombinedImageUniforms = maxCombinedImages;
@@ -928,7 +930,8 @@ void RendererVk::ensureCapsInitialized() const
 
         // TODO: tessellation shader support is incomplete.  http://anglebug.com/3572
         mNativeExtensions.tessellationShaderEXT =
-            getFeatures().exposeNonConformantExtensionsAndVersions.enabled;
+            mFeatures.supportsTransformFeedbackExtension.enabled &&
+            mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
         mNativeCaps.maxPatchVertices = LimitToInt(limitsVk.maxTessellationPatchSize);
         mNativeCaps.maxTessPatchComponents =
             LimitToInt(limitsVk.maxTessellationControlPerPatchOutputComponents);
@@ -950,6 +953,16 @@ void RendererVk::ensureCapsInitialized() const
             mNativeCaps.maxCombinedUniformBlocks + kReservedTessellationDefaultUniformBindingCount);
         mNativeCaps.maxUniformBufferBindings = LimitToInt(
             mNativeCaps.maxUniformBufferBindings + kReservedTessellationDefaultUniformBindingCount);
+
+        mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::TessControl] =
+            mNativeCaps.maxCombinedShaderOutputResources;
+        mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::TessControl] =
+            maxCombinedAtomicCounterBuffers;
+
+        mNativeCaps.maxShaderStorageBlocks[gl::ShaderType::TessEvaluation] =
+            mNativeCaps.maxCombinedShaderOutputResources;
+        mNativeCaps.maxShaderAtomicCounterBuffers[gl::ShaderType::TessEvaluation] =
+            maxCombinedAtomicCounterBuffers;
     }
 
     // GL_APPLE_clip_distance/GL_EXT_clip_cull_distance
