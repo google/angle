@@ -22,6 +22,30 @@
       },
       "revId": "50f7d64610097f0a1eeef27e6e35612ad52b1023",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc2badcf_1af14a5c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 9246,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T17:36:35Z",
+      "side": 0,
+      "message": "It\u0027s nonesense. With geometry shader it doesn\u0027t matter if there is transform feedback or what the transform feedback mode is. If GS takes X (e.g. points) and generates Y (e.g. triangles), valid draw mode is X and valid transform feedback mode is Y.\n\nThe `if` above this checks for the no-GS case. With GS, we go outside the if and check what GS expects as input (and again, it doesn\u0027t matter what it generates).",
+      "parentUuid": "1a38cd04_0d7bc0ff",
+      "range": {
+        "startLine": 9246,
+        "startChar": 8,
+        "endLine": 9246,
+        "endChar": 25
+      },
+      "revId": "50f7d64610097f0a1eeef27e6e35612ad52b1023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

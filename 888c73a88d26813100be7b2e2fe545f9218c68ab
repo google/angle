@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "58302eb8_7c7f4761",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4249,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T17:36:35Z",
+      "side": 1,
+      "message": "The fixes are kind of entangled because a lot of tests rely on a number of fixes to run. If I split it, I basically won\u0027t be able to enable anything until the last change.",
+      "parentUuid": "9186b793_2ee68512",
+      "range": {
+        "startLine": 4249,
+        "startChar": 22,
+        "endLine": 4249,
+        "endChar": 23
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9660654b_a34cec0e",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 5
@@ -71,6 +95,30 @@
       "writtenOn": "2021-01-27T13:13:01Z",
       "side": 1,
       "message": "this still too.",
+      "range": {
+        "startLine": 749,
+        "startChar": 25,
+        "endLine": 749,
+        "endChar": 45
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0472085a_aeb630d1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T17:36:35Z",
+      "side": 1,
+      "message": "Still what? Split?",
+      "parentUuid": "9660654b_a34cec0e",
       "range": {
         "startLine": 749,
         "startChar": 25,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca18ae95_e533bc4c",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T17:36:35Z",
+      "side": 1,
+      "message": "They do have special versions for the extensions. These are called only for the ES3.2 entry points. There are variants for EXT and OES in validationESEXT.cpp.\n\nThe extra extension check here was a copy-paste artifact.",
+      "parentUuid": "05209410_e3831c8d",
+      "range": {
+        "startLine": 201,
+        "startChar": 5,
+        "endLine": 201,
+        "endChar": 35
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9930ef90_8783103d",
@@ -117,6 +189,30 @@
       "writtenOn": "2021-01-27T13:13:01Z",
       "side": 1,
       "message": "can you please update the generator scripts to stop updating the year?",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0fccb29_c247be80",
+        "filename": "src/tests/compiler_tests/ImmutableString_test_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T17:36:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9930ef90_8783103d",
       "range": {
         "startLine": 4,
         "startChar": 13,
