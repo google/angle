@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "312a413f_8d335f79",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-27T20:16:39Z",
+      "side": 1,
+      "message": "How is this related to GS/TS?",
+      "range": {
+        "startLine": 252,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 53
+      },
+      "revId": "182cfad3f56a7367b9bc6e59159baf077622e776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "139d7337_e8836b7f",
         "filename": "src/libANGLE/validationES31.cpp",
         "patchSetId": 1
