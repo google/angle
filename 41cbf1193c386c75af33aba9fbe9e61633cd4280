@@ -16,6 +16,46 @@
       "message": "This fixes the native replay for eFootball PES 2021.",
       "revId": "41cbf1193c386c75af33aba9fbe9e61633cd4280",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbd41986_36e9a4b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:19:11Z",
+      "side": 1,
+      "message": "Nice work!",
+      "revId": "41cbf1193c386c75af33aba9fbe9e61633cd4280",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8875175d_6615bdcd",
+        "filename": "src/libANGLE/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5147,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:19:11Z",
+      "side": 1,
+      "message": "suggest you ASSERT that the program ID is in the call. no function that I can see uses a uniform block index without an explicit program id.",
+      "range": {
+        "startLine": 5135,
+        "startChar": 0,
+        "endLine": 5147,
+        "endChar": 22
+      },
+      "revId": "41cbf1193c386c75af33aba9fbe9e61633cd4280",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
