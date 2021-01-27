@@ -16,6 +16,23 @@
       "message": "Split",
       "revId": "d8248ef99fe14e2f965a36b093edfb5d1bc9ba84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "533834d0_aeec178f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:28:36Z",
+      "side": 1,
+      "message": "Are there already separate EXT validation EPs for these?",
+      "revId": "d8248ef99fe14e2f965a36b093edfb5d1bc9ba84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
