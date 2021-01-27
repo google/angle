@@ -139,6 +139,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ec548e1e_aac0cdc6",
+        "filename": "src/libANGLE/renderer/vulkan/android/AHBFunctions.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T22:04:06Z",
+      "side": 1,
+      "message": "Not sure how else it\u0027s done in ANGLE so maybe it matches the style, but does this need to be a factory? Why not have AHBFunctions have the pointers directly, add a \"valid()\" function and use this directly?",
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46c66075_7c971321",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.h",
         "patchSetId": 2
