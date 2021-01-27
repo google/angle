@@ -86,6 +86,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "442a3b20_411759be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-27T16:50:49Z",
+      "side": 1,
+      "message": "I went ahead and updated those also since I\u0027m already in here.",
+      "parentUuid": "15e10fe5_006c11dc",
+      "revId": "d5677dad1283e58e87d1d62de76fad6c1da9ff62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b55a9381_5c600919",
@@ -99,6 +117,30 @@
       "writtenOn": "2021-01-27T13:17:05Z",
       "side": 1,
       "message": "what about getActiveUniformBlockiv, getActiveUniformBlockiv, getActiveUniformBlockivRobust, and getActiveUniformBlockName? can you add them?",
+      "range": {
+        "startLine": 1829,
+        "startChar": 9,
+        "endLine": 1829,
+        "endChar": 26
+      },
+      "revId": "d5677dad1283e58e87d1d62de76fad6c1da9ff62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e89726f_e5f5d9f3",
+        "filename": "scripts/entry_point_packed_gl_enums.json",
+        "patchSetId": 1
+      },
+      "lineNbr": 1829,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-27T16:50:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b55a9381_5c600919",
       "range": {
         "startLine": 1829,
         "startChar": 9,
