@@ -363,6 +363,11 @@ class RendererVk : angle::NonCopyable
     // Log cache stats for all caches
     void logCacheStats() const;
 
+    VkPipelineStageFlags getSupportedVulkanPipelineStageMask() const
+    {
+        return mSupportedVulkanPipelineStageMask;
+    }
+
   private:
     angle::Result initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex);
     void ensureCapsInitialized() const;
@@ -492,6 +497,17 @@ class RendererVk : angle::NonCopyable
     // Stats about all Vulkan object caches
     using VulkanCacheStats = angle::PackedEnumMap<VulkanCacheType, CacheStats>;
     VulkanCacheStats mVulkanCacheStats;
+
+    // A mask to filter out Vulkan pipeline stages that are not supported, applied in situations
+    // where multiple stages are prespecified (for example with image layout transitions):
+    //
+    // - Excludes GEOMETRY if geometry shaders are not supported.
+    // - Excludes TESSELLATION_CONTROL and TESSELLATION_EVALUATION if tessellation shaders are not
+    //   supported.
+    //
+    // Note that this mask can have bits set that don't correspond to valid stages, so it's strictly
+    // only useful for masking out unsupported stages in an otherwise valid set of stages.
+    VkPipelineStageFlags mSupportedVulkanPipelineStageMask;
 };
 
 }  // namespace rx

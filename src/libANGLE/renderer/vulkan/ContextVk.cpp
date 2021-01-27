@@ -121,14 +121,18 @@ GLenum DefaultGLErrorCode(VkResult result)
 
 constexpr gl::ShaderMap<vk::ImageLayout> kShaderReadOnlyImageLayouts = {
     {gl::ShaderType::Vertex, vk::ImageLayout::VertexShaderReadOnly},
+    {gl::ShaderType::TessControl, vk::ImageLayout::PreFragmentShadersReadOnly},
+    {gl::ShaderType::TessEvaluation, vk::ImageLayout::PreFragmentShadersReadOnly},
+    {gl::ShaderType::Geometry, vk::ImageLayout::PreFragmentShadersReadOnly},
     {gl::ShaderType::Fragment, vk::ImageLayout::FragmentShaderReadOnly},
-    {gl::ShaderType::Geometry, vk::ImageLayout::GeometryShaderReadOnly},
     {gl::ShaderType::Compute, vk::ImageLayout::ComputeShaderReadOnly}};
 
 constexpr gl::ShaderMap<vk::ImageLayout> kShaderWriteImageLayouts = {
     {gl::ShaderType::Vertex, vk::ImageLayout::VertexShaderWrite},
+    {gl::ShaderType::TessControl, vk::ImageLayout::PreFragmentShadersWrite},
+    {gl::ShaderType::TessEvaluation, vk::ImageLayout::PreFragmentShadersWrite},
+    {gl::ShaderType::Geometry, vk::ImageLayout::PreFragmentShadersWrite},
     {gl::ShaderType::Fragment, vk::ImageLayout::FragmentShaderWrite},
-    {gl::ShaderType::Geometry, vk::ImageLayout::GeometryShaderWrite},
     {gl::ShaderType::Compute, vk::ImageLayout::ComputeShaderWrite}};
 
 constexpr VkBufferUsageFlags kVertexBufferUsage = VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
@@ -1266,12 +1270,18 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
                 executable->getSamplerShaderBitsForTextureUnitIndex(textureUnit);
             ASSERT(remainingShaderBits.any());
             gl::ShaderType firstShader = remainingShaderBits.first();
+            gl::ShaderType lastShader  = remainingShaderBits.last();
             remainingShaderBits.reset(firstShader);
-            // If we have multiple shader accessing it, we barrier against all shader stage read
-            // given that we only support vertex/frag shaders
-            if (remainingShaderBits.any())
+            remainingShaderBits.reset(lastShader);
+            // We barrier against either:
+            // - Vertex only
+            // - Fragment only
+            // - Pre-fragment only (vertex, geometry and tessellation together)
+            if (remainingShaderBits.any() || firstShader != lastShader)
             {
-                textureLayout = vk::ImageLayout::AllGraphicsShadersReadOnly;
+                textureLayout = lastShader == gl::ShaderType::Fragment
+                                    ? vk::ImageLayout::AllGraphicsShadersReadOnly
+                                    : vk::ImageLayout::PreFragmentShadersReadOnly;
             }
             else
             {
@@ -1279,8 +1289,7 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
             }
         }
         // Ensure the image is in read-only layout
-        commandBufferHelper->imageRead(&mResourceUseList, image.getAspectFlags(), textureLayout,
-                                       &image);
+        commandBufferHelper->imageRead(this, image.getAspectFlags(), textureLayout, &image);
 
         textureVk->retainImageViews(&mResourceUseList);
     }
@@ -4284,16 +4293,23 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         alreadyProcessed.insert(image);
 
         vk::ImageLayout imageLayout;
-        gl::ShaderType shader = static_cast<gl::ShaderType>(gl::ScanForward(shaderStages.bits()));
-        shaderStages.reset(shader);
-        // This is accessed by multiple shaders
-        if (shaderStages.any())
+        gl::ShaderType firstShader = shaderStages.first();
+        gl::ShaderType lastShader  = shaderStages.last();
+        shaderStages.reset(firstShader);
+        shaderStages.reset(lastShader);
+        // We barrier against either:
+        // - Vertex only
+        // - Fragment only
+        // - Pre-fragment only (vertex, geometry and tessellation together)
+        if (shaderStages.any() || firstShader != lastShader)
         {
-            imageLayout = vk::ImageLayout::AllGraphicsShadersWrite;
+            imageLayout = lastShader == gl::ShaderType::Fragment
+                              ? vk::ImageLayout::AllGraphicsShadersWrite
+                              : vk::ImageLayout::PreFragmentShadersWrite;
         }
         else
         {
-            imageLayout = kShaderWriteImageLayouts[shader];
+            imageLayout = kShaderWriteImageLayouts[firstShader];
         }
 
         VkImageAspectFlags aspectFlags = image->getAspectFlags();
@@ -4307,8 +4323,8 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         }
 
         commandBufferHelper->imageWrite(
-            &mResourceUseList, gl::LevelIndex(static_cast<uint32_t>(imageUnit.level)), layerStart,
-            layerCount, aspectFlags, imageLayout, vk::AliasingMode::Allowed, image);
+            this, gl::LevelIndex(static_cast<uint32_t>(imageUnit.level)), layerStart, layerCount,
+            aspectFlags, imageLayout, vk::AliasingMode::Allowed, image);
     }
 
     return angle::Result::Continue;
@@ -5073,7 +5089,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
     {
         ASSERT(!IsRenderPassStartedAndUsesImage(*mRenderPassCommands, *imageAccess.image));
 
-        imageAccess.image->recordReadBarrier(imageAccess.aspectFlags, imageAccess.imageLayout,
+        imageAccess.image->recordReadBarrier(this, imageAccess.aspectFlags, imageAccess.imageLayout,
                                              &mOutsideRenderPassCommands->getCommandBuffer());
         imageAccess.image->retain(&mResourceUseList);
     }
@@ -5083,7 +5099,7 @@ angle::Result ContextVk::onResourceAccess(const vk::CommandBufferAccess &access)
         ASSERT(!IsRenderPassStartedAndUsesImage(*mRenderPassCommands, *imageWrite.access.image));
 
         imageWrite.access.image->recordWriteBarrier(
-            imageWrite.access.aspectFlags, imageWrite.access.imageLayout,
+            this, imageWrite.access.aspectFlags, imageWrite.access.imageLayout,
             &mOutsideRenderPassCommands->getCommandBuffer());
         imageWrite.access.image->retain(&mResourceUseList);
         imageWrite.access.image->onWrite(imageWrite.levelStart, imageWrite.levelCount,

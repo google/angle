@@ -101,8 +101,12 @@ struct ImageMemoryBarrierData
     PipelineStage barrierIndex;
 };
 
+constexpr VkPipelineStageFlags kPreFragmentStageFlags =
+    VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT |
+    VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT | VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
+
 constexpr VkPipelineStageFlags kAllShadersPipelineStageFlags =
-    VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |
+    kPreFragmentStageFlags | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT |
     VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
 
 constexpr VkPipelineStageFlags kAllDepthStencilPipelineStageFlags =
@@ -314,33 +318,35 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         },
     },
     {
-        ImageLayout::GeometryShaderReadOnly,
+        ImageLayout::PreFragmentShadersReadOnly,
         ImageMemoryBarrierData{
-            "GeometryShaderReadOnly",
+            "PreFragmentShadersReadOnly",
             VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
-            VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT,
-            VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT,
+            kPreFragmentStageFlags,
+            kPreFragmentStageFlags,
             // Transition to: all reads must happen after barrier.
             VK_ACCESS_SHADER_READ_BIT,
             // Transition from: RAR and WAR don't need memory barrier.
             0,
             ResourceAccess::ReadOnly,
-            PipelineStage::GeometryShader,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::VertexShader,
         },
     },
     {
-        ImageLayout::GeometryShaderWrite,
+        ImageLayout::PreFragmentShadersWrite,
         ImageMemoryBarrierData{
-            "GeometryShaderWrite",
+            "PreFragmentShadersWrite",
             VK_IMAGE_LAYOUT_GENERAL,
-            VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT,
-            VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT,
+            kPreFragmentStageFlags,
+            kPreFragmentStageFlags,
             // Transition to: all reads and writes must happen after barrier.
             VK_ACCESS_SHADER_READ_BIT | VK_ACCESS_SHADER_WRITE_BIT,
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_SHADER_WRITE_BIT,
             ResourceAccess::Write,
-            PipelineStage::GeometryShader,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::VertexShader,
         },
     },
     {
@@ -437,6 +443,18 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
     },
 };
 // clang-format on
+
+VkPipelineStageFlags GetImageLayoutSrcStageMask(Context *context,
+                                                const ImageMemoryBarrierData &transition)
+{
+    return transition.srcStageMask & context->getRenderer()->getSupportedVulkanPipelineStageMask();
+}
+
+VkPipelineStageFlags GetImageLayoutDstStageMask(Context *context,
+                                                const ImageMemoryBarrierData &transition)
+{
+    return transition.dstStageMask & context->getRenderer()->getSupportedVulkanPipelineStageMask();
+}
 
 VkImageCreateFlags GetImageCreateFlags(gl::TextureType textureType)
 {
@@ -846,19 +864,19 @@ void CommandBufferHelper::bufferWrite(ResourceUseList *resourceUseList,
     }
 }
 
-void CommandBufferHelper::imageRead(ResourceUseList *resourceUseList,
+void CommandBufferHelper::imageRead(ContextVk *contextVk,
                                     VkImageAspectFlags aspectFlags,
                                     ImageLayout imageLayout,
                                     ImageHelper *image)
 {
-    image->retain(resourceUseList);
+    image->retain(&contextVk->getResourceUseList());
 
     if (image->isReadBarrierNecessary(imageLayout))
     {
         PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
         ASSERT(barrierIndex != PipelineStage::InvalidEnum);
         PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
-        if (image->updateLayoutAndBarrier(aspectFlags, imageLayout, barrier))
+        if (image->updateLayoutAndBarrier(contextVk, aspectFlags, imageLayout, barrier))
         {
             mPipelineBarrierMask.set(barrierIndex);
         }
@@ -875,7 +893,7 @@ void CommandBufferHelper::imageRead(ResourceUseList *resourceUseList,
     }
 }
 
-void CommandBufferHelper::imageWrite(ResourceUseList *resourceUseList,
+void CommandBufferHelper::imageWrite(ContextVk *contextVk,
                                      gl::LevelIndex level,
                                      uint32_t layerStart,
                                      uint32_t layerCount,
@@ -884,13 +902,13 @@ void CommandBufferHelper::imageWrite(ResourceUseList *resourceUseList,
                                      AliasingMode aliasingMode,
                                      ImageHelper *image)
 {
-    image->retain(resourceUseList);
+    image->retain(&contextVk->getResourceUseList());
     image->onWrite(level, 1, layerStart, layerCount, aspectFlags);
     // Write always requires a barrier
     PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
     ASSERT(barrierIndex != PipelineStage::InvalidEnum);
     PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
-    if (image->updateLayoutAndBarrier(aspectFlags, imageLayout, barrier))
+    if (image->updateLayoutAndBarrier(contextVk, aspectFlags, imageLayout, barrier))
     {
         mPipelineBarrierMask.set(barrierIndex);
     }
@@ -1065,7 +1083,7 @@ void CommandBufferHelper::executeBarriers(const angle::FeaturesVk &features,
     mPipelineBarrierMask.reset();
 }
 
-void CommandBufferHelper::finalizeDepthStencilImageLayout()
+void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
 {
     ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(mDepthStencilImage);
@@ -1098,7 +1116,7 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout()
         ASSERT(barrierIndex != PipelineStage::InvalidEnum);
         PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
 
-        if (mDepthStencilImage->updateLayoutAndBarrier(aspectFlags, imageLayout, barrier))
+        if (mDepthStencilImage->updateLayoutAndBarrier(context, aspectFlags, imageLayout, barrier))
         {
             mPipelineBarrierMask.set(barrierIndex);
         }
@@ -1127,7 +1145,7 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout()
     }
 }
 
-void CommandBufferHelper::finalizeDepthStencilResolveImageLayout()
+void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *context)
 {
     ASSERT(mIsRenderPassCommandBuffer);
     ASSERT(mDepthStencilImage);
@@ -1142,7 +1160,8 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout()
     ASSERT(barrierIndex != PipelineStage::InvalidEnum);
     PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
 
-    if (mDepthStencilResolveImage->updateLayoutAndBarrier(aspectFlags, imageLayout, barrier))
+    if (mDepthStencilResolveImage->updateLayoutAndBarrier(context, aspectFlags, imageLayout,
+                                                          barrier))
     {
         mPipelineBarrierMask.set(barrierIndex);
     }
@@ -1170,19 +1189,19 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout()
     }
 }
 
-void CommandBufferHelper::onImageHelperRelease(const ImageHelper *image)
+void CommandBufferHelper::onImageHelperRelease(Context *context, const ImageHelper *image)
 {
     ASSERT(mIsRenderPassCommandBuffer);
 
     if (mDepthStencilImage == image)
     {
-        finalizeDepthStencilImageLayout();
+        finalizeDepthStencilImageLayout(context);
         mDepthStencilImage = nullptr;
     }
 
     if (mDepthStencilResolveImage == image)
     {
-        finalizeDepthStencilResolveImageLayout();
+        finalizeDepthStencilResolveImageLayout(context);
         mDepthStencilResolveImage = nullptr;
     }
 }
@@ -1286,11 +1305,11 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
     // Do depth stencil layout change.
     if (mDepthStencilImage)
     {
-        finalizeDepthStencilImageLayout();
+        finalizeDepthStencilImageLayout(contextVk);
     }
     if (mDepthStencilResolveImage)
     {
-        finalizeDepthStencilResolveImageLayout();
+        finalizeDepthStencilResolveImageLayout(contextVk);
     }
 }
 
@@ -3703,7 +3722,7 @@ angle::Result ImageHelper::initializeNonZeroMemory(Context *context, VkDeviceSiz
     ANGLE_TRY(renderer->getCommandBufferOneOff(context, &commandBuffer));
 
     // Queue a DMA copy.
-    barrierImpl(getAspectFlags(), ImageLayout::TransferDst, mCurrentQueueFamilyIndex,
+    barrierImpl(context, getAspectFlags(), ImageLayout::TransferDst, mCurrentQueueFamilyIndex,
                 &commandBuffer);
 
     StagingBuffer stagingBuffer;
@@ -4169,13 +4188,14 @@ bool ImageHelper::isReadBarrierNecessary(ImageLayout newLayout) const
     return layoutData.type == ResourceAccess::Write;
 }
 
-void ImageHelper::changeLayoutAndQueue(VkImageAspectFlags aspectMask,
+void ImageHelper::changeLayoutAndQueue(Context *context,
+                                       VkImageAspectFlags aspectMask,
                                        ImageLayout newLayout,
                                        uint32_t newQueueFamilyIndex,
                                        CommandBuffer *commandBuffer)
 {
     ASSERT(isQueueChangeNeccesary(newQueueFamilyIndex));
-    barrierImpl(aspectMask, newLayout, newQueueFamilyIndex, commandBuffer);
+    barrierImpl(context, aspectMask, newLayout, newQueueFamilyIndex, commandBuffer);
 }
 
 void ImageHelper::acquireFromExternal(ContextVk *contextVk,
@@ -4193,7 +4213,8 @@ void ImageHelper::acquireFromExternal(ContextVk *contextVk,
     mCurrentLayout           = currentLayout;
     mCurrentQueueFamilyIndex = externalQueueFamilyIndex;
 
-    changeLayoutAndQueue(getAspectFlags(), mCurrentLayout, rendererQueueFamilyIndex, commandBuffer);
+    changeLayoutAndQueue(contextVk, getAspectFlags(), mCurrentLayout, rendererQueueFamilyIndex,
+                         commandBuffer);
 
     // It is unknown how the external has modified the image, so assume every subresource has
     // defined content.  That is unless the layout is Undefined.
@@ -4215,7 +4236,8 @@ void ImageHelper::releaseToExternal(ContextVk *contextVk,
 {
     ASSERT(mCurrentQueueFamilyIndex == rendererQueueFamilyIndex);
 
-    changeLayoutAndQueue(getAspectFlags(), desiredLayout, externalQueueFamilyIndex, commandBuffer);
+    changeLayoutAndQueue(contextVk, getAspectFlags(), desiredLayout, externalQueueFamilyIndex,
+                         commandBuffer);
 }
 
 bool ImageHelper::isReleasedToExternal() const
@@ -4272,7 +4294,8 @@ ANGLE_INLINE void ImageHelper::initImageMemoryBarrierStruct(
 
 // Generalized to accept both "primary" and "secondary" command buffers.
 template <typename CommandBufferT>
-void ImageHelper::barrierImpl(VkImageAspectFlags aspectMask,
+void ImageHelper::barrierImpl(Context *context,
+                              VkImageAspectFlags aspectMask,
                               ImageLayout newLayout,
                               uint32_t newQueueFamilyIndex,
                               CommandBufferT *commandBuffer)
@@ -4284,26 +4307,29 @@ void ImageHelper::barrierImpl(VkImageAspectFlags aspectMask,
     initImageMemoryBarrierStruct(aspectMask, newLayout, newQueueFamilyIndex, &imageMemoryBarrier);
 
     // There might be other shaderRead operations there other than the current layout.
-    VkPipelineStageFlags srcStageMask = transitionFrom.srcStageMask;
+    VkPipelineStageFlags srcStageMask = GetImageLayoutSrcStageMask(context, transitionFrom);
     if (mCurrentShaderReadStageMask)
     {
         srcStageMask |= mCurrentShaderReadStageMask;
         mCurrentShaderReadStageMask  = 0;
         mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     }
-    commandBuffer->imageBarrier(srcStageMask, transitionTo.dstStageMask, imageMemoryBarrier);
+    commandBuffer->imageBarrier(srcStageMask, GetImageLayoutDstStageMask(context, transitionTo),
+                                imageMemoryBarrier);
 
     mCurrentLayout           = newLayout;
     mCurrentQueueFamilyIndex = newQueueFamilyIndex;
 }
 
 template void ImageHelper::barrierImpl<priv::SecondaryCommandBuffer>(
+    Context *context,
     VkImageAspectFlags aspectMask,
     ImageLayout newLayout,
     uint32_t newQueueFamilyIndex,
     priv::SecondaryCommandBuffer *commandBuffer);
 
-bool ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
+bool ImageHelper::updateLayoutAndBarrier(Context *context,
+                                         VkImageAspectFlags aspectMask,
                                          ImageLayout newLayout,
                                          PipelineBarrier *barrier)
 {
@@ -4315,7 +4341,8 @@ bool ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
         // changed.  The following asserts that such a barrier is not attempted.
         ASSERT(layoutData.type == ResourceAccess::Write);
         // No layout change, only memory barrier is required
-        barrier->mergeMemoryBarrier(layoutData.srcStageMask, layoutData.dstStageMask,
+        barrier->mergeMemoryBarrier(GetImageLayoutSrcStageMask(context, layoutData),
+                                    GetImageLayoutDstStageMask(context, layoutData),
                                     layoutData.srcAccessMask, layoutData.dstAccessMask);
         barrierModified = true;
     }
@@ -4323,8 +4350,8 @@ bool ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
     {
         const ImageMemoryBarrierData &transitionFrom = kImageMemoryBarrierData[mCurrentLayout];
         const ImageMemoryBarrierData &transitionTo   = kImageMemoryBarrierData[newLayout];
-        VkPipelineStageFlags srcStageMask            = transitionFrom.srcStageMask;
-        VkPipelineStageFlags dstStageMask            = transitionTo.dstStageMask;
+        VkPipelineStageFlags srcStageMask = GetImageLayoutSrcStageMask(context, transitionFrom);
+        VkPipelineStageFlags dstStageMask = GetImageLayoutDstStageMask(context, transitionTo);
 
         if (IsShaderReadOnlyLayout(transitionTo) && IsShaderReadOnlyLayout(transitionFrom))
         {
@@ -4337,8 +4364,9 @@ bool ImageHelper::updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
             {
                 const ImageMemoryBarrierData &layoutData =
                     kImageMemoryBarrierData[mLastNonShaderReadOnlyLayout];
-                barrier->mergeMemoryBarrier(layoutData.srcStageMask, dstStageMask,
-                                            layoutData.srcAccessMask, transitionTo.dstAccessMask);
+                barrier->mergeMemoryBarrier(GetImageLayoutSrcStageMask(context, layoutData),
+                                            dstStageMask, layoutData.srcAccessMask,
+                                            transitionTo.dstAccessMask);
                 barrierModified = true;
                 // Accumulate new read stage.
                 mCurrentShaderReadStageMask |= dstStageMask;
@@ -5663,7 +5691,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             if (updateLayerCount >= kMaxParallelSubresourceUpload)
             {
                 // If there are more subresources than bits we can track, always insert a barrier.
-                recordWriteBarrier(aspectFlags, ImageLayout::TransferDst, commandBuffer);
+                recordWriteBarrier(contextVk, aspectFlags, ImageLayout::TransferDst, commandBuffer);
                 subresourceUploadsInProgress = std::numeric_limits<uint64_t>::max();
             }
             else
@@ -5677,7 +5705,8 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
                 if ((subresourceUploadsInProgress & subresourceHash) != 0)
                 {
                     // If there's overlap in subresource upload, issue a barrier.
-                    recordWriteBarrier(aspectFlags, ImageLayout::TransferDst, commandBuffer);
+                    recordWriteBarrier(contextVk, aspectFlags, ImageLayout::TransferDst,
+                                       commandBuffer);
                     subresourceUploadsInProgress = 0;
                 }
                 subresourceUploadsInProgress |= subresourceHash;

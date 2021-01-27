@@ -625,7 +625,8 @@ RendererVk::RendererVk()
       mPipelineCacheDirty(false),
       mPipelineCacheInitialized(false),
       mCommandProcessor(this),
-      mGlslangInitialized(false)
+      mGlslangInitialized(false),
+      mSupportedVulkanPipelineStageMask(0)
 {
     VkFormatProperties invalid = {0, 0, kInvalidFormatFeatureFlags};
     mFormatProperties.fill(invalid);
@@ -1718,6 +1719,21 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
         std::lock_guard<std::mutex> lock(mPipelineCacheMutex);
         ANGLE_TRY(initPipelineCache(displayVk, &mPipelineCache, &success));
     }
+
+    // Track the set of supported pipeline stages.  This is used when issuing image layout
+    // transitions that cover many stages (such as AllGraphicsReadOnly) to mask out unsupported
+    // stages, which avoids enumerating every possible combination of stages in the layouts.
+    VkPipelineStageFlags unsupportedStages = 0;
+    if (!mPhysicalDeviceFeatures.tessellationShader)
+    {
+        unsupportedStages |= VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT |
+                             VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT;
+    }
+    if (!mPhysicalDeviceFeatures.geometryShader)
+    {
+        unsupportedStages |= VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
+    }
+    mSupportedVulkanPipelineStageMask = ~unsupportedStages;
 
     return angle::Result::Continue;
 }

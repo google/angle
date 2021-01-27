@@ -995,11 +995,11 @@ class CommandBufferHelper : angle::NonCopyable
                      AliasingMode aliasingMode,
                      BufferHelper *buffer);
 
-    void imageRead(ResourceUseList *resourceUseList,
+    void imageRead(ContextVk *contextVk,
                    VkImageAspectFlags aspectFlags,
                    ImageLayout imageLayout,
                    ImageHelper *image);
-    void imageWrite(ResourceUseList *resourceUseList,
+    void imageWrite(ContextVk *contextVk,
                     gl::LevelIndex level,
                     uint32_t layerStart,
                     uint32_t layerCount,
@@ -1053,7 +1053,7 @@ class CommandBufferHelper : angle::NonCopyable
         return mRenderPassStarted;
     }
 
-    void onImageHelperRelease(const ImageHelper *image);
+    void onImageHelperRelease(Context *context, const ImageHelper *image);
 
     void beginRenderPass(const Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,
@@ -1176,8 +1176,8 @@ class CommandBufferHelper : angle::NonCopyable
     void restoreDepthContent();
     void restoreStencilContent();
 
-    void finalizeDepthStencilImageLayout();
-    void finalizeDepthStencilResolveImageLayout();
+    void finalizeDepthStencilImageLayout(Context *context);
+    void finalizeDepthStencilResolveImageLayout(Context *context);
 
     // Allocator used by this class. Using a pool allocator per CBH to avoid threading issues
     //  that occur w/ shared allocator between multiple CBHs.
@@ -1286,8 +1286,9 @@ enum class ImageLayout
     TransferDst,
     VertexShaderReadOnly,
     VertexShaderWrite,
-    GeometryShaderReadOnly,
-    GeometryShaderWrite,
+    // PreFragment == Vertex, Tessellation and Geometry stages
+    PreFragmentShadersReadOnly,
+    PreFragmentShadersWrite,
     FragmentShaderReadOnly,
     FragmentShaderWrite,
     ComputeShaderReadOnly,
@@ -1621,17 +1622,19 @@ class ImageHelper final : public Resource, public angle::Subject
                                         uint32_t layerCount) const;
     bool hasStagedUpdatesInAllocatedLevels() const;
 
-    void recordWriteBarrier(VkImageAspectFlags aspectMask,
+    void recordWriteBarrier(Context *context,
+                            VkImageAspectFlags aspectMask,
                             ImageLayout newLayout,
                             CommandBuffer *commandBuffer)
     {
-        barrierImpl(aspectMask, newLayout, mCurrentQueueFamilyIndex, commandBuffer);
+        barrierImpl(context, aspectMask, newLayout, mCurrentQueueFamilyIndex, commandBuffer);
     }
 
     // This function can be used to prevent issuing redundant layout transition commands.
     bool isReadBarrierNecessary(ImageLayout newLayout) const;
 
-    void recordReadBarrier(VkImageAspectFlags aspectMask,
+    void recordReadBarrier(Context *context,
+                           VkImageAspectFlags aspectMask,
                            ImageLayout newLayout,
                            CommandBuffer *commandBuffer)
     {
@@ -1640,7 +1643,7 @@ class ImageHelper final : public Resource, public angle::Subject
             return;
         }
 
-        barrierImpl(aspectMask, newLayout, mCurrentQueueFamilyIndex, commandBuffer);
+        barrierImpl(context, aspectMask, newLayout, mCurrentQueueFamilyIndex, commandBuffer);
     }
 
     bool isQueueChangeNeccesary(uint32_t newQueueFamilyIndex) const
@@ -1648,13 +1651,15 @@ class ImageHelper final : public Resource, public angle::Subject
         return mCurrentQueueFamilyIndex != newQueueFamilyIndex;
     }
 
-    void changeLayoutAndQueue(VkImageAspectFlags aspectMask,
+    void changeLayoutAndQueue(Context *context,
+                              VkImageAspectFlags aspectMask,
                               ImageLayout newLayout,
                               uint32_t newQueueFamilyIndex,
                               CommandBuffer *commandBuffer);
 
     // Returns true if barrier has been generated
-    bool updateLayoutAndBarrier(VkImageAspectFlags aspectMask,
+    bool updateLayoutAndBarrier(Context *context,
+                                VkImageAspectFlags aspectMask,
                                 ImageLayout newLayout,
                                 PipelineBarrier *barrier);
 
@@ -1834,7 +1839,8 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Generalized to accept both "primary" and "secondary" command buffers.
     template <typename CommandBufferT>
-    void barrierImpl(VkImageAspectFlags aspectMask,
+    void barrierImpl(Context *context,
+                     VkImageAspectFlags aspectMask,
                      ImageLayout newLayout,
                      uint32_t newQueueFamilyIndex,
                      CommandBufferT *commandBuffer);
