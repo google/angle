@@ -340,6 +340,24 @@
       "parentUuid": "da00a4b3_a8ea7373",
       "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d72b67d_42602d8a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-27T18:36:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "93f4955d_c15cd601",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

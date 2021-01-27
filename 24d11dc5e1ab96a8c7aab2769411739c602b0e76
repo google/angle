@@ -303,6 +303,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "76745278_703851a2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1341,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-27T18:36:34Z",
+      "side": 1,
+      "message": "i think this is no longer relevant?",
+      "parentUuid": "562a8d96_7dd4ff8a",
+      "range": {
+        "startLine": 1341,
+        "startChar": 25,
+        "endLine": 1341,
+        "endChar": 67
+      },
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5ad23624_b1d6a628",
@@ -316,6 +340,24 @@
       "writtenOn": "2021-01-06T04:53:25Z",
       "side": 1,
       "message": "Maybe also conditional to the executable using framebuffer fetch? Otherwise it\u0027s inefficiency for no reason.",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7aa82367_54ec04ea",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1634,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-27T18:36:34Z",
+      "side": 1,
+      "message": "no longer relevant?",
+      "parentUuid": "5ad23624_b1d6a628",
       "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -355,6 +397,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4b8b12a_79c24651",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1636,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-27T18:36:34Z",
+      "side": 1,
+      "message": "no longer relevant?",
+      "parentUuid": "28ffd68f_73cdb25b",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9e5bd158_67c1f503",
@@ -368,6 +428,24 @@
       "writtenOn": "2021-01-06T04:53:25Z",
       "side": 1,
       "message": "The application subpass is not necessarily subpass 0. See `hasUnresolveAttachments` below.",
+      "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a54de4f3_6e711f2e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 576,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-27T18:36:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e5bd158_67c1f503",
       "revId": "24d11dc5e1ab96a8c7aab2769411739c602b0e76",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
