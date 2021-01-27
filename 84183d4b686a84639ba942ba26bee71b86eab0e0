@@ -16,6 +16,52 @@
       "message": "PTAL",
       "revId": "84183d4b686a84639ba942ba26bee71b86eab0e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dcd58d6_ba97fb27",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T19:07:47Z",
+      "side": 1,
+      "message": "nit: Usual way is `length() \u003e 0` (like you had before, minus the `? true : false`)",
+      "range": {
+        "startLine": 375,
+        "startChar": 11,
+        "endLine": 375,
+        "endChar": 28
+      },
+      "revId": "84183d4b686a84639ba942ba26bee71b86eab0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29cd7e7c_33e4eba0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1471,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T19:07:47Z",
+      "side": 1,
+      "message": "Must `\u0026 kDepthStencilFormatStorageMask`.",
+      "range": {
+        "startLine": 1471,
+        "startChar": 72,
+        "endLine": 1471,
+        "endChar": 73
+      },
+      "revId": "84183d4b686a84639ba942ba26bee71b86eab0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
