@@ -1236,9 +1236,13 @@ void WriteCppReplayIndexFiles(bool compression,
     header
         << "using LocationsMap = std::unordered_map<GLuint, std::unordered_map<GLint, GLint>>;\n";
     header << "extern LocationsMap gUniformLocations;\n";
+    header << "using BlockIndexesMap = std::unordered_map<GLuint, std::unordered_map<GLuint, "
+              "GLuint>>;\n";
+    header << "extern BlockIndexesMap gUniformBlockIndexes;\n";
     header << "extern GLuint gCurrentProgram;\n";
     header << "void UpdateUniformLocation(GLuint program, const char *name, GLint location);\n";
     header << "void DeleteUniformLocations(GLuint program);\n";
+    header << "void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index);\n";
     header << "void UpdateCurrentProgram(GLuint program);\n";
     header << "\n";
     header << "// Maps from captured Resource ID to run-time Resource ID.\n";
@@ -1292,6 +1296,7 @@ void WriteCppReplayIndexFiles(bool compression,
     source << "}  // namespace\n";
     source << "\n";
     source << "LocationsMap gUniformLocations;\n";
+    source << "BlockIndexesMap gUniformBlockIndexes;\n";
     source << "GLuint gCurrentProgram = 0;\n";
     source << "\n";
     source << "void UpdateUniformLocation(GLuint program, const char *name, GLint location)\n";
@@ -1301,6 +1306,10 @@ void WriteCppReplayIndexFiles(bool compression,
     source << "void DeleteUniformLocations(GLuint program)\n";
     source << "{\n";
     source << "    gUniformLocations.erase(program);\n";
+    source << "}\n";
+    source << "void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index)\n";
+    source << "{\n";
+    source << "    gUniformBlockIndexes[program][index] = glGetUniformBlockIndex(program, name);\n";
     source << "}\n";
     source << "void UpdateCurrentProgram(GLuint program)\n";
     source << "{\n";
@@ -1608,6 +1617,27 @@ void CaptureUpdateUniformLocations(const gl::Program *program, std::vector<CallC
 
         params.addValueParam("location", ParamType::TGLint, location);
         callsOut->emplace_back("UpdateUniformLocation", std::move(params));
+    }
+}
+
+void CaptureUpdateUniformBlockIndexes(const gl::Program *program,
+                                      std::vector<CallCapture> *callsOut)
+{
+    const std::vector<gl::InterfaceBlock> &uniformBlocks = program->getState().getUniformBlocks();
+
+    for (GLuint index = 0; index < uniformBlocks.size(); ++index)
+    {
+        ParamBuffer params;
+
+        std::string name;
+        params.addValueParam("program", ParamType::TShaderProgramID, program->id());
+
+        ParamCapture nameParam("name", ParamType::TGLcharConstPointer);
+        CaptureString(uniformBlocks[index].name.c_str(), &nameParam);
+        params.addParam(std::move(nameParam));
+
+        params.addValueParam("index", ParamType::TGLuint, index);
+        callsOut->emplace_back("UpdateUniformBlockIndex", std::move(params));
     }
 }
 
@@ -2907,6 +2937,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         cap(CaptureLinkProgram(replayState, true, id));
         CaptureUpdateUniformLocations(program, setupCalls);
         CaptureUpdateUniformValues(replayState, context, program, setupCalls);
+        CaptureUpdateUniformBlockIndexes(program, setupCalls);
 
         // Capture uniform block bindings for each program
         for (unsigned int uniformBlockIndex = 0;
@@ -4302,6 +4333,7 @@ void FrameCapture::maybeCapturePostCallUpdates(const gl::Context *context)
             const gl::Program *program =
                 context->getProgramResolveLink(param.value.ShaderProgramIDVal);
             CaptureUpdateUniformLocations(program, &mFrameCalls);
+            CaptureUpdateUniformBlockIndexes(program, &mFrameCalls);
             break;
         }
         case EntryPoint::GLUseProgram:
@@ -5099,6 +5131,12 @@ void WriteParamValueReplay<ParamType::TUniformBlockIndex>(std::ostream &os,
                                                           const CallCapture &call,
                                                           gl::UniformBlockIndex value)
 {
-    os << value.value;
+    // Find the program from the call parameters.
+    gl::ShaderProgramID programID;
+    bool foundProgram = FindShaderProgramIDInCall(call, &programID);
+    ASSERT(foundProgram);
+
+    os << "gUniformBlockIndexes[gShaderProgramMap[" << programID.value << "]][" << value.value
+       << "]";
 }
 }  // namespace angle
