@@ -429,6 +429,7 @@ def main():
 
     except Exception:
         traceback.print_exc()
+        results['interrupted'] = True
         rc = 1
 
     if result_tests:
