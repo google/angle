@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51dd163a_abd939c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T19:19:33Z",
+      "side": 1,
+      "message": "Can you make this a split change to land before this? Would help separate performance diff with the extra map/invalidate calls and the memory property change (in case a bisect is needed).",
+      "revId": "345a3b5ccdd51701bb497b54afc7f20dddc089f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb77b8c6_4b6ce55d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T19:19:33Z",
+      "side": 1,
+      "message": "nit: TMI that doesn\u0027t belong to commit message.",
+      "range": {
+        "startLine": 13,
+        "startChar": 27,
+        "endLine": 14,
+        "endChar": 46
+      },
+      "revId": "345a3b5ccdd51701bb497b54afc7f20dddc089f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8e1c843_6c1ea6ba",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 864,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T19:19:33Z",
+      "side": 1,
+      "message": "Just make map() call invalidate() and unmap() call flush(). In the absence of any proof that this is hurting performance, no need for the complication.",
+      "range": {
+        "startLine": 864,
+        "startChar": 18,
+        "endLine": 864,
+        "endChar": 21
+      },
+      "revId": "345a3b5ccdd51701bb497b54afc7f20dddc089f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9340706_4fd7a5f6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 874,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T19:19:33Z",
+      "side": 1,
+      "message": "We tend to avoid overloading. In this case, it\u0027s not worth adding overloads and the call sites can just provide all needed parameters.",
+      "range": {
+        "startLine": 874,
+        "startChar": 18,
+        "endLine": 874,
+        "endChar": 23
+      },
+      "revId": "345a3b5ccdd51701bb497b54afc7f20dddc089f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
