@@ -21,6 +21,8 @@
             "                    May refer to names of previously listed structs or interface",
             "                    blocks.",
             "   essl_extension: Optional. Name of the ESSL extension where this variable is from.",
+            "   essl_extension_becomes_core_in: Optional. ESSL level where symbols from this",
+            "                                   extension have become core.",
             "   glsl_extension: Optional. Name of the GLSL extension where this variable is from.",
             "   value: Optional. String that has one valid value: 'resources'. Denotes that the",
             "          value of the variable should be based on the field of ShBuiltInResources",
@@ -69,6 +71,7 @@
                     "gl_NumSamples":{
                         "essl_level":"ESSL3_BUILTINS",
                         "essl_extension":"OES_sample_variables",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "type":{
                             "basic":"Int",
                             "precision":"Low",
@@ -394,6 +397,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryOutputComponents":{
@@ -404,6 +408,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryImageUniforms":{
@@ -414,6 +419,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryTextureImageUnits":{
@@ -424,6 +430,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryOutputVertices":{
@@ -434,6 +441,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryTotalOutputComponents":{
@@ -444,6 +452,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryUniformComponents":{
@@ -454,6 +463,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryAtomicCounters":{
@@ -464,6 +474,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxGeometryAtomicCounterBuffers":{
@@ -474,6 +485,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     }
                 }
@@ -488,6 +500,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessControlOutputComponents":{
@@ -498,6 +511,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessControlTextureImageUnits":{
@@ -508,6 +522,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessControlUniformComponents":{
@@ -518,6 +533,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessControlTotalOutputComponents":{
@@ -528,6 +544,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessControlImageUniforms":{
@@ -538,6 +555,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessControlAtomicCounters":{
@@ -548,6 +566,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessControlAtomicCounterBuffers":{
@@ -558,6 +577,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessPatchComponents":{
@@ -568,6 +588,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxPatchVertices":{
@@ -578,6 +599,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessGenLevel":{
@@ -588,6 +610,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessEvaluationInputComponents":{
@@ -598,6 +621,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessEvaluationOutputComponents":{
@@ -608,6 +632,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessEvaluationTextureImageUnits":{
@@ -618,6 +643,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessEvaluationUniformComponents":{
@@ -628,6 +654,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessEvaluationImageUniforms":{
@@ -638,6 +665,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessEvaluationAtomicCounters":{
@@ -648,6 +676,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     },
                     "gl_MaxTessEvaluationAtomicCounterBuffers":{
@@ -658,6 +687,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     }
                 }
@@ -672,6 +702,7 @@
                             "qualifier":"Const"
                         },
                         "essl_extension":"OES_sample_variables",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "value":"resources"
                     }
                 }
@@ -853,6 +884,7 @@
                     "gl_PrimitiveID":{
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "type":{
                             "basic":"Int",
                             "precision":"High",
@@ -862,6 +894,7 @@
                     "gl_Layer":{
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "type":{
                             "basic":"Int",
                             "precision":"High",
@@ -875,6 +908,7 @@
                     "gl_SampleID":{
                         "essl_level":"ESSL3_BUILTINS",
                         "essl_extension":"OES_sample_variables",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "type":{
                             "basic":"Int",
                             "precision":"Low",
@@ -884,6 +918,7 @@
                     "gl_SamplePosition":{
                         "essl_level":"ESSL3_BUILTINS",
                         "essl_extension":"OES_sample_variables",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "type":{
                             "basic":"Float",
                             "precision":"Medium",
@@ -894,11 +929,13 @@
                     "gl_SampleMaskIn":{
                         "essl_level":"ESSL3_BUILTINS",
                         "essl_extension":"OES_sample_variables",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "initDynamicType":"TType *{type_name} = new TType(EbtInt, EbpHigh, EvqSampleMaskIn, 1); {type_name}->makeArray((resources.MaxSamples+31)/32);"
                     },
                     "gl_SampleMask":{
                         "essl_level":"ESSL3_BUILTINS",
                         "essl_extension":"OES_sample_variables",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "initDynamicType":"TType *{type_name} = new TType(EbtInt, EbpHigh, EvqSampleMask, 1); {type_name}->makeArray((resources.MaxSamples+31)/32);"
                     }
                 }
@@ -1141,6 +1178,7 @@
             "gl_PrimitiveIDIn":{
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_geometry_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1150,6 +1188,7 @@
             "gl_InvocationID":{
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_geometry_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1160,6 +1199,7 @@
                 "suffix":"GS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_geometry_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1170,6 +1210,7 @@
                 "suffix":"GS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_geometry_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1179,6 +1220,7 @@
             "gl_PerVertex":{
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_geometry_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "class":"TInterfaceBlock",
                 "fields":{
                     "gl_Position":{
@@ -1192,6 +1234,7 @@
             "gl_in":{
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_geometry_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(gl_PerVertex, EvqPerVertexIn, TLayoutQualifier::Create()); {type_name}->makeArray(0u);",
                 "comment":"The array size of gl_in is undefined until we get a valid input primitive declaration."
             }
@@ -1203,6 +1246,7 @@
                         "suffix":"OutBlock",
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_geometry_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "private":true,
                         "class":"TInterfaceBlock",
                         "fields":{
@@ -1218,7 +1262,8 @@
                         "suffix":"GS",
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_geometry_shader",
-                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqPosition, 4); {type_name}->setInterfaceBlock(gl_PerVertexOutBlock);"
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqPosition, 4); {type_name}->setInterfaceBlock(gl_PerVertexOutBlock{ext_or_core_suffix});"
                     }
                 }
             }
@@ -1231,6 +1276,7 @@
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1241,6 +1287,7 @@
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1251,6 +1298,7 @@
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1261,18 +1309,21 @@
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqTessLevelOuter, 1); {type_name}->makeArray(4u);"
             },
             "gl_TessLevelInner":{
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqTessLevelInner, 1); {type_name}->makeArray(2u);"
             },
             "gl_PerVertex":{
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "class":"TInterfaceBlock",
                 "fields":{
                     "gl_Position":{
@@ -1287,12 +1338,14 @@
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(gl_PerVertex, EvqPerVertexIn, TLayoutQualifier::Create()); {type_name}->makeArray(resources.MaxPatchVertices);"
             },
             "gl_out":{
                 "suffix":"TCS",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(gl_PerVertex, EvqPerVertexOut, TLayoutQualifier::Create()); {type_name}->makeArray(resources.MaxPatchVertices);"
             }
         },
@@ -1303,6 +1356,7 @@
                         "suffix":"OutTcsBlock",
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "private":true,
                         "class":"TInterfaceBlock",
                         "fields":{
@@ -1318,7 +1372,8 @@
                         "suffix":"TCS",
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_tessellation_shader",
-                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqPosition, 4); {type_name}->setInterfaceBlock(gl_PerVertexOutTcsBlock);"
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqPosition, 4); {type_name}->setInterfaceBlock(gl_PerVertexOutTcsBlock{ext_or_core_suffix});"
                     }
                 }
             }
@@ -1331,6 +1386,7 @@
                 "suffix":"TES",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1341,6 +1397,7 @@
                 "suffix":"TES",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "type":{
                     "basic":"Int",
                     "precision":"High",
@@ -1359,18 +1416,21 @@
                 "suffix":"TES",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqTessLevelOuter, 1); {type_name}->makeArray(4u);"
             },
             "gl_TessLevelInner":{
                 "suffix":"TES",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqTessLevelInner, 1); {type_name}->makeArray(2u);"
             },
             "gl_PerVertex":{
                 "suffix":"TES",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "class":"TInterfaceBlock",
                 "fields":{
                     "gl_Position":{
@@ -1385,12 +1445,14 @@
                 "suffix":"TES",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(gl_PerVertex, EvqPerVertexIn, TLayoutQualifier::Create()); {type_name}->makeArray(resources.MaxPatchVertices);"
             },
             "gl_out":{
                 "suffix":"TES",
                 "essl_level":"ESSL3_1_BUILTINS",
                 "essl_extension":"EXT_tessellation_shader",
+                "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                 "initDynamicType":"TType *{type_name} = new TType(gl_PerVertex, EvqPerVertexOut, TLayoutQualifier::Create()); {type_name}->makeArray(resources.MaxPatchVertices);"
             }
         },
@@ -1401,6 +1463,7 @@
                         "suffix":"OutTesBlock",
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_tessellation_shader",
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
                         "private":true,
                         "class":"TInterfaceBlock",
                         "fields":{
@@ -1416,7 +1479,8 @@
                         "suffix":"TES",
                         "essl_level":"ESSL3_1_BUILTINS",
                         "essl_extension":"EXT_tessellation_shader",
-                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqPosition, 4); {type_name}->setInterfaceBlock(gl_PerVertexOutTesBlock);"
+                        "essl_extension_becomes_core_in":"ESSL3_2_BUILTINS",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpHigh, EvqPosition, 4); {type_name}->setInterfaceBlock(gl_PerVertexOutTesBlock{ext_or_core_suffix});"
                     }
                 }
             }

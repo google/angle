@@ -459,11 +459,28 @@ bool TCompiler::checkShaderVersion(TParseContext *parseContext)
                     "Geometry shader is not supported in this shader version.");
                 return false;
             }
-            else
+            else if (mShaderVersion == 310)
             {
-                ASSERT(mShaderVersion == 310 || mShaderVersion == 320);
                 if (!parseContext->checkCanUseExtension(sh::TSourceLoc(),
                                                         TExtension::EXT_geometry_shader))
+                {
+                    return false;
+                }
+            }
+            break;
+
+        case GL_TESS_CONTROL_SHADER_EXT:
+        case GL_TESS_EVALUATION_SHADER_EXT:
+            if (mShaderVersion < 310)
+            {
+                mDiagnostics.globalError(
+                    "Tessellation shaders are not supported in this shader version.");
+                return false;
+            }
+            else if (mShaderVersion == 310)
+            {
+                if (!parseContext->checkCanUseExtension(sh::TSourceLoc(),
+                                                        TExtension::EXT_tessellation_shader))
                 {
                     return false;
                 }

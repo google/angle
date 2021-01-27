@@ -1258,7 +1258,7 @@ struct TLayoutQualifier
     int invocations;
     int maxVertices;
 
-    // EXT_tessellation_control shader layout qualifiers
+    // EXT_tessellation_shader shader layout qualifiers
     int vertices;
     TLayoutTessEvaluationType tesPrimitiveType;
     TLayoutTessEvaluationType tesVertexSpacingType;
@@ -1414,6 +1414,9 @@ inline const char *getQualifierString(TQualifier q)
     case EvqGeometryIn:             return "in";
     case EvqGeometryOut:            return "out";
     case EvqPerVertexIn:            return "gl_in";
+    case EvqPrimitiveIDIn:          return "gl_PrimitiveIDIn";
+    case EvqInvocationID:           return "gl_InvocationID";
+    case EvqPrimitiveID:            return "gl_PrimitiveID";
     case EvqPrecise:                return "precise";
     case EvqClipDistance:           return "ClipDistance";
     case EvqSample:                 return "sample";

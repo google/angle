@@ -2499,7 +2499,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
     bool typeContainsIntegers =
         (type.getBasicType() == EbtInt || type.getBasicType() == EbtUInt ||
          type.isStructureContainingType(EbtInt) || type.isStructureContainingType(EbtUInt));
-    bool extendedShaderTypes = mShaderVersion == 320 ||
+    bool extendedShaderTypes = mShaderVersion >= 320 ||
                                isExtensionEnabled(TExtension::EXT_geometry_shader) ||
                                isExtensionEnabled(TExtension::EXT_tessellation_shader);
     if (typeContainsIntegers && qualifier != EvqFlatIn && qualifier != EvqFlatOut &&
@@ -4135,7 +4135,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         if (isShaderIoBlock)
         {
             if (!isExtensionEnabled(TExtension::OES_shader_io_blocks) &&
-                !isExtensionEnabled(TExtension::EXT_shader_io_blocks))
+                !isExtensionEnabled(TExtension::EXT_shader_io_blocks) && mShaderVersion < 320)
             {
                 error(typeQualifier.line,
                       "invalid qualifier: shader IO blocks need shader io block extension",
@@ -4981,8 +4981,9 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
         qualifier.imageInternalFormat = EiifR32UI;
     }
     else if (mShaderType == GL_GEOMETRY_SHADER_EXT &&
-             checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader) &&
-             checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310))
+             (mShaderVersion >= 320 ||
+              (checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader) &&
+               checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310))))
     {
         if (qualifierType == "points")
         {
@@ -5018,8 +5019,9 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
         }
     }
     else if (mShaderType == GL_TESS_EVALUATION_SHADER_EXT &&
-             checkCanUseExtension(qualifierTypeLine, TExtension::EXT_tessellation_shader) &&
-             checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310))
+             (mShaderVersion >= 320 ||
+              (checkCanUseExtension(qualifierTypeLine, TExtension::EXT_tessellation_shader) &&
+               checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310))))
     {
         if (qualifierType == "triangles")
         {
@@ -5254,12 +5256,14 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
         }
     }
     else if (qualifierType == "invocations" && mShaderType == GL_GEOMETRY_SHADER_EXT &&
-             checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader))
+             (mShaderVersion >= 320 ||
+              checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader)))
     {
         parseInvocations(intValue, intValueLine, intValueString, &qualifier.invocations);
     }
     else if (qualifierType == "max_vertices" && mShaderType == GL_GEOMETRY_SHADER_EXT &&
-             checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader))
+             (mShaderVersion >= 320 ||
+              checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader)))
     {
         parseMaxVertices(intValue, intValueLine, intValueString, &qualifier.maxVertices);
     }
@@ -5269,7 +5273,8 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
         parseIndexLayoutQualifier(intValue, intValueLine, intValueString, &qualifier.index);
     }
     else if (qualifierType == "vertices" && mShaderType == GL_TESS_CONTROL_SHADER_EXT &&
-             checkCanUseExtension(qualifierTypeLine, TExtension::EXT_tessellation_shader))
+             (mShaderVersion >= 320 ||
+              checkCanUseExtension(qualifierTypeLine, TExtension::EXT_tessellation_shader)))
     {
         parseVertices(intValue, intValueLine, intValueString, &qualifier.vertices);
     }

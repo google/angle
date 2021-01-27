@@ -34,6 +34,8 @@
 //         function name from C++ keywords, or disambiguate two functions with the same name.
 //     "essl_extension"
 //         string, ESSL extension where the function is defined.
+//     "essl_extension_becomes_core_in"
+//         string, ESSL level where functions from this extension have become core.
 //     "glsl_extension"
 //         string, GLSL extension where the function is defined.
 //     "hasSideEffects"
@@ -1182,12 +1184,12 @@ GROUP BEGIN ESSL310CS {"shader_type": "COMPUTE"}
 GROUP END ESSL310CS
 
 GROUP BEGIN ESSL310TCS {"shader_type": "TESS_CONTROL_EXT"}
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_tessellation_shader", "hasSideEffects": true}
+  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_tessellation_shader", "essl_extension_becomes_core_in": "ESSL3_2_BUILTINS", "hasSideEffects": true}
     void barrier();
 GROUP END ESSL310TCS
 
 GROUP BEGIN ESSL310GS {"shader_type": "GEOMETRY_EXT"}
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_geometry_shader", "hasSideEffects": true}
+  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_geometry_shader", "essl_extension_becomes_core_in": "ESSL3_2_BUILTINS", "hasSideEffects": true}
     void EmitVertex();
     void EndPrimitive();
 GROUP END ESSL310GS
