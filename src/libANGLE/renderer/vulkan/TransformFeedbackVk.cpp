@@ -37,11 +37,19 @@ TransformFeedbackVk::~TransformFeedbackVk() {}
 
 void TransformFeedbackVk::onDestroy(const gl::Context *context)
 {
-    RendererVk *rendererVk = vk::GetImpl(context)->getRenderer();
+    ASSERT(std::all_of(mCounterBufferHelpers.begin(), mCounterBufferHelpers.end(),
+                       [](vk::BufferHelper &counterBuffer) { return !counterBuffer.valid(); }));
+}
 
+void TransformFeedbackVk::releaseCounterBuffers(RendererVk *renderer)
+{
     for (vk::BufferHelper &bufferHelper : mCounterBufferHelpers)
     {
-        bufferHelper.release(rendererVk);
+        bufferHelper.release(renderer);
+    }
+    for (VkBuffer &buffer : mCounterBufferHandles)
+    {
+        buffer = VK_NULL_HANDLE;
     }
 }
 
@@ -129,7 +137,8 @@ angle::Result TransformFeedbackVk::begin(const gl::Context *context,
         mRebindTransformFeedbackBuffer = true;
     }
 
-    return contextVk->onBeginTransformFeedback(xfbBufferCount, mBufferHelpers);
+    return contextVk->onBeginTransformFeedback(xfbBufferCount, mBufferHelpers,
+                                               mCounterBufferHelpers);
 }
 
 angle::Result TransformFeedbackVk::end(const gl::Context *context)
@@ -147,6 +156,9 @@ angle::Result TransformFeedbackVk::end(const gl::Context *context)
     }
 
     contextVk->onEndTransformFeedback();
+
+    releaseCounterBuffers(contextVk->getRenderer());
+
     return angle::Result::Continue;
 }
 
@@ -184,7 +196,8 @@ angle::Result TransformFeedbackVk::resume(const gl::Context *context)
         initializeXFBBuffersDesc(contextVk, xfbBufferCount);
     }
 
-    return contextVk->onBeginTransformFeedback(xfbBufferCount, mBufferHelpers);
+    return contextVk->onBeginTransformFeedback(xfbBufferCount, mBufferHelpers,
+                                               mCounterBufferHelpers);
 }
 
 angle::Result TransformFeedbackVk::bindIndexedBuffer(

@@ -78,6 +78,12 @@ class BitSetT final
             mBitsCopy.set(index);
         }
 
+        void setLaterBits(const BitSetT &bits)
+        {
+            ASSERT((BitSetT(bits) &= Mask(mCurrentBit + 1)).none());
+            mBitsCopy |= bits;
+        }
+
       private:
         std::size_t getNextBit();
 
@@ -532,7 +538,7 @@ class BitSetArray final
             ASSERT(pos > (mIndex * priv::kDefaultBitSetSize) + *mCurrentIterator);
             prepareCopy();
             mParentCopy.reset(pos);
-            updateIterator(pos, false);
+            updateIteratorBit(pos, false);
         }
 
         void setLaterBit(std::size_t pos)
@@ -540,7 +546,14 @@ class BitSetArray final
             ASSERT(pos > (mIndex * priv::kDefaultBitSetSize) + *mCurrentIterator);
             prepareCopy();
             mParentCopy.set(pos);
-            updateIterator(pos, true);
+            updateIteratorBit(pos, true);
+        }
+
+        void setLaterBits(const BitSetArray &bits)
+        {
+            prepareCopy();
+            mParentCopy |= bits;
+            updateIteratorBits(bits);
         }
 
       private:
@@ -555,7 +568,7 @@ class BitSetArray final
             }
         }
 
-        ANGLE_INLINE void updateIterator(std::size_t pos, bool setBit)
+        ANGLE_INLINE void updateIteratorBit(std::size_t pos, bool setBit)
         {
             // Get the index and offset, update current interator if within range
             size_t index  = pos >> kShiftForDivision;
@@ -571,6 +584,11 @@ class BitSetArray final
                     mCurrentIterator.resetLaterBit(offset);
                 }
             }
+        }
+
+        ANGLE_INLINE void updateIteratorBits(const BitSetArray &bits)
+        {
+            mCurrentIterator.setLaterBits(bits.mBaseBitSetArray[mIndex]);
         }
 
         // Problem -

@@ -299,7 +299,7 @@ TYPED_TEST(BitSetIteratorTest, BitAssignment)
 TYPED_TEST(BitSetIteratorTest, SetLaterBit)
 {
     TypeParam mStateBits            = this->mStateBits;
-    std::set<size_t> expectedValues = {0, 1, 3, 5, 7, 9, 35};
+    std::set<size_t> expectedValues = {0, 1, 3, 5, 6, 7, 9, 35};
     mStateBits.set(0);
     mStateBits.set(1);
 
@@ -311,6 +311,10 @@ TYPED_TEST(BitSetIteratorTest, SetLaterBit)
         {
             iter.setLaterBit(3);
             iter.setLaterBit(5);
+        }
+        if (*iter == 5)
+        {
+            iter.setLaterBit(6);
             iter.setLaterBit(7);
             iter.setLaterBit(9);
             iter.setLaterBit(35);
@@ -343,6 +347,37 @@ TYPED_TEST(BitSetIteratorTest, ResetLaterBit)
             iter.resetLaterBit(8);
         }
 
+        actualValues.insert(*iter);
+    }
+
+    EXPECT_EQ(expectedValues, actualValues);
+}
+
+// Tests adding bitsets to the iterator during iteration.
+TYPED_TEST(BitSetIteratorTest, SetLaterBits)
+{
+    TypeParam mStateBits            = this->mStateBits;
+    std::set<size_t> expectedValues = {1, 2, 3, 4, 5, 7, 9};
+    mStateBits.set(1);
+    mStateBits.set(2);
+    mStateBits.set(3);
+
+    TypeParam laterBits;
+    laterBits.set(4);
+    laterBits.set(5);
+    laterBits.set(7);
+    laterBits.set(9);
+
+    std::set<size_t> actualValues;
+
+    for (auto iter = mStateBits.begin(), end = mStateBits.end(); iter != end; ++iter)
+    {
+        if (*iter == 3)
+        {
+            iter.setLaterBits(laterBits);
+        }
+
+        EXPECT_EQ(actualValues.count(*iter), 0u);
         actualValues.insert(*iter);
     }
 

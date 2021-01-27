@@ -325,10 +325,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void onTransformFeedbackStateChanged();
     angle::Result onBeginTransformFeedback(
         size_t bufferCount,
-        const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
+        const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers,
+        const gl::TransformFeedbackBuffersArray<vk::BufferHelper> &counterBuffers);
     void onEndTransformFeedback();
     angle::Result onPauseTransformFeedback();
-    void pauseTransformFeedbackIfStartedAndRebindBuffersOnResume();
+    void pauseTransformFeedbackIfActiveUnpaused();
 
     // When UtilsVk issues draw or dispatch calls, it binds a new pipeline and descriptor sets that
     // the context is not aware of.  These functions are called to make sure the pipeline and
@@ -614,7 +615,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         // Shader resources excluding textures, which are handled separately.
         DIRTY_BIT_SHADER_RESOURCES,
         DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS,
-        DIRTY_BIT_TRANSFORM_FEEDBACK_STATE,
         DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME,
         DIRTY_BIT_DESCRIPTOR_SETS,
         DIRTY_BIT_MAX,
@@ -622,8 +622,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     using DirtyBits = angle::BitSet<DIRTY_BIT_MAX>;
 
-    using GraphicsDirtyBitHandler =
-        angle::Result (ContextVk::*)(DirtyBits::Iterator *dirtyBitsIterator);
+    using GraphicsDirtyBitHandler = angle::Result (
+        ContextVk::*)(DirtyBits::Iterator *dirtyBitsIterator, DirtyBits dirtyBitMask);
     using ComputeDirtyBitHandler = angle::Result (ContextVk::*)();
 
     struct DriverUniformsDescriptorSet
@@ -777,25 +777,38 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void invalidateDriverUniforms();
 
     // Handlers for graphics pipeline dirty bits.
-    angle::Result handleDirtyGraphicsEventLog(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsTextures(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsIndexBuffer(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsDriverUniformsBinding(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsShaderResources(DirtyBits::Iterator *dirtyBitsIterator);
+    angle::Result handleDirtyGraphicsEventLog(DirtyBits::Iterator *dirtyBitsIterator,
+                                              DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDefaultAttribs(DirtyBits::Iterator *dirtyBitsIterator,
+                                                    DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *dirtyBitsIterator,
+                                                  DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsRenderPass(DirtyBits::Iterator *dirtyBitsIterator,
+                                                DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsPipelineBinding(DirtyBits::Iterator *dirtyBitsIterator,
+                                                     DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsTextures(DirtyBits::Iterator *dirtyBitsIterator,
+                                              DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsVertexBuffers(DirtyBits::Iterator *dirtyBitsIterator,
+                                                   DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsIndexBuffer(DirtyBits::Iterator *dirtyBitsIterator,
+                                                 DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDriverUniforms(DirtyBits::Iterator *dirtyBitsIterator,
+                                                    DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDriverUniformsBinding(DirtyBits::Iterator *dirtyBitsIterator,
+                                                           DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsShaderResources(DirtyBits::Iterator *dirtyBitsIterator,
+                                                     DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsTransformFeedbackBuffersEmulation(
-        DirtyBits::Iterator *dirtyBitsIterator);
+        DirtyBits::Iterator *dirtyBitsIterator,
+        DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsTransformFeedbackBuffersExtension(
-        DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsTransformFeedbackState(DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsTransformFeedbackResume(
-        DirtyBits::Iterator *dirtyBitsIterator);
-    angle::Result handleDirtyGraphicsDescriptorSets(DirtyBits::Iterator *dirtyBitsIterator);
+        DirtyBits::Iterator *dirtyBitsIterator,
+        DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsTransformFeedbackResume(DirtyBits::Iterator *dirtyBitsIterator,
+                                                             DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsDescriptorSets(DirtyBits::Iterator *dirtyBitsIterator,
+                                                    DirtyBits dirtyBitMask);
 
     // Handlers for compute pipeline dirty bits.
     angle::Result handleDirtyComputeEventLog();
@@ -840,6 +853,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     bool hasRecordedCommands();
     void dumpCommandStreamDiagnostics();
     angle::Result flushOutsideRenderPassCommands();
+    // Flush commands and end render pass without setting any dirty bits.
+    // flushCommandsAndEndRenderPass() and flushCommandsAndEndRenderPassMidDirtyBitHandling() will
+    // set the dirty bits directly or through the iterator respectively.  Outside those two
+    // functions, this shouldn't be called directly.
+    angle::Result flushCommandsAndEndRenderPassImpl();
+    angle::Result flushCommandsAndEndRenderPassMidDirtyBitHandling(
+        DirtyBits::Iterator *dirtyBitsIterator,
+        DirtyBits dirtyBitMask);
     void flushDescriptorSetUpdates();
 
     void onRenderPassFinished();
@@ -851,7 +872,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void populateTransformFeedbackBufferSet(
         size_t bufferCount,
         const gl::TransformFeedbackBuffersArray<vk::BufferHelper *> &buffers);
-    void pauseTransformFeedbackIfStarted(DirtyBits onResumeOps);
 
     // DescriptorSet writes
     template <typename T, const T *VkWriteDescriptorSet::*pInfo>

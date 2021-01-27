@@ -87,6 +87,11 @@ class TransformFeedbackVk : public TransformFeedbackImpl
         return mBufferSizes;
     }
 
+    gl::TransformFeedbackBuffersArray<vk::BufferHelper> &getCounterBufferHelpers()
+    {
+        return mCounterBufferHelpers;
+    }
+
     const gl::TransformFeedbackBuffersArray<VkBuffer> &getCounterBufferHandles() const
     {
         return mCounterBufferHandles;
@@ -102,6 +107,8 @@ class TransformFeedbackVk : public TransformFeedbackImpl
                             VkDescriptorSet descSet) const;
 
     void initializeXFBBuffersDesc(ContextVk *contextVk, size_t xfbBufferCount);
+
+    void releaseCounterBuffers(RendererVk *renderer);
 
     // This member variable is set when glBindTransformFeedbackBuffers/glBeginTransformFeedback
     // is called and unset in dirty bit handler for transform feedback state change. If this

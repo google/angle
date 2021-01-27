@@ -1123,6 +1123,7 @@ class CommandBufferHelper : angle::NonCopyable
     void resumeTransformFeedback();
     void pauseTransformFeedback();
     bool isTransformFeedbackStarted() const { return mValidTransformFeedbackBufferCount > 0; }
+    bool isTransformFeedbackActiveUnpaused() const { return mIsTransformFeedbackActiveUnpaused; }
 
     uint32_t getAndResetCounter()
     {
@@ -1201,6 +1202,7 @@ class CommandBufferHelper : angle::NonCopyable
     gl::TransformFeedbackBuffersArray<VkBuffer> mTransformFeedbackCounterBuffers;
     uint32_t mValidTransformFeedbackBufferCount;
     bool mRebindTransformFeedbackBuffers;
+    bool mIsTransformFeedbackActiveUnpaused;
 
     bool mIsRenderPassCommandBuffer;
     bool mReadOnlyDepthStencilMode;

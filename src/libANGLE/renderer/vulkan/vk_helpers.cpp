@@ -823,6 +823,7 @@ CommandBufferHelper::CommandBufferHelper()
       mTransformFeedbackCounterBuffers{},
       mValidTransformFeedbackBufferCount(0),
       mRebindTransformFeedbackBuffers(false),
+      mIsTransformFeedbackActiveUnpaused(false),
       mIsRenderPassCommandBuffer(false),
       mReadOnlyDepthStencilMode(false),
       mDepthAccess(ResourceAccess::Unused),
@@ -1463,26 +1464,6 @@ angle::Result CommandBufferHelper::flushToPrimary(const angle::FeaturesVk &featu
         primary->beginRenderPass(beginInfo, VK_SUBPASS_CONTENTS_INLINE);
         mCommandBuffer.executeCommands(primary->getHandle());
         primary->endRenderPass();
-
-        if (mValidTransformFeedbackBufferCount != 0)
-        {
-            // Would be better to accumulate this barrier using the command APIs.
-            // TODO: Clean thus up before we close http://anglebug.com/3206
-            VkBufferMemoryBarrier bufferBarrier = {};
-            bufferBarrier.sType                 = VK_STRUCTURE_TYPE_BUFFER_MEMORY_BARRIER;
-            bufferBarrier.pNext                 = nullptr;
-            bufferBarrier.srcAccessMask       = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT;
-            bufferBarrier.dstAccessMask       = VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT;
-            bufferBarrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-            bufferBarrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-            bufferBarrier.buffer              = mTransformFeedbackCounterBuffers[0];
-            bufferBarrier.offset              = 0;
-            bufferBarrier.size                = VK_WHOLE_SIZE;
-
-            primary->pipelineBarrier(VK_PIPELINE_STAGE_TRANSFORM_FEEDBACK_BIT_EXT,
-                                     VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT, 0u, 0u, nullptr, 1u,
-                                     &bufferBarrier, 0u, nullptr);
-        }
     }
     else
     {
@@ -1622,7 +1603,8 @@ void CommandBufferHelper::reset()
     // This state should never change for non-renderPass command buffer
     ASSERT(mRenderPassStarted == false);
     ASSERT(mValidTransformFeedbackBufferCount == 0);
-    ASSERT(mRebindTransformFeedbackBuffers == false);
+    ASSERT(!mRebindTransformFeedbackBuffers);
+    ASSERT(!mIsTransformFeedbackActiveUnpaused);
     ASSERT(mRenderPassUsedImages.empty());
 }
 
@@ -1634,7 +1616,8 @@ void CommandBufferHelper::resumeTransformFeedback()
     uint32_t numCounterBuffers =
         mRebindTransformFeedbackBuffers ? 0 : mValidTransformFeedbackBufferCount;
 
-    mRebindTransformFeedbackBuffers = false;
+    mRebindTransformFeedbackBuffers    = false;
+    mIsTransformFeedbackActiveUnpaused = true;
 
     mCommandBuffer.beginTransformFeedback(numCounterBuffers,
                                           mTransformFeedbackCounterBuffers.data());
@@ -1643,7 +1626,8 @@ void CommandBufferHelper::resumeTransformFeedback()
 void CommandBufferHelper::pauseTransformFeedback()
 {
     ASSERT(mIsRenderPassCommandBuffer);
-    ASSERT(isTransformFeedbackStarted());
+    ASSERT(isTransformFeedbackStarted() && isTransformFeedbackActiveUnpaused());
+    mIsTransformFeedbackActiveUnpaused = false;
     mCommandBuffer.endTransformFeedback(mValidTransformFeedbackBufferCount,
                                         mTransformFeedbackCounterBuffers.data());
 }
