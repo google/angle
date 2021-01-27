@@ -16,6 +16,29 @@
       "message": "Split",
       "revId": "99728863735852488ec18437fa4302c46347e217",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ed160b2_534dc3a4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3971,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-27T20:37:31Z",
+      "side": 1,
+      "message": "Since this is copied into the PPO\u0027s executable, do you need to query the gsProgram directly or can you go through the executable so you don\u0027t need any of the Program/ProgramPipeline stuff?\n\nLooking closer, these values are duplicated in both ShaderState and ProgramExecutable.   Which is the source of truth?\n\n    class ShaderState final : angle::NonCopyable\n    {\n    ...\n        // Geometry Shader.\n        Optional\u003cPrimitiveMode\u003e mGeometryShaderInputPrimitiveType;\n        Optional\u003cPrimitiveMode\u003e mGeometryShaderOutputPrimitiveType;\n        Optional\u003cGLint\u003e mGeometryShaderMaxVertices;\n        int mGeometryShaderInvocations;\n\n        // Tessellation Shader\n        int mTessControlShaderVertices;\n        GLenum mTessGenMode;\n        GLenum mTessGenSpacing;\n        GLenum mTessGenVertexOrder;\n        GLenum mTessGenPointMode;\n\n\n    class ProgramExecutable final : public angle::Subject\n    {\n    ...\n        // GL_EXT_geometry_shader.\n        PrimitiveMode mGeometryShaderInputPrimitiveType;\n        PrimitiveMode mGeometryShaderOutputPrimitiveType;\n        int mGeometryShaderInvocations;\n        int mGeometryShaderMaxVertices;\n\n        // GL_EXT_tessellation_shader\n        int mTessControlShaderVertices;\n        GLenum mTessGenMode;\n        GLenum mTessGenSpacing;\n        GLenum mTessGenVertexOrder;\n        GLenum mTessGenPointMode;",
+      "range": {
+        "startLine": 3971,
+        "startChar": 26,
+        "endLine": 3971,
+        "endChar": 74
+      },
+      "revId": "99728863735852488ec18437fa4302c46347e217",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
