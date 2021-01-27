@@ -115,6 +115,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "846be518_3462dc5a",
+        "filename": "src/libANGLE/renderer/vulkan/android/AHBFunctions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-27T19:34:26Z",
+      "side": 1,
+      "message": "For example:\n    using PFAHardwareBuffer_allocate                 \u003d void (*)(const AHardwareBuffer_Desc *desc,\n                                                AHardwareBuffer **outBuffer);\n    using PFAHardwareBuffer_acquire                  \u003d void (*)(AHardwareBuffer *buffer);\n    using PFAHardwareBuffer_describe                 \u003d void (*)(const AHardwareBuffer *buffer,\n                                                AHardwareBuffer_Desc *outDesc);\n    using PFAHardwareBuffer_lock                     \u003d int (*)(AHardwareBuffer *buffer,\n                                           uint64_t usage,\n                                           int32_t fence,\n                                           const ARect *rect,\n                                           void **outVirtualAddress);\n    using PFAHardwareBuffer_recvHandleFromUnixSocket \u003d int (*)(int socketFd,\n                                                               AHardwareBuffer **outBuffer);\n    using PFAHardwareBuffer_release                  \u003d void (*)(AHardwareBuffer *buffer);\n    using PFAHardwareBuffer_sendHandleToUnixSocket   \u003d int (*)(const AHardwareBuffer *buffer,\n                                                             int socketFd);\n    using PFAHardwareBuffer_unlock \u003d int (*)(AHardwareBuffer *buffer, int32_t *fence);",
+      "parentUuid": "441f0189_f200146c",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 12
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46c66075_7c971321",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.h",
         "patchSetId": 2
