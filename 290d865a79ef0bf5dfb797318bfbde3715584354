@@ -288,6 +288,30 @@
       },
       "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37ca20b8_8045cd54",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3284,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-27T17:45:44Z",
+      "side": 1,
+      "message": "\u003e Maybe dirty bits extended needs another bitset then\n\nwe talked about this internally and wanted to propose this as a follow on cleanup change. want to land the extension first. that ok?",
+      "parentUuid": "dfeeb706_35da765f",
+      "range": {
+        "startLine": 3284,
+        "startChar": 4,
+        "endLine": 3284,
+        "endChar": 20
+      },
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
