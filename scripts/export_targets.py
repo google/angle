@@ -204,6 +204,7 @@ IGNORED_INCLUDES = {
     b'libANGLE/renderer/gl/wgl/DisplayWGL.h',
     b'libANGLE/renderer/metal/DisplayMtl_api.h',
     b'libANGLE/renderer/null/DisplayNULL.h',
+    b'libANGLE/renderer/vulkan/android/AHBFunctions.h',
     b'libANGLE/renderer/vulkan/android/DisplayVkAndroid.h',
     b'libANGLE/renderer/vulkan/fuchsia/DisplayVkFuchsia.h',
     b'libANGLE/renderer/vulkan/ggp/DisplayVkGGP.h',

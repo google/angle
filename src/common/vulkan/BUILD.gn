@@ -7,12 +7,6 @@ import("../../../gni/angle.gni")
 
 assert(angle_enable_vulkan)
 
-config("angle_vulkan_lib_android") {
-  if (is_android) {
-    libs = [ "vulkan" ]
-  }
-}
-
 config("angle_vulkan_headers_config") {
   if (angle_shared_libvulkan) {
     defines = [ "ANGLE_SHARED_LIBVULKAN=1" ]
@@ -34,7 +28,6 @@ angle_source_set("angle_vulkan_headers") {
 }
 
 group("angle_vulkan_entry_points") {
-  public_configs = [ ":angle_vulkan_lib_android" ]
   public_deps = [ ":angle_vulkan_headers" ]
   if (is_fuchsia) {
     public_deps += [

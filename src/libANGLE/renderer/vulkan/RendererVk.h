@@ -292,6 +292,8 @@ class RendererVk : angle::NonCopyable
         }
     }
 
+    egl::Display *getDisplay() const { return mDisplay; }
+
     VkResult getLastPresentResult(VkSwapchainKHR swapchain)
     {
         return mCommandProcessor.getLastPresentResult(swapchain);

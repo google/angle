@@ -20,6 +20,9 @@ class DeviceMemory;
 
 namespace rx
 {
+
+class RendererVk;
+
 namespace vk
 {
 angle::Result InitAndroidExternalMemory(ContextVk *contextVk,
@@ -29,7 +32,7 @@ angle::Result InitAndroidExternalMemory(ContextVk *contextVk,
                                         VkMemoryPropertyFlags *memoryPropertyFlagsOut,
                                         DeviceMemory *deviceMemoryOut);
 
-void ReleaseAndroidExternalMemory(EGLClientBuffer clientBuffer);
+void ReleaseAndroidExternalMemory(RendererVk *rendererVk, EGLClientBuffer clientBuffer);
 }  // namespace vk
 }  // namespace rx
 

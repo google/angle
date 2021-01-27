@@ -13,14 +13,15 @@
 #include "libANGLE/Display.h"
 #include "libANGLE/renderer/vulkan/DisplayVk.h"
 #include "libANGLE/renderer/vulkan/RendererVk.h"
-
-#include <android/hardware_buffer.h>
+#include "libANGLE/renderer/vulkan/android/AHBFunctions.h"
+#include "libANGLE/renderer/vulkan/android/DisplayVkAndroid.h"
 
 namespace rx
 {
 
 namespace
 {
+
 VkImageTiling AhbDescUsageToVkImageTiling(const AHardwareBuffer_Desc &ahbDescription)
 {
     if ((ahbDescription.usage & AHARDWAREBUFFER_USAGE_CPU_READ_MASK) != 0 ||
@@ -140,6 +141,9 @@ VkImageUsageFlags AhbDescUsageToVkImageUsage(const AHardwareBuffer_Desc &ahbDesc
 
 angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk)
 {
+    const AHBFunctions &functions = static_cast<DisplayVkAndroid *>(displayVk)->getAHBFunctions();
+    ANGLE_VK_CHECK(displayVk, functions.valid(), VK_ERROR_INITIALIZATION_FAILED);
+
     RendererVk *renderer = displayVk->getRenderer();
 
     struct ANativeWindowBuffer *windowBuffer =
@@ -154,7 +158,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     struct AHardwareBuffer *hardwareBuffer =
         angle::android::ANativeWindowBufferToAHardwareBuffer(windowBuffer);
 
-    AHardwareBuffer_acquire(hardwareBuffer);
+    functions.acquire(hardwareBuffer);
     VkAndroidHardwareBufferFormatPropertiesANDROID bufferFormatProperties;
     bufferFormatProperties.sType =
         VK_STRUCTURE_TYPE_ANDROID_HARDWARE_BUFFER_FORMAT_PROPERTIES_ANDROID;
@@ -181,7 +185,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     // 1. Derive VkImageTiling mode based on AHB usage flags
     // 2. Map AHB usage flags to VkImageUsageFlags
     AHardwareBuffer_Desc ahbDescription;
-    AHardwareBuffer_describe(hardwareBuffer, &ahbDescription);
+    functions.describe(hardwareBuffer, &ahbDescription);
     VkImageTiling imageTilingMode = AhbDescUsageToVkImageTiling(ahbDescription);
     VkImageUsageFlags usage = AhbDescUsageToVkImageUsage(ahbDescription, isDepthOrStencilFormat);
 
@@ -310,7 +314,10 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
 
 void HardwareBufferImageSiblingVkAndroid::onDestroy(const egl::Display *display)
 {
-    AHardwareBuffer_release(angle::android::ANativeWindowBufferToAHardwareBuffer(
+    const AHBFunctions &functions = GetImplAs<DisplayVkAndroid>(display)->getAHBFunctions();
+    ASSERT(functions.valid());
+
+    functions.release(angle::android::ANativeWindowBufferToAHardwareBuffer(
         angle::android::ClientBufferToANativeWindowBuffer(mBuffer)));
 
     ASSERT(mImage == nullptr);

@@ -3044,7 +3044,7 @@ void BufferMemory::destroy(RendererVk *renderer)
     if (isExternalBuffer())
     {
         mExternalMemory.destroy(renderer->getDevice());
-        ReleaseAndroidExternalMemory(mClientBuffer);
+        ReleaseAndroidExternalMemory(renderer, mClientBuffer);
     }
     else
     {
