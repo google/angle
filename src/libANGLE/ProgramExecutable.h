@@ -328,6 +328,8 @@ class ProgramExecutable final : public angle::Subject
 
     int getGeometryShaderMaxVertices() const { return mGeometryShaderMaxVertices; }
 
+    GLenum getTessGenMode() const { return mTessGenMode; }
+
   private:
     // TODO(timvp): http://anglebug.com/3570: Investigate removing these friend
     // class declarations and accessing the necessary members with getters/setters.

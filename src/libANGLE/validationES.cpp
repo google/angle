@@ -735,6 +735,22 @@ bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
         return transformFeedbackPrimitiveMode == renderPrimitiveMode;
     }
 
+    const ProgramExecutable *executable = context->getState().getProgramExecutable();
+    ASSERT(executable);
+    if (executable->hasLinkedShaderStage(ShaderType::Geometry))
+    {
+        // If geometry shader is active, transform feedback mode must match what is output from this
+        // stage.
+        renderPrimitiveMode = executable->getGeometryShaderOutputPrimitiveType();
+    }
+    else if (executable->hasLinkedShaderStage(ShaderType::TessEvaluation))
+    {
+        // Similarly with tessellation shaders, but only if no geometry shader is present.  With
+        // tessellation shaders, only triangles are possibly output.
+        return transformFeedbackPrimitiveMode == PrimitiveMode::Triangles &&
+               executable->getTessGenMode() == GL_TRIANGLES;
+    }
+
     // [GL_EXT_geometry_shader] Table 12.1gs
     switch (renderPrimitiveMode)
     {
