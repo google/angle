@@ -104,6 +104,24 @@
       "parentUuid": "7cae17a9_05894e68",
       "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "33ef20cb_4862e2f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-27T10:03:01Z",
+      "side": 1,
+      "message": "Yes, we are working on fixing it. Disabling the test is simple, but we need to ensure the related extension does work well on any Mali builds. It\u0027s not only for the bug, using render areas which are not aligned with vkGetRenderAreaGranularity can result in performance losses, this is even described in the Vulkan Spec. \nI would add the work-around for the multisampled rendering to texture only on Mali if you concern about it will affect other GPUs.",
+      "parentUuid": "594cc121_02ff8ee9",
+      "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
