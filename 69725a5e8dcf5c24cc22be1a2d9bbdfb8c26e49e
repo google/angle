@@ -100,6 +100,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "171e4940_315c1d80",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T03:11:59Z",
+      "side": 1,
+      "message": "Ack.",
+      "parentUuid": "b3eb127e_08b32138",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e2ce3e0_1257849a",
@@ -167,6 +185,24 @@
       "side": 1,
       "message": "I think user will add a barrier in front of draw call. And it will be same for the first draw call.",
       "parentUuid": "154d17ab_a5181bf9",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b20bce15_e879b036",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3701,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T03:11:59Z",
+      "side": 1,
+      "message": "Ack, I guess it\u0027s needed. I was thinking another barrier would take care of it, but it doesn\u0027t look like it would.",
+      "parentUuid": "dbdcb6db_0dcf2229",
       "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -284,6 +320,24 @@
       "side": 1,
       "message": "not quite the same but it does fit",
       "parentUuid": "be9a6a77_35611348",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93f4955d_c15cd601",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T03:11:59Z",
+      "side": 1,
+      "message": "`mColorAttachmentZeroBasedRange` doesn\u0027t work. You can no longer represent a render pass with no color attachments. Why did removing `mHasDepthStencilAttachment` not work?",
+      "parentUuid": "da00a4b3_a8ea7373",
       "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
