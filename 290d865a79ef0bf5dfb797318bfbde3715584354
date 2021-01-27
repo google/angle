@@ -240,6 +240,30 @@
       },
       "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2627c400_5a546855",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3284,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T17:38:47Z",
+      "side": 1,
+      "message": "Maybe dirty bits extended needs another bitset then. Or maybe you could swap this with a rarely used dirty bit.",
+      "parentUuid": "0f4a4e2a_364be2d4",
+      "range": {
+        "startLine": 3284,
+        "startChar": 4,
+        "endLine": 3284,
+        "endChar": 20
+      },
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
