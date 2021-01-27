@@ -86,6 +86,24 @@
       "parentUuid": "2d378d3f_21006e90",
       "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "594cc121_02ff8ee9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-27T07:21:27Z",
+      "side": 1,
+      "message": "Thanks for the explanation. Is this something that would eventually be fixed in the Mali driver? The tests try to scrutinize the implementation but don\u0027t necessarily reflect normal usage. In the absence of any real-world applications that are affected by this, how about we just suppress the test on ARM and move on?\n\nI would have suggested adding a FeaturesVk flag as well that would be enabled only on Mali, but I think that would just hide bugs since we don\u0027t have any bots that would use it.",
+      "parentUuid": "7cae17a9_05894e68",
+      "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
