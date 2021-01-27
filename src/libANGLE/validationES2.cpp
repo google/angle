@@ -3741,7 +3741,7 @@ bool ValidateCreateShader(const Context *context, ShaderType type)
             break;
 
         case ShaderType::Compute:
-            if (context->getClientVersion() < Version(3, 1))
+            if (context->getClientVersion() < ES_3_1)
             {
                 context->validationError(GL_INVALID_ENUM, kES31Required);
                 return false;
@@ -3749,7 +3749,7 @@ bool ValidateCreateShader(const Context *context, ShaderType type)
             break;
 
         case ShaderType::Geometry:
-            if (!context->getExtensions().geometryShader)
+            if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
                 return false;
@@ -3757,7 +3757,8 @@ bool ValidateCreateShader(const Context *context, ShaderType type)
             break;
 
         case ShaderType::TessControl:
-            if (!context->getExtensions().tessellationShaderEXT)
+            if (!context->getExtensions().tessellationShaderEXT &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
                 return false;
@@ -3765,7 +3766,8 @@ bool ValidateCreateShader(const Context *context, ShaderType type)
             break;
 
         case ShaderType::TessEvaluation:
-            if (!context->getExtensions().tessellationShaderEXT)
+            if (!context->getExtensions().tessellationShaderEXT &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
                 return false;

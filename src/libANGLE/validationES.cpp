@@ -249,7 +249,8 @@ bool ValidateTextureWrapModeValue(const Context *context,
             break;
 
         case GL_CLAMP_TO_BORDER:
-            if (!context->getExtensions().textureBorderClampOES)
+            if (!context->getExtensions().textureBorderClampOES &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;
@@ -727,7 +728,9 @@ bool ValidateTransformFeedbackPrimitiveMode(const Context *context,
 {
     ASSERT(context);
 
-    if (!context->getExtensions().geometryShader || !context->getExtensions().tessellationShaderEXT)
+    if ((!context->getExtensions().geometryShader ||
+         !context->getExtensions().tessellationShaderEXT) &&
+        context->getClientVersion() < ES_3_2)
     {
         // It is an invalid operation to call DrawArrays or DrawArraysInstanced with a draw mode
         // that does not match the current transform feedback object's draw mode (if transform
@@ -1176,7 +1179,7 @@ bool ValidQueryType(const Context *context, QueryType queryType)
         case QueryType::CommandsCompleted:
             return context->getExtensions().syncQuery;
         case QueryType::PrimitivesGenerated:
-            return context->getExtensions().geometryShader;
+            return context->getClientVersion() >= ES_3_2 || context->getExtensions().geometryShader;
         default:
             return false;
     }
@@ -3926,7 +3929,7 @@ void RecordDrawModeError(const Context *context, PrimitiveMode mode)
         case PrimitiveMode::LineStripAdjacency:
         case PrimitiveMode::TrianglesAdjacency:
         case PrimitiveMode::TriangleStripAdjacency:
-            if (!extensions.geometryShader)
+            if (!extensions.geometryShader && context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kGeometryShaderExtensionNotEnabled);
                 return;
@@ -4031,7 +4034,7 @@ const char *ValidateDrawElementsStates(const Context *context)
     {
         // EXT_geometry_shader allows transform feedback to work with all draw commands.
         // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
-        if (!context->getExtensions().geometryShader)
+        if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
         {
             // It is an invalid operation to call DrawElements, DrawRangeElements or
             // DrawElementsInstanced while transform feedback is active, (3.0.2, section 2.14, pg
@@ -5019,7 +5022,7 @@ bool ValidateGetFramebufferAttachmentParameterivBase(const Context *context,
             break;
 
         case GL_FRAMEBUFFER_ATTACHMENT_LAYERED_EXT:
-            if (!context->getExtensions().geometryShader)
+            if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kGeometryShaderExtensionNotEnabled);
                 return false;
@@ -5416,7 +5419,7 @@ bool ValidateGetProgramivBase(const Context *context,
         case GL_GEOMETRY_LINKED_OUTPUT_TYPE_EXT:
         case GL_GEOMETRY_LINKED_VERTICES_OUT_EXT:
         case GL_GEOMETRY_SHADER_INVOCATIONS_EXT:
-            if (!context->getExtensions().geometryShader)
+            if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kGeometryShaderExtensionNotEnabled);
                 return false;
@@ -5451,7 +5454,8 @@ bool ValidateGetProgramivBase(const Context *context,
         case GL_TESS_GEN_SPACING_EXT:
         case GL_TESS_GEN_VERTEX_ORDER_EXT:
         case GL_TESS_GEN_POINT_MODE_EXT:
-            if (!context->getExtensions().tessellationShaderEXT)
+            if (!context->getExtensions().tessellationShaderEXT &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kTessellationShaderExtensionNotEnabled);
                 return false;
@@ -6406,7 +6410,7 @@ bool ValidateGetTexParameterBase(const Context *context,
 
         case GL_DEPTH_STENCIL_TEXTURE_MODE:
         case GL_IMAGE_FORMAT_COMPATIBILITY_TYPE:
-            if (context->getClientVersion() < Version(3, 1))
+            if (context->getClientVersion() < ES_3_1)
             {
                 context->validationError(GL_INVALID_ENUM, kEnumRequiresGLES31);
                 return false;
@@ -6433,7 +6437,8 @@ bool ValidateGetTexParameterBase(const Context *context,
             break;
 
         case GL_TEXTURE_BORDER_COLOR:
-            if (!context->getExtensions().textureBorderClampOES)
+            if (!context->getExtensions().textureBorderClampOES &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;
@@ -7147,7 +7152,8 @@ bool ValidateTexParameterBase(const Context *context,
             break;
 
         case GL_TEXTURE_BORDER_COLOR:
-            if (!context->getExtensions().textureBorderClampOES)
+            if (!context->getExtensions().textureBorderClampOES &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;
@@ -7358,7 +7364,8 @@ bool ValidateSamplerParameterBase(const Context *context,
         break;
 
         case GL_TEXTURE_BORDER_COLOR:
-            if (!context->getExtensions().textureBorderClampOES)
+            if (!context->getExtensions().textureBorderClampOES &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;
@@ -7448,7 +7455,8 @@ bool ValidateGetSamplerParameterBase(const Context *context,
             break;
 
         case GL_TEXTURE_BORDER_COLOR:
-            if (!context->getExtensions().textureBorderClampOES)
+            if (!context->getExtensions().textureBorderClampOES &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
                 return false;

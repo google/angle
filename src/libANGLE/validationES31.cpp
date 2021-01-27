@@ -102,12 +102,13 @@ bool ValidateProgramResourceProperty(const Context *context, GLenum prop)
             return true;
 
         case GL_REFERENCED_BY_GEOMETRY_SHADER_EXT:
-            return context->getExtensions().geometryShader;
+            return context->getExtensions().geometryShader || context->getClientVersion() >= ES_3_2;
 
         case GL_REFERENCED_BY_TESS_CONTROL_SHADER_EXT:
         case GL_REFERENCED_BY_TESS_EVALUATION_SHADER_EXT:
         case GL_IS_PER_PATCH_EXT:
-            return context->getExtensions().tessellationShaderEXT;
+            return context->getExtensions().tessellationShaderEXT ||
+                   context->getClientVersion() >= ES_3_2;
 
         case GL_LOCATION_INDEX_EXT:
             return context->getExtensions().blendFuncExtended;
@@ -480,7 +481,7 @@ bool ValidateDrawArraysIndirect(const Context *context, PrimitiveMode mode, cons
     {
         // EXT_geometry_shader allows transform feedback to work with all draw commands.
         // [EXT_geometry_shader] Section 12.1, "Transform Feedback"
-        if (context->getExtensions().geometryShader)
+        if (context->getExtensions().geometryShader || context->getClientVersion() >= ES_3_2)
         {
             if (!ValidateTransformFeedbackPrimitiveMode(
                     context, curTransformFeedback->getPrimitiveMode(), mode))
@@ -1056,7 +1057,7 @@ bool ValidateFramebufferParameteri(const Context *context, GLenum target, GLenum
         }
         case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
         {
-            if (!context->getExtensions().geometryShader)
+            if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kGeometryShaderExtensionNotEnabled);
                 return false;
@@ -1111,7 +1112,7 @@ bool ValidateGetFramebufferParameteriv(const Context *context,
         case GL_FRAMEBUFFER_DEFAULT_FIXED_SAMPLE_LOCATIONS:
             break;
         case GL_FRAMEBUFFER_DEFAULT_LAYERS_EXT:
-            if (!context->getExtensions().geometryShader)
+            if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kGeometryShaderExtensionNotEnabled);
                 return false;
@@ -1715,12 +1716,12 @@ bool ValidateUseProgramStagesBase(const Context *context,
     GLbitfield knownShaderBits =
         GL_VERTEX_SHADER_BIT | GL_FRAGMENT_SHADER_BIT | GL_COMPUTE_SHADER_BIT;
 
-    if (context->getClientVersion() == ES_3_2 || context->getExtensions().geometryShader)
+    if (context->getClientVersion() >= ES_3_2 || context->getExtensions().geometryShader)
     {
         knownShaderBits |= GL_GEOMETRY_SHADER_BIT;
     }
 
-    if (context->getClientVersion() == ES_3_2 || context->getExtensions().tessellationShaderEXT)
+    if (context->getClientVersion() >= ES_3_2 || context->getExtensions().tessellationShaderEXT)
     {
         knownShaderBits |= GL_TESS_CONTROL_SHADER_BIT;
         knownShaderBits |= GL_TESS_EVALUATION_SHADER_BIT;

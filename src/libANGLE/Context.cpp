@@ -9226,7 +9226,7 @@ void StateCache::updateValidDrawModes(Context *context)
         // active and not paused, regardless of mode. Any primitive type may be used while transform
         // feedback is paused.
         if (!context->getExtensions().geometryShader &&
-            !context->getExtensions().tessellationShaderEXT)
+            !context->getExtensions().tessellationShaderEXT && context->getClientVersion() < ES_3_2)
         {
             mCachedValidDrawModes.fill(false);
             mCachedValidDrawModes[curTransformFeedback->getPrimitiveMode()] = true;
