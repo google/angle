@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "91782fda_b6e055a5",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 375,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-27T23:14:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9dcd58d6_ba97fb27",
+      "range": {
+        "startLine": 375,
+        "startChar": 11,
+        "endLine": 375,
+        "endChar": 28
+      },
+      "revId": "84183d4b686a84639ba942ba26bee71b86eab0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29cd7e7c_33e4eba0",
