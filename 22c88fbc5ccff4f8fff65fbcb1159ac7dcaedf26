@@ -16,6 +16,121 @@
       "message": "Hi Jamie \u0026 Geoff, PTAL. Thanks",
       "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b0b827c_9ecfb9d3",
+        "filename": "src/libANGLE/renderer/vulkan/android/AHBFunctions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:20:58Z",
+      "side": 1,
+      "message": "nit: can you update to the \u0027using\u0027 style syntax?",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 12
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46c66075_7c971321",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:20:58Z",
+      "side": 1,
+      "message": "nit: return a const \u0026? is this required to be valid?",
+      "range": {
+        "startLine": 47,
+        "startChar": 23,
+        "endLine": 47,
+        "endChar": 24
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da07476a_7d9821ee",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:20:58Z",
+      "side": 1,
+      "message": "nit: this can be ASSERT as it\u0027s an implementation error",
+      "range": {
+        "startLine": 30,
+        "startChar": 5,
+        "endLine": 31,
+        "endChar": 5
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28fe1279_a1cac612",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:20:58Z",
+      "side": 1,
+      "message": "nit: this can be ASSERT as it\u0027s an implementation error",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbbcb10d_9ba0b95d",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:20:58Z",
+      "side": 1,
+      "message": "nit: this can be ASSERT as it\u0027s an implementation error",
+      "range": {
+        "startLine": 114,
+        "startChar": 18,
+        "endLine": 114,
+        "endChar": 34
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
