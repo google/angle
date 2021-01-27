@@ -68,6 +68,24 @@
       "parentUuid": "e216a1c6_f57e9fa3",
       "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cae17a9_05894e68",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340324
+      },
+      "writtenOn": "2021-01-27T05:37:10Z",
+      "side": 1,
+      "message": "Actually it is a corner case that is a function defect in mali\u0027s driver, related to AFBC(arm\u0027s frame buffer compression) support. \nFor the end2end test MultisampledRenderToTextureTest.DrawMultisampledDifferentSamples, in the second draw, the MS rendering with a render area not aligned to vkGetRenderAreaGranularity. ANGLE reduces the render area compared to the GLES application, the resolve only happens inside the render area, so the pixels outside the render area are preserved.(https://gitlab.khronos.org/vulkan/vulkan/-/issues/1850)\nDue to the AFBC resolve attachment, we need to preserve the \"skirt region\" of the resolve attachment(There exists a defect I think). The \"readback\" is not a real \"read\" or \"write\" operation.\n\nCurrently, the work-around using vkGetRenderAreaGranularity suggests for it.\nYour concern makes sense, and I also prefer to do it under the condition.",
+      "parentUuid": "2d378d3f_21006e90",
+      "revId": "5bb636d17d461b42fc598dc11402a62db28cc2bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
