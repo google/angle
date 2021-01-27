@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '4bbaf376844e36af607cce252af7c2712d356ed2',
+  'chromium_revision': '9ac53d238b0c35c4c567c031bd273045de68a89d',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -65,7 +65,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': '1cd5ea42acb73f0cb3144bd16a110161600e6b76',
+  'catapult_revision': '9d5ec46922405ae79512edaca638c6654d099105',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -76,22 +76,22 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@fcaf1b1b3620b302a606f84ddae2079e0a90140c',
+    'url': '{chromium_git}/chromium/src/build.git@60c7f94b2900ceb1ce71f1db64dbb128ad0ad47d',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@71044dffd076987ca9dbd13b6abb2f7858b0f302',
+    'url': '{chromium_git}/chromium/src/buildtools.git@e3db55b4639f2a331af6f3708ca1fbd22322aac3',
     'condition': 'not build_with_chromium',
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@001e33eea6c4a29df01fdeaa24bbde334f8ed725',
+    'url': '{chromium_git}/chromium/src/testing@d573d8d1be658b6f5ef3a2c8ef0e4ba078eba224',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@f0c0aae6f27d366b483fca48d9c12a95ee334a06',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@f43a84ba6618080780d745bb4cc1515a23956d98',
     'condition': 'not build_with_chromium',
   },
 
