@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a38cd04_0d7bc0ff",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 9246,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:13:01Z",
+      "side": 0,
+      "message": "what\u0027s up with this? is it duplicated with something?",
+      "range": {
+        "startLine": 9246,
+        "startChar": 8,
+        "endLine": 9246,
+        "endChar": 25
+      },
+      "revId": "50f7d64610097f0a1eeef27e6e35612ad52b1023",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

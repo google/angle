@@ -16,6 +16,115 @@
       "message": "@Mohan, once this lands, you can go ahead and chip away at the bugs. The suppressions are still broad on Android and Linux because of the bots, but locally (on recent drivers) tests pass/fail similarly between the platforms.\n\nI fixed the bugs that most widely affected the tests in this CL, so hopefully there\u0027s nothing too complicated left to fix.",
       "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0ff8f5c_27a00c81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:13:01Z",
+      "side": 1,
+      "message": "Looks good but a few requests.",
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9186b793_2ee68512",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4249,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:13:01Z",
+      "side": 1,
+      "message": "some of this stuff you should split into separate changes to make it easy to follow what\u0027s being fixed.",
+      "range": {
+        "startLine": 4249,
+        "startChar": 22,
+        "endLine": 4249,
+        "endChar": 23
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9660654b_a34cec0e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:13:01Z",
+      "side": 1,
+      "message": "this still too.",
+      "range": {
+        "startLine": 749,
+        "startChar": 25,
+        "endLine": 749,
+        "endChar": 45
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05209410_e3831c8d",
+        "filename": "src/libANGLE/validationES32.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:13:01Z",
+      "side": 1,
+      "message": "these functions should all check for 3.2 support and have special versions for the extensions.",
+      "range": {
+        "startLine": 201,
+        "startChar": 5,
+        "endLine": 201,
+        "endChar": 35
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9930ef90_8783103d",
+        "filename": "src/tests/compiler_tests/ImmutableString_test_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T13:13:01Z",
+      "side": 1,
+      "message": "can you please update the generator scripts to stop updating the year?",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "888c73a88d26813100be7b2e2fe545f9218c68ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
