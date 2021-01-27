@@ -4141,7 +4141,7 @@ bool ValidateGetUniformBlockIndex(const Context *context,
 
 bool ValidateGetActiveUniformBlockiv(const Context *context,
                                      ShaderProgramID program,
-                                     GLuint uniformBlockIndex,
+                                     UniformBlockIndex uniformBlockIndex,
                                      GLenum pname,
                                      const GLint *params)
 {
@@ -4150,7 +4150,7 @@ bool ValidateGetActiveUniformBlockiv(const Context *context,
 
 bool ValidateGetActiveUniformBlockName(const Context *context,
                                        ShaderProgramID program,
-                                       GLuint uniformBlockIndex,
+                                       UniformBlockIndex uniformBlockIndex,
                                        GLsizei bufSize,
                                        const GLsizei *length,
                                        const GLchar *uniformBlockName)
@@ -4167,7 +4167,7 @@ bool ValidateGetActiveUniformBlockName(const Context *context,
         return false;
     }
 
-    if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
+    if (uniformBlockIndex.value >= programObject->getActiveUniformBlockCount())
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxActiveUniformBlock);
         return false;
@@ -4178,7 +4178,7 @@ bool ValidateGetActiveUniformBlockName(const Context *context,
 
 bool ValidateUniformBlockBinding(const Context *context,
                                  ShaderProgramID program,
-                                 GLuint uniformBlockIndex,
+                                 UniformBlockIndex uniformBlockIndex,
                                  GLuint uniformBlockBinding)
 {
     if (context->getClientMajorVersion() < 3)
@@ -4200,7 +4200,7 @@ bool ValidateUniformBlockBinding(const Context *context,
     }
 
     // if never linked, there won't be any uniform blocks
-    if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
+    if (uniformBlockIndex.value >= programObject->getActiveUniformBlockCount())
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsMaxUniformBufferBindings);
         return false;

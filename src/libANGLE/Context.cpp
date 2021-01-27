@@ -2630,7 +2630,7 @@ void Context::getProgramResourceiv(ShaderProgramID program,
                                    GLint *params)
 {
     const Program *programObject = getProgramResolveLink(program);
-    QueryProgramResourceiv(programObject, programInterface, index, propCount, props, bufSize,
+    QueryProgramResourceiv(programObject, programInterface, {index}, propCount, props, bufSize,
                            length, params);
 }
 
@@ -7483,7 +7483,7 @@ GLuint Context::getUniformBlockIndex(ShaderProgramID program, const GLchar *unif
 }
 
 void Context::getActiveUniformBlockiv(ShaderProgramID program,
-                                      GLuint uniformBlockIndex,
+                                      UniformBlockIndex uniformBlockIndex,
                                       GLenum pname,
                                       GLint *params)
 {
@@ -7492,7 +7492,7 @@ void Context::getActiveUniformBlockiv(ShaderProgramID program,
 }
 
 void Context::getActiveUniformBlockivRobust(ShaderProgramID program,
-                                            GLuint uniformBlockIndex,
+                                            UniformBlockIndex uniformBlockIndex,
                                             GLenum pname,
                                             GLsizei bufSize,
                                             GLsizei *length,
@@ -7502,7 +7502,7 @@ void Context::getActiveUniformBlockivRobust(ShaderProgramID program,
 }
 
 void Context::getActiveUniformBlockName(ShaderProgramID program,
-                                        GLuint uniformBlockIndex,
+                                        UniformBlockIndex uniformBlockIndex,
                                         GLsizei bufSize,
                                         GLsizei *length,
                                         GLchar *uniformBlockName)
@@ -7512,7 +7512,7 @@ void Context::getActiveUniformBlockName(ShaderProgramID program,
 }
 
 void Context::uniformBlockBinding(ShaderProgramID program,
-                                  GLuint uniformBlockIndex,
+                                  UniformBlockIndex uniformBlockIndex,
                                   GLuint uniformBlockBinding)
 {
     Program *programObject = getProgramResolveLink(program);

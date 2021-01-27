@@ -647,7 +647,7 @@ bool ValidateVertexAttribIndex(const Context *context, GLuint index);
 
 bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          ShaderProgramID program,
-                                         GLuint uniformBlockIndex,
+                                         UniformBlockIndex uniformBlockIndex,
                                          GLenum pname,
                                          GLsizei *length);
 

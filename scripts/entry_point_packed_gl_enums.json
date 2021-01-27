@@ -494,13 +494,16 @@
         "program": "ShaderProgramID"
     },
     "glGetActiveUniformBlockiv": {
-        "program": "ShaderProgramID"
+        "program": "ShaderProgramID",
+        "uniformBlockIndex": "UniformBlockIndex"
     },
     "glGetActiveUniformBlockivRobust": {
-        "program": "ShaderProgramID"
+        "program": "ShaderProgramID",
+        "uniformBlockIndex": "UniformBlockIndex"
     },
     "glGetActiveUniformBlockName": {
-        "program": "ShaderProgramID"
+        "program": "ShaderProgramID",
+        "uniformBlockIndex": "UniformBlockIndex"
     },
     "glGetActiveUniformName": {
         "program": "ShaderProgramID"
@@ -1825,7 +1828,8 @@
         "location": "UniformLocation"
     },
     "glUniformBlockBinding": {
-        "program": "ShaderProgramID"
+        "program": "ShaderProgramID",
+        "uniformBlockIndex": "UniformBlockIndex"
     },
     "glUnmapBuffer": {
         "target": "BufferBinding"

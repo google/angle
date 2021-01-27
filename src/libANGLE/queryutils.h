@@ -113,7 +113,7 @@ void QueryVertexAttribIuiv(const VertexAttribute &attrib,
                            GLuint *params);
 
 void QueryActiveUniformBlockiv(const Program *program,
-                               GLuint uniformBlockIndex,
+                               UniformBlockIndex uniformBlockIndex,
                                GLenum pname,
                                GLint *params);
 
@@ -172,7 +172,7 @@ GLint QueryProgramResourceLocation(const Program *program,
                                    const GLchar *name);
 void QueryProgramResourceiv(const Program *program,
                             GLenum programInterface,
-                            GLuint index,
+                            UniformBlockIndex index,
                             GLsizei propCount,
                             const GLenum *props,
                             GLsizei bufSize,

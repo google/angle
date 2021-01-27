@@ -129,6 +129,7 @@ enum class ParamType
     TTransformFeedbackID,
     TTransformFeedbackIDConstPointer,
     TTransformFeedbackIDPointer,
+    TUniformBlockIndex,
     TUniformLocation,
     TVertexArrayID,
     TVertexArrayIDConstPointer,
@@ -140,7 +141,7 @@ enum class ParamType
     TvoidPointerPointer,
 };
 
-constexpr uint32_t kParamTypeCount = 121;
+constexpr uint32_t kParamTypeCount = 122;
 
 union ParamValue
 {
@@ -256,6 +257,7 @@ union ParamValue
     gl::TransformFeedbackID TransformFeedbackIDVal;
     const gl::TransformFeedbackID *TransformFeedbackIDConstPointerVal;
     gl::TransformFeedbackID *TransformFeedbackIDPointerVal;
+    gl::UniformBlockIndex UniformBlockIndexVal;
     gl::UniformLocation UniformLocationVal;
     gl::VertexArrayID VertexArrayIDVal;
     const gl::VertexArrayID *VertexArrayIDConstPointerVal;
@@ -1015,6 +1017,13 @@ inline gl::TransformFeedbackID *GetParamVal<ParamType::TTransformFeedbackIDPoint
 }
 
 template <>
+inline gl::UniformBlockIndex GetParamVal<ParamType::TUniformBlockIndex, gl::UniformBlockIndex>(
+    const ParamValue &value)
+{
+    return value.UniformBlockIndexVal;
+}
+
+template <>
 inline gl::UniformLocation GetParamVal<ParamType::TUniformLocation, gl::UniformLocation>(
     const ParamValue &value)
 {
@@ -1310,6 +1319,8 @@ T AccessParamValue(ParamType paramType, const ParamValue &value)
             return GetParamVal<ParamType::TTransformFeedbackIDConstPointer, T>(value);
         case ParamType::TTransformFeedbackIDPointer:
             return GetParamVal<ParamType::TTransformFeedbackIDPointer, T>(value);
+        case ParamType::TUniformBlockIndex:
+            return GetParamVal<ParamType::TUniformBlockIndex, T>(value);
         case ParamType::TUniformLocation:
             return GetParamVal<ParamType::TUniformLocation, T>(value);
         case ParamType::TVertexArrayID:
@@ -2058,6 +2069,13 @@ inline void SetParamVal<ParamType::TTransformFeedbackIDPointer>(gl::TransformFee
 }
 
 template <>
+inline void SetParamVal<ParamType::TUniformBlockIndex>(gl::UniformBlockIndex valueIn,
+                                                       ParamValue *valueOut)
+{
+    valueOut->UniformBlockIndexVal = valueIn;
+}
+
+template <>
 inline void SetParamVal<ParamType::TUniformLocation>(gl::UniformLocation valueIn,
                                                      ParamValue *valueOut)
 {
@@ -2462,6 +2480,9 @@ void InitParamValue(ParamType paramType, T valueIn, ParamValue *valueOut)
             break;
         case ParamType::TTransformFeedbackIDPointer:
             SetParamVal<ParamType::TTransformFeedbackIDPointer>(valueIn, valueOut);
+            break;
+        case ParamType::TUniformBlockIndex:
+            SetParamVal<ParamType::TUniformBlockIndex>(valueIn, valueOut);
             break;
         case ParamType::TUniformLocation:
             SetParamVal<ParamType::TUniformLocation>(valueIn, valueOut);

@@ -5941,7 +5941,7 @@ bool ValidateGetVertexAttribIuivRobustANGLE(const Context *context,
 
 bool ValidateGetActiveUniformBlockivRobustANGLE(const Context *context,
                                                 ShaderProgramID program,
-                                                GLuint uniformBlockIndex,
+                                                UniformBlockIndex uniformBlockIndex,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 const GLsizei *length,
@@ -7195,7 +7195,7 @@ bool ValidateVertexAttribIndex(const Context *context, GLuint index)
 
 bool ValidateGetActiveUniformBlockivBase(const Context *context,
                                          ShaderProgramID program,
-                                         GLuint uniformBlockIndex,
+                                         UniformBlockIndex uniformBlockIndex,
                                          GLenum pname,
                                          GLsizei *length)
 {
@@ -7216,7 +7216,7 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
         return false;
     }
 
-    if (uniformBlockIndex >= programObject->getActiveUniformBlockCount())
+    if (uniformBlockIndex.value >= programObject->getActiveUniformBlockCount())
     {
         context->validationError(GL_INVALID_VALUE, kIndexExceedsActiveUniformBlockCount);
         return false;
@@ -7243,7 +7243,7 @@ bool ValidateGetActiveUniformBlockivBase(const Context *context,
         if (pname == GL_UNIFORM_BLOCK_ACTIVE_UNIFORM_INDICES)
         {
             const InterfaceBlock &uniformBlock =
-                programObject->getUniformBlockByIndex(uniformBlockIndex);
+                programObject->getUniformBlockByIndex(uniformBlockIndex.value);
             *length = static_cast<GLsizei>(uniformBlock.memberIndexes.size());
         }
         else

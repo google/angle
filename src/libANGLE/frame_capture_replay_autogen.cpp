@@ -1016,7 +1016,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             context->getActiveUniformBlockName(
                 params.getParam("programPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal,
-                params.getParam("uniformBlockIndex", ParamType::TGLuint, 1).value.GLuintVal,
+                params.getParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex, 1)
+                    .value.UniformBlockIndexVal,
                 params.getParam("bufSize", ParamType::TGLsizei, 2).value.GLsizeiVal,
                 replayContext->getReadBufferPointer<GLsizei *>(
                     params.getParam("length", ParamType::TGLsizeiPointer, 3)),
@@ -1027,7 +1028,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             context->getActiveUniformBlockiv(
                 params.getParam("programPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal,
-                params.getParam("uniformBlockIndex", ParamType::TGLuint, 1).value.GLuintVal,
+                params.getParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex, 1)
+                    .value.UniformBlockIndexVal,
                 params.getParam("pname", ParamType::TGLenum, 2).value.GLenumVal,
                 replayContext->getReadBufferPointer<GLint *>(
                     params.getParam("params", ParamType::TGLintPointer, 3)));
@@ -3110,7 +3112,8 @@ void FrameCapture::ReplayCall(gl::Context *context,
             context->uniformBlockBinding(
                 params.getParam("programPacked", ParamType::TShaderProgramID, 0)
                     .value.ShaderProgramIDVal,
-                params.getParam("uniformBlockIndex", ParamType::TGLuint, 1).value.GLuintVal,
+                params.getParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex, 1)
+                    .value.UniformBlockIndexVal,
                 params.getParam("uniformBlockBinding", ParamType::TGLuint, 2).value.GLuintVal);
             break;
         case angle::EntryPoint::GLUniformMatrix2fv:

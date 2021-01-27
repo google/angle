@@ -482,7 +482,7 @@ void CaptureGetParameter(const gl::State &glState,
 
 void CaptureGetActiveUniformBlockivParameters(const gl::State &glState,
                                               gl::ShaderProgramID handle,
-                                              GLuint uniformBlockIndex,
+                                              gl::UniformBlockIndex uniformBlockIndex,
                                               GLenum pname,
                                               ParamCapture *paramCapture);
 
@@ -594,6 +594,11 @@ template <>
 void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
                                                         const CallCapture &call,
                                                         gl::UniformLocation value);
+
+template <>
+void WriteParamValueReplay<ParamType::TUniformBlockIndex>(std::ostream &os,
+                                                          const CallCapture &call,
+                                                          gl::UniformBlockIndex value);
 
 template <>
 void WriteParamValueReplay<ParamType::TGLsync>(std::ostream &os,

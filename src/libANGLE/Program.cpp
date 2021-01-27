@@ -342,15 +342,15 @@ GLuint GetInterfaceBlockIndex(const std::vector<InterfaceBlock> &list, const std
     return GL_INVALID_INDEX;
 }
 
-void GetInterfaceBlockName(const GLuint index,
+void GetInterfaceBlockName(const UniformBlockIndex index,
                            const std::vector<InterfaceBlock> &list,
                            GLsizei bufSize,
                            GLsizei *length,
                            GLchar *name)
 {
-    ASSERT(index < list.size());
+    ASSERT(index.value < list.size());
 
-    const auto &block = list[index];
+    const auto &block = list[index.value];
 
     if (bufSize > 0)
     {
@@ -3062,7 +3062,7 @@ bool Program::isValidated() const
     return mValidated;
 }
 
-void Program::getActiveUniformBlockName(const GLuint blockIndex,
+void Program::getActiveUniformBlockName(const UniformBlockIndex blockIndex,
                                         GLsizei bufSize,
                                         GLsizei *length,
                                         GLchar *blockName) const
@@ -3078,8 +3078,8 @@ void Program::getActiveShaderStorageBlockName(const GLuint blockIndex,
                                               GLchar *blockName) const
 {
     ASSERT(!mLinkingState);
-    GetInterfaceBlockName(blockIndex, mState.mExecutable->getShaderStorageBlocks(), bufSize, length,
-                          blockName);
+    GetInterfaceBlockName({blockIndex}, mState.mExecutable->getShaderStorageBlocks(), bufSize,
+                          length, blockName);
 }
 
 template <typename T>
@@ -3140,12 +3140,12 @@ const InterfaceBlock &Program::getShaderStorageBlockByIndex(GLuint index) const
     return mState.mExecutable->getShaderStorageBlocks()[index];
 }
 
-void Program::bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding)
+void Program::bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint uniformBlockBinding)
 {
     ASSERT(!mLinkingState);
-    mState.mExecutable->mUniformBlocks[uniformBlockIndex].binding = uniformBlockBinding;
-    mState.mActiveUniformBlockBindings.set(uniformBlockIndex, uniformBlockBinding != 0);
-    mDirtyBits.set(DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + uniformBlockIndex);
+    mState.mExecutable->mUniformBlocks[uniformBlockIndex.value].binding = uniformBlockBinding;
+    mState.mActiveUniformBlockBindings.set(uniformBlockIndex.value, uniformBlockBinding != 0);
+    mDirtyBits.set(DIRTY_BIT_UNIFORM_BLOCK_BINDING_0 + uniformBlockIndex.value);
 }
 
 GLuint Program::getUniformBlockBinding(GLuint uniformBlockIndex) const
@@ -4337,7 +4337,7 @@ void Program::initInterfaceBlockBindings()
          blockIndex++)
     {
         InterfaceBlock &uniformBlock = mState.mExecutable->mUniformBlocks[blockIndex];
-        bindUniformBlock(blockIndex, uniformBlock.binding);
+        bindUniformBlock({blockIndex}, uniformBlock.binding);
     }
 }
 

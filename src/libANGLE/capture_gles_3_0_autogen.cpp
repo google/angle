@@ -825,7 +825,7 @@ CallCapture CaptureGenVertexArrays(const State &glState,
 CallCapture CaptureGetActiveUniformBlockName(const State &glState,
                                              bool isCallValid,
                                              ShaderProgramID programPacked,
-                                             GLuint uniformBlockIndex,
+                                             UniformBlockIndex uniformBlockIndexPacked,
                                              GLsizei bufSize,
                                              GLsizei *length,
                                              GLchar *uniformBlockName)
@@ -833,7 +833,8 @@ CallCapture CaptureGetActiveUniformBlockName(const State &glState,
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
-    paramBuffer.addValueParam("uniformBlockIndex", ParamType::TGLuint, uniformBlockIndex);
+    paramBuffer.addValueParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex,
+                              uniformBlockIndexPacked);
     paramBuffer.addValueParam("bufSize", ParamType::TGLsizei, bufSize);
 
     if (isCallValid)
@@ -841,7 +842,7 @@ CallCapture CaptureGetActiveUniformBlockName(const State &glState,
         ParamCapture lengthParam("length", ParamType::TGLsizeiPointer);
         InitParamValue(ParamType::TGLsizeiPointer, length, &lengthParam.value);
         CaptureGetActiveUniformBlockName_length(glState, isCallValid, programPacked,
-                                                uniformBlockIndex, bufSize, length,
+                                                uniformBlockIndexPacked, bufSize, length,
                                                 uniformBlockName, &lengthParam);
         paramBuffer.addParam(std::move(lengthParam));
     }
@@ -858,7 +859,7 @@ CallCapture CaptureGetActiveUniformBlockName(const State &glState,
         ParamCapture uniformBlockNameParam("uniformBlockName", ParamType::TGLcharPointer);
         InitParamValue(ParamType::TGLcharPointer, uniformBlockName, &uniformBlockNameParam.value);
         CaptureGetActiveUniformBlockName_uniformBlockName(glState, isCallValid, programPacked,
-                                                          uniformBlockIndex, bufSize, length,
+                                                          uniformBlockIndexPacked, bufSize, length,
                                                           uniformBlockName, &uniformBlockNameParam);
         paramBuffer.addParam(std::move(uniformBlockNameParam));
     }
@@ -876,14 +877,15 @@ CallCapture CaptureGetActiveUniformBlockName(const State &glState,
 CallCapture CaptureGetActiveUniformBlockiv(const State &glState,
                                            bool isCallValid,
                                            ShaderProgramID programPacked,
-                                           GLuint uniformBlockIndex,
+                                           UniformBlockIndex uniformBlockIndexPacked,
                                            GLenum pname,
                                            GLint *params)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
-    paramBuffer.addValueParam("uniformBlockIndex", ParamType::TGLuint, uniformBlockIndex);
+    paramBuffer.addValueParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex,
+                              uniformBlockIndexPacked);
     paramBuffer.addEnumParam("pname", GLenumGroup::UniformBlockPName, ParamType::TGLenum, pname);
 
     if (isCallValid)
@@ -891,7 +893,7 @@ CallCapture CaptureGetActiveUniformBlockiv(const State &glState,
         ParamCapture paramsParam("params", ParamType::TGLintPointer);
         InitParamValue(ParamType::TGLintPointer, params, &paramsParam.value);
         CaptureGetActiveUniformBlockiv_params(glState, isCallValid, programPacked,
-                                              uniformBlockIndex, pname, params, &paramsParam);
+                                              uniformBlockIndexPacked, pname, params, &paramsParam);
         paramBuffer.addParam(std::move(paramsParam));
     }
     else
@@ -2367,13 +2369,14 @@ CallCapture CaptureUniform4uiv(const State &glState,
 CallCapture CaptureUniformBlockBinding(const State &glState,
                                        bool isCallValid,
                                        ShaderProgramID programPacked,
-                                       GLuint uniformBlockIndex,
+                                       UniformBlockIndex uniformBlockIndexPacked,
                                        GLuint uniformBlockBinding)
 {
     ParamBuffer paramBuffer;
 
     paramBuffer.addValueParam("programPacked", ParamType::TShaderProgramID, programPacked);
-    paramBuffer.addValueParam("uniformBlockIndex", ParamType::TGLuint, uniformBlockIndex);
+    paramBuffer.addValueParam("uniformBlockIndexPacked", ParamType::TUniformBlockIndex,
+                              uniformBlockIndexPacked);
     paramBuffer.addValueParam("uniformBlockBinding", ParamType::TGLuint, uniformBlockBinding);
 
     return CallCapture(angle::EntryPoint::GLUniformBlockBinding, std::move(paramBuffer));

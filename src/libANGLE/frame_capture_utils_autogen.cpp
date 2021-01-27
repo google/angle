@@ -433,6 +433,10 @@ void WriteParamCaptureReplay(std::ostream &os, const CallCapture &call, const Pa
             WriteParamValueReplay<ParamType::TvoidConstPointer>(os, call,
                                                                 param.value.voidConstPointerVal);
             break;
+        case ParamType::TUniformBlockIndex:
+            WriteParamValueReplay<ParamType::TUniformBlockIndex>(os, call,
+                                                                 param.value.UniformBlockIndexVal);
+            break;
         case ParamType::TUniformLocation:
             WriteParamValueReplay<ParamType::TUniformLocation>(os, call,
                                                                param.value.UniformLocationVal);
@@ -703,6 +707,8 @@ const char *ParamTypeToString(ParamType paramType)
             return "const GLuint *";
         case ParamType::TTransformFeedbackIDPointer:
             return "GLuint *";
+        case ParamType::TUniformBlockIndex:
+            return "GLenum";
         case ParamType::TUniformLocation:
             return "GLenum";
         case ParamType::TVertexArrayID:

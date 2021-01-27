@@ -1004,19 +1004,20 @@ void GL_APIENTRY GL_GetActiveUniformBlockName(GLuint program,
 
     if (context)
     {
-        ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
+        ShaderProgramID programPacked             = PackParam<ShaderProgramID>(program);
+        UniformBlockIndex uniformBlockIndexPacked = PackParam<UniformBlockIndex>(uniformBlockIndex);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid =
             (context->skipValidation() ||
-             ValidateGetActiveUniformBlockName(context, programPacked, uniformBlockIndex, bufSize,
-                                               length, uniformBlockName));
+             ValidateGetActiveUniformBlockName(context, programPacked, uniformBlockIndexPacked,
+                                               bufSize, length, uniformBlockName));
         if (isCallValid)
         {
-            context->getActiveUniformBlockName(programPacked, uniformBlockIndex, bufSize, length,
-                                               uniformBlockName);
+            context->getActiveUniformBlockName(programPacked, uniformBlockIndexPacked, bufSize,
+                                               length, uniformBlockName);
         }
         ANGLE_CAPTURE(GetActiveUniformBlockName, isCallValid, context, programPacked,
-                      uniformBlockIndex, bufSize, length, uniformBlockName);
+                      uniformBlockIndexPacked, bufSize, length, uniformBlockName);
     }
     else
     {
@@ -1038,17 +1039,18 @@ void GL_APIENTRY GL_GetActiveUniformBlockiv(GLuint program,
 
     if (context)
     {
-        ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
+        ShaderProgramID programPacked             = PackParam<ShaderProgramID>(program);
+        UniformBlockIndex uniformBlockIndexPacked = PackParam<UniformBlockIndex>(uniformBlockIndex);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
         bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateGetActiveUniformBlockiv(context, programPacked,
-                                                            uniformBlockIndex, pname, params));
+                            ValidateGetActiveUniformBlockiv(
+                                context, programPacked, uniformBlockIndexPacked, pname, params));
         if (isCallValid)
         {
-            context->getActiveUniformBlockiv(programPacked, uniformBlockIndex, pname, params);
+            context->getActiveUniformBlockiv(programPacked, uniformBlockIndexPacked, pname, params);
         }
         ANGLE_CAPTURE(GetActiveUniformBlockiv, isCallValid, context, programPacked,
-                      uniformBlockIndex, pname, params);
+                      uniformBlockIndexPacked, pname, params);
     }
     else
     {
@@ -2521,17 +2523,20 @@ void GL_APIENTRY GL_UniformBlockBinding(GLuint program,
 
     if (context)
     {
-        ShaderProgramID programPacked                         = PackParam<ShaderProgramID>(program);
+        ShaderProgramID programPacked             = PackParam<ShaderProgramID>(program);
+        UniformBlockIndex uniformBlockIndexPacked = PackParam<UniformBlockIndex>(uniformBlockIndex);
         std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
-        bool isCallValid                                      = (context->skipValidation() ||
-                            ValidateUniformBlockBinding(context, programPacked, uniformBlockIndex,
-                                                        uniformBlockBinding));
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateUniformBlockBinding(context, programPacked, uniformBlockIndexPacked,
+                                         uniformBlockBinding));
         if (isCallValid)
         {
-            context->uniformBlockBinding(programPacked, uniformBlockIndex, uniformBlockBinding);
+            context->uniformBlockBinding(programPacked, uniformBlockIndexPacked,
+                                         uniformBlockBinding);
         }
-        ANGLE_CAPTURE(UniformBlockBinding, isCallValid, context, programPacked, uniformBlockIndex,
-                      uniformBlockBinding);
+        ANGLE_CAPTURE(UniformBlockBinding, isCallValid, context, programPacked,
+                      uniformBlockIndexPacked, uniformBlockBinding);
     }
     else
     {

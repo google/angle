@@ -758,6 +758,11 @@ struct UniformLocation
 {
     int value;
 };
+
+struct UniformBlockIndex
+{
+    uint32_t value;
+};
 }  // namespace gl
 
 namespace egl

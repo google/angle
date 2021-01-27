@@ -636,7 +636,7 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
     void getUniformiv(const Context *context, UniformLocation location, GLint *params) const;
     void getUniformuiv(const Context *context, UniformLocation location, GLuint *params) const;
 
-    void getActiveUniformBlockName(const GLuint blockIndex,
+    void getActiveUniformBlockName(const UniformBlockIndex blockIndex,
                                    GLsizei bufSize,
                                    GLsizei *length,
                                    GLchar *blockName) const;
@@ -669,7 +669,7 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
     GLuint getUniformBlockIndex(const std::string &name) const;
     GLuint getShaderStorageBlockIndex(const std::string &name) const;
 
-    void bindUniformBlock(GLuint uniformBlockIndex, GLuint uniformBlockBinding);
+    void bindUniformBlock(UniformBlockIndex uniformBlockIndex, GLuint uniformBlockBinding);
     GLuint getUniformBlockBinding(GLuint uniformBlockIndex) const;
     GLuint getShaderStorageBlockBinding(GLuint shaderStorageBlockIndex) const;
 

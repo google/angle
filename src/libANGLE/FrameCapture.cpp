@@ -2913,7 +2913,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
              uniformBlockIndex < program->getActiveUniformBlockCount(); uniformBlockIndex++)
         {
             GLuint blockBinding = program->getUniformBlockBinding(uniformBlockIndex);
-            cap(CaptureUniformBlockBinding(replayState, true, id, uniformBlockIndex, blockBinding));
+            cap(CaptureUniformBlockBinding(replayState, true, id, {uniformBlockIndex},
+                                           blockBinding));
         }
 
         resourceTracker->onShaderProgramAccess(id);
@@ -4865,7 +4866,7 @@ gl::Program *GetProgramForCapture(const gl::State &glState, gl::ShaderProgramID 
 
 void CaptureGetActiveUniformBlockivParameters(const gl::State &glState,
                                               gl::ShaderProgramID handle,
-                                              GLuint uniformBlockIndex,
+                                              gl::UniformBlockIndex uniformBlockIndex,
                                               GLenum pname,
                                               ParamCapture *paramCapture)
 {
@@ -5091,5 +5092,13 @@ void WriteParamValueReplay<ParamType::TUniformLocation>(std::ostream &os,
     }
 
     os << "][" << value.value << "]";
+}
+
+template <>
+void WriteParamValueReplay<ParamType::TUniformBlockIndex>(std::ostream &os,
+                                                          const CallCapture &call,
+                                                          gl::UniformBlockIndex value)
+{
+    os << value.value;
 }
 }  // namespace angle

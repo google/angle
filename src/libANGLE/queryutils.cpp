@@ -1626,7 +1626,7 @@ void QueryVertexAttribIuiv(const VertexAttribute &attrib,
 }
 
 void QueryActiveUniformBlockiv(const Program *program,
-                               GLuint uniformBlockIndex,
+                               UniformBlockIndex uniformBlockIndex,
                                GLenum pname,
                                GLint *params)
 {
@@ -2036,7 +2036,7 @@ void QueryProgramResourceName(const Program *program,
             break;
 
         case GL_UNIFORM_BLOCK:
-            program->getActiveUniformBlockName(index, bufSize, length, name);
+            program->getActiveUniformBlockName({index}, bufSize, length, name);
             break;
 
         case GL_TRANSFORM_FEEDBACK_VARYING:
@@ -2071,7 +2071,7 @@ GLint QueryProgramResourceLocation(const Program *program,
 
 void QueryProgramResourceiv(const Program *program,
                             GLenum programInterface,
-                            GLuint index,
+                            UniformBlockIndex index,
                             GLsizei propCount,
                             const GLenum *props,
                             GLsizei bufSize,
@@ -2100,41 +2100,43 @@ void QueryProgramResourceiv(const Program *program,
         switch (programInterface)
         {
             case GL_PROGRAM_INPUT:
-                params[i] = GetInputResourceProperty(program, index, props[i]);
+                params[i] = GetInputResourceProperty(program, index.value, props[i]);
                 ++pos;
                 break;
 
             case GL_PROGRAM_OUTPUT:
-                params[i] = GetOutputResourceProperty(program, index, props[i]);
+                params[i] = GetOutputResourceProperty(program, index.value, props[i]);
                 ++pos;
                 break;
 
             case GL_UNIFORM:
-                params[i] = GetUniformResourceProperty(program, index, props[i]);
+                params[i] = GetUniformResourceProperty(program, index.value, props[i]);
                 ++pos;
                 break;
 
             case GL_BUFFER_VARIABLE:
-                params[i] = GetBufferVariableResourceProperty(program, index, props[i]);
+                params[i] = GetBufferVariableResourceProperty(program, index.value, props[i]);
                 ++pos;
                 break;
 
             case GL_UNIFORM_BLOCK:
-                GetUniformBlockResourceProperty(program, index, props[i], params, bufSize, &pos);
+                GetUniformBlockResourceProperty(program, index.value, props[i], params, bufSize,
+                                                &pos);
                 break;
 
             case GL_SHADER_STORAGE_BLOCK:
-                GetShaderStorageBlockResourceProperty(program, index, props[i], params, bufSize,
-                                                      &pos);
+                GetShaderStorageBlockResourceProperty(program, index.value, props[i], params,
+                                                      bufSize, &pos);
                 break;
 
             case GL_ATOMIC_COUNTER_BUFFER:
-                GetAtomicCounterBufferResourceProperty(program, index, props[i], params, bufSize,
-                                                       &pos);
+                GetAtomicCounterBufferResourceProperty(program, index.value, props[i], params,
+                                                       bufSize, &pos);
                 break;
 
             case GL_TRANSFORM_FEEDBACK_VARYING:
-                params[i] = GetTransformFeedbackVaryingResourceProperty(program, index, props[i]);
+                params[i] =
+                    GetTransformFeedbackVaryingResourceProperty(program, index.value, props[i]);
                 ++pos;
                 break;
 

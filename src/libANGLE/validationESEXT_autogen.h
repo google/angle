@@ -482,7 +482,7 @@ bool ValidateGetUniformuivRobustANGLE(const Context *context,
                                       const GLuint *params);
 bool ValidateGetActiveUniformBlockivRobustANGLE(const Context *context,
                                                 ShaderProgramID programPacked,
-                                                GLuint uniformBlockIndex,
+                                                UniformBlockIndex uniformBlockIndexPacked,
                                                 GLenum pname,
                                                 GLsizei bufSize,
                                                 const GLsizei *length,
