@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "441f0189_f200146c",
+        "filename": "src/libANGLE/renderer/vulkan/android/AHBFunctions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-27T19:32:23Z",
+      "side": 1,
+      "message": "Something like this:\nhttps://source.chromium.org/chromium/chromium/src/+/master:base/android/android_hardware_buffer_compat.h;l\u003d16?q\u003dPFAHardwareBuffer_allocate\n\nEspecially after clang format, it will become much worse.",
+      "parentUuid": "924445a6_ea97df2f",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 12
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46c66075_7c971321",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.h",
         "patchSetId": 2
