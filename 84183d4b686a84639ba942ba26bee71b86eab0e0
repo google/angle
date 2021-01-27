@@ -62,6 +62,30 @@
       },
       "revId": "84183d4b686a84639ba942ba26bee71b86eab0e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ada9e88_b69e415a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1471,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-27T22:42:21Z",
+      "side": 1,
+      "message": "operator[] has the logic below, so we don\u0027t need it here.\n--------------------------\nif (index \u003e\u003d depthStencilAttachmentIndex())\n{\n    format \u0026\u003d kDepthStencilFormatStorageMask;\n}",
+      "parentUuid": "29cd7e7c_33e4eba0",
+      "range": {
+        "startLine": 1471,
+        "startChar": 72,
+        "endLine": 1471,
+        "endChar": 73
+      },
+      "revId": "84183d4b686a84639ba942ba26bee71b86eab0e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
