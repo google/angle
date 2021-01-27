@@ -16,6 +16,24 @@
       "message": "LGTM",
       "revId": "a4e57ff56de26989bdd5a1c29750025dbdac4197",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d66459e_48b2c896",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000770
+      },
+      "writtenOn": "2021-01-27T15:14:34Z",
+      "side": 1,
+      "message": "Thanks! Mind submitting this? I don\u0027t seem to have permission.",
+      "parentUuid": "e26d12ea_d4291778",
+      "revId": "a4e57ff56de26989bdd5a1c29750025dbdac4197",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
