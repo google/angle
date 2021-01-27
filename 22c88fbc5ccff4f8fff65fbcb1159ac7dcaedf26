@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "924445a6_ea97df2f",
+        "filename": "src/libANGLE/renderer/vulkan/android/AHBFunctions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:29:30Z",
+      "side": 1,
+      "message": "why?\n\nusing PFAHardwareBuffer_allocate \u003d void (*)(const ... );\n\nseems fine.",
+      "parentUuid": "bfc9dc65_254269d4",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 12
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "46c66075_7c971321",
         "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.h",
         "patchSetId": 2
