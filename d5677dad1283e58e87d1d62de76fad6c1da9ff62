@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "deea7fa8_4ed7ee13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-27T01:59:16Z",
+      "side": 1,
+      "message": "PTAL\n\nMostly a refactor in preparation for the next CL in the relation chain to enable capturing glUniformBlockBinding().",
+      "revId": "d5677dad1283e58e87d1d62de76fad6c1da9ff62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
