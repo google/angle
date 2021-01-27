@@ -16,6 +16,29 @@
       "message": "Split",
       "revId": "182cfad3f56a7367b9bc6e59159baf077622e776",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "139d7337_e8836b7f",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1719,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-27T19:24:43Z",
+      "side": 1,
+      "message": "I deliberately left this as \u003d\u003d because there is no ES version greater than 3.2, and if there were fixing a few equality checks would be the least of our problems.",
+      "range": {
+        "startLine": 1719,
+        "startChar": 36,
+        "endLine": 1719,
+        "endChar": 37
+      },
+      "revId": "182cfad3f56a7367b9bc6e59159baf077622e776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
