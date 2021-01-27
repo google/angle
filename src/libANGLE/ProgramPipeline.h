@@ -151,6 +151,8 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     void updateTransformFeedbackMembers();
     void updateShaderStorageBlocks();
     void updateImageBindings();
+    void updateExecutableGeometryProperties();
+    void updateExecutableTessellationProperties();
     void updateHasBooleans();
     void updateExecutable();
 
