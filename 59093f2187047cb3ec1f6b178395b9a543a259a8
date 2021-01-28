@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71ab3e77_dd8ee5c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T11:17:37Z",
+      "side": 1,
+      "message": "PTAL. The failures are due to a spec bug [1] which I fixed VVL for as well [2].\n\n[1]: https://gitlab.khronos.org/vulkan/vulkan/-/merge_requests/4355\n[2]: https://github.com/KhronosGroup/Vulkan-ValidationLayers/pull/2506\n",
+      "revId": "59093f2187047cb3ec1f6b178395b9a543a259a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84dfcfdf_3e60e11a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T11:17:37Z",
+      "side": 1,
+      "message": "It looks like Manhattan is the only one that does transform feedback in our traces, and I\u0027ve made sure there\u0027s no regression (in the # of render passes). That said, it\u0027s still pretty easy for the graphics pipeline to be invalidated for no reason. One option to make this bullet proof is:\n\n- In setupDraw before handling dirty bits, if DIRTY_BIT_PIELINE, update the graphics pipeline but don\u0027t bind it.\n- Only break RP if the new graphics pipeline handle is different from the old one.\n- Usual dirty-bit handling of DIRTY_BIT_PIPELINE becomes a lone cmd buffer pipeline bind.\n\nIt adds one `if` to setupDraw(), but would make sure there\u0027s absolutely no endRP due to transform feedback. That said, Manhattan is fine with the change and we don\u0027t have any other trace for me to compare and know if the above change is worth it.",
+      "revId": "59093f2187047cb3ec1f6b178395b9a543a259a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
