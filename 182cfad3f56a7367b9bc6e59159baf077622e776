@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff73c541_481092f1",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T09:52:49Z",
+      "side": 1,
+      "message": "Happened to fix while here. Not really worth a split CL IMO.",
+      "parentUuid": "312a413f_8d335f79",
+      "range": {
+        "startLine": 252,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 53
+      },
+      "revId": "182cfad3f56a7367b9bc6e59159baf077622e776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "139d7337_e8836b7f",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-01-27T19:24:43Z",
       "side": 1,
       "message": "I deliberately left this as \u003d\u003d because there is no ES version greater than 3.2, and if there were fixing a few equality checks would be the least of our problems.",
+      "range": {
+        "startLine": 1719,
+        "startChar": 36,
+        "endLine": 1719,
+        "endChar": 37
+      },
+      "revId": "182cfad3f56a7367b9bc6e59159baf077622e776",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19b739f8_fc77e977",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1719,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T09:52:49Z",
+      "side": 1,
+      "message": "What makes \u003d\u003d better than \u003e\u003d? If there\u0027s an ES 3.3 in the future, it\u0027s one fewer problem to fix.",
+      "parentUuid": "139d7337_e8836b7f",
       "range": {
         "startLine": 1719,
         "startChar": 36,
