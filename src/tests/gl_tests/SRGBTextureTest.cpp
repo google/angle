@@ -276,7 +276,7 @@ TEST_P(SRGBTextureTest, SRGBDecodeTextureParameter)
 // Test basic functionality of SRGB override using the texture parameter
 TEST_P(SRGBTextureTest, SRGBOverrideTextureParameter)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_override"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
 
     GLColor linearColor = kLinearColor;
     GLColor srgbColor   = kNonlinearColor;
@@ -307,7 +307,7 @@ TEST_P(SRGBTextureTest, SRGBOverrideTextureParameter)
 // Test that all supported formats can be overridden
 TEST_P(SRGBTextureTestES3, SRGBOverrideFormats)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_override"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
 
     constexpr GLenum possibleFormats[] = {GL_RGB8,
                                           GL_RGBA8,
@@ -369,7 +369,7 @@ TEST_P(SRGBTextureTestES3, SRGBOverrideFormats)
 // Test interaction between sRGB_override and sampler objects
 TEST_P(SRGBTextureTestES3, SRGBOverrideTextureParameterWithSampler)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_override"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
 
     GLColor linearColor = kLinearColor;
     GLColor srgbColor   = kNonlinearColor;
@@ -411,7 +411,7 @@ TEST_P(SRGBTextureTestES3, SRGBOverrideTextureParameterWithSampler)
 // the value of TEXTURE_FORMAT_SRGB_OVERRIDE_EXT is ignored."
 TEST_P(SRGBTextureTestES3, SRGBOverrideTextureParameterNoop)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_override"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_sRGB"));
 
     GLColor linearColor = kLinearColor;
@@ -544,7 +544,7 @@ TEST_P(SRGBTextureTestES3, SRGBDecodeTextureAndSamplerParameter)
 TEST_P(SRGBTextureTestES3, SRGBDecodeOverridePriority)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_decode"));
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_sRGB_override"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_format_sRGB_override"));
 
     GLColor linearColor = kLinearColor;
 
