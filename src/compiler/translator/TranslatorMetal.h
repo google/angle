@@ -27,8 +27,8 @@ namespace sh
 class SpecConstMetal : public SpecConst
 {
   public:
-    SpecConstMetal(TSymbolTable *symbolTable, ShCompileOptions compileOptions)
-        : SpecConst(symbolTable, compileOptions)
+    SpecConstMetal(TSymbolTable *symbolTable, ShCompileOptions compileOptions, GLenum shaderType)
+        : SpecConst(symbolTable, compileOptions, shaderType)
     {}
     ~SpecConstMetal() override {}
 

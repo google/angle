@@ -1222,7 +1222,7 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
                                  getShaderVersion(), getOutputType(), precisionEmulation,
                                  enablePrecision, compileOptions);
 
-    SpecConst specConst(&getSymbolTable(), compileOptions);
+    SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
 
     if ((compileOptions & SH_USE_SPECIALIZATION_CONSTANT) != 0)
     {

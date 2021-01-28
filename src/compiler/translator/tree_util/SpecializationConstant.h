@@ -23,7 +23,7 @@ namespace sh
 class SpecConst
 {
   public:
-    SpecConst(TSymbolTable *symbolTable, ShCompileOptions compileOptions);
+    SpecConst(TSymbolTable *symbolTable, ShCompileOptions compileOptions, GLenum shaderType);
     virtual ~SpecConst();
 
     // Line rasterizaton emulation

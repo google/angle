@@ -223,9 +223,14 @@ TIntermTyped *CreateFloatArrayWithRotationIndex(const Vec2EnumMap &valuesEnumMap
 }
 }  // anonymous namespace
 
-SpecConst::SpecConst(TSymbolTable *symbolTable, ShCompileOptions compileOptions)
+SpecConst::SpecConst(TSymbolTable *symbolTable, ShCompileOptions compileOptions, GLenum shaderType)
     : mSymbolTable(symbolTable), mCompileOptions(compileOptions)
 {
+    if (shaderType == GL_FRAGMENT_SHADER || shaderType == GL_COMPUTE_SHADER)
+    {
+        return;
+    }
+
     // Mark SpecConstUsage::Rotation unconditionally.  gl_Position is always rotated.
     if ((mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT) != 0 &&
         (mCompileOptions & SH_ADD_PRE_ROTATION) != 0)
