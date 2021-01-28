@@ -46,6 +46,30 @@
       },
       "revId": "1fe0139e60913ea90c521762b630b3e1d63a132f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb75adfc_c3b39f14",
+        "filename": "src/tests/deqp_support/deqp_gles3_rotate_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T18:41:07Z",
+      "side": 1,
+      "message": "Thanks. FYI, I cancelled your windows bot runs, the bots are overwhelmed",
+      "parentUuid": "729da00a_d6f10e3a",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 93
+      },
+      "revId": "1fe0139e60913ea90c521762b630b3e1d63a132f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
