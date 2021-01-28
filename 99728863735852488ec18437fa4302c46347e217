@@ -39,6 +39,30 @@
       },
       "revId": "99728863735852488ec18437fa4302c46347e217",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b0aed02_fd918dc4",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3971,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T11:19:34Z",
+      "side": 1,
+      "message": "Hah, what was I thinking! Done.\n\nI\u0027m pretty sure the values in ProgramExecutable are copies of ShaderState.",
+      "parentUuid": "8ed160b2_534dc3a4",
+      "range": {
+        "startLine": 3971,
+        "startChar": 26,
+        "endLine": 3971,
+        "endChar": 74
+      },
+      "revId": "99728863735852488ec18437fa4302c46347e217",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
