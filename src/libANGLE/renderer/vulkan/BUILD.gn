@@ -195,14 +195,13 @@ config("angle_vulkan_backend_config") {
 angle_source_set("angle_vk_mem_alloc_wrapper") {
   deps = [
     "$angle_root/src/common/vulkan:angle_vulkan_headers",
-    "$angle_vulkan_memory_allocator_dir",
+    "$angle_vulkan_memory_allocator_dir:vulkan_memory_allocator_with_usage",
   ]
   configs += [ "$angle_root:angle_no_cfi_unrelated_cast" ]
   sources = [
     "vk_mem_alloc_wrapper.cpp",
     "vk_mem_alloc_wrapper.h",
   ]
-  defines = [ "VMA_IMPLEMENTATION" ]
   if (is_clang) {
     cflags_cc = [
       "-Wno-extra-semi-stmt",

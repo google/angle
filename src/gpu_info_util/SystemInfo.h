@@ -72,6 +72,7 @@ struct SystemInfo
 
     // Only available on Android
     std::string machineManufacturer;
+    int androidSdkLevel = 0;
 
     // Only available on macOS and Android
     std::string machineModelName;

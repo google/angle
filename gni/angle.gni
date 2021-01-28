@@ -111,15 +111,11 @@ declare_args() {
                      (angle_use_x11 && !is_chromeos)) && !is_fuchsia &&
                     !angle_is_winuwp && !is_ggp && !is_win_arm64
 
-  # ANGLE Vulkan backend on Android requires API level 26, i.e. Oreo, due to
-  # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
-  # Otherwise, API level 24 would have been enough.
   angle_enable_vulkan =
       angle_has_build &&
       ((is_win && !angle_is_winuwp) ||
        (is_linux && (angle_use_x11 || angle_use_vulkan_display) &&
-        !is_chromeos) || (is_android && ndk_api_level_at_least_26) ||
-       is_fuchsia || is_ggp || is_mac)
+        !is_chromeos) || is_android || is_fuchsia || is_ggp || is_mac)
 
   # Disable null backend to save space for official build.
   angle_enable_null = !is_official_build
@@ -144,9 +140,12 @@ declare_args() {
 
   # Disable the layers in ubsan builds because of really slow builds.
   # TODO(anglebug.com/4082) enable validation layers on mac for swiftshader
+  # Vulkan Validation Layers require Android NDK API level 26, i.e. Oreo, due to
+  # Vulkan Validation Layers compatibility issues, see http://crrev/c/1405714.
   angle_enable_vulkan_validation_layers =
       angle_enable_vulkan && !is_ubsan && !is_tsan && !is_asan &&
-      (is_debug || dcheck_always_on) && !is_mac
+      (is_debug || dcheck_always_on) && !is_mac &&
+      (!is_android || ndk_api_level_at_least_26)
 
   # Disable overlay by default
   angle_enable_overlay = false
