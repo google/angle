@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bee2aed_9077b358",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-28T16:49:35Z",
+      "side": 1,
+      "message": "LGTM\n\nAny ideas on a test that might expose the incorrect barrier without this change?",
+      "revId": "59093f2187047cb3ec1f6b178395b9a543a259a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84dfcfdf_3e60e11a",
