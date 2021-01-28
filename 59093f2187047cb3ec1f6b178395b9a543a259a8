@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "561cf9d7_a987ae14",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T17:05:03Z",
+      "side": 1,
+      "message": "We have a bunch. ARM contributed the fix where they pause/resumed xfb due to tests rebinding the pipeline (probably more like ANGLE over-zealously doing it). That was not a correct fix as it was missing this barrier. Unfortunately no symptoms without syncval.",
+      "parentUuid": "3bee2aed_9077b358",
+      "revId": "59093f2187047cb3ec1f6b178395b9a543a259a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84dfcfdf_3e60e11a",
