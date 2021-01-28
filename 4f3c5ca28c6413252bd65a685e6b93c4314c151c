@@ -33,6 +33,24 @@
       "message": "I would only be worried that these changes regress this: https://bugs.chromium.org/p/chromium/issues/detail?id\u003d940865\nUnfortunately I didn\u0027t make a test when I landed that fix.. But it\u0027d be trivial to add to the webgl tests.\n\nAlso, is it ok that ANGLE skips this validation in the general case, even when it\u0027s not running under WebGL?",
       "revId": "4f3c5ca28c6413252bd65a685e6b93c4314c151c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0e3d785_2fc4cc75",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-01-28T18:57:16Z",
+      "side": 1,
+      "message": "Please always add a test 😊\n\nI\u0027ll add a case to https://github.com/KhronosGroup/WebGL/pull/3206 . In my local testing, this still works and hasn\u0027t regressed.\n\nANGLE\u0027s preprocessor and shader translator handle these shaders correctly. The new rule is that the WebGL level eliminates non-ASCII characters, and ANGLE\u0027s shader compiler handles the rest.",
+      "parentUuid": "af807ed2_794c5b4e",
+      "revId": "4f3c5ca28c6413252bd65a685e6b93c4314c151c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
