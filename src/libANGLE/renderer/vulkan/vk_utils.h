@@ -910,6 +910,12 @@ void InitExternalMemoryHostFunctions(VkInstance instance);
 // VK_KHR_external_fence_capabilities
 void InitExternalFenceCapabilitiesFunctions(VkInstance instance);
 
+// VK_KHR_get_memory_requirements2
+void InitGetMemoryRequirements2KHRFunctions(VkDevice device);
+
+// VK_KHR_bind_memory2
+void InitBindMemory2KHRFunctions(VkDevice device);
+
 // VK_KHR_external_fence_fd
 void InitExternalFenceFdFunctions(VkInstance instance);
 

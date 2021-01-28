@@ -1351,14 +1351,18 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     }
 
     // Enable VK_KHR_get_memory_requirements2, if supported
+    bool hasGetMemoryRequirements2KHR = false;
     if (ExtensionFound(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME, deviceExtensionNames))
     {
         enabledDeviceExtensions.push_back(VK_KHR_GET_MEMORY_REQUIREMENTS_2_EXTENSION_NAME);
+        hasGetMemoryRequirements2KHR = true;
     }
 
     // Enable VK_KHR_bind_memory2, if supported
+    bool hasBindMemory2KHR = false;
     if (ExtensionFound(VK_KHR_BIND_MEMORY_2_EXTENSION_NAME, deviceExtensionNames))
     {
+        hasBindMemory2KHR = true;
         enabledDeviceExtensions.push_back(VK_KHR_BIND_MEMORY_2_EXTENSION_NAME);
     }
 
@@ -1678,6 +1682,14 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     }
 
 #if !defined(ANGLE_SHARED_LIBVULKAN)
+    if (hasGetMemoryRequirements2KHR)
+    {
+        InitGetMemoryRequirements2KHRFunctions(mDevice);
+    }
+    if (hasBindMemory2KHR)
+    {
+        InitBindMemory2KHRFunctions(mDevice);
+    }
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
         InitTransformFeedbackEXTFunctions(mDevice);

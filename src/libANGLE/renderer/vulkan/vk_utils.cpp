@@ -905,6 +905,7 @@ void InitGetPhysicalDeviceProperties2KHRFunctions(VkInstance instance)
 {
     GET_INSTANCE_FUNC(vkGetPhysicalDeviceProperties2KHR);
     GET_INSTANCE_FUNC(vkGetPhysicalDeviceFeatures2KHR);
+    GET_INSTANCE_FUNC(vkGetPhysicalDeviceMemoryProperties2KHR);
 }
 
 void InitTransformFeedbackEXTFunctions(VkDevice device)
@@ -960,6 +961,20 @@ void InitExternalSemaphoreFdFunctions(VkInstance instance)
 void InitExternalMemoryHostFunctions(VkInstance instance)
 {
     GET_INSTANCE_FUNC(vkGetMemoryHostPointerPropertiesEXT);
+}
+
+// VK_KHR_get_memory_requirements2
+void InitGetMemoryRequirements2KHRFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkGetBufferMemoryRequirements2KHR);
+    GET_DEVICE_FUNC(vkGetImageMemoryRequirements2KHR);
+}
+
+// VK_KHR_bind_memory2
+void InitBindMemory2KHRFunctions(VkDevice device)
+{
+    GET_DEVICE_FUNC(vkBindBufferMemory2KHR);
+    GET_DEVICE_FUNC(vkBindImageMemory2KHR);
 }
 
 // VK_KHR_external_fence_capabilities
