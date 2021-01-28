@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec5ab5a2_f6e3b1d6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-28T13:04:34Z",
+      "side": 1,
+      "message": "Hi Shahbaz or Jamie, PTAL. Thanks.",
+      "revId": "2edd50d4b97135f056631378137506017ea9fbcb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
