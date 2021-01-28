@@ -33,6 +33,24 @@
       "message": "testing possible? just wondering.",
       "revId": "3cb39c49d404b6fbe184b4dffee30872484f5a5b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49b47ebf_0f95a3de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T09:54:18Z",
+      "side": 1,
+      "message": "This was one of the reasons a major chunk of the 3.2 KHR tests failed, so it\u0027s covered.",
+      "parentUuid": "343cce5b_9b51819f",
+      "revId": "3cb39c49d404b6fbe184b4dffee30872484f5a5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
