@@ -33,6 +33,24 @@
       "message": "Why does GL_EXT_tessellation_shader require VK_EXT_transform_feedback?",
       "revId": "c405952523e14751d0af01108434a239c2b9cac4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21da08b8_f9442a18",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 930,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T10:02:21Z",
+      "side": 1,
+      "message": "No transform feedback emulation support.",
+      "parentUuid": "65e4abdc_aa45c07b",
+      "revId": "c405952523e14751d0af01108434a239c2b9cac4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
