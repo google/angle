@@ -16,6 +16,23 @@
       "message": "Shabi, here\u0027s a first-pass at changing MultisampleTest use a rectangular window.  There\u0027s a problem (at least on my Intel laptop) with D3D11 and the Triangle test.",
       "revId": "7d981e0ab10a662e101960662cfbb60ff2bcac93",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "225e0244_4dfb834f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T21:17:14Z",
+      "side": 1,
+      "message": "Cool! Maybe a follow up could add WithEmulatedPreRotation to these tests too (though I expect that would turn up a number of failures, specially given how the tests verify things)",
+      "revId": "7d981e0ab10a662e101960662cfbb60ff2bcac93",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
