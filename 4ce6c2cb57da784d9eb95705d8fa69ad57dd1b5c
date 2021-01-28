@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6186052c_481d3bdb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T11:10:01Z",
+      "side": 1,
+      "message": "Thanks. Please audit the call sites to these functions and remove flush() or invalidate() calls that are now unnecessary.",
+      "revId": "4ce6c2cb57da784d9eb95705d8fa69ad57dd1b5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7e7c41c_2413d839",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3297,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T11:10:01Z",
+      "side": 1,
+      "message": "nit: you can `return` this directly",
+      "range": {
+        "startLine": 3297,
+        "startChar": 4,
+        "endLine": 3297,
+        "endChar": 14
+      },
+      "revId": "4ce6c2cb57da784d9eb95705d8fa69ad57dd1b5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a635bc5_fd191866",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3305,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T11:10:01Z",
+      "side": 1,
+      "message": "Same nit: you can move the `*ptrOut` calculation above the `invalidate` call, and `return` it directly.",
+      "range": {
+        "startLine": 3305,
+        "startChar": 4,
+        "endLine": 3305,
+        "endChar": 14
+      },
+      "revId": "4ce6c2cb57da784d9eb95705d8fa69ad57dd1b5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ce0933f_74f3ee79",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3313,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T11:10:01Z",
+      "side": 1,
+      "message": "Please return `angle::Result` from `unmap` and use ANGLE_TRY in the callers. I checked and they are mostly ok doing that, except for two places that call this right before `destroy()` (where the calling functions are void). You could remove the call to `unmap()` there and instead call `mMemory.unmap(renderer)` directly in `BufferHelper::destroy()` (not sure if there could be a double-unmap problem?)",
+      "revId": "4ce6c2cb57da784d9eb95705d8fa69ad57dd1b5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
