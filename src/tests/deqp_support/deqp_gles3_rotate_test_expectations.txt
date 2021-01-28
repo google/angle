@@ -34,7 +34,3 @@
 // gl_FragCoord and gl_PointCOord
 5350 VULKAN PREROTATION180 : dEQP-GLES3.functional.shaders.builtin_variable.fragcoord_xyz = FAIL
 5350 VULKAN PREROTATION180 : dEQP-GLES3.functional.shaders.builtin_variable.pointcoord = FAIL
-
-// Blit
-5044 SWIFTSHADER PREROTATION270 : dEQP-GLES3.functional.fbo.invalidate.whole.unbind_blit_msaa_color = FAIL
-5044 SWIFTSHADER PREROTATION270 : dEQP-GLES3.functional.fbo.invalidate.whole.unbind_blit_msaa_stencil = FAIL
