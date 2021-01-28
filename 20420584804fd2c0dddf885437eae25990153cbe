@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1797737_2bb07509",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 998,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-28T18:05:39Z",
+      "side": 1,
+      "message": "you could store this as your packed enum if you like.",
+      "range": {
+        "startLine": 998,
+        "startChar": 11,
+        "endLine": 998,
+        "endChar": 29
+      },
+      "revId": "20420584804fd2c0dddf885437eae25990153cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "975798b9_abfc3f76",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-28T18:05:39Z",
+      "side": 1,
+      "message": "can be a part of gl::State",
+      "range": {
+        "startLine": 256,
+        "startChar": 20,
+        "endLine": 256,
+        "endChar": 49
+      },
+      "revId": "20420584804fd2c0dddf885437eae25990153cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d0a81c0_ca016c60",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-28T18:05:39Z",
+      "side": 1,
+      "message": "can be a part of gl::State",
+      "range": {
+        "startLine": 223,
+        "startChar": 24,
+        "endLine": 223,
+        "endChar": 42
+      },
+      "revId": "20420584804fd2c0dddf885437eae25990153cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
