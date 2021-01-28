@@ -16,6 +16,23 @@
       "message": "any other comments?",
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25e6268d_b4fd8b32",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-28T10:08:09Z",
+      "side": 1,
+      "message": "Coming together nicely!\n\nCould you please run the tests locally with the syncval change [1] applied? You may encounter other synchronization bugs we have (which you can ignore), but at least we can be notified if there\u0027s an issue with the synchronization here.\n\n[1]: https://chromium-review.googlesource.com/c/angle/angle/+/2297884\n",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
