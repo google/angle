@@ -137,6 +137,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1fa9a5f8_2fa7bd5c",
+        "filename": "src/libANGLE/renderer/vulkan/android/AHBFunctions.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-28T16:05:12Z",
+      "side": 1,
+      "message": "Removed not used methods. and then the code looks better with `using \u003d`\nDone",
+      "parentUuid": "846be518_3462dc5a",
+      "range": {
+        "startLine": 31,
+        "startChar": 4,
+        "endLine": 31,
+        "endChar": 12
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec548e1e_aac0cdc6",
@@ -154,6 +178,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6335281c_63dce3f2",
+        "filename": "src/libANGLE/renderer/vulkan/android/AHBFunctions.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-28T16:05:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec548e1e_aac0cdc6",
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "46c66075_7c971321",
@@ -167,6 +209,30 @@
       "writtenOn": "2021-01-27T19:20:58Z",
       "side": 1,
       "message": "nit: return a const \u0026? is this required to be valid?",
+      "range": {
+        "startLine": 47,
+        "startChar": 23,
+        "endLine": 47,
+        "endChar": 24
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2d33d83_33e75849",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-28T16:05:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46c66075_7c971321",
       "range": {
         "startLine": 47,
         "startChar": 23,
@@ -224,6 +290,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "19c4dcc6_3bb4d05d",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-28T16:05:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "11b1ecfa_d3349d0d",
+      "range": {
+        "startLine": 30,
+        "startChar": 5,
+        "endLine": 31,
+        "endChar": 5
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "28fe1279_a1cac612",
@@ -247,6 +337,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "52d4759b_a6f3025f",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-28T16:05:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "28fe1279_a1cac612",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 5
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dbbcb10d_9ba0b95d",
@@ -260,6 +374,30 @@
       "writtenOn": "2021-01-27T19:20:58Z",
       "side": 1,
       "message": "nit: this can be ASSERT as it\u0027s an implementation error",
+      "range": {
+        "startLine": 114,
+        "startChar": 18,
+        "endLine": 114,
+        "endChar": 34
+      },
+      "revId": "22c88fbc5ccff4f8fff65fbcb1159ac7dcaedf26",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bab8e0f6_6efc9b39",
+        "filename": "src/libANGLE/renderer/vulkan/android/vk_android_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-28T16:05:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbbcb10d_9ba0b95d",
       "range": {
         "startLine": 114,
         "startChar": 18,
