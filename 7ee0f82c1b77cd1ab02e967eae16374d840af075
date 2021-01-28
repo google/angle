@@ -22,6 +22,30 @@
       },
       "revId": "7ee0f82c1b77cd1ab02e967eae16374d840af075",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9744b31e_0e5bfcbc",
+        "filename": "src/libANGLE/renderer/renderer_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-28T16:53:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ffcccb4_d67d5f3c",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 0
+      },
+      "revId": "7ee0f82c1b77cd1ab02e967eae16374d840af075",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
