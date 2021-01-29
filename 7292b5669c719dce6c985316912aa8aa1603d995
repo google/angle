@@ -52,6 +52,29 @@
       "parentUuid": "dfd4eeaf_092b0895",
       "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02505c66_172e0a74",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-29T23:10:08Z",
+      "side": 1,
+      "message": "I don\u0027t remember why it was necessary, but what happens without the isCompute() check in ProgramExecutable::updateActiveImages()?   Maybe it\u0027s unnecessary, so this workaround can be removed too.\n\nIt seems like imageUniform.activeShaders() should return ShaderType::Compute if that\u0027s where it\u0027s active.",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 329,
+        "endChar": 48
+      },
+      "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
