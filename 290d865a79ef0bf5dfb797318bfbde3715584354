@@ -100,6 +100,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1aa99ff_57137ab6",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1054,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-29T02:16:36Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b9c8ba73_3824d6a1",
+      "range": {
+        "startLine": 1054,
+        "startChar": 28,
+        "endLine": 1054,
+        "endChar": 50
+      },
+      "revId": "290d865a79ef0bf5dfb797318bfbde3715584354",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f93f25a2_c7ac2aea",
