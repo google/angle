@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "309b88cb_1f7b11e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-29T10:56:58Z",
+      "side": 1,
+      "message": "PTAL again. Adding GS/TS to AllShaderStages triggered a VVL error on swiftshader, complaining about specifying stages that are not supported by the implementation. I added a mask to auto-filter the stages based on hardware capabilities, though it required passing a Context around a bunch.",
+      "revId": "dae4e47887b76f11be6b54e96676e433f5d97e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
