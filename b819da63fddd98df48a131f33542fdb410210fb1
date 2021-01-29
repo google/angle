@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18edca7a_dd79d529",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:50:55Z",
+      "side": 1,
+      "message": "Shabi: please fork this CL and use git --amend --reset-author --no-edit to claim it as your own.",
+      "revId": "b819da63fddd98df48a131f33542fdb410210fb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
