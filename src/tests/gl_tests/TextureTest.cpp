@@ -4501,7 +4501,7 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineIncompatibleLevelBeyondMaxLevel)
 }
 
 // Port test from web_gl/conformance2/textures/misc/fuzz-545-immutable-tex-render-feedback.html.
-// What this try to do is create a renderer feedback loop and ensure it is not crashing.
+// What this tries to do is create a render feedback loop and ensure it is not crashing.
 TEST_P(Texture2DBaseMaxTestES3, Fuzz545ImmutableTexRenderFeedback)
 {
     // http://crbug.com/1212206
@@ -4509,7 +4509,7 @@ TEST_P(Texture2DBaseMaxTestES3, Fuzz545ImmutableTexRenderFeedback)
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Texture2D(), essl1_shaders::fs::Texture2D());
 
-    constexpr uint32_t MIPS = 3;
+    constexpr uint32_t MIPS = 2;
     constexpr uint32_t SIZE = 10;
 
     GLTexture immutTex;

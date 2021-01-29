@@ -178,8 +178,8 @@
 //// General Vulkan expectations
 ////
 
-// Cannot create 2D (array) view of 3D texture.
-3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*layer = FAIL
+// Cannot create 2D (array) view of 3D texture.  These fail with validation errors, and cause a crash in syncval.
+3886 VULKAN : dEQP-GLES31.functional.image_load_store.3d.*single_layer = SKIP
 
 // Geometry shader support:
 5430 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL

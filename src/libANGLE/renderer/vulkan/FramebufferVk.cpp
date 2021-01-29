@@ -1320,7 +1320,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
     }
 
     return angle::Result::Continue;
-}  // namespace rx
+}
 
 void FramebufferVk::updateColorResolveAttachment(
     uint32_t colorIndexGL,

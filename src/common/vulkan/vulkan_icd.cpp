@@ -57,6 +57,7 @@ const std::string WrapICDEnvironment(const char *icdEnvironment)
 }
 
 constexpr char kLoaderLayersPathEnv[] = "VK_LAYER_PATH";
+constexpr char kLayerEnablesEnv[]     = "VK_LAYER_ENABLES";
 #endif
 
 constexpr char kLoaderICDFilenamesEnv[]              = "VK_ICD_FILENAMES";
@@ -162,6 +163,12 @@ ScopedVkLoaderEnvironment::ScopedVkLoaderEnvironment(bool enableValidationLayers
         {
             ERR() << "Error setting environment for Vulkan layers init.";
             mEnableValidationLayers = false;
+        }
+        if (!angle::PrependPathToEnvironmentVar(
+                kLayerEnablesEnv, "VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION"))
+        {
+            ERR() << "Error setting synchronization validation environment for Vulkan validation "
+                     "layers init.";
         }
 
         if (!setCustomExtensionsEnvironment())
