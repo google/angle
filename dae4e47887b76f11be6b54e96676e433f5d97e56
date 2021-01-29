@@ -50,6 +50,24 @@
       "message": "nit: Might be worth noting that this isn\u0027t actually a list of valid pipeline stage flags, since it will contain 0xFFFFFFFF if GS/TS are supported, which is beyond the current last value:\n\n    VK_PIPELINE_STAGE_COMMAND_PREPROCESS_BIT_NV \u003d 0x00020000,\n\nAnd the max size of the enum:\n\n    VK_PIPELINE_STAGE_FLAG_BITS_MAX_ENUM \u003d 0x7FFFFFFF\n\nInstead, this is a mask to remove unsupported stages from valid VkPipelineStageFlags values (but even that isn\u0027t entirely true, since it contains invalid values itself).\n\nI\u0027m not sure of a good concise way to state that though.",
       "revId": "dae4e47887b76f11be6b54e96676e433f5d97e56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b97d382a_8200991c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 506,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-29T16:33:46Z",
+      "side": 1,
+      "message": "I was tempted to call this `mUnsupported...` and do the masking with `\u0026 ~getUnsupported...()`. I went with avoiding the double negative, but if that makes it more clear, it\u0027s fine by me. Otherwise I can update the comment.\n\nWDYT?",
+      "parentUuid": "94db9655_bc8f9e7d",
+      "revId": "dae4e47887b76f11be6b54e96676e433f5d97e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
