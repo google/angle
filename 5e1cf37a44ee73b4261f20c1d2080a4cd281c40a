@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65ba6eb9_9bb6fe20",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-29T17:42:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95d0c2fa_e90166e1",
+      "range": {
+        "startLine": 113,
+        "startChar": 5,
+        "endLine": 113,
+        "endChar": 23
+      },
+      "revId": "5e1cf37a44ee73b4261f20c1d2080a4cd281c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a42e3521_e3c563ac",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-01-29T17:31:00Z",
       "side": 1,
       "message": "nit: comment to record this for posterity?",
+      "range": {
+        "startLine": 573,
+        "startChar": 21,
+        "endLine": 573,
+        "endChar": 39
+      },
+      "revId": "5e1cf37a44ee73b4261f20c1d2080a4cd281c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8356cb32_fcc1d73b",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-01-29T17:42:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a42e3521_e3c563ac",
       "range": {
         "startLine": 573,
         "startChar": 21,
