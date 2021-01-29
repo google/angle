@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e71de692_b9751a97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-01-29T20:48:19Z",
+      "side": 1,
+      "message": "We only emit the specialization constant if it is been used (mUsageBits set). Is this not true any more? ",
+      "revId": "c6d6f5075bc73b558abdf0795bf731ea8c3320a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
