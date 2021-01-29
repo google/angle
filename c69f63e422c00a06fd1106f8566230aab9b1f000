@@ -33,6 +33,24 @@
       "message": "Coming together nicely!\n\nCould you please run the tests locally with the syncval change [1] applied? You may encounter other synchronization bugs we have (which you can ignore), but at least we can be notified if there\u0027s an issue with the synchronization here.\n\n[1]: https://chromium-review.googlesource.com/c/angle/angle/+/2297884\n",
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d81550a8_284be7ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-01-29T07:31:55Z",
+      "side": 1,
+      "message": "Unfortunately, the newly added end2end tests failed with the syncval change. Error messages are like below.\n--------------------------\n../../src/tests/test_utils/ANGLETest.cpp(63): error: RendererVk.cpp:346 (DebugUtilsMessenger): [ SYNC-HAZARD-WRITE_AFTER_WRITE ] Validation Error: [ SYNC-HAZARD-WRITE_AFTER_WRITE ] Object 0: handle \u003d 0x310000000031, type \u003d VK_OBJECT_TYPE_IMAGE; | MessageID \u003d 0xfdf9f5e1 | vkCmdPipelineBarrier: Hazard WRITE_AFTER_WRITE for image barrier 0 VkImage 0x310000000031[]. Access info (usage: SYNC_IMAGE_LAYOUT_TRANSITION, prior_usage: SYNC_IMAGE_LAYOUT_TRANSITION, write_barriers: 0, command: vkCmdEndRenderPass, seq_no: 7, reset_no: 1).\n                            Object: 0x310000000031 (type \u003d Image(10))\n--------------------------\n\nIt was not easy to debug syncval layer. but I think I found out a root cause of it.\nIn my change, I modify the layout of the color attachment image from VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL to VK_IMAGE_LAYOUT_GENERAL in case the program has framebuffer fetch.\n---------------------------\n@@ -934,7 +952,8 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,\n \n         VkAttachmentReference colorRef;\n         colorRef.attachment \u003d attachmentCount.get();\n--       colorRef.layout     \u003d VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;\n+        colorRef.layout     \u003d needInputAttachments ? VK_IMAGE_LAYOUT_GENERAL\n+                                               : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;\n---------------------------\nThis seems to cause layout transition after color write operation and it leads to sync validation error in barrier check before readpixels.\n\nWhen I reverted this part then ignored the vulkan validation errors caused by bad layout type, all end2end tests passed.\n\nI don\u0027t have nice idea to avoid this problem with ANGLE modification. But how about we modify syncval layer not to set a usage flags to SYNC_IMAGE_LAYOUT_TRANSITION when source or dst layout is VK_IMAGE_LAYOUT_GENERAL? (though I can\u0027t find relevant code for it.)",
+      "parentUuid": "25e6268d_b4fd8b32",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
