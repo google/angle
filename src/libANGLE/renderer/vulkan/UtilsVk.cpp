@@ -1571,11 +1571,13 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
     bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
+    bool clipSpaceOriginUpperLeft =
+        contextVk->getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft;
     // Set depth range to clear value.  If clearing depth, the vertex shader depth output is clamped
     // to this value, thus clearing the depth buffer to the desired clear value.
     const float clearDepthValue = params.depthStencilClearValue.depth;
     gl_vk::GetViewport(completeRenderArea, clearDepthValue, clearDepthValue, invertViewport,
-                       completeRenderArea.height, &viewport);
+                       clipSpaceOriginUpperLeft, completeRenderArea.height, &viewport);
     pipelineDesc.setViewport(viewport);
 
     // Scissored clears can create a large number of pipelines in some tests.  Use dynamic state for
@@ -1801,7 +1803,8 @@ angle::Result UtilsVk::blitResolveImpl(ContextVk *contextVk,
 
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, completeRenderArea.height, &viewport);
+    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, false, false, completeRenderArea.height,
+                       &viewport);
     pipelineDesc.setViewport(viewport);
 
     pipelineDesc.setScissor(gl_vk::GetRect(params.blitArea));
@@ -2235,7 +2238,7 @@ angle::Result UtilsVk::copyImage(ContextVk *contextVk,
     }
 
     VkViewport viewport;
-    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, dest->getExtents().height, &viewport);
+    gl_vk::GetViewport(renderArea, 0.0f, 1.0f, false, false, dest->getExtents().height, &viewport);
     pipelineDesc.setViewport(viewport);
 
     VkRect2D scissor = gl_vk::GetRect(renderArea);
@@ -2690,8 +2693,10 @@ angle::Result UtilsVk::unresolve(ContextVk *contextVk,
     VkViewport viewport;
     gl::Rectangle completeRenderArea = framebuffer->getRotatedCompleteRenderArea(contextVk);
     bool invertViewport              = contextVk->isViewportFlipEnabledForDrawFBO();
-    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, completeRenderArea.height,
-                       &viewport);
+    bool clipSpaceOriginUpperLeft =
+        contextVk->getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft;
+    gl_vk::GetViewport(completeRenderArea, 0.0f, 1.0f, invertViewport, clipSpaceOriginUpperLeft,
+                       completeRenderArea.height, &viewport);
     pipelineDesc.setViewport(viewport);
 
     pipelineDesc.setScissor(gl_vk::GetRect(completeRenderArea));

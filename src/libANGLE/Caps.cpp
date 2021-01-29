@@ -1035,6 +1035,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_draw_elements_base_vertex"] = enableableExtension(&Extensions::drawElementsBaseVertexEXT);
         map["GL_EXT_gpu_shader5"] = enableableExtension(&Extensions::gpuShader5EXT);
         map["GL_APPLE_clip_distance"] = enableableExtension(&Extensions::clipDistanceAPPLE);
+        map["GL_EXT_clip_control"] = enableableExtension(&Extensions::clipControlEXT);
         map["GL_EXT_EGL_image_array"] = enableableExtension(&Extensions::eglImageArray);
         map["GL_EXT_buffer_storage"] = enableableExtension(&Extensions::bufferStorageEXT);
         map["GL_EXT_external_buffer"] = enableableExtension(&Extensions::externalBufferEXT);

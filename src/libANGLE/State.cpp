@@ -416,6 +416,9 @@ void State::initialize(Context *context)
     mNearZ           = 0.0f;
     mFarZ            = 1.0f;
 
+    mClipControlOrigin = GL_LOWER_LEFT_EXT;
+    mClipControlDepth  = GL_NEGATIVE_ONE_TO_ONE_EXT;
+
     mActiveSampler = 0;
 
     mVertexAttribCurrentValues.resize(caps.maxVertexAttributes);
@@ -814,6 +817,21 @@ void State::setDepthRange(float zNear, float zFar)
         mNearZ = zNear;
         mFarZ  = zFar;
         mDirtyBits.set(DIRTY_BIT_DEPTH_RANGE);
+    }
+}
+
+void State::setClipControl(GLenum origin, GLenum depth)
+{
+    if (mClipControlOrigin != origin)
+    {
+        mClipControlOrigin = origin;
+        mDirtyBits.set(DIRTY_BIT_EXTENDED);
+    }
+
+    if (mClipControlDepth != depth)
+    {
+        mClipControlDepth = depth;
+        mDirtyBits.set(DIRTY_BIT_EXTENDED);
     }
 }
 
@@ -2366,6 +2384,16 @@ void State::getBooleanv(GLenum pname, GLboolean *params) const
         case GL_PRIMITIVE_RESTART_FOR_PATCHES_SUPPORTED:
             *params = isPrimitiveRestartEnabled() && getExtensions().tessellationShaderEXT;
             break;
+        // 2.2.2 Data Conversions For State Query Commands, in GLES 3.2 spec.
+        // If a command returning boolean data is called, such as GetBooleanv, a floating-point or
+        // integer value converts to FALSE if and only if it is zero. Otherwise it converts to TRUE.
+        // GL_EXT_clip_control
+        case GL_CLIP_ORIGIN_EXT:
+            *params = GL_TRUE;
+            break;
+        case GL_CLIP_DEPTH_MODE_EXT:
+            *params = GL_TRUE;
+            break;
         default:
             UNREACHABLE();
             break;
@@ -2481,6 +2509,15 @@ void State::getFloatv(GLenum pname, GLfloat *params) const
             break;
         case GL_MIN_SAMPLE_SHADING_VALUE:
             *params = mMinSampleShading;
+            break;
+        // 2.2.2 Data Conversions For State Query Commands, in GLES 3.2 spec.
+        // If a command returning floating-point data is called, such as GetFloatv, ... An integer
+        // value is coerced to floating-point.
+        case GL_CLIP_ORIGIN_EXT:
+            *params = static_cast<float>(mClipControlOrigin);
+            break;
+        case GL_CLIP_DEPTH_MODE_EXT:
+            *params = static_cast<float>(mClipControlDepth);
             break;
         default:
             UNREACHABLE();
@@ -2948,6 +2985,13 @@ angle::Result State::getIntegerv(const Context *context, GLenum pname, GLint *pa
             *params = mPatchVertices;
             break;
 
+        // GL_EXT_clip_control
+        case GL_CLIP_ORIGIN_EXT:
+            *params = mClipControlOrigin;
+            break;
+        case GL_CLIP_DEPTH_MODE_EXT:
+            *params = mClipControlDepth;
+            break;
         default:
             UNREACHABLE();
             break;

@@ -1338,7 +1338,19 @@ bool ValidateBufferStorageEXT(const Context *context,
 // GL_EXT_clip_control
 bool ValidateClipControlEXT(const Context *context, GLenum origin, GLenum depth)
 {
-    return false;
+    if ((origin != GL_LOWER_LEFT_EXT) && (origin != GL_UPPER_LEFT_EXT))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidOriginEnum);
+        return false;
+    }
+
+    if ((depth != GL_NEGATIVE_ONE_TO_ONE_EXT) && (depth != GL_ZERO_TO_ONE_EXT))
+    {
+        context->validationError(GL_INVALID_ENUM, kInvalidDepthEnum);
+        return false;
+    }
+
+    return true;
 }
 
 // GL_EXT_external_buffer

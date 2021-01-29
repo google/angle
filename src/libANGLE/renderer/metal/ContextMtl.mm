@@ -1044,6 +1044,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_EXTENDED:
                 updateExtendedState(glState);
+                // Nothing to do until EXT_clip_control is implemented.
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_SHADING:
                 // Nothing to do until OES_sample_shading is implemented.

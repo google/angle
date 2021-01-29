@@ -83,6 +83,12 @@ struct Rectangle
 bool operator==(const Rectangle &a, const Rectangle &b);
 bool operator!=(const Rectangle &a, const Rectangle &b);
 
+enum class ClipSpaceOrigin
+{
+    LowerLeft = 0,
+    UpperLeft = 1
+};
+
 // Calculate the intersection of two rectangles.  Returns false if the intersection is empty.
 bool ClipRectangle(const Rectangle &source, const Rectangle &clip, Rectangle *intersection);
 // Calculate the smallest rectangle that covers both rectangles.  This rectangle may cover areas

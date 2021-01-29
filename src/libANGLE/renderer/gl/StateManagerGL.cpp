@@ -2071,6 +2071,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 setClipDistancesEnable(state.getEnabledClipDistances());
                 // TODO(jmadill): handle mipmap generation hint
                 // TODO(jmadill): handle shader derivative hint
+                // Nothing to do until EXT_clip_contorl is implemented.
                 break;
             case gl::State::DIRTY_BIT_SAMPLE_SHADING:
                 // Nothing to do until OES_sample_shading is implemented.

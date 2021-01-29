@@ -173,6 +173,15 @@ class State : angle::NonCopyable
     float getNearPlane() const { return mNearZ; }
     float getFarPlane() const { return mFarZ; }
 
+    // Clip control extension
+    void setClipControl(GLenum origin, GLenum depth);
+    bool isClipControlDepthZeroToOne() const { return mClipControlDepth == GL_ZERO_TO_ONE_EXT; }
+    gl::ClipSpaceOrigin getClipSpaceOrigin() const
+    {
+        return mClipControlOrigin == GL_UPPER_LEFT_EXT ? ClipSpaceOrigin::UpperLeft
+                                                       : ClipSpaceOrigin::LowerLeft;
+    }
+
     // Blend state manipulation
     bool isBlendEnabled() const { return mBlendStateExt.mEnabledMask.test(0); }
     bool isBlendEnabledIndexed(GLuint index) const
@@ -651,7 +660,8 @@ class State : angle::NonCopyable
         DIRTY_BIT_PROVOKING_VERTEX,
         DIRTY_BIT_SAMPLE_SHADING,
         DIRTY_BIT_PATCH_VERTICES,
-        DIRTY_BIT_EXTENDED,  // clip distances, mipmap generation hint, derivative hint.
+        DIRTY_BIT_EXTENDED,  // clip distances, mipmap generation hint, derivative hint,
+                             // EXT_clip_control
         DIRTY_BIT_INVALID,
         DIRTY_BIT_MAX = DIRTY_BIT_INVALID,
     };
@@ -988,6 +998,9 @@ class State : angle::NonCopyable
     Rectangle mViewport;
     float mNearZ;
     float mFarZ;
+
+    GLenum mClipControlOrigin;
+    GLenum mClipControlDepth;
 
     Framebuffer *mReadFramebuffer;
     Framebuffer *mDrawFramebuffer;

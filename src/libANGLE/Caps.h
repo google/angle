@@ -655,6 +655,9 @@ struct Extensions
     // GL_APPLE_clip_distance
     bool clipDistanceAPPLE = false;
 
+    // GL_EXT_clip_control
+    bool clipControlEXT = false;
+
     // GL_OES_texture_cube_map_array
     bool textureCubeMapArrayOES = false;
     // GL_EXT_texture_cube_map_array
