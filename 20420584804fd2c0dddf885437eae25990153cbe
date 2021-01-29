@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b59b218_45982582",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 998,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T19:56:46Z",
+      "side": 1,
+      "message": "It\u0027s what we call a \"packed enum\". Our goal is to eventually replace all GLenums in ANGLE with packed strict type enums. So it would be a good and consistent change to store this in the front end.",
+      "parentUuid": "cc17512e_8a35d73e",
+      "range": {
+        "startLine": 998,
+        "startChar": 11,
+        "endLine": 998,
+        "endChar": 29
+      },
+      "revId": "20420584804fd2c0dddf885437eae25990153cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "975798b9_abfc3f76",
