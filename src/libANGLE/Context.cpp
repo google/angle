@@ -3700,6 +3700,15 @@ void Context::initCaps()
                << std::endl;
         ANGLE_LIMIT_CAP(mState.mCaps.maxImageUnits, maxImageUnits);
 
+        // Set a large uniform buffer offset alignment that works on multiple platforms.
+        // The offset used by the trace needs to be divisible by the device's actual value.
+        // Values seen during development: ARM (16), Intel (32), Qualcomm (128), Nvidia (256)
+        constexpr GLint uniformBufferOffsetAlignment = 256;
+        ASSERT(uniformBufferOffsetAlignment % mState.mCaps.uniformBufferOffsetAlignment == 0);
+        INFO() << "Setting uniform buffer offset alignment to " << uniformBufferOffsetAlignment
+               << " while FrameCapture enabled" << std::endl;
+        mState.mCaps.uniformBufferOffsetAlignment = uniformBufferOffsetAlignment;
+
         INFO() << "Disabling GL_EXT_map_buffer_range and GL_OES_mapbuffer during capture, which "
                   "are not supported on some native drivers"
                << std::endl;
