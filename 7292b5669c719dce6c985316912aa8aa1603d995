@@ -16,6 +16,24 @@
       "message": "Obligatory test suggestion.",
       "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfd4eeaf_092b0895",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-29T20:23:52Z",
+      "side": 1,
+      "message": "There are numerous deqp tests. The ASSERT() in ContextVk.cpp originally fired which I had hacked around before. This fixes it and adds back the ASSERT (which no longer fires).",
+      "parentUuid": "82ad2779_71f29278",
+      "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
