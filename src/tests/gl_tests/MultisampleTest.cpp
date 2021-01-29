@@ -91,7 +91,7 @@ class MultisampleTest : public ANGLETestWithParam<MultisampleTestParams>
 
         // Create a window, context and surface if multisampling is possible.
         mOSWindow = OSWindow::New();
-        mOSWindow->initialize("MultisampleTest", kWindowSize, kWindowSize);
+        mOSWindow->initialize("MultisampleTest", kWindowWidth, kWindowHeight);
         setWindowVisible(mOSWindow, true);
 
         EGLint contextAttributes[] = {
@@ -155,7 +155,8 @@ class MultisampleTest : public ANGLETestWithParam<MultisampleTestParams>
     }
 
   protected:
-    static constexpr int kWindowSize = 8;
+    static constexpr int kWindowWidth  = 16;
+    static constexpr int kWindowHeight = 8;
 
     OSWindow *mOSWindow            = nullptr;
     EGLDisplay mDisplay            = EGL_NO_DISPLAY;
@@ -197,29 +198,33 @@ void main()
     ASSERT_GL_NO_ERROR();
 
     // The center pixels should be all red.
-    EXPECT_PIXEL_COLOR_EQ(kWindowSize / 2, kWindowSize / 2, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWindowSize / 2 - 1, kWindowSize / 2, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWindowSize / 2, kWindowSize / 2 - 1, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWindowSize / 2 - 1, kWindowSize / 2 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth / 2, kWindowHeight / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth / 2 - 1, kWindowHeight / 2, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth / 2, kWindowHeight / 2 - 1, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth / 2 - 1, kWindowHeight / 2 - 1, GLColor::red);
 
     // Border pixels should be between red and black, and not exactly either; corners are darker and
     // sides are brighter.
     const GLColor kSideColor   = {128, 0, 0, 128};
     const GLColor kCornerColor = {64, 0, 0, 64};
     constexpr int kErrorMargin = 16;
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 - 2, kWindowSize / 2 - 2, kCornerColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 - 2, kWindowSize / 2 + 1, kCornerColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 + 1, kWindowSize / 2 - 2, kCornerColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 + 1, kWindowSize / 2 + 1, kCornerColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 - 2, kWindowHeight / 2 - 2, kCornerColor,
+                            kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 - 2, kWindowHeight / 2 + 1, kCornerColor,
+                            kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 + 1, kWindowHeight / 2 - 2, kCornerColor,
+                            kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 + 1, kWindowHeight / 2 + 1, kCornerColor,
+                            kErrorMargin);
 
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 - 2, kWindowSize / 2 - 1, kSideColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 - 2, kWindowSize / 2, kSideColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 - 1, kWindowSize / 2 - 2, kSideColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 - 1, kWindowSize / 2 + 1, kSideColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2, kWindowSize / 2 - 2, kSideColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2, kWindowSize / 2 + 1, kSideColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 + 1, kWindowSize / 2 - 1, kSideColor, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2 + 1, kWindowSize / 2, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 - 2, kWindowHeight / 2 - 1, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 - 2, kWindowHeight / 2, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 - 1, kWindowHeight / 2 - 2, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 - 1, kWindowHeight / 2 + 1, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2, kWindowHeight / 2 - 2, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2, kWindowHeight / 2 + 1, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 + 1, kWindowHeight / 2 - 1, kSideColor, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2 + 1, kWindowHeight / 2, kSideColor, kErrorMargin);
 }
 
 // Test line rendering on a multisampled surface.  GLES2 section 3.4.4.
@@ -257,15 +262,15 @@ TEST_P(MultisampleTest, Line)
     constexpr int kErrorMargin = 16;
     constexpr int kLargeMargin = 80;
 
-    static_assert(kWindowSize == 8, "Verification code written for 8x8 window");
+    static_assert(kWindowWidth == 16, "Verification code written for 16x8 window");
     EXPECT_PIXEL_COLOR_NEAR(0, 2, kDarkRed, kLargeMargin);
-    EXPECT_PIXEL_COLOR_NEAR(1, 3, GLColor::red, kLargeMargin);
-    EXPECT_PIXEL_COLOR_NEAR(2, 3, GLColor::red, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(3, 3, kMidRed, kLargeMargin);
-    EXPECT_PIXEL_COLOR_NEAR(4, 4, kMidRed, kLargeMargin);
-    EXPECT_PIXEL_COLOR_NEAR(5, 4, GLColor::red, kErrorMargin);
-    EXPECT_PIXEL_COLOR_NEAR(6, 4, GLColor::red, kLargeMargin);
-    EXPECT_PIXEL_COLOR_NEAR(7, 5, kDarkRed, kLargeMargin);
+    EXPECT_PIXEL_COLOR_NEAR(3, 3, GLColor::red, kLargeMargin);
+    EXPECT_PIXEL_COLOR_NEAR(4, 3, GLColor::red, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(6, 3, kMidRed, kLargeMargin);
+    EXPECT_PIXEL_COLOR_NEAR(8, 4, kMidRed, kLargeMargin);
+    EXPECT_PIXEL_COLOR_NEAR(11, 4, GLColor::red, kErrorMargin);
+    EXPECT_PIXEL_COLOR_NEAR(12, 4, GLColor::red, kLargeMargin);
+    EXPECT_PIXEL_COLOR_NEAR(15, 5, kDarkRed, kLargeMargin);
 }
 
 // Test polygon rendering on a multisampled surface.  GLES2 section 3.5.3.
@@ -290,16 +295,17 @@ TEST_P(MultisampleTest, Triangle)
 
     // Top-left pixels should be all red.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWindowSize / 4, kWindowSize / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth / 4, kWindowHeight / 4, GLColor::red);
 
     // Diagonal pixels from bottom-left to top-right are between red and black.  Pixels above the
     // diagonal are red and pixels below it are black.
-    const GLColor kMidRed      = {128, 0, 0, 128};
-    constexpr int kErrorMargin = 16;
+    const GLColor kMidRed = {128, 0, 0, 128};
+    // D3D11 is off by 63 for red (191 instead of 128), where other back-ends get 128
+    constexpr int kErrorMargin = 64;
 
-    for (int i = 1; i + 1 < kWindowSize; ++i)
+    for (int i = 2; i + 2 < kWindowWidth; i += 2)
     {
-        int j = kWindowSize - 1 - i;
+        int j = kWindowHeight - 1 - (i / 2);
         EXPECT_PIXEL_COLOR_NEAR(i, j, kMidRed, kErrorMargin);
         EXPECT_PIXEL_COLOR_EQ(i, j - 1, GLColor::red);
         EXPECT_PIXEL_COLOR_EQ(i, j + 1, GLColor::transparentBlack);
@@ -353,7 +359,7 @@ TEST_P(MultisampleTest, ContentPresevedAfterInterruption)
 
     // Top-left pixels should be all red.
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
-    EXPECT_PIXEL_COLOR_EQ(kWindowSize / 4, kWindowSize / 4, GLColor::red);
+    EXPECT_PIXEL_COLOR_EQ(kWindowWidth / 4, kWindowHeight / 4, GLColor::red);
 
     // Triangle edge:
     // Diagonal pixels from bottom-left to top-right are between red and black.  Pixels above the
@@ -362,14 +368,14 @@ TEST_P(MultisampleTest, ContentPresevedAfterInterruption)
         const GLColor kMidRed      = {128, 0, 0, 128};
         constexpr int kErrorMargin = 16;
 
-        for (int i = 1; i + 1 < kWindowSize; ++i)
+        for (int i = 2; i + 2 < kWindowWidth; i += 2)
         {
             // Exclude the middle pixel where the triangle and line cross each other.
-            if (abs(kWindowSize / 2 - i) <= 1)
+            if (abs(kWindowHeight / 2 - (i / 2)) <= 1)
             {
                 continue;
             }
-            int j = kWindowSize - 1 - i;
+            int j = kWindowHeight - 1 - (i / 2);
             EXPECT_PIXEL_COLOR_NEAR(i, j, kMidRed, kErrorMargin);
             EXPECT_PIXEL_COLOR_EQ(i, j - 1, GLColor::red);
             EXPECT_PIXEL_COLOR_EQ(i, j + 1, GLColor::transparentBlack);
@@ -382,11 +388,11 @@ TEST_P(MultisampleTest, ContentPresevedAfterInterruption)
         constexpr int kErrorMargin = 16;
         constexpr int kLargeMargin = 80;
 
-        static_assert(kWindowSize == 8, "Verification code written for 8x8 window");
+        static_assert(kWindowWidth == 16, "Verification code written for 16x8 window");
         // Exclude the triangle region.
-        EXPECT_PIXEL_COLOR_NEAR(5, 4, GLColor::red, kErrorMargin);
-        EXPECT_PIXEL_COLOR_NEAR(6, 4, GLColor::red, kLargeMargin);
-        EXPECT_PIXEL_COLOR_NEAR(7, 5, kDarkRed, kLargeMargin);
+        EXPECT_PIXEL_COLOR_NEAR(11, 4, GLColor::red, kErrorMargin);
+        EXPECT_PIXEL_COLOR_NEAR(12, 4, GLColor::red, kLargeMargin);
+        EXPECT_PIXEL_COLOR_NEAR(15, 5, kDarkRed, kLargeMargin);
     }
 }
 
@@ -442,8 +448,8 @@ TEST_P(MultisampleTestES3, ResolveToFBO)
 
     GLTexture resolveTexture;
     glBindTexture(GL_TEXTURE_2D, resolveTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWindowSize, kWindowSize, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                 nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kWindowWidth, kWindowHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -460,17 +466,17 @@ TEST_P(MultisampleTestES3, ResolveToFBO)
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, resolveFBO);
     glClearColor(1, 0, 0, 1);
     glClear(GL_COLOR_BUFFER_BIT);
-    glBlitFramebuffer(0, 0, kWindowSize, kWindowSize, 0, 0, kWindowSize, kWindowSize,
+    glBlitFramebuffer(0, 0, kWindowWidth, kWindowHeight, 0, 0, kWindowWidth, kWindowHeight,
                       GL_COLOR_BUFFER_BIT, GL_NEAREST);
     ASSERT_GL_NO_ERROR();
 
     const GLColor kResult = GLColor(63, 127, 191, 63);
     glBindFramebuffer(GL_READ_FRAMEBUFFER, resolveFBO);
     EXPECT_PIXEL_COLOR_NEAR(0, 0, kResult, 1);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize - 1, 0, kResult, 1);
-    EXPECT_PIXEL_COLOR_NEAR(0, kWindowSize - 1, kResult, 1);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize - 1, kWindowSize - 1, kResult, 1);
-    EXPECT_PIXEL_COLOR_NEAR(kWindowSize / 2, kWindowSize / 2, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth - 1, 0, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, kWindowHeight - 1, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth - 1, kWindowHeight - 1, kResult, 1);
+    EXPECT_PIXEL_COLOR_NEAR(kWindowWidth / 2, kWindowHeight / 2, kResult, 1);
 }
 
 ANGLE_INSTANTIATE_TEST_COMBINE_1(MultisampleTest,
