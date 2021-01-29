@@ -36,6 +36,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b53588a9_12a4b4a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1323708
+      },
+      "writtenOn": "2021-01-29T02:50:09Z",
+      "side": 1,
+      "message": "Hi Lingfeng\nWe can verify on the Arm platform once these 4 red runs are resolved",
+      "revId": "4ce6c2cb57da784d9eb95705d8fa69ad57dd1b5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7e7c41c_2413d839",
