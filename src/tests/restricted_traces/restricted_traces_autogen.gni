@@ -29,6 +29,7 @@ angle_restricted_traces = [
   "lego_legacy 2",
   "magic_tiles_3 2",
   "manhattan_10 1",
+  "manhattan_31 6",
   "marvel_contest_of_champions 1",
   "mobile_legends 1",
   "nba2k20_800 1",

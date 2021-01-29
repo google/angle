@@ -334,6 +334,15 @@ TracePerfTest::TracePerfTest()
         }
     }
 
+    if (param.testID == RestrictedTraceID::manhattan_31)
+    {
+        // TODO: http://anglebug.com/5591 Trace crashes on Pixel 2 in vulkan driver
+        if (IsPixel2() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

@@ -31,6 +31,7 @@
 #include "lego_legacy/lego_legacy_capture_context2.h"
 #include "magic_tiles_3/magic_tiles_3_capture_context2.h"
 #include "manhattan_10/manhattan_10_capture_context1.h"
+#include "manhattan_31/manhattan_31_capture_context6.h"
 #include "marvel_contest_of_champions/marvel_contest_of_champions_capture_context1.h"
 #include "mobile_legends/mobile_legends_capture_context1.h"
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
@@ -121,6 +122,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {manhattan_10::kReplayFrameStart, manhattan_10::kReplayFrameEnd,
       manhattan_10::kReplayDrawSurfaceWidth, manhattan_10::kReplayDrawSurfaceHeight,
       "manhattan_10"}},
+    {RestrictedTraceID::manhattan_31,
+     {manhattan_31::kReplayFrameStart, manhattan_31::kReplayFrameEnd,
+      manhattan_31::kReplayDrawSurfaceWidth, manhattan_31::kReplayDrawSurfaceHeight,
+      "manhattan_31"}},
     {RestrictedTraceID::marvel_contest_of_champions,
      {marvel_contest_of_champions::kReplayFrameStart, marvel_contest_of_champions::kReplayFrameEnd,
       marvel_contest_of_champions::kReplayDrawSurfaceWidth,
@@ -242,6 +247,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::manhattan_31:
+            manhattan_31::ReplayContext6Frame(frameIndex);
+            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::ReplayContext1Frame(frameIndex);
             break;
@@ -351,6 +359,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::manhattan_31:
+            manhattan_31::ResetContext6Replay();
             break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::ResetContext1Replay();
@@ -462,6 +473,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetupContext1Replay();
             break;
+        case RestrictedTraceID::manhattan_31:
+            manhattan_31::SetupContext6Replay();
+            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::SetupContext1Replay();
             break;
@@ -572,6 +586,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::manhattan_31:
+            manhattan_31::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::SetBinaryDataDir(dataDir);
             break;
@@ -681,6 +698,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::manhattan_10:
             manhattan_10::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::manhattan_31:
+            manhattan_31::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::SetBinaryDataDecompressCallback(callback);
