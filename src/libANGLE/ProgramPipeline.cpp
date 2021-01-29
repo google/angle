@@ -293,6 +293,7 @@ void ProgramPipeline::updateImageBindings()
 {
     mState.mExecutable->mComputeImageBindings.clear();
     mState.mExecutable->mGraphicsImageBindings.clear();
+    mState.mExecutable->mActiveImageShaderBits.fill({});
 
     // Only copy the storage blocks from each Program in the PPO once, since each Program could
     // contain multiple shader stages.
@@ -310,6 +311,8 @@ void ProgramPipeline::updateImageBindings()
             {
                 mState.mExecutable->mGraphicsImageBindings.emplace_back(imageBinding);
             }
+
+            mState.mExecutable->updateActiveImages(shaderProgram->getExecutable());
         }
     }
 
@@ -320,6 +323,10 @@ void ProgramPipeline::updateImageBindings()
         {
             mState.mExecutable->mComputeImageBindings.emplace_back(imageBinding);
         }
+
+        mState.mExecutable->setIsCompute(true);
+        mState.mExecutable->updateActiveImages(computeProgram->getExecutable());
+        mState.mExecutable->setIsCompute(false);
     }
 }
 

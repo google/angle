@@ -433,7 +433,7 @@ void ProgramExecutable::updateActiveImages(const ProgramExecutable &executable)
             }
             else
             {
-                mActiveImageShaderBits[imageUnit] = shaderBits;
+                mActiveImageShaderBits[imageUnit] |= shaderBits;
             }
         }
     }

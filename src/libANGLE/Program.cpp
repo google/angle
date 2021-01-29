@@ -5005,6 +5005,7 @@ angle::Result Program::deserialize(const Context *context,
 void Program::postResolveLink(const gl::Context *context)
 {
     mState.updateActiveSamplers();
+    mState.mExecutable->mActiveImageShaderBits.fill({});
     mState.mExecutable->updateActiveImages(getExecutable());
 
     setUniformValuesFromBindingQualifiers();

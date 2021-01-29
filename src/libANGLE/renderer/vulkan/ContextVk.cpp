@@ -4254,23 +4254,7 @@ angle::Result ContextVk::updateActiveImages(const gl::Context *context,
         // lingering staged updates in its staging buffer for unused texture mip levels or
         // layers. Therefore we can't verify it has no staged updates right here.
         gl::ShaderBitSet shaderStages = activeImageShaderBits[imageUnitIndex];
-
-        // TODO: PPOs don't initialize mActiveImageShaderBits.  http://anglebug.com/5358
-        // Once that is fixed, the following if should be replaced with an assertion:
-        //
-        //     ASSERT(shaderStages.any());
-        if (shaderStages.none())
-        {
-            if (executable->isCompute())
-            {
-                shaderStages.set(gl::ShaderType::Compute);
-            }
-            else
-            {
-                shaderStages.set();
-                shaderStages.reset(gl::ShaderType::Compute);
-            }
-        }
+        ASSERT(shaderStages.any());
 
         // Special handling of texture buffers.  They have a buffer attached instead of an image.
         if (texture->getType() == gl::TextureType::Buffer)
