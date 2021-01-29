@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d4ef84d_883acd2d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 917,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-01-29T06:08:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66a663b1_220cfb1a",
+      "range": {
+        "startLine": 917,
+        "startChar": 23,
+        "endLine": 917,
+        "endChar": 52
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "55981d48_200d84d2",
@@ -121,6 +145,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b3b94891_ef9f5278",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-01-29T06:08:57Z",
+      "side": 1,
+      "message": "I\u0027ve moved these secondary output locations to the executable. I\u0027ve added tests using program pipelines but was unable to have them expectedly fail before moving these to the executable.",
+      "parentUuid": "caac058e_0ed4ae79",
+      "range": {
+        "startLine": 549,
+        "startChar": 68,
+        "endLine": 549,
+        "endChar": 95
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0623d89f_4a862e75",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 6
@@ -203,6 +251,30 @@
       "writtenOn": "2021-01-13T20:51:05Z",
       "side": 1,
       "message": "can you move all this and the above logic into a helper that specifically handles secondary output locations?",
+      "range": {
+        "startLine": 615,
+        "startChar": 2,
+        "endLine": 631,
+        "endChar": 9
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0827997_f20048a5",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 631,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-01-29T06:08:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10e24b5b_1aa53b44",
       "range": {
         "startLine": 615,
         "startChar": 2,
