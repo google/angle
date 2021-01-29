@@ -16,6 +16,24 @@
       "message": "We only emit the specialization constant if it is been used (mUsageBits set). Is this not true any more? ",
       "revId": "c6d6f5075bc73b558abdf0795bf731ea8c3320a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a274b20_39400f7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-29T20:58:19Z",
+      "side": 1,
+      "message": "It was, until I changed it to say \"gl_Position\" is always used in VS, so add SpecConstUsage::Rotation unconditionally (well, conditional to spec consts being used at all). I should have limited that to the pre-fragment stages, which this change does.",
+      "parentUuid": "e71de692_b9751a97",
+      "revId": "c6d6f5075bc73b558abdf0795bf731ea8c3320a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
