@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d69b07f0_b0dc5f9f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:29:51Z",
+      "side": 1,
+      "message": "nit: Turn",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 4
+      },
+      "revId": "efa4c437d17652f094dac146d3a26f2625256c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "729fc04d_6126f0e5",
@@ -14,6 +37,23 @@
       "writtenOn": "2021-01-29T13:22:39Z",
       "side": 1,
       "message": "Hi Jamie, PTAL. Thanks.",
+      "revId": "efa4c437d17652f094dac146d3a26f2625256c64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea1c2e4e_5973e2ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:29:51Z",
+      "side": 1,
+      "message": "As discussed on the chat, you\u0027ll likely need to tweak angle_test_instantiate to disable Vulkan on the 5x.",
       "revId": "efa4c437d17652f094dac146d3a26f2625256c64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
