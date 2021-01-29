@@ -16,6 +16,24 @@
       "message": "Would have liked to see this state in the front end...",
       "revId": "80a4223e4deeacc87823fe53c6c3b2d259d27733",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "541cdfe3_65ddd871",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-29T20:56:23Z",
+      "side": 1,
+      "message": "the follow on change that introduces second level of bitset for dirty_bit_extended should make this a non-issue",
+      "parentUuid": "77a4abcb_152a3d00",
+      "revId": "80a4223e4deeacc87823fe53c6c3b2d259d27733",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

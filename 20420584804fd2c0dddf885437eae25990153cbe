@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "39d3dc3c_c86fc083",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 998,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-01-29T20:56:23Z",
+      "side": 1,
+      "message": "\u003e It\u0027s what we call a \"packed enum\"\n\nthe comment on the datatype says -\n // PackedEnumMap\u003cE, T\u003e is like an std::array\u003cT, E::EnumCount\u003e but is indexed with enum values\n\nSince we didn\u0027t have non-trivial enum counts and also had no usecase for iteration, it did not make sense to use it but was unaware of the overall replacement goal",
+      "parentUuid": "6b59b218_45982582",
+      "range": {
+        "startLine": 998,
+        "startChar": 11,
+        "endLine": 998,
+        "endChar": 29
+      },
+      "revId": "20420584804fd2c0dddf885437eae25990153cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "975798b9_abfc3f76",
