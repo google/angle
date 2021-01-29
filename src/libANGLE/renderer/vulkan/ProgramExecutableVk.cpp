@@ -141,7 +141,7 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     if (isLastPreFragmentStage)
     {
         options.preRotation = static_cast<SurfaceRotation>(optionBits.surfaceRotation);
-        options.transformPositionToVulkanClipSpace = true;
+        options.transformPositionToVulkanClipSpace = optionBits.enableDepthCorrection;
     }
 
     ANGLE_TRY(GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
@@ -686,6 +686,7 @@ angle::Result ProgramExecutableVk::getGraphicsPipeline(
 
     mTransformOptions.enableLineRasterEmulation = contextVk->isBresenhamEmulationEnabled(mode);
     mTransformOptions.surfaceRotation           = ToUnderlying(desc.getSurfaceRotation());
+    mTransformOptions.enableDepthCorrection     = !glState.isClipControlDepthZeroToOne();
 
     // This must be called after mTransformOptions have been set.
     ProgramInfo &programInfo                  = getGraphicsProgramInfo(mTransformOptions);
