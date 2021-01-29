@@ -73,6 +73,144 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "de6c237b_819f50ed",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 4735,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "should be part of the executable save/load",
+      "range": {
+        "startLine": 4733,
+        "startChar": 0,
+        "endLine": 4735,
+        "endChar": 0
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fd9a658_e9bc4038",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 4998,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "should be part of the executable save/load",
+      "range": {
+        "startLine": 4993,
+        "startChar": 0,
+        "endLine": 4998,
+        "endChar": 0
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70a60e74_ea89ff64",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "nit: uses instead of has?",
+      "range": {
+        "startLine": 373,
+        "startChar": 24,
+        "endLine": 373,
+        "endChar": 43
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5b05d90_6d7b58d9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2793,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "how about instead notify the fb of a program change, and let the FB check if the FBF mode matches or does not match the current RP\u0027s FBF setting? That way we can remove the extra state from ContextVk.",
+      "range": {
+        "startLine": 2793,
+        "startChar": 30,
+        "endLine": 2793,
+        "endChar": 61
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27761092_2bf4cebd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "nit: _BARRIER",
+      "range": {
+        "startLine": 597,
+        "startChar": 8,
+        "endLine": 597,
+        "endChar": 35
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ba372d5_52d646eb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "mLastProgramUsesFramebufferFetch, to make it consistent naming with other vars\n\nThough see other comments, we might not need this.",
+      "range": {
+        "startLine": 1003,
+        "startChar": 9,
+        "endLine": 1003,
+        "endChar": 35
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ad1f31b6_1a75c991",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 13
@@ -96,6 +234,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cde2412f_28a747c8",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1939,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "startNewRP sounds reasonable to me. We only need FB fetch in a RP. It also looks out of place to me here.",
+      "parentUuid": "ad1f31b6_1a75c991",
+      "range": {
+        "startLine": 1931,
+        "startChar": 0,
+        "endLine": 1939,
+        "endChar": 72
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7d384fb7_21db61d9",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 13
@@ -107,6 +269,29 @@
       "writtenOn": "2021-01-29T10:30:12Z",
       "side": 1,
       "message": "There\u0027s a bug here. Say the application does this:\n\n- Start RP\n- Draw without fetch mode\n * sets mHasFramebufferFetch \u003d false\n- Draw with fetch mode\n * sets mHasFramebufferFetch \u003d true\n- Draw without fetch mode\n * sets mHasFramebufferFetch \u003d false\n- End RP\n\nAt the end when we create the render pass, InitializeRenderPassFromDesc will set needInputAttachments \u003d false, so the image layouts would be COLOR_ATTACHMENT, and the input attachments not specified.\n\nYou can add an `updateFramebufferFetchMode` that says SetBitField(mHasFramebufferFetch, mHasFramebufferFetch || hasFramebufferFetch); to call in FramebufferVk::onSwitchProgramFramebufferFetch()\n\nPlease add a test as well.",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ccf7a8b_7da166b4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1375,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T16:39:37Z",
+      "side": 1,
+      "message": "nit: can you fix these to use ! instead of \u003d\u003d false?",
+      "range": {
+        "startLine": 1375,
+        "startChar": 10,
+        "endLine": 1375,
+        "endChar": 49
+      },
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
