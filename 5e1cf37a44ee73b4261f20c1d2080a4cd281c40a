@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b29bde5_2ba601dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T17:31:00Z",
+      "side": 1,
+      "message": "LGTM, couple nits.",
+      "revId": "5e1cf37a44ee73b4261f20c1d2080a4cd281c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95d0c2fa_e90166e1",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T17:31:00Z",
+      "side": 1,
+      "message": "suggestion: IsAndroid##OrNewer where ## is 9/10/etc.",
+      "range": {
+        "startLine": 113,
+        "startChar": 5,
+        "endLine": 113,
+        "endChar": 23
+      },
+      "revId": "5e1cf37a44ee73b4261f20c1d2080a4cd281c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a42e3521_e3c563ac",
+        "filename": "src/tests/test_utils/angle_test_instantiate.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T17:31:00Z",
+      "side": 1,
+      "message": "nit: comment to record this for posterity?",
+      "range": {
+        "startLine": 573,
+        "startChar": 21,
+        "endLine": 573,
+        "endChar": 39
+      },
+      "revId": "5e1cf37a44ee73b4261f20c1d2080a4cd281c40a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
