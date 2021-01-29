@@ -68,6 +68,46 @@
       "parentUuid": "b25abcba_a5d69853",
       "revId": "dc2174c54cab8a9791608e3693f2f6c7a1d77014",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "feda0cdb_8fdd830a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-29T23:39:36Z",
+      "side": 1,
+      "message": "Looks like this increases the size of the isolated outputs by a factor of 10.\nAssuming 10MB per shard, 37 shards in win-angle-deqp-rel-64, 5 builds per hour, 6 dEQP bots,\nthis comes down to around 10GB per hour.\nI wonder if we need to get approval to use the additional cloud storage and traffic from somebody.",
+      "revId": "dc2174c54cab8a9791608e3693f2f6c7a1d77014",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56c4c28c_c8fd758b",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-01-29T23:39:36Z",
+      "side": 1,
+      "message": "Would be more readable to put the rest of the for() in an else{}\nEven better if this 150 line function would be split into several smaller ones.",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 673,
+        "endChar": 21
+      },
+      "revId": "dc2174c54cab8a9791608e3693f2f6c7a1d77014",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
