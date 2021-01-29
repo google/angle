@@ -169,6 +169,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "81cb1af3_fc4fd155",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 549,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-29T09:22:37Z",
+      "side": 1,
+      "message": "Thanks for the tests. The executable is the right place for this, but the reason the tests pass is that this information can only come from the fragment shader whose state is passed here.\n\nNote that in the end this information is not even copied to the program pipeline\u0027s executable in this change.",
+      "parentUuid": "b3b94891_ef9f5278",
+      "range": {
+        "startLine": 549,
+        "startChar": 68,
+        "endLine": 549,
+        "endChar": 95
+      },
+      "revId": "bc7deda7882fd57f7475c6df7eaafb1183f00401",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0623d89f_4a862e75",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 6
