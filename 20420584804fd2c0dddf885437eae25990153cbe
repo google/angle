@@ -96,6 +96,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94e6aa54_6e4159e0",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 998,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-01-29T21:07:21Z",
+      "side": 1,
+      "message": "Yeah it\u0027s very minor. No need to address, just wanted to clarify.",
+      "parentUuid": "39d3dc3c_c86fc083",
+      "range": {
+        "startLine": 998,
+        "startChar": 11,
+        "endLine": 998,
+        "endChar": 29
+      },
+      "revId": "20420584804fd2c0dddf885437eae25990153cbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "975798b9_abfc3f76",
