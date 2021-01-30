@@ -75,6 +75,30 @@
       },
       "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a3687af_47c49b88",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-30T02:26:46Z",
+      "side": 1,
+      "message": "There are a number of bugs here. Some parts of the executable state correctly track compute and graphics resources separately, some have only one set for seemingly both.\n\nWithout the isCompute() check, things will probably work, but that\u0027s only because the tests don\u0027t exercise PPOs that are simultaneously graphics and compute (or at least don\u0027t exercise them in any interesting way). Unfortunately I don\u0027t have the time to go about fixing these bugs, hence the workaround here :(",
+      "parentUuid": "02505c66_172e0a74",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 329,
+        "endChar": 48
+      },
+      "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
