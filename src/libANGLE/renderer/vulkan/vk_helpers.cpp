@@ -1666,7 +1666,8 @@ DynamicBuffer::DynamicBuffer(DynamicBuffer &&other)
       mSize(other.mSize),
       mAlignment(other.mAlignment),
       mMemoryPropertyFlags(other.mMemoryPropertyFlags),
-      mInFlightBuffers(std::move(other.mInFlightBuffers))
+      mInFlightBuffers(std::move(other.mInFlightBuffers)),
+      mBufferFreeList(std::move(other.mBufferFreeList))
 {}
 
 void DynamicBuffer::init(RendererVk *renderer,
