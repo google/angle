@@ -16,6 +16,24 @@
       "message": "LGTM assuming CQ is happy too.",
       "revId": "ac75e74a865fadb2e758f8ac1b86ff6b23a78f27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54cb4fb3_174e24f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-01-30T00:09:06Z",
+      "side": 1,
+      "message": "Skipping on Pixel 2 due to Vulkan driver badness.",
+      "parentUuid": "d8d345db_44b0f3e5",
+      "revId": "ac75e74a865fadb2e758f8ac1b86ff6b23a78f27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
