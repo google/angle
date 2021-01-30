@@ -99,6 +99,30 @@
       },
       "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "379f9ee2_fa69798d",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 329,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-01-30T02:44:39Z",
+      "side": 1,
+      "message": "Sounds good.\n\n\u003e There are a number of bugs here.\n\nNot surprising.\n\n\u003e Some parts of the executable state correctly track compute and graphics resources separately, some have only one set for seemingly both.\n\nYeah, I split things up to handle graphics and compute in the same PPO as much as was required by dEQP, but no more.   ANGLE itself isn\u0027t setup to handle that case very well, so I didn\u0027t want to dive too deep into things for a niche of a corner case, especially since (as you pointed out), the testing for all of that is minimal in the first place.\n\nEven if you did have time to fix all of this up, it\u0027s unlikely to be time well spent since I still don\u0027t think we\u0027ve come across an app that uses PPOs yet, let alone one combining graphics and compute into a single PPO.",
+      "parentUuid": "5a3687af_47c49b88",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 329,
+        "endChar": 48
+      },
+      "revId": "7292b5669c719dce6c985316912aa8aa1603d995",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
