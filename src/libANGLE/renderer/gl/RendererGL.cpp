@@ -457,4 +457,9 @@ bool ScopedWorkerContextGL::operator()() const
     return mValid;
 }
 
+void RendererGL::handleGPUSwitch()
+{
+    nativegl_gl::ReInitializeFeaturesAtGPUSwitch(mFunctions.get(), &mFeatures);
+}
+
 }  // namespace rx

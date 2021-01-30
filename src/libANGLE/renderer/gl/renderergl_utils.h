@@ -106,6 +106,7 @@ void GenerateCaps(const FunctionsGL *functions,
 
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features);
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features);
+void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features);
 }  // namespace nativegl_gl
 
 namespace nativegl

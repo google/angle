@@ -522,6 +522,13 @@ struct FeaturesGL : FeatureSetBase
     Feature initFragmentOutputVariables = {
         "init_fragment_output_variables", FeatureCategory::OpenGLWorkarounds,
         "No init gl_FragColor causes context lost", &members, "http://crbug.com/1171371"};
+
+    // On macOS with Intel GPUs, instanced array with divisor > 0 is buggy when first > 0 in
+    // drawArraysInstanced. Shift the attributes with extra offset to workaround.
+    Feature shiftInstancedArrayDataWithExtraOffset = {
+        "shift_instanced_array_data_with_offset", FeatureCategory::OpenGLWorkarounds,
+        "glDrawArraysInstanced is buggy on certain new Mac Intel GPUs", &members,
+        "http://crbug.com/1144207"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
