@@ -57,6 +57,8 @@ class VertexArrayGL : public VertexArrayImpl
 
     void validateState(const gl::Context *context) const;
 
+    void recoverForcedStreamingAttributesForDrawArraysInstanced(const gl::Context *context) const;
+
   private:
     angle::Result syncDrawState(const gl::Context *context,
                                 const gl::AttributesMask &activeAttributesMask,
@@ -116,6 +118,10 @@ class VertexArrayGL : public VertexArrayImpl
                                  GLsizei stride,
                                  GLintptr offset) const;
 
+    void recoverForcedStreamingAttributesForDrawArraysInstanced(
+        const gl::Context *context,
+        gl::AttributesMask *attributeMask) const;
+
     GLuint mVertexArrayID;
     int mAppliedNumViews;
 
@@ -133,6 +139,11 @@ class VertexArrayGL : public VertexArrayImpl
 
     mutable size_t mStreamingArrayBufferSize;
     mutable GLuint mStreamingArrayBuffer;
+
+    // Used for Mac Intel instanced draw workaround
+    mutable gl::AttributesMask mForcedStreamingAttributesForDrawArraysInstancedMask;
+    mutable gl::AttributesMask mInstancedAttributesMask;
+    mutable std::array<GLint, gl::MAX_VERTEX_ATTRIBS> mForcedStreamingAttributesFirstOffsets;
 };
 
 ANGLE_INLINE angle::Result VertexArrayGL::syncDrawElementsState(
