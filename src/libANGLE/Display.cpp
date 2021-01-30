@@ -1826,8 +1826,10 @@ void Display::initializeFrontendFeatures()
 {
     // Enable on all Impls
     ANGLE_FEATURE_CONDITION((&mFrontendFeatures), loseContextOnOutOfMemory, true);
-    ANGLE_FEATURE_CONDITION((&mFrontendFeatures), scalarizeVecAndMatConstructorArgs, true);
     ANGLE_FEATURE_CONDITION((&mFrontendFeatures), allowCompressedFormats, true);
+
+    // No longer enable this on any Impl - crbug.com/1165751
+    ANGLE_FEATURE_CONDITION((&mFrontendFeatures), scalarizeVecAndMatConstructorArgs, false);
 
     mImplementation->initializeFrontendFeatures(&mFrontendFeatures);
 

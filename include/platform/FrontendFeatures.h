@@ -48,7 +48,7 @@ struct FrontendFeatures : angle::FeatureSetBase
     angle::Feature scalarizeVecAndMatConstructorArgs = {
         "scalarize_vec_and_mat_constructor_args", angle::FeatureCategory::FrontendWorkarounds,
         "Always rewrite vec/mat constructors to be consistent", &members,
-        "http://crbug.com/398694"};
+        "http://crbug.com/1165751"};
 
     // Disable support for GL_OES_get_program_binary
     angle::Feature disableProgramBinary = {
