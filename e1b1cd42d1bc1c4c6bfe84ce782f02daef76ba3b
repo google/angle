@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16f5c4a9_6a46e22c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-30T02:31:49Z",
+      "side": 1,
+      "message": "Timely!\n\nFYI, I saw on my Pixel4 with the pre-release driver that transform feedback was taking the emulation path. Looks like QC still doesn\u0027t have the extension implemented.",
+      "revId": "e1b1cd42d1bc1c4c6bfe84ce782f02daef76ba3b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
