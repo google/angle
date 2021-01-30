@@ -16,6 +16,23 @@
       "message": "Hi Jamie, PTAL. Thanks",
       "revId": "59b84e67c9cde40526007b89e95141352f93371d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f877d02d_8859e147",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-30T21:52:23Z",
+      "side": 1,
+      "message": "Thanks for the fix. I\u0027m going to land this now so the bots don\u0027t need to run again on Monday.",
+      "revId": "59b84e67c9cde40526007b89e95141352f93371d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
