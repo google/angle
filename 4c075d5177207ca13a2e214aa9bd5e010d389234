@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "795a42ee_7adf2487",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-01-31T05:10:31Z",
+      "side": 1,
+      "message": "PTAL.\n\nEXPECT_PIXEL_COLOR32F_NEAR in the test returns GL_INVALID_FRAMEBUFFER_OPERATION on Android/Vulkan. Do you know what feature I should check for to know if read back is possible? glReadPixel\u0027s validation only returns GL_INVALID_FRAMEBUFFER_OPERATION for multiview apparently.",
+      "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
