@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0488beba_49dfb641",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-01T22:17:11Z",
+      "side": 1,
+      "message": "seems like a flaky failure in multi-thread case, trying again",
+      "revId": "1cb4813eede19c6bae9329da98de99c8f2fdbd50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
