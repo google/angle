@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2e6e0ffd_c8b98656",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-01T20:50:03Z",
+      "side": 1,
+      "message": "What\u0027s the reason that the tests take 30 seconds without --bot-mode? \nThe original bug states that this is still a problem even with --gtest_filter\u003dGLSLTest_ES31\\*. In that case, won\u0027t this CL still not address the problem?",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "251b9b99_dce9d295",
         "filename": "src/tests/test_utils/runner/TestSuite.cpp",
         "patchSetId": 1
