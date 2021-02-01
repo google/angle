@@ -58,9 +58,6 @@
 4723 VULKAN NVIDIA : KHR-GLES31.core.shader_image_size.advanced-nonMS-vs-uint = SKIP
 4723 VULKAN NVIDIA : KHR-GLES31.core.program_interface_query.transform-feedback-types = SKIP
 
-// Incompatible between incomplete texture and sampler format (isampler2D or usampler2D):
-3588 VULKAN : KHR-GLES31.core.sample_variables.mask.rgba8*i.* = FAIL
-
 // Geometry shader support
 5483 VULKAN : KHR-GLES31.core.draw_indirect.basic-mode-*adjacency = SKIP
 
@@ -96,7 +93,7 @@
 4159 VULKAN PIXEL2ORXL : KHR-GLES31.core.draw_indirect.advanced-twoPass-transformFeedback-arrays = FAIL
 
 // Fails to link the shader program on Pixel2 and Pixel2 XL
-3588 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8.samples_*.mask_* = FAIL
+5572 VULKAN PIXEL2ORXL : KHR-GLES31.core.sample_variables.mask.rgba8*.samples_*.mask_* = FAIL
 
 // Failing on Android with SwiftShader
 4300 SWIFTSHADER ANDROID : KHR-GLES31.core.shader_integer_mix.mix-bvec4 = FAIL

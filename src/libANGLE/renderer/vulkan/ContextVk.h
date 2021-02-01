@@ -351,6 +351,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     gl::BlendStateExt::ColorMaskStorage::Type getClearColorMasks() const;
     angle::Result getIncompleteTexture(const gl::Context *context,
                                        gl::TextureType type,
+                                       gl::SamplerFormat format,
                                        gl::Texture **textureOut);
     void updateColorMasks(const gl::BlendStateExt &blendStateExt);
     void updateSampleMaskWithRasterizationSamples(const uint32_t rasterizationSamples);

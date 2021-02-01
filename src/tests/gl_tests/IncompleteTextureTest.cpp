@@ -245,10 +245,6 @@ void main()
 // Verifies that an incomplete integer texture has a signed integer type default value.
 TEST_P(IncompleteTextureTestES3, IntegerType)
 {
-    // On Vulkan, D3D, and Metal backend, creating the incomplete texture which has a signed integer
-    // type, isn't supported.
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsD3D() || IsMetal());
-
     // GLES backend on Adreno has a problem to create a incomplete texture, although it doesn't go
     // through the routine which creates a incomplete texture in the ANGLE driver.
     ANGLE_SKIP_TEST_IF(IsAdreno() && IsAndroid() && IsOpenGLES());
@@ -303,10 +299,6 @@ void main()
 // Verifies that an incomplete unsigned integer texture has an unsigned integer type default value.
 TEST_P(IncompleteTextureTestES3, UnsignedIntegerType)
 {
-    // On Vulkan, D3D, and Metal backend, creating the incomplete texture which has a unsigned
-    // integer type, isn't supported.
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsD3D() || IsMetal());
-
     // GLES backend on Adreno has a problem to create a incomplete texture, although it doesn't go
     // through the routine which creates a incomplete texture in the ANGLE driver.
     ANGLE_SKIP_TEST_IF(IsAdreno() && IsAndroid() && IsOpenGLES());
@@ -362,13 +354,15 @@ void main()
 // Verifies that we are able to create an incomplete shadow texture.
 TEST_P(IncompleteTextureTestES3, ShadowType)
 {
-    // On Vulkan, D3D, and Metal backend, creating the incomplete texture which has a shadow type,
-    // isn't supported.
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsD3D() || IsMetal());
-
     // GLES backend on Adreno has a problem to create a incomplete texture, although it doesn't go
     // through the routine which creates a incomplete texture in the ANGLE driver.
     ANGLE_SKIP_TEST_IF(IsAdreno() && IsAndroid() && IsOpenGLES());
+
+    // http://crbug.com/1168370
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsOpenGL());
+
+    // http://anglebug.com/5594
+    ANGLE_SKIP_TEST_IF(IsD3D11() || IsOSX());
 
     constexpr char kVS[] = R"(#version 300 es
 in highp vec2 position;
@@ -387,10 +381,6 @@ void main()
 {
     color = vec4(vec3(texture(tex, texCoord)), 1.0f);
 })";
-
-    // http://anglebug.com/5107
-    // Metal doesn't support a shadow sampler when the GL_TEXTURE_COMPARE_MODE value is GL_NONE.
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
 
     constexpr GLColor clearColor = {10, 40, 20, 30};
     constexpr GLColor blackColor = {0, 0, 0, 255};

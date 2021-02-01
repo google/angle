@@ -480,7 +480,8 @@ angle::Result Context9::getIncompleteTexture(const gl::Context *context,
                                              gl::TextureType type,
                                              gl::Texture **textureOut)
 {
-    return mIncompleteTextures.getIncompleteTexture(context, type, nullptr, textureOut);
+    return mIncompleteTextures.getIncompleteTexture(context, type, gl::SamplerFormat::Float,
+                                                    nullptr, textureOut);
 }
 
 void Context9::handleResult(HRESULT hr,

@@ -207,11 +207,14 @@ class IncompleteTextureSet final : angle::NonCopyable
 
     angle::Result getIncompleteTexture(const gl::Context *context,
                                        gl::TextureType type,
+                                       gl::SamplerFormat format,
                                        MultisampleTextureInitializer *multisampleInitializer,
                                        gl::Texture **textureOut);
 
   private:
-    gl::TextureMap mIncompleteTextures;
+    using TextureMapWithSamplerFormat = angle::PackedEnumMap<gl::SamplerFormat, gl::TextureMap>;
+
+    TextureMapWithSamplerFormat mIncompleteTextures;
     gl::Buffer *mIncompleteTextureBufferAttachment;
 };
 

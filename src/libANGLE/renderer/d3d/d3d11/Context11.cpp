@@ -971,7 +971,8 @@ angle::Result Context11::getIncompleteTexture(const gl::Context *context,
                                               gl::TextureType type,
                                               gl::Texture **textureOut)
 {
-    return mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut);
+    return mIncompleteTextures.getIncompleteTexture(context, type, gl::SamplerFormat::Float, this,
+                                                    textureOut);
 }
 
 angle::Result Context11::initializeMultisampleTextureToBlack(const gl::Context *context,

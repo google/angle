@@ -574,9 +574,10 @@ void ContextVk::onDestroy(const gl::Context *context)
 
 angle::Result ContextVk::getIncompleteTexture(const gl::Context *context,
                                               gl::TextureType type,
+                                              gl::SamplerFormat format,
                                               gl::Texture **textureOut)
 {
-    return mIncompleteTextures.getIncompleteTexture(context, type, this, textureOut);
+    return mIncompleteTextures.getIncompleteTexture(context, type, format, this, textureOut);
 }
 
 angle::Result ContextVk::initialize()
@@ -4138,7 +4139,9 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         // Null textures represent incomplete textures.
         if (isIncompleteTexture)
         {
-            ANGLE_TRY(getIncompleteTexture(context, textureType, &texture));
+            ANGLE_TRY(getIncompleteTexture(
+                context, textureType, executable->getSamplerFormatForTextureUnitIndex(textureUnit),
+                &texture));
         }
 
         TextureVk *textureVk = vk::GetImpl(texture);
