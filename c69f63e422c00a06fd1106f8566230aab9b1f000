@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "195738ef_5eb511aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T15:02:50Z",
+      "side": 1,
+      "message": "Ok, then only the second bullet point should be enough: in FramebufferVk::startNewRenderPass set the layout of the attachments to GENERAL if the desc is in fetch mode. You can add an ASSERT in onSwitchProgramFramebufferFetch() that no render pass is open.\n\nThat said, I noticed another bug. See other comment.",
+      "parentUuid": "2c72ab00_5c05a76b",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "de6c237b_819f50ed",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 13
@@ -276,6 +294,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a8d93ab9_f54b64e7",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2733,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T15:02:50Z",
+      "side": 1,
+      "message": "This function should early out if `this` is not the current draw framebuffer! If the READ framebuffer is synced, we don\u0027t want to be updating the graphics pipeline. Please also add an ASSERT(framebufferVk \u003d\u003d vk::GetImpl(mState.getDrawFramebuffer()));` in onDrawFramebufferRenderPassDescChange.\n\nA test to trigger the bug could be:\n\n- Create FBO1 with two attachments\n- Draw with fetch program (this syncs FBO1)\n- Create FBO2 with one attachments, initialize the attachment with glTexSubImage, bind as READ framebuffer\n- Blit src:FBO2 dst:FBO1 (this syncs FBO2 as READ framebuffer, no need to sync FBO1 cause not dirty. This function is called for FBO2 which mistakenly updates the graphics pipeline based on FBO2\u0027s desc)\n- Draw with fetch program again (FBO1 is not synced, so graphics pipeline is still based on FBO2\u0027s desc) -\u003e should fail with validation error as pipeline says only one attachment but draw FBO (FBO1) has two.",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7d384fb7_21db61d9",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 13
@@ -305,6 +340,24 @@
       "side": 1,
       "message": "Is it possible sequence in my change? ANGLE breaks RP whenever the program fetch mode is changed. So I think there should be endRP, startRP between the fetch mode switch. Then nothing could be a problem.",
       "parentUuid": "7d384fb7_21db61d9",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb1d17c4_2b8f4184",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T15:02:50Z",
+      "side": 1,
+      "message": "Ok, then please add an `ASSERT(!mHasFramebufferFetch);` here to make sure the expectation is met. Also, a test if there isn\u0027t one already would be much appreciated.",
+      "parentUuid": "09be6014_ad7e8f3a",
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
