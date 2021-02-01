@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d29d89f3_09f16414",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-01T18:43:32Z",
+      "side": 1,
+      "message": "But batch QPA files will still be kept in Swarming\u0027s isolated outputs, right?\nIs it useful to have one huge merged QPA in addition to those?",
+      "range": {
+        "startLine": 11,
+        "startChar": 10,
+        "endLine": 11,
+        "endChar": 67
+      },
+      "revId": "e8d79f5dde3457d1320875611d51861a3f638226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "1753d28b_ba6ced97",
@@ -14,6 +37,52 @@
       "writtenOn": "2021-02-01T16:23:14Z",
       "side": 1,
       "message": "PTAL Yuly.",
+      "revId": "e8d79f5dde3457d1320875611d51861a3f638226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fdc79b0_0197b9f5",
+        "filename": "scripts/angle_deqp_test_merge.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-01T18:43:32Z",
+      "side": 1,
+      "message": "standard_isolated_script_merge?",
+      "range": {
+        "startLine": 19,
+        "startChar": 7,
+        "endLine": 19,
+        "endChar": 27
+      },
+      "revId": "e8d79f5dde3457d1320875611d51861a3f638226",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21787845_dd0a9609",
+        "filename": "scripts/angle_deqp_test_merge.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-01T18:43:32Z",
+      "side": 1,
+      "message": "I think you need StandardIsolatedScriptMerge from https://source.chromium.org/chromium/chromium/src/+/master:testing/merge_scripts/standard_isolated_script_merge.py",
+      "range": {
+        "startLine": 29,
+        "startChar": 11,
+        "endLine": 30,
+        "endChar": 73
+      },
       "revId": "e8d79f5dde3457d1320875611d51861a3f638226",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
