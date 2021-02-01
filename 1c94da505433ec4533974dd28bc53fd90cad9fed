@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54cf6d37_9b69050c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-01T15:45:15Z",
+      "side": 1,
+      "message": "Without images we save maybe 1/2 the size. They\u0027re still fairly big. The good news is that the infra stores these compressed and they should compress very well. Landing, keep an eye out, and I also asked about storage in the luci users chat.",
+      "revId": "1c94da505433ec4533974dd28bc53fd90cad9fed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
