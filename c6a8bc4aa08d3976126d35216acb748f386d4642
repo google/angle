@@ -16,6 +16,23 @@
       "message": "As a follow up, if you can write a regression test that triggers the crash, that would be great.",
       "revId": "c6a8bc4aa08d3976126d35216acb748f386d4642",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfe77fbb_34bda7de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-01T14:45:51Z",
+      "side": 1,
+      "message": "LGTM as well. If you could write a regression test in angle_end2end_tests that we could add to our CQ that would be much appreciated.",
+      "revId": "c6a8bc4aa08d3976126d35216acb748f386d4642",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
