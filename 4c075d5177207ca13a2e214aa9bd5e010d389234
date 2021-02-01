@@ -16,6 +16,57 @@
       "message": "PTAL.\n\nEXPECT_PIXEL_COLOR32F_NEAR in the test returns GL_INVALID_FRAMEBUFFER_OPERATION on Android/Vulkan. Do you know what feature I should check for to know if read back is possible? glReadPixel\u0027s validation only returns GL_INVALID_FRAMEBUFFER_OPERATION for multiview apparently.",
       "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0931fc4_6633b7ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-01T17:08:41Z",
+      "side": 1,
+      "message": "LGTM\n\nHave you tried this with the sync validation VVL to see if there are any new errors?",
+      "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3878b03_ca618063",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3932,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-01T17:08:41Z",
+      "side": 1,
+      "message": "ASSERT_GL_FRAMEBUFFER_COMPLETE",
+      "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37b73818_e55f657c",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3945,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-01T17:08:41Z",
+      "side": 1,
+      "message": "ASSERT_GL_FRAMEBUFFER_COMPLETE",
+      "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
