@@ -2010,6 +2010,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     bool isSwiftShader =
         IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID);
 
+    bool supportsNegativeViewport =
+        ExtensionFound(VK_KHR_MAINTENANCE1_EXTENSION_NAME, deviceExtensionNames) ||
+        mPhysicalDeviceProperties.apiVersion >= VK_API_VERSION_1_1;
+
     if (mLineRasterizationFeatures.bresenhamLines == VK_TRUE)
     {
         ASSERT(mLineRasterizationFeatures.sType ==
@@ -2196,7 +2200,8 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         ExtensionFound(VK_EXT_EXTERNAL_MEMORY_HOST_EXTENSION_NAME, deviceExtensionNames));
 
     // Android pre-rotation support can be disabled.
-    ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces, IsAndroid());
+    ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces,
+                            IsAndroid() && supportsNegativeViewport);
 
     // Currently disabled by default: http://anglebug.com/3078
     ANGLE_FEATURE_CONDITION(
@@ -2277,6 +2282,9 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // r32f image emulation is done unconditionally so VK_FORMAT_FEATURE_STORAGE_*_ATOMIC_BIT is not
     // required.
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateR32fImageAtomicExchange, true);
+
+    // Negative viewports are exposed in the Maintenance1 extension and in core Vulkan 1.1+.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsNegativeViewport, supportsNegativeViewport);
 
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);

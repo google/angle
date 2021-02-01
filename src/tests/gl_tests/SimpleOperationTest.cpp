@@ -1212,13 +1212,15 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     WithMetalForcedBufferGPUStorage(ES3_METAL()),
     WithMetalMemoryBarrierAndCheapRenderPass(ES3_METAL(),
                                              /* hasBarrier */ false,
-                                             /* cheapRenderPass */ false));
+                                             /* cheapRenderPass */ false),
+    WithNoVulkanViewportFlip(ES2_VULKAN()));
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     TriangleFanDrawTest,
     WithMetalForcedBufferGPUStorage(ES3_METAL()),
     WithMetalMemoryBarrierAndCheapRenderPass(ES3_METAL(),
                                              /* hasBarrier */ false,
-                                             /* cheapRenderPass */ false));
+                                             /* cheapRenderPass */ false),
+    WithNoVulkanViewportFlip(ES2_VULKAN()));
 
 }  // namespace

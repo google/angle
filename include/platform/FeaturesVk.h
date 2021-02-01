@@ -467,6 +467,10 @@ struct FeaturesVk : FeatureSetBase
         "emulateR32fImageAtomicExchange", FeatureCategory::VulkanWorkarounds,
         "Emulate r32f images with r32ui to support imageAtomicExchange.", &members,
         "http://anglebug.com/5535"};
+
+    Feature supportsNegativeViewport = {
+        "supportsNegativeViewport", FeatureCategory::VulkanFeatures,
+        "The driver supports inverting the viewport with a negative height.", &members};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

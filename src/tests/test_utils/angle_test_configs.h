@@ -281,6 +281,13 @@ inline PlatformParameters WithAsyncCommandQueueFeatureVulkan(const PlatformParam
     withAsyncCommandQueue.eglParameters.asyncCommandQueueFeatureVulkan = EGL_TRUE;
     return withAsyncCommandQueue;
 }
+
+inline PlatformParameters WithNoVulkanViewportFlip(const PlatformParameters &params)
+{
+    PlatformParameters withoutVulkanViewportFlip                       = params;
+    withoutVulkanViewportFlip.eglParameters.supportsVulkanViewportFlip = EGL_FALSE;
+    return withoutVulkanViewportFlip;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

@@ -254,6 +254,15 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_ForceMetalBufferGPUStorage";
     }
 
+    if (pp.eglParameters.supportsVulkanViewportFlip == EGL_TRUE)
+    {
+        stream << "_VulkanViewportFlip";
+    }
+    else if (pp.eglParameters.supportsVulkanViewportFlip == EGL_FALSE)
+    {
+        stream << "_NoVulkanViewportFlip";
+    }
+
     return stream;
 }
 

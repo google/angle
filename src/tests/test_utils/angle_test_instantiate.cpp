@@ -564,6 +564,7 @@ bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters 
         switch (param.getRenderer())
         {
             case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
+                return true;
             case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
                 // Swiftshader's vulkan frontend doesn't build on Android.
                 if (param.getDeviceType() == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
@@ -571,6 +572,10 @@ bool IsConfigAllowlisted(const SystemInfo &systemInfo, const PlatformParameters 
                     return false;
                 }
                 if (!IsAndroid9OrNewer())
+                {
+                    return false;
+                }
+                if (param.eglParameters.supportsVulkanViewportFlip == EGL_FALSE)
                 {
                     return false;
                 }

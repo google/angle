@@ -206,6 +206,15 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         disabledFeatureOverrides.push_back("gen_multiple_mips_per_pass");
     }
 
+    if (params.supportsVulkanViewportFlip == EGL_TRUE)
+    {
+        enabledFeatureOverrides.push_back("supportsViewportFlip");
+    }
+    else if (params.supportsVulkanViewportFlip == EGL_FALSE)
+    {
+        disabledFeatureOverrides.push_back("supportsViewportFlip");
+    }
+
     switch (params.emulatedPrerotation)
     {
         case 90:

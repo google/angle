@@ -33,8 +33,10 @@ bool ValidateTransformedSpirV(ContextVk *contextVk,
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
         GlslangSpirvOptions options;
-        options.shaderType                         = shaderType;
-        options.preRotation                        = SurfaceRotation::FlippedRotated90Degrees;
+        options.shaderType  = shaderType;
+        options.preRotation = SurfaceRotation::FlippedRotated90Degrees;
+        options.negativeViewportSupported =
+            contextVk->getFeatures().supportsNegativeViewport.enabled;
         options.transformPositionToVulkanClipSpace = true;
         options.removeDebugInfo                    = true;
         options.isTransformFeedbackStage           = shaderType == lastPreFragmentStage;
@@ -135,8 +137,9 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     options.shaderType = shaderType;
     options.removeEarlyFragmentTestsOptimization =
         shaderType == gl::ShaderType::Fragment && optionBits.removeEarlyFragmentTestsOptimization;
-    options.removeDebugInfo          = !contextVk->getRenderer()->getEnableValidationLayers();
-    options.isTransformFeedbackStage = isLastPreFragmentStage;
+    options.removeDebugInfo           = !contextVk->getRenderer()->getEnableValidationLayers();
+    options.isTransformFeedbackStage  = isLastPreFragmentStage;
+    options.negativeViewportSupported = contextVk->getFeatures().supportsNegativeViewport.enabled;
 
     if (isLastPreFragmentStage)
     {

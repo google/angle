@@ -1807,11 +1807,27 @@ void SpirvTransformer::preRotateXY(spirv::IdRef xId,
     switch (mOptions.preRotation)
     {
         case SurfaceRotation::Identity:
-        case SurfaceRotation::FlippedIdentity:
             // [ 1  0]   [x]
             // [ 0  1] * [y]
             *rotatedXIdOut = xId;
             *rotatedYIdOut = yId;
+            break;
+        case SurfaceRotation::FlippedIdentity:
+            if (mOptions.negativeViewportSupported)
+            {
+                // [ 1  0]   [x]
+                // [ 0  1] * [y]
+                *rotatedXIdOut = xId;
+                *rotatedYIdOut = yId;
+            }
+            else
+            {
+                // [ 1  0]   [x]
+                // [ 0 -1] * [y]
+                *rotatedXIdOut = xId;
+                *rotatedYIdOut = getNewId();
+                spirv::WriteFNegate(mSpirvBlobOut, mFloatId, *rotatedYIdOut, yId);
+            }
             break;
         case SurfaceRotation::Rotated90Degrees:
         case SurfaceRotation::FlippedRotated90Degrees:
