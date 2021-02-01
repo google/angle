@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb4903ee_e8d8c590",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-01T22:00:55Z",
+      "side": 1,
+      "message": "Earlier dry runs were green - CQ\u0027ing.\n",
+      "revId": "ed63bd9f7e6793d19325a599b19b5bc2cde8023a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
