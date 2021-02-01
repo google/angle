@@ -210,6 +210,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "af452eb6_c0ad4030",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-01T22:24:52Z",
+      "side": 1,
+      "message": "Mohan, you can use the BitSetIteratorPerf in conjunction with the other perf tests. The Texture one you picked out is good.\n\nI look at the machine code with VTune (good) and MSVS 2019 (works, but it is a bit more peculiar).\n\nI\u0027m fine with a generic solution if it\u0027s light-speed. Just want our fast path to be supported with the fastest code. This is definitely an improvement over ToT, but how fast is it compared to BitSet64?",
+      "parentUuid": "9bbebf32_e17ecd27",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1e4d5081_7fa7165c",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 1
