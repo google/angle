@@ -16,6 +16,40 @@
       "message": "PTAL Ken/Jonah.",
       "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "251b9b99_dce9d295",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T16:47:48Z",
+      "side": 1,
+      "message": "Unnecessary check, std::set::insert is noop if key is already there.",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50d1e6b6_5132edc5",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T16:47:48Z",
+      "side": 1,
+      "message": "Please also add instructions on how to disable that in this message. I do sometimes run a set through the debugger.",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
