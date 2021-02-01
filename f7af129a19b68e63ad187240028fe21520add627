@@ -192,6 +192,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9bbebf32_e17ecd27",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T22:21:08Z",
+      "side": 1,
+      "message": "Or rather BitSet96? I don\u0027t know how much we care about supporting 32-bit.",
+      "parentUuid": "0a205b22_6c3d72d1",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1e4d5081_7fa7165c",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 1
