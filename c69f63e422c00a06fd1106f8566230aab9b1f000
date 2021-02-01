@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2c72ab00_5c05a76b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-02-01T05:34:05Z",
+      "side": 1,
+      "message": "I\u0027m confused.\nIn my code, onSwitchProgramFramebufferFetch() is called after the program executable/fetch mode is changed. Also render pass will be always closed because I call flushCommandsAndEndRenderPass() before I call onSwitchProgramFramebufferFetch().\nSo I don\u0027t understand most of your comment related to onSwitchProgramFramebufferFetch().",
+      "parentUuid": "5ec7dbfa_8fff1bac",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "de6c237b_819f50ed",
         "filename": "src/libANGLE/Program.cpp",
         "patchSetId": 13
@@ -269,6 +287,24 @@
       "writtenOn": "2021-01-29T10:30:12Z",
       "side": 1,
       "message": "There\u0027s a bug here. Say the application does this:\n\n- Start RP\n- Draw without fetch mode\n * sets mHasFramebufferFetch \u003d false\n- Draw with fetch mode\n * sets mHasFramebufferFetch \u003d true\n- Draw without fetch mode\n * sets mHasFramebufferFetch \u003d false\n- End RP\n\nAt the end when we create the render pass, InitializeRenderPassFromDesc will set needInputAttachments \u003d false, so the image layouts would be COLOR_ATTACHMENT, and the input attachments not specified.\n\nYou can add an `updateFramebufferFetchMode` that says SetBitField(mHasFramebufferFetch, mHasFramebufferFetch || hasFramebufferFetch); to call in FramebufferVk::onSwitchProgramFramebufferFetch()\n\nPlease add a test as well.",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09be6014_ad7e8f3a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-02-01T05:34:05Z",
+      "side": 1,
+      "message": "Is it possible sequence in my change? ANGLE breaks RP whenever the program fetch mode is changed. So I think there should be endRP, startRP between the fetch mode switch. Then nothing could be a problem.",
+      "parentUuid": "7d384fb7_21db61d9",
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
