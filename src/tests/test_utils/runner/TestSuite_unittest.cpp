@@ -63,9 +63,9 @@ class TestSuiteTest : public testing::Test
 
         std::string resultsFileName = "--results-file=" + mTempFileName;
 
-        std::vector<const char *> args = {
-            executablePath.c_str(), kRunTestSuite,      "--gtest_also_run_disabled_tests",
-            "--bot-mode",           "--test-timeout=5", resultsFileName.c_str()};
+        std::vector<const char *> args = {executablePath.c_str(), kRunTestSuite,
+                                          "--gtest_also_run_disabled_tests", "--test-timeout=5",
+                                          resultsFileName.c_str()};
 
         for (const std::string &arg : extraArgs)
         {

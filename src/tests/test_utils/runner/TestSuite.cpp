@@ -121,6 +121,17 @@ bool ParseFlag(const char *expected, const char *actual, bool *flagOut)
     return false;
 }
 
+template <typename SetterFuncT>
+bool ParseFlagCustom(const char *expected, const char *actual, SetterFuncT setterFunc)
+{
+    if (strcmp(expected, actual) == 0)
+    {
+        setterFunc();
+        return true;
+    }
+    return false;
+}
+
 bool ParseStringArg(const char *flag, const char *argument, std::string *valueOut)
 {
     const char *value = ParseFlagValue(flag, argument);
@@ -967,6 +978,44 @@ void GTestListTests(const std::map<TestIdentifier, TestResult> &resultsMap)
         }
     }
 }
+
+ANGLE_MAYBE_UNUSED std::set<std::string> GetUniqueTestConfigs(
+    const std::vector<TestIdentifier> &testIdentifiers)
+{
+    std::set<std::string> uniqueConfigNames;
+    for (const TestIdentifier &id : testIdentifiers)
+    {
+        std::string config = GetConfigNameFromTestIdentifier(id);
+        uniqueConfigNames.insert(config);
+    }
+    return uniqueConfigNames;
+}
+
+TestSuiteRunMode DetermineTestSuiteRunMode(const std::vector<TestIdentifier> &testSet, int batchId)
+{
+#if defined(ANGLE_PLATFORM_ANDROID)
+    // TODO: Run single config per process on Android. http://anglebug.com/5600
+    return TestSuiteRunMode::SingleProcess;
+#else
+    // Run single-process if in a child batch.
+    if (batchId != -1)
+    {
+        return TestSuiteRunMode::SingleProcess;
+    }
+
+    // If more than one config, enable multi-process by default.
+    // Also use multi-process if we only have the single default config.
+    std::set<std::string> testConfigs = GetUniqueTestConfigs(testSet);
+    if ((testConfigs.size() == 1) && (*testConfigs.begin() != "default"))
+    {
+        return TestSuiteRunMode::SingleProcess;
+    }
+    else
+    {
+        return TestSuiteRunMode::MultiProcess;
+    }
+#endif  // defined(ANGLE_PLATFORM_ANDROID)
+}
 }  // namespace
 
 // static
@@ -1030,7 +1079,7 @@ ProcessInfo::ProcessInfo(ProcessInfo &&other)
 TestSuite::TestSuite(int *argc, char **argv)
     : mShardCount(-1),
       mShardIndex(-1),
-      mBotMode(false),
+      mRunMode(TestSuiteRunMode::Unspecified),
       mDebugTestGroups(false),
       mGTestListTests(false),
       mListTests(false),
@@ -1173,6 +1222,12 @@ TestSuite::TestSuite(int *argc, char **argv)
 
     std::vector<TestIdentifier> testSet = GetFilteredTests(&mTestFileLines, alsoRunDisabledTests);
 
+    if (mRunMode == TestSuiteRunMode::Unspecified)
+    {
+        mRunMode = DetermineTestSuiteRunMode(testSet, mBatchId);
+        ASSERT(mRunMode != TestSuiteRunMode::Unspecified);
+    }
+
     if (mShardCount == 0)
     {
         printf("Shard count must be > 0.\n");
@@ -1192,7 +1247,7 @@ TestSuite::TestSuite(int *argc, char **argv)
             testSet = GetShardTests(testSet, mShardIndex, mShardCount, &mTestFileLines,
                                     alsoRunDisabledTests);
 
-            if (!mBotMode)
+            if (mRunMode == TestSuiteRunMode::SingleProcess)
             {
                 mFilterString = GetTestFilter(testSet);
 
@@ -1224,7 +1279,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         mTestResults.testArtifactsFakeTestName = fakeTestName.str();
     }
 
-    if (mBotMode)
+    if (mRunMode == TestSuiteRunMode::MultiProcess)
     {
         // Split up test batches.
         mTestQueue = BatchTests(testSet, mBatchSize);
@@ -1249,7 +1304,8 @@ TestSuite::TestSuite(int *argc, char **argv)
 
     mTotalResultCount = testSet.size();
 
-    if ((mBotMode || !mResultsDirectory.empty()) && mResultsFile.empty())
+    if ((mRunMode == TestSuiteRunMode::MultiProcess || !mResultsDirectory.empty()) &&
+        mResultsFile.empty())
     {
         // Create a default output file in bot mode.
         mResultsFile = "output.json";
@@ -1262,7 +1318,7 @@ TestSuite::TestSuite(int *argc, char **argv)
         mResultsFile = resultFileName.str();
     }
 
-    if (!mBotMode)
+    if (mRunMode == TestSuiteRunMode::SingleProcess)
     {
         testing::TestEventListeners &listeners = testing::UnitTest::GetInstance()->listeners();
         listeners.Append(new TestEventListener(
@@ -1304,7 +1360,10 @@ bool TestSuite::parseSingleArg(const char *argument)
             ParseStringArg(kHistogramJsonFileArg, argument, &mHistogramJsonFile) ||
             ParseStringArg("--isolated-script-test-perf-output=", argument, &mHistogramJsonFile) ||
             ParseStringArg(kIsolatedOutDir, argument, &mTestArtifactDirectory) ||
-            ParseFlag("--bot-mode", argument, &mBotMode) ||
+            ParseFlagCustom("--single-process", argument,
+                            [this]() { this->mRunMode = TestSuiteRunMode::SingleProcess; }) ||
+            ParseFlagCustom("--multi-process", argument,
+                            [this]() { this->mRunMode = TestSuiteRunMode::MultiProcess; }) ||
             ParseFlag("--debug-test-groups", argument, &mDebugTestGroups) ||
             ParseFlag(kGTestListTests, argument, &mGTestListTests) ||
             ParseFlag(kListTests, argument, &mListTests) ||
@@ -1605,7 +1664,7 @@ int TestSuite::run()
     }
 
     // Run tests serially.
-    if (!mBotMode)
+    if (mRunMode == TestSuiteRunMode::SingleProcess)
     {
         // Only start the watchdog if the debugger is not attached and we're a child process.
         if (!angle::IsDebuggerAttached() && mBatchId != -1)
