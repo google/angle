@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a77d738_b6da40d8",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T18:34:14Z",
+      "side": 1,
+      "message": "nit: can remove this \"k\"",
+      "range": {
+        "startLine": 574,
+        "startChar": 40,
+        "endLine": 574,
+        "endChar": 41
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c66ea6ab_5e351ec8",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T18:34:14Z",
+      "side": 1,
+      "message": "If it\u0027s going to use for loops, how is this any different from std::bitset? My impressions was that the point of reimplementing this was so that the loops are unrolled and constants are used as much as possible. Note that ANGLE is built with -Os, so loop unrolling is not automatic (usually doesn\u0027t happen with -O2 either AFAIK)\n\nAny perf test you could write for this would be highly useful in determining what works best.",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
