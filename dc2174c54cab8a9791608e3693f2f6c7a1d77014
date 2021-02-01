@@ -87,6 +87,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e8cf65b_7408732c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-01T15:13:57Z",
+      "side": 1,
+      "message": "10mb might be a bit much. I turned off image capture by default in release. Let\u0027s see how big these are.",
+      "parentUuid": "feda0cdb_8fdd830a",
+      "revId": "dc2174c54cab8a9791608e3693f2f6c7a1d77014",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "56c4c28c_c8fd758b",
@@ -100,6 +118,30 @@
       "writtenOn": "2021-01-29T23:39:36Z",
       "side": 1,
       "message": "Would be more readable to put the rest of the for() in an else{}\nEven better if this 150 line function would be split into several smaller ones.",
+      "range": {
+        "startLine": 673,
+        "startChar": 0,
+        "endLine": 673,
+        "endChar": 21
+      },
+      "revId": "dc2174c54cab8a9791608e3693f2f6c7a1d77014",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c14d66aa_39a856e2",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-01T15:13:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56c4c28c_c8fd758b",
       "range": {
         "startLine": 673,
         "startChar": 0,
