@@ -75,6 +75,24 @@
       "parentUuid": "e227e16e_2c77236e",
       "revId": "f7af129a19b68e63ad187240028fe21520add627",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8bbae18_eee3ea8a",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T21:08:52Z",
+      "side": 1,
+      "message": "Interesting, glad to know there\u0027s a perf test that can measure this. Let\u0027s wait and see what Jamie thinks about this too.\n\nThat said, without having looked at std::bitset\u0027s implementation myself, I\u0027m surprised there\u0027s any difference. I would have expected std::bitset to have a similar implementation (like how else can you do this?).",
+      "parentUuid": "3fac4755_98f8f7a2",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
