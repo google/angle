@@ -39,6 +39,24 @@
       "message": "If it\u0027s going to use for loops, how is this any different from std::bitset? My impressions was that the point of reimplementing this was so that the loops are unrolled and constants are used as much as possible. Note that ANGLE is built with -Os, so loop unrolling is not automatic (usually doesn\u0027t happen with -O2 either AFAIK)\n\nAny perf test you could write for this would be highly useful in determining what works best.",
       "revId": "f7af129a19b68e63ad187240028fe21520add627",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e227e16e_2c77236e",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-01T18:37:22Z",
+      "side": 1,
+      "message": "Note also that in the end we really only need 2-word and 3-word variants. 2-word variant for 64-bit bitsets on 32-bit systems + 96-bit bitsets for 64-bit systems. 3-word variant for 96-bit bitsets on 32-bit systems.\n\nIf the implementation cannot be generic enough to support both 2- and 3-word implementations without incurring overheads, then I think it\u0027s fine to do only 2-word and let 32-bit systems continue using std::bitset. That said, a couple of constexpr `if`s should take care of the 2- and 3-word implementation differences.",
+      "parentUuid": "c66ea6ab_5e351ec8",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
