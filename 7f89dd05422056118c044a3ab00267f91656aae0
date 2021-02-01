@@ -50,6 +50,24 @@
       "message": "Please also add instructions on how to disable that in this message. I do sometimes run a set through the debugger.",
       "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11dae521_134a8387",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-01T17:06:04Z",
+      "side": 1,
+      "message": "When you use the debugger, can you restrict yourself to one backend/config?",
+      "parentUuid": "50d1e6b6_5132edc5",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
