@@ -174,6 +174,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0a205b22_6c3d72d1",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-01T21:52:07Z",
+      "side": 1,
+      "message": "\u003e I\u0027m a bit surprised you went with the N words approach instead of the two words approach\n\n128 today, maybe 256 later, went ahead with flexibility.\n\n\u003e We want the machine instructions to be unrolled in this case. If the compiler can\u0027t do it for whatever reason we will have to do it manually\n\ndidn\u0027t dig into machine code, took the perf test numbers at face value\n\n\u003e Does the fixed size \"2\" get unrolled in the loops or does it stay as a loop?\n\nyou looked at this machine code using what tool?\n\n\u003e If the compiler can\u0027t do it for whatever reason we will have to do it manually.\n\nas mentioned earlier, i can just make this a BitSet128 for now and worry about generic case later\n\n\u003e Also look at BitSetIteratorPerf.cpp\n\nshould i be using this as the perf test to tune implementation?",
+      "parentUuid": "6d5298bd_06545910",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1e4d5081_7fa7165c",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 1
@@ -197,6 +215,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "51e8d062_b38d1362",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-01T21:52:07Z",
+      "side": 1,
+      "message": "cant use range-for because of - \"// The last BaseBitSet needs special handling\"",
+      "parentUuid": "1e4d5081_7fa7165c",
+      "range": {
+        "startLine": 733,
+        "startChar": 8,
+        "endLine": 734,
+        "endChar": 9
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "da6b12ee_7e0b22ae",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 1
@@ -208,6 +250,30 @@
       "writtenOn": "2021-02-01T21:24:01Z",
       "side": 1,
       "message": "We don\u0027t define an intersects() function on bitsets.",
+      "range": {
+        "startLine": 793,
+        "startChar": 8,
+        "endLine": 793,
+        "endChar": 74
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "18377a0a_76556b2e",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 793,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-01T21:52:07Z",
+      "side": 1,
+      "message": "why? sets and intersection go hand-in-hand, no?\n\nAlso, this was a replacement for the \"(BitSetT \u0026 BitSetT).none()\" pattern where it would create a new temp object and call \"none()\" on it, looked wasteful.",
+      "parentUuid": "da6b12ee_7e0b22ae",
       "range": {
         "startLine": 793,
         "startChar": 8,
