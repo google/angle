@@ -336,6 +336,10 @@ if (build_angle_perftests) {
   angle_source_set("angle_trace_perftests") {
     testonly = true
     if (build_angle_trace_perf_tests) {
+      if (is_ios) {
+        # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+        check_includes = false
+      }
       sources = [ "perf_tests/TracePerfTest.cpp" ]
       deps = [
         ":angle_perftests_shared",
@@ -1127,6 +1131,10 @@ if (build_angle_deqp_tests && !is_fuchsia) {
   }
 
   angle_deqp_source_set("angle_deqp_libtester") {
+    if (is_ios) {
+      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+      check_includes = false
+    }
     public_deps = [
       ":angle_deqp_framework_common",
       ":angle_deqp_framework_egl",
