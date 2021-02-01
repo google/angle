@@ -16,6 +16,24 @@
       "message": "LGTM with a green run.",
       "revId": "5bc3943208ed3cba86c233fddaf6a83f0b2a8282",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6dc2b3a7_e0950d3c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-01T18:59:04Z",
+      "side": 1,
+      "message": "So it now passes gn check, but the next error is that we can\u0027t specify our own scripts for angle_end2end_tests and angle_white_box_tests in https://source.chromium.org/chromium/chromium/src/+/master:testing/buildbot/gn_isolate_map.pyl;l\u003d191 due to\nhttps://source.chromium.org/chromium/chromium/src/+/master:tools/mb/mb.py;l\u003d1525\n\nI wonder if we really need our custom scripts, or perhaps we can add some changes to the bin/run_* scripts if we are not happy with them?",
+      "parentUuid": "b72e1efe_455f5830",
+      "revId": "5bc3943208ed3cba86c233fddaf6a83f0b2a8282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
