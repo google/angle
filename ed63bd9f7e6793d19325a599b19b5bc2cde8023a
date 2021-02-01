@@ -16,6 +16,23 @@
       "message": "Earlier dry runs were green - CQ\u0027ing.\n",
       "revId": "ed63bd9f7e6793d19325a599b19b5bc2cde8023a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae8a4e86_b0832db2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-01T22:56:43Z",
+      "side": 1,
+      "message": "Filed http://crbug.com/1173237 about intermittent win-swangle-try-tot-angle-x86 test timeouts.\n",
+      "revId": "ed63bd9f7e6793d19325a599b19b5bc2cde8023a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
