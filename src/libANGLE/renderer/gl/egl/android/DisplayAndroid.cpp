@@ -65,61 +65,48 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     gl::Version eglVersion(mEGL->majorVersion, mEGL->minorVersion);
     ASSERT(eglVersion >= gl::Version(1, 4));
 
+    std::vector<EGLint> renderableTypes;
     static_assert(EGL_OPENGL_ES3_BIT == EGL_OPENGL_ES3_BIT_KHR, "Extension define must match core");
-    EGLint esBit = (eglVersion >= gl::Version(1, 5) || mEGL->hasExtension("EGL_KHR_create_context"))
-                       ? EGL_OPENGL_ES3_BIT
-                       : EGL_OPENGL_ES2_BIT;
-
-    // clang-format off
-    std::vector<EGLint> configAttribListBase =
+    if (eglVersion >= gl::Version(1, 5) || mEGL->hasExtension("EGL_KHR_create_context"))
     {
-        EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER,
-        // Android doesn't support pixmaps
-        EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT,
-        EGL_CONFIG_CAVEAT, EGL_NONE,
-        EGL_CONFORMANT, esBit,
-        EGL_RENDERABLE_TYPE, esBit,
-    };
-    // clang-format on
-
-    if (mEGL->hasExtension("EGL_EXT_pixel_format_float"))
-    {
-        // Don't request floating point configs
-        configAttribListBase.push_back(EGL_COLOR_COMPONENT_TYPE_EXT);
-        configAttribListBase.push_back(EGL_COLOR_COMPONENT_TYPE_FIXED_EXT);
+        renderableTypes.push_back(EGL_OPENGL_ES3_BIT);
     }
+    renderableTypes.push_back(EGL_OPENGL_ES2_BIT);
 
-    std::vector<EGLint> configAttribListWithFormat = configAttribListBase;
+    egl::AttributeMap baseConfigAttribs;
+    baseConfigAttribs.insert(EGL_COLOR_BUFFER_TYPE, EGL_RGB_BUFFER);
+    // Android doesn't support pixmaps
+    baseConfigAttribs.insert(EGL_SURFACE_TYPE, EGL_WINDOW_BIT | EGL_PBUFFER_BIT);
+
+    egl::AttributeMap configAttribsWithFormat(baseConfigAttribs);
+    // Choose RGBA8888
+    configAttribsWithFormat.insert(EGL_RED_SIZE, 8);
+    configAttribsWithFormat.insert(EGL_GREEN_SIZE, 8);
+    configAttribsWithFormat.insert(EGL_BLUE_SIZE, 8);
+    configAttribsWithFormat.insert(EGL_ALPHA_SIZE, 8);
+
+    // Choose D24S8
     // EGL1.5 spec Section 2.2 says that depth, multisample and stencil buffer depths
     // must match for contexts to be compatible.
-    // Choose RGBA8888
-    configAttribListWithFormat.push_back(EGL_RED_SIZE);
-    configAttribListWithFormat.push_back(8);
-    configAttribListWithFormat.push_back(EGL_GREEN_SIZE);
-    configAttribListWithFormat.push_back(8);
-    configAttribListWithFormat.push_back(EGL_BLUE_SIZE);
-    configAttribListWithFormat.push_back(8);
-    configAttribListWithFormat.push_back(EGL_ALPHA_SIZE);
-    configAttribListWithFormat.push_back(8);
-    // Choose DEPTH24_STENCIL8
-    configAttribListWithFormat.push_back(EGL_DEPTH_SIZE);
-    configAttribListWithFormat.push_back(24);
-    configAttribListWithFormat.push_back(EGL_STENCIL_SIZE);
-    configAttribListWithFormat.push_back(8);
-    // Choose no multisampling
-    configAttribListWithFormat.push_back(EGL_SAMPLE_BUFFERS);
-    configAttribListWithFormat.push_back(0);
+    configAttribsWithFormat.insert(EGL_DEPTH_SIZE, 24);
+    configAttribsWithFormat.insert(EGL_STENCIL_SIZE, 8);
 
-    // Complete the attrib lists
-    configAttribListBase.push_back(EGL_NONE);
-    configAttribListWithFormat.push_back(EGL_NONE);
+    EGLConfig configWithFormat = EGL_NO_CONFIG_KHR;
+    for (EGLint renderableType : renderableTypes)
+    {
+        baseConfigAttribs.insert(EGL_RENDERABLE_TYPE, renderableType);
+        configAttribsWithFormat.insert(EGL_RENDERABLE_TYPE, renderableType);
 
-    EGLint numConfig;
-    EGLConfig configWithFormat;
+        std::vector<EGLint> attribVector = configAttribsWithFormat.toIntVector();
 
-    EGLBoolean success =
-        mEGL->chooseConfig(configAttribListWithFormat.data(), &configWithFormat, 1, &numConfig);
-    if (success == EGL_FALSE)
+        EGLint numConfig = 0;
+        if (mEGL->chooseConfig(attribVector.data(), &configWithFormat, 1, &numConfig) == EGL_TRUE)
+        {
+            break;
+        }
+    }
+
+    if (configWithFormat == EGL_NO_CONFIG_KHR)
     {
         return egl::EglNotInitialized()
                << "eglChooseConfig failed with " << egl::Error(mEGL->getError());
@@ -143,12 +130,12 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
     // Create mMockPbuffer with a normal config, but create a no_config mContext, if possible
     if (mEGL->hasExtension("EGL_KHR_no_config_context"))
     {
-        mConfigAttribList = configAttribListBase;
+        mConfigAttribList = baseConfigAttribs.toIntVector();
         mConfig           = EGL_NO_CONFIG_KHR;
     }
     else
     {
-        mConfigAttribList = configAttribListWithFormat;
+        mConfigAttribList = configAttribsWithFormat.toIntVector();
         mConfig           = configWithFormat;
     }
 
