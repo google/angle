@@ -57,6 +57,24 @@
       "parentUuid": "c66ea6ab_5e351ec8",
       "revId": "f7af129a19b68e63ad187240028fe21520add627",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fac4755_98f8f7a2",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-01T20:53:30Z",
+      "side": 1,
+      "message": "\u003e My impressions was that the point of reimplementing this was so that the loops are unrolled and constants are used as much as possible.\n\nI did not look into how std::bitset implements the container. All i was aiming for was that all iterations and set/get operations happen on 64bit values all the time which the new class achieves. I am fine with renaming the class to BitSet128 and removing all for loops\n\n\u003e Any perf test you could write for this would be highly useful in determining what works best.\n\ni used the existing texture perf test for measurements. I posted perf data on the next change that actually uses this class but pasting here as well -\n\ntexture perf test on local machine gave this result -\n\nwithout patch -\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from TexturesBenchmark\n[ RUN      ] TexturesBenchmark.Run/vulkan_null_8_textures_5_rebind_3_state_8_mips\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 1152.3734264549 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 3396 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 16804 count\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 1166.2437196270 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 3396 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 20200 count\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 1147.5633097704 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 3396 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 23596 count\n[       OK ] TexturesBenchmark.Run/vulkan_null_8_textures_5_rebind_3_state_8_mips (7128 ms)\n[----------] 1 test from TexturesBenchmark (7128 ms total)\n\nwith patch -\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from TexturesBenchmark\n[ RUN      ] TexturesBenchmark.Run/vulkan_null_8_textures_5_rebind_3_state_8_mips\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 835.8876610760 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 4734 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 23513 count\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 831.6839452489 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 4734 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 28247 count\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 820.6383508962 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 4734 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 32981 count\n[       OK ] TexturesBenchmark.Run/vulkan_null_8_textures_5_rebind_3_state_8_mips (7084 ms)\n[----------] 1 test from TexturesBenchmark (7086 ms total)",
+      "parentUuid": "e227e16e_2c77236e",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
