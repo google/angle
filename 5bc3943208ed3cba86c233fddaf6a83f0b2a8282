@@ -70,6 +70,24 @@
       "parentUuid": "529e5621_8f4e014a",
       "revId": "5bc3943208ed3cba86c233fddaf6a83f0b2a8282",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d22131ed_9505b8a3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T01:18:07Z",
+      "side": 1,
+      "message": "The issue is nothing consumes the --no-xvfb command line with the run_ scripts. They either use xvfb or they don\u0027t. We need to add this conditionality to the run_ scripts. Or build two test targets. I think cleaner just to fix the scripts, and about the same work.",
+      "parentUuid": "0e88affc_3f5d31b7",
+      "revId": "5bc3943208ed3cba86c233fddaf6a83f0b2a8282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
