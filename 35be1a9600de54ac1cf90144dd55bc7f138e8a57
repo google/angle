@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4762cb9d_c5f4f9f0",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T05:12:34Z",
+      "side": 1,
+      "message": "We can use it for 128-bit bitsets on 32-bit, so I\u0027d suggest we keep it.",
+      "parentUuid": "401a10e9_c08edc09",
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ff90e3ae_c737a0d2",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 2
@@ -48,6 +66,24 @@
       "writtenOn": "2021-02-02T03:08:59Z",
       "side": 1,
       "message": "BitSet128 on 32-bit should have 4 elements. This class is broken for 32-bit. I suggest naming it to BitSet2, and then use `using` to define `BitSet128` in 64-bit and `BitSet64` in 32-bit (instead of what we currently have). 128-bit bitset on 32-bit would continue to use std::bitset.",
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c2415be_5f7c6b9b",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T05:12:34Z",
+      "side": 1,
+      "message": "I\u0027d just use bitset large. And use this as a BitSet64 on 32-bit. Instead would call it DoubleBitSet or something.",
+      "parentUuid": "ff90e3ae_c737a0d2",
       "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
