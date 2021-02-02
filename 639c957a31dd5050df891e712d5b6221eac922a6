@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37069f9a_1e1d7dd7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-02T16:45:38Z",
+      "side": 1,
+      "message": "The failure for win-angle-rel-32 should be irrelevant.\nStill need to add feature initialization when switching from amd gpu to intel gpu (like to hear your ideas on implementation)\nThanks",
+      "revId": "639c957a31dd5050df891e712d5b6221eac922a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
