@@ -3598,6 +3598,29 @@ angle::Result ImageHelper::init(Context *context,
                         maxLevel, mipLevels, layerCount, isRobustResourceInitEnabled);
 }
 
+angle::Result ImageHelper::initMSAASwapchain(Context *context,
+                                             gl::TextureType textureType,
+                                             const VkExtent3D &extents,
+                                             bool rotatedAspectRation,
+                                             const Format &format,
+                                             GLint samples,
+                                             VkImageUsageFlags usage,
+                                             gl::LevelIndex baseLevel,
+                                             gl::LevelIndex maxLevel,
+                                             uint32_t mipLevels,
+                                             uint32_t layerCount,
+                                             bool isRobustResourceInitEnabled)
+{
+    ANGLE_TRY(initExternal(context, textureType, extents, format, samples, usage,
+                           kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, baseLevel,
+                           maxLevel, mipLevels, layerCount, isRobustResourceInitEnabled));
+    if (rotatedAspectRation)
+    {
+        std::swap(mExtents.width, mExtents.height);
+    }
+    return angle::Result::Continue;
+}
+
 angle::Result ImageHelper::initExternal(Context *context,
                                         gl::TextureType textureType,
                                         const VkExtent3D &extents,

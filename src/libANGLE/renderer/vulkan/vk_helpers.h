@@ -1336,6 +1336,18 @@ class ImageHelper final : public Resource, public angle::Subject
                        uint32_t mipLevels,
                        uint32_t layerCount,
                        bool isRobustResourceInitEnabled);
+    angle::Result initMSAASwapchain(Context *context,
+                                    gl::TextureType textureType,
+                                    const VkExtent3D &extents,
+                                    bool rotatedAspectRation,
+                                    const Format &format,
+                                    GLint samples,
+                                    VkImageUsageFlags usage,
+                                    gl::LevelIndex baseLevel,
+                                    gl::LevelIndex maxLevel,
+                                    uint32_t mipLevels,
+                                    uint32_t layerCount,
+                                    bool isRobustResourceInitEnabled);
     angle::Result initExternal(Context *context,
                                gl::TextureType textureType,
                                const VkExtent3D &extents,
