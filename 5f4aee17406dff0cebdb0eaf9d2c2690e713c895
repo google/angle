@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1edf2919_ad072fe1",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4927,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-02-02T16:55:23Z",
+      "side": 1,
+      "message": "A lot of the data save/loading is done in the serialize/deserialize functions. There is no missing matching code block in serialize, it\u0027s using mState.getSecondaryOutputLocations() which is a getter that retrieves the data in the executable. Do you want me to move everything to save/load that can be done there as well? I was doing it this way to be consistent.",
+      "parentUuid": "841d6af8_5a426987",
+      "range": {
+        "startLine": 4919,
+        "startChar": 0,
+        "endLine": 4927,
+        "endChar": 5
+      },
+      "revId": "5f4aee17406dff0cebdb0eaf9d2c2690e713c895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "74e9e1bb_4369130c",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 7
