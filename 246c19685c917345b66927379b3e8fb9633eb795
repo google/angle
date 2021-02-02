@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de9d80e3_1bc2ce57",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-02-02T10:26:32Z",
+      "side": 1,
+      "message": "To fix the issue 5598:\nhttps://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5598\nPlease review, thanks!",
+      "revId": "246c19685c917345b66927379b3e8fb9633eb795",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
