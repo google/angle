@@ -51,6 +51,24 @@
       "parentUuid": "937a99b0_269f7b8f",
       "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcb76dfc_00910619",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T19:24:00Z",
+      "side": 1,
+      "message": "I would prefer sticking with BitSetLarge and getting rid of BitSet128. Given the added benefit that 32bit is already taken care of in BitSetLarge",
+      "parentUuid": "c90bce17_51c6fff7",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
