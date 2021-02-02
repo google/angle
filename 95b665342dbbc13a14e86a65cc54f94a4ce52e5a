@@ -1,6 +1,40 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "1eef2c33_18889316",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-02T23:08:45Z",
+      "side": 1,
+      "message": "I don\u0027t see any changes to the ReadPixels or blit paths.",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57242c29_06137696",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-02T23:08:45Z",
+      "side": 1,
+      "message": "Any testing on Android with a device that\u0027s actually rotated?",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "668f0f5f_c80822f3",
@@ -14,6 +48,86 @@
       "writtenOn": "2021-02-02T18:21:34Z",
       "side": 1,
       "message": "PTAL",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7ba77c8_c9b4caa6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-02T23:08:45Z",
+      "side": 1,
+      "message": "I did a first-pass review.  I\u0027m wondering about the motivation for this CL.  Are there some old devices we\u0027re planning to use in the future?",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8e591e6_38e3191c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2653,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-02T23:08:45Z",
+      "side": 1,
+      "message": "How much testing has been done with Android pre-rotation and this CL?",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1513584_b7e33287",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-02T23:08:45Z",
+      "side": 1,
+      "message": "Looks like this check got removed sometime.  I\u0027m curious about why it got removed (just looking for insights).\n\nBTW, I checked the Android CDD doc (see: https://source.android.com/compatibility/android-cdd).  I thought that Vulkan 1.1 and/or the VK_KHR_maintenance1 were required, but they are not (at least with Android 11).  I thought they were (starting with Android 8 or 9), but the language only requires the symbols be present).",
+      "range": {
+        "startLine": 2011,
+        "startChar": 9,
+        "endLine": 2011,
+        "endChar": 34
+      },
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dd59b26_7ac843cd",
+        "filename": "util/EGLPlatformParameters.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-02T23:08:45Z",
+      "side": 1,
+      "message": "I don\u0027t see where this is used within ANGLE\u0027s rendering code.",
+      "range": {
+        "startLine": 88,
+        "startChar": 11,
+        "endLine": 88,
+        "endChar": 50
+      },
       "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
