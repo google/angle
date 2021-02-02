@@ -52,6 +52,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b3c7147_63ba6730",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T22:29:55Z",
+      "side": 1,
+      "message": "The original program was related to multiple configs in a single process. This just doesn\u0027t work (e.g. Metal + GL in a single thread).",
+      "parentUuid": "2e6e0ffd_c8b98656",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "251b9b99_dce9d295",
@@ -65,6 +83,24 @@
       "writtenOn": "2021-02-01T16:47:48Z",
       "side": 1,
       "message": "Unnecessary check, std::set::insert is noop if key is already there.",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4075f848_b44dee41",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 977,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T22:29:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "251b9b99_dce9d295",
       "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -135,6 +171,24 @@
       "writtenOn": "2021-02-02T00:54:04Z",
       "side": 1,
       "message": "Could we define a new --no-bot-mode locally to this test harness which, if specified, would avoid taking this code path?",
+      "parentUuid": "2a46922c_55762f6a",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7bd5e64_d886836f",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T22:29:55Z",
+      "side": 1,
+      "message": "Added --single-process and --multi-process args. It picks the right mode selectively. Shabi and I chatted offline. Think somewhere there was a misunderstanding about this CL - it runs multiple configs in multiple processes, but multiple tests in a single process.",
       "parentUuid": "2a46922c_55762f6a",
       "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
