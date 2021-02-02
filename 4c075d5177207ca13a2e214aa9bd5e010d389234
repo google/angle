@@ -70,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eecdcd0a_f8fedb4a",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3932,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T06:06:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c3878b03_ca618063",
+      "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37b73818_e55f657c",
@@ -83,6 +101,24 @@
       "writtenOn": "2021-02-01T17:08:41Z",
       "side": 1,
       "message": "ASSERT_GL_FRAMEBUFFER_COMPLETE",
+      "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e388489_9dfe4518",
+        "filename": "src/tests/gl_tests/StateChangeTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3945,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T06:06:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "37b73818_e55f657c",
       "revId": "4c075d5177207ca13a2e214aa9bd5e010d389234",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
