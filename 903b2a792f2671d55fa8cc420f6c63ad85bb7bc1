@@ -16,6 +16,23 @@
       "message": "Can you add a regression test for this to help diagnose a fix that doesn\u0027t mess up the transition table?",
       "revId": "903b2a792f2671d55fa8cc420f6c63ad85bb7bc1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c2be87b_dfa999ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T15:54:32Z",
+      "side": 1,
+      "message": "Jason: would you be able to adapt the feedback in the comments and take Tim\u0027s approach listed above?",
+      "revId": "903b2a792f2671d55fa8cc420f6c63ad85bb7bc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
