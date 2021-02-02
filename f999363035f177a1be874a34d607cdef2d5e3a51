@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2a43095_ea1c81a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-02T01:04:20Z",
+      "side": 1,
+      "message": "Shabi, this is a WIP step in the correct direction.  The game still looks wrong, but the tests improved.\n\nThis version passes all 118 of the tests in \"MultisampleTest.cpp\" on my Pixel 4 XL, at 0 and 90 degrees.  At 180 and 270 degrees, the following tests fail:\n\n- TextureMultisampleTest.ResolveToDefaultFramebuffer/ES3_1_Vulkan\n- TextureMultisampleTest.ResolveToDefaultFramebuffer/ES3_1_Vulkan_AsyncQueue\n- MultisampleTestES3.ResolveToFBO/ES3_1_Vulkan_NoFixture\n- MultisampleTestES3.ResolveToFBO/ES3_Vulkan_NoFixture\n",
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
