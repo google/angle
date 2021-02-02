@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a54257f4_040d837a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T15:31:08Z",
+      "side": 1,
+      "message": "Two comments here:\n\nI think you mean to say it\u0027s ANGLE\u0027s (Vk app\u0027s) responsibility rather than the GL application.\n\nAnd I\u0027m not totally convinced. If you are correct then the explicit synchronization is GL has a huge blind spot. See this wording:\n\n\"Explicit synchronization is required to ensure that the effects of buffer and texture data stores performed by shaders will be visible to subsequent operations using the same objects and will not overwrite data still to be read by previously requested operations\"\n\nThe \"and will not overwrite data still to be read\" says the intent is to cover this problem. Can we take a pause on this and take it up with the GL WG or in an internal GL list?",
+      "range": {
+        "startLine": 11,
+        "startChar": 15,
+        "endLine": 12,
+        "endChar": 54
+      },
+      "revId": "5b7477f1cb765b0e5b0844e4887b62ccac550b74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4f0d1b69_2ede68ce",
@@ -14,6 +37,29 @@
       "writtenOn": "2021-02-02T15:13:44Z",
       "side": 1,
       "message": "PTAL. Failures are unrelated (Android ones are from the previous change).",
+      "revId": "5b7477f1cb765b0e5b0844e4887b62ccac550b74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9de1cf8f_1ac675ec",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3161,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T15:31:08Z",
+      "side": 1,
+      "message": "maybe we can do this by chaining setLaterBit to the last of the dirty bits in the mask... would save on the fast fast path.",
+      "range": {
+        "startLine": 3151,
+        "startChar": 0,
+        "endLine": 3161,
+        "endChar": 5
+      },
       "revId": "5b7477f1cb765b0e5b0844e4887b62ccac550b74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
