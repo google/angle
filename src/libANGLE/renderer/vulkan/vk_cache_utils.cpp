@@ -161,8 +161,7 @@ void UnpackAttachmentDesc(VkAttachmentDescription *desc,
                           uint8_t samples,
                           const PackedAttachmentOpsDesc &ops)
 {
-    // We would only need this flag for duplicated attachments. Apply it conservatively.
-    desc->flags   = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
+    desc->flags   = 0;
     desc->format  = format.actualImageVkFormat();
     desc->samples = gl_vk::GetSamples(samples);
     desc->loadOp  = static_cast<VkAttachmentLoadOp>(ops.loadOp);
@@ -182,11 +181,7 @@ void UnpackColorResolveAttachmentDesc(VkAttachmentDescription *desc,
                                       bool usedAsInputAttachment,
                                       bool isInvalidated)
 {
-    // We would only need this flag for duplicated attachments. Apply it conservatively.  In
-    // practice it's unlikely any application would use the same image as multiple resolve
-    // attachments simultaneously, so this flag can likely be removed without any issue if it incurs
-    // a performance penalty.
-    desc->flags  = VK_ATTACHMENT_DESCRIPTION_MAY_ALIAS_BIT;
+    desc->flags  = 0;
     desc->format = format.actualImageVkFormat();
 
     // This function is for color resolve attachments.
