@@ -228,6 +228,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "22c3202d_cab9f2a5",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T01:35:14Z",
+      "side": 1,
+      "message": "\u003e Or rather BitSet96?\n\nthat would be a composition of BitSet64 and BitSet32, but i thought we prefer 64bit on CPUs that can support 64? hence made the suggestion of BitSet128, also gives us enough of a buffer to not worry about expanding dirty bit\n\nThese are the numbers i get with BitSet128 with explicit BitSet64[2] container (better but not by that much) -\n\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from TexturesBenchmark\n[ RUN      ] TexturesBenchmark.Run/vulkan_null_8_textures_5_rebind_3_state_8_mips\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 828.9386153575 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 4707 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 23457 count\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 824.1093716902 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 4707 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 28164 count\n*RESULT Textures_vulkan_null.wall_time: 8_textures_5_rebind_3_state_8_mips\u003d 820.2500929396 ns\nRESULT Textures_vulkan_null.trial_steps: 8_textures_5_rebind_3_state_8_mips\u003d 4707 count\nRESULT Textures_vulkan_null.total_steps: 8_textures_5_rebind_3_state_8_mips\u003d 32871 count\n[       OK ] TexturesBenchmark.Run/vulkan_null_8_textures_5_rebind_3_state_8_mips (7066 ms)\n[----------] 1 test from TexturesBenchmark (7067 ms total)\n\n[----------] Global test environment tear-down\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 1 test from 1 test suite ran. (7069 ms total)\n[  PASSED  ] 1 test.",
+      "parentUuid": "9bbebf32_e17ecd27",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1e4d5081_7fa7165c",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 1
