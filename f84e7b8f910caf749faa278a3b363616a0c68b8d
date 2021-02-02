@@ -34,6 +34,24 @@
       "parentUuid": "8a0e4a18_4ef804e9",
       "revId": "f84e7b8f910caf749faa278a3b363616a0c68b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae63df10_379475ce",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 587,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T20:34:19Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1c2b92d9_3853c331",
+      "revId": "f84e7b8f910caf749faa278a3b363616a0c68b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
