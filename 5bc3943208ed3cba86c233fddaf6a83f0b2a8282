@@ -52,6 +52,24 @@
       "parentUuid": "6dc2b3a7_e0950d3c",
       "revId": "5bc3943208ed3cba86c233fddaf6a83f0b2a8282",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e88affc_3f5d31b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-02T01:10:23Z",
+      "side": 1,
+      "message": "The condition is \"test_type \u003d\u003d \u0027generated_script\u0027 or is_ios or is_lacros\" so Android is fine (for now).\n\nIf xvfb is the only issue, we can handle it with bot configuration.\nLooks like the default is to use xvfb, so we can pass --no-xvfb on Linux GPU bots.",
+      "parentUuid": "529e5621_8f4e014a",
+      "revId": "5bc3943208ed3cba86c233fddaf6a83f0b2a8282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
