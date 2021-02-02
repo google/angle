@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07956e8c_a4016ce7",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1899,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-02T02:16:36Z",
+      "side": 1,
+      "message": "Fantastic work Shrek! Your workaround works perfectly on 10.15.x on current Intel GPU hardware!\n\nThe issue is that the Chrome team\u0027s Mac Mini GPU testers are still running some tests on the old Intel Iris Graphics 5100 - and that GPU didn\u0027t have this bug.\n\nSince we don\u0027t have too many Intel GPUs to test on right now, let\u0027s just add a carve-out for this GPU (8086:0a2e). Is that possible?\n\nThere\u0027s another problem which needs to be resolved - this ANGLE_FEATURE_CONDITION must be reinitialized whenever the system switches from the integrated to discrete GPU or back. There are already hooks in ContextImpl for this; see this CL:\n\nhttps://chromium-review.googlesource.com/2240638\n\ncould you ask Geoff and Jonah on chat the best way to reinitialize these features, or maybe just this one, upon GPU switch? Right now on a dual-GPU MacBook Pro, if Chrome starts up on the integrated GPU, instanced rendering breaks on the discrete GPU, and vice versa.\n\nFantastic work again!",
+      "revId": "bcd254a8bdb7c95b51d37ec7d4b83231f95cc8fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
