@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "937a99b0_269f7b8f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T17:51:44Z",
+      "side": 1,
+      "message": "i modified the bitsetiteratorperf test and these are the numbers -\nnote -\nBitSetIteratorPerfTest/5 \u003d\u003d angle::BitSet\u003c96\u003e\nBitSetIteratorPerfTest/6 \u003d\u003d angle::BitSetLarge\u003c96\u003e\nBitSetIteratorPerfTest/7 \u003d\u003d angle::BitSet128\u003c96\u003e\n\n[----------] 1 test from BitSetIteratorPerfTest/5, where TypeParam \u003d \u003ctype\u003e\n[ RUN      ] BitSetIteratorPerfTest/5.Run\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 1700.0129446387 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 1 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 1499.9823179096 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 2 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 1500.0114217401 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 3 count\n[       OK ] BitSetIteratorPerfTest/5.Run (1 ms)\n[----------] 1 test from BitSetIteratorPerfTest/5 (1 ms total)\n\n[----------] 1 test from BitSetIteratorPerfTest/6, where TypeParam \u003d \u003ctype\u003e\n[ RUN      ] BitSetIteratorPerfTest/6.Run\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 300.0022843480 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 1 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 300.0022843480 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 2 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 300.0022843480 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 3 count\n[       OK ] BitSetIteratorPerfTest/6.Run (1 ms)\n[----------] 1 test from BitSetIteratorPerfTest/6 (2 ms total)\n\n[----------] 1 test from BitSetIteratorPerfTest/7, where TypeParam \u003d \u003ctype\u003e\n[ RUN      ] BitSetIteratorPerfTest/7.Run\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 400.0030457973 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 1 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 300.0022843480 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 2 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 300.0022843480 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 1 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 3 count\n[       OK ] BitSetIteratorPerfTest/7.Run (1 ms)\n[----------] 1 test from BitSetIteratorPerfTest/7 (2 ms total)",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
