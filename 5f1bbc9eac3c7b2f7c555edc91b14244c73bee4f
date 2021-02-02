@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8b7c161_ca4451f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T16:13:31Z",
+      "side": 1,
+      "message": "Maybe ignore this for now as well. Thinking about it more, this is pretty similar to sample-in-graphics-after-draw etc so there should be a better way to break the RP.",
+      "revId": "5f1bbc9eac3c7b2f7c555edc91b14244c73bee4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
