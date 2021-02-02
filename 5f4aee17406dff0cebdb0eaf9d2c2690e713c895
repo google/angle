@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "901d5510_056bf915",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4927,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T17:02:42Z",
+      "side": 1,
+      "message": "Ah OK, I get why there is no diff. So the matching code part of my comment makes sense.\n\nStill we should move the (de)serialization for the executable to the executable save/load code. This is a code consistency thing. The serialization in this file should pertain strictly to the Program instead of the exe.",
+      "parentUuid": "1edf2919_ad072fe1",
+      "range": {
+        "startLine": 4919,
+        "startChar": 0,
+        "endLine": 4927,
+        "endChar": 5
+      },
+      "revId": "5f4aee17406dff0cebdb0eaf9d2c2690e713c895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "74e9e1bb_4369130c",
         "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
         "patchSetId": 7
