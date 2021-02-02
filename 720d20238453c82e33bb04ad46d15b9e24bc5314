@@ -39,6 +39,30 @@
       },
       "revId": "720d20238453c82e33bb04ad46d15b9e24bc5314",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83abd048_4f9ae57e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T16:35:18Z",
+      "side": 1,
+      "message": "I just noticed the failures last night too. I need to experiment with this; the bug is that DIRTY_BIT_DEFAULT_ATTRIBS needs to be processed before DIRTY_BIT_PIPELINE because it can affect it. I wouldn\u0027t want to add two ifs, and a loop over the dirty bits masked with the two bits is probably going to perform worse. One possibility is to put the startRenderPass call inside a dirty bit handler (a new dirty bit), and then have the handlers use mRenderPassCommandBuffer instead of the passed in command buffer.\n\nI\u0027ll see which of these scores better in the benchmarks.",
+      "parentUuid": "ae407a89_ed950135",
+      "range": {
+        "startLine": 792,
+        "startChar": 0,
+        "endLine": 799,
+        "endChar": 5
+      },
+      "revId": "720d20238453c82e33bb04ad46d15b9e24bc5314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
