@@ -107,6 +107,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "492eb4ad_7b295975",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Shabi, almost all comments have been addressed except for synchronization validation layer error.\n\nHyunchang tried to resolve this as you suggested but did not make much progress. There is a gap in his understanding of Vulkan layout transitions blocking him for now. Can we land this change and address the VVL in a follow up change?",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de6c237b_819f50ed",
@@ -120,6 +137,30 @@
       "writtenOn": "2021-01-29T16:39:37Z",
       "side": 1,
       "message": "should be part of the executable save/load",
+      "range": {
+        "startLine": 4733,
+        "startChar": 0,
+        "endLine": 4735,
+        "endChar": 0
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36ab5f3f_8c877a11",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 4735,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de6c237b_819f50ed",
       "range": {
         "startLine": 4733,
         "startChar": 0,
@@ -153,6 +194,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b4a7301_258369f3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 4998,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fd9a658_e9bc4038",
+      "range": {
+        "startLine": 4993,
+        "startChar": 0,
+        "endLine": 4998,
+        "endChar": 0
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70a60e74_ea89ff64",
@@ -166,6 +231,30 @@
       "writtenOn": "2021-01-29T16:39:37Z",
       "side": 1,
       "message": "nit: uses instead of has?",
+      "range": {
+        "startLine": 373,
+        "startChar": 24,
+        "endLine": 373,
+        "endChar": 43
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9ba67c7_f5c01493",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "70a60e74_ea89ff64",
       "range": {
         "startLine": 373,
         "startChar": 24,
@@ -201,6 +290,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "78415e35_857fbcdf",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2793,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "made the FB check FBF mode and removed onSwitchProgramFramebufferFetch. But we still need the state in ContextVK because we need to close RP in case of fetch mode switch.",
+      "parentUuid": "f5b05d90_6d7b58d9",
+      "range": {
+        "startLine": 2793,
+        "startChar": 30,
+        "endLine": 2793,
+        "endChar": 61
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "27761092_2bf4cebd",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 13
@@ -212,6 +325,30 @@
       "writtenOn": "2021-01-29T16:39:37Z",
       "side": 1,
       "message": "nit: _BARRIER",
+      "range": {
+        "startLine": 597,
+        "startChar": 8,
+        "endLine": 597,
+        "endChar": 35
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4c1e65e_782d38af",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 597,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27761092_2bf4cebd",
       "range": {
         "startLine": 597,
         "startChar": 8,
@@ -235,6 +372,30 @@
       "writtenOn": "2021-01-29T16:39:37Z",
       "side": 1,
       "message": "mLastProgramUsesFramebufferFetch, to make it consistent naming with other vars\n\nThough see other comments, we might not need this.",
+      "range": {
+        "startLine": 1003,
+        "startChar": 9,
+        "endLine": 1003,
+        "endChar": 35
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57ad2ab9_e84104ea",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 1003,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ba372d5_52d646eb",
       "range": {
         "startLine": 1003,
         "startChar": 9,
@@ -292,6 +453,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3e0f82d_c330a419",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1939,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cde2412f_28a747c8",
+      "range": {
+        "startLine": 1931,
+        "startChar": 0,
+        "endLine": 1939,
+        "endChar": 72
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a8d93ab9_f54b64e7",
@@ -305,6 +490,24 @@
       "writtenOn": "2021-02-01T15:02:50Z",
       "side": 1,
       "message": "This function should early out if `this` is not the current draw framebuffer! If the READ framebuffer is synced, we don\u0027t want to be updating the graphics pipeline. Please also add an ASSERT(framebufferVk \u003d\u003d vk::GetImpl(mState.getDrawFramebuffer()));` in onDrawFramebufferRenderPassDescChange.\n\nA test to trigger the bug could be:\n\n- Create FBO1 with two attachments\n- Draw with fetch program (this syncs FBO1)\n- Create FBO2 with one attachments, initialize the attachment with glTexSubImage, bind as READ framebuffer\n- Blit src:FBO2 dst:FBO1 (this syncs FBO2 as READ framebuffer, no need to sync FBO1 cause not dirty. This function is called for FBO2 which mistakenly updates the graphics pipeline based on FBO2\u0027s desc)\n- Draw with fetch program again (FBO1 is not synced, so graphics pipeline is still based on FBO2\u0027s desc) -\u003e should fail with validation error as pipeline says only one attachment but draw FBO (FBO1) has two.",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4162e43_8ade8c3a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2733,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "moved this routine to startNewRP and got rid of onSwitchProgramFramebufferFetch function. So we don\u0027t need to worry about those case.",
+      "parentUuid": "a8d93ab9_f54b64e7",
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -364,6 +567,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "09be9d60_8244fc41",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "This function is called whenever the fetch mode is switched. So, assertion condition you wrote is not proper.",
+      "parentUuid": "fb1d17c4_2b8f4184",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7ccf7a8b_7da166b4",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 13
@@ -375,6 +596,30 @@
       "writtenOn": "2021-01-29T16:39:37Z",
       "side": 1,
       "message": "nit: can you fix these to use ! instead of \u003d\u003d false?",
+      "range": {
+        "startLine": 1375,
+        "startChar": 10,
+        "endLine": 1375,
+        "endChar": 49
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e034acab_b2191660",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1375,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T18:07:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ccf7a8b_7da166b4",
       "range": {
         "startLine": 1375,
         "startChar": 10,
