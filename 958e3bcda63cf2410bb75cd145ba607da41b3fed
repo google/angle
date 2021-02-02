@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a5e77b3_9bf12d3c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-02T19:58:03Z",
+      "side": 1,
+      "message": "Add logic to reinitialize this workaround feature only when gpu switches.",
+      "revId": "958e3bcda63cf2410bb75cd145ba607da41b3fed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
