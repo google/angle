@@ -177,6 +177,30 @@
       },
       "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaf13d2c_cc6f1ba5",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T17:12:44Z",
+      "side": 1,
+      "message": "Might be fixed with ToT, ARM landed a relevant fix recently.",
+      "parentUuid": "1d419e1d_994832b2",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 5
+      },
+      "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
