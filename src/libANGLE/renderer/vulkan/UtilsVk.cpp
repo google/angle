@@ -2434,7 +2434,7 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     shaderParams.componentCount = totalPixelCount * shaderParams.Nd;
     // Total number of 4-byte outputs is the number of components divided by how many components can
     // fit in a 4-byte value.  Note that this value is also the invocation size of the shader.
-    shaderParams.outputCount  = shaderParams.componentCount / shaderParams.Ed;
+    shaderParams.outputCount  = UnsignedCeilDivide(shaderParams.componentCount, shaderParams.Ed);
     shaderParams.srcOffset    = 0;
     shaderParams.destOffset   = 0;
     shaderParams.isSrcHDR     = 0;
