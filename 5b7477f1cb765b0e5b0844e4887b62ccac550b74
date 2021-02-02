@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "58291d79_01141a3a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T15:36:20Z",
+      "side": 1,
+      "message": "Right right, ANGLE\u0027s responsibility.\n\nHmm... ok let me read more. Maybe a glMemoryBarrier is needed at after all.",
+      "parentUuid": "a54257f4_040d837a",
+      "range": {
+        "startLine": 11,
+        "startChar": 15,
+        "endLine": 12,
+        "endChar": 54
+      },
+      "revId": "5b7477f1cb765b0e5b0844e4887b62ccac550b74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4f0d1b69_2ede68ce",
