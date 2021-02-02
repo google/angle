@@ -36,6 +36,7 @@
 #include "mobile_legends/mobile_legends_capture_context1.h"
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
+#include "raid_shadow_legends/raid_shadow_legends_capture_context2.h"
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
 #include "real_gangster_crime/real_gangster_crime_capture_context3.h"
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context2.h"
@@ -141,6 +142,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {pubg_mobile_lite::kReplayFrameStart, pubg_mobile_lite::kReplayFrameEnd,
       pubg_mobile_lite::kReplayDrawSurfaceWidth, pubg_mobile_lite::kReplayDrawSurfaceHeight,
       "pubg_mobile_lite"}},
+    {RestrictedTraceID::raid_shadow_legends,
+     {raid_shadow_legends::kReplayFrameStart, raid_shadow_legends::kReplayFrameEnd,
+      raid_shadow_legends::kReplayDrawSurfaceWidth, raid_shadow_legends::kReplayDrawSurfaceHeight,
+      "raid_shadow_legends"}},
     {RestrictedTraceID::real_commando_secret_mission,
      {real_commando_secret_mission::kReplayFrameStart,
       real_commando_secret_mission::kReplayFrameEnd,
@@ -262,6 +267,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::raid_shadow_legends:
+            raid_shadow_legends::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::ReplayContext1Frame(frameIndex);
             break;
@@ -374,6 +382,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::raid_shadow_legends:
+            raid_shadow_legends::ResetContext2Replay();
             break;
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::ResetContext1Replay();
@@ -488,6 +499,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetupContext1Replay();
             break;
+        case RestrictedTraceID::raid_shadow_legends:
+            raid_shadow_legends::SetupContext2Replay();
+            break;
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::SetupContext1Replay();
             break;
@@ -601,6 +615,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::raid_shadow_legends:
+            raid_shadow_legends::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::SetBinaryDataDir(dataDir);
             break;
@@ -713,6 +730,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::raid_shadow_legends:
+            raid_shadow_legends::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::SetBinaryDataDecompressCallback(callback);
