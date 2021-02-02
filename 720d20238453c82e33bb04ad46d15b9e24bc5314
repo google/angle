@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2823b012_7604be7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T15:59:29Z",
+      "side": 1,
+      "message": "Looks like some test failures still.",
+      "revId": "720d20238453c82e33bb04ad46d15b9e24bc5314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae407a89_ed950135",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 799,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T15:59:29Z",
+      "side": 1,
+      "message": "this is no longer a dirty bit that gets processed in the loop: can you remove it from the dirty bit set and make it a bool?",
+      "range": {
+        "startLine": 792,
+        "startChar": 0,
+        "endLine": 799,
+        "endChar": 5
+      },
+      "revId": "720d20238453c82e33bb04ad46d15b9e24bc5314",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
