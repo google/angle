@@ -33,6 +33,24 @@
       "message": "right now my bandwidth is limited, if more profiling is needed could you guys please help out?\n\nonce we decide on which class to use i will take care of the comments related to style and fix the 32bit problem with BitSet128",
       "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c90bce17_51c6fff7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-02T19:19:49Z",
+      "side": 1,
+      "message": "FYI - something i noticed and was a bit surprising, BitSetLarge performs marginally better than BitSet128. in the texture perf benchmark the numbers are like ~820ns and ~830ns respectively.",
+      "parentUuid": "937a99b0_269f7b8f",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
