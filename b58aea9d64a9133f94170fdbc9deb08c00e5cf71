@@ -16,6 +16,24 @@
       "message": "You should disable the pre-rotation feature when !supportsNegativeViewport then, since you didn\u0027t handle non-flipped rotation.",
       "revId": "b58aea9d64a9133f94170fdbc9deb08c00e5cf71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7fa63178_9f9a448e",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2281,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-02T18:21:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30920f99_e965b279",
+      "revId": "b58aea9d64a9133f94170fdbc9deb08c00e5cf71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
