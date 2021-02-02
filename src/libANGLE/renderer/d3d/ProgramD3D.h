@@ -481,7 +481,8 @@ class ProgramD3D : public ProgramImpl
     void getUniformInternal(GLint location, DestT *dataOut) const;
 
     template <typename T>
-    void setUniformImpl(const gl::VariableLocation &locationInfo,
+    void setUniformImpl(D3DUniform *targetUniform,
+                        const gl::VariableLocation &locationInfo,
                         GLsizei count,
                         const T *v,
                         uint8_t *targetData,

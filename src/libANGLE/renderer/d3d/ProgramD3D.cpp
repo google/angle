@@ -2662,24 +2662,34 @@ bool ProgramD3D::hasNamedUniform(const std::string &name)
 
 // Assume count is already clamped.
 template <typename T>
-void ProgramD3D::setUniformImpl(const gl::VariableLocation &locationInfo,
+void ProgramD3D::setUniformImpl(D3DUniform *targetUniform,
+                                const gl::VariableLocation &locationInfo,
                                 GLsizei count,
                                 const T *v,
                                 uint8_t *targetState,
                                 GLenum uniformType)
 {
-    D3DUniform *targetUniform             = mD3DUniforms[locationInfo.index];
     const int components                  = targetUniform->typeInfo.componentCount;
     const unsigned int arrayElementOffset = locationInfo.arrayIndex;
+    const int blockSize                   = 4;
 
     if (targetUniform->typeInfo.type == uniformType)
     {
-        T *dest         = reinterpret_cast<T *>(targetState) + arrayElementOffset * 4;
+        T *dest         = reinterpret_cast<T *>(targetState) + arrayElementOffset * blockSize;
         const T *source = v;
 
-        for (GLint i = 0; i < count; i++, dest += 4, source += components)
+        // If the component is equal to the block size, we can optimize to a single memcpy.
+        // Otherwise, we have to do partial block writes.
+        if (components == blockSize)
         {
-            memcpy(dest, source, components * sizeof(T));
+            memcpy(dest, source, components * count * sizeof(T));
+        }
+        else
+        {
+            for (GLint i = 0; i < count; i++, dest += blockSize, source += components)
+            {
+                memcpy(dest, source, components * sizeof(T));
+            }
         }
     }
     else
@@ -2721,10 +2731,10 @@ void ProgramD3D::setUniformInternal(GLint location, GLsizei count, const T *v, G
 
     for (gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        if (targetUniform->mShaderData[shaderType])
+        uint8_t *targetState = targetUniform->mShaderData[shaderType];
+        if (targetState)
         {
-            setUniformImpl(locationInfo, count, v, targetUniform->mShaderData[shaderType],
-                           uniformType);
+            setUniformImpl(targetUniform, locationInfo, count, v, targetState, uniformType);
             mShaderUniformsDirty.set(shaderType);
         }
     }
