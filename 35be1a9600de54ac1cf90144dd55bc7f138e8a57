@@ -20,6 +20,63 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "401a10e9_c08edc09",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T03:08:59Z",
+      "side": 1,
+      "message": "Unused class is unused.",
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff90e3ae_c737a0d2",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T03:08:59Z",
+      "side": 1,
+      "message": "BitSet128 on 32-bit should have 4 elements. This class is broken for 32-bit. I suggest naming it to BitSet2, and then use `using` to define `BitSet128` in 64-bit and `BitSet64` in 32-bit (instead of what we currently have). 128-bit bitset on 32-bit would continue to use std::bitset.",
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fdb71a6_ff483ebb",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 827,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T03:08:59Z",
+      "side": 1,
+      "message": "My personal opinion is that these aren\u0027t any less magical than the numbers they are defining, and just serve to make it harder to read the code.",
+      "range": {
+        "startLine": 826,
+        "startChar": 0,
+        "endLine": 827,
+        "endChar": 60
+      },
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "14917d22_2dcce35f",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 2
@@ -31,6 +88,30 @@
       "writtenOn": "2021-02-02T01:40:50Z",
       "side": 1,
       "message": "if helpful, i can replace this with - BitSet64\u003cN1\u003e, BitSet64\u003cN2\u003e",
+      "range": {
+        "startLine": 832,
+        "startChar": 4,
+        "endLine": 832,
+        "endChar": 44
+      },
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "091bf9eb_31291d1d",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 832,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-02T03:08:59Z",
+      "side": 1,
+      "message": "No need IMO.",
+      "parentUuid": "14917d22_2dcce35f",
       "range": {
         "startLine": 832,
         "startChar": 4,
