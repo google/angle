@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "528b9b75_e3d5d956",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-02T00:54:04Z",
+      "side": 1,
+      "message": "Tested this locally; it definitely works around the problem. I think it would be good to make the default configuration work better so +1\u0027ing this, but open to feedback from others.\n",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "251b9b99_dce9d295",
@@ -101,6 +118,24 @@
       "side": 1,
       "message": "I *can*, just sometimes it\u0027s convenient not to. So there\u0027s no way to disable --bot-mode? There are legitimate reasons you may not want it. For example if you are reproducing one of the bot mode \"shards\" with the provided gtest filter, you don\u0027t want to be further broken down and run in separate processes. Or if you\u0027re trying to debug an issue that only manifests when tests (of the same config) are run in sequence.",
       "parentUuid": "11dae521_134a8387",
+      "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3914c753_3acaeeeb",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1193,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-02T00:54:04Z",
+      "side": 1,
+      "message": "Could we define a new --no-bot-mode locally to this test harness which, if specified, would avoid taking this code path?",
+      "parentUuid": "2a46922c_55762f6a",
       "revId": "7f89dd05422056118c044a3ab00267f91656aae0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
