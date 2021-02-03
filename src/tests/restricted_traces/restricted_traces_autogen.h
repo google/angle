@@ -75,6 +75,7 @@ enum class RestrictedTraceID
     magic_tiles_3,
     manhattan_10,
     manhattan_31,
+    minecraft,
     marvel_contest_of_champions,
     mobile_legends,
     nba2k20_800,
