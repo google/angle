@@ -85,6 +85,7 @@ enum class RestrictedTraceID
     real_gangster_crime,
     saint_seiya_awakening,
     subway_surfers,
+    temple_run_2,
     temple_run_300,
     trex_200,
     whatsapp,
