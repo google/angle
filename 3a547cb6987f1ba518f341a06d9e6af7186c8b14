@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ae9a18c_deda1f96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-03T04:29:49Z",
+      "side": 1,
+      "message": "Hey Tim, this came together fast, nice!\n\nIt looks like this solution will work for full texture levels, but glCopyImageSubData takes XYZ offsets and width/height/depth as well, so we\u0027ll need to preserve the data in the cache outside of that range.\n\nMaybe we can land this and assert the copy is an entire level for now?",
+      "revId": "3a547cb6987f1ba518f341a06d9e6af7186c8b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
