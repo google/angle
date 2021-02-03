@@ -20,6 +20,80 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4743eb7e_f7cf723b",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 423,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:36:56Z",
+      "side": 1,
+      "message": "This should be updated in ProgramPipeline::updateExecutable() to support program pipeline objects. Please duplicate one of the tests and use a program pipeline instead of a monolithic program.",
+      "revId": "a43bdce236da08175cae68ee7e00c8de8365c6e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99bb06df_926a0b96",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1884,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:36:56Z",
+      "side": 1,
+      "message": "nit: no longer used",
+      "range": {
+        "startLine": 1884,
+        "startChar": 41,
+        "endLine": 1884,
+        "endChar": 61
+      },
+      "revId": "a43bdce236da08175cae68ee7e00c8de8365c6e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bdc770f_b705a234",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2553,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:36:56Z",
+      "side": 1,
+      "message": "Some tests are failing because presumably `executable` is nullptr (because RP is started for the sake of clear).",
+      "revId": "a43bdce236da08175cae68ee7e00c8de8365c6e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bbcd000_0b6ff400",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2561,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:36:56Z",
+      "side": 1,
+      "message": "Why clear the cache? You should instead set a bit in FramebufferDesc (you can take one away from mMaxIndex) so you don\u0027t pull the wrong framebuffer from the cache.",
+      "revId": "a43bdce236da08175cae68ee7e00c8de8365c6e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e07adb5_99832a6e",
         "filename": "src/tests/gl_tests/FramebufferFetchTest.cpp",
         "patchSetId": 14

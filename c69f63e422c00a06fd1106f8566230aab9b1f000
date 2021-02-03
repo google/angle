@@ -514,6 +514,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2a56b0ac_668e7f06",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2733,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:36:56Z",
+      "side": 1,
+      "message": "Great. Please add the regression test as described to make sure we don\u0027t regress this in the future.",
+      "parentUuid": "d4162e43_8ade8c3a",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7d384fb7_21db61d9",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 13
@@ -579,6 +597,24 @@
       "side": 1,
       "message": "This function is called whenever the fetch mode is switched. So, assertion condition you wrote is not proper.",
       "parentUuid": "fb1d17c4_2b8f4184",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf23653d_201e2b04",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 1336,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:36:56Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "09be9d60_8244fc41",
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
