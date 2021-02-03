@@ -376,7 +376,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mFlipYForCurrentSurface(false),
       mFlipViewportForDrawFramebuffer(false),
       mFlipViewportForReadFramebuffer(false),
-      mClipSpaceOrigin(gl::ClipSpaceOrigin::LowerLeft),
       mIsAnyHostVisibleBufferWritten(false),
       mEmulateSeamfulCubeMapSampling(false),
       mOutsideRenderPassCommands(nullptr),
@@ -2655,7 +2654,7 @@ void ContextVk::updateViewport(FramebufferVk *framebufferVk,
         rotatedRect, nearPlane, farPlane, invertViewport,
         // If clip space origin is upper left, viewport origin's y value will be offset by the
         // height of the viewport when clip space is mapped into screen space.
-        mClipSpaceOrigin == gl::ClipSpaceOrigin::UpperLeft,
+        mState.getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft,
         // If the surface is rotated 90/270 degrees, use the framebuffer's width instead of the
         // height for calculating the final viewport.
         isRotatedAspectRatioForDrawFBO() ? fbDimensions.width : fbDimensions.height, &vkViewport);
@@ -3099,9 +3098,9 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 invalidateGraphicsDriverUniforms();
 
                 // Handling clip space origin for EXT_clip_control.
-                if (glState.getClipSpaceOrigin() != getClipSpaceOrigin())
+                if (glState.getExtendedDirtyBits().test(
+                        gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_CLIP_CONTROL))
                 {
-                    updateClipSpaceOrigin(glState);
                     updateViewport(vk::GetImpl(glState.getDrawFramebuffer()), glState.getViewport(),
                                    glState.getNearPlane(), glState.getFarPlane(),
                                    isViewportFlipEnabledForDrawFBO());
@@ -3313,16 +3312,6 @@ void ContextVk::updateSurfaceRotationReadFramebuffer(const gl::State &glState)
     gl::Framebuffer *readFramebuffer = glState.getReadFramebuffer();
     mCurrentRotationReadFramebuffer =
         DetermineSurfaceRotation(readFramebuffer, mCurrentWindowSurface);
-}
-
-gl::ClipSpaceOrigin ContextVk::getClipSpaceOrigin() const
-{
-    return mClipSpaceOrigin;
-}
-
-void ContextVk::updateClipSpaceOrigin(const gl::State &glState)
-{
-    mClipSpaceOrigin = glState.getClipSpaceOrigin();
 }
 
 gl::Caps ContextVk::getNativeCaps() const

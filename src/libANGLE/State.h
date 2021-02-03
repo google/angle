@@ -668,6 +668,15 @@ class State : angle::NonCopyable
 
     static_assert(DIRTY_BIT_MAX <= 64, "State dirty bits must be capped at 64");
 
+    enum ExtendedDirtyBitType
+    {
+        EXTENDED_DIRTY_BIT_CLIP_CONTROL,  // EXT_clip_control
+        EXTENDED_DIRTY_BIT_INVALID,
+        EXTENDED_DIRTY_BIT_MAX = EXTENDED_DIRTY_BIT_INVALID,
+    };
+
+    static_assert(EXTENDED_DIRTY_BIT_MAX <= 8, "State extended dirty bits must be capped at 8");
+
     // TODO(jmadill): Consider storing dirty objects in a list instead of by binding.
     enum DirtyObjectType
     {
@@ -696,6 +705,10 @@ class State : angle::NonCopyable
         mDirtyBits.set();
         mDirtyCurrentValues.set();
     }
+
+    using ExtendedDirtyBits = angle::BitSet8<EXTENDED_DIRTY_BIT_MAX>;
+    const ExtendedDirtyBits &getExtendedDirtyBits() const { return mExtendedDirtyBits; }
+    void clearExtendedDirtyBits() { mExtendedDirtyBits.reset(); }
 
     using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
     void clearDirtyObjects() { mDirtyObjects.reset(); }
@@ -1092,6 +1105,7 @@ class State : angle::NonCopyable
     GLES1State mGLES1State;
 
     DirtyBits mDirtyBits;
+    ExtendedDirtyBits mExtendedDirtyBits;
     DirtyObjects mDirtyObjects;
     mutable AttributesMask mDirtyCurrentValues;
     ActiveTextureMask mDirtyActiveTextures;

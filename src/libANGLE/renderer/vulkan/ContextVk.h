@@ -215,11 +215,10 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // isYFlipEnabledForDrawFBO indicates the rendered image is upside-down.
     ANGLE_INLINE bool isYFlipEnabledForDrawFBO() const
     {
-        return mClipSpaceOrigin == gl::ClipSpaceOrigin::UpperLeft
+        return mState.getClipSpaceOrigin() == gl::ClipSpaceOrigin::UpperLeft
                    ? !isViewportFlipEnabledForDrawFBO()
                    : isViewportFlipEnabledForDrawFBO();
     }
-    gl::ClipSpaceOrigin getClipSpaceOrigin() const;
 
     void invalidateProgramBindingHelper(const gl::State &glState);
     angle::Result invalidateProgramExecutableHelper(const gl::Context *context);
@@ -749,8 +748,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void updateSurfaceRotationDrawFramebuffer(const gl::State &glState);
     void updateSurfaceRotationReadFramebuffer(const gl::State &glState);
 
-    void updateClipSpaceOrigin(const gl::State &glState);
-
     angle::Result updateActiveTextures(const gl::Context *context);
     angle::Result updateActiveImages(const gl::Context *context,
                                      vk::CommandBufferHelper *commandBufferHelper);
@@ -956,9 +953,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     bool mFlipYForCurrentSurface;
     bool mFlipViewportForDrawFramebuffer;
     bool mFlipViewportForReadFramebuffer;
-
-    // Cache clip origin state, needed for viewport calculation.
-    gl::ClipSpaceOrigin mClipSpaceOrigin;
 
     // If any host-visible buffer is written by the GPU since last submission, a barrier is inserted
     // at the end of the command buffer to make that write available to the host.

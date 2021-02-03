@@ -822,16 +822,23 @@ void State::setDepthRange(float zNear, float zFar)
 
 void State::setClipControl(GLenum origin, GLenum depth)
 {
+    bool updated = false;
     if (mClipControlOrigin != origin)
     {
         mClipControlOrigin = origin;
-        mDirtyBits.set(DIRTY_BIT_EXTENDED);
+        updated            = true;
     }
 
     if (mClipControlDepth != depth)
     {
         mClipControlDepth = depth;
+        updated           = true;
+    }
+
+    if (updated)
+    {
         mDirtyBits.set(DIRTY_BIT_EXTENDED);
+        mExtendedDirtyBits.set(EXTENDED_DIRTY_BIT_CLIP_CONTROL);
     }
 }
 
