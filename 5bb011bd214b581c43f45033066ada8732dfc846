@@ -39,6 +39,30 @@
       },
       "revId": "5bb011bd214b581c43f45033066ada8732dfc846",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2c7af1b_e72a7689",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-03T18:54:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "805c5275_82b78ad0",
+      "range": {
+        "startLine": 692,
+        "startChar": 8,
+        "endLine": 692,
+        "endChar": 44
+      },
+      "revId": "5bb011bd214b581c43f45033066ada8732dfc846",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
