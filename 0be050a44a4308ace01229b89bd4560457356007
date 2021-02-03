@@ -16,6 +16,24 @@
       "message": "Hi Jonah,\n\nThis commit caused many xfb failures because waived option doesn\u0027t work any more.Is there any cts change in progress?\n\nBest Regards,\nCheryl Wei",
       "revId": "0be050a44a4308ace01229b89bd4560457356007",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98ab2509_e323b255",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 31
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-03T16:31:20Z",
+      "side": 1,
+      "message": "Hi Cheryl,\n\n\nI wasn\u0027t aware of CTS tests that rely on our strings. Can you give me more info about which tests and what usage of our strings?",
+      "parentUuid": "2ab07900_fcd9a8ff",
+      "revId": "0be050a44a4308ace01229b89bd4560457356007",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
