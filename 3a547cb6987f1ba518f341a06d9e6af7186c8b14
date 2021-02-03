@@ -16,6 +16,24 @@
       "message": "Hey Tim, this came together fast, nice!\n\nIt looks like this solution will work for full texture levels, but glCopyImageSubData takes XYZ offsets and width/height/depth as well, so we\u0027ll need to preserve the data in the cache outside of that range.\n\nMaybe we can land this and assert the copy is an entire level for now?",
       "revId": "3a547cb6987f1ba518f341a06d9e6af7186c8b14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca35e64b_feec327d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-03T07:25:08Z",
+      "side": 1,
+      "message": "Yeah, it was pretty straightforward once you pointed out we already have the data.\n\nAnd yeah, good catch.\n\nIt looks like we can steal some of the logic in captureCompressedTextureData() to get the offsets into the texture data, but I\u0027m not sure what the subtleties are when trying to get texture coordinates vs mip levels (maybe it\u0027s just a straight copy of the code?).   That code has already caused us a few headaches though, so it would probably be better to defer that work until we come across something that actually needs it.\n\nI\u0027ve opened anglebug.com/5604 and added a TODO to add that support if we come across an app in the future that needs it.",
+      "parentUuid": "6ae9a18c_deda1f96",
+      "revId": "3a547cb6987f1ba518f341a06d9e6af7186c8b14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
