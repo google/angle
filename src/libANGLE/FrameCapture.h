@@ -343,6 +343,7 @@ class FrameCapture final : angle::NonCopyable
                                     size_t instanceCount);
     void captureMappedBufferSnapshot(const gl::Context *context, const CallCapture &call);
 
+    void copyCompressedTextureData(const gl::Context *context, const CallCapture &call);
     void captureCompressedTextureData(const gl::Context *context, const CallCapture &call);
 
     void reset();
@@ -408,6 +409,14 @@ class FrameCaptureShared final : angle::NonCopyable
     // Load data from a previously stored texture level
     const std::vector<uint8_t> &retrieveCachedTextureLevel(gl::TextureID id, GLint level);
 
+    // Create new texture level data and copy the source into it
+    void copyCachedTextureLevel(const gl::Context *context,
+                                gl::TextureID srcID,
+                                GLint srcLevel,
+                                gl::TextureID dstID,
+                                GLint dstLevel,
+                                const CallCapture &call);
+
     // Create the location that should be used to cache texture level data
     std::vector<uint8_t> &getCachedTextureLevelData(gl::Texture *texture,
                                                     gl::TextureTarget target,
@@ -435,12 +444,16 @@ void CaptureCallToFrameCapture(CaptureFuncT captureFunc,
 {
     FrameCapture *frameCapture = context->getFrameCapture();
     if (!frameCapture->isCapturing())
+    {
         return;
+    }
 
     CallCapture call = captureFunc(context->getState(), isCallValid, captureParams...);
 
     if (!isCallValid)
+    {
         INFO() << "FrameCapture: Capturing invalid call to " << GetEntryPointName(call.entryPoint);
+    }
 
     frameCapture->captureCall(context, std::move(call));
 }
