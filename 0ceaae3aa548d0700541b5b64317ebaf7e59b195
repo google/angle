@@ -33,6 +33,40 @@
       "message": "LGTM. Thinking about it I\u0027d prefer naming these ExtendedDirtyBits rather than DirtyBitsExtended.",
       "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "156e82da_5cd43018",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:53:51Z",
+      "side": 1,
+      "message": "LGTM with Jamie\u0027s naming suggestion fixes",
+      "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a2f011c_3f752714",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:53:51Z",
+      "side": 1,
+      "message": "Maybe here, maybe as a follow up: there are a handful of places that set this bit. Could you please add a separate extended dirty bit for each of those. Handling some of them would be noop in the Vulkan backend.",
+      "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
