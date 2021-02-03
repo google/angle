@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63a9b42c_a298c71f",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T21:42:08Z",
+      "side": 1,
+      "message": "you could cap it at 32 reasonably without any performance penalty at all.",
+      "range": {
+        "startLine": 678,
+        "startChar": 93,
+        "endLine": 678,
+        "endChar": 94
+      },
+      "revId": "b34da1d81c3c119556dc5757917cc07181d80362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
