@@ -168,6 +168,7 @@ struct SwapchainImage : angle::NonCopyable
     static constexpr size_t kPresentHistorySize = kSwapHistorySize + 1;
     std::array<ImagePresentHistory, kPresentHistorySize> presentHistory;
     size_t currentPresentHistoryIndex = 0;
+    uint64_t mFrameNumber             = 0;
 };
 }  // namespace impl
 
@@ -242,6 +243,8 @@ class WindowSurfaceVk : public SurfaceVk
         }
         return mPreTransform;
     }
+
+    egl::Error getBufferAge(const gl::Context *context, EGLint *age) override;
 
   protected:
     angle::Result swapImpl(const gl::Context *context,
@@ -340,6 +343,9 @@ class WindowSurfaceVk : public SurfaceVk
 
     // True when acquiring the next image is deferred.
     bool mNeedToAcquireNextSwapchainImage;
+
+    // EGL_EXT_buffer_age: Track frame count.
+    uint64_t mFrameCount;
 };
 
 }  // namespace rx

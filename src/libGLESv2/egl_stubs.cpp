@@ -557,8 +557,9 @@ EGLBoolean QuerySurface(Thread *thread,
 {
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglQuerySurface",
                          GetDisplayIfValid(display), EGL_FALSE);
-    ANGLE_EGL_TRY_RETURN(thread, QuerySurfaceAttrib(display, eglSurface, attribute, value),
-                         "eglQuerySurface", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
+    ANGLE_EGL_TRY_RETURN(
+        thread, QuerySurfaceAttrib(display, thread->getContext(), eglSurface, attribute, value),
+        "eglQuerySurface", GetSurfaceIfValid(display, eglSurface), EGL_FALSE);
 
     thread->setSuccess();
     return EGL_TRUE;

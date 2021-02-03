@@ -275,6 +275,7 @@ void QueryConfigAttrib(const Config *config, EGLint attribute, EGLint *value);
 void QueryContextAttrib(const gl::Context *context, EGLint attribute, EGLint *value);
 
 egl::Error QuerySurfaceAttrib(const Display *display,
+                              const gl::Context *context,
                               const Surface *surface,
                               EGLint attribute,
                               EGLint *value);

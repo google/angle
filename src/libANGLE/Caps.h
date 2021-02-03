@@ -1218,6 +1218,9 @@ struct DisplayExtensions
 
     // EGL_ANGLE_external_context_and_surface
     bool externalContextAndSurface = false;
+
+    // EGL_EXT_buffer_age
+    bool bufferAgeEXT = false;
 };
 
 struct DeviceExtensions

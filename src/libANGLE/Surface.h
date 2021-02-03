@@ -186,6 +186,8 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     // otherwise.
     const gl::Offset &getTextureOffset() const { return mTextureOffset; }
 
+    Error getBufferAge(const gl::Context *context, EGLint *age) const;
+
   protected:
     Surface(EGLint surfaceType,
             const egl::Config *config,
