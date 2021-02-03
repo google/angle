@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b27b3f8e_b40d632d",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-03T19:47:12Z",
+      "side": 1,
+      "message": "Can you elaborate?",
+      "range": {
+        "startLine": 252,
+        "startChar": 39,
+        "endLine": 252,
+        "endChar": 70
+      },
+      "revId": "e8dcb3f2a658d5fd7e7391e22a26d0167265125d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
