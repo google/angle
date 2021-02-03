@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbefae7d_1672e696",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T19:30:13Z",
+      "side": 1,
+      "message": "LGTM. Thinking about it I\u0027d prefer naming these ExtendedDirtyBits rather than DirtyBitsExtended.",
+      "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
