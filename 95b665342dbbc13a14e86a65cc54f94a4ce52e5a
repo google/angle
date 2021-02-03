@@ -274,6 +274,30 @@
       },
       "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fca7c88_6b7e74de",
+        "filename": "util/EGLPlatformParameters.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T21:37:55Z",
+      "side": 1,
+      "message": "Thanks for pointing out the test failures. I have to screen out the Android configs in test_instantiate so we don\u0027t run this config on Android.\n\nThe ref is where ANGLE\u0027s rendering changes if the feature is disabled. This is strictly for vk-portability support (See linked bugs). I updated the commit message to clarify this.\n\nYou\u0027re saying that this CL isn\u0027t complete. You\u0027re right, it\u0027s not intended to be, it\u0027s a quick stab at getting compatible rendering on a config which is currently entirely unsupported.",
+      "parentUuid": "e39c5da3_ab026df8",
+      "range": {
+        "startLine": 88,
+        "startChar": 11,
+        "endLine": 88,
+        "endChar": 50
+      },
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
