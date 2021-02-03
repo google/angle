@@ -22,6 +22,30 @@
       },
       "revId": "b34da1d81c3c119556dc5757917cc07181d80362",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30979450_a13e8936",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-03T21:44:36Z",
+      "side": 1,
+      "message": "would it cause a perf penalty if it is not 32? if not, i would like to go ahead with the land and when we expand this in the follow up change, update the cap to 32",
+      "parentUuid": "63a9b42c_a298c71f",
+      "range": {
+        "startLine": 678,
+        "startChar": 93,
+        "endLine": 678,
+        "endChar": 94
+      },
+      "revId": "b34da1d81c3c119556dc5757917cc07181d80362",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
