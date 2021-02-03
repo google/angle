@@ -21,6 +21,7 @@
 #include "dragon_ball_legends/dragon_ball_legends_capture_context1.h"
 #include "efootball_pes_2021/efootball_pes_2021_capture_context7.h"
 #include "egypt_1500/egypt_1500_capture_context1.h"
+#include "eight_ball_pool/eight_ball_pool_capture_context2.h"
 #include "fate_grand_order/fate_grand_order_capture_context1.h"
 #include "fifa_mobile/fifa_mobile_capture_context2.h"
 #include "free_fire/free_fire_capture_context1.h"
@@ -90,6 +91,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::egypt_1500,
      {egypt_1500::kReplayFrameStart, egypt_1500::kReplayFrameEnd,
       egypt_1500::kReplayDrawSurfaceWidth, egypt_1500::kReplayDrawSurfaceHeight, "egypt_1500"}},
+    {RestrictedTraceID::eight_ball_pool,
+     {eight_ball_pool::kReplayFrameStart, eight_ball_pool::kReplayFrameEnd,
+      eight_ball_pool::kReplayDrawSurfaceWidth, eight_ball_pool::kReplayDrawSurfaceHeight,
+      "eight_ball_pool"}},
     {RestrictedTraceID::fate_grand_order,
      {fate_grand_order::kReplayFrameStart, fate_grand_order::kReplayFrameEnd,
       fate_grand_order::kReplayDrawSurfaceWidth, fate_grand_order::kReplayDrawSurfaceHeight,
@@ -129,13 +134,13 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {manhattan_31::kReplayFrameStart, manhattan_31::kReplayFrameEnd,
       manhattan_31::kReplayDrawSurfaceWidth, manhattan_31::kReplayDrawSurfaceHeight,
       "manhattan_31"}},
-    {RestrictedTraceID::minecraft,
-     {minecraft::kReplayFrameStart, minecraft::kReplayFrameEnd, minecraft::kReplayDrawSurfaceWidth,
-      minecraft::kReplayDrawSurfaceHeight, "minecraft"}},
     {RestrictedTraceID::marvel_contest_of_champions,
      {marvel_contest_of_champions::kReplayFrameStart, marvel_contest_of_champions::kReplayFrameEnd,
       marvel_contest_of_champions::kReplayDrawSurfaceWidth,
       marvel_contest_of_champions::kReplayDrawSurfaceHeight, "marvel_contest_of_champions"}},
+    {RestrictedTraceID::minecraft,
+     {minecraft::kReplayFrameStart, minecraft::kReplayFrameEnd, minecraft::kReplayDrawSurfaceWidth,
+      minecraft::kReplayDrawSurfaceHeight, "minecraft"}},
     {RestrictedTraceID::mobile_legends,
      {mobile_legends::kReplayFrameStart, mobile_legends::kReplayFrameEnd,
       mobile_legends::kReplayDrawSurfaceWidth, mobile_legends::kReplayDrawSurfaceHeight,
@@ -231,6 +236,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::eight_ball_pool:
+            eight_ball_pool::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::ReplayContext1Frame(frameIndex);
             break;
@@ -264,11 +272,11 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::manhattan_31:
             manhattan_31::ReplayContext6Frame(frameIndex);
             break;
-        case RestrictedTraceID::minecraft:
-            minecraft::ReplayContext2Frame(frameIndex);
-            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::ReplayContext1Frame(frameIndex);
+            break;
+        case RestrictedTraceID::minecraft:
+            minecraft::ReplayContext2Frame(frameIndex);
             break;
         case RestrictedTraceID::mobile_legends:
             mobile_legends::ReplayContext1Frame(frameIndex);
@@ -353,6 +361,9 @@ void ResetReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::egypt_1500:
             egypt_1500::ResetContext1Replay();
             break;
+        case RestrictedTraceID::eight_ball_pool:
+            eight_ball_pool::ResetContext2Replay();
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::ResetContext1Replay();
             break;
@@ -386,11 +397,11 @@ void ResetReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::manhattan_31:
             manhattan_31::ResetContext6Replay();
             break;
-        case RestrictedTraceID::minecraft:
-            minecraft::ResetContext2Replay();
-            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::minecraft:
+            minecraft::ResetContext2Replay();
             break;
         case RestrictedTraceID::mobile_legends:
             mobile_legends::ResetContext1Replay();
@@ -475,6 +486,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetupContext1Replay();
             break;
+        case RestrictedTraceID::eight_ball_pool:
+            eight_ball_pool::SetupContext2Replay();
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetupContext1Replay();
             break;
@@ -508,11 +522,11 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::manhattan_31:
             manhattan_31::SetupContext6Replay();
             break;
-        case RestrictedTraceID::minecraft:
-            minecraft::SetupContext2Replay();
-            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::SetupContext1Replay();
+            break;
+        case RestrictedTraceID::minecraft:
+            minecraft::SetupContext2Replay();
             break;
         case RestrictedTraceID::mobile_legends:
             mobile_legends::SetupContext1Replay();
@@ -597,6 +611,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::eight_ball_pool:
+            eight_ball_pool::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetBinaryDataDir(dataDir);
             break;
@@ -630,11 +647,11 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::manhattan_31:
             manhattan_31::SetBinaryDataDir(dataDir);
             break;
-        case RestrictedTraceID::minecraft:
-            minecraft::SetBinaryDataDir(dataDir);
-            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::SetBinaryDataDir(dataDir);
+            break;
+        case RestrictedTraceID::minecraft:
+            minecraft::SetBinaryDataDir(dataDir);
             break;
         case RestrictedTraceID::mobile_legends:
             mobile_legends::SetBinaryDataDir(dataDir);
@@ -719,6 +736,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
         case RestrictedTraceID::egypt_1500:
             egypt_1500::SetBinaryDataDecompressCallback(callback);
             break;
+        case RestrictedTraceID::eight_ball_pool:
+            eight_ball_pool::SetBinaryDataDecompressCallback(callback);
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetBinaryDataDecompressCallback(callback);
             break;
@@ -752,11 +772,11 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
         case RestrictedTraceID::manhattan_31:
             manhattan_31::SetBinaryDataDecompressCallback(callback);
             break;
-        case RestrictedTraceID::minecraft:
-            minecraft::SetBinaryDataDecompressCallback(callback);
-            break;
         case RestrictedTraceID::marvel_contest_of_champions:
             marvel_contest_of_champions::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::minecraft:
+            minecraft::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::mobile_legends:
             mobile_legends::SetBinaryDataDecompressCallback(callback);
