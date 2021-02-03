@@ -107,7 +107,7 @@ class ANGLEPerfTest : public testing::Test, angle::NonCopyable
     virtual void computeGPUTime() {}
 
     double printResults();
-    void calibrateStepsToRun();
+    void calibrateStepsToRun(RunLoopPolicy policy);
 
     std::string mName;
     std::string mBackend;

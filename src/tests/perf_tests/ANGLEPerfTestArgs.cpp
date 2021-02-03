@@ -74,6 +74,7 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         else if (strcmp("--calibration", argv[argIndex]) == 0)
         {
             gCalibration = true;
+            gTestTrials  = 0;
         }
         else if (strcmp("--steps-per-trial", argv[argIndex]) == 0 && argIndex < *argc - 1)
         {
