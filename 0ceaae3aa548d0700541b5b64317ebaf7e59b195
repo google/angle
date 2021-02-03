@@ -52,6 +52,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b340dd8_c7718878",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-03T20:28:54Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "dbefae7d_1672e696",
+      "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a2f011c_3f752714",
@@ -65,6 +83,24 @@
       "writtenOn": "2021-02-03T19:53:51Z",
       "side": 1,
       "message": "Maybe here, maybe as a follow up: there are a handful of places that set this bit. Could you please add a separate extended dirty bit for each of those. Handling some of them would be noop in the Vulkan backend.",
+      "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5dfd22fd_6df475fa",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 840,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-03T20:28:54Z",
+      "side": 1,
+      "message": "Ack.\n\nwill leave the bug open to track this AI",
+      "parentUuid": "4a2f011c_3f752714",
       "revId": "0ceaae3aa548d0700541b5b64317ebaf7e59b195",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
