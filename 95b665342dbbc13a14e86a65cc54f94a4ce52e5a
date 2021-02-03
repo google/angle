@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "543fb95e_08db1ee5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T02:26:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1eef2c33_18889316",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57242c29_06137696",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-02-02T23:08:45Z",
       "side": 1,
       "message": "Any testing on Android with a device that\u0027s actually rotated?",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d93e5c6_72b0d6c8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T02:26:12Z",
+      "side": 1,
+      "message": "No, this won\u0027t be used on Android.",
+      "parentUuid": "57242c29_06137696",
       "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -86,6 +122,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ceaa6e2_3d14ded3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2653,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T02:26:12Z",
+      "side": 1,
+      "message": "Ack, none, it will only be used on desktop.\n\nref is here.",
+      "parentUuid": "c8e591e6_38e3191c",
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1513584_b7e33287",
@@ -109,6 +163,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b3c87ca_15283ac8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2011,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T02:26:12Z",
+      "side": 1,
+      "message": "Ack, this isn\u0027t for Android.",
+      "parentUuid": "a1513584_b7e33287",
+      "range": {
+        "startLine": 2011,
+        "startChar": 9,
+        "endLine": 2011,
+        "endChar": 34
+      },
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5dd59b26_7ac843cd",
@@ -122,6 +200,30 @@
       "writtenOn": "2021-02-02T23:08:45Z",
       "side": 1,
       "message": "I don\u0027t see where this is used within ANGLE\u0027s rendering code.",
+      "range": {
+        "startLine": 88,
+        "startChar": 11,
+        "endLine": 88,
+        "endChar": 50
+      },
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06f1c7e2_c78a2268",
+        "filename": "util/EGLPlatformParameters.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T02:26:12Z",
+      "side": 1,
+      "message": "Ack, PTAL at the ref.",
+      "parentUuid": "5dd59b26_7ac843cd",
       "range": {
         "startLine": 88,
         "startChar": 11,
