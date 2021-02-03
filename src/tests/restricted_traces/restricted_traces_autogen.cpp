@@ -37,6 +37,7 @@
 #include "minecraft/minecraft_capture_context2.h"
 #include "mobile_legends/mobile_legends_capture_context1.h"
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
+#include "one_punch_man/one_punch_man_capture_context3.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
 #include "raid_shadow_legends/raid_shadow_legends_capture_context2.h"
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
@@ -148,6 +149,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::nba2k20_800,
      {nba2k20_800::kReplayFrameStart, nba2k20_800::kReplayFrameEnd,
       nba2k20_800::kReplayDrawSurfaceWidth, nba2k20_800::kReplayDrawSurfaceHeight, "nba2k20_800"}},
+    {RestrictedTraceID::one_punch_man,
+     {one_punch_man::kReplayFrameStart, one_punch_man::kReplayFrameEnd,
+      one_punch_man::kReplayDrawSurfaceWidth, one_punch_man::kReplayDrawSurfaceHeight,
+      "one_punch_man"}},
     {RestrictedTraceID::pubg_mobile_lite,
      {pubg_mobile_lite::kReplayFrameStart, pubg_mobile_lite::kReplayFrameEnd,
       pubg_mobile_lite::kReplayDrawSurfaceWidth, pubg_mobile_lite::kReplayDrawSurfaceHeight,
@@ -284,6 +289,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::one_punch_man:
+            one_punch_man::ReplayContext3Frame(frameIndex);
+            break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ReplayContext1Frame(frameIndex);
             break;
@@ -408,6 +416,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::one_punch_man:
+            one_punch_man::ResetContext3Replay();
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ResetContext1Replay();
@@ -534,6 +545,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetupContext1Replay();
             break;
+        case RestrictedTraceID::one_punch_man:
+            one_punch_man::SetupContext3Replay();
+            break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetupContext1Replay();
             break;
@@ -659,6 +673,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::one_punch_man:
+            one_punch_man::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDir(dataDir);
             break;
@@ -783,6 +800,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::nba2k20_800:
             nba2k20_800::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::one_punch_man:
+            one_punch_man::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDecompressCallback(callback);

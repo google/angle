@@ -80,6 +80,7 @@ enum class RestrictedTraceID
     minecraft,
     mobile_legends,
     nba2k20_800,
+    one_punch_man,
     pubg_mobile_lite,
     raid_shadow_legends,
     real_commando_secret_mission,

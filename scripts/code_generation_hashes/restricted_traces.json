@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "519363b75549ab5b481755339253c4a9",
+    "89fc0b2aa4ecba2061ea5fb03e7ec612",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -55,6 +55,8 @@
     "5da0b64ab06225a7e85b8a0bb8275b52",
   "src/tests/restricted_traces/nba2k20_800.tar.gz.sha1":
     "9a97bffd4c6c156a14308bb1c6f50a7e",
+  "src/tests/restricted_traces/one_punch_man.tar.gz.sha1":
+    "d7af01fd688a3cbbb9b7d58ed31620fb",
   "src/tests/restricted_traces/pubg_mobile_lite.tar.gz.sha1":
     "6a77372489ee4b43639b684a39ab8d71",
   "src/tests/restricted_traces/raid_shadow_legends.tar.gz.sha1":
@@ -64,13 +66,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "4de3e43a32a55a0bf60ee68638066b71",
+    "4969e456d73d31b0ae29309a4612449a",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "184f06e2bea0e0fcede1e58101442303",
+    "c8369c046b0661107adddfd68c1206ab",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "aa400deb4d6c13c4bb77fb36ba2d41e8",
+    "12c2698a88311465e1b6b39d7ec5535c",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "338d355dd9b28edd8fd2bbd5ec7a006f",
+    "a46e8bf12476096e0be3ec4b03c39160",
   "src/tests/restricted_traces/saint_seiya_awakening.tar.gz.sha1":
     "c9cde6bdfd9096a44d5f03d905a45a4f",
   "src/tests/restricted_traces/subway_surfers.tar.gz.sha1":
