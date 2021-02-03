@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "5bb011bd214b581c43f45033066ada8732dfc846",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "805c5275_82b78ad0",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 692,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-03T17:43:20Z",
+      "side": 1,
+      "message": "the naming scheme is a bit out of line with the other enums here. They use\n\nenum DirtyBitType\n{\n  DIRTY_BIT_X\n}\n\nso we should use\n\nenum DirtyBitExtendedType\n{\n   DIRTY_BIT_EXTENDED_X\n}\n\nand so on for the rest of the code.",
+      "range": {
+        "startLine": 692,
+        "startChar": 8,
+        "endLine": 692,
+        "endChar": 44
+      },
+      "revId": "5bb011bd214b581c43f45033066ada8732dfc846",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
