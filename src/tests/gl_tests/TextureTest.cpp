@@ -3870,6 +3870,47 @@ TEST_P(Texture2DTestES3, CopyImage)
     EXPECT_PIXEL_RECT_EQ(0, 0, 2, 4, GLColor::red);
 }
 
+// Test GL_EXT_copy_image compressed texture copy with mipmaps smaller than the block size
+TEST_P(Texture2DTestES3, CopyCompressedImageMipMaps)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_copy_image"));
+    // TODO(http://anglebug.com/5634): Fix calls to vkCmdCopyBufferToImage() with images smaller
+    // than the compressed format block size.
+    ANGLE_SKIP_TEST_IF(isAllocateNonZeroMemoryEnabled());
+
+    constexpr uint32_t kSize             = 4;
+    constexpr size_t kNumLevels          = 3;
+    const uint8_t CompressedImageETC1[8] = {0x0, 0x0, 0xf8, 0x2, 0xff, 0xff, 0x0, 0x0};
+
+    GLTexture srcTexture;
+    glBindTexture(GL_TEXTURE_2D, srcTexture);
+    for (size_t level = 0; level < kNumLevels; ++level)
+    {
+        glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_ETC1_RGB8_OES, kSize >> level,
+                               kSize >> level, 0, 8, CompressedImageETC1);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    GLTexture destTexture;
+    glBindTexture(GL_TEXTURE_2D, destTexture);
+    for (size_t level = 0; level < kNumLevels; ++level)
+    {
+        glCompressedTexImage2D(GL_TEXTURE_2D, level, GL_ETC1_RGB8_OES, kSize >> level,
+                               kSize >> level, 0, 8, nullptr);
+        EXPECT_GL_NO_ERROR();
+    }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // copy
+    for (size_t level = 0; level < kNumLevels; ++level)
+    {
+        glCopyImageSubDataEXT(srcTexture, GL_TEXTURE_2D, level, 0, 0, 0, destTexture, GL_TEXTURE_2D,
+                              level, 0, 0, 0, kSize >> level, kSize >> level, 1);
+        EXPECT_GL_NO_ERROR();
+    }
+}
+
 // Test GL_EXT_copy_image copy with a non-zero base level
 TEST_P(Texture2DTestES3, CopyImageBaseLevel1)
 {

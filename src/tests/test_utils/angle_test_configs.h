@@ -34,6 +34,7 @@ struct PlatformParameters
     EGLint getRenderer() const;
     EGLint getDeviceType() const;
     bool isSwiftshader() const;
+    EGLint getAllocateNonZeroMemoryFeature() const;
 
     void initDefaultParameters();
 

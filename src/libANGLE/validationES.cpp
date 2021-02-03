@@ -2965,16 +2965,15 @@ bool ValidateCompressedRegion(const Context *context,
                               GLsizei width,
                               GLsizei height)
 {
-    if (formatInfo.compressed)
+    ASSERT(formatInfo.compressed);
+
+    // INVALID_VALUE is generated if the image format is compressed and the dimensions of the
+    // subregion fail to meet the alignment constraints of the format.
+    if ((width % formatInfo.compressedBlockWidth != 0) ||
+        (height % formatInfo.compressedBlockHeight != 0))
     {
-        // INVALID_VALUE is generated if the image format is compressed and the dimensions of the
-        // subregion fail to meet the alignment constraints of the format.
-        if ((width % formatInfo.compressedBlockWidth != 0) ||
-            (height % formatInfo.compressedBlockHeight != 0))
-        {
-            context->validationError(GL_INVALID_VALUE, kInvalidCompressedRegionSize);
-            return false;
-        }
+        context->validationError(GL_INVALID_VALUE, kInvalidCompressedRegionSize);
+        return false;
     }
 
     return true;
@@ -3355,12 +3354,27 @@ bool ValidateCopyImageSubDataBase(const Context *context,
         return false;
     }
 
-    if (!ValidateCompressedRegion(context, srcFormatInfo, srcWidth, srcHeight))
+    bool fillsEntireMip               = false;
+    gl::Texture *dstTexture           = context->getTexture({dstName});
+    gl::TextureTarget dstTargetPacked = gl::PackParam<gl::TextureTarget>(dstTarget);
+    // TODO(http://anglebug.com/5643): Some targets (e.g., GL_TEXTURE_CUBE_MAP, GL_RENDERBUFFER) are
+    // unsupported when used with compressed formats due to gl::PackParam() returning
+    // TextureTarget::InvalidEnum.
+    if (dstTargetPacked != gl::TextureTarget::InvalidEnum)
+    {
+        const gl::Extents &dstExtents = dstTexture->getExtents(dstTargetPacked, dstLevel);
+        fillsEntireMip = dstX == 0 && dstY == 0 && dstZ == 0 && srcWidth == dstExtents.width &&
+                         srcHeight == dstExtents.height && srcDepth == dstExtents.depth;
+    }
+
+    if (srcFormatInfo.compressed && !fillsEntireMip &&
+        !ValidateCompressedRegion(context, srcFormatInfo, srcWidth, srcHeight))
     {
         return false;
     }
 
-    if (!ValidateCompressedRegion(context, dstFormatInfo, dstWidth, dstHeight))
+    if (dstFormatInfo.compressed && !fillsEntireMip &&
+        !ValidateCompressedRegion(context, dstFormatInfo, dstWidth, dstHeight))
     {
         return false;
     }

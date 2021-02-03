@@ -524,6 +524,11 @@ class ANGLETestBase
 
     bool platformSupportsMultithreading() const;
 
+    bool isAllocateNonZeroMemoryEnabled() const
+    {
+        return mCurrentParams->getAllocateNonZeroMemoryFeature() == EGL_TRUE;
+    }
+
   private:
     void checkD3D11SDKLayersMessages();
 

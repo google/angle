@@ -49,6 +49,11 @@ bool PlatformParameters::isSwiftshader() const
     return eglParameters.deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE;
 }
 
+EGLint PlatformParameters::getAllocateNonZeroMemoryFeature() const
+{
+    return eglParameters.allocateNonZeroMemoryFeature;
+}
+
 void PlatformParameters::initDefaultParameters()
 {
     // Default debug layers to enabled in tests.
