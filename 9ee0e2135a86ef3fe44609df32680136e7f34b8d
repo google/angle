@@ -123,6 +123,24 @@
       "parentUuid": "3b86defe_e9978cb8",
       "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ddfc0c1_ef1441f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-03T19:46:32Z",
+      "side": 1,
+      "message": "jamie, new data with your perf harness iteration count fix -\n\n[----------] 1 test from BitSetIteratorPerfTest/5, where TypeParam \u003d \u003ctype\u003e\n[ RUN      ] BitSetIteratorPerfTest/5.Run\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 1252.0331836686 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 736628 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 1473257 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 1279.2891391420 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 736628 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 2209885 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 1331.6773188142 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 736628 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 2946513 count\n[       OK ] BitSetIteratorPerfTest/5.Run (3850 ms)\n[----------] 1 test from BitSetIteratorPerfTest/5 (3851 ms total)\n\n[----------] 1 test from BitSetIteratorPerfTest/6, where TypeParam \u003d \u003ctype\u003e\n[ RUN      ] BitSetIteratorPerfTest/6.Run\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 159.4278510872 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 5966943 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 11933889 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 166.5619229193 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 5966943 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 17900832 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 163.9136824272 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 5966943 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 23867775 count\n[       OK ] BitSetIteratorPerfTest/6.Run (3928 ms)\n[----------] 1 test from BitSetIteratorPerfTest/6 (3929 ms total)\n\n[----------] 1 test from BitSetIteratorPerfTest/7, where TypeParam \u003d \u003ctype\u003e\n[ RUN      ] BitSetIteratorPerfTest/7.Run\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 177.1952231688 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 5764915 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 11529832 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 178.2739207782 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 5764915 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 17294747 count\n*RESULT BitSetIteratorPerf.wall_time: run\u003d 180.6482662863 ns\nRESULT BitSetIteratorPerf.trial_steps: run\u003d 5764915 count\nRESULT BitSetIteratorPerf.total_steps: run\u003d 23059662 count\n[       OK ] BitSetIteratorPerfTest/7.Run (4096 ms)\n[----------] 1 test from BitSetIteratorPerfTest/7 (4097 ms total)",
+      "parentUuid": "8091dc23_4efc7b96",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
