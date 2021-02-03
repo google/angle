@@ -699,7 +699,9 @@ size_t MaxClientArraySize(const gl::AttribArray<size_t> &clientArraySizes)
     for (size_t size : clientArraySizes)
     {
         if (size > found)
+        {
             found = size;
+        }
     }
 
     return found;
@@ -4344,7 +4346,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
     }
 }
 
-void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
+void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call, bool isCallValid)
 {
     if (SkipCall(call.entryPoint))
     {
@@ -4355,7 +4357,15 @@ void FrameCapture::captureCall(const gl::Context *context, CallCapture &&call)
 
     maybeCapturePreCallUpdates(context, call);
 
-    mFrameCalls.emplace_back(std::move(call));
+    if (isCallValid)
+    {
+        mFrameCalls.emplace_back(std::move(call));
+    }
+    else
+    {
+        INFO() << "FrameCapture: Not capturing invalid call to "
+               << GetEntryPointName(call.entryPoint);
+    }
 
     maybeCapturePostCallUpdates(context);
 }

@@ -315,7 +315,7 @@ class FrameCapture final : angle::NonCopyable
     FrameCapture();
     ~FrameCapture();
 
-    void captureCall(const gl::Context *context, CallCapture &&call);
+    void captureCall(const gl::Context *context, CallCapture &&call, bool isCallValid);
     void checkForCaptureTrigger();
     void onEndFrame(const gl::Context *context);
     void onDestroyContext(const gl::Context *context);
@@ -450,12 +450,7 @@ void CaptureCallToFrameCapture(CaptureFuncT captureFunc,
 
     CallCapture call = captureFunc(context->getState(), isCallValid, captureParams...);
 
-    if (!isCallValid)
-    {
-        INFO() << "FrameCapture: Capturing invalid call to " << GetEntryPointName(call.entryPoint);
-    }
-
-    frameCapture->captureCall(context, std::move(call));
+    frameCapture->captureCall(context, std::move(call), isCallValid);
 }
 
 template <typename T>
