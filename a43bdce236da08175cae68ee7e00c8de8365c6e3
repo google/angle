@@ -111,6 +111,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4cb8aeab_630a62cb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 2561,
+      "author": {
+        "id": 1357791
+      },
+      "writtenOn": "2021-02-04T22:54:18Z",
+      "side": 1,
+      "message": "The idea seems to have a limitation in case the mMaxIndex in FramebufferDesc is 0. DrawNonFetchDrawFetch test have 4 draw call and we switch the fetch mode in every draw call. mMaxIndex value at first draw call was 2 and I decreased the value when program switches the mode. So the value became 0 at 3rd draw call. what should we do at 4th draw call?",
+      "parentUuid": "0bbcd000_0b6ff400",
+      "revId": "a43bdce236da08175cae68ee7e00c8de8365c6e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7e07adb5_99832a6e",
         "filename": "src/tests/gl_tests/FramebufferFetchTest.cpp",
         "patchSetId": 14
