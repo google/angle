@@ -16,6 +16,24 @@
       "message": "It looks fine to me but adding Ian and Cody to extra eyes.",
       "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "751d8bd4_0d20f23d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-04T21:05:50Z",
+      "side": 1,
+      "message": "I believe only the platform can use that call, it is not available in the NDK.  So you\u0027ll need to maintain the old way.",
+      "parentUuid": "5da70658_66d54664",
+      "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
