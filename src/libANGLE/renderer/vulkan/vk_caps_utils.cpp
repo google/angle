@@ -483,6 +483,12 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.sampleVariablesOES =
         supportSampleRateShading && vk_gl::GetMaxSampleCount(kNotSupportedSampleCounts) == 0;
 
+    // Enable EXT_unpack_subimage
+    mNativeExtensions.unpackSubimage = true;
+
+    // Enable NV_pack_subimage
+    mNativeExtensions.packSubimage = true;
+
     mNativeCaps.minInterpolationOffset          = limitsVk.minInterpolationOffset;
     mNativeCaps.maxInterpolationOffset          = limitsVk.maxInterpolationOffset;
     mNativeCaps.subPixelInterpolationOffsetBits = limitsVk.subPixelInterpolationOffsetBits;
