@@ -3088,26 +3088,39 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_EXTENDED:
             {
-                // Handling clip distance enabled flags, mipmap generation hint & shader derivative
-                // hint.
-                invalidateGraphicsDriverUniforms();
-
-                // Handling clip space origin for EXT_clip_control.
-                if (glState.getExtendedDirtyBits().test(
-                        gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_CLIP_CONTROL))
+                gl::State::ExtendedDirtyBits extendedDirtyBits =
+                    glState.getAndResetExtendedDirtyBits();
+                for (size_t extendedDirtyBit : extendedDirtyBits)
                 {
-                    updateViewport(vk::GetImpl(glState.getDrawFramebuffer()), glState.getViewport(),
-                                   glState.getNearPlane(), glState.getFarPlane(),
-                                   isViewportFlipEnabledForDrawFBO());
-                    // Since we are flipping the y coordinate, update front face state
-                    mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
-                                                           glState.getRasterizerState(),
-                                                           isYFlipEnabledForDrawFBO());
-                    updateScissor(glState);
+                    switch (extendedDirtyBit)
+                    {
+                        case gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_CLIP_CONTROL:
+                            updateViewport(vk::GetImpl(glState.getDrawFramebuffer()),
+                                           glState.getViewport(), glState.getNearPlane(),
+                                           glState.getFarPlane(),
+                                           isViewportFlipEnabledForDrawFBO());
+                            // Since we are flipping the y coordinate, update front face state
+                            mGraphicsPipelineDesc->updateFrontFace(&mGraphicsPipelineTransition,
+                                                                   glState.getRasterizerState(),
+                                                                   isYFlipEnabledForDrawFBO());
+                            updateScissor(glState);
 
-                    // Nothing is needed for depth correction for EXT_clip_control.
-                    // glState will be used to toggle control path of depth correction code in
-                    // SPIR-V tranform options.
+                            // Nothing is needed for depth correction for EXT_clip_control.
+                            // glState will be used to toggle control path of depth correction code
+                            // in SPIR-V tranform options.
+                            break;
+                        case gl::State::ExtendedDirtyBitType::EXTENDED_DIRTY_BIT_CLIP_DISTANCES:
+                            invalidateGraphicsDriverUniforms();
+                            break;
+                        case gl::State::ExtendedDirtyBitType::
+                            EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT:
+                            break;
+                        case gl::State::ExtendedDirtyBitType::
+                            EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT:
+                            break;
+                        default:
+                            UNREACHABLE();
+                    }
                 }
                 break;
             }

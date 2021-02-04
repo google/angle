@@ -670,12 +670,15 @@ class State : angle::NonCopyable
 
     enum ExtendedDirtyBitType
     {
-        EXTENDED_DIRTY_BIT_CLIP_CONTROL,  // EXT_clip_control
+        EXTENDED_DIRTY_BIT_CLIP_CONTROL,            // EXT_clip_control
+        EXTENDED_DIRTY_BIT_CLIP_DISTANCES,          // clip distances
+        EXTENDED_DIRTY_BIT_MIPMAP_GENERATION_HINT,  // mipmap generation hint
+        EXTENDED_DIRTY_BIT_SHADER_DERIVATIVE_HINT,  // shader derivative hint
         EXTENDED_DIRTY_BIT_INVALID,
         EXTENDED_DIRTY_BIT_MAX = EXTENDED_DIRTY_BIT_INVALID,
     };
 
-    static_assert(EXTENDED_DIRTY_BIT_MAX <= 8, "State extended dirty bits must be capped at 8");
+    static_assert(EXTENDED_DIRTY_BIT_MAX <= 32, "State extended dirty bits must be capped at 32");
 
     // TODO(jmadill): Consider storing dirty objects in a list instead of by binding.
     enum DirtyObjectType
@@ -706,8 +709,10 @@ class State : angle::NonCopyable
         mDirtyCurrentValues.set();
     }
 
-    using ExtendedDirtyBits = angle::BitSet8<EXTENDED_DIRTY_BIT_MAX>;
+    using ExtendedDirtyBits = angle::BitSet32<EXTENDED_DIRTY_BIT_MAX>;
     const ExtendedDirtyBits &getExtendedDirtyBits() const { return mExtendedDirtyBits; }
+    // TODO(https://anglebug.com/5631): Handle extended dirty bits on non-vulkan backends
+    ExtendedDirtyBits getAndResetExtendedDirtyBits() const;
     void clearExtendedDirtyBits() { mExtendedDirtyBits.reset(); }
 
     using DirtyObjects = angle::BitSet<DIRTY_OBJECT_MAX>;
@@ -1105,7 +1110,7 @@ class State : angle::NonCopyable
     GLES1State mGLES1State;
 
     DirtyBits mDirtyBits;
-    ExtendedDirtyBits mExtendedDirtyBits;
+    mutable ExtendedDirtyBits mExtendedDirtyBits;
     DirtyObjects mDirtyObjects;
     mutable AttributesMask mDirtyCurrentValues;
     ActiveTextureMask mDirtyActiveTextures;
