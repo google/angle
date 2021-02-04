@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2dca4d23_b01a877e",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-04T19:23:50Z",
+      "side": 1,
+      "message": "\u003e Wasn\u0027t the real issue that this is not rotated (and thus doesn\u0027t match the actual swapchain image)?\n\nNo.  The pre-rotation code is written so that most of ANGLE thinks an image is what the application thinks it is (wide or tall).  For example, if the app creates a landscape/90-degree-rotated window (e.g. 1920x1080), the app and all of its calls will be w.r.t. landscape dimensions (1920x1080).  Most of ANGLE will operate on that same (landscape) basis.  All of ANGLE\u0027s front-end, and most of the Vulkan back-end think in terms of the application\u0027s dimensions.  The back-end stores/uses a lot of values in front-end data structures, and the front-end ends up using dimensions from ImageHelper (which need to be the application\u0027s dimensions).\n\nTo avoid massive changes to ANGLE, I design pre-rotation so that most of ANGLE continues to work with the application\u0027s dimensions (or \"coordinate system\" if you will), and only the parts of ANGLE that talk to Vulkan need to know/use the rotated dimensions (e.g. 1080x1920).  Thus, the actual swapchain\u0027s VkImages need to be rotated, and the final scissor, viewport, renderArea that go to Vulkan need to be based on the rotated dimensions.  But the ImageHelper stores non-rotated extents (for use by the rest of ANGLE).\n\nThe problem with MSAA swapchains was that ImageHelper\u0027s dimensions were rotated, and that messed up most of ANGLE (which, again, thinks in non-rotated terms and pulls the application dimensions from ImageHelper).\n\nIf we want a huge refactor, we can change from the current approach.  That\u0027s beyond the scope of getting MSAA swapchains working:-).",
+      "parentUuid": "eaeedcdc_67c9f32e",
+      "range": {
+        "startLine": 1048,
+        "startChar": 79,
+        "endLine": 1048,
+        "endChar": 86
+      },
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bba977b6_23761ab8",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 1
@@ -71,6 +95,24 @@
       "writtenOn": "2021-02-04T18:46:05Z",
       "side": 1,
       "message": "This is a recipe for disaster. The image extents should reflect the actual image extent no matter what.",
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "becf7abf_dc994c98",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3619,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-04T19:23:50Z",
+      "side": 1,
+      "message": "I addressed this in my other comment.  This makes MSAA swapchain images equal with other swapchain images.",
+      "parentUuid": "bba977b6_23761ab8",
       "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
