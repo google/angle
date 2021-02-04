@@ -141,6 +141,116 @@
       "parentUuid": "8091dc23_4efc7b96",
       "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d68743a_41fdf4dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-04T19:42:20Z",
+      "side": 1,
+      "message": "Looks good re: the \"Large\" bitset. Sorry, had some comments that I missed sending off.",
+      "parentUuid": "9ddfc0c1_ef1441f5",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "386d205c_dd7930e3",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-04T19:42:20Z",
+      "side": 1,
+      "message": "naming-wise, can we think about the name for this class a bit? Maybe BitSetArray?",
+      "range": {
+        "startLine": 563,
+        "startChar": 6,
+        "endLine": 563,
+        "endChar": 17
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5016bdcc_06431f81",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-04T19:42:20Z",
+      "side": 1,
+      "message": "same comment here - put a type inside the above ifdef and use it",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 573,
+        "endChar": 39
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b516c135_5f5642ba",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-04T19:42:20Z",
+      "side": 1,
+      "message": "I\u0027d make this \u003c\u003d the platform native word size, not 64. again using a constant defined above.",
+      "range": {
+        "startLine": 585,
+        "startChar": 8,
+        "endLine": 585,
+        "endChar": 75
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5432d6b_d200effa",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-04T19:42:20Z",
+      "side": 1,
+      "message": "Can you prove this function is more efficient than other paths? If not we should remove it because it doesn\u0027t exist in std::bitset.",
+      "range": {
+        "startLine": 796,
+        "startChar": 9,
+        "endLine": 796,
+        "endChar": 19
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
