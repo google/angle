@@ -94,6 +94,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f8db1815_2cd416bb",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:09:35Z",
+      "side": 1,
+      "message": "Sorry, not \u0027and\u0027 it but iterate over it instead of all attribs and it simplifies the checks inside the loop.",
+      "parentUuid": "c10a8b37_ce3f5310",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 204,
+        "endChar": 13
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cff86666_f9f30312",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 8
