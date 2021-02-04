@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "1d7df1edbfb0ccec7a5ef63d167fd50a",
+    "a385235543c74efe5e629464c6c21410",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -23,6 +23,8 @@
     "0d569cbab0adf4df1027f671c65f7bff",
   "src/tests/restricted_traces/eight_ball_pool.tar.gz.sha1":
     "5826ab8ccdef774fbec4106ddef76720",
+  "src/tests/restricted_traces/fallout_shelter_online.tar.gz.sha1":
+    "6f2784d375489b6d6f44092de1a859e0",
   "src/tests/restricted_traces/fate_grand_order.tar.gz.sha1":
     "091d008d6d38d2cc8a6d31e3be417063",
   "src/tests/restricted_traces/fifa_mobile.tar.gz.sha1":
@@ -68,13 +70,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "31d3aca1e36cfa8b8b86a7068875743e",
+    "919e86f84cf4a7fb55b3707a602137e4",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "874a557b0f0fe10a7acbff5dfdc35778",
+    "86eabb91447341145432697cc831a1bd",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "63c1d2d02d7196357780fa7421f4992c",
+    "8a7361dc9ad4e04fa9adf0f47025624a",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "fe91c1d3973c02eca4a5c09e0f58bccc",
+    "2ea8f1924bca98c57f36f2494fc4c3ea",
   "src/tests/restricted_traces/saint_seiya_awakening.tar.gz.sha1":
     "c9cde6bdfd9096a44d5f03d905a45a4f",
   "src/tests/restricted_traces/shadow_fight_2.tar.gz.sha1":

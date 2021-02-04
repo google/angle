@@ -65,6 +65,7 @@ enum class RestrictedTraceID
     efootball_pes_2021,
     egypt_1500,
     eight_ball_pool,
+    fallout_shelter_online,
     fate_grand_order,
     fifa_mobile,
     free_fire,

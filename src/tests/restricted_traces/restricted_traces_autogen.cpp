@@ -22,6 +22,7 @@
 #include "efootball_pes_2021/efootball_pes_2021_capture_context7.h"
 #include "egypt_1500/egypt_1500_capture_context1.h"
 #include "eight_ball_pool/eight_ball_pool_capture_context2.h"
+#include "fallout_shelter_online/fallout_shelter_online_capture_context3.h"
 #include "fate_grand_order/fate_grand_order_capture_context1.h"
 #include "fifa_mobile/fifa_mobile_capture_context2.h"
 #include "free_fire/free_fire_capture_context1.h"
@@ -98,6 +99,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {eight_ball_pool::kReplayFrameStart, eight_ball_pool::kReplayFrameEnd,
       eight_ball_pool::kReplayDrawSurfaceWidth, eight_ball_pool::kReplayDrawSurfaceHeight,
       "eight_ball_pool"}},
+    {RestrictedTraceID::fallout_shelter_online,
+     {fallout_shelter_online::kReplayFrameStart, fallout_shelter_online::kReplayFrameEnd,
+      fallout_shelter_online::kReplayDrawSurfaceWidth,
+      fallout_shelter_online::kReplayDrawSurfaceHeight, "fallout_shelter_online"}},
     {RestrictedTraceID::fate_grand_order,
      {fate_grand_order::kReplayFrameStart, fate_grand_order::kReplayFrameEnd,
       fate_grand_order::kReplayDrawSurfaceWidth, fate_grand_order::kReplayDrawSurfaceHeight,
@@ -253,6 +258,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::eight_ball_pool:
             eight_ball_pool::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::fallout_shelter_online:
+            fallout_shelter_online::ReplayContext3Frame(frameIndex);
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::ReplayContext1Frame(frameIndex);
             break;
@@ -386,6 +394,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::eight_ball_pool:
             eight_ball_pool::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::fallout_shelter_online:
+            fallout_shelter_online::ResetContext3Replay();
             break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::ResetContext1Replay();
@@ -521,6 +532,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::eight_ball_pool:
             eight_ball_pool::SetupContext2Replay();
             break;
+        case RestrictedTraceID::fallout_shelter_online:
+            fallout_shelter_online::SetupContext3Replay();
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetupContext1Replay();
             break;
@@ -655,6 +669,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::eight_ball_pool:
             eight_ball_pool::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::fallout_shelter_online:
+            fallout_shelter_online::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetBinaryDataDir(dataDir);
             break;
@@ -788,6 +805,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::eight_ball_pool:
             eight_ball_pool::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::fallout_shelter_online:
+            fallout_shelter_online::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::fate_grand_order:
             fate_grand_order::SetBinaryDataDecompressCallback(callback);
