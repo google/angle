@@ -58,6 +58,7 @@ enum class RestrictedTraceID
     arena_of_valor,
     asphalt_8,
     brawl_stars,
+    bus_simulator_indonesia,
     candy_crush_500,
     clash_of_clans,
     clash_royale,

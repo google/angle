@@ -362,6 +362,15 @@ TracePerfTest::TracePerfTest()
         }
     }
 
+    if (param.testID == RestrictedTraceID::bus_simulator_indonesia)
+    {
+        // TODO(https://anglebug.com/5629) Linux+Intel native GLES generates GL_INVALID_OPERATION
+        if (IsLinux() && IsIntel() && param.getRenderer() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 
