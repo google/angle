@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47f87c9d_315a752f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-04T00:00:14Z",
+      "side": 1,
+      "message": "I defer review to Geoff and Jonah but this looks good to me! Great work Shrek!\n",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa9ee770_409f3f41",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-04T00:00:14Z",
+      "side": 1,
+      "message": "I was worried about this doing redundant work, but see that recoverForcedStreamingAttributesForDrawArraysInstanced has an early-out at the top. Good work!",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "455e4340_d6ca44c1",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-04T00:00:14Z",
+      "side": 1,
+      "message": "typo: original",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a83b72e6_1ca75075",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 8
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-02-04T00:00:14Z",
+      "side": 1,
+      "message": "I\u0027m not sure of the architecture but thought that the way to do this was to register listeners that listen to the onStateChange message above.",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
