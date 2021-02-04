@@ -99,4 +99,15 @@ egl::Error DisplayGL::makeCurrentSurfaceless(gl::Context *context)
     UNIMPLEMENTED();
     return egl::NoError();
 }
+
+std::string DisplayGL::getVendorString() const
+{
+    return GetVendorString(getRenderer()->getFunctions());
+}
+
+std::string DisplayGL::getVersionString() const
+{
+    return GetVersionString(getRenderer()->getFunctions());
+}
+
 }  // namespace rx

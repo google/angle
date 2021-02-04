@@ -165,6 +165,7 @@ struct ContextCreationTry
 
 std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedType, bool isMesaGLX);
 
+std::string GetRendererString(const FunctionsGL *functions);
 std::string GetVendorString(const FunctionsGL *functions);
 std::string GetVersionString(const FunctionsGL *functions);
 

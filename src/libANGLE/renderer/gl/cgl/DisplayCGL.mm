@@ -460,16 +460,6 @@ egl::Error DisplayCGL::validateClientBuffer(const egl::Config *configuration,
     return egl::NoError();
 }
 
-std::string DisplayCGL::getVendorString() const
-{
-    return GetVendorString(mRenderer->getFunctions());
-}
-
-std::string DisplayCGL::getVersionString() const
-{
-    return GetVersionString(mRenderer->getFunctions());
-}
-
 CGLContextObj DisplayCGL::getCGLContext() const
 {
     return mContext;
@@ -585,6 +575,11 @@ void DisplayCGL::initializeFrontendFeatures(angle::FrontendFeatures *features) c
 void DisplayCGL::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getFeatures().populateFeatureList(features);
+}
+
+RendererGL *DisplayCGL::getRenderer() const
+{
+    return mRenderer.get();
 }
 
 egl::Error DisplayCGL::referenceDiscreteGPU()

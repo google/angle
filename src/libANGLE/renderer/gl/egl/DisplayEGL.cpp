@@ -133,16 +133,6 @@ EGLSyncImpl *DisplayEGL::createSync(const egl::AttributeMap &attribs)
     return new SyncEGL(attribs, mEGL);
 }
 
-std::string DisplayEGL::getVendorString() const
-{
-    return GetVendorString(mRenderer->getFunctions());
-}
-
-std::string DisplayEGL::getVersionString() const
-{
-    return GetVersionString(mRenderer->getFunctions());
-}
-
 egl::Error DisplayEGL::initializeContext(EGLContext shareContext,
                                          const egl::AttributeMap &eglAttributes,
                                          EGLContext *outContext,
@@ -780,6 +770,11 @@ void DisplayEGL::initializeFrontendFeatures(angle::FrontendFeatures *features) c
 void DisplayEGL::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getFeatures().populateFeatureList(features);
+}
+
+RendererGL *DisplayEGL::getRenderer() const
+{
+    return reinterpret_cast<RendererGL *>(mRenderer.get());
 }
 
 egl::Error DisplayEGL::validateImageClientBuffer(const gl::Context *context,

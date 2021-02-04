@@ -472,16 +472,6 @@ rx::ContextImpl *DisplayWGL::createContext(const gl::State &state,
     return new ContextWGL(state, errorSet, mRenderer);
 }
 
-std::string DisplayWGL::getVendorString() const
-{
-    return GetVendorString(mRenderer->getFunctions());
-}
-
-std::string DisplayWGL::getVersionString() const
-{
-    return GetVersionString(mRenderer->getFunctions());
-}
-
 egl::ConfigSet DisplayWGL::generateConfigs()
 {
     egl::ConfigSet configs;
@@ -1057,6 +1047,11 @@ void DisplayWGL::initializeFrontendFeatures(angle::FrontendFeatures *features) c
 void DisplayWGL::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getFeatures().populateFeatureList(features);
+}
+
+RendererGL *DisplayWGL::getRenderer() const
+{
+    return reinterpret_cast<RendererGL *>(mRenderer.get());
 }
 
 }  // namespace rx

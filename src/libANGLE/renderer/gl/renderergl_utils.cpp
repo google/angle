@@ -2340,6 +2340,11 @@ std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedTyp
     return contextsToTry;
 }
 
+std::string GetRendererString(const FunctionsGL *functions)
+{
+    return std::string(reinterpret_cast<const char *>(functions->getString(GL_RENDERER)));
+}
+
 std::string GetVendorString(const FunctionsGL *functions)
 {
     return std::string(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));

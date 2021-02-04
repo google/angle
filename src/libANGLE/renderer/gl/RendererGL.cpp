@@ -255,7 +255,7 @@ void RendererGL::popDebugGroup() {}
 
 std::string RendererGL::getRendererDescription() const
 {
-    return std::string(reinterpret_cast<const char *>(mFunctions->getString(GL_RENDERER)));
+    return GetRendererString(mFunctions.get());
 }
 
 const gl::Version &RendererGL::getMaxSupportedESVersion() const

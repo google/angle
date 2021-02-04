@@ -294,16 +294,6 @@ egl::Error DisplayEAGL::validateClientBuffer(const egl::Config *configuration,
     return egl::NoError();
 }
 
-std::string DisplayEAGL::getVendorString() const
-{
-    return GetVendorString(mRenderer->getFunctions());
-}
-
-std::string DisplayEAGL::getVersionString() const
-{
-    return GetVersionString(mRenderer->getFunctions());
-}
-
 EAGLContextObj DisplayEAGL::getEAGLContext() const
 {
     return mContext;
@@ -410,6 +400,12 @@ void DisplayEAGL::populateFeatureList(angle::FeatureList *features)
 {
     mRenderer->getFeatures().populateFeatureList(features);
 }
+
+RendererGL *DisplayEAGL::getRenderer() const
+{
+    return mRenderer.get();
+}
+
 }
 
 #endif  // defined(ANGLE_ENABLE_EAGL)
