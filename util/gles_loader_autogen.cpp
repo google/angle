@@ -57,7 +57,6 @@ ANGLE_UTIL_EXPORT PFNGLGETCLIPPLANEXPROC l_glGetClipPlanex;
 ANGLE_UTIL_EXPORT PFNGLGETFIXEDVPROC l_glGetFixedv;
 ANGLE_UTIL_EXPORT PFNGLGETLIGHTXVPROC l_glGetLightxv;
 ANGLE_UTIL_EXPORT PFNGLGETMATERIALXVPROC l_glGetMaterialxv;
-ANGLE_UTIL_EXPORT PFNGLGETPOINTERVPROC l_glGetPointerv;
 ANGLE_UTIL_EXPORT PFNGLGETTEXENVIVPROC l_glGetTexEnviv;
 ANGLE_UTIL_EXPORT PFNGLGETTEXENVXVPROC l_glGetTexEnvxv;
 ANGLE_UTIL_EXPORT PFNGLGETTEXPARAMETERXVPROC l_glGetTexParameterxv;
@@ -411,6 +410,50 @@ ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBFORMATPROC l_glVertexAttribFormat;
 ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBIFORMATPROC l_glVertexAttribIFormat;
 ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBBINDINGPROC l_glVertexAttribBinding;
 ANGLE_UTIL_EXPORT PFNGLVERTEXBINDINGDIVISORPROC l_glVertexBindingDivisor;
+ANGLE_UTIL_EXPORT PFNGLBLENDBARRIERPROC l_glBlendBarrier;
+ANGLE_UTIL_EXPORT PFNGLCOPYIMAGESUBDATAPROC l_glCopyImageSubData;
+ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGECONTROLPROC l_glDebugMessageControl;
+ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGEINSERTPROC l_glDebugMessageInsert;
+ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGECALLBACKPROC l_glDebugMessageCallback;
+ANGLE_UTIL_EXPORT PFNGLGETDEBUGMESSAGELOGPROC l_glGetDebugMessageLog;
+ANGLE_UTIL_EXPORT PFNGLPUSHDEBUGGROUPPROC l_glPushDebugGroup;
+ANGLE_UTIL_EXPORT PFNGLPOPDEBUGGROUPPROC l_glPopDebugGroup;
+ANGLE_UTIL_EXPORT PFNGLOBJECTLABELPROC l_glObjectLabel;
+ANGLE_UTIL_EXPORT PFNGLGETOBJECTLABELPROC l_glGetObjectLabel;
+ANGLE_UTIL_EXPORT PFNGLOBJECTPTRLABELPROC l_glObjectPtrLabel;
+ANGLE_UTIL_EXPORT PFNGLGETOBJECTPTRLABELPROC l_glGetObjectPtrLabel;
+ANGLE_UTIL_EXPORT PFNGLGETPOINTERVPROC l_glGetPointerv;
+ANGLE_UTIL_EXPORT PFNGLENABLEIPROC l_glEnablei;
+ANGLE_UTIL_EXPORT PFNGLDISABLEIPROC l_glDisablei;
+ANGLE_UTIL_EXPORT PFNGLBLENDEQUATIONIPROC l_glBlendEquationi;
+ANGLE_UTIL_EXPORT PFNGLBLENDEQUATIONSEPARATEIPROC l_glBlendEquationSeparatei;
+ANGLE_UTIL_EXPORT PFNGLBLENDFUNCIPROC l_glBlendFunci;
+ANGLE_UTIL_EXPORT PFNGLBLENDFUNCSEPARATEIPROC l_glBlendFuncSeparatei;
+ANGLE_UTIL_EXPORT PFNGLCOLORMASKIPROC l_glColorMaski;
+ANGLE_UTIL_EXPORT PFNGLISENABLEDIPROC l_glIsEnabledi;
+ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSBASEVERTEXPROC l_glDrawElementsBaseVertex;
+ANGLE_UTIL_EXPORT PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC l_glDrawRangeElementsBaseVertex;
+ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC l_glDrawElementsInstancedBaseVertex;
+ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERTEXTUREPROC l_glFramebufferTexture;
+ANGLE_UTIL_EXPORT PFNGLPRIMITIVEBOUNDINGBOXPROC l_glPrimitiveBoundingBox;
+ANGLE_UTIL_EXPORT PFNGLGETGRAPHICSRESETSTATUSPROC l_glGetGraphicsResetStatus;
+ANGLE_UTIL_EXPORT PFNGLREADNPIXELSPROC l_glReadnPixels;
+ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMFVPROC l_glGetnUniformfv;
+ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMIVPROC l_glGetnUniformiv;
+ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMUIVPROC l_glGetnUniformuiv;
+ANGLE_UTIL_EXPORT PFNGLMINSAMPLESHADINGPROC l_glMinSampleShading;
+ANGLE_UTIL_EXPORT PFNGLPATCHPARAMETERIPROC l_glPatchParameteri;
+ANGLE_UTIL_EXPORT PFNGLTEXPARAMETERIIVPROC l_glTexParameterIiv;
+ANGLE_UTIL_EXPORT PFNGLTEXPARAMETERIUIVPROC l_glTexParameterIuiv;
+ANGLE_UTIL_EXPORT PFNGLGETTEXPARAMETERIIVPROC l_glGetTexParameterIiv;
+ANGLE_UTIL_EXPORT PFNGLGETTEXPARAMETERIUIVPROC l_glGetTexParameterIuiv;
+ANGLE_UTIL_EXPORT PFNGLSAMPLERPARAMETERIIVPROC l_glSamplerParameterIiv;
+ANGLE_UTIL_EXPORT PFNGLSAMPLERPARAMETERIUIVPROC l_glSamplerParameterIuiv;
+ANGLE_UTIL_EXPORT PFNGLGETSAMPLERPARAMETERIIVPROC l_glGetSamplerParameterIiv;
+ANGLE_UTIL_EXPORT PFNGLGETSAMPLERPARAMETERIUIVPROC l_glGetSamplerParameterIuiv;
+ANGLE_UTIL_EXPORT PFNGLTEXBUFFERPROC l_glTexBuffer;
+ANGLE_UTIL_EXPORT PFNGLTEXBUFFERRANGEPROC l_glTexBufferRange;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE3DMULTISAMPLEPROC l_glTexStorage3DMultisample;
 ANGLE_UTIL_EXPORT PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEANGLEPROC
     l_glDrawArraysInstancedBaseInstanceANGLE;
 ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLEPROC
@@ -807,7 +850,6 @@ ANGLE_UTIL_EXPORT PFNGLGETCLIPPLANEXCONTEXTANGLEPROC l_glGetClipPlanexContextANG
 ANGLE_UTIL_EXPORT PFNGLGETFIXEDVCONTEXTANGLEPROC l_glGetFixedvContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETLIGHTXVCONTEXTANGLEPROC l_glGetLightxvContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETMATERIALXVCONTEXTANGLEPROC l_glGetMaterialxvContextANGLE;
-ANGLE_UTIL_EXPORT PFNGLGETPOINTERVCONTEXTANGLEPROC l_glGetPointervContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETTEXENVIVCONTEXTANGLEPROC l_glGetTexEnvivContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETTEXENVXVCONTEXTANGLEPROC l_glGetTexEnvxvContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETTEXPARAMETERXVCONTEXTANGLEPROC l_glGetTexParameterxvContextANGLE;
@@ -1203,6 +1245,58 @@ ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBFORMATCONTEXTANGLEPROC l_glVertexAttribFormat
 ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBIFORMATCONTEXTANGLEPROC l_glVertexAttribIFormatContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLVERTEXATTRIBBINDINGCONTEXTANGLEPROC l_glVertexAttribBindingContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLVERTEXBINDINGDIVISORCONTEXTANGLEPROC l_glVertexBindingDivisorContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBLENDBARRIERCONTEXTANGLEPROC l_glBlendBarrierContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLCOPYIMAGESUBDATACONTEXTANGLEPROC l_glCopyImageSubDataContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGECONTROLCONTEXTANGLEPROC l_glDebugMessageControlContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGEINSERTCONTEXTANGLEPROC l_glDebugMessageInsertContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDEBUGMESSAGECALLBACKCONTEXTANGLEPROC l_glDebugMessageCallbackContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETDEBUGMESSAGELOGCONTEXTANGLEPROC l_glGetDebugMessageLogContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPUSHDEBUGGROUPCONTEXTANGLEPROC l_glPushDebugGroupContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPOPDEBUGGROUPCONTEXTANGLEPROC l_glPopDebugGroupContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLOBJECTLABELCONTEXTANGLEPROC l_glObjectLabelContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETOBJECTLABELCONTEXTANGLEPROC l_glGetObjectLabelContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLOBJECTPTRLABELCONTEXTANGLEPROC l_glObjectPtrLabelContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETOBJECTPTRLABELCONTEXTANGLEPROC l_glGetObjectPtrLabelContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETPOINTERVCONTEXTANGLEPROC l_glGetPointervContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLENABLEICONTEXTANGLEPROC l_glEnableiContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDISABLEICONTEXTANGLEPROC l_glDisableiContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBLENDEQUATIONICONTEXTANGLEPROC l_glBlendEquationiContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBLENDEQUATIONSEPARATEICONTEXTANGLEPROC
+    l_glBlendEquationSeparateiContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBLENDFUNCICONTEXTANGLEPROC l_glBlendFunciContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLBLENDFUNCSEPARATEICONTEXTANGLEPROC l_glBlendFuncSeparateiContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLCOLORMASKICONTEXTANGLEPROC l_glColorMaskiContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLISENABLEDICONTEXTANGLEPROC l_glIsEnablediContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSBASEVERTEXCONTEXTANGLEPROC
+    l_glDrawElementsBaseVertexContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDRAWRANGEELEMENTSBASEVERTEXCONTEXTANGLEPROC
+    l_glDrawRangeElementsBaseVertexContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXCONTEXTANGLEPROC
+    l_glDrawElementsInstancedBaseVertexContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERTEXTURECONTEXTANGLEPROC l_glFramebufferTextureContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPRIMITIVEBOUNDINGBOXCONTEXTANGLEPROC l_glPrimitiveBoundingBoxContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETGRAPHICSRESETSTATUSCONTEXTANGLEPROC
+    l_glGetGraphicsResetStatusContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLREADNPIXELSCONTEXTANGLEPROC l_glReadnPixelsContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMFVCONTEXTANGLEPROC l_glGetnUniformfvContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMIVCONTEXTANGLEPROC l_glGetnUniformivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMUIVCONTEXTANGLEPROC l_glGetnUniformuivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLMINSAMPLESHADINGCONTEXTANGLEPROC l_glMinSampleShadingContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPATCHPARAMETERICONTEXTANGLEPROC l_glPatchParameteriContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXPARAMETERIIVCONTEXTANGLEPROC l_glTexParameterIivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXPARAMETERIUIVCONTEXTANGLEPROC l_glTexParameterIuivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETTEXPARAMETERIIVCONTEXTANGLEPROC l_glGetTexParameterIivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETTEXPARAMETERIUIVCONTEXTANGLEPROC l_glGetTexParameterIuivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLSAMPLERPARAMETERIIVCONTEXTANGLEPROC l_glSamplerParameterIivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLSAMPLERPARAMETERIUIVCONTEXTANGLEPROC l_glSamplerParameterIuivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETSAMPLERPARAMETERIIVCONTEXTANGLEPROC
+    l_glGetSamplerParameterIivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLGETSAMPLERPARAMETERIUIVCONTEXTANGLEPROC
+    l_glGetSamplerParameterIuivContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXBUFFERCONTEXTANGLEPROC l_glTexBufferContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXBUFFERRANGECONTEXTANGLEPROC l_glTexBufferRangeContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLTEXSTORAGE3DMULTISAMPLECONTEXTANGLEPROC
+    l_glTexStorage3DMultisampleContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEANGLECONTEXTANGLEPROC
     l_glDrawArraysInstancedBaseInstanceANGLEContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXBASEINSTANCEANGLECONTEXTANGLEPROC
@@ -1746,7 +1840,6 @@ void LoadGLES(LoadProc loadProc)
     l_glGetFixedv     = reinterpret_cast<PFNGLGETFIXEDVPROC>(loadProc("glGetFixedv"));
     l_glGetLightxv    = reinterpret_cast<PFNGLGETLIGHTXVPROC>(loadProc("glGetLightxv"));
     l_glGetMaterialxv = reinterpret_cast<PFNGLGETMATERIALXVPROC>(loadProc("glGetMaterialxv"));
-    l_glGetPointerv   = reinterpret_cast<PFNGLGETPOINTERVPROC>(loadProc("glGetPointerv"));
     l_glGetTexEnviv   = reinterpret_cast<PFNGLGETTEXENVIVPROC>(loadProc("glGetTexEnviv"));
     l_glGetTexEnvxv   = reinterpret_cast<PFNGLGETTEXENVXVPROC>(loadProc("glGetTexEnvxv"));
     l_glGetTexParameterxv =
@@ -2260,6 +2353,74 @@ void LoadGLES(LoadProc loadProc)
         reinterpret_cast<PFNGLVERTEXATTRIBBINDINGPROC>(loadProc("glVertexAttribBinding"));
     l_glVertexBindingDivisor =
         reinterpret_cast<PFNGLVERTEXBINDINGDIVISORPROC>(loadProc("glVertexBindingDivisor"));
+    l_glBlendBarrier = reinterpret_cast<PFNGLBLENDBARRIERPROC>(loadProc("glBlendBarrier"));
+    l_glCopyImageSubData =
+        reinterpret_cast<PFNGLCOPYIMAGESUBDATAPROC>(loadProc("glCopyImageSubData"));
+    l_glDebugMessageControl =
+        reinterpret_cast<PFNGLDEBUGMESSAGECONTROLPROC>(loadProc("glDebugMessageControl"));
+    l_glDebugMessageInsert =
+        reinterpret_cast<PFNGLDEBUGMESSAGEINSERTPROC>(loadProc("glDebugMessageInsert"));
+    l_glDebugMessageCallback =
+        reinterpret_cast<PFNGLDEBUGMESSAGECALLBACKPROC>(loadProc("glDebugMessageCallback"));
+    l_glGetDebugMessageLog =
+        reinterpret_cast<PFNGLGETDEBUGMESSAGELOGPROC>(loadProc("glGetDebugMessageLog"));
+    l_glPushDebugGroup = reinterpret_cast<PFNGLPUSHDEBUGGROUPPROC>(loadProc("glPushDebugGroup"));
+    l_glPopDebugGroup  = reinterpret_cast<PFNGLPOPDEBUGGROUPPROC>(loadProc("glPopDebugGroup"));
+    l_glObjectLabel    = reinterpret_cast<PFNGLOBJECTLABELPROC>(loadProc("glObjectLabel"));
+    l_glGetObjectLabel = reinterpret_cast<PFNGLGETOBJECTLABELPROC>(loadProc("glGetObjectLabel"));
+    l_glObjectPtrLabel = reinterpret_cast<PFNGLOBJECTPTRLABELPROC>(loadProc("glObjectPtrLabel"));
+    l_glGetObjectPtrLabel =
+        reinterpret_cast<PFNGLGETOBJECTPTRLABELPROC>(loadProc("glGetObjectPtrLabel"));
+    l_glGetPointerv    = reinterpret_cast<PFNGLGETPOINTERVPROC>(loadProc("glGetPointerv"));
+    l_glEnablei        = reinterpret_cast<PFNGLENABLEIPROC>(loadProc("glEnablei"));
+    l_glDisablei       = reinterpret_cast<PFNGLDISABLEIPROC>(loadProc("glDisablei"));
+    l_glBlendEquationi = reinterpret_cast<PFNGLBLENDEQUATIONIPROC>(loadProc("glBlendEquationi"));
+    l_glBlendEquationSeparatei =
+        reinterpret_cast<PFNGLBLENDEQUATIONSEPARATEIPROC>(loadProc("glBlendEquationSeparatei"));
+    l_glBlendFunci = reinterpret_cast<PFNGLBLENDFUNCIPROC>(loadProc("glBlendFunci"));
+    l_glBlendFuncSeparatei =
+        reinterpret_cast<PFNGLBLENDFUNCSEPARATEIPROC>(loadProc("glBlendFuncSeparatei"));
+    l_glColorMaski = reinterpret_cast<PFNGLCOLORMASKIPROC>(loadProc("glColorMaski"));
+    l_glIsEnabledi = reinterpret_cast<PFNGLISENABLEDIPROC>(loadProc("glIsEnabledi"));
+    l_glDrawElementsBaseVertex =
+        reinterpret_cast<PFNGLDRAWELEMENTSBASEVERTEXPROC>(loadProc("glDrawElementsBaseVertex"));
+    l_glDrawRangeElementsBaseVertex = reinterpret_cast<PFNGLDRAWRANGEELEMENTSBASEVERTEXPROC>(
+        loadProc("glDrawRangeElementsBaseVertex"));
+    l_glDrawElementsInstancedBaseVertex =
+        reinterpret_cast<PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXPROC>(
+            loadProc("glDrawElementsInstancedBaseVertex"));
+    l_glFramebufferTexture =
+        reinterpret_cast<PFNGLFRAMEBUFFERTEXTUREPROC>(loadProc("glFramebufferTexture"));
+    l_glPrimitiveBoundingBox =
+        reinterpret_cast<PFNGLPRIMITIVEBOUNDINGBOXPROC>(loadProc("glPrimitiveBoundingBox"));
+    l_glGetGraphicsResetStatus =
+        reinterpret_cast<PFNGLGETGRAPHICSRESETSTATUSPROC>(loadProc("glGetGraphicsResetStatus"));
+    l_glReadnPixels    = reinterpret_cast<PFNGLREADNPIXELSPROC>(loadProc("glReadnPixels"));
+    l_glGetnUniformfv  = reinterpret_cast<PFNGLGETNUNIFORMFVPROC>(loadProc("glGetnUniformfv"));
+    l_glGetnUniformiv  = reinterpret_cast<PFNGLGETNUNIFORMIVPROC>(loadProc("glGetnUniformiv"));
+    l_glGetnUniformuiv = reinterpret_cast<PFNGLGETNUNIFORMUIVPROC>(loadProc("glGetnUniformuiv"));
+    l_glMinSampleShading =
+        reinterpret_cast<PFNGLMINSAMPLESHADINGPROC>(loadProc("glMinSampleShading"));
+    l_glPatchParameteri = reinterpret_cast<PFNGLPATCHPARAMETERIPROC>(loadProc("glPatchParameteri"));
+    l_glTexParameterIiv = reinterpret_cast<PFNGLTEXPARAMETERIIVPROC>(loadProc("glTexParameterIiv"));
+    l_glTexParameterIuiv =
+        reinterpret_cast<PFNGLTEXPARAMETERIUIVPROC>(loadProc("glTexParameterIuiv"));
+    l_glGetTexParameterIiv =
+        reinterpret_cast<PFNGLGETTEXPARAMETERIIVPROC>(loadProc("glGetTexParameterIiv"));
+    l_glGetTexParameterIuiv =
+        reinterpret_cast<PFNGLGETTEXPARAMETERIUIVPROC>(loadProc("glGetTexParameterIuiv"));
+    l_glSamplerParameterIiv =
+        reinterpret_cast<PFNGLSAMPLERPARAMETERIIVPROC>(loadProc("glSamplerParameterIiv"));
+    l_glSamplerParameterIuiv =
+        reinterpret_cast<PFNGLSAMPLERPARAMETERIUIVPROC>(loadProc("glSamplerParameterIuiv"));
+    l_glGetSamplerParameterIiv =
+        reinterpret_cast<PFNGLGETSAMPLERPARAMETERIIVPROC>(loadProc("glGetSamplerParameterIiv"));
+    l_glGetSamplerParameterIuiv =
+        reinterpret_cast<PFNGLGETSAMPLERPARAMETERIUIVPROC>(loadProc("glGetSamplerParameterIuiv"));
+    l_glTexBuffer      = reinterpret_cast<PFNGLTEXBUFFERPROC>(loadProc("glTexBuffer"));
+    l_glTexBufferRange = reinterpret_cast<PFNGLTEXBUFFERRANGEPROC>(loadProc("glTexBufferRange"));
+    l_glTexStorage3DMultisample =
+        reinterpret_cast<PFNGLTEXSTORAGE3DMULTISAMPLEPROC>(loadProc("glTexStorage3DMultisample"));
     l_glDrawArraysInstancedBaseInstanceANGLE =
         reinterpret_cast<PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEANGLEPROC>(
             loadProc("glDrawArraysInstancedBaseInstanceANGLE"));
@@ -2992,8 +3153,6 @@ void LoadGLES(LoadProc loadProc)
         reinterpret_cast<PFNGLGETLIGHTXVCONTEXTANGLEPROC>(loadProc("glGetLightxvContextANGLE"));
     l_glGetMaterialxvContextANGLE = reinterpret_cast<PFNGLGETMATERIALXVCONTEXTANGLEPROC>(
         loadProc("glGetMaterialxvContextANGLE"));
-    l_glGetPointervContextANGLE =
-        reinterpret_cast<PFNGLGETPOINTERVCONTEXTANGLEPROC>(loadProc("glGetPointervContextANGLE"));
     l_glGetTexEnvivContextANGLE =
         reinterpret_cast<PFNGLGETTEXENVIVCONTEXTANGLEPROC>(loadProc("glGetTexEnvivContextANGLE"));
     l_glGetTexEnvxvContextANGLE =
@@ -3782,6 +3941,108 @@ void LoadGLES(LoadProc loadProc)
     l_glVertexBindingDivisorContextANGLE =
         reinterpret_cast<PFNGLVERTEXBINDINGDIVISORCONTEXTANGLEPROC>(
             loadProc("glVertexBindingDivisorContextANGLE"));
+    l_glBlendBarrierContextANGLE =
+        reinterpret_cast<PFNGLBLENDBARRIERCONTEXTANGLEPROC>(loadProc("glBlendBarrierContextANGLE"));
+    l_glCopyImageSubDataContextANGLE = reinterpret_cast<PFNGLCOPYIMAGESUBDATACONTEXTANGLEPROC>(
+        loadProc("glCopyImageSubDataContextANGLE"));
+    l_glDebugMessageControlContextANGLE =
+        reinterpret_cast<PFNGLDEBUGMESSAGECONTROLCONTEXTANGLEPROC>(
+            loadProc("glDebugMessageControlContextANGLE"));
+    l_glDebugMessageInsertContextANGLE = reinterpret_cast<PFNGLDEBUGMESSAGEINSERTCONTEXTANGLEPROC>(
+        loadProc("glDebugMessageInsertContextANGLE"));
+    l_glDebugMessageCallbackContextANGLE =
+        reinterpret_cast<PFNGLDEBUGMESSAGECALLBACKCONTEXTANGLEPROC>(
+            loadProc("glDebugMessageCallbackContextANGLE"));
+    l_glGetDebugMessageLogContextANGLE = reinterpret_cast<PFNGLGETDEBUGMESSAGELOGCONTEXTANGLEPROC>(
+        loadProc("glGetDebugMessageLogContextANGLE"));
+    l_glPushDebugGroupContextANGLE = reinterpret_cast<PFNGLPUSHDEBUGGROUPCONTEXTANGLEPROC>(
+        loadProc("glPushDebugGroupContextANGLE"));
+    l_glPopDebugGroupContextANGLE = reinterpret_cast<PFNGLPOPDEBUGGROUPCONTEXTANGLEPROC>(
+        loadProc("glPopDebugGroupContextANGLE"));
+    l_glObjectLabelContextANGLE =
+        reinterpret_cast<PFNGLOBJECTLABELCONTEXTANGLEPROC>(loadProc("glObjectLabelContextANGLE"));
+    l_glGetObjectLabelContextANGLE = reinterpret_cast<PFNGLGETOBJECTLABELCONTEXTANGLEPROC>(
+        loadProc("glGetObjectLabelContextANGLE"));
+    l_glObjectPtrLabelContextANGLE = reinterpret_cast<PFNGLOBJECTPTRLABELCONTEXTANGLEPROC>(
+        loadProc("glObjectPtrLabelContextANGLE"));
+    l_glGetObjectPtrLabelContextANGLE = reinterpret_cast<PFNGLGETOBJECTPTRLABELCONTEXTANGLEPROC>(
+        loadProc("glGetObjectPtrLabelContextANGLE"));
+    l_glGetPointervContextANGLE =
+        reinterpret_cast<PFNGLGETPOINTERVCONTEXTANGLEPROC>(loadProc("glGetPointervContextANGLE"));
+    l_glEnableiContextANGLE =
+        reinterpret_cast<PFNGLENABLEICONTEXTANGLEPROC>(loadProc("glEnableiContextANGLE"));
+    l_glDisableiContextANGLE =
+        reinterpret_cast<PFNGLDISABLEICONTEXTANGLEPROC>(loadProc("glDisableiContextANGLE"));
+    l_glBlendEquationiContextANGLE = reinterpret_cast<PFNGLBLENDEQUATIONICONTEXTANGLEPROC>(
+        loadProc("glBlendEquationiContextANGLE"));
+    l_glBlendEquationSeparateiContextANGLE =
+        reinterpret_cast<PFNGLBLENDEQUATIONSEPARATEICONTEXTANGLEPROC>(
+            loadProc("glBlendEquationSeparateiContextANGLE"));
+    l_glBlendFunciContextANGLE =
+        reinterpret_cast<PFNGLBLENDFUNCICONTEXTANGLEPROC>(loadProc("glBlendFunciContextANGLE"));
+    l_glBlendFuncSeparateiContextANGLE = reinterpret_cast<PFNGLBLENDFUNCSEPARATEICONTEXTANGLEPROC>(
+        loadProc("glBlendFuncSeparateiContextANGLE"));
+    l_glColorMaskiContextANGLE =
+        reinterpret_cast<PFNGLCOLORMASKICONTEXTANGLEPROC>(loadProc("glColorMaskiContextANGLE"));
+    l_glIsEnablediContextANGLE =
+        reinterpret_cast<PFNGLISENABLEDICONTEXTANGLEPROC>(loadProc("glIsEnablediContextANGLE"));
+    l_glDrawElementsBaseVertexContextANGLE =
+        reinterpret_cast<PFNGLDRAWELEMENTSBASEVERTEXCONTEXTANGLEPROC>(
+            loadProc("glDrawElementsBaseVertexContextANGLE"));
+    l_glDrawRangeElementsBaseVertexContextANGLE =
+        reinterpret_cast<PFNGLDRAWRANGEELEMENTSBASEVERTEXCONTEXTANGLEPROC>(
+            loadProc("glDrawRangeElementsBaseVertexContextANGLE"));
+    l_glDrawElementsInstancedBaseVertexContextANGLE =
+        reinterpret_cast<PFNGLDRAWELEMENTSINSTANCEDBASEVERTEXCONTEXTANGLEPROC>(
+            loadProc("glDrawElementsInstancedBaseVertexContextANGLE"));
+    l_glFramebufferTextureContextANGLE = reinterpret_cast<PFNGLFRAMEBUFFERTEXTURECONTEXTANGLEPROC>(
+        loadProc("glFramebufferTextureContextANGLE"));
+    l_glPrimitiveBoundingBoxContextANGLE =
+        reinterpret_cast<PFNGLPRIMITIVEBOUNDINGBOXCONTEXTANGLEPROC>(
+            loadProc("glPrimitiveBoundingBoxContextANGLE"));
+    l_glGetGraphicsResetStatusContextANGLE =
+        reinterpret_cast<PFNGLGETGRAPHICSRESETSTATUSCONTEXTANGLEPROC>(
+            loadProc("glGetGraphicsResetStatusContextANGLE"));
+    l_glReadnPixelsContextANGLE =
+        reinterpret_cast<PFNGLREADNPIXELSCONTEXTANGLEPROC>(loadProc("glReadnPixelsContextANGLE"));
+    l_glGetnUniformfvContextANGLE = reinterpret_cast<PFNGLGETNUNIFORMFVCONTEXTANGLEPROC>(
+        loadProc("glGetnUniformfvContextANGLE"));
+    l_glGetnUniformivContextANGLE = reinterpret_cast<PFNGLGETNUNIFORMIVCONTEXTANGLEPROC>(
+        loadProc("glGetnUniformivContextANGLE"));
+    l_glGetnUniformuivContextANGLE = reinterpret_cast<PFNGLGETNUNIFORMUIVCONTEXTANGLEPROC>(
+        loadProc("glGetnUniformuivContextANGLE"));
+    l_glMinSampleShadingContextANGLE = reinterpret_cast<PFNGLMINSAMPLESHADINGCONTEXTANGLEPROC>(
+        loadProc("glMinSampleShadingContextANGLE"));
+    l_glPatchParameteriContextANGLE = reinterpret_cast<PFNGLPATCHPARAMETERICONTEXTANGLEPROC>(
+        loadProc("glPatchParameteriContextANGLE"));
+    l_glTexParameterIivContextANGLE = reinterpret_cast<PFNGLTEXPARAMETERIIVCONTEXTANGLEPROC>(
+        loadProc("glTexParameterIivContextANGLE"));
+    l_glTexParameterIuivContextANGLE = reinterpret_cast<PFNGLTEXPARAMETERIUIVCONTEXTANGLEPROC>(
+        loadProc("glTexParameterIuivContextANGLE"));
+    l_glGetTexParameterIivContextANGLE = reinterpret_cast<PFNGLGETTEXPARAMETERIIVCONTEXTANGLEPROC>(
+        loadProc("glGetTexParameterIivContextANGLE"));
+    l_glGetTexParameterIuivContextANGLE =
+        reinterpret_cast<PFNGLGETTEXPARAMETERIUIVCONTEXTANGLEPROC>(
+            loadProc("glGetTexParameterIuivContextANGLE"));
+    l_glSamplerParameterIivContextANGLE =
+        reinterpret_cast<PFNGLSAMPLERPARAMETERIIVCONTEXTANGLEPROC>(
+            loadProc("glSamplerParameterIivContextANGLE"));
+    l_glSamplerParameterIuivContextANGLE =
+        reinterpret_cast<PFNGLSAMPLERPARAMETERIUIVCONTEXTANGLEPROC>(
+            loadProc("glSamplerParameterIuivContextANGLE"));
+    l_glGetSamplerParameterIivContextANGLE =
+        reinterpret_cast<PFNGLGETSAMPLERPARAMETERIIVCONTEXTANGLEPROC>(
+            loadProc("glGetSamplerParameterIivContextANGLE"));
+    l_glGetSamplerParameterIuivContextANGLE =
+        reinterpret_cast<PFNGLGETSAMPLERPARAMETERIUIVCONTEXTANGLEPROC>(
+            loadProc("glGetSamplerParameterIuivContextANGLE"));
+    l_glTexBufferContextANGLE =
+        reinterpret_cast<PFNGLTEXBUFFERCONTEXTANGLEPROC>(loadProc("glTexBufferContextANGLE"));
+    l_glTexBufferRangeContextANGLE = reinterpret_cast<PFNGLTEXBUFFERRANGECONTEXTANGLEPROC>(
+        loadProc("glTexBufferRangeContextANGLE"));
+    l_glTexStorage3DMultisampleContextANGLE =
+        reinterpret_cast<PFNGLTEXSTORAGE3DMULTISAMPLECONTEXTANGLEPROC>(
+            loadProc("glTexStorage3DMultisampleContextANGLE"));
     l_glDrawArraysInstancedBaseInstanceANGLEContextANGLE =
         reinterpret_cast<PFNGLDRAWARRAYSINSTANCEDBASEINSTANCEANGLECONTEXTANGLEPROC>(
             loadProc("glDrawArraysInstancedBaseInstanceANGLEContextANGLE"));

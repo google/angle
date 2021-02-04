@@ -142,7 +142,7 @@ def gen_gles_loader(gles_preamble, path, header_lib, export, internal_prefix, fi
 
     # First run through the main GLES entry points.  Since ES2+ is the primary use
     # case, we go through those first and then add ES1-only APIs at the end.
-    for major_version, minor_version in [[2, 0], [3, 0], [3, 1], [1, 0]]:
+    for major_version, minor_version in [[2, 0], [3, 0], [3, 1], [3, 2], [1, 0]]:
         annotation = "{}_{}".format(major_version, minor_version)
         name_prefix = "GL_ES_VERSION_"
 
