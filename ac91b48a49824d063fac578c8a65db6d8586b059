@@ -70,6 +70,24 @@
       "parentUuid": "d24ae457_462d60de",
       "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "530d0a86_9f7b2ada",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-04T22:13:21Z",
+      "side": 1,
+      "message": "This approach may work for that environment (I\u0027m assuming that you tested it), but won\u0027t for the ANGLE APK, which this CL also affects.  In fact, the failing pre-submit bots are only building for the APK case.\n\nI see 2 approaches:\n\n1) Rework the GN args/python magic to recognize when building for APK vs. Cuttlefish/SwANGLE and do the old code for APK and the new code otherwise.\n\n2) Maintain a CL that you apply for your Cuttlefish/SwANGLE build.\n\nI think #1 is preferable:-).",
+      "parentUuid": "1cbfe25d_e3305449",
+      "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
