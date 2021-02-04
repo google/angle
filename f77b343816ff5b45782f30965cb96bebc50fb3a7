@@ -20,6 +20,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "835c96e8_798ab1db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "Looks good! Couple suggestions to improve performance and simplify the code.",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "aa9ee770_409f3f41",
         "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
         "patchSetId": 8
@@ -54,6 +71,115 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c10a8b37_ce3f5310",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "If you end up tracking the instanced attributes, you can then \u0027and\u0027 it with needsStreamingAttribs here and iterate over the bits.",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 204,
+        "endChar": 13
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cff86666_f9f30312",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "I\u0027d like to merge the two blocks below as much as possible. Something like:\n\n\tconst uint8_t *inputPointer \u003d nullptr;\n\tif (features.shiftInstancedArrayDataWithExtraOffset.enabled \u0026\u0026 adjustedDivisor \u003e 0)\n\t{\n\t\tinputPointer \u003d get buffer data;\n\t}\n\telse\n\t{\n\t\tinputPointer \u003d static_cast\u003cconst uint8_t *\u003e(attrib.pointer);\n\t}\n\n\t... copy data ...",
+      "range": {
+        "startLine": 413,
+        "startChar": 12,
+        "endLine": 413,
+        "endChar": 87
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ca95999_170cf438",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "It\u0027s not guaranteed that a buffer is bound, it may be null. In this case you use attrib.pointer as the data source.",
+      "range": {
+        "startLine": 430,
+        "startChar": 16,
+        "endLine": 430,
+        "endChar": 83
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d2b1c11_f338e24a",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "MapBuffer should always be available when this workaround is enabled (you can ASSERT(CanMapBufferForRead(functions)).\n\nYou can use MapBufferRangeWithFallback to read back the buffer data.",
+      "range": {
+        "startLine": 428,
+        "startChar": 16,
+        "endLine": 438,
+        "endChar": 90
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b54d5656_d5cb1882",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "I think you can also use an AttributesMask to track which attributes have a non-zero divisor. Something like mInstancedAttributes. You would only update it in VertexArrayGL::updateBindingDivisor which is only called to sync dirty bits.",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a83b72e6_1ca75075",
         "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
         "patchSetId": 8
@@ -65,6 +191,47 @@
       "writtenOn": "2021-02-04T00:00:14Z",
       "side": 1,
       "message": "I\u0027m not sure of the architecture but thought that the way to do this was to register listeners that listen to the onStateChange message above.",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed530fc3_9f53f96d",
+        "filename": "src/libANGLE/renderer/gl/cgl/DisplayCGL.mm",
+        "patchSetId": 8
+      },
+      "lineNbr": 667,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "I think this is fine in this case, the notification is being forwarded to the renderer which is 1:1 with the DisplayCGL.",
+      "parentUuid": "a83b72e6_1ca75075",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ebf6244_714ae3ac",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1912,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-04T22:07:57Z",
+      "side": 1,
+      "message": "Let\u0027s call ReInitializeFeaturesAtGPUSwitch here to avoid duplicated code",
+      "range": {
+        "startLine": 1908,
+        "startChar": 4,
+        "endLine": 1912,
+        "endChar": 72
+      },
       "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
