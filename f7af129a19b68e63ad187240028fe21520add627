@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d27ed1e7_96780010",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d3aad6d_04e38669",
+      "range": {
+        "startLine": 567,
+        "startChar": 1,
+        "endLine": 573,
+        "endChar": 39
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a77d738_b6da40d8",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-02-01T18:34:14Z",
       "side": 1,
       "message": "nit: can remove this \"k\"",
+      "range": {
+        "startLine": 574,
+        "startChar": 40,
+        "endLine": 574,
+        "endChar": 41
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18e05e2a_de647717",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a77d738_b6da40d8",
       "range": {
         "startLine": 574,
         "startChar": 40,
@@ -244,6 +292,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d23e9c2d_4a916b0c",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 591,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "22c3202d_cab9f2a5",
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e4d5081_7fa7165c",
@@ -281,6 +347,30 @@
       "side": 1,
       "message": "cant use range-for because of - \"// The last BaseBitSet needs special handling\"",
       "parentUuid": "1e4d5081_7fa7165c",
+      "range": {
+        "startLine": 733,
+        "startChar": 8,
+        "endLine": 734,
+        "endChar": 9
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a69aa9c5_f063574f",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "51e8d062_b38d1362",
       "range": {
         "startLine": 733,
         "startChar": 8,
@@ -338,6 +428,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60f4b0b9_2c1afcd8",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 793,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "talked about in another comment",
+      "parentUuid": "18377a0a_76556b2e",
+      "range": {
+        "startLine": 793,
+        "startChar": 8,
+        "endLine": 793,
+        "endChar": 74
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6c79f25c_93aa061c",
@@ -351,6 +465,30 @@
       "writtenOn": "2021-02-01T21:24:01Z",
       "side": 1,
       "message": "for all of these can you use the out-of-line style we use for the other bitset classes to be consistent?",
+      "range": {
+        "startLine": 791,
+        "startChar": 0,
+        "endLine": 801,
+        "endChar": 5
+      },
+      "revId": "f7af129a19b68e63ad187240028fe21520add627",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06d4975f_a671ab20",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6c79f25c_93aa061c",
       "range": {
         "startLine": 791,
         "startChar": 0,

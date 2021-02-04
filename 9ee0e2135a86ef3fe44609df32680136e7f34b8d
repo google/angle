@@ -161,6 +161,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "adac4d8c_33b0d6fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "jamie, i sync\u0027d to tip before pushing patch and ran the perf tests once but for some reason i am now unable to get any wall_time/count or any such data when i run any perf test. It just writes total time into a file called \"output.json\" and nothing else. Is this a known problem?",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "386d205c_dd7930e3",
@@ -174,6 +191,30 @@
       "writtenOn": "2021-02-04T19:42:20Z",
       "side": 1,
       "message": "naming-wise, can we think about the name for this class a bit? Maybe BitSetArray?",
+      "range": {
+        "startLine": 563,
+        "startChar": 6,
+        "endLine": 563,
+        "endChar": 17
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8218275_02733c7d",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "i really wanted to call it BigBitSet",
+      "parentUuid": "386d205c_dd7930e3",
       "range": {
         "startLine": 563,
         "startChar": 6,
@@ -207,6 +248,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f657dca1_d769fb2b",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5016bdcc_06431f81",
+      "range": {
+        "startLine": 567,
+        "startChar": 0,
+        "endLine": 573,
+        "endChar": 39
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b516c135_5f5642ba",
@@ -220,6 +285,30 @@
       "writtenOn": "2021-02-04T19:42:20Z",
       "side": 1,
       "message": "I\u0027d make this \u003c\u003d the platform native word size, not 64. again using a constant defined above.",
+      "range": {
+        "startLine": 585,
+        "startChar": 8,
+        "endLine": 585,
+        "endChar": 75
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6136955_a8372833",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 585,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b516c135_5f5642ba",
       "range": {
         "startLine": 585,
         "startChar": 8,
@@ -255,6 +344,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3814f89e_bf4046b6",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "it takes lesser memory than the existing solution where it constructs a temp object which will need more instructions and hence less efficient? why are we trying to maintain compatibility with std::bitset?",
+      "parentUuid": "c5432d6b_d200effa",
+      "range": {
+        "startLine": 796,
+        "startChar": 9,
+        "endLine": 796,
+        "endChar": 19
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b06a0007_dc46419e",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 3
@@ -266,6 +379,24 @@
       "writtenOn": "2021-02-04T19:46:37Z",
       "side": 1,
       "message": "Didn\u0027t we establish that the other class is actually faster than the manually unrolled one? Should we delete this one?",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1da12bc4_59df233c",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b06a0007_dc46419e",
       "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

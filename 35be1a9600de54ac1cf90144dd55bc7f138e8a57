@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "634dd336_d4a65a60",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "will be removing BitSet128",
+      "parentUuid": "4762cb9d_c5f4f9f0",
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff90e3ae_c737a0d2",
@@ -84,6 +102,24 @@
       "side": 1,
       "message": "I\u0027d just use bitset large. And use this as a BitSet64 on 32-bit. Instead would call it DoubleBitSet or something.",
       "parentUuid": "ff90e3ae_c737a0d2",
+      "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c087ec7_0c73e3a1",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 823,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T22:51:28Z",
+      "side": 1,
+      "message": "No longer relevant",
+      "parentUuid": "0c2415be_5f7c6b9b",
       "revId": "35be1a9600de54ac1cf90144dd55bc7f138e8a57",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
