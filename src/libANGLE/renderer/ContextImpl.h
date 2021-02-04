@@ -161,9 +161,6 @@ class ContextImpl : public GLImplFactory
     // Device loss
     virtual gl::GraphicsResetStatus getResetStatus() = 0;
 
-    // Renderer description
-    virtual std::string getRendererDescription() const = 0;
-
     // EXT_debug_marker
     virtual angle::Result insertEventMarker(GLsizei length, const char *marker) = 0;
     virtual angle::Result pushGroupMarker(GLsizei length, const char *marker)   = 0;

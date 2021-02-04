@@ -760,11 +760,6 @@ gl::GraphicsResetStatus ContextGL::getResetStatus()
     return resetStatus;
 }
 
-std::string ContextGL::getRendererDescription() const
-{
-    return mRenderer->getRendererDescription();
-}
-
 angle::Result ContextGL::insertEventMarker(GLsizei length, const char *marker)
 {
     mRenderer->insertEventMarker(length, marker);

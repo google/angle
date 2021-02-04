@@ -97,8 +97,6 @@ class RendererGL : angle::NonCopyable
     void pushDebugGroup(GLenum source, GLuint id, const std::string &message);
     void popDebugGroup();
 
-    std::string getRendererDescription() const;
-
     GLint getGPUDisjoint();
     GLint64 getTimestamp();
 

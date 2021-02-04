@@ -229,6 +229,10 @@ class Display final : public LabeledObject,
     const std::string &getVendorString() const;
     const std::string &getVersionString() const;
 
+    std::string getBackendRendererDescription() const;
+    std::string getBackendVendorString() const;
+    std::string getBackendVersionString() const;
+
     EGLint programCacheGetAttrib(EGLenum attrib) const;
     Error programCacheQuery(EGLint index,
                             void *key,

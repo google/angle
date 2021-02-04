@@ -3080,9 +3080,9 @@ void Context::programParameteri(ShaderProgramID program, GLenum pname, GLint val
 void Context::initRendererString()
 {
     std::ostringstream frontendRendererString;
-    std::string vendorString(mDisplay->getImplementation()->getVendorString());
-    std::string rendererString(mImplementation->getRendererDescription());
-    std::string versionString(mDisplay->getImplementation()->getVersionString());
+    std::string vendorString(mDisplay->getBackendVendorString());
+    std::string rendererString(mDisplay->getBackendRendererDescription());
+    std::string versionString(mDisplay->getBackendVersionString());
     // Commas are used as a separator in ANGLE's renderer string, so remove commas from each
     // element.
     vendorString.erase(std::remove(vendorString.begin(), vendorString.end(), ','),

@@ -74,7 +74,16 @@ egl::Error DisplayVk::restoreLostDevice(const egl::Display *display)
     return egl::EglBadDisplay();
 }
 
-std::string DisplayVk::getVendorString() const
+std::string DisplayVk::getRendererDescription()
+{
+    if (mRenderer)
+    {
+        return mRenderer->getRendererDescription();
+    }
+    return std::string();
+}
+
+std::string DisplayVk::getVendorString()
 {
     if (mRenderer)
     {
@@ -83,7 +92,7 @@ std::string DisplayVk::getVendorString() const
     return std::string();
 }
 
-std::string DisplayVk::getVersionString() const
+std::string DisplayVk::getVersionString()
 {
     if (mRenderer)
     {

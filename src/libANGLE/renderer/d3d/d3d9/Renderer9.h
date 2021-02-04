@@ -157,7 +157,6 @@ class Renderer9 : public RendererD3D
     bool testDeviceResettable() override;
 
     VendorID getVendorId() const;
-    std::string getRendererDescription() const;
     DeviceIdentifier getAdapterIdentifier() const override;
 
     IDirect3DDevice9 *getDevice() { return mDevice; }
@@ -408,6 +407,7 @@ class Renderer9 : public RendererD3D
 
     void setGlobalDebugAnnotator() override;
 
+    std::string getRendererDescription() const override;
     std::string getVendorString() const override;
     std::string getVersionString() const override;
 

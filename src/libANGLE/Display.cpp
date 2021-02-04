@@ -1856,6 +1856,21 @@ const std::string &Display::getVersionString() const
     return mVersionString;
 }
 
+std::string Display::getBackendRendererDescription() const
+{
+    return mImplementation->getRendererDescription();
+}
+
+std::string Display::getBackendVendorString() const
+{
+    return mImplementation->getVendorString();
+}
+
+std::string Display::getBackendVersionString() const
+{
+    return mImplementation->getVersionString();
+}
+
 Device *Display::getDevice() const
 {
     return mDevice;

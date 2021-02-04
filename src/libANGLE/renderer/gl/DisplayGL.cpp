@@ -100,12 +100,17 @@ egl::Error DisplayGL::makeCurrentSurfaceless(gl::Context *context)
     return egl::NoError();
 }
 
-std::string DisplayGL::getVendorString() const
+std::string DisplayGL::getRendererDescription()
+{
+    return GetRendererString(getRenderer()->getFunctions());
+}
+
+std::string DisplayGL::getVendorString()
 {
     return GetVendorString(getRenderer()->getFunctions());
 }
 
-std::string DisplayGL::getVersionString() const
+std::string DisplayGL::getVersionString()
 {
     return GetVersionString(getRenderer()->getFunctions());
 }

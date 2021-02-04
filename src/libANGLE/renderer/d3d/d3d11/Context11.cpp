@@ -723,11 +723,6 @@ gl::GraphicsResetStatus Context11::getResetStatus()
     return mRenderer->getResetStatus();
 }
 
-std::string Context11::getRendererDescription() const
-{
-    return mRenderer->getRendererDescription();
-}
-
 angle::Result Context11::insertEventMarker(GLsizei length, const char *marker)
 {
     mRenderer->getAnnotator()->setMarker(marker);

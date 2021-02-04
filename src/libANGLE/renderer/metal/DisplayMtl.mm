@@ -138,12 +138,28 @@ egl::Error DisplayMtl::restoreLostDevice(const egl::Display *display)
     return egl::NoError();
 }
 
-std::string DisplayMtl::getVendorString() const
+std::string DisplayMtl::getRendererDescription()
+{
+    ANGLE_MTL_OBJC_SCOPE
+    {
+        std::string desc = "Metal Renderer";
+
+        if (mMetalDevice)
+        {
+            desc += ": ";
+            desc += mMetalDevice.get().name.UTF8String;
+        }
+
+        return desc;
+    }
+}
+
+std::string DisplayMtl::getVendorString()
 {
     return GetVendorString(mMetalDeviceVendorId);
 }
 
-std::string DisplayMtl::getVersionString() const
+std::string DisplayMtl::getVersionString()
 {
     ANGLE_MTL_OBJC_SCOPE
     {
@@ -420,22 +436,6 @@ egl::Error DisplayMtl::validateClientBuffer(const egl::Config *configuration,
             return egl::EglBadAttribute();
     }
     return egl::NoError();
-}
-
-std::string DisplayMtl::getRendererDescription() const
-{
-    ANGLE_MTL_OBJC_SCOPE
-    {
-        std::string desc = "Metal Renderer";
-
-        if (mMetalDevice)
-        {
-            desc += ": ";
-            desc += mMetalDevice.get().name.UTF8String;
-        }
-
-        return desc;
-    }
 }
 
 gl::Caps DisplayMtl::getNativeCaps() const

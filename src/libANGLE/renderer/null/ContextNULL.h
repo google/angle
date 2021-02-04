@@ -160,9 +160,6 @@ class ContextNULL : public ContextImpl
     // Device loss
     gl::GraphicsResetStatus getResetStatus() override;
 
-    // Renderer description
-    std::string getRendererDescription() const override;
-
     // EXT_debug_marker
     angle::Result insertEventMarker(GLsizei length, const char *marker) override;
     angle::Result pushGroupMarker(GLsizei length, const char *marker) override;

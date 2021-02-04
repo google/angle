@@ -94,8 +94,9 @@ class DisplayImpl : public EGLImplFactory, public angle::Subject
                                       EGLNativePixmapType pixmap,
                                       const egl::AttributeMap &attributes) const;
 
-    virtual std::string getVendorString() const  = 0;
-    virtual std::string getVersionString() const = 0;
+    virtual std::string getRendererDescription() = 0;
+    virtual std::string getVendorString()        = 0;
+    virtual std::string getVersionString()       = 0;
 
     virtual DeviceImpl *createDevice();
 

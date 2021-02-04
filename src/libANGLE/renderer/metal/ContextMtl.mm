@@ -790,12 +790,6 @@ gl::GraphicsResetStatus ContextMtl::getResetStatus()
     return gl::GraphicsResetStatus::NoError;
 }
 
-// Renderer description
-std::string ContextMtl::getRendererDescription() const
-{
-    return getDisplay()->getRendererDescription();
-}
-
 // EXT_debug_marker
 angle::Result ContextMtl::insertEventMarker(GLsizei length, const char *marker)
 {

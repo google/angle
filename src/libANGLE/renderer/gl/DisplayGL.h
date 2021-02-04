@@ -52,8 +52,9 @@ class DisplayGL : public DisplayImpl
 
     virtual RendererGL *getRenderer() const = 0;
 
-    std::string getVendorString() const override;
-    std::string getVersionString() const override;
+    std::string getRendererDescription() override;
+    std::string getVendorString() override;
+    std::string getVersionString() override;
 
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;

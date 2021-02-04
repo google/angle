@@ -353,7 +353,16 @@ void DisplayD3D::generateExtensions(egl::DisplayExtensions *outExtensions) const
     mRenderer->generateDisplayExtensions(outExtensions);
 }
 
-std::string DisplayD3D::getVendorString() const
+std::string DisplayD3D::getRendererDescription()
+{
+    if (mRenderer)
+    {
+        return mRenderer->getRendererDescription();
+    }
+    return std::string();
+}
+
+std::string DisplayD3D::getVendorString()
 {
     if (mRenderer)
     {
@@ -362,7 +371,7 @@ std::string DisplayD3D::getVendorString() const
     return std::string();
 }
 
-std::string DisplayD3D::getVersionString() const
+std::string DisplayD3D::getVersionString()
 {
     if (mRenderer)
     {

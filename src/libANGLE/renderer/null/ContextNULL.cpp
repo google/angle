@@ -313,11 +313,6 @@ gl::GraphicsResetStatus ContextNULL::getResetStatus()
     return gl::GraphicsResetStatus::NoError;
 }
 
-std::string ContextNULL::getRendererDescription() const
-{
-    return "NULL";
-}
-
 angle::Result ContextNULL::insertEventMarker(GLsizei length, const char *marker)
 {
     return angle::Result::Continue;

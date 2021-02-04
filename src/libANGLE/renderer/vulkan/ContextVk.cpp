@@ -2456,11 +2456,6 @@ gl::GraphicsResetStatus ContextVk::getResetStatus()
     return gl::GraphicsResetStatus::NoError;
 }
 
-std::string ContextVk::getRendererDescription() const
-{
-    return mRenderer->getRendererDescription();
-}
-
 angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
     if (!mRenderer->enableDebugUtils())

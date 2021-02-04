@@ -358,11 +358,6 @@ gl::GraphicsResetStatus Context9::getResetStatus()
     return mRenderer->getResetStatus();
 }
 
-std::string Context9::getRendererDescription() const
-{
-    return mRenderer->getRendererDescription();
-}
-
 angle::Result Context9::insertEventMarker(GLsizei length, const char *marker)
 {
     mRenderer->getAnnotator()->setMarker(marker);

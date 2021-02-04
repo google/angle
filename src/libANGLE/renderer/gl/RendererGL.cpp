@@ -253,11 +253,6 @@ void RendererGL::pushDebugGroup(GLenum source, GLuint id, const std::string &mes
 
 void RendererGL::popDebugGroup() {}
 
-std::string RendererGL::getRendererDescription() const
-{
-    return GetRendererString(mFunctions.get());
-}
-
 const gl::Version &RendererGL::getMaxSupportedESVersion() const
 {
     // Force generation of caps

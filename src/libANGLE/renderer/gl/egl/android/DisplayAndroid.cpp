@@ -162,7 +162,7 @@ egl::Error DisplayAndroid::initialize(egl::Display *display)
 
     ANGLE_TRY(DisplayGL::initialize(display));
 
-    std::string rendererDescription = mRenderer->getRendererDescription();
+    std::string rendererDescription = getRendererDescription();
     __android_log_print(ANDROID_LOG_INFO, "ANGLE", "%s", rendererDescription.c_str());
     return egl::NoError();
 }
