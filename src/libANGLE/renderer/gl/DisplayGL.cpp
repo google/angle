@@ -22,7 +22,9 @@
 namespace rx
 {
 
-DisplayGL::DisplayGL(const egl::DisplayState &state) : DisplayImpl(state) {}
+DisplayGL::DisplayGL(const egl::DisplayState &state)
+    : DisplayImpl(state), mRendererDescription(""), mVendorString(""), mVersionString("")
+{}
 
 DisplayGL::~DisplayGL() {}
 
@@ -102,17 +104,36 @@ egl::Error DisplayGL::makeCurrentSurfaceless(gl::Context *context)
 
 std::string DisplayGL::getRendererDescription()
 {
-    return GetRendererString(getRenderer()->getFunctions());
+    if (mRendererDescription.empty())
+    {
+        mRendererDescription = GetRendererString(getRenderer()->getFunctions());
+    }
+    return mRendererDescription;
 }
 
 std::string DisplayGL::getVendorString()
 {
-    return GetVendorString(getRenderer()->getFunctions());
+    if (mVendorString.empty())
+    {
+        mVendorString = GetVendorString(getRenderer()->getFunctions());
+    }
+    return mVendorString;
 }
 
 std::string DisplayGL::getVersionString()
 {
-    return GetVersionString(getRenderer()->getFunctions());
+    if (mVersionString.empty())
+    {
+        mVersionString = GetVersionString(getRenderer()->getFunctions());
+    }
+    return mVersionString;
+}
+
+void DisplayGL::resetCachedGLStrings()
+{
+    mRendererDescription = "";
+    mVendorString        = "";
+    mVersionString       = "";
 }
 
 }  // namespace rx
