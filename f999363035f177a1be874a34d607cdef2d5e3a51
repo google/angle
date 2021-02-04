@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b7254e76_86bf79e7",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-04T19:44:33Z",
+      "side": 1,
+      "message": "Would I be right to say that the swapchain image extents are always retrieved through the render target that\u0027s created for them? Is it possible to have the images store the correct extents and have the render target keep a 90-degree-rotated flag and auto-swap in RenderTargetVk::getExtents()?\n\nSounds like down the line having the render targets return the correct extents would save all the extent correction that is applied afterwards too (avoiding the double swap).",
+      "parentUuid": "2dca4d23_b01a877e",
+      "range": {
+        "startLine": 1048,
+        "startChar": 79,
+        "endLine": 1048,
+        "endChar": 86
+      },
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bba977b6_23761ab8",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 1
