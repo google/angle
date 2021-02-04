@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be13ee95_e320e7cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-04T23:16:40Z",
+      "side": 1,
+      "message": "PTAL - couple of comments need to be resolved, rest have been addressed",
+      "revId": "6ca4005bc4a6f6c196c8a8f25b388ab6970968cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
