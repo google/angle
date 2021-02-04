@@ -298,6 +298,30 @@
       },
       "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a09d875c_9df24891",
+        "filename": "util/EGLPlatformParameters.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-04T22:05:16Z",
+      "side": 1,
+      "message": "I\u0027m not been very familiar with the test config code.  I just downloaded this CL and watched it in Visual Studio.  I see what\u0027s going on now.  As I thought, the test config part of this CL doesn\u0027t connect with the rendering code yet.  There are no configs that turn on this test feature (only \"_NoVulkanViewportFlip\" so far).",
+      "parentUuid": "6fca7c88_6b7e74de",
+      "range": {
+        "startLine": 88,
+        "startChar": 11,
+        "endLine": 88,
+        "endChar": 50
+      },
+      "revId": "95b665342dbbc13a14e86a65cc54f94a4ce52e5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
