@@ -34,6 +34,24 @@
       "parentUuid": "5da70658_66d54664",
       "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d24ae457_462d60de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-04T21:09:39Z",
+      "side": 1,
+      "message": "That matches my understanding, at least when ANGLE is in an APK.  Is this for when ANGLE\u0027s .so files are installed in the filesystem?",
+      "parentUuid": "751d8bd4_0d20f23d",
+      "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
