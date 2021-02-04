@@ -33,6 +33,46 @@
       "message": "Creating an MSAA swapchain this way is necessary (e.g. gets most of the MultisampleTest\u0027s passing), but not sufficient for fixing all MSAA-swapchain-related problems.  It treats MSAA swapchain images the same as non-MSAA swapchain images (e.g. proper renderArea, scissor and viewport calculations).\n\nShabi, is the way I structured this acceptable?  I tried to minimize the amount of change to the rest of ANGLE by creating a new initMSAASwapchain() method.",
       "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eaeedcdc_67c9f32e",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-04T18:46:05Z",
+      "side": 1,
+      "message": "Wasn\u0027t the real issue that this is not rotated (and thus doesn\u0027t match the actual swapchain image)? Can we fix this to use the rotated extents, and fix pre-rotation wherever necessary (like when getting the window extents or something)?",
+      "range": {
+        "startLine": 1048,
+        "startChar": 79,
+        "endLine": 1048,
+        "endChar": 86
+      },
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bba977b6_23761ab8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3619,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-04T18:46:05Z",
+      "side": 1,
+      "message": "This is a recipe for disaster. The image extents should reflect the actual image extent no matter what.",
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
