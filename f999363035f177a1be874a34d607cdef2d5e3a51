@@ -16,6 +16,23 @@
       "message": "Shabi, this is a WIP step in the correct direction.  The game still looks wrong, but the tests improved.\n\nThis version passes all 118 of the tests in \"MultisampleTest.cpp\" on my Pixel 4 XL, at 0 and 90 degrees.  At 180 and 270 degrees, the following tests fail:\n\n- TextureMultisampleTest.ResolveToDefaultFramebuffer/ES3_1_Vulkan\n- TextureMultisampleTest.ResolveToDefaultFramebuffer/ES3_1_Vulkan_AsyncQueue\n- MultisampleTestES3.ResolveToFBO/ES3_1_Vulkan_NoFixture\n- MultisampleTestES3.ResolveToFBO/ES3_Vulkan_NoFixture\n",
       "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9975015c_968f8977",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-04T15:30:56Z",
+      "side": 1,
+      "message": "Creating an MSAA swapchain this way is necessary (e.g. gets most of the MultisampleTest\u0027s passing), but not sufficient for fixing all MSAA-swapchain-related problems.  It treats MSAA swapchain images the same as non-MSAA swapchain images (e.g. proper renderArea, scissor and viewport calculations).\n\nShabi, is the way I structured this acceptable?  I tried to minimize the amount of change to the rest of ANGLE by creating a new initMSAASwapchain() method.",
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
