@@ -251,6 +251,23 @@
       },
       "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b06a0007_dc46419e",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 821,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-04T19:46:37Z",
+      "side": 1,
+      "message": "Didn\u0027t we establish that the other class is actually faster than the manually unrolled one? Should we delete this one?",
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
