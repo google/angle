@@ -105,6 +105,24 @@
       "parentUuid": "2011b9e2_70df8a46",
       "revId": "8602cfa09c37e2f1052b3cb2be6309547584d47b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a26e44e5_fe32c1bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-05T14:06:35Z",
+      "side": 1,
+      "message": "Mohan: if the tests failed, the second set of output would show the failure. What you\u0027re seeing is equivalent output, you don\u0027t need --single-process.",
+      "parentUuid": "15f07314_2b42f89f",
+      "revId": "8602cfa09c37e2f1052b3cb2be6309547584d47b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
