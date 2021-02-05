@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "5ad69636ae462aab71d1bad9e83d063c",
+    "4e623a37bf7372631c7f222c1564eb4b",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -76,13 +76,15 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "2f09fc37526983e0a377b60e6221e6a7",
+    "7eed313e826257e73426cc78b07b2154",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "9919a300c626aa7d99c6dc808c440911",
+    "2b4bde4e4aef3c2171735528b55a2604",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "46a38dfd80a97795300d16b37819a5b0",
+    "3f936634243168c4d302292dd6120bc9",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "c700f8da2e0981981f58a83de102bac5",
+    "0a26d879b694dcb092c1c924a2120e65",
+  "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
+    "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/saint_seiya_awakening.tar.gz.sha1":
     "c9cde6bdfd9096a44d5f03d905a45a4f",
   "src/tests/restricted_traces/shadow_fight_2.tar.gz.sha1":

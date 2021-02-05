@@ -90,6 +90,7 @@ enum class RestrictedTraceID
     raid_shadow_legends,
     real_commando_secret_mission,
     real_gangster_crime,
+    rise_of_kingdoms,
     saint_seiya_awakening,
     shadow_fight_2,
     sniper_3d,

@@ -47,6 +47,7 @@
 #include "raid_shadow_legends/raid_shadow_legends_capture_context2.h"
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
 #include "real_gangster_crime/real_gangster_crime_capture_context3.h"
+#include "rise_of_kingdoms/rise_of_kingdoms_capture_context4.h"
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context2.h"
 #include "shadow_fight_2/shadow_fight_2_capture_context2.h"
 #include "sniper_3d/sniper_3d_capture_context3.h"
@@ -194,6 +195,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {real_gangster_crime::kReplayFrameStart, real_gangster_crime::kReplayFrameEnd,
       real_gangster_crime::kReplayDrawSurfaceWidth, real_gangster_crime::kReplayDrawSurfaceHeight,
       "real_gangster_crime"}},
+    {RestrictedTraceID::rise_of_kingdoms,
+     {rise_of_kingdoms::kReplayFrameStart, rise_of_kingdoms::kReplayFrameEnd,
+      rise_of_kingdoms::kReplayDrawSurfaceWidth, rise_of_kingdoms::kReplayDrawSurfaceHeight,
+      "rise_of_kingdoms"}},
     {RestrictedTraceID::saint_seiya_awakening,
      {saint_seiya_awakening::kReplayFrameStart, saint_seiya_awakening::kReplayFrameEnd,
       saint_seiya_awakening::kReplayDrawSurfaceWidth,
@@ -350,6 +355,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::ReplayContext3Frame(frameIndex);
             break;
+        case RestrictedTraceID::rise_of_kingdoms:
+            rise_of_kingdoms::ReplayContext4Frame(frameIndex);
+            break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::ReplayContext2Frame(frameIndex);
             break;
@@ -498,6 +506,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::rise_of_kingdoms:
+            rise_of_kingdoms::ResetContext4Replay();
             break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::ResetContext2Replay();
@@ -648,6 +659,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::SetupContext3Replay();
             break;
+        case RestrictedTraceID::rise_of_kingdoms:
+            rise_of_kingdoms::SetupContext4Replay();
+            break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetupContext2Replay();
             break;
@@ -797,6 +811,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::rise_of_kingdoms:
+            rise_of_kingdoms::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetBinaryDataDir(dataDir);
             break;
@@ -945,6 +962,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::rise_of_kingdoms:
+            rise_of_kingdoms::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetBinaryDataDecompressCallback(callback);
