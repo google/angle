@@ -88,6 +88,24 @@
       "parentUuid": "1cbfe25d_e3305449",
       "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9d3a8d7_75627d64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-02-05T21:02:34Z",
+      "side": 1,
+      "message": "PTAL - seems like using \u003csys/system_properties.h\u003e directly works.",
+      "parentUuid": "530d0a86_9f7b2ada",
+      "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
