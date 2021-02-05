@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9c3040ae_383b618d",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-05T18:06:20Z",
+      "side": 1,
+      "message": "Maybe a \"WordIterator\" class can be added for this purpose? You can remove this function to avoid accidental usage.",
+      "parentUuid": "aa9299e9_42a61a29",
+      "range": {
+        "startLine": 626,
+        "startChar": 8,
+        "endLine": 626,
+        "endChar": 76
+      },
+      "revId": "6ca4005bc4a6f6c196c8a8f25b388ab6970968cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3dabbff9_10c499bf",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 4
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-05T00:13:56Z",
       "side": 1,
       "message": "reminder for me to address this",
+      "range": {
+        "startLine": 856,
+        "startChar": 4,
+        "endLine": 857,
+        "endChar": 15
+      },
+      "revId": "6ca4005bc4a6f6c196c8a8f25b388ab6970968cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "921a30e2_9c858b2f",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-05T18:06:20Z",
+      "side": 1,
+      "message": "Probably better to \u0026 the last element with the last-element-mask unconditionally after the loop, instead of adding an if inside it (the way all() does).\n\n+ Regression test of course",
+      "parentUuid": "3dabbff9_10c499bf",
       "range": {
         "startLine": 856,
         "startChar": 4,
