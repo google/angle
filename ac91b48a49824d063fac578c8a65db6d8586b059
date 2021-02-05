@@ -106,6 +106,24 @@
       "parentUuid": "530d0a86_9f7b2ada",
       "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d02e12dd_98d74101",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-05T21:15:31Z",
+      "side": 1,
+      "message": "That looks like a great find, and some internal searching reveals threads that say it is supported.  Nice!\nhttps://groups.google.com/a/google.com/g/android-ndk/c/oo41-B0YUWg/m/dgcdeAr2AQAJ",
+      "parentUuid": "d9d3a8d7_75627d64",
+      "revId": "ac91b48a49824d063fac578c8a65db6d8586b059",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
