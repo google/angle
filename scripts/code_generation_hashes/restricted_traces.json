@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "905586546eba20d11842c7018f9b5a21",
+    "5ad69636ae462aab71d1bad9e83d063c",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -13,6 +13,8 @@
     "b0772c8cf2d3d49e49fea9fe7cff0446",
   "src/tests/restricted_traces/clash_of_clans.tar.gz.sha1":
     "4e3190f8b3cdded405172d6ef1fa7fa3",
+  "src/tests/restricted_traces/clash_royale.tar.gz.sha1":
+    "5a2d06f461a43b7ca69ce8bbf1079aad",
   "src/tests/restricted_traces/cod_mobile.tar.gz.sha1":
     "80a697dd447e4aae4fefd3627f663c4f",
   "src/tests/restricted_traces/coin_master.tar.gz.sha1":
@@ -74,13 +76,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "be1e1ba47922639d361867ebb01fdf10",
+    "2f09fc37526983e0a377b60e6221e6a7",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "9fbf117aedd227ad18a3d1cbf4b8f5cc",
+    "9919a300c626aa7d99c6dc808c440911",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "7c7f5a58f4f280049caf88f3fc04981f",
+    "46a38dfd80a97795300d16b37819a5b0",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "ce4b41bffbb134cd0fff030059820554",
+    "c700f8da2e0981981f58a83de102bac5",
   "src/tests/restricted_traces/saint_seiya_awakening.tar.gz.sha1":
     "c9cde6bdfd9096a44d5f03d905a45a4f",
   "src/tests/restricted_traces/shadow_fight_2.tar.gz.sha1":

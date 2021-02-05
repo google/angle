@@ -60,6 +60,7 @@ enum class RestrictedTraceID
     brawl_stars,
     candy_crush_500,
     clash_of_clans,
+    clash_royale,
     cod_mobile,
     coin_master,
     dragon_ball_legends,
