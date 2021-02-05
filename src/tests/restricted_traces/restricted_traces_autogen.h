@@ -90,6 +90,7 @@ enum class RestrictedTraceID
     real_gangster_crime,
     saint_seiya_awakening,
     shadow_fight_2,
+    sniper_3d,
     subway_surfers,
     temple_run_2,
     temple_run_300,
