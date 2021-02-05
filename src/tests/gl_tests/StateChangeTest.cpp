@@ -943,6 +943,63 @@ TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests that drawing after flush without any state change works.
+TEST_P(StateChangeTest, DrawAfterFlushWithNoStateChange)
+{
+    // Draw (0.125, 0.25, 0.5, 0.5) once, using additive blend
+    ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+    glUseProgram(drawColor);
+
+    GLint colorUniformLocation =
+        glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    GLint positionLocation = glGetAttribLocation(drawColor, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLocation);
+
+    // Setup VAO
+    const auto &quadVertices = GetQuadVertices();
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3) * 6, quadVertices.data(), GL_STATIC_DRAW);
+
+    GLVertexArray vertexArray;
+    glBindVertexArray(vertexArray);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+    ASSERT_GL_NO_ERROR();
+
+    // Clear and draw
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    glUniform4f(colorUniformLocation, 0.125f, 0.25f, 0.5f, 0.5f);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Make sure the work is submitted.
+    glFinish();
+
+    // Draw again with no state change
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    ASSERT_GL_NO_ERROR();
+
+    // Make sure the pixels have the correct colors.
+    const int h = getWindowHeight() - 1;
+    const int w = getWindowWidth() - 1;
+    const GLColor kExpected(63, 127, 255, 255);
+
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w - 1, 0, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(0, h - 1, kExpected, 1);
+    EXPECT_PIXEL_COLOR_NEAR(w - 1, h - 1, kExpected, 1);
+}
+
 // Test that switching VAOs keeps the disabled "current value" attributes up-to-date.
 TEST_P(StateChangeTestES3, VertexArrayObjectAndDisabledAttributes)
 {
