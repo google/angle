@@ -119,13 +119,6 @@ struct ProcessInfo : angle::NonCopyable
     std::string filterString;
 };
 
-enum class TestSuiteRunMode
-{
-    Unspecified,
-    SingleProcess,
-    MultiProcess,
-};
-
 using TestQueue = std::queue<std::vector<TestIdentifier>>;
 
 class TestSuite
@@ -171,7 +164,7 @@ class TestSuite
     int mShardIndex;
     angle::CrashCallback mCrashCallback;
     TestResults mTestResults;
-    TestSuiteRunMode mRunMode;
+    bool mBotMode;
     bool mDebugTestGroups;
     bool mGTestListTests;
     bool mListTests;
