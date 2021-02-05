@@ -33,6 +33,24 @@
       "message": "Do you ever reset these bits? I recall now that was the problem using tiered bits. It actually can make this a bit tricky to use sometimes.",
       "revId": "ba9e17f66e8c0eda87be787488baef38ef94739e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbc4f6ee_bb0aa902",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-05T20:09:40Z",
+      "side": 1,
+      "message": "\u003e Do you ever reset these bits?\n\nyes, see here -\u003e https://chromium-review.googlesource.com/c/angle/angle/+/2673062/5/src/libANGLE/Context.inl.h",
+      "parentUuid": "68f0f72f_0188fa88",
+      "revId": "ba9e17f66e8c0eda87be787488baef38ef94739e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
