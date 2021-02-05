@@ -54,6 +54,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e2b207d_eadf0e49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-05T21:04:12Z",
+      "side": 1,
+      "message": "Sounds good. Having different types for rotated and non-rotated extents would definitely help in making it obvious when you would need each of those functions.",
+      "parentUuid": "80d980f0_5c6b0d01",
+      "revId": "79f5a50284001a86b67607c3ffe3aa5717a31dd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f700a20_d592130a",
