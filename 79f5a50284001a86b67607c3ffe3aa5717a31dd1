@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4eee9f77_58d8841c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-05T00:32:56Z",
+      "side": 1,
+      "message": "Is it possible to land this and work on your proposal for changing ImageHelper\u0027s extents in the near future?",
+      "revId": "79f5a50284001a86b67607c3ffe3aa5717a31dd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f700a20_d592130a",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1339,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-05T00:32:56Z",
+      "side": 1,
+      "message": "Note: Adding this change to this CL gets the \"Ragnarok M: Eternal Love\" game to render to the full display.",
+      "range": {
+        "startLine": 1333,
+        "startChar": 0,
+        "endLine": 1339,
+        "endChar": 0
+      },
+      "revId": "79f5a50284001a86b67607c3ffe3aa5717a31dd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

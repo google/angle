@@ -132,6 +132,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "db062b41_856ef4f6",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1048,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-05T00:32:56Z",
+      "side": 1,
+      "message": "While there are multiple readers of ImageHelper::mExtents, it looks like the SurfaceVk and FramebufferVk users of a swapchain image\u0027s extents come through the RenderTarget.  Your proposal seems like a good approach longer term.",
+      "parentUuid": "c8b75e4e_5fd9f5cf",
+      "range": {
+        "startLine": 1048,
+        "startChar": 79,
+        "endLine": 1048,
+        "endChar": 86
+      },
+      "revId": "f999363035f177a1be874a34d607cdef2d5e3a51",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bba977b6_23761ab8",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 1
