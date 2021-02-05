@@ -69,6 +69,24 @@
       "parentUuid": "28469142_3822e95e",
       "revId": "8602cfa09c37e2f1052b3cb2be6309547584d47b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2011b9e2_70df8a46",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-05T02:38:44Z",
+      "side": 1,
+      "message": "Why do you need to see the stdout for tests from angle_unittests?",
+      "parentUuid": "2abce147_02b55187",
+      "revId": "8602cfa09c37e2f1052b3cb2be6309547584d47b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
