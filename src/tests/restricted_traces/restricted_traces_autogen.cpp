@@ -18,6 +18,7 @@
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
 #include "clash_of_clans/clash_of_clans_capture_context1.h"
 #include "cod_mobile/cod_mobile_capture_context1.h"
+#include "coin_master/coin_master_capture_context2.h"
 #include "dragon_ball_legends/dragon_ball_legends_capture_context1.h"
 #include "efootball_pes_2021/efootball_pes_2021_capture_context7.h"
 #include "egypt_1500/egypt_1500_capture_context1.h"
@@ -84,6 +85,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::cod_mobile,
      {cod_mobile::kReplayFrameStart, cod_mobile::kReplayFrameEnd,
       cod_mobile::kReplayDrawSurfaceWidth, cod_mobile::kReplayDrawSurfaceHeight, "cod_mobile"}},
+    {RestrictedTraceID::coin_master,
+     {coin_master::kReplayFrameStart, coin_master::kReplayFrameEnd,
+      coin_master::kReplayDrawSurfaceWidth, coin_master::kReplayDrawSurfaceHeight, "coin_master"}},
     {RestrictedTraceID::dragon_ball_legends,
      {dragon_ball_legends::kReplayFrameStart, dragon_ball_legends::kReplayFrameEnd,
       dragon_ball_legends::kReplayDrawSurfaceWidth, dragon_ball_legends::kReplayDrawSurfaceHeight,
@@ -246,6 +250,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::cod_mobile:
             cod_mobile::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::coin_master:
+            coin_master::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::dragon_ball_legends:
             dragon_ball_legends::ReplayContext1Frame(frameIndex);
             break;
@@ -382,6 +389,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::coin_master:
+            coin_master::ResetContext2Replay();
             break;
         case RestrictedTraceID::dragon_ball_legends:
             dragon_ball_legends::ResetContext1Replay();
@@ -520,6 +530,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::cod_mobile:
             cod_mobile::SetupContext1Replay();
             break;
+        case RestrictedTraceID::coin_master:
+            coin_master::SetupContext2Replay();
+            break;
         case RestrictedTraceID::dragon_ball_legends:
             dragon_ball_legends::SetupContext1Replay();
             break;
@@ -657,6 +670,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::cod_mobile:
             cod_mobile::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::coin_master:
+            coin_master::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::dragon_ball_legends:
             dragon_ball_legends::SetBinaryDataDir(dataDir);
             break;
@@ -793,6 +809,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::cod_mobile:
             cod_mobile::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::coin_master:
+            coin_master::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::dragon_ball_legends:
             dragon_ball_legends::SetBinaryDataDecompressCallback(callback);

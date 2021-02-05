@@ -61,6 +61,7 @@ enum class RestrictedTraceID
     candy_crush_500,
     clash_of_clans,
     cod_mobile,
+    coin_master,
     dragon_ball_legends,
     efootball_pes_2021,
     egypt_1500,
