@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de1bad62_66621fde",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-05T02:14:42Z",
+      "side": 1,
+      "message": "PTAL\n\nI had to take a slightly different approach and move the invalid check into FrameCapture::captureCall(), so we can still call the maybe* functions to prevent the compilation errors that were causing the test failures.",
+      "revId": "2330d6845a8f89235d9e9b2a54fb0e4e8863f525",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
