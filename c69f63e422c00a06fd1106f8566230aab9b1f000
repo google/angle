@@ -124,6 +124,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96870632_b4379546",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-05T02:30:49Z",
+      "side": 1,
+      "message": "This seems to be invalid now that \"onSwitchProgramFramebufferFetch()\" no longer exists",
+      "parentUuid": "195738ef_5eb511aa",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de6c237b_819f50ed",
@@ -302,6 +320,30 @@
       "side": 1,
       "message": "made the FB check FBF mode and removed onSwitchProgramFramebufferFetch. But we still need the state in ContextVK because we need to close RP in case of fetch mode switch.",
       "parentUuid": "f5b05d90_6d7b58d9",
+      "range": {
+        "startLine": 2793,
+        "startChar": 30,
+        "endLine": 2793,
+        "endChar": 61
+      },
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afed32a9_9aca9c4a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2793,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-05T02:30:49Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "78415e35_857fbcdf",
       "range": {
         "startLine": 2793,
         "startChar": 30,
@@ -526,6 +568,24 @@
       "side": 1,
       "message": "Great. Please add the regression test as described to make sure we don\u0027t regress this in the future.",
       "parentUuid": "d4162e43_8ade8c3a",
+      "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6508cff7_81dc6d3b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2733,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-05T02:30:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2a56b0ac_668e7f06",
       "revId": "c69f63e422c00a06fd1106f8566230aab9b1f000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },

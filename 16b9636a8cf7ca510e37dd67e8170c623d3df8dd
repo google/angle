@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79ccf68e_7b414850",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-05T02:30:49Z",
+      "side": 1,
+      "message": "PTAL - i think there is one last unresolved comment related to \"Why clear the cache?\"",
+      "revId": "16b9636a8cf7ca510e37dd67e8170c623d3df8dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
