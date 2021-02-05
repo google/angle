@@ -28,6 +28,7 @@
 #include "fifa_mobile/fifa_mobile_capture_context2.h"
 #include "free_fire/free_fire_capture_context1.h"
 #include "google_maps/google_maps_capture_context3.h"
+#include "happy_color/happy_color_capture_context2.h"
 #include "hay_day/hay_day_capture_context2.h"
 #include "hearthstone/hearthstone_capture_context2.h"
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
@@ -121,6 +122,9 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::google_maps,
      {google_maps::kReplayFrameStart, google_maps::kReplayFrameEnd,
       google_maps::kReplayDrawSurfaceWidth, google_maps::kReplayDrawSurfaceHeight, "google_maps"}},
+    {RestrictedTraceID::happy_color,
+     {happy_color::kReplayFrameStart, happy_color::kReplayFrameEnd,
+      happy_color::kReplayDrawSurfaceWidth, happy_color::kReplayDrawSurfaceHeight, "happy_color"}},
     {RestrictedTraceID::hay_day,
      {hay_day::kReplayFrameStart, hay_day::kReplayFrameEnd, hay_day::kReplayDrawSurfaceWidth,
       hay_day::kReplayDrawSurfaceHeight, "hay_day"}},
@@ -284,6 +288,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::google_maps:
             google_maps::ReplayContext3Frame(frameIndex);
             break;
+        case RestrictedTraceID::happy_color:
+            happy_color::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::hay_day:
             hay_day::ReplayContext2Frame(frameIndex);
             break;
@@ -426,6 +433,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::google_maps:
             google_maps::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::happy_color:
+            happy_color::ResetContext2Replay();
             break;
         case RestrictedTraceID::hay_day:
             hay_day::ResetContext2Replay();
@@ -570,6 +580,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::google_maps:
             google_maps::SetupContext3Replay();
             break;
+        case RestrictedTraceID::happy_color:
+            happy_color::SetupContext2Replay();
+            break;
         case RestrictedTraceID::hay_day:
             hay_day::SetupContext2Replay();
             break;
@@ -713,6 +726,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::google_maps:
             google_maps::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::happy_color:
+            happy_color::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::hay_day:
             hay_day::SetBinaryDataDir(dataDir);
             break;
@@ -855,6 +871,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::google_maps:
             google_maps::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::happy_color:
+            happy_color::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::hay_day:
             hay_day::SetBinaryDataDecompressCallback(callback);
