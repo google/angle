@@ -4249,6 +4249,20 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),
         // and handleDirtyGraphicsPipeline().
         mCurrentGraphicsPipeline = nullptr;
+
+        // The default uniforms descriptor set was reset during createPipelineLayout(), so mark them
+        // dirty to get everything reallocated/rebound before the next draw.
+        if (executable->hasDefaultUniforms())
+        {
+            if (mProgram)
+            {
+                mProgram->setAllDefaultUniformsDirty();
+            }
+            else if (mProgramPipeline)
+            {
+                mProgramPipeline->setAllDefaultUniformsDirty(context->getState());
+            }
+        }
     }
 
     return angle::Result::Continue;

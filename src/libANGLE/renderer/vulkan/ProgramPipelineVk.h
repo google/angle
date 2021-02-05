@@ -51,6 +51,7 @@ class ProgramPipelineVk : public ProgramPipelineImpl
 
     angle::Result updateUniforms(ContextVk *contextVk);
 
+    void setAllDefaultUniformsDirty(const gl::State &glState);
     bool dirtyUniforms(const gl::State &glState);
     void onProgramBind(ContextVk *contextVk);
 
@@ -59,7 +60,6 @@ class ProgramPipelineVk : public ProgramPipelineImpl
                                           const gl::ProgramExecutable &glExecutable,
                                           const gl::State &glState,
                                           gl::ShaderMap<VkDeviceSize> *uniformOffsets) const;
-    void setAllDefaultUniformsDirty(const gl::State &glState);
 
     ProgramExecutableVk mExecutable;
 };
