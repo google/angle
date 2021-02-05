@@ -89,6 +89,41 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa4ee70d_c7078a07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-05T22:11:39Z",
+      "side": 1,
+      "message": "This makes \"Ragnarok M Eternal Love\" playable, although there are still some oddities that I\u0027ve shared with Ian.",
+      "parentUuid": "f1bb5e1c_eaf553bc",
+      "revId": "79f5a50284001a86b67607c3ffe3aa5717a31dd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "88c336d6_69cef52c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-05T22:11:39Z",
+      "side": 1,
+      "message": "+2 to unblock apps, although we know there is more pre-rotation work to do.",
+      "revId": "79f5a50284001a86b67607c3ffe3aa5717a31dd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f700a20_d592130a",
