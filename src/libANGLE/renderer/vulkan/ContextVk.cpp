@@ -290,6 +290,14 @@ egl::ContextPriority GetContextPriority(const gl::State &state)
 }
 }  // anonymous namespace
 
+// Not necessary once upgraded to C++17.
+constexpr ContextVk::DirtyBits ContextVk::kIndexAndVertexDirtyBits;
+constexpr ContextVk::DirtyBits ContextVk::kPipelineDescAndBindingDirtyBits;
+constexpr ContextVk::DirtyBits ContextVk::kTexturesAndDescSetDirtyBits;
+constexpr ContextVk::DirtyBits ContextVk::kResourcesAndDescSetDirtyBits;
+constexpr ContextVk::DirtyBits ContextVk::kXfbBuffersAndDescSetDirtyBits;
+constexpr ContextVk::DirtyBits ContextVk::kDriverUniformsAndBindingDirtyBits;
+
 ANGLE_INLINE void ContextVk::flushDescriptorSetUpdates()
 {
     if (mWriteDescriptorSets.empty())
@@ -408,24 +416,18 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     // Note that currently these dirty bits are set every time a new render pass command buffer is
     // begun.  However, using ANGLE's SecondaryCommandBuffer, the Vulkan command buffer (which is
     // the primary command buffer) is not ended, so technically we don't need to rebind these.
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_RENDER_PASS);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_PIPELINE_BINDING);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TEXTURES);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
-    mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
+    mNewGraphicsCommandBufferDirtyBits = DirtyBits{
+        DIRTY_BIT_RENDER_PASS,     DIRTY_BIT_PIPELINE_BINDING,       DIRTY_BIT_TEXTURES,
+        DIRTY_BIT_VERTEX_BUFFERS,  DIRTY_BIT_INDEX_BUFFER,           DIRTY_BIT_SHADER_RESOURCES,
+        DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
         mNewGraphicsCommandBufferDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
     }
 
-    mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_PIPELINE_BINDING);
-    mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_TEXTURES);
-    mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
-    mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
-    mNewComputeCommandBufferDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
+    mNewComputeCommandBufferDirtyBits =
+        DirtyBits{DIRTY_BIT_PIPELINE_BINDING, DIRTY_BIT_TEXTURES, DIRTY_BIT_SHADER_RESOURCES,
+                  DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_EVENT_LOG] = &ContextVk::handleDirtyGraphicsEventLog;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DEFAULT_ATTRIBS] =
@@ -3483,10 +3485,8 @@ angle::Result ContextVk::invalidateCurrentTextures(const gl::Context *context)
 
     if (executable->hasTextures())
     {
-        mGraphicsDirtyBits.set(DIRTY_BIT_TEXTURES);
-        mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
-        mComputeDirtyBits.set(DIRTY_BIT_TEXTURES);
-        mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+        mGraphicsDirtyBits |= kTexturesAndDescSetDirtyBits;
+        mComputeDirtyBits |= kTexturesAndDescSetDirtyBits;
 
         ANGLE_TRY(updateActiveTextures(context));
     }
@@ -3502,25 +3502,20 @@ void ContextVk::invalidateCurrentShaderResources()
     if (executable->hasUniformBuffers() || executable->hasStorageBuffers() ||
         executable->hasAtomicCounterBuffers() || executable->hasImages())
     {
-        mGraphicsDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
-        mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
-        mComputeDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
-        mComputeDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+        mGraphicsDirtyBits |= kResourcesAndDescSetDirtyBits;
+        mComputeDirtyBits |= kResourcesAndDescSetDirtyBits;
     }
 }
 
 void ContextVk::invalidateGraphicsDriverUniforms()
 {
-    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
-    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
+    mGraphicsDirtyBits |= kDriverUniformsAndBindingDirtyBits;
 }
 
 void ContextVk::invalidateDriverUniforms()
 {
-    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
-    mGraphicsDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
-    mComputeDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS);
-    mComputeDirtyBits.set(DIRTY_BIT_DRIVER_UNIFORMS_BINDING);
+    mGraphicsDirtyBits |= kDriverUniformsAndBindingDirtyBits;
+    mComputeDirtyBits |= kDriverUniformsAndBindingDirtyBits;
 }
 
 void ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
@@ -3563,8 +3558,7 @@ void ContextVk::invalidateCurrentTransformFeedbackBuffers()
     }
     else if (getFeatures().emulateTransformFeedback.enabled)
     {
-        mGraphicsDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
-        mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);
+        mGraphicsDirtyBits |= kXfbBuffersAndDescSetDirtyBits;
     }
 }
 
@@ -3572,8 +3566,8 @@ void ContextVk::onTransformFeedbackStateChanged()
 {
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
-        mGraphicsDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_STATE);
-        mGraphicsDirtyBits.set(DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS);
+        mGraphicsDirtyBits |=
+            DirtyBits{DIRTY_BIT_TRANSFORM_FEEDBACK_STATE, DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS};
     }
     else if (getFeatures().emulateTransformFeedback.enabled)
     {
@@ -3840,8 +3834,7 @@ void ContextVk::writeAtomicCounterBufferDriverUniformOffsets(uint32_t *offsetsOu
 
 void ContextVk::pauseTransformFeedbackIfStartedAndRebindBuffersOnResume()
 {
-    DirtyBits rebindTransformFeedbackOnResume;
-    rebindTransformFeedbackOnResume.set(DIRTY_BIT_TRANSFORM_FEEDBACK_STATE);
+    DirtyBits rebindTransformFeedbackOnResume{DIRTY_BIT_TRANSFORM_FEEDBACK_STATE};
     pauseTransformFeedbackIfStarted(rebindTransformFeedbackOnResume);
 }
 

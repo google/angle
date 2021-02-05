@@ -301,8 +301,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     ANGLE_INLINE void invalidateVertexAndIndexBuffers()
     {
-        mGraphicsDirtyBits.set(DIRTY_BIT_VERTEX_BUFFERS);
-        mGraphicsDirtyBits.set(DIRTY_BIT_INDEX_BUFFER);
+        mGraphicsDirtyBits |= kIndexAndVertexDirtyBits;
     }
 
     angle::Result onVertexBufferChange(const vk::BufferHelper *vertexBuffer);
@@ -760,14 +759,13 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     ANGLE_INLINE void invalidateCurrentGraphicsPipeline()
     {
-        // Note: DIRTY_BIT_PIPELINE_BIND will be automatically set if pipeline bind is necessary.
+        // Note: DIRTY_BIT_PIPELINE_BINDING will be automatically set if pipeline bind is necessary.
         mGraphicsDirtyBits.set(DIRTY_BIT_PIPELINE_DESC);
     }
 
     ANGLE_INLINE void invalidateCurrentComputePipeline()
     {
-        mComputeDirtyBits.set(DIRTY_BIT_PIPELINE_DESC);
-        mComputeDirtyBits.set(DIRTY_BIT_PIPELINE_BINDING);
+        mComputeDirtyBits |= kPipelineDescAndBindingDirtyBits;
         mCurrentComputePipeline = nullptr;
     }
 
@@ -915,6 +913,18 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     DirtyBits mIndexedDirtyBitsMask;
     DirtyBits mNewGraphicsCommandBufferDirtyBits;
     DirtyBits mNewComputeCommandBufferDirtyBits;
+    static constexpr DirtyBits kIndexAndVertexDirtyBits{DIRTY_BIT_VERTEX_BUFFERS,
+                                                        DIRTY_BIT_INDEX_BUFFER};
+    static constexpr DirtyBits kPipelineDescAndBindingDirtyBits{DIRTY_BIT_PIPELINE_DESC,
+                                                                DIRTY_BIT_PIPELINE_BINDING};
+    static constexpr DirtyBits kTexturesAndDescSetDirtyBits{DIRTY_BIT_TEXTURES,
+                                                            DIRTY_BIT_DESCRIPTOR_SETS};
+    static constexpr DirtyBits kResourcesAndDescSetDirtyBits{DIRTY_BIT_SHADER_RESOURCES,
+                                                             DIRTY_BIT_DESCRIPTOR_SETS};
+    static constexpr DirtyBits kXfbBuffersAndDescSetDirtyBits{DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS,
+                                                              DIRTY_BIT_DESCRIPTOR_SETS};
+    static constexpr DirtyBits kDriverUniformsAndBindingDirtyBits{
+        DIRTY_BIT_DRIVER_UNIFORMS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
     // Cached back-end objects.
     VertexArrayVk *mVertexArray;
