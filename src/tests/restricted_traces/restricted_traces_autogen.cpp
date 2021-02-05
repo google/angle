@@ -48,6 +48,7 @@
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
 #include "real_gangster_crime/real_gangster_crime_capture_context3.h"
 #include "rise_of_kingdoms/rise_of_kingdoms_capture_context4.h"
+#include "romancing_saga/romancing_saga_capture_context3.h"
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context2.h"
 #include "shadow_fight_2/shadow_fight_2_capture_context2.h"
 #include "sniper_3d/sniper_3d_capture_context3.h"
@@ -199,6 +200,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {rise_of_kingdoms::kReplayFrameStart, rise_of_kingdoms::kReplayFrameEnd,
       rise_of_kingdoms::kReplayDrawSurfaceWidth, rise_of_kingdoms::kReplayDrawSurfaceHeight,
       "rise_of_kingdoms"}},
+    {RestrictedTraceID::romancing_saga,
+     {romancing_saga::kReplayFrameStart, romancing_saga::kReplayFrameEnd,
+      romancing_saga::kReplayDrawSurfaceWidth, romancing_saga::kReplayDrawSurfaceHeight,
+      "romancing_saga"}},
     {RestrictedTraceID::saint_seiya_awakening,
      {saint_seiya_awakening::kReplayFrameStart, saint_seiya_awakening::kReplayFrameEnd,
       saint_seiya_awakening::kReplayDrawSurfaceWidth,
@@ -358,6 +363,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::rise_of_kingdoms:
             rise_of_kingdoms::ReplayContext4Frame(frameIndex);
             break;
+        case RestrictedTraceID::romancing_saga:
+            romancing_saga::ReplayContext3Frame(frameIndex);
+            break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::ReplayContext2Frame(frameIndex);
             break;
@@ -509,6 +517,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::rise_of_kingdoms:
             rise_of_kingdoms::ResetContext4Replay();
+            break;
+        case RestrictedTraceID::romancing_saga:
+            romancing_saga::ResetContext3Replay();
             break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::ResetContext2Replay();
@@ -662,6 +673,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::rise_of_kingdoms:
             rise_of_kingdoms::SetupContext4Replay();
             break;
+        case RestrictedTraceID::romancing_saga:
+            romancing_saga::SetupContext3Replay();
+            break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetupContext2Replay();
             break;
@@ -814,6 +828,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::rise_of_kingdoms:
             rise_of_kingdoms::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::romancing_saga:
+            romancing_saga::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetBinaryDataDir(dataDir);
             break;
@@ -965,6 +982,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::rise_of_kingdoms:
             rise_of_kingdoms::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::romancing_saga:
+            romancing_saga::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::saint_seiya_awakening:
             saint_seiya_awakening::SetBinaryDataDecompressCallback(callback);
