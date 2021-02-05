@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "80d980f0_5c6b0d01",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-05T20:53:36Z",
+      "side": 1,
+      "message": "\u003e Are we pressed for time?\n\nSomewhat.  My understanding is that this is blocking a team from doing performance analysis of 3 games.\n\nBased on past experience, refactors can take a while (e.g. get common understanding, deal with style preferences, work through unexpected problems with people\u0027s preferred solutions).  Thus, I\u0027d like to unblock others and then do the refactor.\n\n\n\u003e I think having the RenderTarget return the swapped extents instead of having the ImageHelper actually store swapped extents is at least _some_ progress towards a better solution.\n\nMost of the time, we want the non-rotated extents.  Sometimes, we want rotated extents.  Eventually, the rotation happens, but frequently after the extents are used with other non-rotated values (e.g. scissor).  Thus, I\u0027ll propose both getExtents() and getRotatedExtents() methods.  Perhaps for both RenderTarget and ImageHelper.\n\nProbably the biggest issue is properly articulating when and were rotation occurs.  The differences in understanding of pre-rotation is why I think the refactor can take a while:-).",
+      "parentUuid": "bd91eaf7_405ca9a6",
+      "revId": "79f5a50284001a86b67607c3ffe3aa5717a31dd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f700a20_d592130a",
@@ -73,6 +91,30 @@
       "side": 1,
       "message": "This kind of hackery is exactly why I think it\u0027s wrong for the ImageHelper to have the wrong extents. :)",
       "parentUuid": "3f700a20_d592130a",
+      "range": {
+        "startLine": 1333,
+        "startChar": 0,
+        "endLine": 1339,
+        "endChar": 0
+      },
+      "revId": "79f5a50284001a86b67607c3ffe3aa5717a31dd1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "040c9268_18435d0d",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1339,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-05T20:53:36Z",
+      "side": 1,
+      "message": "This is how pre-rotation works (rotate only when needed).  I do acknowledge that providing both getExtents() and getRotatedExtents() methods can be beneficial.",
+      "parentUuid": "33c0b138_28349ae3",
       "range": {
         "startLine": 1333,
         "startChar": 0,
