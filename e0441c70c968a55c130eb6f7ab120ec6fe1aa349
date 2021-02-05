@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "e0441c70c968a55c130eb6f7ab120ec6fe1aa349",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b56ddbf_4d0b941e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-05T21:59:41Z",
+      "side": 1,
+      "message": "LGTM, as long as standalone bots are happy.",
+      "revId": "e0441c70c968a55c130eb6f7ab120ec6fe1aa349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
