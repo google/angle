@@ -118,6 +118,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e1a92f3b_df9ec1a0",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-06T00:36:11Z",
+      "side": 1,
+      "message": "I think this reminds me that I also need to recover if a attribute divisor is reset to 0 from some non-zero value;\nAlso I need to streaming attributes when first \u003d\u003d 0 if they are previously forced streaming. I should have this covered locally.",
+      "parentUuid": "f8db1815_2cd416bb",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 204,
+        "endChar": 13
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cff86666_f9f30312",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 8
@@ -129,6 +153,30 @@
       "writtenOn": "2021-02-04T22:07:57Z",
       "side": 1,
       "message": "I\u0027d like to merge the two blocks below as much as possible. Something like:\n\n\tconst uint8_t *inputPointer \u003d nullptr;\n\tif (features.shiftInstancedArrayDataWithExtraOffset.enabled \u0026\u0026 adjustedDivisor \u003e 0)\n\t{\n\t\tinputPointer \u003d get buffer data;\n\t}\n\telse\n\t{\n\t\tinputPointer \u003d static_cast\u003cconst uint8_t *\u003e(attrib.pointer);\n\t}\n\n\t... copy data ...",
+      "range": {
+        "startLine": 413,
+        "startChar": 12,
+        "endLine": 413,
+        "endChar": 87
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "966b7b8a_b515da18",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-06T00:36:11Z",
+      "side": 1,
+      "message": "When refactoring this part I\u0027m seeing different outcome for multi-draw tests... so spending some time here (which is weird that the logic should be the same here, I have closely looked at parameters passed to memcpy for both cases but not find anything... yet)",
+      "parentUuid": "cff86666_f9f30312",
       "range": {
         "startLine": 413,
         "startChar": 12,
