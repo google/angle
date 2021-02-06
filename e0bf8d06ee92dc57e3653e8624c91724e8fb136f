@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7a9d843_3bdc9df4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-06T11:29:16Z",
+      "side": 1,
+      "message": "Could you please split the change in 3? The dirty bit one may need some back and forth, but we could land the other ones faster.",
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21fd68ae_0f583b42",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-06T11:29:16Z",
+      "side": 1,
+      "message": "This is a no-op since mGraphicsDirtyBits is being iterated on (the iterators keep a copy of the bits, even if not, the iteration is using a masked copy of mGraphicsDirtyBits).\n\nThe one who sets DIRTY_BIT_UNIFORM also sets this bit, so this can just become an ASSERT.",
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd1859dd_b2e4332e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3470,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-06T11:29:16Z",
+      "side": 1,
+      "message": "This is called on every program change, which is generally done on every draw call.\n\nIf we only need to do this for immutable samplers, please make sure they are only set from the call inside `if (haveImmutableSampler)`.\n\nThat said, why do we even have to redo the uniforms with immutable samplers?",
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fbf1d202_36269fe1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3167,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-06T11:29:16Z",
+      "side": 1,
+      "message": "What\u0027s this number?",
+      "range": {
+        "startLine": 3167,
+        "startChar": 55,
+        "endLine": 3167,
+        "endChar": 65
+      },
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eef12955_82deaead",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3169,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-06T11:29:16Z",
+      "side": 1,
+      "message": "super nit: missing a punctuation or a preposition? The sentence was hard to follow at first.",
+      "range": {
+        "startLine": 3168,
+        "startChar": 71,
+        "endLine": 3169,
+        "endChar": 55
+      },
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
