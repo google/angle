@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a26401d_4d6e0264",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-06T11:06:32Z",
+      "side": 1,
+      "message": "Could you please add a regression test Tim?\n\n+kbr, who I vaguely recall encountered an issue a while back with compressed texture copies, and nevertheless might be interested in adding a WebGL test for this.",
+      "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
