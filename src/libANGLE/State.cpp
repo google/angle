@@ -589,7 +589,7 @@ void State::reset(const Context *context)
     setAllDirtyBits();
 }
 
-ANGLE_INLINE void State::unsetActiveTextures(ActiveTextureMask textureMask)
+ANGLE_INLINE void State::unsetActiveTextures(const ActiveTextureMask &textureMask)
 {
     // Unset any relevant bound textures.
     for (size_t textureIndex : textureMask)

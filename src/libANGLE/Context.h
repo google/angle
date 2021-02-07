@@ -247,7 +247,7 @@ class StateCache final : angle::NonCopyable
 
     // Places that can trigger updateActiveImageUnitIndices:
     // 1. onProgramExecutableChange.
-    ImageUnitMask getActiveImageUnitIndices() const { return mCachedActiveImageUnitIndices; }
+    const ImageUnitMask &getActiveImageUnitIndices() const { return mCachedActiveImageUnitIndices; }
 
     // Places that can trigger updateCanDraw:
     // 1. onProgramExecutableChange.
