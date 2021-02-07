@@ -75,6 +75,7 @@ enum class RestrictedTraceID
     happy_color,
     hay_day,
     hearthstone,
+    hill_climb_racing,
     kartrider_rush,
     klondike_adventures,
     lego_legacy,
