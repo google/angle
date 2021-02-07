@@ -59,6 +59,7 @@
 #include "whatsapp/whatsapp_capture_context1.h"
 #include "world_of_tanks_blitz/world_of_tanks_blitz_capture_context1.h"
 #include "world_war_doh/world_war_doh_capture_context2.h"
+#include "worms_zone_io/worms_zone_io_capture_context1.h"
 
 namespace angle
 {
@@ -240,7 +241,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
     {RestrictedTraceID::world_war_doh,
      {world_war_doh::kReplayFrameStart, world_war_doh::kReplayFrameEnd,
       world_war_doh::kReplayDrawSurfaceWidth, world_war_doh::kReplayDrawSurfaceHeight,
-      "world_war_doh"}}};
+      "world_war_doh"}},
+    {RestrictedTraceID::worms_zone_io,
+     {worms_zone_io::kReplayFrameStart, worms_zone_io::kReplayFrameEnd,
+      worms_zone_io::kReplayDrawSurfaceWidth, worms_zone_io::kReplayDrawSurfaceHeight,
+      "worms_zone_io"}}};
 }
 
 const TraceInfo &GetTraceInfo(RestrictedTraceID traceID)
@@ -395,6 +400,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
             break;
         case RestrictedTraceID::world_war_doh:
             world_war_doh::ReplayContext2Frame(frameIndex);
+            break;
+        case RestrictedTraceID::worms_zone_io:
+            worms_zone_io::ReplayContext1Frame(frameIndex);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -551,6 +559,9 @@ void ResetReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::world_war_doh:
             world_war_doh::ResetContext2Replay();
             break;
+        case RestrictedTraceID::worms_zone_io:
+            worms_zone_io::ResetContext1Replay();
+            break;
         default:
             fprintf(stderr, "Error in switch.\n");
             assert(0);
@@ -705,6 +716,9 @@ void SetupReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::world_war_doh:
             world_war_doh::SetupContext2Replay();
+            break;
+        case RestrictedTraceID::worms_zone_io:
+            worms_zone_io::SetupContext1Replay();
             break;
         default:
             fprintf(stderr, "Error in switch.\n");
@@ -861,6 +875,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::world_war_doh:
             world_war_doh::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::worms_zone_io:
+            worms_zone_io::SetBinaryDataDir(dataDir);
+            break;
         default:
             fprintf(stderr, "Error in switch.\n");
             assert(0);
@@ -1015,6 +1032,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::world_war_doh:
             world_war_doh::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::worms_zone_io:
+            worms_zone_io::SetBinaryDataDecompressCallback(callback);
             break;
         default:
             fprintf(stderr, "Error in switch.\n");

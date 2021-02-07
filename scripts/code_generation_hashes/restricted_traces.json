@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "376ef2d792116ed829dfc377b437b87e",
+    "224de327a8636a1b4fe4a8f6d4fbff6c",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -76,13 +76,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "dec04d1916b0649c0b595a7cd3979332",
+    "9e97a6a70bf94f42a6cebc9c8395f2bd",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "d05c64d18b14a9630f503f28eefa9354",
+    "978fdfc3acc84eb680d71d996d9504ba",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "9774fe958933680dd4aefd35c30d2d25",
+    "d89a842d1054f9fdabf8e50345340c36",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "b1ede968b37ffe7ade00b41ea8c268be",
+    "c057f2940dad5c895a4fa996de2b8820",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
@@ -106,5 +106,7 @@
   "src/tests/restricted_traces/world_of_tanks_blitz.tar.gz.sha1":
     "6cba9bb8542b71443f107952faddbe64",
   "src/tests/restricted_traces/world_war_doh.tar.gz.sha1":
-    "ac16fcec4e9514e8b4cc952f91f37f60"
+    "ac16fcec4e9514e8b4cc952f91f37f60",
+  "src/tests/restricted_traces/worms_zone_io.tar.gz.sha1":
+    "d2a7f98823d8d9f6581fba94f041a9cc"
 }
