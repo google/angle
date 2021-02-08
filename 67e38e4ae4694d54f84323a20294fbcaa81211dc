@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6693d936_ce188464",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T18:19:11Z",
+      "side": 1,
+      "message": "Try fixing this using a pre-declaration of BitSetArray. If you need help with this let me know. Last thing to fix before landing.",
+      "parentUuid": "6d4e9f2d_24202462",
+      "range": {
+        "startLine": 539,
+        "startChar": 17,
+        "endLine": 539,
+        "endChar": 31
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dfeca77c_fcf3266b",
