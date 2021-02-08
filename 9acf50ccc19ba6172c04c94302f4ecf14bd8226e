@@ -68,6 +68,24 @@
       "parentUuid": "812dec00_343618b5",
       "revId": "9acf50ccc19ba6172c04c94302f4ecf14bd8226e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0c4658d_b12de4f0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:39:56Z",
+      "side": 1,
+      "message": "agreed, will do that in the last change, not here. Will make it easy to revert in case there are regressions",
+      "parentUuid": "c29eea6c_40f46b44",
+      "revId": "9acf50ccc19ba6172c04c94302f4ecf14bd8226e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
