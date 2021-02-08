@@ -163,6 +163,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4e46f7f3_cd3f4680",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T19:52:03Z",
+      "side": 1,
+      "message": "I wouldn\u0027t say we need to keep the other code the same. It just doesn\u0027t compile with the current patch set. Temporary objects are not that big a deal for uint64_t types, with arrays they start to get more problematic.",
+      "parentUuid": "e7d3912d_61510c26",
+      "range": {
+        "startLine": 539,
+        "startChar": 17,
+        "endLine": 539,
+        "endChar": 31
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dfeca77c_fcf3266b",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 7
