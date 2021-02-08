@@ -51,6 +51,24 @@
       "parentUuid": "68f0f72f_0188fa88",
       "revId": "ba9e17f66e8c0eda87be787488baef38ef94739e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2482927d_7f5304b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T20:21:11Z",
+      "side": 1,
+      "message": "How about instead you use the \"getAndReset\" paradigm like I use for the \"current value\" attribs? That would save calling the reset for draws when these extended bits aren\u0027t used.",
+      "parentUuid": "fbc4f6ee_bb0aa902",
+      "revId": "ba9e17f66e8c0eda87be787488baef38ef94739e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
