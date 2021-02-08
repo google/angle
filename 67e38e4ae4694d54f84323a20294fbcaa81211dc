@@ -185,6 +185,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9e56cce_0dbf63d6",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T21:26:07Z",
+      "side": 1,
+      "message": "\u003e \u003e Try fixing this using a pre-declaration of BitSetArray\n\n\u003e Unfortunately forward declaration didn\u0027t help\n\nlooks like this was intellisense messing with me, it compiled just fine\n\n\u003e Temporary objects ... with arrays they start to get more problematic.\n\nagreed\n\n\u003e It just doesn\u0027t compile with the current patch set\n\ni have reorg\u0027d the patches like so -\nCL1 -\u003e only add BitSetArray, not used by other types\nCL2 -\u003e use const ref whenever possible\nCL3 -\u003e remove IterableBitSet and update code to account for it\n\nwith this hopefully each patch should compile just fine",
+      "parentUuid": "4e46f7f3_cd3f4680",
+      "range": {
+        "startLine": 539,
+        "startChar": 17,
+        "endLine": 539,
+        "endChar": 31
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dfeca77c_fcf3266b",
