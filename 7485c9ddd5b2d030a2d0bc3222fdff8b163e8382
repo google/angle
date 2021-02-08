@@ -33,6 +33,24 @@
       "message": "I think it would be cleaner to just not call this function if the texture size is smaller than the block size and the update fills the entire texture.",
       "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40c02cc7_f157207a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T19:55:59Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "3a26401d_4d6e0264",
+      "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
