@@ -89,6 +89,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5c65bae_b1b0fa8d",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:21:03Z",
+      "side": 1,
+      "message": "\u003e Try fixing this using a pre-declaration of BitSetArray\n\nUnfortunately forward declaration didn\u0027t help\n\n\u003e If you need help with this let me know\n\nyes please",
+      "parentUuid": "6693d936_ce188464",
+      "range": {
+        "startLine": 539,
+        "startChar": 17,
+        "endLine": 539,
+        "endChar": 31
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dfeca77c_fcf3266b",
