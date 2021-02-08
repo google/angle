@@ -142,13 +142,13 @@ class BitSetT final
     ParamT first() const;
     ParamT last() const;
 
-  private:
     // Produces a mask of ones up to the "x"th bit.
     constexpr static BitsT Mask(std::size_t x)
     {
         return ((Bit<BitsT>(static_cast<ParamT>(x - 1)) - 1) << 1) + 1;
     }
 
+  private:
     BitsT mBits;
 };
 
@@ -546,12 +546,16 @@ struct GetBitSet<N, EnableIfBitsFit<N, uint64_t>>
 {
     using Type = BitSet64<N>;
 };
+constexpr std::size_t kDefaultBitSetSize = 64;
+using BaseBitSetType                     = BitSet64<kDefaultBitSetSize>;
 #else
 template <size_t N>
 struct GetBitSet<N, EnableIfBitsFit<N, uint32_t>>
 {
     using Type = BitSet32<N>;
 };
+constexpr std::size_t kDefaultBitSetSize = 32;
+using BaseBitSetType                     = BitSet32<kDefaultBitSetSize>;
 #endif  // defined(ANGLE_IS_64_BIT_CPU)
 
 }  // namespace priv
@@ -559,6 +563,299 @@ struct GetBitSet<N, EnableIfBitsFit<N, uint32_t>>
 template <size_t N>
 using BitSet = typename priv::GetBitSet<N>::Type;
 
+template <std::size_t N>
+class BitSetArray final
+{
+  private:
+    static constexpr std::size_t kDefaultBitSetSizeMinusOne = priv::kDefaultBitSetSize - 1;
+    static constexpr std::size_t kShiftForDivision =
+        static_cast<std::size_t>(rx::Log2(static_cast<unsigned int>(priv::kDefaultBitSetSize)));
+    static constexpr std::size_t kArraySize =
+        ((N + kDefaultBitSetSizeMinusOne) >> kShiftForDivision);
+    constexpr static std::size_t kLastElementCount = (N & kDefaultBitSetSizeMinusOne);
+    constexpr static std::size_t kLastElementMask  = priv::BaseBitSetType::Mask(
+        kLastElementCount == 0 ? priv::kDefaultBitSetSize : kLastElementCount);
+
+    using BaseBitSet = priv::BaseBitSetType;
+    std::array<BaseBitSet, kArraySize> mBaseBitSetArray;
+
+  public:
+    BitSetArray();
+    BitSetArray(const BitSetArray<N> &other);
+
+    class Reference final
+    {
+      public:
+        ~Reference() {}
+        Reference &operator=(bool x)
+        {
+            mParent.set(mPosition, x);
+            return *this;
+        }
+        explicit operator bool() const { return mParent.test(mPosition); }
+
+      private:
+        friend class BitSetArray;
+
+        Reference(BitSetArray &parent, std::size_t pos) : mParent(parent), mPosition(pos) {}
+
+        BitSetArray &mParent;
+        std::size_t mPosition;
+    };
+    class Iterator final
+    {
+      public:
+        Iterator(const BitSetArray<N> &bitSetArray, std::size_t index);
+        Iterator &operator++();
+        bool operator==(const Iterator &other) const;
+        bool operator!=(const Iterator &other) const;
+        size_t operator*() const;
+
+      private:
+        const BitSetArray &mParent;
+        size_t mIndex;
+        typename BaseBitSet::Iterator mCurrentIterator;
+    };
+
+    constexpr std::size_t size() const { return N; }
+    Iterator begin() const { return Iterator(*this, 0); }
+    Iterator end() const { return Iterator(*this, kArraySize); }
+    unsigned long to_ulong() const
+    {
+        // TODO(anglebug.com/5628): Handle serializing more than kDefaultBitSetSize
+        for (std::size_t index = 1; index < kArraySize; index++)
+        {
+            ASSERT(mBaseBitSetArray[index].none());
+        }
+        return static_cast<unsigned long>(mBaseBitSetArray[0].to_ulong());
+    }
+
+    BitSetArray &operator=(const BitSetArray &other);
+    bool operator[](std::size_t pos) const;
+    Reference operator[](std::size_t pos)
+    {
+        ASSERT(pos < size());
+        return Reference(*this, pos);
+    }
+
+    BitSetArray &set(std::size_t pos, bool value = true);
+    BitSetArray &reset();
+    BitSetArray &reset(std::size_t pos);
+    bool test(std::size_t pos) const;
+    bool all() const;
+    bool any() const;
+    bool none() const;
+    std::size_t count() const;
+    bool intersects(const BitSetArray &other) const;
+    BitSetArray<N> &flip();
+};
+
+template <std::size_t N>
+BitSetArray<N>::BitSetArray()
+{
+    static_assert(N > priv::kDefaultBitSetSize, "BitSetArray type can't support requested size.");
+    reset();
+}
+
+template <size_t N>
+BitSetArray<N>::BitSetArray(const BitSetArray<N> &other)
+{
+    for (std::size_t index = 0; index < kArraySize; index++)
+    {
+        mBaseBitSetArray[index] = other.mBaseBitSetArray[index];
+    }
+}
+
+template <size_t N>
+BitSetArray<N>::Iterator::Iterator(const BitSetArray<N> &bitSetArray, std::size_t index)
+    : mParent(bitSetArray), mIndex(index), mCurrentIterator(mParent.mBaseBitSetArray[0].begin())
+{
+    while (mIndex < mParent.kArraySize)
+    {
+        if (mParent.mBaseBitSetArray[mIndex].any())
+        {
+            break;
+        }
+        mIndex++;
+    }
+
+    if (mIndex < mParent.kArraySize)
+    {
+        mCurrentIterator = mParent.mBaseBitSetArray[mIndex].begin();
+    }
+    else
+    {
+        mCurrentIterator = mParent.mBaseBitSetArray[mParent.kArraySize - 1].end();
+    }
+}
+
+template <std::size_t N>
+typename BitSetArray<N>::Iterator &BitSetArray<N>::Iterator::operator++()
+{
+    ++mCurrentIterator;
+    if (mCurrentIterator == mParent.mBaseBitSetArray[mIndex].end())
+    {
+        mIndex++;
+        if (mIndex < mParent.kArraySize)
+        {
+            mCurrentIterator = mParent.mBaseBitSetArray[mIndex].begin();
+        }
+    }
+    return *this;
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::Iterator::operator==(const BitSetArray<N>::Iterator &other) const
+{
+    return mCurrentIterator == other.mCurrentIterator;
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::Iterator::operator!=(const BitSetArray<N>::Iterator &other) const
+{
+    return mCurrentIterator != other.mCurrentIterator;
+}
+
+template <std::size_t N>
+std::size_t BitSetArray<N>::Iterator::operator*() const
+{
+    return (mIndex * priv::kDefaultBitSetSize) + *mCurrentIterator;
+}
+
+template <std::size_t N>
+BitSetArray<N> &BitSetArray<N>::operator=(const BitSetArray<N> &other)
+{
+    for (std::size_t index = 0; index < kArraySize; index++)
+    {
+        mBaseBitSetArray[index] = other.mBaseBitSetArray[index];
+    }
+    return *this;
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::operator[](std::size_t pos) const
+{
+    ASSERT(pos < size());
+    return test(pos);
+}
+
+template <std::size_t N>
+BitSetArray<N> &BitSetArray<N>::set(std::size_t pos, bool value)
+{
+    ASSERT(pos < size());
+    // Get the index and offset, then set the bit
+    size_t index  = pos >> kShiftForDivision;
+    size_t offset = pos & kDefaultBitSetSizeMinusOne;
+    mBaseBitSetArray[index].set(offset, value);
+    return *this;
+}
+
+template <std::size_t N>
+BitSetArray<N> &BitSetArray<N>::reset()
+{
+    for (BaseBitSet &baseBitSet : mBaseBitSetArray)
+    {
+        baseBitSet.reset();
+    }
+    return *this;
+}
+
+template <std::size_t N>
+BitSetArray<N> &BitSetArray<N>::reset(std::size_t pos)
+{
+    ASSERT(pos < size());
+    return set(pos, false);
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::test(std::size_t pos) const
+{
+    ASSERT(pos < size());
+    // Get the index and offset, then test the bit
+    size_t index  = pos >> kShiftForDivision;
+    size_t offset = pos & kDefaultBitSetSizeMinusOne;
+    return mBaseBitSetArray[index].test(offset);
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::all() const
+{
+    static priv::BaseBitSetType kLastElementBitSet = priv::BaseBitSetType(kLastElementMask);
+
+    for (std::size_t index = 0; index < kArraySize - 1; index++)
+    {
+        if (!mBaseBitSetArray[index].all())
+        {
+            return false;
+        }
+    }
+
+    // The last element in mBaseBitSetArray may need special handling
+    return mBaseBitSetArray[kArraySize - 1] == kLastElementBitSet;
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::any() const
+{
+    for (const BaseBitSet &baseBitSet : mBaseBitSetArray)
+    {
+        if (baseBitSet.any())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::none() const
+{
+    for (const BaseBitSet &baseBitSet : mBaseBitSetArray)
+    {
+        if (!baseBitSet.none())
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+template <std::size_t N>
+std::size_t BitSetArray<N>::count() const
+{
+    size_t count = 0;
+    for (const BaseBitSet &baseBitSet : mBaseBitSetArray)
+    {
+        count += baseBitSet.count();
+    }
+    return count;
+}
+
+template <std::size_t N>
+bool BitSetArray<N>::intersects(const BitSetArray<N> &other) const
+{
+    for (std::size_t index = 0; index < kArraySize; index++)
+    {
+        if (mBaseBitSetArray[index].bits() & other.mBaseBitSetArray[index].bits())
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+template <std::size_t N>
+BitSetArray<N> &BitSetArray<N>::flip()
+{
+    for (BaseBitSet &baseBitSet : mBaseBitSetArray)
+    {
+        baseBitSet.flip();
+    }
+
+    // The last element in mBaseBitSetArray may need special handling
+    mBaseBitSetArray[kArraySize - 1] &= kLastElementMask;
+    return *this;
+}
 }  // namespace angle
 
 template <size_t N, typename BitsT, typename ParamT>

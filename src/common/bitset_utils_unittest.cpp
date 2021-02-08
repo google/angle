@@ -346,4 +346,92 @@ TYPED_TEST(BitSetIteratorTest, ResetLaterBit)
 
     EXPECT_EQ(expectedValues, actualValues);
 }
+
+template <typename T>
+class BitSetArrayTest : public testing::Test
+{
+  protected:
+    T mBitSet;
+};
+
+using BitSetArrayTypes =
+    ::testing::Types<BitSetArray<65>, BitSetArray<128>, BitSetArray<130>, BitSetArray<511>>;
+TYPED_TEST_SUITE(BitSetArrayTest, BitSetArrayTypes);
+
+TYPED_TEST(BitSetArrayTest, BasicTest)
+{
+    TypeParam &mBits = this->mBitSet;
+
+    EXPECT_FALSE(mBits.all());
+    EXPECT_FALSE(mBits.any());
+    EXPECT_TRUE(mBits.none());
+    EXPECT_EQ(mBits.count(), 0u);
+
+    // Verify set on a single bit
+    mBits.set(45);
+    for (auto bit : mBits)
+    {
+        EXPECT_EQ(bit, 45u);
+    }
+    mBits.reset(45);
+
+    // Set every bit to 1.
+    for (size_t i = 0; i < mBits.size(); ++i)
+    {
+        mBits.set(i);
+
+        EXPECT_EQ(mBits.all(), i + 1 == mBits.size());
+        EXPECT_TRUE(mBits.any());
+        EXPECT_FALSE(mBits.none());
+        EXPECT_EQ(mBits.count(), i + 1);
+    }
+
+    // Reset odd bits to 0.
+    for (size_t i = 1; i < mBits.size(); i += 2)
+    {
+        mBits.reset(i);
+
+        EXPECT_FALSE(mBits.all());
+        EXPECT_TRUE(mBits.any());
+        EXPECT_FALSE(mBits.none());
+        EXPECT_EQ(mBits.count(), mBits.size() - i / 2 - 1);
+    }
+
+    // Make sure the bit pattern is what we expect at this point.
+    // All even bits should be set
+    for (size_t i = 0; i < mBits.size(); ++i)
+    {
+        EXPECT_EQ(mBits.test(i), i % 2 == 0);
+        EXPECT_EQ(static_cast<bool>(mBits[i]), i % 2 == 0);
+    }
+
+    // Reset everything.
+    mBits.reset();
+    EXPECT_FALSE(mBits.all());
+    EXPECT_FALSE(mBits.any());
+    EXPECT_TRUE(mBits.none());
+    EXPECT_EQ(mBits.count(), 0u);
+
+    // Test intersection logic
+    TypeParam testBitSet;
+    testBitSet.set(1);
+    testBitSet.set(3);
+    testBitSet.set(5);
+    EXPECT_FALSE(mBits.intersects(testBitSet));
+    mBits.set(3);
+    EXPECT_TRUE(mBits.intersects(testBitSet));
+    mBits.set(4);
+    EXPECT_TRUE(mBits.intersects(testBitSet));
+    mBits.reset(3);
+    EXPECT_FALSE(mBits.intersects(testBitSet));
+    testBitSet.set(4);
+    EXPECT_TRUE(mBits.intersects(testBitSet));
+
+    // Test that flip works.
+    // Reset everything.
+    mBits.reset();
+    EXPECT_EQ(mBits.count(), 0u);
+    mBits.flip();
+    EXPECT_EQ(mBits.count(), mBits.size());
+}
 }  // anonymous namespace

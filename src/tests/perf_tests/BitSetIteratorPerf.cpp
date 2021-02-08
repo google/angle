@@ -52,7 +52,9 @@ using TestTypes = Types<angle::IterableBitSet<32>,
                         angle::BitSet32<32>,
                         angle::BitSet64<32>,
                         angle::IterableBitSet<64>,
-                        angle::BitSet64<64>>;
+                        angle::BitSet64<64>,
+                        angle::BitSet<96>,
+                        angle::BitSetArray<96>>;
 TYPED_TEST_SUITE(BitSetIteratorPerfTest, TestTypes);
 
 TYPED_TEST(BitSetIteratorPerfTest, Run)
