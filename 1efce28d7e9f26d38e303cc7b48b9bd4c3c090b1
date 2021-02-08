@@ -16,6 +16,24 @@
       "message": "LGTM once bots are sorted out.",
       "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c339ed0c_d94cd11e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T21:43:25Z",
+      "side": 1,
+      "message": "this is interesting, even though we have this template specialization -\n\n template \u003csize_t N, typename Enable \u003d void\u003e\n struct GetBitSet\n {\n     using Type \u003d BitSetArray\u003cN\u003e;\n };\n\n // Prefer 64-bit bitsets on 64-bit CPUs. They seem faster than 32-bit.\n #if defined(ANGLE_IS_64_BIT_CPU)\n template \u003csize_t N\u003e\n struct GetBitSet\u003cN, EnableIfBitsFit\u003cN, uint64_t\u003e\u003e\n {\n     using Type \u003d BitSet64\u003cN\u003e;\n };\n\nit looks like this member -\u003e \"using DirtyBits \u003d angle::BitSet\u003cDIRTY_BIT_MAX\u003e;\" of State.h\nis resolving as BitSetArray\u003c\u003e type instead, per error -\n ../../src\\libANGLE/State.h(702): note: while trying to match the argument list \u0027(const gl::State::DirtyBits)\u0027\n ../../src\\libANGLE/State.h(702): error C2088: \u0027~\u0027: illegal for class\n ../../src\\libANGLE/State.h(705): error C2660: \u0027angle::BitSetArray\u003c64\u003e::set\u0027: function does not take 0 arguments\n\nim missing some template incantation. jamie help?",
+      "parentUuid": "58dccb44_2f9b9ce5",
+      "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
