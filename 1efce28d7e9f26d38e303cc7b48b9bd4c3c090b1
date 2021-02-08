@@ -69,6 +69,24 @@
       "parentUuid": "ba371fde_a1ac2af2",
       "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0e62ffe_e90bd428",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-08T21:55:36Z",
+      "side": 1,
+      "message": "On 32-bit systems, they were using IterableBitSet.",
+      "parentUuid": "3f22aedd_71f366e0",
+      "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
