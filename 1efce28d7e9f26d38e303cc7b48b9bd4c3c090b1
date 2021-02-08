@@ -105,6 +105,24 @@
       "parentUuid": "c0e62ffe_e90bd428",
       "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87aa015a_a0478230",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T22:39:46Z",
+      "side": 1,
+      "message": "There\u0027s no mystery here Mohan - on Android we cross-compile 32 and 64 bit versions to make a single APK that supports both arch. It\u0027s a 32-bit issue that you can easily reproduce locally using target_cpu \u003d \"x86\" in your gn args.",
+      "parentUuid": "30138800_75873388",
+      "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
