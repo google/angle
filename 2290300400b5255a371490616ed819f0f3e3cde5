@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "082d1c90_224133f7",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-08T04:01:12Z",
+      "side": 1,
+      "message": "If you set kLastElementMask to `BaseBitSetType::Mask(kLastElementCount \u003d\u003d 0 ? kBaseBitSetSize : kLastElementCount)`, then it would truly be the mask of the last element (i.e. it would be 0xffff...ffff when kBaseBitSetSize divides N). You could then avoid ifs when this is used.",
+      "range": {
+        "startLine": 581,
+        "startChar": 51,
+        "endLine": 582,
+        "endChar": 75
+      },
+      "revId": "2290300400b5255a371490616ed819f0f3e3cde5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc597fe7_90389a5e",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-08T04:01:12Z",
+      "side": 1,
+      "message": "A construct such as `mBaseBitSetArray[kArraySize - 1] \u003d\u003d BaseBitSetType(kLastElementMask)` may be more efficient (no need for bit counting).",
+      "range": {
+        "startLine": 796,
+        "startChar": 33,
+        "endLine": 796,
+        "endChar": 94
+      },
+      "revId": "2290300400b5255a371490616ed819f0f3e3cde5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
