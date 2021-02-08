@@ -33,6 +33,23 @@
       "message": "LGTM, thanks. Nice work on this.",
       "revId": "9acf50ccc19ba6172c04c94302f4ecf14bd8226e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "812dec00_343618b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:29:06Z",
+      "side": 1,
+      "message": "looks like i need to reorder this a bit. If i make the change to BitSet in this change then things wont compile without changing things like \"mActiveSamplersMask(0)\" -\u003e \"mActiveSamplersMask(0)\"\n\nwill move the removal of iteratorbitset to the last change in this chain",
+      "revId": "9acf50ccc19ba6172c04c94302f4ecf14bd8226e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
