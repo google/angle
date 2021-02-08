@@ -22,6 +22,30 @@
       },
       "revId": "15c9a8ba78aa05c10eb1dbb1fb4f30ef7528bda0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e0d2070_e91f2044",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3083,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-08T19:36:32Z",
+      "side": 1,
+      "message": "The \"backend strings\" are used to build ANGLE\u0027s renderer string so we can properly forward backend info to chrome. Since ANGLE already has a egl::Display::getVendorString for ANGLE\u0027s own \"frontend strings\", I made egl::Display::getBackendVendorString, etc. Let me know if you have comments and I can follow up.",
+      "parentUuid": "2b0bdf26_33b2ab29",
+      "range": {
+        "startLine": 3083,
+        "startChar": 29,
+        "endLine": 3083,
+        "endChar": 37
+      },
+      "revId": "15c9a8ba78aa05c10eb1dbb1fb4f30ef7528bda0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
