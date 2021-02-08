@@ -70,6 +70,23 @@
       "parentUuid": "92bef5a2_f790fec0",
       "revId": "3b2845948430839885b9481d106656f6b9320267",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0828b971_dc858e0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T17:26:01Z",
+      "side": 1,
+      "message": "SGTM Mohan.",
+      "revId": "3b2845948430839885b9481d106656f6b9320267",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
