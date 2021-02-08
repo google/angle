@@ -16,6 +16,98 @@
       "message": "PTAL",
       "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53609458_4ecfc9cc",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T16:53:14Z",
+      "side": 1,
+      "message": "can you update this to use your new type? We can also remove IterableBitSet.",
+      "range": {
+        "startLine": 539,
+        "startChar": 17,
+        "endLine": 539,
+        "endChar": 31
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfeca77c_fcf3266b",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T16:53:14Z",
+      "side": 1,
+      "message": "nit: how about kDefaultBitSetSize instead of two types?",
+      "range": {
+        "startLine": 550,
+        "startChar": 0,
+        "endLine": 551,
+        "endChar": 56
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5261399b_4e58b39b",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T16:53:14Z",
+      "side": 1,
+      "message": "nit: kBaseBitSetSizeMinusOne  (one less word)",
+      "range": {
+        "startLine": 574,
+        "startChar": 33,
+        "endLine": 574,
+        "endChar": 59
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8064f827_776acf2e",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T16:53:14Z",
+      "side": 1,
+      "message": "nit: seems not necessary to constexpr zero",
+      "range": {
+        "startLine": 575,
+        "startChar": 33,
+        "endLine": 575,
+        "endChar": 44
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
