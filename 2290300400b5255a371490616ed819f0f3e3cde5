@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7b8e127_a73ab0cf",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T16:38:09Z",
+      "side": 1,
+      "message": "Done. yup, realized this after upload",
+      "parentUuid": "082d1c90_224133f7",
+      "range": {
+        "startLine": 581,
+        "startChar": 51,
+        "endLine": 582,
+        "endChar": 75
+      },
+      "revId": "2290300400b5255a371490616ed819f0f3e3cde5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc597fe7_90389a5e",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-02-08T04:01:12Z",
       "side": 1,
       "message": "A construct such as `mBaseBitSetArray[kArraySize - 1] \u003d\u003d BaseBitSetType(kLastElementMask)` may be more efficient (no need for bit counting).",
+      "range": {
+        "startLine": 796,
+        "startChar": 33,
+        "endLine": 796,
+        "endChar": 94
+      },
+      "revId": "2290300400b5255a371490616ed819f0f3e3cde5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e23dad7_e03bb1df",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T16:38:09Z",
+      "side": 1,
+      "message": "good point, done. Changed it a bit to use a static var instead of constructing a new one every time (was unable to get the constexpr constructor to work)",
+      "parentUuid": "fc597fe7_90389a5e",
       "range": {
         "startLine": 796,
         "startChar": 33,
