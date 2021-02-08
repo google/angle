@@ -33,6 +33,23 @@
       "message": "LGTM, as long as standalone bots are happy.",
       "revId": "e0441c70c968a55c130eb6f7ab120ec6fe1aa349",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2d6abe4_5cb02f11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T16:31:42Z",
+      "side": 1,
+      "message": "+Shabi FYI (Sheriff)",
+      "revId": "e0441c70c968a55c130eb6f7ab120ec6fe1aa349",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
