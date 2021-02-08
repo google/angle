@@ -139,6 +139,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e7d3912d_61510c26",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:59:02Z",
+      "side": 1,
+      "message": "\u003e http://crrev.com/c/2679048\n\nthanks, will take a look\n\n\u003e Also please add a \u0026 operator\n\nif you look at how it is currently handled -\n template \u003csize_t N, typename BitsT, typename ParamT\u003e\n inline angle::BitSetT\u003cN, BitsT, ParamT\u003e operator\u0026(const angle::BitSetT\u003cN, BitsT, ParamT\u003e \u0026lhs,\n                                                  const angle::BitSetT\u003cN, BitsT, ParamT\u003e \u0026rhs)\n {\n     angle::BitSetT\u003cN, BitsT, ParamT\u003e result(lhs);\n     result \u0026\u003d rhs.bits();\n     return result;\n }\n\na temp object is created. This happens, potentially on every draw. Is there a better way? Also if existing code is inefficient (at least in terms of memory) why cling on to it?\n\nThat said if you really want it i will go ahead implement a similar function for BitSetArray, just dont quite get it.",
+      "parentUuid": "3ed1470a_f5d0c884",
+      "range": {
+        "startLine": 539,
+        "startChar": 17,
+        "endLine": 539,
+        "endChar": 31
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dfeca77c_fcf3266b",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 7
