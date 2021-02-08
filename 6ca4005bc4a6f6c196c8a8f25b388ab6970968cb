@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9b0eca49_db8f6d0b",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-08T18:22:55Z",
+      "side": 1,
+      "message": "Can you add an ASSERT that mBaseBitSetArray[n].none() for n \u003e 0? If an application actually uses more than 64 textures we don\u0027t want this to silently screw things up.",
+      "parentUuid": "708d1f2f_98ba402c",
+      "range": {
+        "startLine": 626,
+        "startChar": 8,
+        "endLine": 626,
+        "endChar": 76
+      },
+      "revId": "6ca4005bc4a6f6c196c8a8f25b388ab6970968cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3dabbff9_10c499bf",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 4
