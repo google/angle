@@ -225,6 +225,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6af852aa_5b97c89e",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T00:24:24Z",
+      "side": 1,
+      "message": "BitSetArray SGTM, will upload a patch soon",
+      "parentUuid": "d8218275_02733c7d",
+      "range": {
+        "startLine": 563,
+        "startChar": 6,
+        "endLine": 563,
+        "endChar": 17
+      },
+      "revId": "9ee0e2135a86ef3fe44609df32680136e7f34b8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5016bdcc_06431f81",
