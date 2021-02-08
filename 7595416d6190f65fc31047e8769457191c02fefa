@@ -16,6 +16,24 @@
       "message": "I really don\u0027t like this, and removed it in this change: https://chromium-review.googlesource.com/c/angle/angle/+/2678886\n\nThe other change is cleaner IMO and more versatile, though uses two loops in setupDraw(). Microbenchmarks show no discernible difference between this change and that one, so my preference is to squash the two. Let me know what you think.",
       "revId": "7595416d6190f65fc31047e8769457191c02fefa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e02b6429_505ab576",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T20:24:57Z",
+      "side": 1,
+      "message": "Pass to the handlers instead?",
+      "parentUuid": "f4527e86_84bf12a2",
+      "revId": "7595416d6190f65fc31047e8769457191c02fefa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
