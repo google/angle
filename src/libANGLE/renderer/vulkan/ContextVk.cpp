@@ -4221,6 +4221,10 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         // will likely affect performance negatively.
         ANGLE_TRY(mExecutable->createPipelineLayout(context, &mActiveTextures));
         invalidateCurrentGraphicsPipeline();
+
+        // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),
+        // and handleDirtyGraphicsPipeline().
+        mCurrentGraphicsPipeline = nullptr;
     }
 
     return angle::Result::Continue;
