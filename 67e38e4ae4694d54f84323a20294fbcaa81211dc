@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d4e9f2d_24202462",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 539,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:06:11Z",
+      "side": 1,
+      "message": "\u003e can you update this to use your new type?\n\nDone.\n\n\u003e We can also remove IterableBitSet.\n\nDone.\n\nUnfortunately comes with side effect of having to split \"#if defined(ANGLE_IS_64_BIT_CPU)\" block into 2 chunks",
+      "parentUuid": "53609458_4ecfc9cc",
+      "range": {
+        "startLine": 539,
+        "startChar": 17,
+        "endLine": 539,
+        "endChar": 31
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dfeca77c_fcf3266b",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-08T16:53:14Z",
       "side": 1,
       "message": "nit: how about kDefaultBitSetSize instead of two types?",
+      "range": {
+        "startLine": 550,
+        "startChar": 0,
+        "endLine": 551,
+        "endChar": 56
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bc3f58a_b930df0d",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 551,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:06:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfeca77c_fcf3266b",
       "range": {
         "startLine": 550,
         "startChar": 0,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e604284b_df60fd42",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:06:11Z",
+      "side": 1,
+      "message": "Done with new name -\u003e kDefaultBitSetSizeMinusOne",
+      "parentUuid": "5261399b_4e58b39b",
+      "range": {
+        "startLine": 574,
+        "startChar": 33,
+        "endLine": 574,
+        "endChar": 59
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8064f827_776acf2e",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-02-08T16:53:14Z",
       "side": 1,
       "message": "nit: seems not necessary to constexpr zero",
+      "range": {
+        "startLine": 575,
+        "startChar": 33,
+        "endLine": 575,
+        "endChar": 44
+      },
+      "revId": "67e38e4ae4694d54f84323a20294fbcaa81211dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0bde68d_873685d2",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:06:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8064f827_776acf2e",
       "range": {
         "startLine": 575,
         "startChar": 33,

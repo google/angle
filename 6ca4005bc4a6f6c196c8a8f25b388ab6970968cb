@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "708d1f2f_98ba402c",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T18:06:11Z",
+      "side": 1,
+      "message": "\u003e You can remove this function to avoid accidental usage.\n\ni think framecapture needs this, complains otherwise. I dont want to change all that code in this CL. i would like to leave the code as-is where we only serialize mBaseBitSetArray[0] and open a todo bug to be addressed in a follow up change. WDYT?",
+      "parentUuid": "9c3040ae_383b618d",
+      "range": {
+        "startLine": 626,
+        "startChar": 8,
+        "endLine": 626,
+        "endChar": 76
+      },
+      "revId": "6ca4005bc4a6f6c196c8a8f25b388ab6970968cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3dabbff9_10c499bf",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 4
