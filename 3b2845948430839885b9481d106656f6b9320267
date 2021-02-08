@@ -16,6 +16,24 @@
       "message": "Does this make any noticeable difference anywhere?",
       "revId": "3b2845948430839885b9481d106656f6b9320267",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "671420e4_975fe62b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T17:17:14Z",
+      "side": 1,
+      "message": "when i was profiling BitSetArray i noticed that my copy constructor was being hit multiple times in texture test and it turned out that each time a call to \"getActiveSamplersMask()\" was made it would unnecessarily create a new object.",
+      "parentUuid": "5ec163e6_f52fc9c0",
+      "revId": "3b2845948430839885b9481d106656f6b9320267",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
