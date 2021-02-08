@@ -16,6 +16,115 @@
       "message": "PTAL. There\u0027s probably several steps this is missing, but wanted to get some eyes on it. I had some problems running the semantic diff.",
       "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64c04bc6_78f8146b",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-08T23:29:02Z",
+      "side": 1,
+      "message": "👍",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 51
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ec122e0_d77ef8d8",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-08T23:29:02Z",
+      "side": 1,
+      "message": "do you really need this on Win and Linux? Or whatever because it doesn\u0027t hurt?",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1159c434_e60966ec",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-08T23:29:02Z",
+      "side": 1,
+      "message": "it accepts `cq_group` arg. This way you don\u0027t need to carry around the verifiers:\nhttps://chromium.googlesource.com/infra/luci/luci-go/+/refs/heads/master/lucicfg/doc/README.md#luci.cq_tryjob_verifier\n\n\nsimilarly, for views https://chromium.googlesource.com/infra/luci/luci-go/+/refs/heads/master/lucicfg/doc/README.md#luci.console_view_entry accepts console_view.",
+      "range": {
+        "startLine": 186,
+        "startChar": 17,
+        "endLine": 186,
+        "endChar": 35
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d75442cf_d2c84f03",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-08T23:29:02Z",
+      "side": 1,
+      "message": "consider:\n  clang, debug, uwp, trace_tests \u003d True, True, True, True\n  \nangle_mirrored_builder(\"linux-clang-rel\", clang, not debug, \"x64\", not uwp, not trace_tests, views, verifiers)\n\nthough if you eliminate views and verifiers, 6 vals alone aren\u0027t that bad.",
+      "range": {
+        "startLine": 247,
+        "startChar": 42,
+        "endLine": 247,
+        "endChar": 73
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2149dc80_a577bbc4",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-08T23:29:02Z",
+      "side": 1,
+      "message": "\"angle-cq\" is redundant. I recommend \"main\" or \"master\" s.t. iff you add different config for other refs, you\u0027d be able to distinguish them in monitoring/BQ data.",
+      "range": {
+        "startLine": 285,
+        "startChar": 12,
+        "endLine": 285,
+        "endChar": 20
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
