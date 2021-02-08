@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b0bdf26_33b2ab29",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3083,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T16:56:05Z",
+      "side": 1,
+      "message": "nit: can you please expose getters in egl::Display instead of calling the implementation via getImplementation?",
+      "range": {
+        "startLine": 3083,
+        "startChar": 29,
+        "endLine": 3083,
+        "endChar": 37
+      },
+      "revId": "15c9a8ba78aa05c10eb1dbb1fb4f30ef7528bda0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
