@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "534001ac_32bbc35e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-08T17:26:26Z",
+      "side": 1,
+      "message": "LGTM with Jamie\u0027s comment addressed",
+      "revId": "ab5079e67a965c2185ac1df0c97f3b2331f28cbb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
