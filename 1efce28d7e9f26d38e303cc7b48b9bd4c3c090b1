@@ -51,6 +51,24 @@
       "message": "Evidently this class is missing implementation for all the functions in BitSetT.\n\nYou can emulate building for 32-bit simply by making ANGLE temporarily use BitSetArray everywhere and work through build failures on a 64-bit build.",
       "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f22aedd_71f366e0",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T21:51:07Z",
+      "side": 1,
+      "message": "given my bandwidth i was going for make the CPU overhead due to 96bits go away and nothing more but scope has increased. still doesn\u0027t explain why any type wanting \u003c\u003d 64bits (like the state dirty bit type) would resolve to BitSetArray instead of BitSet64",
+      "parentUuid": "ba371fde_a1ac2af2",
+      "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
