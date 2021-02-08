@@ -1,6 +1,40 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "10c8dcfb_c3ec7856",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-08T20:47:31Z",
+      "side": 1,
+      "message": "Seems reasonable.",
+      "revId": "7595416d6190f65fc31047e8769457191c02fefa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bd4a7a2_b1e54ca5",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-08T20:47:31Z",
+      "side": 1,
+      "message": "It would be good to ASSERT(DIRTY_BIT_PIPELINE \u003c DIRTY_BIT_PIPELINE_BIND).",
+      "revId": "7595416d6190f65fc31047e8769457191c02fefa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4527e86_84bf12a2",
