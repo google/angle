@@ -34,6 +34,24 @@
       "parentUuid": "5ec163e6_f52fc9c0",
       "revId": "3b2845948430839885b9481d106656f6b9320267",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92bef5a2_f790fec0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-08T17:22:06Z",
+      "side": 1,
+      "message": "OK. I was wondering if that would be the case in release with inlining turned on.",
+      "parentUuid": "671420e4_975fe62b",
+      "revId": "3b2845948430839885b9481d106656f6b9320267",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
