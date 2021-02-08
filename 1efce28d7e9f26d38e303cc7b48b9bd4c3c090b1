@@ -87,6 +87,24 @@
       "parentUuid": "3f22aedd_71f366e0",
       "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30138800_75873388",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-08T21:58:29Z",
+      "side": 1,
+      "message": "but this bot \"android_angle_vk64_rel_ng\" failed too with log here -\u003e https://ci.chromium.org/ui/p/chromium/builders/try/android_angle_vk64_rel_ng/19369/overview -\n\n Step compile (with patch) failed. Error logs are shown below:\n [2616/3253] CXX android_clang_arm/obj/third_party/angle/src/libANGLE/renderer/gl/angle_gl_backend/SamplerGL.o\n FAILED: \n android_clang_arm/obj/third_party/angle/src/libANGLE/renderer/gl/angle_gl_backend/SamplerGL.o\n/b/s/w/ir/cache/goma/client/gomacc ../../third_party/llvm-build/Release+Asserts/bin/clang++ -MMD -MF...(too long)\nIn file included from ../../third_party/angle/src/libANGLE/renderer/gl/SamplerGL.cpp:12:\nIn file included from ../../third_party/angle/src/libANGLE/renderer/gl/StateManagerGL.h:14:\n../../third_party/angle/src/libANGLE/State.h:702:66: error: invalid argument type \u0027const gl::State::DirtyBits\u0027 (aka \u0027const BitSetArray\u003c64U\u003e\u0027) to unary expression\n\nfeel dumb but im missing something",
+      "parentUuid": "c0e62ffe_e90bd428",
+      "revId": "1efce28d7e9f26d38e303cc7b48b9bd4c3c090b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
