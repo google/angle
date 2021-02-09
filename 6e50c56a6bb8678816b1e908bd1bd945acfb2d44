@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f57980b9_1c36f12f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T21:16:48Z",
+      "side": 1,
+      "message": "Also I notice there\u0027s a luci-logdog.cfg that isn\u0027t auto-generated. Is this working as intended?",
+      "revId": "6e50c56a6bb8678816b1e908bd1bd945acfb2d44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
