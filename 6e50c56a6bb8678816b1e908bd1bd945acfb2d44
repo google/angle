@@ -16,6 +16,24 @@
       "message": "Also I notice there\u0027s a luci-logdog.cfg that isn\u0027t auto-generated. Is this working as intended?",
       "revId": "6e50c56a6bb8678816b1e908bd1bd945acfb2d44",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdbdab51_68e55e99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T21:52:37Z",
+      "side": 1,
+      "message": "ha, see my comment below -- you need to define a GS bucket for use with LogDog.",
+      "parentUuid": "f57980b9_1c36f12f",
+      "revId": "6e50c56a6bb8678816b1e908bd1bd945acfb2d44",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
