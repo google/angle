@@ -104,14 +104,10 @@ LineLoopTest.DISABLED_DrawArraysWithLargeCount/*
 MipmapTest.DISABLED_ThreeLevelsInitData/*
 
 # Compile failed tests
-CopyTextureTest.CopyTextureInvalidTextureIds/*
-CubeMapTextureTest.RenderToFacesConsecutively/*
 EGLSyncTest.AndroidNativeFence_WaitSync/*
 ExplicitContextTest.GetProcAddress/*
 GetImageTest.*
 GetTexLevelParameterTest.Queries/*
-GLSLTest.InvariantGLPosition/*
-GLSLTest.MissingReturnVec4/*
 MemoryObjectTest.MemoryObjectQueries/*
 MemoryObjectTest.MemoryObjectShouldBeMemoryObject/*
 MemoryObjectTest.ShouldFailValidationOnImportFdUnsupportedHandleType/*
@@ -120,9 +116,4 @@ RobustBufferAccessBehaviorTest.EmptyBuffer/*
 RobustClientMemoryTest.*
 RobustResourceInitTest.*
 SemaphoreTest.*
-SimpleOperationTest.DrawTriangleFan/*
-SimpleStateChangeTest.DrawElementsThenDrawElementsNewIndexBuffer/*
-StateChangeTest.FramebufferIncompleteDepthAttachment/*
-Texture2DTest.CopySubImageFloat_RGB_R/*
-TextureRectangleTest.RenderToRectangle/*
 VulkanExternalImageTest.*
