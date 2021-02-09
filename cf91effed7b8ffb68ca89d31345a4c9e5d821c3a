@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a43cd71_34ddd898",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T20:49:07Z",
+      "side": 1,
+      "message": "Nice fix! I\u0027ll start the CQ.",
+      "revId": "cf91effed7b8ffb68ca89d31345a4c9e5d821c3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
