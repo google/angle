@@ -451,6 +451,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "02dd5291_02539a01",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T21:13:58Z",
+      "side": 1,
+      "message": "IIRC our way of checking out the SDK is different in the ANGLE standalone bots so I\u0027m a bit cautious about messing with it. Maybe as a post-process.",
+      "parentUuid": "59b41c72_5495aa8d",
+      "range": {
+        "startLine": 128,
+        "startChar": 28,
+        "endLine": 128,
+        "endChar": 33
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00e96c63_c1843563",
