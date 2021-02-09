@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37173a8a_8340a3a8",
+        "filename": "src/libANGLE/renderer/SurfaceImpl.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-09T22:45:42Z",
+      "side": 1,
+      "message": "It shouldn\u0027t be reachable by any of the backends that not override. Since the check for extension would prevent it.\nWill add.",
+      "parentUuid": "eb61c8ad_0492e398",
+      "range": {
+        "startLine": 119,
+        "startChar": 4,
+        "endLine": 119,
+        "endChar": 10
+      },
+      "revId": "2eee4da230e276725328779f0ea7d94e5fb9f493",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f49f7e28_18dbc185",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-09T21:09:25Z",
       "side": 1,
       "message": "we don\u0027t like to ignore errors here - can you make this return an error and return the value via a pointer argument?",
+      "range": {
+        "startLine": 48,
+        "startChar": 5,
+        "endLine": 48,
+        "endChar": 9
+      },
+      "revId": "2eee4da230e276725328779f0ea7d94e5fb9f493",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aeae4a5c_7d9e2c5f",
+        "filename": "src/libANGLE/renderer/gl/egl/WindowSurfaceEGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-09T22:45:42Z",
+      "side": 1,
+      "message": "It returns bool. So in false case returns 0. A real error would be to call eglGetError() - but I think the only thing here would be bad attribute-, but not supporting extension is accounted for.\nLet me see if I can make return bool and pointer to return value works.",
+      "parentUuid": "f49f7e28_18dbc185",
       "range": {
         "startLine": 48,
         "startChar": 5,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9da5222_ac588f46",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1047,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-09T22:45:42Z",
+      "side": 1,
+      "message": "I\u0027ll look into that. I didn\u0027t see.",
+      "parentUuid": "d4dc636a_f51f105e",
+      "range": {
+        "startLine": 1047,
+        "startChar": 4,
+        "endLine": 1047,
+        "endChar": 28
+      },
+      "revId": "2eee4da230e276725328779f0ea7d94e5fb9f493",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54d455df_911c9cc4",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-02-09T21:09:25Z",
       "side": 1,
       "message": "can you expand on this comment indicating how you are keeping these tracked?",
+      "range": {
+        "startLine": 1253,
+        "startChar": 7,
+        "endLine": 1253,
+        "endChar": 16
+      },
+      "revId": "2eee4da230e276725328779f0ea7d94e5fb9f493",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "adae09bd_ca3fb984",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-09T22:45:42Z",
+      "side": 1,
+      "message": "Will do.",
+      "parentUuid": "54d455df_911c9cc4",
       "range": {
         "startLine": 1253,
         "startChar": 7,
