@@ -33,6 +33,24 @@
       "message": "Should this be done in the front-end instead to benefit the other backends?",
       "revId": "3f7d57eeff99c12bfccbbead631848e69e2b00c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a290bd43_d0af0899",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-09T18:46:47Z",
+      "side": 1,
+      "message": "There is already some caching done in the frontend, but since it depends on an individual ANGLE context it doesn\u0027t help when multiple contexts are created",
+      "parentUuid": "c94cc0e4_b2bad102",
+      "revId": "3f7d57eeff99c12bfccbbead631848e69e2b00c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
