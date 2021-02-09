@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b581ef8_d8257fd6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-09T18:06:02Z",
+      "side": 1,
+      "message": "Geoff, please abandon this. The suppressions that you removed aren\u0027t removed or passing tests. They have been moved to a new file in Vk-GL-CTS. We probably need to adapt our integration with dEQP to take those new files into account.\n\nI\u0027m working on a partial roll (this, minus 3 changes) to get the roll mostly forward for now: https://chromium-review.googlesource.com/c/angle/angle/+/2679296",
+      "revId": "2bbe46a9c0963fa05cce1b841ef8eed7ef766c9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
