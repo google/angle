@@ -33,6 +33,24 @@
       "message": "Can you make the other back-ends call getAndReset as well? Or at least leave a TODO and a bug with this tracked somewhere?",
       "revId": "143488eb212ea14294b76f2c69bcf6341b605394",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9669801_f773f896",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-09T16:42:52Z",
+      "side": 1,
+      "message": "I added the handling of extended dirty bits only to the vulkan backend, so i will add a todo to getAndReset method in State.h itself to track work in other backends",
+      "parentUuid": "870b6560_5f96ddf0",
+      "revId": "143488eb212ea14294b76f2c69bcf6341b605394",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
