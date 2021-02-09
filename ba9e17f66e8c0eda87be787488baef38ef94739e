@@ -69,6 +69,24 @@
       "parentUuid": "fbc4f6ee_bb0aa902",
       "revId": "ba9e17f66e8c0eda87be787488baef38ef94739e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8ea5ad9_631e0366",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-09T01:57:42Z",
+      "side": 1,
+      "message": "ok, will mirror State::getAndResetDirtyCurrentValues()",
+      "parentUuid": "2482927d_7f5304b9",
+      "revId": "ba9e17f66e8c0eda87be787488baef38ef94739e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
