@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "984876f6_8ac43dc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T00:12:49Z",
+      "side": 1,
+      "message": "Yuly 👍 \n(I didn\u0027t look into generated files)",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e013e210_9d8977ff",
@@ -244,6 +261,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6c974427_31d4fe11",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T00:12:49Z",
+      "side": 1,
+      "message": "goto catch! yes, it should be just name here since bucket is specified below.",
+      "parentUuid": "00e96c63_c1843563",
+      "range": {
+        "startLine": 141,
+        "startChar": 15,
+        "endLine": 141,
+        "endChar": 23
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5c30ec6c_360ab2dd",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -255,6 +296,30 @@
       "writtenOn": "2021-02-09T00:05:55Z",
       "side": 1,
       "message": "\"ANGLE try builders\" console is gone from luci-milo.cfg.\nWill https://ci.chromium.org/p/angle/g/try/builders be gone when this lands?",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 9
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54f1b776_9a2305a4",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T00:12:49Z",
+      "side": 1,
+      "message": "yes. But you can add a *view* (not console, which needs git commits): https://chromium.googlesource.com/infra/luci/luci-go/+/refs/heads/master/lucicfg/doc/README.md#luci.list_view_entry",
+      "parentUuid": "5c30ec6c_360ab2dd",
       "range": {
         "startLine": 176,
         "startChar": 0,
@@ -313,6 +378,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7d6a17df_353d4aed",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T00:12:49Z",
+      "side": 1,
+      "message": "`luci.angle.ci` is legacy way to define it. Behind the scenes it was already angle\u0027s project `ci` bucket.",
+      "parentUuid": "71667702_7598a9aa",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 14
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2c919fc8_82901aca",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -336,6 +425,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b351633d_a72ebac4",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T00:12:49Z",
+      "side": 1,
+      "message": "another good catch. The SCHEDULER_TRIGGERER below must be changed to acl.BUILDBUCKET_SCHEDULER:\nhttps://chromium.googlesource.com/infra/luci/luci-go/+/refs/heads/master/lucicfg/doc/README.md#roles_doc",
+      "parentUuid": "2c919fc8_82901aca",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 9
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8b84a435_7f8d1ea7",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -347,6 +460,30 @@
       "writtenOn": "2021-02-09T00:05:55Z",
       "side": 1,
       "message": "Used to be luci.angle.try\nI actually don\u0027t understand how \"angle/try/linux-clang-dbg\" works in commit-queue.cfg at the moment.\n\"angle\" is project, \"linux-clang-dbg\" is the builder, but what is \"try\"?\nNow it only appears in\nacl_sets {\n  name: \"try\"",
+      "range": {
+        "startLine": 206,
+        "startChar": 12,
+        "endLine": 206,
+        "endChar": 15
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b870d957_c41ca42e",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T00:12:49Z",
+      "side": 1,
+      "message": "\"try\" is bucket actual name, while \"luci.angle.try\" was a legacy hack to specify it.",
+      "parentUuid": "8b84a435_7f8d1ea7",
       "range": {
         "startLine": 206,
         "startChar": 12,
