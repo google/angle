@@ -175,6 +175,13 @@ EGLAttrib GetDisplayTypeFromEnvironment()
     }
 #endif
 
+#if defined(ANGLE_ENABLE_METAL)
+    if (angleDefaultEnv == "metal")
+    {
+        return EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE;
+    }
+#endif
+
 #if defined(ANGLE_ENABLE_NULL)
     if (angleDefaultEnv == "null")
     {
