@@ -16,6 +16,24 @@
       "message": "Nice fix! I\u0027ll start the CQ.",
       "revId": "cf91effed7b8ffb68ca89d31345a4c9e5d821c3a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af3e72e5_c3b7531b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-09T20:56:42Z",
+      "side": 1,
+      "message": "Best part is, there was a test already for this, but `BufferVk` has a threshold for allocating a new buffer or not, and the threshold is \"update size \u003e 50%\". The test was updating 50%. FML.",
+      "parentUuid": "6a43cd71_34ddd898",
+      "revId": "cf91effed7b8ffb68ca89d31345a4c9e5d821c3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
