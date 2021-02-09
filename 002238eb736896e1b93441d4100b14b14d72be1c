@@ -16,6 +16,23 @@
       "message": "thanks guys, landing this",
       "revId": "002238eb736896e1b93441d4100b14b14d72be1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fbd2bab_6063b7d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-09T22:27:08Z",
+      "side": 1,
+      "message": "jamie, bots are having a lot of trouble. is it a known issue?",
+      "revId": "002238eb736896e1b93441d4100b14b14d72be1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
