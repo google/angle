@@ -200,6 +200,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "fd6f0db8_2eb83ca2",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T19:05:46Z",
+      "side": 1,
+      "message": "Even if you add Android bots, they will do build on Linux, not Android.",
+      "parentUuid": "baa05c42_be977b24",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 65
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "64c04bc6_78f8146b",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -393,6 +417,30 @@
       "side": 1,
       "message": "https://chromium-review.googlesource.com/c/angle/angle/+/2679298",
       "parentUuid": "cc316599_c4ba4596",
+      "range": {
+        "startLine": 128,
+        "startChar": 28,
+        "endLine": 128,
+        "endChar": 33
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59b41c72_5495aa8d",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T19:05:46Z",
+      "side": 1,
+      "message": "Updating the version looks good, but I wonder, what if we skip it entirely?\nWill we always get the latest version automatically?\nChromium Mac bots don\u0027t specify sdk_version at all, why do we?",
+      "parentUuid": "6ce23839_f99ab912",
       "range": {
         "startLine": 128,
         "startChar": 28,
