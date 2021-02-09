@@ -86,6 +86,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea9d64fb_bda00d9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Will do that in a post pass.",
+      "parentUuid": "9b0b2516_1087725e",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e013e210_9d8977ff",
@@ -109,6 +127,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cbd434c3_5f1dc2b6",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Done, I kept OS struct around, remove the suffixes.",
+      "parentUuid": "e013e210_9d8977ff",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 42
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d9084de_473f9bc1",
@@ -122,6 +164,30 @@
       "writtenOn": "2021-02-09T00:05:55Z",
       "side": 1,
       "message": "I don\u0027t think this is needed.\nUsing this would mean running the build on an Android device, I think.\n\nOther mentions of ANDROID are probably not needed as well.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 65
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "baa05c42_be977b24",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "I plan to add Android in the future. Will remove it for now.",
+      "parentUuid": "1d9084de_473f9bc1",
       "range": {
         "startLine": 49,
         "startChar": 0,
@@ -172,6 +238,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "623b6696_1161161a",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Ack, this is default now. You can see if you git log --grep in depot_tools.",
+      "parentUuid": "9bdcbfdb_5ec6a27d",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57727e18_acda9b49",
@@ -185,6 +269,30 @@
       "writtenOn": "2021-02-09T00:05:55Z",
       "side": 1,
       "message": "It wasn\u0027t immediately clear to me what \"mirrored\" meant.\nI was expecting something like \"standalone\".\nOnly later I realized this adds both a ci and a try builder.\nI\u0027d name this angle_standalone_builder and add a comment on top that it adds a ci and a try builder.",
+      "range": {
+        "startLine": 104,
+        "startChar": 10,
+        "endLine": 104,
+        "endChar": 18
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d6ba29f_8763ee85",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57727e18_acda9b49",
       "range": {
         "startLine": 104,
         "startChar": 10,
@@ -230,6 +338,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a26f386_af60a370",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "It\u0027s mirroring the prior config. I was thinking maybe at some point we\u0027d cross compile on Linux. Anyway I\u0027ll put it behind win for now.",
+      "parentUuid": "f0a7e17e_29d9e579",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cc316599_c4ba4596",
@@ -243,6 +369,30 @@
       "writtenOn": "2021-02-09T00:05:55Z",
       "side": 1,
       "message": "I don\u0027t see Chromium ever specifying this.\nPerhaps there is some default?\nDo we need to update it sometimes?\nChromium specifies xcode_build_version 12a7209, so perhaps 11b52 is outdated?",
+      "range": {
+        "startLine": 128,
+        "startChar": 28,
+        "endLine": 128,
+        "endChar": 33
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ce23839_f99ab912",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "https://chromium-review.googlesource.com/c/angle/angle/+/2679298",
+      "parentUuid": "cc316599_c4ba4596",
       "range": {
         "startLine": 128,
         "startChar": 28,
@@ -300,6 +450,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e7e7c7e_20316f5d",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6c974427_31d4fe11",
+      "range": {
+        "startLine": 141,
+        "startChar": 15,
+        "endLine": 141,
+        "endChar": 23
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c30ec6c_360ab2dd",
@@ -347,6 +521,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53bab42a_bb2ecb7d",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Done, added a list view.",
+      "parentUuid": "54f1b776_9a2305a4",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 9
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1159c434_e60966ec",
@@ -360,6 +558,30 @@
       "writtenOn": "2021-02-08T23:29:02Z",
       "side": 1,
       "message": "it accepts `cq_group` arg. This way you don\u0027t need to carry around the verifiers:\nhttps://chromium.googlesource.com/infra/luci/luci-go/+/refs/heads/master/lucicfg/doc/README.md#luci.cq_tryjob_verifier\n\n\nsimilarly, for views https://chromium.googlesource.com/infra/luci/luci-go/+/refs/heads/master/lucicfg/doc/README.md#luci.console_view_entry accepts console_view.",
+      "range": {
+        "startLine": 186,
+        "startChar": 17,
+        "endLine": 186,
+        "endChar": 35
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b051797_397ed71c",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1159c434_e60966ec",
       "range": {
         "startLine": 186,
         "startChar": 17,
@@ -407,6 +629,30 @@
       "side": 1,
       "message": "`luci.angle.ci` is legacy way to define it. Behind the scenes it was already angle\u0027s project `ci` bucket.",
       "parentUuid": "71667702_7598a9aa",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 14
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da46abcf_b9734c43",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7d6a17df_353d4aed",
       "range": {
         "startLine": 193,
         "startChar": 12,
@@ -466,6 +712,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "062bedea_ab691aff",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Done - Andrii is that the only change I need to make to get the right ACLs? This was one part I wasn\u0027t sure about as well.",
+      "parentUuid": "b351633d_a72ebac4",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 9
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8b84a435_7f8d1ea7",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -513,6 +783,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c962bd8f_0ec5a967",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "b870d957_c41ca42e",
+      "range": {
+        "startLine": 206,
+        "startChar": 12,
+        "endLine": 206,
+        "endChar": 15
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "d75442cf_d2c84f03",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -547,6 +841,30 @@
       "writtenOn": "2021-02-08T23:29:02Z",
       "side": 1,
       "message": "\"angle-cq\" is redundant. I recommend \"main\" or \"master\" s.t. iff you add different config for other refs, you\u0027d be able to distinguish them in monitoring/BQ data.",
+      "range": {
+        "startLine": 285,
+        "startChar": 12,
+        "endLine": 285,
+        "endChar": 20
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fd8c009_e2c4aff4",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T16:24:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2149dc80_a577bbc4",
       "range": {
         "startLine": 285,
         "startChar": 12,
