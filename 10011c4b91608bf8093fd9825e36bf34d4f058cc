@@ -37,6 +37,69 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5904dd66_69f194bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "Andrii, I\u0027m not sure about some points, maybe you can clarify?",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e013e210_9d8977ff",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "Should we be following this convention?\nI don\u0027t expect to have different OSes on different builders in the future.\nProbably something like this is good enough:\n    LINUX \u003d os_enum(\"Linux\", os_category.LINUX, \"linux\"),\n\nActually, you could probably just use \"Linux\", \"Mac\" and \"Windows\" everywhere and ditch the whole \"os\" struct.",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 42
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d9084de_473f9bc1",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "I don\u0027t think this is needed.\nUsing this would mean running the build on an Android device, I think.\n\nOther mentions of ANDROID are probably not needed as well.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 65
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "64c04bc6_78f8146b",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -53,6 +116,46 @@
         "startChar": 0,
         "endLine": 70,
         "endChar": 51
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bdcbfdb_5ec6a27d",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "We used to have\n        properties_j: \"$depot_tools/bot_update:{\\\"apply_patch_on_gclient\\\":true}\"\nin try bucket.\nThe only mention I\u0027ve found is https://source.chromium.org/chromium/chromium/src/+/master:third_party/depot_tools/recipes/recipe_modules/bot_update/__init__.py;l\u003d35\nso perhaps it doesn\u0027t do anything these days?",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57727e18_acda9b49",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "It wasn\u0027t immediately clear to me what \"mirrored\" meant.\nI was expecting something like \"standalone\".\nOnly later I realized this adds both a ci and a try builder.\nI\u0027d name this angle_standalone_builder and add a comment on top that it adds a ci and a try builder.",
+      "range": {
+        "startLine": 104,
+        "startChar": 10,
+        "endLine": 104,
+        "endChar": 18
       },
       "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -77,6 +180,93 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f0a7e17e_29d9e579",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "1ec122e0_d77ef8d8",
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc316599_c4ba4596",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "I don\u0027t see Chromium ever specifying this.\nPerhaps there is some default?\nDo we need to update it sometimes?\nChromium specifies xcode_build_version 12a7209, so perhaps 11b52 is outdated?",
+      "range": {
+        "startLine": 128,
+        "startChar": 28,
+        "endLine": 128,
+        "endChar": 33
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00e96c63_c1843563",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "We didn\u0027t have this prefix before and I don\u0027t see Chromium bots having it either.\nNo \"try/\" prefix either.\n\nOtherwise, I think you\u0027ll need to change in verifiers below:\n                builder \u003d \"angle:try/\" + name,\nto\n                builder \u003d \"angle:try/try/\" + name,",
+      "range": {
+        "startLine": 141,
+        "startChar": 15,
+        "endLine": 141,
+        "endChar": 23
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c30ec6c_360ab2dd",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "\"ANGLE try builders\" console is gone from luci-milo.cfg.\nWill https://ci.chromium.org/p/angle/g/try/builders be gone when this lands?",
+      "range": {
+        "startLine": 176,
+        "startChar": 0,
+        "endLine": 180,
+        "endChar": 9
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1159c434_e60966ec",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4
@@ -93,6 +283,75 @@
         "startChar": 17,
         "endLine": 186,
         "endChar": 35
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71667702_7598a9aa",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "This used to be luci.angle.ci, I wonder if buildbucket will not confuse this with Chromium\u0027s CI bucket now.\nArhg, but in luci-milo.cfg, it names the builder like \"buildbucket/luci.angle.ci/ci/linux-clang-dbg\"!\nHow does it know?",
+      "range": {
+        "startLine": 193,
+        "startChar": 12,
+        "endLine": 193,
+        "endChar": 14
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c919fc8_82901aca",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "I don\u0027t see this in the generated file.\nWe used to have:\nacl_sets {\n  name: \"ci\"\n  acls {\n    role: READER\n    group: \"all\"\n  }\n  acls {\n    role: SCHEDULER\n    identity: \"luci-scheduler@appspot.gserviceaccount.com\"\n  }\n  acls {\n    role: SCHEDULER\n    identity: \"angle-ci-builder@chops-service-accounts.iam.gserviceaccount.com\"\n  }\n}\n\nNow we have:\nbuckets {\n  name: \"ci\"\n  acls {\n    group: \"all\"\n  }",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 9
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b84a435_7f8d1ea7",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-09T00:05:55Z",
+      "side": 1,
+      "message": "Used to be luci.angle.try\nI actually don\u0027t understand how \"angle/try/linux-clang-dbg\" works in commit-queue.cfg at the moment.\n\"angle\" is project, \"linux-clang-dbg\" is the builder, but what is \"try\"?\nNow it only appears in\nacl_sets {\n  name: \"try\"",
+      "range": {
+        "startLine": 206,
+        "startChar": 12,
+        "endLine": 206,
+        "endChar": 15
       },
       "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
