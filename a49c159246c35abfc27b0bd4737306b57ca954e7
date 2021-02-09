@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f34218ac_8f30e1ce",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3170,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-09T14:40:51Z",
+      "side": 1,
+      "message": "What\u0027s this?\n\nDoes this intend to say something like this?\n\n        // ... so\n        // minFilter needs to be equal to chromaFilter.\n        // HardwareBufferImageSiblingVkAndroid() forces chromeFilter to VK_FILTER_NEAREST,\n        // so force VK_FILTER_NEAREST here too for min and mag filter.",
+      "range": {
+        "startLine": 3170,
+        "startChar": 22,
+        "endLine": 3170,
+        "endChar": 38
+      },
+      "revId": "a49c159246c35abfc27b0bd4737306b57ca954e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
