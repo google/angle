@@ -68,6 +68,24 @@
       "parentUuid": "f4527e86_84bf12a2",
       "revId": "7595416d6190f65fc31047e8769457191c02fefa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "509d9ce6_566e6175",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-09T14:56:24Z",
+      "side": 1,
+      "message": "This needs to be passed all the way down to flushCommandsAndEndRenderPass, which is called from many places. If we end up keeping this, I think it ends up being cleaner if it remains as-is.",
+      "parentUuid": "e02b6429_505ab576",
+      "revId": "7595416d6190f65fc31047e8769457191c02fefa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
