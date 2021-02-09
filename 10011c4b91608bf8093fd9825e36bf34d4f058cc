@@ -808,6 +808,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5680e2b2_c388f697",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 4
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T21:52:08Z",
+      "side": 1,
+      "message": "well, looks OK, but I am not able to grasp entire ACL set by reading ~200 LOC of starlark and even more .cfg files.\nI\u0027d say look at diffs with existing configs -- there shouldn\u0027t be any changes there.",
+      "parentUuid": "062bedea_ab691aff",
+      "range": {
+        "startLine": 194,
+        "startChar": 4,
+        "endLine": 194,
+        "endChar": 9
+      },
+      "revId": "10011c4b91608bf8093fd9825e36bf34d4f058cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8b84a435_7f8d1ea7",
         "filename": "infra/config/global/main.star",
         "patchSetId": 4

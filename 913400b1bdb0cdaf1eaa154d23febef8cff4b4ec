@@ -20,6 +20,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "daf80131_694abc0e",
+        "filename": "infra/config/global/main.star",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-02-09T21:52:08Z",
+      "side": 1,
+      "message": "also add \n\nhttps://chromium.googlesource.com/infra/luci/luci-go/+/refs/heads/master/lucicfg/doc/README.md#luci.logdog\n\ndon\u0027t you have your own bucket?",
+      "revId": "913400b1bdb0cdaf1eaa154d23febef8cff4b4ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "718f6b22_519732c9",
         "filename": "infra/config/global/main.star",
         "patchSetId": 5
