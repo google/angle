@@ -41,10 +41,14 @@ qapitrace mytrace
 ## Enabling Debug Markers
 
 ANGLE can emit debug-utils markers for every GLES API command that are visible to both Android
-GPU Inspector (AGI) and RenderDoc.  This support is compiled for debug builds or when the
-following GN arg is set:
+GPU Inspector (AGI) and RenderDoc.  This support is compiled when the following GN args are set:
 ```
 angle_enable_trace = true
+angle_enable_annotator_run_time_checks = true
+```
+In addition, if the following GN arg is set, the API calls will output to Android's logcat:
+```
+angle_enable_trace_android_logcat = true
 ```
 Once compiled, the markers need to be turned on.
 
