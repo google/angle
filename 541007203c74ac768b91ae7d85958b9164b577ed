@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc9e2380_595307e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-09T18:54:05Z",
+      "side": 1,
+      "message": "I think this follows the pattern that\u0027s been used before.  AGI appears to have locked in to \"org.chromium.angle\", and so this CL adds the new package name with the old.  Once AGI transitions to using it, we can split this so that the nightly Pantheon build just builds \"org.chromium.angle.agi\".  Sound good?",
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
