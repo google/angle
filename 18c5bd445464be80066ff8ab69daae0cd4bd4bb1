@@ -16,6 +16,24 @@
       "message": "Would this change allow you to do something better?\n\n    https://chromium-review.googlesource.com/c/angle/angle/+/2678863 make",
       "revId": "18c5bd445464be80066ff8ab69daae0cd4bd4bb1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce564c88_1cc370fa",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4212,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-09T18:34:19Z",
+      "side": 1,
+      "message": "That CL may make help with the TODO, but we still need to clear the pointer to fix the use-after-free error that createPipelineLayout() is leading to by calling ShaderProgramHelper::release().",
+      "parentUuid": "5ea145c9_5448c13d",
+      "revId": "18c5bd445464be80066ff8ab69daae0cd4bd4bb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
