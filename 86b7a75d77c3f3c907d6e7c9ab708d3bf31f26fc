@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce096628_592ccbdb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-09T14:53:22Z",
+      "side": 1,
+      "message": "Do you think there\u0027s a way to design the dirty bit to subsume this as well?",
+      "range": {
+        "startLine": 816,
+        "startChar": 0,
+        "endLine": 825,
+        "endChar": 5
+      },
+      "revId": "86b7a75d77c3f3c907d6e7c9ab708d3bf31f26fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
