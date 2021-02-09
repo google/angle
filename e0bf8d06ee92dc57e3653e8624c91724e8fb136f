@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "97ee7ddd_6d1a18ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-09T00:21:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7a9d843_3bdc9df4",
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "eed99fea_52458851",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 8
@@ -52,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec282ae5_aaf85161",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1227,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-09T00:21:42Z",
+      "side": 1,
+      "message": "Good catch.",
+      "parentUuid": "21fd68ae_0f583b42",
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd1859dd_b2e4332e",
@@ -65,6 +101,24 @@
       "writtenOn": "2021-02-06T11:29:16Z",
       "side": 1,
       "message": "This is called on every program change, which is generally done on every draw call.\n\nIf we only need to do this for immutable samplers, please make sure they are only set from the call inside `if (haveImmutableSampler)`.\n\nThat said, why do we even have to redo the uniforms with immutable samplers?",
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7f6cb7f_5e0fd212",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3470,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-09T00:21:42Z",
+      "side": 1,
+      "message": "I\u0027ve moved this dirty bit into the \u0027haveImmutableSampler\u0027 block in ContextVk::updateActiveTextures().\n\nAs for why this is necessary, I\u0027ve updated the CL description that describes why we need to mark the uniforms dirty.\n\nHowever, since there\u0027s already a call to updateUniforms() in ContextVk::setupDraw(), an alternative to this approach would to just setAllDefaultUniformsDirty() directly in the \u0027if (haveImmutableSampler)\u0027 block:\n\n    if (haveImmutableSampler)\n    {\n        // TODO(http://anglebug.com/5033): This will recreate the descriptor pools each time, which\n        // will likely affect performance negatively.\n        ANGLE_TRY(mExecutable-\u003ecreatePipelineLayout(context, \u0026mActiveTextures));\n        invalidateCurrentGraphicsPipeline();\n\n        // createPipelineLayout() resets the descriptor sets, so we need to mark the default\n        // uniforms dirty to get the descriptor sets re-allocated and bound.\n        if (executable-\u003ehasDefaultUniforms())\n        {\n            if (mProgram)\n            {\n                mProgram-\u003esetAllDefaultUniformsDirty();\n            }\n            else if (mProgramPipeline)\n            {\n                mProgramPipeline-\u003esetAllDefaultUniformsDirty(getState());\n            }\n        }\n\n        // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),\n        // and handleDirtyGraphicsPipeline().\n        mCurrentGraphicsPipeline \u003d nullptr;\n    }\n\nThat\u0027s certainly simpler, and means we only call updateUniforms() once in setupDraw(), but didn\u0027t feel quite as idiomatic for ANGLE which is why I went with the dirty bit.   Let me know which you guys like better.",
+      "parentUuid": "bd1859dd_b2e4332e",
       "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -92,6 +146,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "beca16b6_1998c799",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3167,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-09T00:21:42Z",
+      "side": 1,
+      "message": "It\u0027s copied from the VVL output verbatim, but I assume it\u0027s an sType value.",
+      "parentUuid": "fbf1d202_36269fe1",
+      "range": {
+        "startLine": 3167,
+        "startChar": 55,
+        "endLine": 3167,
+        "endChar": 65
+      },
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eef12955_82deaead",
@@ -105,6 +183,30 @@
       "writtenOn": "2021-02-06T11:29:16Z",
       "side": 1,
       "message": "super nit: missing a punctuation or a preposition? The sentence was hard to follow at first.",
+      "range": {
+        "startLine": 3168,
+        "startChar": 71,
+        "endLine": 3169,
+        "endChar": 55
+      },
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "467d3caf_0195a4db",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3169,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-09T00:21:42Z",
+      "side": 1,
+      "message": "Yeah, this is missing a period.\nThe first block is a copy/paste of the VVL error output, followed by why VK_FILTER_NEAREST is being forced here.   I agree it\u0027s difficult to follow, so I reworded things a bit in the split off CL:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2683038",
+      "parentUuid": "eef12955_82deaead",
       "range": {
         "startLine": 3168,
         "startChar": 71,
