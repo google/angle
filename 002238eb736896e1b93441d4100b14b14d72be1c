@@ -33,6 +33,24 @@
       "message": "jamie, bots are having a lot of trouble. is it a known issue?",
       "revId": "002238eb736896e1b93441d4100b14b14d72be1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eae94ba0_849a21ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-09T22:28:58Z",
+      "side": 1,
+      "message": "Yes, we ran out of capacity on Pixel 2s, Yuly disabled the 32-bit tests here:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2686116\n\nThere was also a major break with the Windows tests, Yuly is fixing that here:\n\nhttps://chromium-review.googlesource.com/c/chromium/src/+/2685501",
+      "parentUuid": "0fbd2bab_6063b7d9",
+      "revId": "002238eb736896e1b93441d4100b14b14d72be1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
