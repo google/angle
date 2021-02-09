@@ -1802,10 +1802,10 @@ TEST_P(SimpleStateChangeTest, DrawElementsThenDrawElementsNewIndices)
 
     // We expect to draw the triangle with the last three points on the bottom right, and
     // rebind the same element buffer and draw with the same indices.
-    auto vertices = std::vector<Vector3>{
+    std::vector<Vector3> vertices = {
         {-1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}, {1.0f, -1.0f, 0.0f}, {-1.0f, -1.0f, 0.0f}};
 
-    auto indices8 = std::vector<GLubyte>{0, 1, 2, 2, 3, 0};
+    std::vector<GLubyte> indices8 = {0, 1, 2, 2, 3, 0};
 
     GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
     ASSERT_NE(-1, positionLocation);
@@ -1831,7 +1831,77 @@ TEST_P(SimpleStateChangeTest, DrawElementsThenDrawElementsNewIndices)
 
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, (void *)(0 * sizeof(GLubyte)));
 
-    auto newIndices8 = std::vector<GLubyte>{2, 3, 0};
+    std::vector<GLubyte> newIndices8 = {2, 3, 0};
+
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, newIndices8.size() * sizeof(GLubyte),
+                    &newIndices8[0]);
+
+    glUniform4f(colorUniformLocation, 0.0f, 0.0f, 1.0f, 1.0f);
+
+    // Draw the triangle again with the same offset.
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, (void *)(0 * sizeof(GLubyte)));
+
+    glDisableVertexAttribArray(positionLocation);
+
+    ASSERT_GL_NO_ERROR();
+
+    int quarterWidth  = getWindowWidth() / 4;
+    int quarterHeight = getWindowHeight() / 4;
+
+    // Validate the triangle is drawn on the bottom left.
+    EXPECT_PIXEL_COLOR_EQ(quarterWidth * 2, quarterHeight, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(quarterWidth, quarterHeight * 2, GLColor::blue);
+
+    // Validate the triangle is NOT on the top right part.
+    EXPECT_PIXEL_COLOR_EQ(quarterWidth * 2, quarterHeight * 3, GLColor::white);
+}
+
+// Draw a triangle with drawElements then change the indices and draw again.  Similar to
+// DrawElementsThenDrawElementsNewIndices, but changes the whole index buffer (not just half).  This
+// triggers a different path in the Vulkan backend based on the fact that the majority of the buffer
+// is being updated.
+TEST_P(SimpleStateChangeTest, DrawElementsThenDrawElementsWholeNewIndices)
+{
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+
+    glUseProgram(program);
+
+    // Background Red color
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // We expect to draw the triangle with the last three points on the bottom right, and
+    // rebind the same element buffer and draw with the same indices.
+    std::vector<Vector3> vertices = {
+        {-1.0f, 1.0f, 0.0f}, {1.0f, 1.0f, 0.0f}, {1.0f, -1.0f, 0.0f}, {-1.0f, -1.0f, 0.0f}};
+
+    std::vector<GLubyte> indices8 = {0, 1, 2, 2, 3, 0};
+
+    GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+    ASSERT_NE(-1, positionLocation);
+
+    GLint colorUniformLocation =
+        glGetUniformLocation(program, angle::essl1_shaders::ColorUniform());
+    ASSERT_NE(colorUniformLocation, -1);
+
+    glUniform4f(colorUniformLocation, 1.0f, 1.0f, 1.0f, 1.0f);
+
+    GLBuffer indexBuffer8;
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBuffer8);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices8.size() * sizeof(GLubyte), &indices8[0],
+                 GL_DYNAMIC_DRAW);
+
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(),
+                 GL_STATIC_DRAW);
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEnableVertexAttribArray(positionLocation);
+
+    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_BYTE, (void *)(0 * sizeof(GLubyte)));
+
+    std::vector<GLubyte> newIndices8 = {2, 3, 0, 0, 0, 0};
 
     glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, newIndices8.size() * sizeof(GLubyte),
                     &newIndices8[0]);
