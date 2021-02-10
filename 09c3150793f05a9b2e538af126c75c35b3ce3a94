@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65e3c5d2_9932145e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-10T23:06:11Z",
+      "side": 1,
+      "message": "Hi Shabi, I took a pass at creating getRotatedExtents()-type methods.  I also added a large comment to try to explain pre-rotation better.\n\nI want you to take a look at the current state before I do more.  Not all of the methods end up being used, and I\u0027m not convinced it\u0027s wise to save rotated extents in ImageHelper (since mostly, the non-rotated extents are used).",
+      "revId": "09c3150793f05a9b2e538af126c75c35b3ce3a94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
