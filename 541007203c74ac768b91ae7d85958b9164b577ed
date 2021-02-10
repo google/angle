@@ -16,6 +16,46 @@
       "message": "I think this follows the pattern that\u0027s been used before.  AGI appears to have locked in to \"org.chromium.angle\", and so this CL adds the new package name with the old.  Once AGI transitions to using it, we can split this so that the nightly Pantheon build just builds \"org.chromium.angle.agi\".  Sound good?",
       "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c86da17_8eb976b9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-10T00:31:22Z",
+      "side": 1,
+      "message": "General approach LGTM.  Can you try one optimization?",
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "759691f0_1e1bb016",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-10T00:31:22Z",
+      "side": 1,
+      "message": "This can be moved out to avoid code duplication. Try moving the if check out to group(\"angle_apks\") and set it there, then read it in the template with:\n  forward_variables_from(invoker, \"*\")\n  version_code \u003d invoker.version_code",
+      "range": {
+        "startLine": 1254,
+        "startChar": 0,
+        "endLine": 1259,
+        "endChar": 5
+      },
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
