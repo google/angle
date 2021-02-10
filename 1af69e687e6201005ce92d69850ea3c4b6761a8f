@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b1be809_45fab81e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3370,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T15:06:01Z",
+      "side": 1,
+      "message": "this should be just if compressed \u0026\u0026 !fillsEntireMip, right? I don\u0027t follow why you added the \u003e checks.",
+      "range": {
+        "startLine": 3366,
+        "startChar": 4,
+        "endLine": 3370,
+        "endChar": 82
+      },
+      "revId": "1af69e687e6201005ce92d69850ea3c4b6761a8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
