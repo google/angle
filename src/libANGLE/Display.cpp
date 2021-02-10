@@ -1237,6 +1237,13 @@ Error Display::createContext(const Config *configuration,
     gl::Context *context = new gl::Context(this, configuration, shareContext, shareTextures,
                                            shareSemaphores, cachePointer, clientType, attribs,
                                            mDisplayExtensions, GetClientExtensions());
+    Error error          = context->initialize();
+    if (error.isError())
+    {
+        delete context;
+        return error;
+    }
+
     if (shareContext != nullptr)
     {
         shareContext->setShared();

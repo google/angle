@@ -377,7 +377,14 @@ Context::Context(egl::Display *display,
     ASSERT(mDisplay);
 }
 
-void Context::initialize()
+egl::Error Context::initialize()
+{
+    if (!mImplementation)
+        return egl::Error(EGL_NOT_INITIALIZED, "native context creation failed");
+    return egl::NoError();
+}
+
+void Context::initializeDefaultResources()
 {
     mImplementation->setMemoryProgramCache(mMemoryProgramCache);
 
@@ -691,7 +698,7 @@ egl::Error Context::makeCurrent(egl::Display *display,
     {
         ASSERT(!mIsCurrent);
 
-        initialize();
+        initializeDefaultResources();
         initRendererString();
         initVersionStrings();
         initExtensionStrings();
