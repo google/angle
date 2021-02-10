@@ -16,6 +16,75 @@
       "message": "LGTM",
       "revId": "09245da53e38513cf9a78362685dff1f6c341367",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "415e4cdf_fbe3b15f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T19:59:04Z",
+      "side": 1,
+      "message": "nit: suggest making it static too",
+      "range": {
+        "startLine": 3460,
+        "startChar": 8,
+        "endLine": 3460,
+        "endChar": 18
+      },
+      "revId": "09245da53e38513cf9a78362685dff1f6c341367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddfe8e82_8eaf3b08",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T19:59:04Z",
+      "side": 1,
+      "message": "nit: suggest we make this a constexpr static, could be more optimal",
+      "range": {
+        "startLine": 307,
+        "startChar": 30,
+        "endLine": 307,
+        "endChar": 89
+      },
+      "revId": "09245da53e38513cf9a78362685dff1f6c341367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2c35290_c9fe2b21",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 762,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T19:59:04Z",
+      "side": 1,
+      "message": "nit: same",
+      "range": {
+        "startLine": 762,
+        "startChar": 29,
+        "endLine": 762,
+        "endChar": 38
+      },
+      "revId": "09245da53e38513cf9a78362685dff1f6c341367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
