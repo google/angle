@@ -16,6 +16,24 @@
       "message": "Can we add a regression test for this use case? Once we have that in place I\u0027m not worried about regressing it accidentally if we micro-optimize this.",
       "revId": "e07208831c2cf5e1d0acffcfaa2ca64c6fdefd16",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5328d36b_574ccf2a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T16:10:35Z",
+      "side": 1,
+      "message": "In the general case, all of the testing already exists.\n\nFor the immutable sampler case, the regression test is being tracked with b/160709550.   I\u0027ll start reading up on how to do that, though I\u0027m not sure when that\u0027ll be ready.",
+      "parentUuid": "7b85c744_423195b5",
+      "revId": "e07208831c2cf5e1d0acffcfaa2ca64c6fdefd16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
