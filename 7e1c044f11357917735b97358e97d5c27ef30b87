@@ -16,6 +16,75 @@
       "message": "PTAL",
       "revId": "7e1c044f11357917735b97358e97d5c27ef30b87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30bdf40e_835b7c38",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 835,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T14:58:49Z",
+      "side": 1,
+      "message": "Can be a follow up, but let\u0027s try making this part of handleDirtyRenderPass. I traced this a bit and didn\u0027t see it set dirty bits. We can even get rid of mRenderPassCommandBuffer if that speeds things up.",
+      "range": {
+        "startLine": 830,
+        "startChar": 0,
+        "endLine": 835,
+        "endChar": 5
+      },
+      "revId": "7e1c044f11357917735b97358e97d5c27ef30b87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40aa77c8_2614b21b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 557,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T14:58:49Z",
+      "side": 1,
+      "message": "nit: to make this clear it is a dirty bit handler, can you move it into the private section and call it handleDirty(Graphics)RenderPass",
+      "range": {
+        "startLine": 557,
+        "startChar": 18,
+        "endLine": 557,
+        "endChar": 33
+      },
+      "revId": "7e1c044f11357917735b97358e97d5c27ef30b87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "423dd24c_3b3b5757",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T14:58:49Z",
+      "side": 1,
+      "message": "could you instead return an indicator that the RP changed via an output variable so we don\u0027t have the make the DirtyBits and Iterator public? seems like it shouldn\u0027t be too much of an overhead.",
+      "range": {
+        "startLine": 140,
+        "startChar": 18,
+        "endLine": 140,
+        "endChar": 36
+      },
+      "revId": "7e1c044f11357917735b97358e97d5c27ef30b87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
