@@ -13,7 +13,7 @@
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Context.inl.h"
-#include "libANGLE/FrameCapture.h"
+#include "libANGLE/capture/FrameCapture.h"
 
 using namespace gl;
 

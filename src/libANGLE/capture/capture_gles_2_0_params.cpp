@@ -6,7 +6,7 @@
 // capture_gles2_params.cpp:
 //   Pointer parameter capture functions for the OpenGL ES 2.0 entry points.
 
-#include "libANGLE/capture_gles_2_0_autogen.h"
+#include "libANGLE/capture/capture_gles_2_0_autogen.h"
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Shader.h"

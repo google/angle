@@ -12,7 +12,7 @@
 #define LIBANGLE_CAPTURE_GLES_3_1_AUTOGEN_H_
 
 #include "common/PackedEnums.h"
-#include "libANGLE/FrameCapture.h"
+#include "libANGLE/capture/FrameCapture.h"
 
 namespace gl
 {

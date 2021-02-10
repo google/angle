@@ -8,9 +8,9 @@
 // frame_capture_utils_autogen.cpp:
 //   ANGLE Frame capture types and helper functions.
 
-#include "libANGLE/frame_capture_utils_autogen.h"
+#include "libANGLE/capture/frame_capture_utils_autogen.h"
 
-#include "libANGLE/FrameCapture.h"
+#include "libANGLE/capture/FrameCapture.h"
 
 namespace angle
 {

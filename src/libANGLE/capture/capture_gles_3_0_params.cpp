@@ -6,8 +6,8 @@
 // capture_gles3_params.cpp:
 //   Pointer parameter capture functions for the OpenGL ES 3.0 entry points.
 
-#include "libANGLE/capture_gles_2_0_autogen.h"
-#include "libANGLE/capture_gles_3_0_autogen.h"
+#include "libANGLE/capture/capture_gles_2_0_autogen.h"
+#include "libANGLE/capture/capture_gles_3_0_autogen.h"
 
 using namespace angle;
 

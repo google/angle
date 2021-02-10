@@ -6,7 +6,7 @@
 // capture_gles32_params.cpp:
 //   Pointer parameter capture functions for the OpenGL ES 3.2 entry points.
 
-#include "libANGLE/capture_gles_3_2_autogen.h"
+#include "libANGLE/capture/capture_gles_3_2_autogen.h"
 
 using namespace angle;
 

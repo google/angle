@@ -12,7 +12,7 @@
 #include <ostream>
 #include <string>
 
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/capture/gl_enum_utils_autogen.h"
 
 namespace gl
 {

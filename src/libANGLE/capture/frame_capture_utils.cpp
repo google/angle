@@ -7,7 +7,7 @@
 //   ANGLE frame capture util implementation.
 //
 
-#include "libANGLE/frame_capture_utils.h"
+#include "libANGLE/capture/frame_capture_utils.h"
 
 #include <vector>
 

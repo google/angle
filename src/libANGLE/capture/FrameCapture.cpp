@@ -7,7 +7,7 @@
 //   ANGLE Frame capture implementation.
 //
 
-#include "libANGLE/FrameCapture.h"
+#include "libANGLE/capture/FrameCapture.h"
 
 #include <cerrno>
 #include <cstring>
@@ -30,11 +30,11 @@
 #include "libANGLE/Shader.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/VertexArray.h"
-#include "libANGLE/capture_gles_2_0_autogen.h"
-#include "libANGLE/capture_gles_3_0_autogen.h"
-#include "libANGLE/capture_gles_3_1_autogen.h"
-#include "libANGLE/frame_capture_utils.h"
-#include "libANGLE/gl_enum_utils.h"
+#include "libANGLE/capture/capture_gles_2_0_autogen.h"
+#include "libANGLE/capture/capture_gles_3_0_autogen.h"
+#include "libANGLE/capture/capture_gles_3_1_autogen.h"
+#include "libANGLE/capture/frame_capture_utils.h"
+#include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
 

@@ -6,7 +6,7 @@
 // gl_enum_utils.cpp:
 //   Utility functions for converting GLenums to string.
 
-#include "libANGLE/gl_enum_utils.h"
+#include "libANGLE/capture/gl_enum_utils.h"
 
 #include "common/bitset_utils.h"
 

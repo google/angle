@@ -13,8 +13,8 @@
 #include "common/PackedEnums.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/angletypes.h"
+#include "libANGLE/capture/frame_capture_utils_autogen.h"
 #include "libANGLE/entry_points_utils.h"
-#include "libANGLE/frame_capture_utils_autogen.h"
 
 namespace gl
 {

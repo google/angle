@@ -807,7 +807,7 @@ config("angle_frame_capture_enabled") {
 angle_source_set("libANGLE") {
   public_deps = [ ":libANGLE_base" ]
   public_configs = [ ":angle_frame_capture_disabled" ]
-  sources = [ "src/libANGLE/FrameCapture_mock.cpp" ]
+  sources = [ "src/libANGLE/capture/FrameCapture_mock.cpp" ]
 
   # gl_enum_utils defaults included in with_capture build
   deps = []
@@ -819,8 +819,8 @@ angle_source_set("libANGLE") {
 angle_source_set("angle_gl_enum_utils") {
   public_deps = [ ":libANGLE_base" ]
   sources = [
-    "src/libANGLE/gl_enum_utils.cpp",
-    "src/libANGLE/gl_enum_utils_autogen.cpp",
+    "src/libANGLE/capture/gl_enum_utils.cpp",
+    "src/libANGLE/capture/gl_enum_utils_autogen.cpp",
   ]
 }
 

@@ -48,9 +48,9 @@ template_gl_enums_source = """// GENERATED FILE - DO NOT EDIT.
 // gl_enum_utils_autogen.cpp:
 //   mapping of GLenum value to string.
 
-#include "libANGLE/gl_enum_utils_autogen.h"
+#include "libANGLE/capture/gl_enum_utils_autogen.h"
 
-#include "libANGLE/gl_enum_utils.h"
+#include "libANGLE/capture/gl_enum_utils.h"
 
 namespace gl
 {{
@@ -221,7 +221,7 @@ if __name__ == '__main__':
         'registry_xml.py',
     ]
 
-    gl_enum_utils_autogen_base_path = '../src/libANGLE/gl_enum_utils_autogen'
+    gl_enum_utils_autogen_base_path = '../src/libANGLE/capture/gl_enum_utils_autogen'
     outputs = [
         gl_enum_utils_autogen_base_path + '.h',
         gl_enum_utils_autogen_base_path + '.cpp',

@@ -7,7 +7,7 @@
 //   ANGLE mock Frame capture implementation.
 //
 
-#include "libANGLE/FrameCapture.h"
+#include "libANGLE/capture/FrameCapture.h"
 
 #if ANGLE_CAPTURE_ENABLED
 #    error Frame capture must be disabled to include this file.
