@@ -51,6 +51,42 @@
       "parentUuid": "3a26401d_4d6e0264",
       "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd4e1609_2a47692a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T04:30:45Z",
+      "side": 1,
+      "message": "I tried giving this a shot with PS4, though even that\u0027s not quite right since it doesn\u0027t handle unsupported TextureTarget values.\n\nI\u0027m going to stick with this version since it\u0027s a lot simpler.",
+      "parentUuid": "b2c7aaec_8bd23ecc",
+      "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50146f2c_c26393b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T04:30:45Z",
+      "side": 1,
+      "message": "Done.\n\nI added Texture2DTestES3.CopyCompressedImageMipMaps which is able to repro the same error message that the app was seeing.\n\nNote that it needs to be skipped for the ES3_Vulkan_AllocateNonZeroMemory case, since ImageHelper::initializeNonZeroMemory() fails with small compressed textures (anglebug.com/5634).",
+      "parentUuid": "40c02cc7_f157207a",
+      "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
