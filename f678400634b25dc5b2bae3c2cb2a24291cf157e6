@@ -22,6 +22,30 @@
       },
       "revId": "f678400634b25dc5b2bae3c2cb2a24291cf157e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42d8071b_bd47f687",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T18:36:45Z",
+      "side": 0,
+      "message": "Not entirely. Vertex attribute changes affect the pipeline (I discovered in this change (or maybe the related xfb change)), and this was messing up some tests.",
+      "parentUuid": "fd2de66d_ac7976af",
+      "range": {
+        "startLine": 494,
+        "startChar": 44,
+        "endLine": 494,
+        "endChar": 74
+      },
+      "revId": "f678400634b25dc5b2bae3c2cb2a24291cf157e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

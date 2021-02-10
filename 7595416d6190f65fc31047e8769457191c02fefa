@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4f63777_bdff140e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T18:36:45Z",
+      "side": 1,
+      "message": "This is automatically ASSERTed in setLaterBit!",
+      "parentUuid": "1bd4a7a2_b1e54ca5",
+      "revId": "7595416d6190f65fc31047e8769457191c02fefa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4527e86_84bf12a2",
