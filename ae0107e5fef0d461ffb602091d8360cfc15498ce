@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdb3252a_44bc855c",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-10T16:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c951b0e9_29b9ae2b",
+      "range": {
+        "startLine": 1249,
+        "startChar": 13,
+        "endLine": 1249,
+        "endChar": 35
+      },
+      "revId": "ae0107e5fef0d461ffb602091d8360cfc15498ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6bb5dd3_9f6127c4",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-10T15:01:54Z",
       "side": 1,
       "message": "I\u0027d also call this angle.agi to be consistent",
+      "range": {
+        "startLine": 1250,
+        "startChar": 24,
+        "endLine": 1250,
+        "endChar": 32
+      },
+      "revId": "ae0107e5fef0d461ffb602091d8360cfc15498ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c6376bb_cb5a09bc",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 1250,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-10T16:03:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6bb5dd3_9f6127c4",
       "range": {
         "startLine": 1250,
         "startChar": 24,
