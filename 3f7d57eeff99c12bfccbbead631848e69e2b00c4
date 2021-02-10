@@ -51,6 +51,23 @@
       "parentUuid": "c94cc0e4_b2bad102",
       "revId": "3f7d57eeff99c12bfccbbead631848e69e2b00c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "343322e1_1e4e541b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-10T16:22:03Z",
+      "side": 1,
+      "message": "Preference for a resetStrings function instead of protected variables.",
+      "revId": "3f7d57eeff99c12bfccbbead631848e69e2b00c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
