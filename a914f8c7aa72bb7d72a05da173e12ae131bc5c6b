@@ -22,6 +22,30 @@
       },
       "revId": "a914f8c7aa72bb7d72a05da173e12ae131bc5c6b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bead858_880de840",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2246,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T00:20:05Z",
+      "side": 1,
+      "message": "tests that passed before (srgb decode related tests) seemes to fail and cause a cascading effect making other tests fail. Leaving code as-is for now, removed it in priori patch to get swiftshader testing underway but we can always do that as a follow up instead of holding back this extension",
+      "parentUuid": "0c7261e5_09a53fe8",
+      "range": {
+        "startLine": 2246,
+        "startChar": 91,
+        "endLine": 2246,
+        "endChar": 96
+      },
+      "revId": "a914f8c7aa72bb7d72a05da173e12ae131bc5c6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
