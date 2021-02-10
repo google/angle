@@ -22,6 +22,30 @@
       },
       "revId": "a49c159246c35abfc27b0bd4737306b57ca954e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "43d8f08b_d88bf9a3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3170,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T02:13:07Z",
+      "side": 1,
+      "message": "Ah, yup, need to take that part out.   Added magFilter too.",
+      "parentUuid": "f34218ac_8f30e1ce",
+      "range": {
+        "startLine": 3170,
+        "startChar": 22,
+        "endLine": 3170,
+        "endChar": 38
+      },
+      "revId": "a49c159246c35abfc27b0bd4737306b57ca954e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
