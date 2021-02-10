@@ -22,6 +22,30 @@
       },
       "revId": "1458d766d6a6cbef561ff9c0a0486304b25aaddf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c350f34_300ceea4",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-10T01:11:54Z",
+      "side": 1,
+      "message": "Thanks.  I was too quick and didn\u0027t read \"for debug builds or\"",
+      "parentUuid": "9e03733e_a40198f3",
+      "range": {
+        "startLine": 44,
+        "startChar": 36,
+        "endLine": 45,
+        "endChar": 25
+      },
+      "revId": "1458d766d6a6cbef561ff9c0a0486304b25aaddf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
