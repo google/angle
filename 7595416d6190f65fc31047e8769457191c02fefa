@@ -122,6 +122,24 @@
       "parentUuid": "182f8c3b_61ee537a",
       "revId": "7595416d6190f65fc31047e8769457191c02fefa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e6e5e9e_0246be63",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T03:37:56Z",
+      "side": 1,
+      "message": "Passing around turned out to be no big deal. I can ASSERT for now that flushAndEndRP is noop in startRP.",
+      "parentUuid": "7f1f2a51_412fe526",
+      "revId": "7595416d6190f65fc31047e8769457191c02fefa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
