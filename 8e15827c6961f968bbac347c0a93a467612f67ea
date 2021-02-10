@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43f5b405_f3900390",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T18:46:10Z",
+      "side": 1,
+      "message": "remind me again why this can\u0027t be called before the pipeline update? if we could call it before I think you could merge the two pipeline dbs.",
+      "range": {
+        "startLine": 1206,
+        "startChar": 25,
+        "endLine": 1206,
+        "endChar": 54
+      },
+      "revId": "8e15827c6961f968bbac347c0a93a467612f67ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbb60b33_652360ff",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 598,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T18:46:10Z",
+      "side": 1,
+      "message": "nit: I would call this PIPELINE_DESC or something so each has an explicit name, instead of \"pipeline\" and \"pipeline bind\"",
+      "range": {
+        "startLine": 598,
+        "startChar": 8,
+        "endLine": 598,
+        "endChar": 26
+      },
+      "revId": "8e15827c6961f968bbac347c0a93a467612f67ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "642c2f4f_9bab3a72",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 608,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T18:46:10Z",
+      "side": 1,
+      "message": "nit: try to make these nouns rather than verbs, so PIPELINE_BINDING, similar to UNIFORMS_BINDING",
+      "range": {
+        "startLine": 608,
+        "startChar": 8,
+        "endLine": 608,
+        "endChar": 31
+      },
+      "revId": "8e15827c6961f968bbac347c0a93a467612f67ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
