@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "979d3871_5d9a49e5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T01:59:40Z",
+      "side": 1,
+      "message": "I think this should be: org.chromium.agi.angle\n\nThe pattern I typically see is that the last part is what the product is (ANGLE), while everything before that are qualifiers (Chromium, AGI).   Otherwise, this looks more like an AGI APK built by ANGLE.",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 27
+      },
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "dc9e2380_595307e4",
@@ -31,6 +54,23 @@
       "writtenOn": "2021-02-10T00:31:22Z",
       "side": 1,
       "message": "General approach LGTM.  Can you try one optimization?",
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14b2f323_130071d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T01:59:40Z",
+      "side": 1,
+      "message": "CC\u0027ing Jamie since he\u0027s much more of a GN expert.",
       "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -72,6 +112,30 @@
       "side": 1,
       "message": "If I understand and did what you wanted, I\u0027m afraid it didn\u0027t work:\n\n```\n$ gn args out/AndroidRelease\nWaiting for editor on \"/home/ianelliott/chromium/src/out/AndroidRelease/args.gn\"...\nGenerating files...\nERROR at //third_party/angle/BUILD.gn:1234:26: Undefined identifier.\n  forward_variables_from(invoker, \"*\")\n                         ^------\nSee //gpu/BUILD.gn:221:5: which caused the file to be included.\n    \"//third_party/angle:translator\",\n    ^-------------------------------\n```",
       "parentUuid": "759691f0_1e1bb016",
+      "range": {
+        "startLine": 1254,
+        "startChar": 0,
+        "endLine": 1259,
+        "endChar": 5
+      },
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f93719eb_d5fead94",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T01:59:40Z",
+      "side": 1,
+      "message": "Can we go simpler:\n\n    if (build_with_chromium \u0026\u0026 !is_component_build \u0026\u0026 is_android \u0026\u0026\n        current_toolchain \u003d\u003d default_toolchain) {\n\n      apk_version_code \u003d \"0\"\n      if (angle_enable_commit_id) {\n        apk_version_code \u003d\n            exec_script(\"src/commit_id.py\", [ \"position\" ], \"trim string\")\n      }\n\n      # Package ANGLE libraries for normal use on Android\n      angle_apk(\"angle_chromium_apk\") {\n        package_name \u003d \"org.chromium.angle\"\n        apk_name \u003d \"AngleLibraries\"\n        version_name \u003d \"ANGLE Developer Build\"\n        version_code \u003d apk_version_code\n      }\n\n      # Package ANGLE libraries for AGI use on Android\n      angle_apk(\"agi_angle_chromium_apk\") {\n        package_name \u003d \"org.chromium.angle.agi\"\n        apk_name \u003d \"AgiAngleLibraries\"\n        version_name \u003d \"ANGLE AGI Build\"\n        version_code \u003d apk_version_code\n      }",
+      "parentUuid": "a60c3678_d3decc79",
       "range": {
         "startLine": 1254,
         "startChar": 0,
