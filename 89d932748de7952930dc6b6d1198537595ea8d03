@@ -50,6 +50,23 @@
       "message": "LGTM",
       "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1e73986_3ba92f9c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T20:01:18Z",
+      "side": 1,
+      "message": "Can you add a test that does this?\n\nfor (n \u003d 0 to 10)\n If age \u003d\u003d 0\n   draw color[n]\n   EXPECT_PIXEL_COLOR_EQ color[n]\n else\n   EXPECT_PIXEL_COLOR_EQ color[n - age] // beware of off by one bugs\n\nThat is the functional test for this change, to make sure the contents of the buffer have actually been preserved, and age doesn\u0027t have off-by-one bugs (assuming the test itself doesn\u0027t!)",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
