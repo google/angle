@@ -111,6 +111,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bbe583e6_ea2e8603",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1722,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T00:02:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "036397f6_634ded67",
+      "range": {
+        "startLine": 1722,
+        "startChar": 44,
+        "endLine": 1722,
+        "endChar": 74
+      },
+      "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3b3b28a0_c8e24e8a",
@@ -134,6 +158,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fda1b52_c4ef35b5",
+        "filename": "src/libANGLE/State.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 3293,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T00:02:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b3b28a0_c8e24e8a",
+      "range": {
+        "startLine": 3293,
+        "startChar": 41,
+        "endLine": 3293,
+        "endChar": 90
+      },
+      "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "20893c05_f18f93ea",
@@ -147,6 +195,24 @@
       "writtenOn": "2021-02-01T21:05:20Z",
       "side": 1,
       "message": "nit: can move to cpp. No reason this should be inline IMO.",
+      "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab676467_fe95578c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T00:02:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "20893c05_f18f93ea",
       "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
