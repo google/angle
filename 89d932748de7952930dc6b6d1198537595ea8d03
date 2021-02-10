@@ -16,6 +16,23 @@
       "message": "oops patch 6 over fixed and removed return line.\nPatch 7 looks good\nPTAL",
       "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a471de0e_6a6315af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-10T17:29:11Z",
+      "side": 1,
+      "message": "It seems ready to merge. Can we get a +2",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
