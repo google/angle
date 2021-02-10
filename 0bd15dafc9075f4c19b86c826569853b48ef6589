@@ -16,6 +16,24 @@
       "message": "These parameters are optional, and replay will certainly not use the results.",
       "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea482307_a593ec1b",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-10T04:13:23Z",
+      "side": 1,
+      "message": "A comment explaining why these can be ignored would be helpful, can be as simple as what you wrote here.\n\nCan you match the type in each?, i.e.:\n\nparamCapture-\u003evalue.GLsizeiPointerVal \u003d nullptr;",
+      "parentUuid": "1e3c9482_9df5bcf4",
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
