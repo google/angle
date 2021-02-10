@@ -353,6 +353,11 @@ const ShCompileOptions SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE = UINT64_C(1) <<
 // VK_EXT_transform_feedback extension.
 const ShCompileOptions SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE = UINT64_C(1) << 60;
 
+// This flag initializes fragment shader's output variables to zero at the beginning of the fragment
+// shader's main(). It is intended as a workaround for drivers which get context lost if
+// gl_FragColor is not written.
+const ShCompileOptions SH_INIT_FRAGMENT_OUTPUT_VARIABLES = UINT64_C(1) << 61;
+
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
 {

@@ -879,7 +879,12 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                 return false;
             }
         }
-        if ((compileOptions & SH_INIT_OUTPUT_VARIABLES) != 0 && mShaderType != GL_COMPUTE_SHADER)
+        bool needInitializeOutputVariables =
+            (compileOptions & SH_INIT_OUTPUT_VARIABLES) != 0 && mShaderType != GL_COMPUTE_SHADER;
+        needInitializeOutputVariables |=
+            (compileOptions & SH_INIT_FRAGMENT_OUTPUT_VARIABLES) != 0 &&
+            mShaderType == GL_FRAGMENT_SHADER;
+        if (needInitializeOutputVariables)
         {
             if (!initializeOutputVariables(root))
             {
@@ -1490,11 +1495,9 @@ bool TCompiler::wereVariablesCollected() const
 
 bool TCompiler::initializeGLPosition(TIntermBlock *root)
 {
-    InitVariableList list;
     sh::ShaderVariable var(GL_FLOAT_VEC4);
     var.name = "gl_Position";
-    list.push_back(var);
-    return InitializeVariables(this, root, list, &mSymbolTable, mShaderVersion, mExtensionBehavior,
+    return InitializeVariables(this, root, {var}, &mSymbolTable, mShaderVersion, mExtensionBehavior,
                                false, false);
 }
 
@@ -1517,6 +1520,7 @@ bool TCompiler::useAllMembersInUnusedStandardAndSharedBlocks(TIntermBlock *root)
 bool TCompiler::initializeOutputVariables(TIntermBlock *root)
 {
     InitVariableList list;
+    list.reserve(mOutputVaryings.size());
     if (mShaderType == GL_VERTEX_SHADER || mShaderType == GL_GEOMETRY_SHADER_EXT)
     {
         for (const sh::ShaderVariable &var : mOutputVaryings)

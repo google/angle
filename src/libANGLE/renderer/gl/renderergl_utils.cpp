@@ -37,17 +37,67 @@ using angle::CheckedNumeric;
 namespace rx
 {
 
+namespace
+{
+
+const char *GetString(const FunctionsGL *functions, GLenum name)
+{
+    return reinterpret_cast<const char *>(functions->getString(name));
+}
+
+bool IsMesa(const FunctionsGL *functions, std::array<int, 3> *version)
+{
+    ASSERT(version);
+
+    if (functions->standard != STANDARD_GL_DESKTOP)
+    {
+        return false;
+    }
+
+    std::string nativeVersionString(GetString(functions, GL_VERSION));
+    size_t pos = nativeVersionString.find("Mesa");
+    if (pos == std::string::npos)
+    {
+        return false;
+    }
+
+    int *data = version->data();
+    data[0] = data[1] = data[2] = 0;
+    std::sscanf(nativeVersionString.c_str() + pos, "Mesa %d.%d.%d", data, data + 1, data + 2);
+
+    return true;
+}
+
+bool IsAdreno42xOr3xx(const FunctionsGL *functions)
+{
+    const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
+
+    int adrenoNumber = 0;
+    if (std::sscanf(nativeGLRenderer, "Adreno (TM) %d", &adrenoNumber) < 1)
+    {
+        // retry for freedreno driver
+        if (std::sscanf(nativeGLRenderer, "FD%d", &adrenoNumber) < 1)
+        {
+            return false;
+        }
+    }
+    return adrenoNumber < 430;
+}
+
+}  // namespace
+
 SwapControlData::SwapControlData()
     : targetSwapInterval(0), maxSwapInterval(-1), currentSwapInterval(-1)
 {}
 
 VendorID GetVendorID(const FunctionsGL *functions)
 {
-    std::string nativeVendorString(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));
+    std::string nativeVendorString(GetString(functions, GL_VENDOR));
     // Concatenate GL_RENDERER to the string being checked because some vendors put their names in
     // GL_RENDERER
-    nativeVendorString +=
-        " " + std::string(reinterpret_cast<const char *>(functions->getString(GL_RENDERER)));
+    nativeVendorString += " ";
+    nativeVendorString += GetString(functions, GL_RENDERER);
+
     if (nativeVendorString.find("NVIDIA") != std::string::npos)
     {
         return VENDOR_ID_NVIDIA;
@@ -82,8 +132,7 @@ VendorID GetVendorID(const FunctionsGL *functions)
 
 uint32_t GetDeviceID(const FunctionsGL *functions)
 {
-    std::string nativeRendererString(
-        reinterpret_cast<const char *>(functions->getString(GL_RENDERER)));
+    std::string nativeRendererString(GetString(functions, GL_RENDERER));
     constexpr std::pair<const char *, uint32_t> kKnownDeviceIDs[] = {
         {"Adreno (TM) 418", ANDROID_DEVICE_ID_NEXUS5X},
         {"Adreno (TM) 530", ANDROID_DEVICE_ID_PIXEL1XL},
@@ -99,30 +148,6 @@ uint32_t GetDeviceID(const FunctionsGL *functions)
     }
 
     return 0;
-}
-
-bool IsMesa(const FunctionsGL *functions, std::array<int, 3> *version)
-{
-    ASSERT(version);
-
-    if (functions->standard != STANDARD_GL_DESKTOP)
-    {
-        return false;
-    }
-
-    std::string nativeVersionString(
-        reinterpret_cast<const char *>(functions->getString(GL_VERSION)));
-    size_t pos = nativeVersionString.find("Mesa");
-    if (pos == std::string::npos)
-    {
-        return false;
-    }
-
-    int *data = version->data();
-    data[0] = data[1] = data[2] = 0;
-    std::sscanf(nativeVersionString.c_str() + pos, "Mesa %d.%d.%d", data, data + 1, data + 2);
-
-    return true;
 }
 
 namespace nativegl_gl
@@ -1901,6 +1926,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     ANGLE_FEATURE_CONDITION(features, setZeroLevelBeforeGenerateMipmap, IsApple());
 
     ANGLE_FEATURE_CONDITION(features, promotePackedFormatsTo8BitPerChannel, IsApple() && hasAMD);
+
+    // crbug.com/1171371
+    // If output variable gl_FragColor is written by fragment shader, it may cause context lost with
+    // Adreno 42x and 3xx.
+    ANGLE_FEATURE_CONDITION(features, initFragmentOutputVariables,
+                            IsAdreno42xOr3xx(functions) || true);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
@@ -2349,18 +2380,17 @@ std::vector<ContextCreationTry> GenerateContextCreationToTry(EGLint requestedTyp
 
 std::string GetRendererString(const FunctionsGL *functions)
 {
-    return std::string(reinterpret_cast<const char *>(functions->getString(GL_RENDERER)));
+    return GetString(functions, GL_RENDERER);
 }
 
 std::string GetVendorString(const FunctionsGL *functions)
 {
-    return std::string(reinterpret_cast<const char *>(functions->getString(GL_VENDOR)));
+    return GetString(functions, GL_VENDOR);
 }
 
 std::string GetVersionString(const FunctionsGL *functions)
 {
-    std::string versionString =
-        std::string(reinterpret_cast<const char *>(functions->getString(GL_VERSION)));
+    std::string versionString = GetString(functions, GL_VERSION);
     if (versionString.find("OpenGL") == std::string::npos)
     {
         std::string prefix = "OpenGL ";
