@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f7e043e_a19c607b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1557,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T03:39:46Z",
+      "side": 0,
+      "message": "Duplicate code, sneaking in with this change",
+      "revId": "cf91effed7b8ffb68ca89d31345a4c9e5d821c3a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
