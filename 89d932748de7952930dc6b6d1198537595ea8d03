@@ -67,6 +67,63 @@
       "message": "Can you add a test that does this?\n\nfor (n \u003d 0 to 10)\n If age \u003d\u003d 0\n   draw color[n]\n   EXPECT_PIXEL_COLOR_EQ color[n]\n else\n   EXPECT_PIXEL_COLOR_EQ color[n - age] // beware of off by one bugs\n\nThat is the functional test for this change, to make sure the contents of the buffer have actually been preserved, and age doesn\u0027t have off-by-one bugs (assuming the test itself doesn\u0027t!)",
       "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de08cff4_930032bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T20:07:17Z",
+      "side": 1,
+      "message": "The spec says:\n\n\u003e If the EGL implementation decides to free un-used back-buffers\n\u003e when the system is under memory pressure or in response to\n\u003e power-management events then EGL will return an age of 0 when\n\u003e it allocates a new buffer at the start of a new frame.\n\nWhat guarantee do we have that the Vulkan swapchain doesn\u0027t similarly free back-buffers that are not being rendered to and aren\u0027t owned by the application?",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "257d0c4d_2c35a81b",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T20:07:17Z",
+      "side": 1,
+      "message": "Please move this (and currentImage.mFrameNumber \u003d mFrameCount) to swapImpl.",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5a8586a_5d7ce32e",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1909,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T20:07:17Z",
+      "side": 1,
+      "message": "Shouldn\u0027t need to cache this. The logic above (from WindowSurfaceVk::swap) can be moved here.",
+      "range": {
+        "startLine": 1909,
+        "startChar": 15,
+        "endLine": 1909,
+        "endChar": 25
+      },
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
