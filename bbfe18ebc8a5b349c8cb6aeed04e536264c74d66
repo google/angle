@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7c1837f_e52cd537",
+        "filename": "src/libANGLE/capture/gl_enum_utils_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T17:52:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc3e611e_50de023f",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 9,
+        "endChar": 39
+      },
+      "revId": "bbfe18ebc8a5b349c8cb6aeed04e536264c74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "55b05b38_9ca3a583",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-02-10T17:46:24Z",
       "side": 1,
       "message": "Does this need to go under capture?",
+      "range": {
+        "startLine": 18,
+        "startChar": 10,
+        "endLine": 18,
+        "endChar": 43
+      },
+      "revId": "bbfe18ebc8a5b349c8cb6aeed04e536264c74d66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e09cefa9_b90c9f83",
+        "filename": "src/tests/gl_tests/FormatPrintTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T17:52:19Z",
+      "side": 1,
+      "message": "Ack\n\nThey go under this folder because they are really only used for capture. They\u0027re used in the \"trace event\" macros. The trace event macros are really just a simpler implementation of our frame capture serialization to cpp files. So they\u0027re also essentially a capture tool. Also when these files change it\u0027s important we re-run the trace tests so it\u0027s helpful to have them in this directory for infra reasons.",
+      "parentUuid": "55b05b38_9ca3a583",
       "range": {
         "startLine": 18,
         "startChar": 10,
