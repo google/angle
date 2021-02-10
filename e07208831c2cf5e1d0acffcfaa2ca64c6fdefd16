@@ -34,6 +34,29 @@
       "parentUuid": "7b85c744_423195b5",
       "revId": "e07208831c2cf5e1d0acffcfaa2ca64c6fdefd16",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27b557f4_0975a2a3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 4252,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T16:31:58Z",
+      "side": 1,
+      "message": "sorry if this has already been covered in your convo with shabi - but why call ProgramVk::setAllDefaultUniformsDirty (etc) here instead of adding the new dirty bit?",
+      "range": {
+        "startLine": 4252,
+        "startChar": 8,
+        "endLine": 4252,
+        "endChar": 58
+      },
+      "revId": "e07208831c2cf5e1d0acffcfaa2ca64c6fdefd16",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
