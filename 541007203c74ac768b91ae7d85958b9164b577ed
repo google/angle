@@ -56,6 +56,30 @@
       },
       "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a60c3678_d3decc79",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-10T00:57:01Z",
+      "side": 1,
+      "message": "If I understand and did what you wanted, I\u0027m afraid it didn\u0027t work:\n\n```\n$ gn args out/AndroidRelease\nWaiting for editor on \"/home/ianelliott/chromium/src/out/AndroidRelease/args.gn\"...\nGenerating files...\nERROR at //third_party/angle/BUILD.gn:1234:26: Undefined identifier.\n  forward_variables_from(invoker, \"*\")\n                         ^------\nSee //gpu/BUILD.gn:221:5: which caused the file to be included.\n    \"//third_party/angle:translator\",\n    ^-------------------------------\n```",
+      "parentUuid": "759691f0_1e1bb016",
+      "range": {
+        "startLine": 1254,
+        "startChar": 0,
+        "endLine": 1259,
+        "endChar": 5
+      },
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
