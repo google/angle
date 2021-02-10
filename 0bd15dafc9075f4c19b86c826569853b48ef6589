@@ -34,6 +34,93 @@
       "parentUuid": "1e3c9482_9df5bcf4",
       "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5097277b_fa4cc852",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T15:16:08Z",
+      "side": 1,
+      "message": "Look at how CaptureShaderSource_length works. If we do the same here it\u0027ll be the most correct.",
+      "parentUuid": "ea482307_a593ec1b",
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a43b97c2_f177cf36",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T15:16:08Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 825,
+        "startChar": 24,
+        "endLine": 825,
+        "endChar": 39
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f143b57_b18fdcd1",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T15:16:08Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 843,
+        "startChar": 24,
+        "endLine": 843,
+        "endChar": 39
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc45e17b_5662478f",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T15:16:08Z",
+      "side": 1,
+      "message": "nit: suggest putting this in the else case.",
+      "range": {
+        "startLine": 861,
+        "startChar": 4,
+        "endLine": 861,
+        "endChar": 28
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
