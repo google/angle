@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "57a986c8_224a8525",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T18:46:32Z",
+      "side": 1,
+      "message": "also you wouldn\u0027t need to call a dirty bit handler that was already processed, which is messy and weird.",
+      "parentUuid": "43f5b405_f3900390",
+      "range": {
+        "startLine": 1206,
+        "startChar": 25,
+        "endLine": 1206,
+        "endChar": 54
+      },
+      "revId": "8e15827c6961f968bbac347c0a93a467612f67ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dbb60b33_652360ff",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 5
