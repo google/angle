@@ -93,6 +93,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae5d72a3_d73ebf27",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T20:54:17Z",
+      "side": 1,
+      "message": "Let me put this to WIP. The double loop instead of passing the iterator around is still cleaner, but we don\u0027t need to bother with that for now.",
+      "parentUuid": "0c59cf37_c9101989",
+      "revId": "79d8e4a764951e61c8abec8e4284ed6e49806504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9bcf44a3_93001bc0",
