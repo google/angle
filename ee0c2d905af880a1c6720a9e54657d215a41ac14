@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "0ad992e5_24aaa8ad",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Explicit barrier is not needed for the coherent version of the extension and that requires more complex logic or hardware support",
+      "parentUuid": "3ab10fa5_b279d48d",
+      "range": {
+        "startLine": 11,
+        "startChar": 40,
+        "endLine": 12,
+        "endChar": 41
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "a6d73b6a_8979859a",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 7
@@ -54,6 +78,30 @@
       "writtenOn": "2021-01-07T19:57:13Z",
       "side": 1,
       "message": "gl has no concept of subpasses, subpass inputs, or input attachments. what gl concepts do these correspond to?",
+      "range": {
+        "startLine": 48,
+        "startChar": 5,
+        "endLine": 48,
+        "endChar": 23
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "31e3262c_0069f0aa",
+        "filename": "src/common/utilities.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Ack, renamed to Frag in/out",
+      "parentUuid": "34ae84e2_3f269e0e",
       "range": {
         "startLine": 48,
         "startChar": 5,
@@ -110,6 +158,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fa3b161_33cab5d9",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 983,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bd750c7_6abc81f5",
+      "range": {
+        "startLine": 983,
+        "startChar": 4,
+        "endLine": 983,
+        "endChar": 20
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7c285603_bc4995df",
@@ -123,6 +195,24 @@
       "writtenOn": "2021-01-06T05:17:34Z",
       "side": 1,
       "message": "Can\u0027t FS `out` variables be arrays? Shouldn\u0027t then FS `inout` variables be able to be arrays?",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55533445_7f39b984",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1079,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Ack, removed EvqFragmentInOut with latest patch",
+      "parentUuid": "7c285603_bc4995df",
       "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -144,6 +234,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "72fc038d_42beb967",
+        "filename": "src/compiler/translator/ValidateNoncoherentQualifier.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4cb0e85_4724df24",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "30b67b7a_aca54c5b",
@@ -157,6 +265,30 @@
       "writtenOn": "2021-01-07T19:57:13Z",
       "side": 1,
       "message": "this is simply ES2_extension_2",
+      "range": {
+        "startLine": 105,
+        "startChar": 11,
+        "endLine": 105,
+        "endChar": 38
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cad94799_ba4e908e",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30b67b7a_aca54c5b",
       "range": {
         "startLine": 105,
         "startChar": 11,
@@ -190,6 +322,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9550c0e2_58a9db35",
+        "filename": "src/compiler/translator/glslang.y",
+        "patchSetId": 7
+      },
+      "lineNbr": 933,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ef3350f_d5a68b7e",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 933,
+        "endChar": 9
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b8fb69f4_369c0ae1",
@@ -203,6 +359,24 @@
       "writtenOn": "2021-01-06T05:17:34Z",
       "side": 1,
       "message": "Please add a handful of tests for the combination of subpass input uniforms and the other ones. An uber one with every uniform could do too. So test drawing with a shader that has a sampler, an image, an atomic counter, and a uniform block. (The test should check if image/atomic counter support in FS exists and generate the shader accordingly, though all platforms should support that on Vulkan, so it could also just skip the test if not supported).",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89546420_25cac7f6",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8fb69f4_369c0ae1",
       "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -230,6 +404,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "024acb92_6007ef9f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Done, also updated to require \"gl::IMPLEMENTATION_MAX_DRAW_BUFFERS\"",
+      "parentUuid": "6b309069_66da35f7",
+      "range": {
+        "startLine": 310,
+        "startChar": 61,
+        "endLine": 310,
+        "endChar": 66
+      },
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "249dc5ef_f255d590",
@@ -243,6 +441,24 @@
       "writtenOn": "2021-01-06T05:17:34Z",
       "side": 1,
       "message": "Please clump the SH_GLSL_VULKAN_OUTPUT tests together to avoid so many `#if`s.\n\nFor the tests that test both the default and SH_GLSL_VULKAN_OUTPUT, you can use a `std::array` initialized in the class with either `{SH_GLSL_130_OUTPUT}` or `{SH_GLSL_130_OUTPUT, SH_GLSL_VULKAN_OUTPUT}` based on ANGLE_ENABLE_VULKAN, and use a loop.",
+      "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d33fe353_cdb8472d",
+        "filename": "src/tests/compiler_tests/EXT_shader_framebuffer_fetch_test.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-10T17:19:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "249dc5ef_f255d590",
       "revId": "ee0c2d905af880a1c6720a9e54657d215a41ac14",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
