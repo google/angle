@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "acf992d7_1617f40f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-10T04:25:57Z",
+      "side": 1,
+      "message": "Since this is a very small variation of the proper APK (org.chromium.angle), extending the name to reflect that seems intuitive. I would expect the least significant part to be last, and makes it much easier to pattern match.",
+      "parentUuid": "979d3871_5d9a49e5",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 27
+      },
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "dc9e2380_595307e4",
@@ -183,6 +207,30 @@
       "writtenOn": "2021-02-10T04:24:50Z",
       "side": 1,
       "message": "Done.  That works, thanks.",
+      "parentUuid": "f93719eb_d5fead94",
+      "range": {
+        "startLine": 1254,
+        "startChar": 0,
+        "endLine": 1259,
+        "endChar": 5
+      },
+      "revId": "541007203c74ac768b91ae7d85958b9164b577ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d047d7e3_f5084bc6",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 1259,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-10T04:25:57Z",
+      "side": 1,
+      "message": "That approach works for me, thanks Tim.",
       "parentUuid": "f93719eb_d5fead94",
       "range": {
         "startLine": 1254,
