@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e587178d_3e5ac91a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1206,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T18:53:26Z",
+      "side": 1,
+      "message": "Upcoming change for xfb needs to close render pass in the handler for DIRTY_BIT_PIPELINE_DESC. That was the whole reason I made this change. This is a split change from that CL.\n\nI agree with the messy and weird. Perhaps in a follow up we can figure out a way to update the FB desc first (in a separate dirty bit before DIRTY_BIT_PIPELINE_DESC?) and start the render pass later, without duplicating startNewRenderPass. This change of Mohan\u0027s is piling on the problem and it may be easier to let him land it and rework this then: https://chromium-review.googlesource.com/c/angle/angle/+/2617243/11/src/libANGLE/renderer/vulkan/FramebufferVk.cpp#1840",
+      "parentUuid": "57a986c8_224a8525",
+      "range": {
+        "startLine": 1206,
+        "startChar": 25,
+        "endLine": 1206,
+        "endChar": 54
+      },
+      "revId": "8e15827c6961f968bbac347c0a93a467612f67ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dbb60b33_652360ff",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
         "patchSetId": 5
