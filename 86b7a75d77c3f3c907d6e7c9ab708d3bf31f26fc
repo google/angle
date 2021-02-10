@@ -22,6 +22,30 @@
       },
       "revId": "86b7a75d77c3f3c907d6e7c9ab708d3bf31f26fc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0c21346_ec07a4fd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T15:46:39Z",
+      "side": 1,
+      "message": "Unfortunately, this is the best we can do:\n\n    if ((mProgram \u0026\u0026 mProgram-\u003edirtyUniforms()) ||\n        (mProgramPipeline \u0026\u0026 mProgramPipeline-\u003edirtyUniforms(getState())))\n    {\n        mGraphicsDirtyBits.set(DIRTY_BIT_UNIFORMS);\n        mGraphicsDirtyBits.set(DIRTY_BIT_DESCRIPTOR_SETS);\n    }\n\nWe still need to check the Program/PPO directly for dirty uniforms, since  ProgramVk::setUniformImpl() can be called without a Context, so there isn\u0027t a way to set the dirty bit:\n\n    ProgramVk::setUniformImpl\n        Program::setUniform1fv\n            Context::programUniform1fv\n            Context::uniform1f\n            Context::uniform1fv\n            GLES1Renderer::setUniform1f\n            GLES1Renderer::setUniform1fv\n\nPassing a Context would be a pretty large refactor, and I don\u0027t think it would make anything cleaner for it.   I would lean to just calling setAllDefaultUniformsDirty() directly in ContextVk::updateActiveTextures() and removing the dirty bit entirely instead.",
+      "parentUuid": "ce096628_592ccbdb",
+      "range": {
+        "startLine": 816,
+        "startChar": 0,
+        "endLine": 825,
+        "endChar": 5
+      },
+      "revId": "86b7a75d77c3f3c907d6e7c9ab708d3bf31f26fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
