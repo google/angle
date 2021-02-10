@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d7804fbb_fb9412ca",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T18:42:32Z",
+      "side": 1,
+      "message": "It\u0027s not the same. glShaderSource\u0027s length is an input. These parameters are (optional) outputs.",
+      "parentUuid": "5097277b_fa4cc852",
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a43b97c2_f177cf36",
         "filename": "src/libANGLE/capture_gles_ext_params.cpp",
         "patchSetId": 1
@@ -67,6 +85,30 @@
       "writtenOn": "2021-02-10T15:16:08Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 825,
+        "startChar": 24,
+        "endLine": 825,
+        "endChar": 39
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b2ee5ae_c24e8fb0",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 825,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T18:42:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a43b97c2_f177cf36",
       "range": {
         "startLine": 825,
         "startChar": 24,
@@ -100,6 +142,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c574ffc_9ce1e534",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 843,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T18:42:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "1f143b57_b18fdcd1",
+      "range": {
+        "startLine": 843,
+        "startChar": 24,
+        "endLine": 843,
+        "endChar": 39
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc45e17b_5662478f",
@@ -113,6 +179,30 @@
       "writtenOn": "2021-02-10T15:16:08Z",
       "side": 1,
       "message": "nit: suggest putting this in the else case.",
+      "range": {
+        "startLine": 861,
+        "startChar": 4,
+        "endLine": 861,
+        "endChar": 28
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0ac6490_432546ef",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T18:42:32Z",
+      "side": 1,
+      "message": "This does work in both if and else cases. The if below overrides parts of what CaptureReadPixels_pixels does in the if case.",
+      "parentUuid": "bc45e17b_5662478f",
       "range": {
         "startLine": 861,
         "startChar": 4,
