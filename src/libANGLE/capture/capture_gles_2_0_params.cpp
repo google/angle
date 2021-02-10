@@ -668,7 +668,9 @@ void CaptureShaderSource_length(const State &glState,
                                 ParamCapture *paramCapture)
 {
     if (!length)
+    {
         return;
+    }
 
     CaptureMemory(length, count * sizeof(GLint), paramCapture);
 }

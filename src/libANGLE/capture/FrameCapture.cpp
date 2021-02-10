@@ -2814,14 +2814,16 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         const gl::FramebufferAttachment *depthAttachment = framebuffer->getDepthAttachment();
         if (depthAttachment)
         {
-            ASSERT(depthAttachment->getBinding() == GL_DEPTH_ATTACHMENT);
+            ASSERT(depthAttachment->getBinding() == GL_DEPTH_ATTACHMENT ||
+                   depthAttachment->getBinding() == GL_DEPTH_STENCIL_ATTACHMENT);
             CaptureFramebufferAttachment(setupCalls, replayState, *depthAttachment);
         }
 
         const gl::FramebufferAttachment *stencilAttachment = framebuffer->getStencilAttachment();
         if (stencilAttachment)
         {
-            ASSERT(stencilAttachment->getBinding() == GL_STENCIL_ATTACHMENT);
+            ASSERT(stencilAttachment->getBinding() == GL_STENCIL_ATTACHMENT ||
+                   depthAttachment->getBinding() == GL_DEPTH_STENCIL_ATTACHMENT);
             CaptureFramebufferAttachment(setupCalls, replayState, *stencilAttachment);
         }
 
