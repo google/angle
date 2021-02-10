@@ -42,6 +42,7 @@ luci.project(
 )
 
 luci.milo(
+    logo = "https://storage.googleapis.com/chrome-infra/OpenGL%20ES_RGB_June16.svg",
     monorail_project = "angleproject",
     monorail_components = ["Infra"],
 )
@@ -164,6 +165,7 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp, trace_tests):
         caches = caches,
         build_numbers = True,
     )
+
     luci.builder(
         name = name,
         bucket = "try",
@@ -175,23 +177,29 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp, trace_tests):
         build_numbers = True,
     )
 
-    config = "clang"
     if trace_tests:
         config = "trace"
-    elif uwp:
-        config = "uwp"
-    elif not clang:
-        if os.category == os_category.WINDOWS:
-            config = "msvc"
-        else:
-            config = "gcc"
+    else:
+        config = "angle"
+
+    if clang:
+        compiler = "clang"
+    elif os.category == os_category.WINDOWS:
+        compiler = "msvc"
+    else:
+        compiler = "gcc"
+
+    if uwp:
+        os = "winuwp"
+    else:
+        os = os.console_name
 
     short_name = "dbg" if debug else "rel"
 
     luci.console_view_entry(
         console_view = "CI Console View",
         builder = "ci/" + name,
-        category = os.console_name + "|" + config + "|" + cpu,
+        category = config + "|" + os + "|" + compiler + "|" + cpu,
         short_name = short_name,
     )
 
@@ -201,7 +209,7 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp, trace_tests):
     )
 
     # Include all bots in the CQ by default except trace tests and GCC configs.
-    if not trace_tests and config != "gcc":
+    if not trace_tests and compiler != "gcc":
         luci.cq_tryjob_verifier(
             cq_group = 'master',
             builder = "angle:try/" + name,
@@ -291,6 +299,11 @@ luci.console_view(
 luci.list_view(
     name = "Try List View",
     title = "ANGLE Try Builders",
+)
+
+luci.list_view_entry(
+    list_view = "Try List View",
+    builder = "try/presubmit",
 )
 
 # CQ
