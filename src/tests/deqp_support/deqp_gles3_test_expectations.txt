@@ -162,10 +162,6 @@
 2323 WIN D3D11 : dEQP-GLES3.functional.texture.units.2_units.only_cube.7 = FAIL
 
 // Blit related failures on D3D11
-3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_x = FAIL
-3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_dst_y = FAIL
-3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_x = FAIL
-3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.nearest_consistency_out_of_bounds_mag_reverse_src_y = FAIL
 3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_linear = FAIL
 3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_x_linear = FAIL
 3297 WIN D3D11 : dEQP-GLES3.functional.fbo.blit.rect.out_of_bounds_reverse_dst_y_linear = FAIL
@@ -298,10 +294,6 @@
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.double_continue_fragment = FAIL
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_vertex = FAIL
 1324 LINUX OPENGL : dEQP-GLES3.functional.shaders.loops.do_while_dynamic_iterations.mixed_break_continue_fragment = FAIL
-
-// Polygon offset failures
-3304 LINUX OPENGL : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
-3304 LINUX OPENGL : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
 
 // Flaky test
 3305 LINUX OPENGL : dEQP-GLES3.functional.shaders.builtin_functions.common.uintbitstofloat.uint_highp_vertex = FAIL
@@ -501,8 +493,6 @@
 // Nexus 5x failures
 3308 NEXUS5X GLES : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond* = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond* = FAIL
-3308 NEXUS5X GLES : dEQP-GLES3.functional.polygon_offset.default_result_depth_clamp = FAIL
-3308 NEXUS5X GLES : dEQP-GLES3.functional.polygon_offset.fixed24_result_depth_clamp = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.lines.3 = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.8 = FAIL
 3308 NEXUS5X GLES : dEQP-GLES3.functional.transform_feedback.random.interleaved.triangles.10 = FAIL
@@ -538,11 +528,6 @@
 3970 VULKAN NVIDIA LINUX : dEQP-GLES3.functional.fbo.depth.depth_write_clamp.depth32f_stencil8 = FAIL
 3970 VULKAN NVIDIA LINUX : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth_component32f = FAIL
 3970 VULKAN NVIDIA LINUX : dEQP-GLES3.functional.fbo.depth.depth_test_clamp.depth32f_stencil8 = FAIL
-
-// Polygon offset:
-// Fails on Quadro P400, driver 418.56, Linux
-3970 VULKAN NVIDIA LINUX : dEQP-GLES3.functional.polygon_offset.float32_result_depth_clamp = FAIL
-3970 VULKAN NVIDIA LINUX : dEQP-GLES3.functional.polygon_offset.float32_factor_1_slope = FAIL
 
 // Transform Feedback
 4666 VULKAN NVIDIA : dEQP-GLES3.functional.transform_feedback.array_element.interleaved.* = SKIP

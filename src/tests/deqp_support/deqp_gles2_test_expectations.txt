@@ -9,7 +9,6 @@
 
 // Failures related to not supporting separate depth/stencil masks on D3D11.
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_depth_funcs.stencil_* = FAIL
-1655 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil_ops.* = FAIL
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.depth_stencil.write_mask.* = FAIL
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.add_constant_color_constant_alpha = FAIL
 1655 D3D11 : dEQP-GLES2.functional.fragment_ops.blend.equation_src_func_dst_func.add_constant_color_one_minus_constant_alpha = FAIL
@@ -48,7 +47,6 @@
 3467 D3D9 : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
 3467 D3D9 : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 3467 D3D11 : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
-3467 D3D11 : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 
 // Shader failures.
 3434 NEXUS5X GLES : dEQP-GLES2.functional.shaders.preprocessor.pragmas.pragma_* = FAIL
@@ -65,10 +63,6 @@
 2426 D3D11 : dEQP-GLES2.functional.depth_range.compare.half_to_zero = FAIL
 2426 D3D11 : dEQP-GLES2.functional.depth_range.compare.one_to_half = FAIL
 2426 D3D11 : dEQP-GLES2.functional.depth_range.compare.0_8_to_third = FAIL
-
-// Windows D3D11 Intel and NVIDIA. Suppressed on all cards for simplicity.
-3292 D3D11 : dEQP-GLES2.functional.polygon_offset.default_render_with_units = FAIL
-3292 D3D11 : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
 
 // Common subexpression invariance
 3293 D3D11 : dEQP-GLES2.functional.shaders.invariance.highp.common_subexpression_1 = FAIL
@@ -135,9 +129,6 @@
 3302 OPENGL INTEL LINUX : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_linear_repeat = FAIL
 3302 OPENGL INTEL LINUX : dEQP-GLES2.functional.texture.vertex.cube.filtering.linear_mipmap_linear_nearest_repeat = FAIL
 3302 OPENGL INTEL LINUX : dEQP-GLES2.functional.texture.vertex.cube.wrap.repeat_repeat = FAIL
-
-// Linux OpenGL NVIDIA
-3303 OPENGL NVIDIA LINUX : dEQP-GLES2.functional.texture.mipmap.cube.projected.nearest_linear = FAIL
 
 // Mac OpenGL specific failures
 3466 MAC OPENGL : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = SKIP
@@ -290,13 +281,11 @@
 
 // Nexus 5x failures
 3309 NEXUS5X GLES : dEQP-GLES2.functional.attribute_location.bind_aliasing.cond* = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.attribute_location.bind_aliasing.max_cond* = FAIL
 3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_int = FAIL
 3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_component_unsigned_short = FAIL
 3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.depth_stencil_unsigned_int_24_8 = FAIL
 3716 NEXUS5X GLES : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.depth_stencil_unsigned_int_24_8 = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.after_render_tex2d_rgb = FAIL
-3309 NEXUS5X GLES : dEQP-GLES2.functional.polygon_offset.default_result_depth_clamp = FAIL
 3715 NEXUS5X GLES : dEQP-GLES2.functional.shaders.builtin_variable.max_draw_buffers_vertex = FAIL
 3715 NEXUS5X GLES : dEQP-GLES2.functional.shaders.builtin_variable.max_draw_buffers_fragment = FAIL
 3309 NEXUS5X GLES : dEQP-GLES2.functional.shaders.return.output_write_in_func_always_vertex = FAIL
@@ -337,7 +326,6 @@
 
 // Android Vulkan backend only failures
 2549 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.depth_stencil.stencil* = SKIP
-4109 VULKAN ANDROID : dEQP-GLES2.functional.texture.mipmap.cube.projected.nearest_linear = FAIL
 
 // Adreno line rasterization is not conformant.
 2830 VULKAN ANDROID : dEQP-GLES2.functional.rasterization.primitives.line_loop = FAIL
@@ -346,8 +334,6 @@
 
 // Failing on the Pixel 2.
 2808 VULKAN ANDROID : dEQP-GLES2.functional.shaders.builtin_variable.fragcoord_w = FAIL
-3306 VULKAN ANDROID : dEQP-GLES2.functional.polygon_offset.default_factor_1_slope = FAIL
-3306 VULKAN ANDROID : dEQP-GLES2.functional.polygon_offset.fixed16_factor_1_slope = FAIL
 
 // Failing on the Pixel 2 due to Qualcomm Vulkan driver
 4344 VULKAN ANDROID : dEQP-GLES2.functional.fragment_ops.interaction.basic_shader.1 = FAIL
@@ -416,11 +402,6 @@
 
 // Fails after OpenGL line rasterization rules implementation. Possibly a bug in FragCoord.
 2809 VULKAN WIN AMD : dEQP-GLES2.functional.clipping.line.long_line_clip = FAIL
-
-// Polygon offset failures
-3301 VULKAN WIN AMD : dEQP-GLES2.functional.polygon_offset.default_result_depth_clamp = FAIL
-3301 VULKAN WIN AMD : dEQP-GLES2.functional.polygon_offset.default_factor_1_slope = FAIL
-3301 VULKAN WIN AMD : dEQP-GLES2.functional.polygon_offset.fixed16_render_with_units = FAIL
 
 // Failures on newer NVIDIA drivers (411.95) and passes on older drivers (388.16).
 2976 VULKAN NVIDIA : dEQP-GLES2.functional.shaders.invariance.* = FAIL
