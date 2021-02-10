@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e4089fc_3f7f5ca0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T15:01:19Z",
+      "side": 1,
+      "message": "Nice. We can even set up a double set of builds to use different build options at some point.",
+      "revId": "ae0107e5fef0d461ffb602091d8360cfc15498ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c951b0e9_29b9ae2b",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T15:01:19Z",
+      "side": 1,
+      "message": "nit: angle_agi_chromium_apk to keep the namespace ordering starting with angle",
+      "range": {
+        "startLine": 1249,
+        "startChar": 13,
+        "endLine": 1249,
+        "endChar": 35
+      },
+      "revId": "ae0107e5fef0d461ffb602091d8360cfc15498ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
