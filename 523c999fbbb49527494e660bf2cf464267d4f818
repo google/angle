@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab327a2a_8ce16441",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-10T00:50:17Z",
+      "side": 1,
+      "message": "Fixed in patch 6.\nPTAL",
+      "revId": "523c999fbbb49527494e660bf2cf464267d4f818",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
