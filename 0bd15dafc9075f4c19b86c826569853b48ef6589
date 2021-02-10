@@ -90,6 +90,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23734465_4dbc86de",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T19:11:04Z",
+      "side": 1,
+      "message": "Chatted offline. Done",
+      "parentUuid": "168ef30c_c5d7a01f",
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a43b97c2_f177cf36",
@@ -245,6 +263,30 @@
       "side": 1,
       "message": "I read the code a few times, and it looks like the code below overrides all the work it does in the not case. Can you please do a double check?",
       "parentUuid": "d0ac6490_432546ef",
+      "range": {
+        "startLine": 861,
+        "startChar": 4,
+        "endLine": 861,
+        "endChar": 28
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db94046d_c65c675a",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-10T19:11:04Z",
+      "side": 1,
+      "message": "Done. It was cleaner to duplicate the code and set the right size.",
+      "parentUuid": "c1749303_ddbaf38e",
       "range": {
         "startLine": 861,
         "startChar": 4,
