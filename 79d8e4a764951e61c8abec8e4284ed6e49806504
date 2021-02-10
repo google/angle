@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "35194f8e_e3fb21f1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T19:59:19Z",
+      "side": 1,
+      "message": "nit: \u0027Remove\u0027 would be more precise",
+      "range": {
+        "startLine": 7,
+        "startChar": 8,
+        "endLine": 7,
+        "endChar": 15
+      },
+      "revId": "79d8e4a764951e61c8abec8e4284ed6e49806504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "20349923_3d5bfe5a",
@@ -49,6 +72,23 @@
       "side": 1,
       "message": "That seems to be a flake. A rerun of the same bot is not failing GOLD. https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5618#c3\n\nWorks correctly locally too (on Intel/Linux)",
       "parentUuid": "4ee1dc54_1a493e92",
+      "revId": "79d8e4a764951e61c8abec8e4284ed6e49806504",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c59cf37_c9101989",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T19:59:19Z",
+      "side": 1,
+      "message": "No longer necessary?",
       "revId": "79d8e4a764951e61c8abec8e4284ed6e49806504",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
