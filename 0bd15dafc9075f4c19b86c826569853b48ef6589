@@ -74,6 +74,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "168ef30c_c5d7a01f",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 807,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T18:49:27Z",
+      "side": 1,
+      "message": "It\u0027s also an output, and works the same. Can you please look again to see if you can do the same here?",
+      "parentUuid": "d7804fbb_fb9412ca",
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a43b97c2_f177cf36",
         "filename": "src/libANGLE/capture_gles_ext_params.cpp",
         "patchSetId": 1
@@ -203,6 +221,30 @@
       "side": 1,
       "message": "This does work in both if and else cases. The if below overrides parts of what CaptureReadPixels_pixels does in the if case.",
       "parentUuid": "bc45e17b_5662478f",
+      "range": {
+        "startLine": 861,
+        "startChar": 4,
+        "endLine": 861,
+        "endChar": 28
+      },
+      "revId": "0bd15dafc9075f4c19b86c826569853b48ef6589",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1749303_ddbaf38e",
+        "filename": "src/libANGLE/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T18:49:27Z",
+      "side": 1,
+      "message": "I read the code a few times, and it looks like the code below overrides all the work it does in the not case. Can you please do a double check?",
+      "parentUuid": "d0ac6490_432546ef",
       "range": {
         "startLine": 861,
         "startChar": 4,
