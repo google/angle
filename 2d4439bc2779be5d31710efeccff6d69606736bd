@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1625260a_43cd7463",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-10T02:03:26Z",
+      "side": 1,
+      "message": "tiny nit:\n\nIn addition, if the following GN arg is set, the API calls will output to Android\u0027s logcat:",
+      "revId": "2d4439bc2779be5d31710efeccff6d69606736bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
