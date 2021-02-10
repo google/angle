@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb83eae8_f53140cd",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-10T21:28:15Z",
+      "side": 1,
+      "message": "Does this push back ES3 _and_ ES2 in the case where ES3 fails?\nDoes that matter?",
+      "revId": "6fd846eba3caae13ec6c8fafd8e30b2fc29c94d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
