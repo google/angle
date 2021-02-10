@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9c56cd5_605b9c2d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T16:59:06Z",
+      "side": 1,
+      "message": "Thanks for the tests!",
+      "revId": "7ac4b75de7fe1b9e10d3e826d92c0b9371ff6c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a83ae315_938d93a0",
+        "filename": "src/tests/egl_tests/EGLSurfaceTestMac.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T16:59:06Z",
+      "side": 1,
+      "message": "nit: 2021",
+      "revId": "7ac4b75de7fe1b9e10d3e826d92c0b9371ff6c3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
