@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c7261e5_09a53fe8",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2246,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-10T00:09:37Z",
+      "side": 1,
+      "message": "what\u0027s the issue here? can we at least document it? does the nvidia implementation have a bug? this might effectively disable all testing of this feature?",
+      "range": {
+        "startLine": 2246,
+        "startChar": 91,
+        "endLine": 2246,
+        "endChar": 96
+      },
+      "revId": "a914f8c7aa72bb7d72a05da173e12ae131bc5c6b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
