@@ -985,11 +985,11 @@ class CommandBufferHelper : angle::NonCopyable
     // General Functions (non-renderPass specific)
     void initialize(bool isRenderPassCommandBuffer);
 
-    void bufferRead(ResourceUseList *resourceUseList,
+    void bufferRead(ContextVk *contextVk,
                     VkAccessFlags readAccessType,
                     PipelineStage readStage,
                     BufferHelper *buffer);
-    void bufferWrite(ResourceUseList *resourceUseList,
+    void bufferWrite(ContextVk *contextVk,
                      VkAccessFlags writeAccessType,
                      PipelineStage writeStage,
                      AliasingMode aliasingMode,
