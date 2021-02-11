@@ -56,17 +56,11 @@ class DisplayGL : public DisplayImpl
     std::string getVendorString() override;
     std::string getVersionString() override;
 
-    void resetCachedGLStrings();
-
   protected:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
 
   private:
     virtual egl::Error makeCurrentSurfaceless(gl::Context *context);
-
-    std::string mRendererDescription;
-    std::string mVendorString;
-    std::string mVersionString;
 };
 
 }  // namespace rx
