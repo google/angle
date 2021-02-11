@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6a7446a_7d5fec24",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-11T17:15:51Z",
+      "side": 1,
+      "message": "LGTM. Please add a \"Bug: angleproject:####\" tag. You can re-use the issue number for the generator python scripts year.",
+      "revId": "b439fb27ab2e36c420d9c9f9fd435eccbee73803",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
