@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1d33bffa_61b88198",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T19:57:29Z",
+      "side": 1,
+      "message": "gpu to gpu copy here?",
+      "parentUuid": "3dfcabd7_6184bdb8",
+      "range": {
+        "startLine": 445,
+        "startChar": 16,
+        "endLine": 445,
+        "endChar": 82
+      },
+      "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1e14bc57_78bcba82",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 9
@@ -71,6 +95,30 @@
       "writtenOn": "2021-02-11T19:34:15Z",
       "side": 1,
       "message": "These two blocks are very close now, can they be merged?",
+      "range": {
+        "startLine": 449,
+        "startChar": 17,
+        "endLine": 484,
+        "endChar": 17
+      },
+      "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86a66a04_dc7dffc4",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T19:57:29Z",
+      "side": 1,
+      "message": "The problem is that I don\u0027t want to allocate extra heap memory for normal branch without workaround. if merge into\nif (workaround){\n}\n\nif (destStride \u003d\u003d sourceStride)\n{\n}\nelse\n{\n}\n\nI think there I need to allocate a unique_pointer\u003cstd::vector\u003e instead of std::vector at top\n\nor do a raw style inputPointer \u003d new uint8_t[size] inside the workaround branch (don\u0027t think this is usual in angle?)\n\nDo you have any suggestion for clean code + no overhead for normal situation here?",
+      "parentUuid": "1e14bc57_78bcba82",
       "range": {
         "startLine": 449,
         "startChar": 17,
