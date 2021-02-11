@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "601183dd_406ad5e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-11T17:40:07Z",
+      "side": 1,
+      "message": "I\u0027m getting a few other hits on datetime:\n\n$ git grep datetime\nscripts/generate_android_bp.py:from datetime import date\nscripts/generate_entry_points.py:from datetime import date\nscripts/generate_stats.py:import datetime\nscripts/generate_stats.py:            info[\u0027date\u0027] \u003d datetime.datetime.now().strftime(\u0027%m/%d/%y\u0027)\nsrc/libANGLE/renderer/d3d/d3d11/gen_blit11helper.py:from datetime import date\nsrc/libANGLE/renderer/d3d/d3d11/gen_texture_format_table.py:from datetime import date\nsrc/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py:from datetime import date\n\nI think all but the use in generate_stats.py can go away too.\n\nGeoff, are you okay with the Android.bp file having a static date, or do you want it to move with generation?\n",
+      "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed59bdaf_5f52c06a",
@@ -72,6 +89,30 @@
       "side": 1,
       "message": "The original dates are technically not important. I\u0027d say any year \u003e 1980 is fine 😊",
       "parentUuid": "ed59bdaf_5f52c06a",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e32ee96_f65493c3",
+        "filename": "src/tests/restricted_traces/trace_egl_loader_autogen.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-11T17:40:07Z",
+      "side": 1,
+      "message": "Works for me.",
+      "parentUuid": "f41521b6_468e38dc",
       "range": {
         "startLine": 4,
         "startChar": 3,
