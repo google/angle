@@ -127,6 +127,30 @@
       },
       "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29749c8a_b3d075e0",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T21:03:56Z",
+      "side": 1,
+      "message": "Oh I see. If we do gpu to gpu copy we don\u0027t need any client side memory allocation..",
+      "parentUuid": "86a66a04_dc7dffc4",
+      "range": {
+        "startLine": 449,
+        "startChar": 17,
+        "endLine": 484,
+        "endChar": 17
+      },
+      "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
