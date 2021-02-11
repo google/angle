@@ -3728,6 +3728,30 @@ angle::Result ContextVk::memoryBarrierByRegion(const gl::Context *context, GLbit
 
 angle::Result ContextVk::memoryBarrierImpl(GLbitfield barriers, VkPipelineStageFlags stageMask)
 {
+    // First, turn GL_ALL_BARRIER_BITS into a mask that has only the valid barriers set.
+    constexpr GLbitfield kCoreBarrierBits =
+        GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT | GL_ELEMENT_ARRAY_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT |
+        GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_COMMAND_BARRIER_BIT |
+        GL_PIXEL_BUFFER_BARRIER_BIT | GL_TEXTURE_UPDATE_BARRIER_BIT | GL_BUFFER_UPDATE_BARRIER_BIT |
+        GL_FRAMEBUFFER_BARRIER_BIT | GL_TRANSFORM_FEEDBACK_BARRIER_BIT |
+        GL_ATOMIC_COUNTER_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT;
+    constexpr GLbitfield kExtensionBarrierBits = GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT;
+
+    barriers &= kCoreBarrierBits | kExtensionBarrierBits;
+
+    // GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT specifies that a fence sync or glFinish must be used
+    // after the barrier for the CPU to to see the shader writes.  Since host-visible buffer writes
+    // always issue a barrier automatically for the sake of glMapBuffer() (see
+    // comment on |mIsAnyHostVisibleBufferWritten|), there's nothing to do for
+    // GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT.
+    barriers &= ~GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT;
+
+    // If no other barrier, early out.
+    if (barriers == 0)
+    {
+        return angle::Result::Continue;
+    }
+
     // Note: many of the barriers specified here are already covered automatically.
     //
     // The barriers that are necessary all have SHADER_WRITE as src access and the dst access is
@@ -3759,12 +3783,6 @@ angle::Result ContextVk::memoryBarrierImpl(GLbitfield barriers, VkPipelineStageF
 
     mOutsideRenderPassCommands->getCommandBuffer().memoryBarrier(stageMask, stageMask,
                                                                  &memoryBarrier);
-
-    if ((barriers & GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT) != 0)
-    {
-        // We need to make sure that all device-writes are host-visible, force a finish
-        ANGLE_TRY(finishImpl());
-    }
 
     return angle::Result::Continue;
 }

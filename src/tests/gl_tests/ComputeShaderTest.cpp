@@ -4352,6 +4352,106 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
 }
 
+// Test glMemoryBarrier(CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT) by writing to persistenly mapped
+// buffer from a compute shader.
+TEST_P(ComputeShaderTest, WriteToPersistentBuffer)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std140, binding = 0) buffer block {
+    uvec4 data;
+} outBlock;
+void main()
+{
+    outBlock.data += uvec4(1);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program);
+
+    constexpr std::array<uint32_t, 4> kInitData = {};
+
+    GLBuffer coherentBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, coherentBuffer);
+    glBufferStorageEXT(
+        GL_SHADER_STORAGE_BUFFER, sizeof(kInitData), kInitData.data(),
+        GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT);
+
+    GLBuffer nonCoherentBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, nonCoherentBuffer);
+    glBufferStorageEXT(GL_SHADER_STORAGE_BUFFER, sizeof(kInitData), kInitData.data(),
+                       GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT);
+
+    // Map the buffers for read and write.
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, coherentBuffer);
+    uint32_t *coherentMapped = reinterpret_cast<uint32_t *>(glMapBufferRange(
+        GL_SHADER_STORAGE_BUFFER, 0, sizeof(kInitData),
+        GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT | GL_MAP_COHERENT_BIT_EXT));
+    ASSERT_GL_NO_ERROR();
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, nonCoherentBuffer);
+    uint32_t *nonCoherentMapped = reinterpret_cast<uint32_t *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kInitData),
+                         GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT_EXT));
+    ASSERT_GL_NO_ERROR();
+
+    constexpr std::array<uint32_t, 4> kCoherentExpectedData = {
+        0x12354678u,
+        0x2468ACE0u,
+        0x13579BDFu,
+        0x76543210u,
+    };
+
+    constexpr std::array<uint32_t, 4> kNonCoherentExpectedData = {
+        0x9ABCDEF0u,
+        0xFDB97531u,
+        0x1F2E3D4Bu,
+        0x5A697887u,
+    };
+
+    coherentMapped[0] = kCoherentExpectedData[0] - 1;
+    coherentMapped[1] = kCoherentExpectedData[1] - 1;
+    coherentMapped[2] = kCoherentExpectedData[2] - 1;
+    coherentMapped[3] = kCoherentExpectedData[3] - 1;
+
+    nonCoherentMapped[0] = kNonCoherentExpectedData[0] - 1;
+    nonCoherentMapped[1] = kNonCoherentExpectedData[1] - 1;
+    nonCoherentMapped[2] = kNonCoherentExpectedData[2] - 1;
+    nonCoherentMapped[3] = kNonCoherentExpectedData[3] - 1;
+
+    // Test coherent write
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, coherentBuffer);
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    glFinish();
+    EXPECT_EQ(coherentMapped[0], kCoherentExpectedData[0]);
+    EXPECT_EQ(coherentMapped[1], kCoherentExpectedData[1]);
+    EXPECT_EQ(coherentMapped[2], kCoherentExpectedData[2]);
+    EXPECT_EQ(coherentMapped[3], kCoherentExpectedData[3]);
+
+    // Test non-coherent write
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, nonCoherentBuffer);
+    glDispatchCompute(1, 1, 1);
+
+    glMemoryBarrier(GL_CLIENT_MAPPED_BUFFER_BARRIER_BIT_EXT);
+    EXPECT_GL_NO_ERROR();
+
+    glFinish();
+    EXPECT_EQ(nonCoherentMapped[0], kNonCoherentExpectedData[0]);
+    EXPECT_EQ(nonCoherentMapped[1], kNonCoherentExpectedData[1]);
+    EXPECT_EQ(nonCoherentMapped[2], kNonCoherentExpectedData[2]);
+    EXPECT_EQ(nonCoherentMapped[3], kNonCoherentExpectedData[3]);
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, coherentBuffer);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, nonCoherentBuffer);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
 ANGLE_INSTANTIATE_TEST_ES31(ComputeShaderTest);
 ANGLE_INSTANTIATE_TEST_ES3(ComputeShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES31(WebGL2ComputeTest);
