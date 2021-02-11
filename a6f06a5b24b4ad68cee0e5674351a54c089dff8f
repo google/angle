@@ -51,6 +51,24 @@
       "parentUuid": "e7544735_9ef6c0a2",
       "revId": "a6f06a5b24b4ad68cee0e5674351a54c089dff8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "862f53c8_a5ecab42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T23:03:18Z",
+      "side": 1,
+      "message": "nvm, Doh! on a 32bit system i force it to be -\n using BaseBitSetType \u003d BitSet32\u003ckDefaultBitSetSize\u003e;\n\nand since \"ConditionArray\" needs 41bits, it is unhappy",
+      "parentUuid": "1f682c0d_ca66f910",
+      "revId": "a6f06a5b24b4ad68cee0e5674351a54c089dff8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
