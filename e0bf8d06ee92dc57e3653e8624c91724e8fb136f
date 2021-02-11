@@ -159,6 +159,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd6a65da_a2c8e48e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3470,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-11T18:39:29Z",
+      "side": 1,
+      "message": "Done.\n\nI\u0027ve gone back to the more targetting version that just calls setAllDefaultUniformsDirty() if there\u0027s an immutable sampler.",
+      "parentUuid": "8e4dd6b0_9d055606",
+      "revId": "e0bf8d06ee92dc57e3653e8624c91724e8fb136f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fbf1d202_36269fe1",
