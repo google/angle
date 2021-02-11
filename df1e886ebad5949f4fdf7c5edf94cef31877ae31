@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa61beef_65c4e54e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T23:12:01Z",
+      "side": 1,
+      "message": "* Fix to use gpu to gpu copy using mapbufferrange\n* Use attrib.pointer as input if binding.getBuffer() \u003d\u003d null\n* Refactor the branch\n\nThanks for the review!",
+      "revId": "df1e886ebad5949f4fdf7c5edf94cef31877ae31",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

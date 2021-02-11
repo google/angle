@@ -348,6 +348,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7987e6ea_fd9dd54e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T23:12:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c470ee41_5cf9e621",
+      "range": {
+        "startLine": 430,
+        "startChar": 16,
+        "endLine": 430,
+        "endChar": 83
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6d2b1c11_f338e24a",
