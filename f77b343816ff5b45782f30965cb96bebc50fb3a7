@@ -326,6 +326,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c470ee41_5cf9e621",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-11T19:29:45Z",
+      "side": 1,
+      "message": "If binding.getBuffer() \u003d\u003d null then attrib.pointer is treated as a pointer directly to the vertex data, otherwise it\u0027s treated as an offset into the buffer.  Chrome/WebGL never binds null buffers so this issue won\u0027t show up within WebGL (and why this code path is never taken in Chrome until now).",
+      "parentUuid": "9862a3d5_1f06dc83",
+      "range": {
+        "startLine": 430,
+        "startChar": 16,
+        "endLine": 430,
+        "endChar": 83
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d2b1c11_f338e24a",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 8
