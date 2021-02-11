@@ -111,6 +111,30 @@
       },
       "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6758153_dab06b65",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T22:02:30Z",
+      "side": 1,
+      "message": "There would be 2 64-bit copies instead of a pointer copy, but instead every *iter wouldn\u0027t be a pointer dereference.\n\n\u003e 2. if we have a BitSetArray\u003c96\u003e and we are at bit 1, a usecase can call setLaterBit(90) in which case the current iterator is out of luck and cant satisfy the requirement. This was not the case with BitSetT::Iterator\n\nHow is setLaterBit(90) a problem? The iterator has a copy of the whole bitset.",
+      "parentUuid": "313967e6_1044aa38",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 42
+      },
+      "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
