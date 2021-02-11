@@ -63,6 +63,30 @@
       },
       "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e68b0cf4_2158f902",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-11T21:51:10Z",
+      "side": 1,
+      "message": "I feel like a single copy is faster than two pointers and a copy. You already have mParentCopy and mIndex, why do you need \u0026mParent and mCurrentParent?",
+      "parentUuid": "8167129a_2d149a95",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 42
+      },
+      "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
