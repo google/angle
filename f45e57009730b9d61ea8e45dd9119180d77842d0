@@ -16,6 +16,24 @@
       "message": "Hey Lubosz, thanks for getting this started quickly.\n\nCan you minimally squash \"Generators: Use fixed ...\" and \"Refresh generated files...\" \n\nThe pre-commit commit verifiers will fail on the first patch and we won\u0027t be able to land them separately. You should be able to test these out using Commit-Queue +1.\n\nAlso when you set \"Ready for Review\" please add your two reviewers. For now we can always pick myself and Cody for you guys.",
       "revId": "f45e57009730b9d61ea8e45dd9119180d77842d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1833248_54fbd3c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-11T16:57:50Z",
+      "side": 1,
+      "message": "Hi Jamie,\n\nWill do. I kept the patches separated initially to make it easier to differentiate the actual changes from the generated ones. Makes sense to keep them together for the verifiers.",
+      "parentUuid": "99b83bcd_ff9087b1",
+      "revId": "f45e57009730b9d61ea8e45dd9119180d77842d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
