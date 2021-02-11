@@ -39,6 +39,30 @@
       },
       "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8167129a_2d149a95",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T21:42:58Z",
+      "side": 1,
+      "message": "copy-paste from another comment -\n\nEverytime an iterator is created, it needs to be a fast operation without any copies involved so that usecases that only iterate without mutating should not take any perf hit [this is where we get the win by having the const reference]. Given that we want the fastest path possible for a fast bitset \"good\" usecases should not have to take the hit just so we can support functionality for mutating cases.",
+      "parentUuid": "e14ca1ae_c0b898e1",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 42
+      },
+      "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
