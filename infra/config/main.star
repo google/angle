@@ -180,7 +180,10 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
     # Trace tests are only included automatically if files in the capture folder change.
     if trace_tests:
         config = "trace"
-        location_regexp = ".+/[+]/src/libANGLE/capture/.+"
+        location_regexp = [
+            ".+/[+]/src/libANGLE/capture/.+",
+            ".+/[+]/src/tests/capture.+",
+        ]
     else:
         config = "angle"
         location_regexp = None
@@ -216,7 +219,7 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
         luci.cq_tryjob_verifier(
             cq_group = 'master',
             builder = "angle:try/" + name,
-            location_regexp = [location_regexp] if location_regexp else None,
+            location_regexp = location_regexp,
         )
 
 
