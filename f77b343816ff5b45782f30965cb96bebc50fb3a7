@@ -69,6 +69,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c07eaa93_59bd25ed",
+        "filename": "src/libANGLE/renderer/gl/ContextGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T02:10:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "455e4340_d6ca44c1",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c10a8b37_ce3f5310",
@@ -164,6 +182,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f358965_48743032",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T02:10:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6796b0ad_5ffd7583",
+      "range": {
+        "startLine": 190,
+        "startChar": 12,
+        "endLine": 204,
+        "endChar": 13
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cff86666_f9f30312",
@@ -211,6 +253,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e775615_892c20cc",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 413,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T02:10:04Z",
+      "side": 1,
+      "message": "I think it\u0027s better to keep it this way. We don\u0027t want extra overhead to nonworkaround case. I don\u0027t see how to avoid a heap std::vector used to copy data from buffer could be avoided if we refactor in this way. By having complete separate branch for workaround we can guarantee usual case is least affected.\n\n(trivial ps: weird issue cause I allocate the vector inside a branch and still use the pointer for memcpy...)",
+      "parentUuid": "966b7b8a_b515da18",
+      "range": {
+        "startLine": 413,
+        "startChar": 12,
+        "endLine": 413,
+        "endChar": 87
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ca95999_170cf438",
@@ -224,6 +290,30 @@
       "writtenOn": "2021-02-04T22:07:57Z",
       "side": 1,
       "message": "It\u0027s not guaranteed that a buffer is bound, it may be null. In this case you use attrib.pointer as the data source.",
+      "range": {
+        "startLine": 430,
+        "startChar": 16,
+        "endLine": 430,
+        "endChar": 83
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9862a3d5_1f06dc83",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T02:10:04Z",
+      "side": 1,
+      "message": "I didn\u0027t quite get this. attrib.pointer is not a buffer id to bind. Do you indicate when user is using client side array buffer (old cpu side style)?",
+      "parentUuid": "8ca95999_170cf438",
       "range": {
         "startLine": 430,
         "startChar": 16,
@@ -257,6 +347,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "030c7023_773f74cf",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 438,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T02:10:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d2b1c11_f338e24a",
+      "range": {
+        "startLine": 428,
+        "startChar": 16,
+        "endLine": 438,
+        "endChar": 90
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b54d5656_d5cb1882",
@@ -270,6 +384,24 @@
       "writtenOn": "2021-02-04T22:07:57Z",
       "side": 1,
       "message": "I think you can also use an AttributesMask to track which attributes have a non-zero divisor. Something like mInstancedAttributes. You would only update it in VertexArrayGL::updateBindingDivisor which is only called to sync dirty bits.",
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c44cfda_54422650",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T02:10:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b54d5656_d5cb1882",
       "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -322,6 +454,30 @@
       "writtenOn": "2021-02-04T22:07:57Z",
       "side": 1,
       "message": "Let\u0027s call ReInitializeFeaturesAtGPUSwitch here to avoid duplicated code",
+      "range": {
+        "startLine": 1908,
+        "startChar": 4,
+        "endLine": 1912,
+        "endChar": 72
+      },
+      "revId": "f77b343816ff5b45782f30965cb96bebc50fb3a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07ddcd8e_986f0780",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1912,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-11T02:10:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ebf6244_714ae3ac",
       "range": {
         "startLine": 1908,
         "startChar": 4,
