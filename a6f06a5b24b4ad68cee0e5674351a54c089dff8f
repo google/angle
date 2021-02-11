@@ -87,6 +87,24 @@
       "parentUuid": "862f53c8_a5ecab42",
       "revId": "a6f06a5b24b4ad68cee0e5674351a54c089dff8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e5eab4f_ad514c78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T23:51:20Z",
+      "side": 1,
+      "message": "i forced the type to this -\n std::array\u003cBitSet32\u003cpriv::kDefaultBitSetSize\u003e, kArraySize\u003e mBaseBitSetArray;\n\nand now i get the error -\n \\workspace\\angle\\src\\common/bitset_utils.h(484): error C2079: \u0027angle::BitSetArray\u003c41\u003e::mBaseBitSetArray\u0027 uses undefined class \u0027std::array\u003cangle::BitSetT\u003c32,uint32_t,size_t\u003e,2\u003e\u0027\nC:\\Users\\m.maiya\\workspace\\angle\\src\\tests\\test_expectations\\GPUTestConfig.h(86): note: see reference to class template instantiation \u0027angle::BitSetArray\u003c41\u003e\u0027 being compiled\n\nit doesnt even see this -\u003e BitSetT\u003c32,uint32_t,size_t\u003e. Need fresh eyes",
+      "parentUuid": "71d813c1_11fa53f1",
+      "revId": "a6f06a5b24b4ad68cee0e5674351a54c089dff8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
