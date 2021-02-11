@@ -16,6 +16,69 @@
       "message": "Addressed (most) issues and cover 2 additional corner cases",
       "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc1fe095_54486ffb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-11T19:34:15Z",
+      "side": 1,
+      "message": "Looks really good, couple small suggestions and let\u0027s land.",
+      "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dfcabd7_6184bdb8",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 445,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-11T19:34:15Z",
+      "side": 1,
+      "message": "Don\u0027t think we need to copy the data out of the source buffer, just copy it directly to the destination and unmap after.",
+      "range": {
+        "startLine": 445,
+        "startChar": 16,
+        "endLine": 445,
+        "endChar": 82
+      },
+      "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e14bc57_78bcba82",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 484,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-11T19:34:15Z",
+      "side": 1,
+      "message": "These two blocks are very close now, can they be merged?",
+      "range": {
+        "startLine": 449,
+        "startChar": 17,
+        "endLine": 484,
+        "endChar": 17
+      },
+      "revId": "a95a0139a06614a519d55d48cbdcd0026938d581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
