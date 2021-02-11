@@ -179,6 +179,24 @@
       "parentUuid": "59d4e98a_5a8b11ad",
       "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23f30380_533282e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T18:09:33Z",
+      "side": 1,
+      "message": "Local run was 30% slower, so half is definitely too few.",
+      "parentUuid": "f87aab6e_877c032b",
+      "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
