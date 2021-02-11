@@ -433,5 +433,95 @@ TYPED_TEST(BitSetArrayTest, BasicTest)
     EXPECT_EQ(mBits.count(), 0u);
     mBits.flip();
     EXPECT_EQ(mBits.count(), mBits.size());
+
+    // Test operators
+
+    // Assignment operators - "=", "&=", "|=" and "^="
+    mBits.reset();
+    mBits = testBitSet;
+    for (auto bit : testBitSet)
+    {
+        EXPECT_TRUE(mBits.test(bit));
+    }
+
+    mBits &= testBitSet;
+    for (auto bit : testBitSet)
+    {
+        EXPECT_TRUE(mBits.test(bit));
+    }
+    EXPECT_EQ(mBits.count(), testBitSet.count());
+
+    mBits.reset();
+    mBits |= testBitSet;
+    for (auto bit : testBitSet)
+    {
+        EXPECT_TRUE(mBits.test(bit));
+    }
+
+    mBits ^= testBitSet;
+    EXPECT_TRUE(mBits.none());
+
+    // Bitwise operators - "&", "|" and "^"
+    std::set<std::size_t> bits1         = {0, 45, 60};
+    std::set<std::size_t> bits2         = {5, 45, 50, 63};
+    std::set<std::size_t> bits1Andbits2 = {45};
+    std::set<std::size_t> bits1Orbits2  = {0, 5, 45, 50, 60, 63};
+    std::set<std::size_t> bits1Xorbits2 = {0, 5, 50, 60, 63};
+    std::set<std::size_t> actualValues;
+    TypeParam testBitSet1;
+    TypeParam testBitSet2;
+
+    for (std::size_t bit : bits1)
+    {
+        testBitSet1.set(bit);
+    }
+    for (std::size_t bit : bits2)
+    {
+        testBitSet2.set(bit);
+    }
+
+    actualValues.clear();
+    for (auto bit : (testBitSet1 & testBitSet2))
+    {
+        actualValues.insert(bit);
+    }
+    EXPECT_EQ(bits1Andbits2, actualValues);
+
+    actualValues.clear();
+    for (auto bit : (testBitSet1 | testBitSet2))
+    {
+        actualValues.insert(bit);
+    }
+    EXPECT_EQ(bits1Orbits2, actualValues);
+
+    actualValues.clear();
+    for (auto bit : (testBitSet1 ^ testBitSet2))
+    {
+        actualValues.insert(bit);
+    }
+    EXPECT_EQ(bits1Xorbits2, actualValues);
+
+    // Relational operators - "==" and "!="
+    EXPECT_FALSE(testBitSet1 == testBitSet2);
+    EXPECT_TRUE(testBitSet1 != testBitSet2);
+
+    // Unary operators - "~" and "[]"
+    mBits.reset();
+    mBits = ~testBitSet;
+    for (auto bit : mBits)
+    {
+        EXPECT_FALSE(testBitSet.test(bit));
+    }
+    EXPECT_EQ(mBits.count(), (mBits.size() - testBitSet.count()));
+
+    mBits.reset();
+    for (auto bit : testBitSet)
+    {
+        mBits[bit] = true;
+    }
+    for (auto bit : mBits)
+    {
+        EXPECT_TRUE(testBitSet.test(bit));
+    }
 }
 }  // anonymous namespace
