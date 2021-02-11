@@ -40,6 +40,7 @@ RequestExtensionTest.Queries/*
 RobustBufferAccessBehaviorTest.DynamicBuffer/*
 SimpleStateChangeTest.DrawAndClearTextureRepeatedly/*
 SimpleStateChangeTest.RebindTranslatedAttribute/*
+StateChangeTest.DrawAfterFlushWithNoStateChange/*
 Texture2DDepthTest.DepthTextureES2Compatibility/*
 TextureCubeTest.*
 VulkanClearTest.*
