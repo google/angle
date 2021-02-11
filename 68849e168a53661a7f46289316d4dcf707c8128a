@@ -74,6 +74,24 @@
       "parentUuid": "5e9d174b_6540997c",
       "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68649c65_1d13549f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-11T17:29:00Z",
+      "side": 1,
+      "message": "Can you check on the infra and see if this change reduces machine minutes on the SwS configs?",
+      "parentUuid": "e3b73982_11e57c43",
+      "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
