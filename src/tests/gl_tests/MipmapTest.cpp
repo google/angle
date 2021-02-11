@@ -2054,6 +2054,10 @@ ANGLE_INSTANTIATE_TEST(MipmapTest, WithNoGenMultipleMipsPerPass(ES2_METAL()));
 ANGLE_INSTANTIATE_TEST(Mipmap3DBoxFilterTest,
                        ES2_METAL(),
                        WithNoGenMultipleMipsPerPass(ES2_METAL()));
+
+// This test suite is not instantiated on some OSes.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(Mipmap3DBoxFilterTest);
+
 }  // namespace extraPlatforms
 
 ANGLE_INSTANTIATE_TEST_ES3(MipmapTestES3);
