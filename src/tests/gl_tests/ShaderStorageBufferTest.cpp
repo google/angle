@@ -315,9 +315,6 @@ TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWrite)
 // Tests modifying an existing shader storage buffer
 TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferReadWriteSame)
 {
-    // Missing PBO support in Vulkan.  http://anglebug.com/3210
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kComputeShaderSource[] =
         R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
@@ -2454,6 +2451,210 @@ void main()
     // 5 * sizeof(float) = 20
     // Vulkan rounds up to the required buffer alignment, so >= 20
     EXPECT_GE(queryData, 20);
+}
+
+// Tests that shader write before pixel pack/unpack works
+TEST_P(ShaderStorageBufferTest31, ShaderStorageBufferWriteThenPixelPackUnpack)
+{
+    // Create two textures and framebuffers and make sure they are initialized.
+    GLTexture color1;
+    glBindTexture(GL_TEXTURE_2D, color1);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+
+    GLFramebuffer framebuffer1;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color1, 0);
+
+    glClearColor(255, 0, 255, 255);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    GLTexture color2;
+    glBindTexture(GL_TEXTURE_2D, color2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+
+    GLFramebuffer framebuffer2;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color2, 0);
+
+    glClearColor(0, 0, 255, 255);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std430, binding = 0) buffer block {
+    uint data[2];
+} outBlock;
+void main()
+{
+    // Output red to index 0, and green to index 1.
+    outBlock.data[0] = 0xFF0000FFu;
+    outBlock.data[1] = 0xFF00FF00u;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+
+    glUseProgram(program);
+
+    constexpr GLsizei kBufferSize                   = sizeof(GLuint) * 2;
+    constexpr std::array<GLuint, 2> kBufferInitData = {0x01234567u, 0x89ABCDEFu};
+
+    // Create a shader storage buffer
+    GLBuffer buffer;
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, kBufferInitData.data(), GL_STATIC_DRAW);
+
+    // Bind shader storage buffer and write to it.
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Issue a memory barrier for pixel pack/unpack operations.
+    glMemoryBarrier(GL_PIXEL_BUFFER_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Use a pixel pack operation to overwrite the output of the compute shader at index 0.  Uses
+    // the second framebuffer which is blue.
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Use a pixel unpack operation to re-initialize the other framebuffer with the results from the
+    // compute shader.
+    glBindTexture(GL_TEXTURE_2D, color1);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    reinterpret_cast<void *>(sizeof(GLuint)));
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the first framebuffer is now green
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify the contents of the buffer.  It should have blue as the first index and green as the
+    // second.
+    GLColor *bufferContents = static_cast<GLColor *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(GLColor::blue, bufferContents[0]);
+    EXPECT_EQ(GLColor::green, bufferContents[1]);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    EXPECT_GL_NO_ERROR();
+}
+
+// Tests that shader write after pixel pack/unpack works
+TEST_P(ShaderStorageBufferTest31, PixelPackUnpackThenShaderStorageBufferWrite)
+{
+    swapBuffers();
+    // Create two textures and framebuffers and make sure they are initialized.
+    GLTexture color1;
+    glBindTexture(GL_TEXTURE_2D, color1);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+
+    GLFramebuffer framebuffer1;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer1);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color1, 0);
+
+    glClearColor(255, 0, 255, 255);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::magenta);
+
+    GLTexture color2;
+    glBindTexture(GL_TEXTURE_2D, color2);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 1, 1);
+
+    GLFramebuffer framebuffer2;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer2);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color2, 0);
+
+    glClearColor(0, 0, 255, 255);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    constexpr GLsizei kBufferSize                   = sizeof(GLuint) * 2;
+    constexpr std::array<GLuint, 2> kBufferInitData = {0x01234567u, 0xFF00FF00u};
+
+    // Create a shader storage buffer
+    GLBuffer buffer;
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kBufferSize, kBufferInitData.data(), GL_STATIC_DRAW);
+
+    // Use a pixel pack operation to overwrite the buffer at index 0.  Uses the second framebuffer
+    // which is blue.
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+    glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    EXPECT_GL_NO_ERROR();
+
+    // Use a pixel unpack operation to re-initialize the other framebuffer with the contents of the
+    // buffer, which is green.
+    glBindTexture(GL_TEXTURE_2D, color1);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, buffer);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE,
+                    reinterpret_cast<void *>(sizeof(GLuint)));
+    EXPECT_GL_NO_ERROR();
+
+    // Issue a memory barrier for pixel pack/unpack operations.
+    glMemoryBarrier(GL_PIXEL_BUFFER_BARRIER_BIT);
+
+    // Issue a dispatch call that overwrites the buffer, also verifying that the results of the pack
+    // operation is correct.
+    constexpr char kComputeShaderSource[] =
+        R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(std430, binding = 0) buffer block {
+    uint data[2];
+} outBlock;
+void main()
+{
+    if (outBlock.data[0] == 0xFFFF0000u)
+    {
+        outBlock.data[0] = 0x11223344u;
+    }
+    else
+    {
+        outBlock.data[0] = 0xABCDABCDu;
+    }
+    outBlock.data[1] = 0x55667788u;
+}
+)";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShaderSource);
+
+    glUseProgram(program);
+
+    // Bind shader storage buffer and write to it.
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+
+    glDispatchCompute(1, 1, 1);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the first framebuffer is now green
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer1);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify that the second framebuffer is still blue
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer2);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Verify the contents of the buffer.
+    uint32_t *bufferContents = static_cast<uint32_t *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(bufferContents[0], 0x11223344u);
+    EXPECT_EQ(bufferContents[1], 0x55667788u);
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+    EXPECT_GL_NO_ERROR();
 }
 
 ANGLE_INSTANTIATE_TEST_ES31(ShaderStorageBufferTest31);

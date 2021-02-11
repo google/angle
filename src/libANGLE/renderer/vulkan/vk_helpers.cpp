@@ -682,6 +682,24 @@ bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
            CanCopyWithTransfer(renderer, srcFormat, srcTilingMode, destFormat, destTilingMode);
 }
 
+bool CanCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
+                                       const vk::Format *imageFormat)
+{
+    const angle::Format *readFormat = &imageFormat->actualImageFormat();
+
+    // Don't allow copies from emulated formats for simplicity.
+    const bool isEmulatedFormat = imageFormat->hasEmulatedImageFormat();
+
+    // Only allow copies to PBOs with identical format.
+    const bool isSameFormatCopy = *readFormat == *packPixelsParams.destFormat;
+
+    // Disallow any transformation.
+    const bool needsTransformation =
+        packPixelsParams.rotation != SurfaceRotation::Identity || packPixelsParams.reverseRowOrder;
+
+    return !isEmulatedFormat && isSameFormatCopy && !needsTransformation;
+}
+
 void ReleaseBufferListToRenderer(RendererVk *renderer, BufferHelperPointerVector *buffers)
 {
     for (std::unique_ptr<BufferHelper> &toFree : *buffers)
@@ -6276,6 +6294,31 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
         srcSubresource.baseArrayLayer = 0;
         srcSubresource.layerCount     = 1;
         srcSubresource.mipLevel       = 0;
+    }
+
+    // If PBO and if possible, copy directly on the GPU.
+    if (packPixelsParams.packBuffer && CanCopyWithTransformForReadPixels(packPixelsParams, mFormat))
+    {
+        BufferHelper &packBuffer = GetImpl(packPixelsParams.packBuffer)->getBuffer();
+
+        CommandBufferAccess copyAccess;
+        copyAccess.onBufferTransferWrite(&packBuffer);
+        copyAccess.onImageTransferRead(copyAspectFlags, src);
+
+        CommandBuffer *copyCommandBuffer;
+        ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(copyAccess, &copyCommandBuffer));
+
+        VkBufferImageCopy region = {};
+        region.bufferImageHeight = srcExtent.height;
+        region.bufferOffset      = packPixelsParams.offset;
+        region.bufferRowLength   = packPixelsParams.outputPitch / readFormat->pixelBytes;
+        region.imageExtent       = srcExtent;
+        region.imageOffset       = srcOffset;
+        region.imageSubresource  = srcSubresource;
+
+        copyCommandBuffer->copyImageToBuffer(src->getImage(), src->getCurrentLayout(),
+                                             packBuffer.getBuffer().getHandle(), 1, &region);
+        return angle::Result::Continue;
     }
 
     VkBuffer bufferHandle      = VK_NULL_HANDLE;

@@ -1226,7 +1226,7 @@ class CommandBufferHelper : angle::NonCopyable
     PackedAttachmentIndex mDepthStencilAttachmentIndex;
 
     // Tracks resources used in the command buffer.
-    // For Buffers, we track the read/write access type so we can enable simuntaneous reads.
+    // For Buffers, we track the read/write access type so we can enable simultaneous reads.
     // Images have unique layouts unlike buffers therefore we don't support multi-read.
     angle::FastIntegerMap<BufferAccess> mUsedBuffers;
     angle::FastIntegerSet mRenderPassUsedImages;
