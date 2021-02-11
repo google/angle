@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f0d761e_ea80fbac",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T20:16:14Z",
+      "side": 0,
+      "message": "If you look at BitSetT::Iterator, the iterator keeps a copy of the bitset and modifies it directly. setLaterBit in other words doesn\u0027t affect the original bitset.\n\nCan you do the same here? You can copy the original bitset (which would copy like 2 words instead of 1, no big deal IMO). Then the functions you added here would be greatly simplified.",
+      "range": {
+        "startLine": 615,
+        "startChar": 26,
+        "endLine": 615,
+        "endChar": 27
+      },
+      "revId": "0f74ae58ed185108ec38a4cb038ef3c31acd9ff4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
