@@ -139,6 +139,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc584615_59dd0e58",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T17:49:11Z",
+      "side": 1,
+      "message": "Can we get a guarantee from the working group, or add explicit spec language about the image contents being retained? Without such a guarantee the implementation is free to delete the image memory and reallocate it on ANI. As long as the implementation retains the handle values, this can still be satisfied: \"This was an original requirement that the images could be coded into the pipeline.\"",
+      "parentUuid": "0fdf630e_d6c11ca0",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "257d0c4d_2c35a81b",
@@ -170,6 +188,24 @@
       "side": 1,
       "message": "I do like moving the math and any overhead to getBufferAge().\nUnfortunately, We end up updating the mFrameNumber of the Image, without capturing the difference for age:\n\n    // EGL_EXT_buffer_age - When an image becomes render target we mark\n    // its FrameNumber with the current mFrameCount.\n    mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber \u003d ++mFrameCount;",
       "parentUuid": "257d0c4d_2c35a81b",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2154429_c117c8d2",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T17:49:11Z",
+      "side": 1,
+      "message": "The problem is that you are setting mFrameNumber for the current image that was swapped in, but you should probably be setting it for the image that was swapped out. In other words, instead of:\n\n- ANI\n- mFrameNumber \u003d N\n- Draw    // age query needs age cached\n- QP\n\nYou can do:\n\n- ANI\n- Draw    // age query can use mFrameNumber\n- mFrameNumber \u003d N\n- QP",
+      "parentUuid": "11e83111_302630d4",
       "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
