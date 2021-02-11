@@ -87,6 +87,30 @@
       },
       "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "313967e6_1044aa38",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T21:58:13Z",
+      "side": 1,
+      "message": "\u003e mParentCopy\n\nonly activated when a mutation is required. for usecases with just iteration it wont have valid values\n\n\u003e why do you need \u0026mParent\n\nconst reference for usecases that only iterate without mutation\n\n\u003e why do you need ... mCurrentParent\n\nthis is a pointer to which ever parent is the active one\n1. for non-mutating cases mCurrentParent points to mParent\n2. for mutating cases mCurrentParent points to mParentCopy",
+      "parentUuid": "e68b0cf4_2158f902",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 42
+      },
+      "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
