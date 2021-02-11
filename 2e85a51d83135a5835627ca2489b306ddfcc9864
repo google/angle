@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "503f8f7f_d9aad60d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-11T14:52:32Z",
+      "side": 1,
+      "message": "Hi Geoff, PTAL. Thanks",
+      "revId": "2e85a51d83135a5835627ca2489b306ddfcc9864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ad6efb3_4adde776",
+        "filename": "src/libANGLE/renderer/gl/ShaderGL.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-11T14:52:32Z",
+      "side": 1,
+      "message": "Does ANGLE always compile and validate shaders from client even if validation is disabled at [1]? If the validation can be skipped, we will need the workaround in skia for SkiaRenderer in viz. And maybe we prefer to skip the shader validation  for viz SkiaRenderer?\n\n[1] https://source.chromium.org/chromium/chromium/src/+/master:ui/gl/gl_context.h;l\u003d90;drc\u003d2ac64302ae161cd6b5e4b1254497bdf5fd6d3415;bpv\u003d1;bpt\u003d1?q\u003dGLContextAttri\u0026ss\u003dchromium%2Fchromium%2Fsrc",
+      "range": {
+        "startLine": 241,
+        "startChar": 38,
+        "endLine": 241,
+        "endChar": 55
+      },
+      "revId": "2e85a51d83135a5835627ca2489b306ddfcc9864",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
