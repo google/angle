@@ -22,6 +22,30 @@
       },
       "revId": "0f74ae58ed185108ec38a4cb038ef3c31acd9ff4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0200e5f_d045ccc3",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T20:33:01Z",
+      "side": 0,
+      "message": "there were 2 reasons i did it this way -\n1. Everytime an iterator is created, it needs to be a fast operation without any copies involved so that usecases that only iterate without mutating should not take any perf hit. Given that we want the fastest path possible for a fast bitset \"good\" usecases should not have to take the hit just so we can support functionality for mutating cases.\n\n2. if we have a BitSetArray\u003c96\u003e and we are at bit 1, a usecase can call setLaterBit(90) in which case the current iterator is out of luck and cant satisfy the requirement. This was not the case with BitSetT::Iterator",
+      "parentUuid": "4f0d761e_ea80fbac",
+      "range": {
+        "startLine": 615,
+        "startChar": 26,
+        "endLine": 615,
+        "endChar": 27
+      },
+      "revId": "0f74ae58ed185108ec38a4cb038ef3c31acd9ff4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
