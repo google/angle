@@ -12,7 +12,7 @@
 
 #include <stdint.h>
 
-#include <bitset>
+#include <array>
 
 #include "common/angleutils.h"
 #include "common/debug.h"
@@ -152,106 +152,6 @@ class BitSetT final
   private:
     BitsT mBits;
 };
-
-template <size_t N>
-class IterableBitSet : public std::bitset<N>
-{
-  public:
-    constexpr IterableBitSet() {}
-    constexpr IterableBitSet(const std::bitset<N> &implicitBitSet) : std::bitset<N>(implicitBitSet)
-    {}
-
-    class Iterator final
-    {
-      public:
-        Iterator(const std::bitset<N> &bits);
-        Iterator &operator++();
-
-        bool operator==(const Iterator &other) const;
-        bool operator!=(const Iterator &other) const;
-        unsigned long operator*() const { return mCurrentBit; }
-
-        // These helper functions allow mutating an iterator in-flight.
-        // They only operate on later bits to ensure we don't iterate the same bit twice.
-        void resetLaterBit(std::size_t index)
-        {
-            ASSERT(index > mCurrentBit);
-            mBits.reset(index - mOffset);
-        }
-
-        void setLaterBit(std::size_t index)
-        {
-            ASSERT(index > mCurrentBit);
-            mBits.set(index - mOffset);
-        }
-
-      private:
-        unsigned long getNextBit();
-
-        static constexpr size_t BitsPerWord = sizeof(uint32_t) * 8;
-        std::bitset<N> mBits;
-        unsigned long mCurrentBit;
-        unsigned long mOffset;
-    };
-
-    Iterator begin() const { return Iterator(*this); }
-    Iterator end() const { return Iterator(std::bitset<N>(0)); }
-};
-
-template <size_t N>
-IterableBitSet<N>::Iterator::Iterator(const std::bitset<N> &bitset)
-    : mBits(bitset), mCurrentBit(0), mOffset(0)
-{
-    if (mBits.any())
-    {
-        mCurrentBit = getNextBit();
-    }
-    else
-    {
-        mOffset = static_cast<unsigned long>(rx::roundUpPow2(N, BitsPerWord));
-    }
-}
-
-template <size_t N>
-ANGLE_INLINE typename IterableBitSet<N>::Iterator &IterableBitSet<N>::Iterator::operator++()
-{
-    ASSERT(mBits.any());
-    mBits.set(mCurrentBit - mOffset, 0);
-    mCurrentBit = getNextBit();
-    return *this;
-}
-
-template <size_t N>
-bool IterableBitSet<N>::Iterator::operator==(const Iterator &other) const
-{
-    return mOffset == other.mOffset && mBits == other.mBits;
-}
-
-template <size_t N>
-bool IterableBitSet<N>::Iterator::operator!=(const Iterator &other) const
-{
-    return !(*this == other);
-}
-
-template <size_t N>
-unsigned long IterableBitSet<N>::Iterator::getNextBit()
-{
-    // TODO(jmadill): Use 64-bit scan when possible.
-    static constexpr std::bitset<N> wordMask(std::numeric_limits<uint32_t>::max());
-
-    while (mOffset < N)
-    {
-        uint32_t wordBits = static_cast<uint32_t>((mBits & wordMask).to_ulong());
-        if (wordBits != 0)
-        {
-            return gl::ScanForward(wordBits) + mOffset;
-        }
-
-        mBits >>= BitsPerWord;
-        mOffset += BitsPerWord;
-    }
-    return 0;
-}
 
 template <size_t N, typename BitsT, typename ParamT>
 constexpr BitSetT<N, BitsT, ParamT>::BitSetT() : mBits(0)
@@ -538,6 +438,9 @@ using BitSet32 = BitSetT<N, uint32_t>;
 template <size_t N>
 using BitSet64 = BitSetT<N, uint64_t>;
 
+template <std::size_t N>
+class BitSetArray;
+
 namespace priv
 {
 
@@ -547,7 +450,7 @@ using EnableIfBitsFit = typename std::enable_if<N <= sizeof(T) * 8>::type;
 template <size_t N, typename Enable = void>
 struct GetBitSet
 {
-    using Type = IterableBitSet<N>;
+    using Type = BitSetArray<N>;
 };
 
 // Prefer 64-bit bitsets on 64-bit CPUs. They seem faster than 32-bit.

@@ -299,7 +299,8 @@ TYPED_TEST(BitSetIteratorTest, BitAssignment)
 TYPED_TEST(BitSetIteratorTest, SetLaterBit)
 {
     TypeParam mStateBits            = this->mStateBits;
-    std::set<size_t> expectedValues = {1, 3, 5, 7, 9};
+    std::set<size_t> expectedValues = {0, 1, 3, 5, 7, 9, 35};
+    mStateBits.set(0);
     mStateBits.set(1);
 
     std::set<size_t> actualValues;
@@ -312,6 +313,7 @@ TYPED_TEST(BitSetIteratorTest, SetLaterBit)
             iter.setLaterBit(5);
             iter.setLaterBit(7);
             iter.setLaterBit(9);
+            iter.setLaterBit(35);
         }
 
         actualValues.insert(*iter);

@@ -48,10 +48,8 @@ void BitSetIteratorPerfTest<T>::step()
 }
 
 // These type names unfortunately don't get printed correctly in Gtest.
-using TestTypes = Types<angle::IterableBitSet<32>,
-                        angle::BitSet32<32>,
+using TestTypes = Types<angle::BitSet32<32>,
                         angle::BitSet64<32>,
-                        angle::IterableBitSet<64>,
                         angle::BitSet64<64>,
                         angle::BitSet<96>,
                         angle::BitSetArray<96>>;
