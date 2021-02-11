@@ -86,6 +86,59 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fdf630e_d6c11ca0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-11T15:54:34Z",
+      "side": 1,
+      "message": "The VkImages for the VkSwapchain, I think are completely allocated at vkCreateSwapchain. They can only be replaced/resized/reallocated at vkCreateSwapchain. This was an original requirement that the images could be coded into the pipeline. No Swapbuffers like behavior. So I don\u0027t think this scenario can work with Vulkan. If i\u0027m wrong, I would think it would still require a new call to vkCreateSwapchain and recreate the buffers?",
+      "parentUuid": "de08cff4_930032bf",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "504d6a2d_b184b4db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-11T15:54:34Z",
+      "side": 1,
+      "message": "Rely to Shahbaz comments. Please check if they seem right to you.",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a9dc64a_0d7cf4f6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-11T15:54:34Z",
+      "side": 1,
+      "message": "Ready, will be in next patch.",
+      "parentUuid": "f1e73986_3ba92f9c",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "257d0c4d_2c35a81b",
@@ -105,6 +158,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "11e83111_302630d4",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-11T15:54:34Z",
+      "side": 1,
+      "message": "I do like moving the math and any overhead to getBufferAge().\nUnfortunately, We end up updating the mFrameNumber of the Image, without capturing the difference for age:\n\n    // EGL_EXT_buffer_age - When an image becomes render target we mark\n    // its FrameNumber with the current mFrameCount.\n    mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber \u003d ++mFrameCount;",
+      "parentUuid": "257d0c4d_2c35a81b",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a5a8586a_5d7ce32e",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 7
@@ -116,6 +187,30 @@
       "writtenOn": "2021-02-10T20:07:17Z",
       "side": 1,
       "message": "Shouldn\u0027t need to cache this. The logic above (from WindowSurfaceVk::swap) can be moved here.",
+      "range": {
+        "startLine": 1909,
+        "startChar": 15,
+        "endLine": 1909,
+        "endChar": 25
+      },
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4469042b_997b6b99",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1909,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-11T15:54:34Z",
+      "side": 1,
+      "message": "Because of above, mFrameCount, and currentImage-\u003emFrameNumber are the same, and so getBufferAge always returns 0.\n\negl::Error WindowSurfaceVk::getBufferAge(EGLint *age) const\n{\n    // EGL_EXT_buffer_age - Age \u003d difference between the current frame number\n    // and the frame the image was last drawn.\n    const SwapchainImage *currentImage \u003d \n             \u0026mSwapchainImages[mCurrentSwapchainImageIndex];\n    if (currentImage-\u003emFrameNumber \u003d\u003d 0)\n    {\n        *age \u003d 0;  // Has not been used for rendering yet, no age.\n    }\n    else\n    {\n        *age \u003d static_cast\u003cEGLint\u003e(mFrameCount - currentImage-\u003emFrameNumber);\n    }\n    return egl::NoError();",
+      "parentUuid": "a5a8586a_5d7ce32e",
       "range": {
         "startLine": 1909,
         "startChar": 15,
