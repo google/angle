@@ -16,6 +16,46 @@
       "message": "PTAL - kick the buddy GLES1 fix",
       "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d543cf9_f6ef069f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-11T21:57:14Z",
+      "side": 1,
+      "message": "FYI I think there is some coverage for this in the covgl tests. We don\u0027t have those set up on the CQ.",
+      "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d822f34c_a40ed7ac",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-11T21:57:14Z",
+      "side": 1,
+      "message": "is unsigned byte the only normalized type? can you add a comment here?",
+      "range": {
+        "startLine": 104,
+        "startChar": 50,
+        "endLine": 104,
+        "endChar": 62
+      },
+      "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
