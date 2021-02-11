@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e206a05c_6e2fe972",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T21:46:17Z",
+      "side": 1,
+      "message": "PTAL - kick the buddy GLES1 fix",
+      "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
