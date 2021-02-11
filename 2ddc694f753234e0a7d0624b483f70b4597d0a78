@@ -56,6 +56,30 @@
       },
       "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dbbafcb_f4f5f917",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T22:48:30Z",
+      "side": 1,
+      "message": "\u003e can you add a comment here?\n\nif you want a spec paragraph then unfortunately we dont have one. this isn\u0027t in the spec and was discovered through experimentation to see what other drivers do",
+      "parentUuid": "d822f34c_a40ed7ac",
+      "range": {
+        "startLine": 104,
+        "startChar": 50,
+        "endLine": 104,
+        "endChar": 62
+      },
+      "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
