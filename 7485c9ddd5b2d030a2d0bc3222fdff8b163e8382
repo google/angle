@@ -87,6 +87,29 @@
       "parentUuid": "40c02cc7_f157207a",
       "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac43f5bf_b9419749",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3362,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-11T22:54:07Z",
+      "side": 1,
+      "message": "Unsupported by what?  This comment and how it relates to getting an InvalidEnum isn\u0027t clear to me.",
+      "range": {
+        "startLine": 3362,
+        "startChar": 4,
+        "endLine": 3362,
+        "endChar": 80
+      },
+      "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

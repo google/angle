@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3148573_8cc69823",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2969,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-11T22:54:07Z",
+      "side": 1,
+      "message": "I think you tried this at one point (or maybe I did), but checking for width/height less than block size *before* checking for alignment might be sufficient.",
+      "revId": "24c50722b849f19e832ebe5a81d547efc9e74873",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a1fe19a_09769c64",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3357,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-11T22:54:07Z",
+      "side": 1,
+      "message": "I\u0027m not sure that filling the mip is the right approach, even though it works for your scenario.  What if we\u0027re copying a region of the compressed texture that is smaller than block size but doesn\u0027t fill the mip?  That\u0027s going to fail the check too, right?",
+      "range": {
+        "startLine": 3357,
+        "startChar": 9,
+        "endLine": 3357,
+        "endChar": 23
+      },
+      "revId": "24c50722b849f19e832ebe5a81d547efc9e74873",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
