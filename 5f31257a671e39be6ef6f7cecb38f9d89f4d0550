@@ -56,6 +56,30 @@
       },
       "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f41521b6_468e38dc",
+        "filename": "src/tests/restricted_traces/trace_egl_loader_autogen.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-11T17:27:44Z",
+      "side": 1,
+      "message": "The original dates are technically not important. I\u0027d say any year \u003e 1980 is fine 😊",
+      "parentUuid": "ed59bdaf_5f52c06a",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
