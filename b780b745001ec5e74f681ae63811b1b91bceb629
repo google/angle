@@ -39,6 +39,24 @@
       "message": "LGTM if it passes the tests. This stuff is pretty finicky. If you could test locally with/without component build, I know our bots only test one of the two permutations.",
       "revId": "b780b745001ec5e74f681ae63811b1b91bceb629",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5448fe6_fe3c4014",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-11T21:20:32Z",
+      "side": 1,
+      "message": "android_angle_vk64_rel_ng will test non-component build, and I hope this gets component build running on https://luci-milo.appspot.com/p/chromium/builders/ci/android-angle-vk-arm-pixel2",
+      "parentUuid": "6bce3fee_ad873920",
+      "revId": "b780b745001ec5e74f681ae63811b1b91bceb629",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
