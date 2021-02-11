@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "07cae823_3e099524",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3460,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T18:22:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "415e4cdf_fbe3b15f",
+      "range": {
+        "startLine": 3460,
+        "startChar": 8,
+        "endLine": 3460,
+        "endChar": 18
+      },
+      "revId": "09245da53e38513cf9a78362685dff1f6c341367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ddfe8e82_8eaf3b08",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25621f84_00047ee2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T18:22:30Z",
+      "side": 1,
+      "message": "Done.\n\nThough it\u0027s constexpr, so I don\u0027t see how that can be more optimal. The binary size remains constant, so I presume in the end the same assembly is generated.",
+      "parentUuid": "ddfe8e82_8eaf3b08",
+      "range": {
+        "startLine": 307,
+        "startChar": 30,
+        "endLine": 307,
+        "endChar": 89
+      },
+      "revId": "09245da53e38513cf9a78362685dff1f6c341367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2c35290_c9fe2b21",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-02-10T19:59:04Z",
       "side": 1,
       "message": "nit: same",
+      "range": {
+        "startLine": 762,
+        "startChar": 29,
+        "endLine": 762,
+        "endChar": 38
+      },
+      "revId": "09245da53e38513cf9a78362685dff1f6c341367",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22e223c6_6dc3f16c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 762,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T18:22:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2c35290_c9fe2b21",
       "range": {
         "startLine": 762,
         "startChar": 29,
