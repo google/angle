@@ -126,6 +126,41 @@
       "message": "Ooops, this is just variance.\nThe flag isn\u0027t on yet 😞",
       "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59d4e98a_5a8b11ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-11T17:36:38Z",
+      "side": 1,
+      "message": "To actually test this, you can upload a Chromium CL setting the flag, and in the same CL set Chromium\u0027s DEPS to ANGLE\u0027s refs/changes/41/2690141/1 instead of the current git hash.",
+      "parentUuid": "6fdec1b7_00da6d32",
+      "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24b6b30a_c87ba5fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-11T17:36:38Z",
+      "side": 1,
+      "message": "To test, add the flag in ",
+      "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
