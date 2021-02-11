@@ -135,6 +135,30 @@
       },
       "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac5b8c6a_f0d47897",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T22:34:04Z",
+      "side": 1,
+      "message": "\u003e but instead every *iter wouldn\u0027t be a pointer dereference\n\nthis is Iterator::operator*() -\n\n template \u003cstd::size_t N\u003e\n std::size_t BitSetArray\u003cN\u003e::Iterator::operator*() const\n {\n     return (mIndex * priv::kDefaultBitSetSize) + *mCurrentIterator;\n }\n\nare you talking about \"*mCurrentIterator\"? because that code existed prior to this change\n\n\u003e How is setLaterBit(90) a problem? The iterator has a copy of the whole bitset.\n\ni thought you were talking about manipulating the existing iterator some way, might have misunderstood it. but yes, when we have a copy that usecase is not a problem",
+      "parentUuid": "d6758153_dab06b65",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 42
+      },
+      "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
