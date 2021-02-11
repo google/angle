@@ -56,6 +56,24 @@
       "message": "Shabi: is this with experimenting on a workstation with a ton of physical cores? Can you check on the bots how they perform with this limit in place? I wonder if we should instead just limit the number of max processes we spawn to 8 or something. Trying to think of a way to get the same result without maintaining a new flag.",
       "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3b73982_11e57c43",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T17:23:29Z",
+      "side": 1,
+      "message": "No, on my personal computer with 16 threads (Ryzen). Not sure if you saw the other message (I wrote it while in WIP). I misread the units in my sleepy haze, so I don\u0027t actually have a repro for this. It\u0027s not about 16 vs 8. It\u0027s about leaving some room for swiftshader\u0027s threads to work. On a 4 thread CPU, bot mode could use 2 for example. When not running no swiftshader, there\u0027s no point in not utilizing the cpu to the max.\n\nAn alternative is to parse --use-angle, but that wouldn\u0027t work if swiftshader is enabled in some other way.",
+      "parentUuid": "5e9d174b_6540997c",
+      "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
