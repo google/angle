@@ -9,7 +9,7 @@
 
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
-#include "libANGLE/frame_capture_utils.h"
+#include "libANGLE/capture/frame_capture_utils.h"
 #include "util/EGLPlatformParameters.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
