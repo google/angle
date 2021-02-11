@@ -39,6 +39,29 @@
       },
       "revId": "a2899c3751511c4fe748919831593329bb9d1a1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f97499b8_4cfd15fb",
+        "filename": "src/tests/gl_tests/FramebufferFetchTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T06:24:21Z",
+      "side": 1,
+      "message": "Use the R\"(...)\" syntax to avoid the ugliness. Random example from our existing tests:\n\n      ... R\"(precision highp float;\nattribute vec4 position;\nvarying vec2 texcoord;\n\nvoid main()\n{\n    gl_Position \u003d vec4(position.xy, 0.0, 1.0);\n    texcoord \u003d (position.xy * 0.5) + 0.5;\n})\";",
+      "range": {
+        "startLine": 1221,
+        "startChar": 24,
+        "endLine": 1221,
+        "endChar": 26
+      },
+      "revId": "a2899c3751511c4fe748919831593329bb9d1a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
