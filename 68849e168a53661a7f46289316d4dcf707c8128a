@@ -161,6 +161,24 @@
       "message": "To test, add the flag in ",
       "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f87aab6e_877c032b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-11T18:05:14Z",
+      "side": 1,
+      "message": "In progress: https://chromium-review.googlesource.com/c/chromium/src/+/2690263\n\nAlso running on my laptop (8 threads). With half threads, usage hovers around 80%, so I wouldn\u0027t be surprised if there\u0027s a slowdown. We could potentially also use 75% of cpus for example if it matters.",
+      "parentUuid": "59d4e98a_5a8b11ad",
+      "revId": "68849e168a53661a7f46289316d4dcf707c8128a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
