@@ -76,6 +76,41 @@ TEST_P(FramebufferObjectTest, TextureObject)
     glDeleteFramebuffers(1, &fboId);
 }
 
+// Checks different formats for a texture object bound to a framebuffer object.
+TEST_P(FramebufferObjectTest, TextureObjectDifferentFormats)
+{
+    // http://anglebug.com/5642
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsOpenGL());
+
+    GLuint fboId;
+
+    glGenFramebuffersOES(1, &fboId);
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, fboId);
+
+    using FormatInfo                                  = std::array<GLenum, 3>;
+    constexpr std::array<FormatInfo, 5> kFormatArrays = {
+        {{GL_RGBA, GL_RGBA, GL_UNSIGNED_BYTE},
+         {GL_RGB, GL_RGB, GL_UNSIGNED_BYTE},
+         {GL_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_4_4_4_4},
+         {GL_RGBA, GL_RGBA, GL_UNSIGNED_SHORT_5_5_5_1},
+         {GL_RGB, GL_RGB, GL_UNSIGNED_SHORT_5_6_5}}};
+
+    for (const FormatInfo &formatInfo : kFormatArrays)
+    {
+        glTexImage2D(GL_TEXTURE_2D, 0, formatInfo[0], 1, 1, 0, formatInfo[1], formatInfo[2],
+                     &GLColor::green);
+        glFramebufferTexture2DOES(GL_FRAMEBUFFER_OES, GL_COLOR_ATTACHMENT0_OES, GL_TEXTURE_2D,
+                                  mTexture->get(), 0);
+        ASSERT_EQ(glCheckFramebufferStatusOES(GL_FRAMEBUFFER_OES),
+                  (GLenum)GL_FRAMEBUFFER_COMPLETE_OES);
+    }
+
+    EXPECT_GL_NO_ERROR();
+
+    glBindFramebufferOES(GL_FRAMEBUFFER_OES, 0);
+    glDeleteFramebuffersOES(1, &fboId);
+}
+
 // Checks that renderbuffer object can be used and can be bound for framebuffer object.
 TEST_P(FramebufferObjectTest, RenderbufferObject)
 {
