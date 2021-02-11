@@ -52,6 +52,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7108a998_78125934",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-11T18:00:23Z",
+      "side": 1,
+      "message": "I\u0027m fine either way, would be nice to update all the cases though!",
+      "parentUuid": "601183dd_406ad5e5",
+      "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed59bdaf_5f52c06a",
