@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "a6f06a5b24b4ad68cee0e5674351a54c089dff8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e7544735_9ef6c0a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-11T22:39:59Z",
+      "side": 1,
+      "message": "guys, i see this error on win bots -\n\n [487/1829] CXX obj/src/tests/angle_test_expectations/GPUTestConfig.obj\n FAILED: obj/src/tests/angle_test_expectations/GPUTestConfig.obj \n ...\n ../../src\\common/bitset_utils.h(484): error C2079: \u0027angle::BitSetArray\u003c41\u003e::mBaseBitSetArray\u0027 uses \n undefined class \u0027std::array\u003cangle::BitSetArray\u003c41\u003e::BaseBitSet,2\u003e\u0027\n \nNot sure why \"BaseBitSet\" is an undefined class",
+      "revId": "a6f06a5b24b4ad68cee0e5674351a54c089dff8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
