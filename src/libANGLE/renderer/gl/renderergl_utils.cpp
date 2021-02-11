@@ -1534,8 +1534,9 @@ void GenerateCaps(const FunctionsGL *functions,
     // ANGLE_compressed_texture_etc
     // Expose this extension only when we support the formats or we're running on top of a native
     // ES driver.
-    extensions->compressedTextureETC = functions->standard == STANDARD_GL_ES &&
-                                       gl::DetermineCompressedTextureETCSupport(*textureCapsMap);
+    extensions->compressedTextureETC =
+        (features.allowEtcFormats.enabled || functions->standard == STANDARD_GL_ES) &&
+        gl::DetermineCompressedTextureETCSupport(*textureCapsMap);
 
     // To work around broken unsized sRGB textures, sized sRGB textures are used. Disable EXT_sRGB
     // if those formats are not available.
@@ -1655,6 +1656,12 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
 
     ANGLE_FEATURE_CONDITION(features, rgba4IsNotSupportedForColorRendering,
                             functions->standard == STANDARD_GL_DESKTOP && isIntel);
+
+    // Although "Sandy Bridge", "Ivy Bridge", and "Haswell" may support GL_ARB_ES3_compatibility
+    // extension, ETC2/EAC formats are emulated there. Newer Intel GPUs support them natively.
+    ANGLE_FEATURE_CONDITION(
+        features, allowEtcFormats,
+        isIntel && !IsSandyBridge(device) && !IsIvyBridge(device) && !IsHaswell(device));
 
     // Ported from gpu_driver_bug_list.json (#183)
     ANGLE_FEATURE_CONDITION(features, emulateAbsIntFunction, IsApple() && isIntel);

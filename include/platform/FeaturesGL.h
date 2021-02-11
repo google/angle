@@ -37,6 +37,10 @@ struct FeaturesGL : FeatureSetBase
                                                     FeatureCategory::OpenGLWorkarounds,
                                                     "GL_RGBA4 is not color renderable", &members};
 
+    // Newer Intel GPUs natively support ETC2/EAC compressed texture formats.
+    Feature allowEtcFormats = {"allow_etc_formats", FeatureCategory::OpenGLWorkarounds,
+                               "Enable ETC2/EAC on desktop OpenGL", &members};
+
     // When clearing a framebuffer on Intel or AMD drivers, when GL_FRAMEBUFFER_SRGB is enabled, the
     // driver clears to the linearized clear color despite the framebuffer not supporting SRGB
     // blending.  It only seems to do this when the framebuffer has only linear attachments, mixed
