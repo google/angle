@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "972bd68d_a9297621",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-02-12T05:57:11Z",
+      "side": 1,
+      "message": "Intel GPUs newer than Haswell support ETC2/EAC in hardware so ANGLE can safely expose those formats for WebGL there via ANGLE_compressed_texture_etc.\n\nIntel GPUs older than Sandy Bridge support neither GL 4.3 nor GL_ARB_ES3_compatibility, so this workaround won\u0027t have any effect on there.",
+      "revId": "991c1628fb3ade277439df0f668789e7c20c3a5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
