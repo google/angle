@@ -16,6 +16,46 @@
       "message": "..Well seems unmap fails for webgl2 context (might be related to buffer size). I will investigate first",
       "revId": "58ca94b08dc92aa4d1d9c6487b59c1b3e81b9022",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92e1266c_fecf3ff1",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-12T17:24:28Z",
+      "side": 1,
+      "message": "Statemanager will only bind if needed so let\u0027s just move this bind down before the unmap call so there are fewer synchronizations.",
+      "range": {
+        "startLine": 488,
+        "startChar": 16,
+        "endLine": 488,
+        "endChar": 90
+      },
+      "revId": "58ca94b08dc92aa4d1d9c6487b59c1b3e81b9022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "454f63be_4065a938",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 510,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-12T17:24:28Z",
+      "side": 1,
+      "message": "here",
+      "revId": "58ca94b08dc92aa4d1d9c6487b59c1b3e81b9022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
