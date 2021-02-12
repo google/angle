@@ -50,6 +50,69 @@
       "message": "LGTM",
       "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "837b3ef9_ac17f8c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-12T17:02:06Z",
+      "side": 1,
+      "message": "Some bot failures.",
+      "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16b59a5d_1b9aca5f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 6290,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-12T17:02:06Z",
+      "side": 1,
+      "message": "!hasEmulatedImageFormat",
+      "range": {
+        "startLine": 6290,
+        "startChar": 40,
+        "endLine": 6290,
+        "endChar": 92
+      },
+      "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "930eeef5_3bf2a947",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 6292,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-12T17:02:06Z",
+      "side": 1,
+      "message": "suggest making this a helper, returning bool, with each condition having a comment.",
+      "range": {
+        "startLine": 6291,
+        "startChar": 29,
+        "endLine": 6292,
+        "endChar": 41
+      },
+      "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
