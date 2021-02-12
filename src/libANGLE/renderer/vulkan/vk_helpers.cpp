@@ -755,6 +755,39 @@ bool CanCopyWithTransfer(RendererVk *renderer,
     return isTilingCompatible && srcFormatHasNecessaryFeature && dstFormatHasNecessaryFeature;
 }
 
+bool FillImageFormatListInfo(RendererVk *rendererVk,
+                             const vk::Format &format,
+                             VkFormat *imageListVkFormat,
+                             VkImageCreateFlags *imageCreateFlags,
+                             VkImageFormatListCreateInfoKHR *imageFormatListCreateInfo)
+{
+    // With the introduction of sRGB related GLES extensions any sample/render target could be
+    // respecified causing it to be interpreted in a different colorspace. Create the VkImage
+    // accordingly.
+    angle::FormatID imageFormat     = format.actualImageFormatID;
+    angle::FormatID imageListFormat = format.actualImageFormat().isSRGB
+                                          ? ConvertToLinear(imageFormat)
+                                          : ConvertToSRGB(imageFormat);
+    *imageListVkFormat = vk::GetVkFormatFromFormatID(imageListFormat);
+
+    if (rendererVk->getFeatures().supportsImageFormatList.enabled &&
+        rendererVk->haveSameFormatFeatureBits(imageFormat, imageListFormat))
+    {
+        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
+        *imageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+
+        // There is just 1 additional format we might use to create a VkImageView for this VkImage
+        imageFormatListCreateInfo->sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
+        imageFormatListCreateInfo->pNext = nullptr;
+        imageFormatListCreateInfo->viewFormatCount = 1;
+        imageFormatListCreateInfo->pViewFormats    = imageListVkFormat;
+
+        return true;
+    }
+
+    return false;
+}
+
 // PackedClearValuesArray implementation
 PackedClearValuesArray::PackedClearValuesArray() : mValues{} {}
 PackedClearValuesArray::~PackedClearValuesArray() = default;

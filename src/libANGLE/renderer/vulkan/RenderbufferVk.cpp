@@ -78,28 +78,15 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         mImageViews.init(renderer);
     }
 
-    // With the introduction of sRGB related GLES extensions any texture could be respecified
-    // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
-    VkImageCreateFlags imageCreateFlags                  = vk::kVkImageCreateFlagsNone;
     VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    angle::FormatID imageFormat                          = format.actualImageFormatID;
-    angle::FormatID imageListFormat                      = format.actualImageFormat().isSRGB
-                                          ? ConvertToLinear(imageFormat)
-                                          : ConvertToSRGB(imageFormat);
-    VkFormat vkFormat = vk::GetVkFormatFromFormatID(imageListFormat);
+    VkImageFormatListCreateInfoKHR formatListInfo        = {};
+    VkFormat imageListVkFormat                           = VK_FORMAT_UNDEFINED;
+    VkImageCreateFlags imageCreateFlags                  = vk::kVkImageCreateFlagsNone;
 
-    VkImageFormatListCreateInfoKHR formatListInfo = {};
-    if (renderer->getFeatures().supportsImageFormatList.enabled)
+    if (FillImageFormatListInfo(renderer, format, &imageListVkFormat, &imageCreateFlags,
+                                &formatListInfo))
     {
-        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
-        imageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
-
-        // There is just 1 additional format we might use to create a VkImageView for this VkImage
-        formatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
-        formatListInfo.pNext           = nullptr;
-        formatListInfo.viewFormatCount = 1;
-        formatListInfo.pViewFormats    = &vkFormat;
-        additionalCreateInfo           = &formatListInfo;
+        additionalCreateInfo = &formatListInfo;
     }
 
     const angle::Format &textureFormat = format.actualImageFormat();

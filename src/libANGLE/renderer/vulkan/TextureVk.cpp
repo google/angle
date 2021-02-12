@@ -2666,30 +2666,15 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     gl_vk::GetExtentsAndLayerCount(mState.getType(), extents, &vkExtent, &layerCount);
     GLint samples = mState.getBaseLevelDesc().samples ? mState.getBaseLevelDesc().samples : 1;
 
-    // With the introduction of sRGB related GLES extensions any texture could be respecified
-    // causing it to be interpreted in a different colorspace. Create the VkImage accordingly.
     VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    angle::FormatID imageFormat                          = format.actualImageFormatID;
-    angle::FormatID imageListFormat                      = format.actualImageFormat().isSRGB
-                                          ? ConvertToLinear(imageFormat)
-                                          : ConvertToSRGB(imageFormat);
-    VkFormat vkFormat = vk::GetVkFormatFromFormatID(imageListFormat);
+    VkImageFormatListCreateInfoKHR formatListInfo        = {};
+    VkFormat imageListVkFormat                           = VK_FORMAT_UNDEFINED;
 
-    VkImageFormatListCreateInfoKHR formatListInfo = {};
-    if (renderer->getFeatures().supportsImageFormatList.enabled &&
-        renderer->haveSameFormatFeatureBits(format.actualImageFormatID, imageListFormat))
+    if (FillImageFormatListInfo(renderer, format, &imageListVkFormat, &mImageCreateFlags,
+                                &formatListInfo))
     {
         mRequiresMutableStorage = true;
-
-        // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
-        mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
-
-        // There is just 1 additional format we might use to create a VkImageView for this VkImage
-        formatListInfo.sType           = VK_STRUCTURE_TYPE_IMAGE_FORMAT_LIST_CREATE_INFO_KHR;
-        formatListInfo.pNext           = nullptr;
-        formatListInfo.viewFormatCount = 1;
-        formatListInfo.pViewFormats    = &vkFormat;
-        additionalCreateInfo           = &formatListInfo;
+        additionalCreateInfo    = &formatListInfo;
     }
 
     ANGLE_TRY(mImage->initExternal(contextVk, mState.getType(), vkExtent, format, samples,
