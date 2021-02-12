@@ -34,6 +34,8 @@ TextureCaps::TextureCaps() = default;
 
 TextureCaps::TextureCaps(const TextureCaps &other) = default;
 
+TextureCaps &TextureCaps::operator=(const TextureCaps &other) = default;
+
 TextureCaps::~TextureCaps() = default;
 
 GLuint TextureCaps::getMaxSamples() const
@@ -1123,6 +1125,7 @@ void TypePrecision::get(GLint *returnRange, GLint *returnPrecision) const
 Caps::Caps()                  = default;
 Caps::Caps(const Caps &other) = default;
 Caps::~Caps()                 = default;
+Caps &Caps::operator=(const Caps &other) = default;
 
 Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensions)
 {

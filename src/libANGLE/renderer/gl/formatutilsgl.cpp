@@ -30,7 +30,9 @@ SupportRequirement::SupportRequirement()
 
 SupportRequirement::SupportRequirement(const SupportRequirement &other) = default;
 
-SupportRequirement::~SupportRequirement() {}
+SupportRequirement &SupportRequirement::operator=(const SupportRequirement &other) = default;
+
+SupportRequirement::~SupportRequirement() = default;
 
 InternalFormat::InternalFormat() : texture(), filter(), textureAttachment(), renderbuffer() {}
 

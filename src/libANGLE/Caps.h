@@ -27,6 +27,8 @@ struct TextureCaps
 {
     TextureCaps();
     TextureCaps(const TextureCaps &other);
+    TextureCaps &operator=(const TextureCaps &other);
+
     ~TextureCaps();
 
     // Supports for basic texturing: glTexImage, glTexSubImage, etc
@@ -797,6 +799,8 @@ struct Caps
 {
     Caps();
     Caps(const Caps &other);
+    Caps &operator=(const Caps &other);
+
     ~Caps();
 
     // If the values could be got by using GetIntegeri_v, they should
