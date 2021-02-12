@@ -51,6 +51,23 @@
       "message": "Hello again! Still trying to roll googletest in Chromium :)",
       "revId": "1c87f99f5ac1b808b82b04a8b2a32d3dad26a9f2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02e72919_0da740d2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-12T15:59:47Z",
+      "side": 1,
+      "message": "This is fine with me, once we roll gtest we\u0027ll see these errors before landing.",
+      "revId": "1c87f99f5ac1b808b82b04a8b2a32d3dad26a9f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
