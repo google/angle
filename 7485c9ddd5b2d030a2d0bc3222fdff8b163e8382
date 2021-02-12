@@ -110,6 +110,30 @@
       },
       "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7530bf9b_1afe6c91",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 3362,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-12T00:07:58Z",
+      "side": 1,
+      "message": "Still curious what the comment and invalid check are for if you can explain further.",
+      "parentUuid": "ac43f5bf_b9419749",
+      "range": {
+        "startLine": 3362,
+        "startChar": 4,
+        "endLine": 3362,
+        "endChar": 80
+      },
+      "revId": "7485c9ddd5b2d030a2d0bc3222fdff8b163e8382",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d60e710_3b1d9516",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2969,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-12T00:07:58Z",
+      "side": 1,
+      "message": "Disregard, I\u0027ve convinced myself this is okay.",
+      "parentUuid": "f3148573_8cc69823",
+      "revId": "24c50722b849f19e832ebe5a81d547efc9e74873",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0a1fe19a_09769c64",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-11T22:54:07Z",
       "side": 1,
       "message": "I\u0027m not sure that filling the mip is the right approach, even though it works for your scenario.  What if we\u0027re copying a region of the compressed texture that is smaller than block size but doesn\u0027t fill the mip?  That\u0027s going to fail the check too, right?",
+      "range": {
+        "startLine": 3357,
+        "startChar": 9,
+        "endLine": 3357,
+        "endChar": 23
+      },
+      "revId": "24c50722b849f19e832ebe5a81d547efc9e74873",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1261413_92f5fa8e",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 3357,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-12T00:07:58Z",
+      "side": 1,
+      "message": "The spec isn\u0027t really clear on how to handle mips that are smaller than a block.  Thinking about this more, it is probably okay for us to assert that copying a region that is both smaller than the mip AND smaller than the block size does not align to the block size, so we can return the error.",
+      "parentUuid": "0a1fe19a_09769c64",
       "range": {
         "startLine": 3357,
         "startChar": 9,
