@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a7f0282_27372fa8",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T18:36:15Z",
+      "side": 1,
+      "message": "i think i can clean this up a bit more",
+      "revId": "2bc96404b8ae5d8e138bc09f59e138f15f3abc15",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
