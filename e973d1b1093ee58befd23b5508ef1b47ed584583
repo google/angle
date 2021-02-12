@@ -33,6 +33,41 @@
       "message": "looks reasonable to me. ",
       "revId": "e973d1b1093ee58befd23b5508ef1b47ed584583",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58ce07f0_55595017",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T19:49:11Z",
+      "side": 1,
+      "message": "\u003e because the spec does allow persistent but !coherent\n\nyes, seems like that is the case",
+      "parentUuid": "31926b9d_0890220c",
+      "revId": "e973d1b1093ee58befd23b5508ef1b47ed584583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b1b0414_6c5a4598",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T19:49:11Z",
+      "side": 1,
+      "message": "shabi, can you please add a comment here saying there is a strong correlation between persistently mapped buffers being backed by coherent memory and how ANGLE handles glMemoryBarrier(...)\n\nIn case we decide to change the memory type later (because coherent memory ops become too expensive on embedded devices) it will serve as a reminder to update glMemoryBarrier(...) as well.",
+      "revId": "e973d1b1093ee58befd23b5508ef1b47ed584583",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
