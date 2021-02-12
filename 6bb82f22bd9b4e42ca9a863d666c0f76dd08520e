@@ -39,6 +39,30 @@
       },
       "revId": "6bb82f22bd9b4e42ca9a863d666c0f76dd08520e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2dfb06e7_602a6dfa",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T19:13:04Z",
+      "side": 1,
+      "message": "I would like to just use raw const char* pointer instead std::string to avoid unnecessary heap allocation and string copy, since this method is really simple and it just needs to use sscanf.\n\nI add a new GetString method, and put several internal used methods into the anonymous namespace.",
+      "parentUuid": "5b52f5c6_24b0cc08",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 74
+      },
+      "revId": "6bb82f22bd9b4e42ca9a863d666c0f76dd08520e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
