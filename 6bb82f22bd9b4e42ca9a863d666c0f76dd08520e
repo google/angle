@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "955e65cd_79664d0f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-12T16:33:00Z",
+      "side": 1,
+      "message": "Nice!",
+      "revId": "6bb82f22bd9b4e42ca9a863d666c0f76dd08520e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b52f5c6_24b0cc08",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-12T16:33:00Z",
+      "side": 1,
+      "message": "nit: there\u0027s already a GetRendererString function in this file",
+      "range": {
+        "startLine": 106,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 74
+      },
+      "revId": "6bb82f22bd9b4e42ca9a863d666c0f76dd08520e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
