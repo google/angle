@@ -46,6 +46,30 @@
       },
       "revId": "0f74ae58ed185108ec38a4cb038ef3c31acd9ff4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "006ccaf3_aadf660a",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 615,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T18:40:07Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "b0200e5f_d045ccc3",
+      "range": {
+        "startLine": 615,
+        "startChar": 26,
+        "endLine": 615,
+        "endChar": 27
+      },
+      "revId": "0f74ae58ed185108ec38a4cb038ef3c31acd9ff4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
