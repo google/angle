@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e807cac_7174f8de",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-12T02:35:41Z",
+      "side": 1,
+      "message": "What\u0027s the point of mechanically tagging the test suites? Should we make a case to googletest that giving errors on test suites with no instances is not a good idea and revert the change that causes the error instead?",
+      "revId": "1c87f99f5ac1b808b82b04a8b2a32d3dad26a9f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a4100526_38c8733b",
