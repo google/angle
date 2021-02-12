@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "1155c95f_c30be0e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1453272
+      },
+      "writtenOn": "2021-02-12T15:43:34Z",
+      "side": 1,
+      "message": "It seems like a reasonable feature to want. Ideally we SHOULD see an error for creating test suites which are never instantiated, since if they\u0027re never instantiated they\u0027re never run. This seems to be the case here: [1].\n\nThere\u0027s only a handful of instances throughout the codebase where this is an issue, primarily in test suites which are used as templates to be instantiated elsewhere. This CL [2] tracks the necessary changes to Chromium.\n\nTo me, the cost of making these few changes now (and having to tag some more OS-specific tests in the future) seems worthwhile to prevent more instances of not running tests like [1].\n\nThoughts?\n\n[1] https://crrev.com/c/2688442\n[2] https://crrev.com/c/2690921",
+      "parentUuid": "1e807cac_7174f8de",
+      "revId": "1c87f99f5ac1b808b82b04a8b2a32d3dad26a9f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "a4100526_38c8733b",
