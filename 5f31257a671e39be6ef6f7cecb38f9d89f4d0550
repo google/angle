@@ -139,6 +139,30 @@
       },
       "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07cdb45b_76f5a05d",
+        "filename": "src/tests/restricted_traces/trace_egl_loader_autogen.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-12T12:44:52Z",
+      "side": 1,
+      "message": "I found the commit that introduced `scripts/generate_loader.py` to be dd815b623e60a1e1550f328104ffcd7caf20fde1, which Jamie wrote in December 2018.\nThe copyright of the script `generate_loader.py` itself is also 2018.",
+      "parentUuid": "2e32ee96_f65493c3",
+      "range": {
+        "startLine": 4,
+        "startChar": 3,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
