@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94d69acb_7557b635",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T21:17:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87536159_7b78201f",
+      "range": {
+        "startLine": 633,
+        "startChar": 12,
+        "endLine": 639,
+        "endChar": 13
+      },
+      "revId": "456a0ddceff92dfb39f541cb1ee222d14ee537a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3fc7c523_cd508302",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-12T19:34:39Z",
       "side": 1,
       "message": "oops",
+      "range": {
+        "startLine": 878,
+        "startChar": 4,
+        "endLine": 878,
+        "endChar": 20
+      },
+      "revId": "456a0ddceff92dfb39f541cb1ee222d14ee537a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e34b73c1_10d8fb82",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 878,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T21:17:19Z",
+      "side": 1,
+      "message": "Done. Added testing as well",
+      "parentUuid": "3fc7c523_cd508302",
       "range": {
         "startLine": 878,
         "startChar": 4,
