@@ -81,6 +81,52 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7d4d76e_f7803f04",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-12T22:20:52Z",
+      "side": 1,
+      "message": "not really in the scope of this CL but maybe AttributeMap could contain this map -\u003e insert -\u003e push_back to list pattern somehow",
+      "range": {
+        "startLine": 180,
+        "startChar": 17,
+        "endLine": 186,
+        "endChar": 61
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c60758b5_b3e87fa9",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-12T22:20:52Z",
+      "side": 1,
+      "message": "this really doesn\u0027t matter but the spec for this extension oddly says that this parameter takes GL_FALSE and GL_TRUE: https://www.khronos.org/registry/OpenGL/extensions/NV/NV_robustness_video_memory_purge.txt",
+      "range": {
+        "startLine": 216,
+        "startChar": 90,
+        "endLine": 216,
+        "endChar": 98
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ffb9b6e3_c7104a58",
@@ -145,6 +191,52 @@
         "startChar": 72,
         "endLine": 768,
         "endChar": 81
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f31df13_25823a68",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-12T22:20:52Z",
+      "side": 1,
+      "message": "Can you address this or make a bug or remove it?",
+      "range": {
+        "startLine": 948,
+        "startChar": 8,
+        "endLine": 949,
+        "endChar": 17
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31905a6e_524b7236",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-12T22:20:52Z",
+      "side": 1,
+      "message": "nit: should have a bug or name",
+      "range": {
+        "startLine": 952,
+        "startChar": 11,
+        "endLine": 952,
+        "endChar": 15
       },
       "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
