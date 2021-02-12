@@ -70,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06eb2ba9_2e8bf422",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-12T12:58:11Z",
+      "side": 1,
+      "message": "Good catch! I missed a few there. 2 of these cases are also just unused imports. The only remaining `datetime` import left in place will be the one in `generate_stats.py`, which uses it to generate build information.",
+      "parentUuid": "7108a998_78125934",
+      "revId": "5f31257a671e39be6ef6f7cecb38f9d89f4d0550",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ed59bdaf_5f52c06a",
