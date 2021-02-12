@@ -159,6 +159,30 @@
       },
       "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f188e3c_a5617610",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T17:45:28Z",
+      "side": 1,
+      "message": "just to close on this with some data, i ran the BitSetIteratorPerfTest with the implementation in this patch and the one where we get rid of the pointers and make a copy all the time and these were the results -\n\nno copy patch -\n\n $ ./out/Release/angle_white_box_perftests.exe --gtest_filter\u003dBitSetIteratorPerfTest/4.Run\n 2 GPUs:\n   0 - AMD device id: 0x731F\n        Driver Version: 27.20.14527.2002\n   1 - Unknown (5140) device id: 0x8C\n        Driver Version: 10.0.17763.1432\n \n Active GPU: 0\n \n Optimus: false\n AMD Switchable: false\n \n \n Note: Google Test filter \u003d BitSetIteratorPerfTest/4.Run\n [\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n [----------] Global test environment set-up.\n [----------] 1 test from BitSetIteratorPerfTest/4, where TypeParam \u003d \u003ctype\u003e\n [ RUN      ] BitSetIteratorPerfTest/4.Run\n *RESULT BitSetIteratorPerf.wall_time: run\u003d 116.1067374961 ns\n RESULT BitSetIteratorPerf.trial_steps: run\u003d 8416124 count\n RESULT BitSetIteratorPerf.total_steps: run\u003d 16832251 count\n *RESULT BitSetIteratorPerf.wall_time: run\u003d 120.9063340796 ns\n RESULT BitSetIteratorPerf.trial_steps: run\u003d 8416124 count\n RESULT BitSetIteratorPerf.total_steps: run\u003d 25248375 count\n *RESULT BitSetIteratorPerf.wall_time: run\u003d 115.1718059285 ns\n RESULT BitSetIteratorPerf.trial_steps: run\u003d 8416124 count\n RESULT BitSetIteratorPerf.total_steps: run\u003d 33664499 count\n [       OK ] BitSetIteratorPerfTest/4.Run (3969 ms)\n [----------] 1 test from BitSetIteratorPerfTest/4 (3970 ms total)\n \n [----------] Global test environment tear-down\n [\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 1 test from 1 test suite ran. (3972 ms total)\n [  PASSED  ] 1 test.\n\nalways copy in constructor patch -\n\n $ ./out/Release/angle_white_box_perftests.exe --gtest_filter\u003dBitSetIteratorPerfTest/4.Run\n 2 GPUs:\n   0 - AMD device id: 0x731F\n        Driver Version: 27.20.14527.2002\n   1 - Unknown (5140) device id: 0x8C\n        Driver Version: 10.0.17763.1432\n \n Active GPU: 0\n \n Optimus: false\n AMD Switchable: false\n \n \n Note: Google Test filter \u003d BitSetIteratorPerfTest/4.Run\n [\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n [----------] Global test environment set-up.\n [----------] 1 test from BitSetIteratorPerfTest/4, where TypeParam \u003d \u003ctype\u003e\n [ RUN      ] BitSetIteratorPerfTest/4.Run\n *RESULT BitSetIteratorPerf.wall_time: run\u003d 242.7446459439 ns\n RESULT BitSetIteratorPerf.trial_steps: run\u003d 4171416 count\n RESULT BitSetIteratorPerf.total_steps: run\u003d 8342834 count\n *RESULT BitSetIteratorPerf.wall_time: run\u003d 250.8450367949 ns\n RESULT BitSetIteratorPerf.trial_steps: run\u003d 4171416 count\n RESULT BitSetIteratorPerf.total_steps: run\u003d 12514250 count\n *RESULT BitSetIteratorPerf.wall_time: run\u003d 254.2203654585 ns\n RESULT BitSetIteratorPerf.trial_steps: run\u003d 4171416 count\n RESULT BitSetIteratorPerf.total_steps: run\u003d 16685666 count\n [       OK ] BitSetIteratorPerfTest/4.Run (4125 ms)\n [----------] 1 test from BitSetIteratorPerfTest/4 (4126 ms total)\n \n [----------] Global test environment tear-down\n [\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 1 test from 1 test suite ran. (4128 ms total)\n [  PASSED  ] 1 test.",
+      "parentUuid": "ac5b8c6a_f0d47897",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 42
+      },
+      "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
