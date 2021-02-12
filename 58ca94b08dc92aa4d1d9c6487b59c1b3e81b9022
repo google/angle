@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "287cee74_bd2f986e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-12T22:38:52Z",
+      "side": 1,
+      "message": "I think callVertexAttribPointer would rely on the binding buffer?",
+      "parentUuid": "92e1266c_fecf3ff1",
+      "range": {
+        "startLine": 488,
+        "startChar": 16,
+        "endLine": 488,
+        "endChar": 90
+      },
+      "revId": "58ca94b08dc92aa4d1d9c6487b59c1b3e81b9022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "454f63be_4065a938",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 12
