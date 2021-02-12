@@ -139,12 +139,28 @@ angle::Result SyncHelper::clientWait(Context *context,
 
     // We defer (ignore) flushes, so it's possible that the glFence's signal operation is pending
     // submission.
-    if ((flushCommands && contextVk) || usedInRecordedCommands())
+    if (contextVk)
     {
-        ANGLE_TRY(contextVk->flushImpl(nullptr));
+        if (flushCommands || usedInRecordedCommands())
+        {
+            ANGLE_TRY(contextVk->flushImpl(nullptr));
+        }
+    }
+    else
+    {
+        if (!mUse.getSerial().valid())
+        {
+            // The sync object wasn't flushed before waiting, so the wait will always necessarily
+            // time out.
+            WARN() << "clientWaitSync called without flushing sync object and/or a valid context "
+                      "active.";
+            *outResult = VK_TIMEOUT;
+            return angle::Result::Continue;
+        }
     }
 
     // If timeout is zero, there's no need to wait, so return timeout already.
+    // Do this after (possibly) flushing, since some apps/tests/traces are relying on this behavior.
     if (timeout == 0)
     {
         *outResult = VK_TIMEOUT;
