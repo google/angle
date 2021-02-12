@@ -768,9 +768,7 @@ def ClearFolderContent(path):
             os.remove(os.path.join(path, f))
 
 def SetCWDToAngleFolder():
-    angle_folder = "angle"
-    cwd = os.path.dirname(os.path.abspath(__file__))
-    cwd = cwd.split(angle_folder)[0] + angle_folder
+    cwd = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
     os.chdir(cwd)
     return cwd
 
