@@ -80,6 +80,30 @@
       },
       "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9fc1e82_037989c4",
+        "filename": "src/libANGLE/Context_gles_1_0.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-12T16:08:02Z",
+      "side": 1,
+      "message": "Please capture that in a comment here.",
+      "parentUuid": "6dbbafcb_f4f5f917",
+      "range": {
+        "startLine": 104,
+        "startChar": 50,
+        "endLine": 104,
+        "endChar": 62
+      },
+      "revId": "2ddc694f753234e0a7d0624b483f70b4597d0a78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
