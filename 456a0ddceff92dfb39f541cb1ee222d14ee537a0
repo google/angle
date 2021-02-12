@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "456a0ddceff92dfb39f541cb1ee222d14ee537a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87536159_7b78201f",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-12T18:44:47Z",
+      "side": 1,
+      "message": "if needed, i can bring back method updateIterator but this time it will take in pos and a bool and then we do if (bool) setLaterBit() else resetLaterBit()\n\nlet me know",
+      "range": {
+        "startLine": 633,
+        "startChar": 12,
+        "endLine": 639,
+        "endChar": 13
+      },
+      "revId": "456a0ddceff92dfb39f541cb1ee222d14ee537a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
