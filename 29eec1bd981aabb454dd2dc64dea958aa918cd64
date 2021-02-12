@@ -16,6 +16,23 @@
       "message": "I was working on glMemoryBarrier(PIXEL_BUFFER_BARRIER_BIT) when I noticed there\u0027s no way to properly test synchronization with pack buffers, so here we are. In the end, this allowed me to discover a key point I was missing.",
       "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "839abfcb_f0ea4bca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-12T07:29:04Z",
+      "side": 1,
+      "message": "FYI, failures are in D3D, except Android which is regarding framebuffer completeness. There are no PBO-related errors.",
+      "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
