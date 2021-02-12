@@ -16,6 +16,161 @@
       "message": "PTAL",
       "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d475ab2_21c8fa0e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T21:08:24Z",
+      "side": 1,
+      "message": "lgtm and nits.",
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79f34e2c_8a20dc2c",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T21:08:24Z",
+      "side": 1,
+      "message": "nit: Do we want to support virtualized context for all platforms with EGL?",
+      "range": {
+        "startLine": 115,
+        "startChar": 24,
+        "endLine": 115,
+        "endChar": 44
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9dfb0543_81f2c8d4",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T21:08:24Z",
+      "side": 1,
+      "message": "nit: std::move()?",
+      "range": {
+        "startLine": 165,
+        "startChar": 41,
+        "endLine": 165,
+        "endChar": 64
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffb9b6e3_c7104a58",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T21:08:24Z",
+      "side": 1,
+      "message": "nit: Do we want to use external context for all platforms with EGL?",
+      "range": {
+        "startLine": 469,
+        "startChar": 9,
+        "endLine": 469,
+        "endChar": 29
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f83ae0f_cfc3dd2e",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T21:08:24Z",
+      "side": 1,
+      "message": "nit: DisplayEGL",
+      "range": {
+        "startLine": 488,
+        "startChar": 68,
+        "endLine": 488,
+        "endChar": 82
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6be7b2dd_2d2418c2",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T21:08:24Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 768,
+        "startChar": 72,
+        "endLine": 768,
+        "endChar": 81
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "236e9ff5_c827fe57",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-02-12T21:08:24Z",
+      "side": 1,
+      "message": "nit: this method is really simple, maybe move to base class as well?",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 6
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
