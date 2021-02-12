@@ -157,6 +157,8 @@ config("constructor_and_destructor_warnings") {
 config("extra_warnings") {
   cflags = []
 
+  is_gcc = !is_clang && !is_win
+
   # Avoid failing builds for warnings enabled by Skia build.
   if (defined(is_skia_standalone)) {
     cflags += [ "-w" ]
@@ -208,6 +210,10 @@ config("extra_warnings") {
         "-Wsuggest-override",
       ]
     }
+  }
+
+  if (is_gcc) {
+    cflags_cc = [ "-Wdeprecated-copy" ]
   }
 
   if (angle_is_winuwp) {
