@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ea05ebc_6d611954",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-02-12T18:00:57Z",
+      "side": 1,
+      "message": "I thought the way it works right now is that this call is deferred at contextVk::flushImpl() time (search for \"mIsAnyHostVisibleBufferWritten\").",
+      "range": {
+        "startLine": 871,
+        "startChar": 8,
+        "endLine": 871,
+        "endChar": 45
+      },
+      "revId": "9f7fdb95c85505160b32da16a28a394fa2cf6ae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
