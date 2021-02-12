@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9730f248_85ba668d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-12T19:26:19Z",
+      "side": 1,
+      "message": "Thanks, Lubosz.  Couple comments on the two you found.\n",
+      "revId": "fca99abb68346adefa963a25c1abd0ff05fc8a14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "241f055d_e416ad86",
+        "filename": "src/compiler/translator/OutputVulkanGLSLForMetal.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-12T19:26:19Z",
+      "side": 1,
+      "message": "Looks like there is a matching entry in:\nsrc/compiler/translator/OutputVulkanGLSLForMetal.h",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 65
+      },
+      "revId": "fca99abb68346adefa963a25c1abd0ff05fc8a14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4f7e3d2_b4e1d5eb",
+        "filename": "src/compiler/translator/TranslatorMetal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-12T19:26:19Z",
+      "side": 1,
+      "message": "Same here, let\u0027s remove the one in:\nsrc/compiler/translator/TranslatorMetal.cpp",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 65
+      },
+      "revId": "fca99abb68346adefa963a25c1abd0ff05fc8a14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
