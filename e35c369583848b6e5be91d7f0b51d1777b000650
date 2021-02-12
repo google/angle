@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e563b20_5d285d73",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-12T20:09:54Z",
+      "side": 1,
+      "message": "Why does this need to be linux-specific? Still warnings in non-linux parts of the code?",
+      "range": {
+        "startLine": 205,
+        "startChar": 13,
+        "endLine": 205,
+        "endChar": 21
+      },
+      "revId": "e35c369583848b6e5be91d7f0b51d1777b000650",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
