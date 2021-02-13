@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10a797d0_e8428d9c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T18:40:51Z",
+      "side": 1,
+      "message": "Pointers for output arguments per style guide",
+      "range": {
+        "startLine": 1318,
+        "startChar": 38,
+        "endLine": 1318,
+        "endChar": 39
+      },
+      "revId": "f5efc0de300f4d75b7fa25add217d4881212645d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
