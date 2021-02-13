@@ -242,6 +242,30 @@
       },
       "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbcd2698_4ec25f73",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 657,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-13T15:14:06Z",
+      "side": 1,
+      "message": "copy constructor is invoked twice per iteration (one for begin and another for end). The micro benchmark will exaggerate the effect, though i didn\u0027t expect it to be double the time",
+      "parentUuid": "75222d2b_fe1a248f",
+      "range": {
+        "startLine": 655,
+        "startChar": 0,
+        "endLine": 657,
+        "endChar": 42
+      },
+      "revId": "1b8e38f137c7a22afdcd45b22253896c18c86f1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

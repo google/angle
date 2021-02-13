@@ -16,6 +16,29 @@
       "message": "anything else shabi?",
       "revId": "350ec3d9888bfe2ae36ac1662de2d57d597a83fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03c54b5e_2fd50f02",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 793,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-13T15:14:06Z",
+      "side": 1,
+      "message": "update this to \"mCurrentParent-\u003e\" for consistency",
+      "range": {
+        "startLine": 793,
+        "startChar": 60,
+        "endLine": 793,
+        "endChar": 68
+      },
+      "revId": "350ec3d9888bfe2ae36ac1662de2d57d597a83fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
