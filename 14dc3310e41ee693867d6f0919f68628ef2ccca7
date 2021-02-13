@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11e73dfc_0e4a71c0",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T04:44:53Z",
+      "side": 1,
+      "message": "usedInRecordedCommands?\n\nThis is an EGL sync, so it\u0027s impossible for there to be deferred flushes associated with it, right? Any way we can ASSERT that this syncHelper is an EGL one? + Comment would be good.",
+      "range": {
+        "startLine": 158,
+        "startChar": 12,
+        "endLine": 158,
+        "endChar": 37
+      },
+      "revId": "14dc3310e41ee693867d6f0919f68628ef2ccca7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dab74082_0b850d09",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T04:44:53Z",
+      "side": 1,
+      "message": "I would make it more formal:\n\n    // The sync object wasn\u0027t flushed before waiting, so the wait will always necessarily\n    // time out.",
+      "range": {
+        "startLine": 161,
+        "startChar": 29,
+        "endLine": 161,
+        "endChar": 63
+      },
+      "revId": "14dc3310e41ee693867d6f0919f68628ef2ccca7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b0ceb5b_095cfd74",
+        "filename": "src/libANGLE/renderer/vulkan/SyncVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T04:44:53Z",
+      "side": 1,
+      "message": "egl?",
+      "range": {
+        "startLine": 162,
+        "startChar": 23,
+        "endLine": 162,
+        "endChar": 24
+      },
+      "revId": "14dc3310e41ee693867d6f0919f68628ef2ccca7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
