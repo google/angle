@@ -271,6 +271,30 @@ TEST_P(StateChangeTestES3, FramebufferIncompleteDepthStencilAttachment)
     ASSERT_GL_NO_ERROR();
 }
 
+// Test that enabling GL_SAMPLE_ALPHA_TO_COVERAGE doesn't generate errors.
+TEST_P(StateChangeTest, AlphaToCoverageEnable)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFramebuffer);
+
+    glBindTexture(GL_TEXTURE_2D, mTextures[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 16, 16, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTextures[0], 0);
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ANGLE_GL_PROGRAM(greenProgram, essl1_shaders::vs::Simple(), essl1_shaders::fs::Green());
+
+    // We don't actually care that this does anything, just that it can be enabled without causing
+    // an error.
+    glEnable(GL_SAMPLE_ALPHA_TO_COVERAGE);
+
+    glUseProgram(greenProgram);
+    drawQuad(greenProgram.get(), std::string(essl1_shaders::PositionAttrib()), 0.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 const char kSimpleAttributeVS[] = R"(attribute vec2 position;
 attribute vec4 testAttrib;
 varying vec4 testVarying;

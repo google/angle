@@ -1846,8 +1846,18 @@ angle::Result GraphicsPipelineDesc::initializePipeline(
 
     VkPipelineRasterizationLineStateCreateInfoEXT rasterLineState = {};
     rasterLineState.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_LINE_STATE_CREATE_INFO_EXT;
-    // Enable Bresenham line rasterization if available and not multisampling.
+    // Enable Bresenham line rasterization if available and the following conditions are met:
+    // 1.) not multisampling
+    // 2.) VUID-VkGraphicsPipelineCreateInfo-lineRasterizationMode-02766:
+    // The Vulkan spec states: If the lineRasterizationMode member of a
+    // VkPipelineRasterizationLineStateCreateInfoEXT structure included in the pNext chain of
+    // pRasterizationState is VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT or
+    // VK_LINE_RASTERIZATION_MODE_RECTANGULAR_SMOOTH_EXT and if rasterization is enabled, then the
+    // alphaToCoverageEnable, alphaToOneEnable, and sampleShadingEnable members of pMultisampleState
+    // must all be VK_FALSE.
     if (rasterAndMS.bits.rasterizationSamples <= 1 &&
+        !rasterAndMS.bits.rasterizationDiscardEnable && !rasterAndMS.bits.alphaToCoverageEnable &&
+        !rasterAndMS.bits.alphaToOneEnable && !rasterAndMS.bits.sampleShadingEnable &&
         contextVk->getFeatures().bresenhamLineRasterization.enabled)
     {
         rasterLineState.lineRasterizationMode = VK_LINE_RASTERIZATION_MODE_BRESENHAM_EXT;
