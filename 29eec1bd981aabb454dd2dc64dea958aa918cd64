@@ -69,6 +69,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c868f814_97432753",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T19:14:58Z",
+      "side": 1,
+      "message": "They are from a previous patchset that needed suppressions.",
+      "parentUuid": "837b3ef9_ac17f8c9",
+      "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "16b59a5d_1b9aca5f",
@@ -92,6 +110,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f5ae5a6_c8573db2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 6290,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T19:14:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16b59a5d_1b9aca5f",
+      "range": {
+        "startLine": 6290,
+        "startChar": 40,
+        "endLine": 6290,
+        "endChar": 92
+      },
+      "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "930eeef5_3bf2a947",
@@ -105,6 +147,30 @@
       "writtenOn": "2021-02-12T17:02:06Z",
       "side": 1,
       "message": "suggest making this a helper, returning bool, with each condition having a comment.",
+      "range": {
+        "startLine": 6291,
+        "startChar": 29,
+        "endLine": 6292,
+        "endChar": 41
+      },
+      "revId": "29eec1bd981aabb454dd2dc64dea958aa918cd64",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "394b8886_be4b549b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 6292,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T19:14:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "930eeef5_3bf2a947",
       "range": {
         "startLine": 6291,
         "startChar": 29,
