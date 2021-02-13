@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48cc0560_6e4e188e",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-13T01:16:30Z",
+      "side": 1,
+      "message": "Question about maxAttributeDataSize. Intuitively using maxAttributeDataSize instead of sum of all attribute typeSize would only work when there\u0027s at most one attribute being streamed?\n(current patch hasn\u0027t make the most of the bufferEmptySpace yet)",
+      "revId": "b831f4864ebd8532406427cecbfbfa7b13728ab1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
