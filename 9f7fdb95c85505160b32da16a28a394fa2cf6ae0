@@ -22,6 +22,30 @@
       },
       "revId": "9f7fdb95c85505160b32da16a28a394fa2cf6ae0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11d9573c_3a7273bd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-13T04:36:54Z",
+      "side": 1,
+      "message": "Yeap, that\u0027s how it\u0027s supposed to work. No one is setting mIsAnyHostVisibleBufferWritten at the moment though (onHostVisibleBufferWrite() here does that).",
+      "parentUuid": "4ea05ebc_6d611954",
+      "range": {
+        "startLine": 871,
+        "startChar": 8,
+        "endLine": 871,
+        "endChar": 45
+      },
+      "revId": "9f7fdb95c85505160b32da16a28a394fa2cf6ae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
