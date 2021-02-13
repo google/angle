@@ -546,8 +546,8 @@ class BitSetArray final
       private:
         ANGLE_INLINE void prepareCopy()
         {
-            ASSERT(mParent.mBaseBitSetArray[mParent.kArraySize - 1].end() ==
-                   mParentCopy.mBaseBitSetArray[mParent.kArraySize - 1].end());
+            ASSERT(mParent.mBaseBitSetArray[mIndex].end() ==
+                   mParentCopy.mBaseBitSetArray[mIndex].end());
             if (mParentCopy.none())
             {
                 mParentCopy    = mParent;
