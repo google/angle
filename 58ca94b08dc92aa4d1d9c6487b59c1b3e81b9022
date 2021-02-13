@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21a5f952_39d0a966",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-13T00:29:07Z",
+      "side": 1,
+      "message": "This is fixed (handling empty unused instanced attributes)",
+      "parentUuid": "8e85f3e0_53f0c20f",
+      "revId": "58ca94b08dc92aa4d1d9c6487b59c1b3e81b9022",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "92e1266c_fecf3ff1",
