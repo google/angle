@@ -823,19 +823,20 @@ angle::Result ContextVk::setupDraw(const gl::Context *context,
         invalidateGraphicsDriverUniforms();
     }
 
+    // If the render pass needs to be recreated, close it before processing dirty bits.  This
+    // operation may add many dirty bits.
+    ASSERT((mRenderPassCommandBuffer == nullptr) == mGraphicsDirtyBits.test(DIRTY_BIT_RENDER_PASS));
+    if (mRenderPassCommandBuffer == nullptr)
+    {
+        ANGLE_TRY(flushCommandsAndEndRenderPass());
+    }
+
     DirtyBits dirtyBits = mGraphicsDirtyBits & dirtyBitMask;
 
     if (dirtyBits.none())
     {
         ASSERT(mRenderPassCommandBuffer);
         return angle::Result::Continue;
-    }
-
-    // If the render pass needs to be recreated, close it before processing dirty bits.  This
-    // operation may add many dirty bits.
-    if (mRenderPassCommandBuffer == nullptr)
-    {
-        ANGLE_TRY(flushCommandsAndEndRenderPass());
     }
 
     // Flush any relevant dirty bits.
