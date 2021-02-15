@@ -4344,6 +4344,9 @@ void main()
 // call works correctly.  This requires an implicit barrier in between the calls.
 TEST_P(SimpleStateChangeTestES31, DrawThenSampleWithCompute)
 {
+    // TODO(anglebug.com/5649): Test is failing since it was introduced on Linux AMD GLES
+    ANGLE_SKIP_TEST_IF(IsOpenGLES() && IsAMD() && IsLinux());
+
     constexpr GLsizei kSize = 1;
     const GLColor kInitColor(111, 222, 33, 44);
 
