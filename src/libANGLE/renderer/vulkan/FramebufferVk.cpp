@@ -2598,9 +2598,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
 
     if (unresolveChanged || anyUnresolve)
     {
-        contextVk->onDrawFramebufferRenderPassDescChange(this);
-        // Notify that the render pass desc has changed.
-        *renderPassDescChangedOut = true;
+        contextVk->onDrawFramebufferRenderPassDescChange(this, renderPassDescChangedOut);
     }
 
     return angle::Result::Continue;

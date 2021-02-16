@@ -1492,9 +1492,7 @@ angle::Result UtilsVk::clearFramebuffer(ContextVk *contextVk,
     }
     else
     {
-        bool renderPassDescChanged = false;
-        ANGLE_TRY(contextVk->startRenderPass(scissoredRenderArea, &commandBuffer,
-                                             &renderPassDescChanged));
+        ANGLE_TRY(contextVk->startRenderPass(scissoredRenderArea, &commandBuffer, nullptr));
     }
 
     if (params.clearStencil || params.clearDepth)

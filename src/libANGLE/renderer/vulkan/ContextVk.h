@@ -317,7 +317,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
     void onFramebufferChange(FramebufferVk *framebufferVk);
-    void onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk);
+    void onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk,
+                                               bool *renderPassDescChangedOut);
     void onHostVisibleBufferWrite() { mIsAnyHostVisibleBufferWritten = true; }
 
     void invalidateCurrentTransformFeedbackBuffers();

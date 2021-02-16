@@ -3043,7 +3043,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 mGraphicsPipelineDesc->updateStencilBackWriteMask(
                     &mGraphicsPipelineTransition, depthStencilState, drawFramebuffer);
                 mGraphicsPipelineDesc->resetSubpass(&mGraphicsPipelineTransition);
-                onDrawFramebufferRenderPassDescChange(mDrawFramebuffer);
+                onDrawFramebufferRenderPassDescChange(mDrawFramebuffer, nullptr);
                 break;
             }
             case gl::State::DIRTY_BIT_RENDERBUFFER_BINDING:
@@ -3538,17 +3538,28 @@ void ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
     // Update scissor.
     updateScissor(mState);
 
-    onDrawFramebufferRenderPassDescChange(framebufferVk);
-    invalidateCurrentGraphicsPipeline();
+    onDrawFramebufferRenderPassDescChange(framebufferVk, nullptr);
 }
 
-void ContextVk::onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk)
+void ContextVk::onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk,
+                                                      bool *renderPassDescChangedOut)
 {
     mGraphicsPipelineDesc->updateRenderPassDesc(&mGraphicsPipelineTransition,
                                                 framebufferVk->getRenderPassDesc());
     const gl::Box &dimensions = framebufferVk->getState().getDimensions();
     mGraphicsPipelineDesc->updateDrawableSize(&mGraphicsPipelineTransition, dimensions.width,
                                               dimensions.height);
+
+    if (renderPassDescChangedOut)
+    {
+        // If render pass desc has changed while processing the dirty bits, notify the caller.
+        *renderPassDescChangedOut = true;
+    }
+    else
+    {
+        // Otherwise mark the pipeline as dirty.
+        invalidateCurrentGraphicsPipeline();
+    }
 }
 
 void ContextVk::invalidateCurrentTransformFeedbackBuffers()
