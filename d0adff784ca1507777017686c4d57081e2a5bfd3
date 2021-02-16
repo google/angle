@@ -51,6 +51,24 @@
       "message": "Cody FYI as well, Mohan unable to access the kartrider trace.",
       "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0fb315f_28211958",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-16T19:38:24Z",
+      "side": 1,
+      "message": "Ack, queueing up a trace update.",
+      "parentUuid": "7583c170_0a0f35d1",
+      "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
