@@ -16,6 +16,24 @@
       "message": "Should we just remove this and have the getRotated*() functions rotate mExtents before returning? At least then it\u0027s impossible to get in an inconsistent state.",
       "revId": "5375c21a5966179829147df9846617d4638658fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f8abc46_64c3b466",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 1947,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-16T21:38:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68715944_e003054a",
+      "revId": "5375c21a5966179829147df9846617d4638658fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
