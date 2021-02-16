@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 #
 # Copyright 2017 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -9,11 +9,8 @@
 #   NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
 import sys, os, pprint, json
-from datetime import date
 import registry_xml
-
-# API types
-GL, GLES, WGL, EGL = ["GL", "GLES", "WGL", "EGL"]
+from registry_xml import apis
 
 # Paths
 EGL_GET_LABELED_OBJECT_DATA_PATH = "../src/libGLESv2/egl_get_labeled_object_data.json"
@@ -161,7 +158,7 @@ extern "C" {{
 }} // extern "C"
 """
 
-TEMPLATE_ENTRY_POINT_DECL = """ANGLE_EXPORT {return_type}{api}APIENTRY {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
+TEMPLATE_ENTRY_POINT_DECL = """ANGLE_EXPORT {return_type}{export_def} {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
 
 TEMPLATE_GLES_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY GL_{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
@@ -1012,7 +1009,7 @@ EGL_PACKED_TYPES = {
 
 
 def is_aliasing_excepted(api, cmd_name):
-    return api == GLES and cmd_name in ALIASING_EXCEPTIONS
+    return api == apis.GLES and cmd_name in ALIASING_EXCEPTIONS
 
 
 def script_relative(path):
@@ -1027,8 +1024,8 @@ def format_entry_point_decl(api, cmd_name, proto, params, is_explicit_context):
     comma_if_needed = ", " if len(params) > 0 else ""
     stripped = strip_api_prefix(cmd_name)
     return TEMPLATE_ENTRY_POINT_DECL.format(
-        api="EGL" if api == EGL else "GL_",
-        name="EGL_%s" % stripped if api == EGL else "GL_%s" % stripped,
+        export_def="EGLAPIENTRY" if api == apis.EGL else "GL_APIENTRY",
+        name="%s_%s" % (("EGL" if api == apis.EGL else "GL"), stripped),
         return_type=proto[:-len(cmd_name)],
         params=", ".join(params),
         comma_if_needed=comma_if_needed,
@@ -1059,7 +1056,7 @@ def make_param(param_type, param_name):
 
 def just_the_type_packed(param, entry):
     name = just_the_name(param)
-    if entry.has_key(name):
+    if name in entry:
         return entry[name]
     else:
         return just_the_type(param)
@@ -1202,12 +1199,12 @@ def get_packed_enums(api, cmd_packed_gl_enums, cmd_name, packed_param_types, par
 
 def get_def_template(api, return_type):
     if return_type.strip() == "void":
-        if api == EGL:
+        if api == apis.EGL:
             return TEMPLATE_EGL_ENTRY_POINT_NO_RETURN
         else:
             return TEMPLATE_GLES_ENTRY_POINT_NO_RETURN
     else:
-        if api == EGL:
+        if api == apis.EGL:
             return TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN
         else:
             return TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN
@@ -1424,9 +1421,9 @@ def format_entry_point_export(cmd_name, proto, params, is_explicit_context, temp
 
 
 def format_validation_proto(api, cmd_name, params, cmd_packed_gl_enums, packed_param_types):
-    if api in ["GL", "GLES"]:
+    if api in [apis.GL, apis.GLES]:
         with_extra_params = ["Context *context"] + params
-    elif api == "EGL":
+    elif api == apis.EGL:
         with_extra_params = ["ValidationContext *val"] + params
     else:
         with_extra_params = params
@@ -1450,7 +1447,7 @@ def path_to(folder, file):
 
 
 def get_entry_points(api, all_commands, commands, is_explicit_context, all_param_types,
-                     cmd_packed_gl_enums, packed_param_types, egl_ep_to_object):
+                     cmd_packed_gl_enums, packed_param_types, egl_ep_to_object, export_template):
     decls = []
     defs = []
     export_defs = []
@@ -1463,7 +1460,7 @@ def get_entry_points(api, all_commands, commands, is_explicit_context, all_param
         proto = command.find('proto')
         cmd_name = proto.find('name').text
 
-        if api == WGL:
+        if api == apis.WGL:
             cmd_name = cmd_name if cmd_name[:3] == 'wgl' else 'wgl' + cmd_name
 
         if cmd_name not in commands:
@@ -1478,7 +1475,6 @@ def get_entry_points(api, all_commands, commands, is_explicit_context, all_param
                                    is_explicit_context, cmd_packed_gl_enums, packed_param_types,
                                    egl_ep_to_object))
 
-        export_template = TEMPLATE_EGL_ENTRY_POINT_EXPORT if api == "EGL" else TEMPLATE_GL_ENTRY_POINT_EXPORT
         export_defs.append(
             format_entry_point_export(cmd_name, proto_text, param_text, is_explicit_context,
                                       export_template))
@@ -2031,7 +2027,7 @@ def get_egl_exports():
 
     egl.AddExtensionCommands(registry_xml.supported_egl_extensions, ['egl'])
 
-    for extension_name, ext_cmd_names in sorted(egl.ext_data.iteritems()):
+    for extension_name, ext_cmd_names in sorted(egl.ext_data.items()):
 
         if len(ext_cmd_names) == 0:
             continue
@@ -2052,7 +2048,7 @@ def get_egl_object_category_map():
     # Construct a mapping from EP to type. Fill in the gaps with Display/None.
     ep_to_object = {}
 
-    for category, eps in spec_json.iteritems():
+    for category, eps in spec_json.items():
         if category == 'description':
             continue
         for ep in eps:
@@ -2117,7 +2113,7 @@ def write_egl_stubs_header(annotation, title, data_source, out_file, all_command
         params = ["".join(param.itertext()) for param in command.findall('param')]
         return_type = proto_text[:-len(cmd_name)]
 
-        internal_params = get_internal_params(EGL, cmd_name, ["Thread *thread"] + params,
+        internal_params = get_internal_params(apis.EGL, cmd_name, ["Thread *thread"] + params,
                                               cmd_packed_egl_enums, EGL_PACKED_TYPES)
 
         stubs.append("%s %s(%s);" % (return_type, strip_api_prefix(cmd_name), internal_params))
@@ -2222,9 +2218,9 @@ def main():
         ]
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
@@ -2267,13 +2263,12 @@ def main():
         xml.AddCommands(feature_name, version)
 
         gles_commands = xml.commands[version]
-        all_commands = xml.all_commands
         all_commands_no_suffix.extend(xml.commands[version])
         all_commands_with_suffix.extend(xml.commands[version])
 
         decls, defs, libgles_defs, validation_protos, capture_protos, capture_methods, capture_pointer_funcs = get_entry_points(
-            GLES, all_commands, gles_commands, False, all_gles_param_types, cmd_packed_gl_enums,
-            [], {})
+            apis.GLES, xml.all_commands, gles_commands, False, all_gles_param_types,
+            cmd_packed_gl_enums, [], {}, TEMPLATE_GL_ENTRY_POINT_EXPORT)
 
         # Write the version as a comment before the first EP.
         libgles_defs.insert(0, "\n// OpenGL ES %s" % comment)
@@ -2302,8 +2297,9 @@ def main():
                    "cpp", source_includes, "libGLESv2", "gl.xml")
 
         glesdecls['core'][(major_version,
-                           minor_version)] = get_decls(GLES, CONTEXT_DECL_FORMAT, all_commands,
-                                                       gles_commands, [], cmd_packed_gl_enums)
+                           minor_version)] = get_decls(apis.GLES, CONTEXT_DECL_FORMAT,
+                                                       xml.all_commands, gles_commands, [],
+                                                       cmd_packed_gl_enums)
 
         validation_annotation = "ES%s%s" % (major_version, minor_if_not_zero)
         write_gl_validation_header(validation_annotation, "ES %s" % comment, validation_protos,
@@ -2332,13 +2328,13 @@ def main():
 
     xml.AddExtensionCommands(registry_xml.supported_extensions, ['gles2', 'gles1'])
 
-    for extension_name, ext_cmd_names in sorted(xml.ext_data.iteritems()):
+    for extension_name, ext_cmd_names in sorted(xml.ext_data.items()):
         extension_commands.extend(xml.ext_data[extension_name])
 
         # Detect and filter duplicate extensions.
         decls, defs, libgles_defs, validation_protos, capture_protos, capture_methods, capture_param_funcs = get_entry_points(
-            GLES, xml.all_commands, ext_cmd_names, False, all_gles_param_types,
-            cmd_packed_gl_enums, [], {})
+            apis.GLES, xml.all_commands, ext_cmd_names, False, all_gles_param_types,
+            cmd_packed_gl_enums, [], {}, TEMPLATE_GL_ENTRY_POINT_EXPORT)
 
         # Avoid writing out entry points defined by a prior extension.
         for dupe in xml.ext_dupes[extension_name]:
@@ -2366,20 +2362,20 @@ def main():
         if (extension_name in registry_xml.gles1_extensions and
                 extension_name not in GLES1_NO_CONTEXT_DECL_EXTENSIONS):
             glesdecls['exts']['GLES1 Extensions'][extension_name] = get_decls(
-                GLES, CONTEXT_DECL_FORMAT, all_commands, ext_cmd_names, all_commands_no_suffix,
-                cmd_packed_gl_enums)
+                apis.GLES, CONTEXT_DECL_FORMAT, xml.all_commands, ext_cmd_names,
+                all_commands_no_suffix, cmd_packed_gl_enums)
         if extension_name in registry_xml.gles_extensions:
             glesdecls['exts']['GLES2+ Extensions'][extension_name] = get_decls(
-                GLES, CONTEXT_DECL_FORMAT, all_commands, ext_cmd_names, all_commands_no_suffix,
-                cmd_packed_gl_enums)
+                apis.GLES, CONTEXT_DECL_FORMAT, xml.all_commands, ext_cmd_names,
+                all_commands_no_suffix, cmd_packed_gl_enums)
         if extension_name in registry_xml.angle_extensions:
             glesdecls['exts']['ANGLE Extensions'][extension_name] = get_decls(
-                GLES, CONTEXT_DECL_FORMAT, all_commands, ext_cmd_names, all_commands_no_suffix,
-                cmd_packed_gl_enums)
+                apis.GLES, CONTEXT_DECL_FORMAT, xml.all_commands, ext_cmd_names,
+                all_commands_no_suffix, cmd_packed_gl_enums)
 
     for name in extension_commands:
         all_commands_with_suffix.append(name)
-        all_commands_no_suffix.append(strip_suffix(GLES, name))
+        all_commands_no_suffix.append(strip_suffix(apis.GLES, name))
 
     # Special handling for EGL_ANGLE_explicit_context extension
     if registry_xml.support_EGL_ANGLE_explicit_context:
@@ -2392,7 +2388,8 @@ def main():
 
         # Get the explicit context entry points
         decls, defs, libgles_defs, validation_protos, capture_protos, capture_methods, capture_param_funcs = get_entry_points(
-            GLES, xml.all_commands, cmds, True, all_gles_param_types, cmd_packed_gl_enums, [], {})
+            apis.GLES, xml.all_commands, cmds, True, all_gles_param_types, cmd_packed_gl_enums, [],
+            {}, TEMPLATE_GL_ENTRY_POINT_EXPORT)
 
         # Append the explicit context entry points
         extension_decls += decls
@@ -2410,7 +2407,7 @@ def main():
             minor_if_not_zero = minor if minor != 0 else ""
             version = "{}{}".format(major_if_not_one, minor_if_not_zero)
 
-            glext_ptrs, glext_protos = get_glext_decls(all_commands,
+            glext_ptrs, glext_protos = get_glext_decls(xml.all_commands,
                                                        xml.all_cmd_names.get_commands(annotation),
                                                        version, True)
 
@@ -2420,10 +2417,10 @@ def main():
             # Append extensions for 1.0 and 2.0
             if (annotation == "1_0"):
                 glext_ext_ptrs, glext_ext_protos = get_glext_decls(
-                    all_commands, xml.all_cmd_names.get_commands("glext"), version, True)
+                    xml.all_commands, xml.all_cmd_names.get_commands("glext"), version, True)
             elif (annotation == "2_0"):
                 glext_ext_ptrs, glext_ext_protos = get_glext_decls(
-                    all_commands, xml.all_cmd_names.get_commands("gl2ext"), version, True)
+                    xml.all_commands, xml.all_cmd_names.get_commands("gl2ext"), version, True)
 
             glext_ptrs += glext_ext_ptrs
             glext_protos += glext_ext_protos
@@ -2469,20 +2466,19 @@ def main():
                 cmd for cmd in all_libgl_commands if cmd not in all_commands_with_suffix
             ]
 
-            all_commands32 = glxml.all_commands
-
             # Validation duplicates handled with suffix
-            _, _, _, protos, _, _, _ = get_entry_points(GL, all_commands32,
+            _, _, _, protos, _, _, _ = get_entry_points(apis.GL, glxml.all_commands,
                                                         just_libgl_commands_suffix, False,
                                                         all_gles_param_types, cmd_packed_gl_enums,
-                                                        [], {})
-            decls, defs, libgl_defs, _, _, _, _ = get_entry_points(GL, all_commands32,
+                                                        [], {}, TEMPLATE_GL_ENTRY_POINT_EXPORT)
+            decls, defs, libgl_defs, _, _, _, _ = get_entry_points(apis.GL, glxml.all_commands,
                                                                    all_libgl_commands, False,
                                                                    all_gles_param_types,
-                                                                   cmd_packed_gl_enums, [], {})
+                                                                   cmd_packed_gl_enums, [], {},
+                                                                   TEMPLATE_GL_ENTRY_POINT_EXPORT)
 
             desktop_gl_decls['core'][(major_version, "X")] += get_decls(
-                GL, CONTEXT_DECL_FORMAT, all_commands32, just_libgl_commands,
+                apis.GL, CONTEXT_DECL_FORMAT, glxml.all_commands, just_libgl_commands,
                 all_commands_no_suffix, cmd_packed_gl_enums)
 
             # Write the version as a comment before the first EP.
@@ -2543,8 +2539,9 @@ def main():
             continue
 
         decls, defs, export_defs, validation_protos, _, _, _ = get_entry_points(
-            EGL, eglxml.all_commands, egl_version_commands, False, egl_param_types,
-            cmd_packed_egl_enums, EGL_PACKED_TYPES, egl_ep_to_object)
+            apis.EGL, eglxml.all_commands, egl_version_commands, False, egl_param_types,
+            cmd_packed_egl_enums, EGL_PACKED_TYPES, egl_ep_to_object,
+            TEMPLATE_EGL_ENTRY_POINT_EXPORT)
 
         comment = "\n// EGL %d.%d" % (major_version, minor_version)
         win_def_comment = "\n    ; EGL %d.%d" % (major_version, minor_version)
@@ -2567,7 +2564,7 @@ def main():
     egl_ext_defs = []
     egl_ext_commands = []
 
-    for extension_name, ext_cmd_names in sorted(eglxml.ext_data.iteritems()):
+    for extension_name, ext_cmd_names in sorted(eglxml.ext_data.items()):
 
         # Extensions may have no new commands.
         if not ext_cmd_names:
@@ -2575,8 +2572,9 @@ def main():
 
         # Detect and filter duplicate extensions.
         decls, defs, export_defs, validation_protos, _, _, _ = get_entry_points(
-            EGL, eglxml.all_commands, ext_cmd_names, False, egl_param_types, cmd_packed_egl_enums,
-            EGL_PACKED_TYPES, egl_ep_to_object)
+            apis.EGL, eglxml.all_commands, ext_cmd_names, False, egl_param_types,
+            cmd_packed_egl_enums, EGL_PACKED_TYPES, egl_ep_to_object,
+            TEMPLATE_EGL_ENTRY_POINT_EXPORT)
 
         # Avoid writing out entry points defined by a prior extension.
         for dupe in eglxml.ext_dupes[extension_name]:
@@ -2613,13 +2611,13 @@ def main():
     feature_name = "{}{}".format(name_prefix, version)
     wglxml.AddCommands(feature_name, version)
     wgl_commands = wglxml.commands[version]
-    all_commands32.extend(wglxml.all_commands)
 
     wgl_commands = [cmd if cmd[:3] == 'wgl' else 'wgl' + cmd for cmd in wgl_commands]
 
     wgl_param_types = set()
     decls_wgl, defs_wgl, wgl_defs, validation_protos_wgl, _, _, _ = get_entry_points(
-        WGL, all_commands32, wgl_commands, False, wgl_param_types, {}, [], {})
+        apis.WGL, wglxml.all_commands, wgl_commands, False, wgl_param_types, {}, [], {},
+        TEMPLATE_GL_ENTRY_POINT_EXPORT)
 
     # Write the version as a comment before the first EP.
     libgl_ep_exports.append("\n    ; WGL %s" % comment)
@@ -2702,7 +2700,7 @@ def main():
     all_gles_param_types = sorted(all_gles_param_types)
     write_capture_helper_header(all_gles_param_types)
     write_capture_helper_source(all_gles_param_types)
-    write_capture_replay_source(GLES, xml.all_commands, all_commands_no_suffix,
+    write_capture_replay_source(apis.GLES, xml.all_commands, all_commands_no_suffix,
                                 cmd_packed_gl_enums, [])
 
 

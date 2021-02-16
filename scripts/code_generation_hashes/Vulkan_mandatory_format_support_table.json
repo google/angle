@@ -2,7 +2,7 @@
   "src/libANGLE/renderer/angle_format.py":
     "32ba71942c0fd00e6807104f1bb80a3c",
   "src/libANGLE/renderer/vulkan/gen_vk_mandatory_format_support_table.py":
-    "0d798546ff1b4932164a64b9404396bb",
+    "3e2b8cd80373275e862bb7c8ba20a745",
   "src/libANGLE/renderer/vulkan/vk_format_map.json":
     "d7bb44b9fa6f6e4038c2a415fe1711a1",
   "src/libANGLE/renderer/vulkan/vk_mandatory_format_support_data.json":

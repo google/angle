@@ -1,4 +1,4 @@
-#!python
+#!/usr/bin/python3
 # Copyright 2017 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -83,9 +83,9 @@ def main():
         inputs = [source for source in registry_xml.xml_inputs]
         outputs = [out_file_name_gles, out_file_name_gl]
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
@@ -104,7 +104,7 @@ def main():
 
     # Also don't add GLES extension commands to libGL proc table
     extension_commands = []
-    for extension_name, ext_cmd_names in sorted(glesxml.ext_data.iteritems()):
+    for extension_name, ext_cmd_names in sorted(glesxml.ext_data.items()):
         extension_commands.extend(glesxml.ext_data[extension_name])
     for name in extension_commands:
         name_no_suffix = name
@@ -142,7 +142,7 @@ def main():
             all_functions[function] = function
 
     proc_data = [('    {"%s", P(%s)}' % (func, angle_func))
-                 for func, angle_func in sorted(all_functions.iteritems())]
+                 for func, angle_func in sorted(all_functions.items())]
 
     with open(out_file_name_gles, 'w') as out_file:
         output_cpp = template_cpp.format(
@@ -186,7 +186,7 @@ def main():
             all_functions[function] = function
 
     proc_data = [('    {"%s", P(%s)}' % (func, angle_func))
-                 for func, angle_func in sorted(all_functions.iteritems())]
+                 for func, angle_func in sorted(all_functions.items())]
 
     with open(out_file_name_gl, 'w') as out_file:
         output_cpp = template_cpp.format(

@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python3
 #
 # Copyright 2018 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -10,9 +10,11 @@
 # List of supported extensions. Add to this list to enable new extensions
 # available in gl.xml.
 
-import sys
 import os
+import sys
 import xml.etree.ElementTree as etree
+
+from enum import Enum
 
 xml_inputs = [
     'gl.xml',
@@ -220,6 +222,14 @@ EGL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5)]
 WGL_VERSIONS = [(1, 0)]
 
 
+# API types
+class apis:
+    GL = 'GL'
+    GLES = 'GLES'
+    WGL = 'WGL'
+    EGL = 'EGL'
+
+
 def script_relative(path):
     return os.path.join(os.path.dirname(sys.argv[0]), path)
 
@@ -228,7 +238,7 @@ def path_to(folder, file):
     return os.path.join(script_relative(".."), "src", folder, file)
 
 
-class GLCommandNames:
+class CommandNames:
 
     def __init__(self):
         self.command_names = {}
@@ -239,7 +249,7 @@ class GLCommandNames:
     def get_all_commands(self):
         cmd_names = []
         # Combine all the version lists into a single list
-        for version, version_cmd_names in sorted(self.command_names.iteritems()):
+        for version, version_cmd_names in sorted(self.command_names.items()):
             cmd_names += version_cmd_names
 
         return cmd_names
@@ -260,7 +270,7 @@ class RegistryXML:
         if (ext_file):
             self._AppendANGLEExts(ext_file)
         self.all_commands = self.root.findall('commands/command')
-        self.all_cmd_names = GLCommandNames()
+        self.all_cmd_names = CommandNames()
         self.commands = {}
 
     def _AppendANGLEExts(self, ext_file):
@@ -337,7 +347,7 @@ class RegistryXML:
 
             self.ext_data[extension_name] = sorted(ext_cmd_names)
 
-        for extension_name, ext_cmd_names in sorted(self.ext_data.iteritems()):
+        for extension_name, ext_cmd_names in sorted(self.ext_data.items()):
 
             # Detect and filter duplicate extensions.
             dupes = []
@@ -351,3 +361,10 @@ class RegistryXML:
             self.ext_data[extension_name] = sorted(ext_cmd_names)
             self.ext_dupes[extension_name] = dupes
             self.all_cmd_names.add_commands(ext_annotations[extension_name], ext_cmd_names)
+
+
+class EntryPoints:
+
+    def __init__(self, api, xml):
+        for command in xml.all_commands:
+            pass

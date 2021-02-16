@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 # Copyright 2018 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -7,7 +7,6 @@
 #  Code generation for mandatory formats supported by Vulkan.
 #  NOTE: don't run this script directly. Run scripts/run_code_generation.py.
 
-from datetime import date
 import sys
 
 sys.path.append('..')

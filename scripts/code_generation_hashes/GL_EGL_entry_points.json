@@ -8,13 +8,13 @@
   "scripts/entry_point_packed_gl_enums.json":
     "4f7b43863a5e61991bba4010db463679",
   "scripts/generate_entry_points.py":
-    "ce3d9b9e53142d7da8fcf85073157d53",
+    "195ba6eaeb6dcf6596720976f73755a5",
   "scripts/gl.xml":
     "f66967f3f3d696b5d8306fd80bbd49a8",
   "scripts/gl_angle_ext.xml":
     "0b4f3476d76a5ccc40af342d6c08739d",
   "scripts/registry_xml.py":
-    "cec95eb2eebe1e74da800ea7678cae14",
+    "c85875a215dcf74e2ed363684f18c26c",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/common/entry_points_enum_autogen.cpp":
@@ -40,7 +40,7 @@
   "src/libANGLE/Context_gles_3_2_autogen.h":
     "48567dca16fd881dfe6d61fee0e3106f",
   "src/libANGLE/Context_gles_ext_autogen.h":
-    "300f7b2c136df50e3409276d34f1a4b3",
+    "d6b07fcd1713e3eddf6156e9cf477ec9",
   "src/libANGLE/capture/capture_gles_1_0_autogen.cpp":
     "7ec7ef8f779b809a45d74b97502c419b",
   "src/libANGLE/capture/capture_gles_1_0_autogen.h":

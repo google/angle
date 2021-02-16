@@ -4,13 +4,13 @@
   "scripts/egl_angle_ext.xml":
     "5bcc01462b355d933cf3ada15198fb68",
   "scripts/gen_proc_table.py":
-    "812d52162301bef358b2d8d38265c375",
+    "ce255f78eeaf4b82662729b775a9514d",
   "scripts/gl.xml":
     "f66967f3f3d696b5d8306fd80bbd49a8",
   "scripts/gl_angle_ext.xml":
     "0b4f3476d76a5ccc40af342d6c08739d",
   "scripts/registry_xml.py":
-    "cec95eb2eebe1e74da800ea7678cae14",
+    "c85875a215dcf74e2ed363684f18c26c",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libGL/proc_table_wgl_autogen.cpp":

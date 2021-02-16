@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 #
 # Copyright 2019 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
@@ -98,9 +98,8 @@ exclude_gl_enum_groups = {'SpecialNumbers'}
 
 def dump_value_to_string_mapping(gl_enum_in_groups, exporting_enums):
     exporting_groups = list()
-    for group_name, inner_mapping in gl_enum_in_groups.iteritems():
-        string_value_pairs = list(
-            filter(lambda x: x[0] in exporting_enums, inner_mapping.iteritems()))
+    for group_name, inner_mapping in gl_enum_in_groups.items():
+        string_value_pairs = list(filter(lambda x: x[0] in exporting_enums, inner_mapping.items()))
         if not string_value_pairs:
             continue
 
@@ -191,7 +190,7 @@ def main(header_output_path, source_output_path):
         script_name=os.path.basename(sys.argv[0]),
         data_source_name="gl.xml and gl_angle_ext.xml",
         year=date.today().year,
-        gl_enum_groups=',\n'.join(sorted(gl_enum_in_groups.iterkeys())))
+        gl_enum_groups=',\n'.join(sorted(gl_enum_in_groups.keys())))
 
     header_output_path = registry_xml.script_relative(header_output_path)
     with open(header_output_path, 'w') as f:
@@ -229,9 +228,9 @@ if __name__ == '__main__':
 
     if len(sys.argv) > 1:
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
     else:
         sys.exit(
             main(
