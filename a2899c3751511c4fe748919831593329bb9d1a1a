@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ab42153_cde4201d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-16T18:05:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "992dda0c_9ad73df0",
+      "range": {
+        "startLine": 301,
+        "startChar": 35,
+        "endLine": 301,
+        "endChar": 37
+      },
+      "revId": "a2899c3751511c4fe748919831593329bb9d1a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f97499b8_4cfd15fb",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-11T06:24:21Z",
       "side": 1,
       "message": "Use the R\"(...)\" syntax to avoid the ugliness. Random example from our existing tests:\n\n      ... R\"(precision highp float;\nattribute vec4 position;\nvarying vec2 texcoord;\n\nvoid main()\n{\n    gl_Position \u003d vec4(position.xy, 0.0, 1.0);\n    texcoord \u003d (position.xy * 0.5) + 0.5;\n})\";",
+      "range": {
+        "startLine": 1221,
+        "startChar": 24,
+        "endLine": 1221,
+        "endChar": 26
+      },
+      "revId": "a2899c3751511c4fe748919831593329bb9d1a1a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd08bdbc_ec98dc5d",
+        "filename": "src/tests/gl_tests/FramebufferFetchTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-16T18:05:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f97499b8_4cfd15fb",
       "range": {
         "startLine": 1221,
         "startChar": 24,
