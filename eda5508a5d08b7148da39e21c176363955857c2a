@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "317b9bc1_75caf168",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T15:39:03Z",
+      "side": 1,
+      "message": "James: can you mention what changed in the reland in the issue description? Not sure how to verify this won\u0027t be reverted again.",
+      "revId": "eda5508a5d08b7148da39e21c176363955857c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
