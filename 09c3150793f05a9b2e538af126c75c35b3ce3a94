@@ -93,6 +93,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6b83a9c_760e4b17",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 634,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-16T17:47:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3dd0f1bc_940a7479",
+      "range": {
+        "startLine": 634,
+        "startChar": 38,
+        "endLine": 634,
+        "endChar": 40
+      },
+      "revId": "09c3150793f05a9b2e538af126c75c35b3ce3a94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b8adb07_f4ddfac6",
@@ -116,6 +140,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a922311_9e45f2fc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 4218,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-16T17:47:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8b8adb07_f4ddfac6",
+      "range": {
+        "startLine": 4212,
+        "startChar": 0,
+        "endLine": 4218,
+        "endChar": 45
+      },
+      "revId": "09c3150793f05a9b2e538af126c75c35b3ce3a94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "614e2d50_30487468",
@@ -129,6 +177,30 @@
       "writtenOn": "2021-02-13T04:26:43Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 1945,
+        "startChar": 19,
+        "endLine": 1945,
+        "endChar": 20
+      },
+      "revId": "09c3150793f05a9b2e538af126c75c35b3ce3a94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5527179d_a3525fd0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1945,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-16T17:47:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "614e2d50_30487468",
       "range": {
         "startLine": 1945,
         "startChar": 19,
