@@ -1,6 +1,86 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbc88826_a6420014",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T22:19:45Z",
+      "side": 1,
+      "message": "This bug is not public, so maybe a small description of the bug is better.",
+      "range": {
+        "startLine": 7,
+        "startChar": 31,
+        "endLine": 7,
+        "endChar": 42
+      },
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ca5387e_c2366e2b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T22:19:45Z",
+      "side": 1,
+      "message": "You can remove this line.",
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b2d236b_9040ff6e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T22:19:45Z",
+      "side": 1,
+      "message": "You can remove this too. It\u0027s the only test added in this change, so it\u0027s obvious.",
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "baca1903_1c2b89b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T22:19:45Z",
+      "side": 1,
+      "message": "?",
+      "range": {
+        "startLine": 39,
+        "startChar": 6,
+        "endLine": 39,
+        "endChar": 45
+      },
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f15d4051_da7060c8",
