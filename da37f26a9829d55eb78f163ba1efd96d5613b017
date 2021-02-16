@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15d3429b_a573043e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T18:31:45Z",
+      "side": 1,
+      "message": "Re-LGTM",
+      "revId": "da37f26a9829d55eb78f163ba1efd96d5613b017",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aac58af_acab4464",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 2555,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T18:31:45Z",
+      "side": 1,
+      "message": "nit: executable !\u003d nullptr \u0026\u0026 executable-\u003eusesFramebufferFetch()",
+      "range": {
+        "startLine": 2555,
+        "startChar": 39,
+        "endLine": 2555,
+        "endChar": 97
+      },
+      "revId": "da37f26a9829d55eb78f163ba1efd96d5613b017",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
