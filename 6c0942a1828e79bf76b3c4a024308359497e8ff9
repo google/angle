@@ -63,6 +63,30 @@
       },
       "revId": "6c0942a1828e79bf76b3c4a024308359497e8ff9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5635fce6_20cf9cf7",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T18:30:08Z",
+      "side": 1,
+      "message": "I\u0027d like to get rid of the if statement and the local variables that act as temporaries on the stack. If you can find a solution that isn\u0027t too cumbersome that satisfies those requests then it\u0027ll improve the code maintainability. If it\u0027s easier to split the changes so you can land this quickly go ahead.",
+      "parentUuid": "512a99cb_8f173b84",
+      "range": {
+        "startLine": 233,
+        "startChar": 22,
+        "endLine": 233,
+        "endChar": 34
+      },
+      "revId": "6c0942a1828e79bf76b3c4a024308359497e8ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
