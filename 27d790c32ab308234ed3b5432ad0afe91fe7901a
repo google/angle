@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f15d4051_da7060c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T22:14:04Z",
+      "side": 1,
+      "message": "LGTM, thanks for the test. I\u0027m not sure what that lock planes define is, hopefully other people can verify.",
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
