@@ -87,6 +87,30 @@
       },
       "revId": "e10f3735ec9508faac20a32313d65514c3a9e97f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b1f1c70_7f51337b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T21:06:15Z",
+      "side": 1,
+      "message": "LGTM either way... not really something that needs to block landing this fix.",
+      "parentUuid": "86b47ba2_d578c044",
+      "range": {
+        "startLine": 887,
+        "startChar": 0,
+        "endLine": 890,
+        "endChar": 5
+      },
+      "revId": "e10f3735ec9508faac20a32313d65514c3a9e97f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
