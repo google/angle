@@ -2539,6 +2539,7 @@ void main()
 
     // Verify the contents of the buffer.  It should have blue as the first index and green as the
     // second.
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
     GLColor *bufferContents = static_cast<GLColor *>(
         glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
     EXPECT_GL_NO_ERROR();
@@ -2647,6 +2648,7 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
 
     // Verify the contents of the buffer.
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
     uint32_t *bufferContents = static_cast<uint32_t *>(
         glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, GL_MAP_READ_BIT));
     EXPECT_GL_NO_ERROR();
