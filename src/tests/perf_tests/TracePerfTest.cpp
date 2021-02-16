@@ -364,8 +364,10 @@ TracePerfTest::TracePerfTest()
 
     if (param.testID == RestrictedTraceID::bus_simulator_indonesia)
     {
-        // TODO(https://anglebug.com/5629) Linux+Intel native GLES generates GL_INVALID_OPERATION
-        if (IsLinux() && IsIntel() && param.getRenderer() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        // TODO(https://anglebug.com/5629) Linux+(Intel|AMD) native GLES generates
+        // GL_INVALID_OPERATION
+        if (IsLinux() && (IsIntel() || IsAMD()) &&
+            param.getRenderer() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
         {
             mSkipTest = true;
         }
