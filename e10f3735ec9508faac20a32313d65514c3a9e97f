@@ -111,6 +111,30 @@
       },
       "revId": "e10f3735ec9508faac20a32313d65514c3a9e97f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33e045f9_802c5d23",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T21:11:43Z",
+      "side": 1,
+      "message": "Ack.\n\nYou don\u0027t want to be issuing this barrier every time you flush the command buffer. It\u0027s a property of the primary command buffer (not the secondary one), but we don\u0027t have a class for that (or do we?).",
+      "parentUuid": "0b1f1c70_7f51337b",
+      "range": {
+        "startLine": 887,
+        "startChar": 0,
+        "endLine": 890,
+        "endChar": 5
+      },
+      "revId": "e10f3735ec9508faac20a32313d65514c3a9e97f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
