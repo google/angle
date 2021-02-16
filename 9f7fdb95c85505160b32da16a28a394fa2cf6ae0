@@ -46,6 +46,30 @@
       },
       "revId": "9f7fdb95c85505160b32da16a28a394fa2cf6ae0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bec206c_5ee87627",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-02-16T19:48:28Z",
+      "side": 1,
+      "message": "mm, maybe my memory is a bit fade. I remember I looked at this before and thought it was set somewhere. But right now as I looked at it, you are right, it is never set. This looks good to me.",
+      "parentUuid": "11d9573c_3a7273bd",
+      "range": {
+        "startLine": 871,
+        "startChar": 8,
+        "endLine": 871,
+        "endChar": 45
+      },
+      "revId": "9f7fdb95c85505160b32da16a28a394fa2cf6ae0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
