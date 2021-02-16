@@ -152,6 +152,30 @@
       },
       "revId": "6c0942a1828e79bf76b3c4a024308359497e8ff9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06be18a5_f604be40",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T23:30:38Z",
+      "side": 1,
+      "message": "Good point, I guess the solution would be an output bool variable.",
+      "parentUuid": "175569f9_bc409492",
+      "range": {
+        "startLine": 233,
+        "startChar": 22,
+        "endLine": 233,
+        "endChar": 34
+      },
+      "revId": "6c0942a1828e79bf76b3c4a024308359497e8ff9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
