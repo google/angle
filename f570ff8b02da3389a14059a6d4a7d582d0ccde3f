@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "591b24f6_746a3ade",
+        "filename": "src/libANGLE/OWNERS",
+        "patchSetId": 3
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T18:31:57Z",
+      "side": 1,
+      "message": "can you move this file into the capture/ subdir? and also add myself?",
+      "range": {
+        "startLine": 4,
+        "startChar": 10,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "f570ff8b02da3389a14059a6d4a7d582d0ccde3f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
