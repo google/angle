@@ -63,6 +63,30 @@
       },
       "revId": "e10f3735ec9508faac20a32313d65514c3a9e97f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86b47ba2_d578c044",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 890,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T21:05:36Z",
+      "side": 1,
+      "message": "Well, if a host visible buffer is written seems to be a property of a command buffer rather than a Context. WDYT?",
+      "parentUuid": "c1ddbf88_a4742e6a",
+      "range": {
+        "startLine": 887,
+        "startChar": 0,
+        "endLine": 890,
+        "endChar": 5
+      },
+      "revId": "e10f3735ec9508faac20a32313d65514c3a9e97f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
