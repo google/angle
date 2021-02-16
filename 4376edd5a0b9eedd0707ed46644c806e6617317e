@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73a1ea71_d1b2f00a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T21:25:07Z",
+      "side": 1,
+      "message": "nit: name is hard to parse, how about flushDirtyGraphicsRenderPass ?",
+      "range": {
+        "startLine": 1221,
+        "startChar": 18,
+        "endLine": 1221,
+        "endChar": 66
+      },
+      "revId": "4376edd5a0b9eedd0707ed46644c806e6617317e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
