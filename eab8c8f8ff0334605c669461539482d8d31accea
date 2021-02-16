@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6983087b_be8b769e",
+        "filename": "src/tests/gl_tests/MultisampledRenderToTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3680,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T19:39:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e151c1e_b9f128bc",
+      "range": {
+        "startLine": 3680,
+        "startChar": 3,
+        "endLine": 3680,
+        "endChar": 9
+      },
+      "revId": "eab8c8f8ff0334605c669461539482d8d31accea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "074bc22d_975db5e0",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-16T19:19:12Z",
       "side": 1,
       "message": "Can consolidate this to a EXPECT_PIXEL_RECT_EQ().",
+      "range": {
+        "startLine": 3733,
+        "startChar": 0,
+        "endLine": 3737,
+        "endChar": 63
+      },
+      "revId": "eab8c8f8ff0334605c669461539482d8d31accea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e5a31c4_a575a2de",
+        "filename": "src/tests/gl_tests/MultisampledRenderToTextureTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3737,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-16T19:39:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "074bc22d_975db5e0",
       "range": {
         "startLine": 3733,
         "startChar": 0,
