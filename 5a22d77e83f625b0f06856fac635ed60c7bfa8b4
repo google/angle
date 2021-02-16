@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "042ecad9_7fae40c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-16T21:05:47Z",
+      "side": 1,
+      "message": "Done.\n\nI added StateChangeTest.AlphaToCoverageEnable which generates the VVL error without the fix.",
+      "parentUuid": "e04d2591_c2f548c7",
+      "revId": "5a22d77e83f625b0f06856fac635ed60c7bfa8b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8abcdcf4_3e90aee6",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-16T19:07:28Z",
       "side": 1,
       "message": "Is it possible to use sample shading with \u003c\u003d 1 bit? Anyway LGTM, just seems like maybe one or more checks could be internal errors if we get here.",
+      "range": {
+        "startLine": 1859,
+        "startChar": 8,
+        "endLine": 1860,
+        "endChar": 83
+      },
+      "revId": "5a22d77e83f625b0f06856fac635ed60c7bfa8b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5899523_d89dce11",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1860,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-16T21:05:47Z",
+      "side": 1,
+      "message": "I haven\u0027t looked into what that is or how it\u0027s used, it\u0027s just included here since the VVL error mentions it as a constraint.\n\nI\u0027m going to leave this as-is for now since it\u0027s outside of the scope of this CL and we can revisit it if we hit issues in the future.",
+      "parentUuid": "8abcdcf4_3e90aee6",
       "range": {
         "startLine": 1859,
         "startChar": 8,
