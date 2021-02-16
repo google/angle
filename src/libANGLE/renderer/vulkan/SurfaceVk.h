@@ -208,6 +208,8 @@ class WindowSurfaceVk : public SurfaceVk
     // width and height can change with client window resizing
     EGLint getWidth() const override;
     EGLint getHeight() const override;
+    EGLint getRotatedWidth() const;
+    EGLint getRotatedHeight() const;
     // Note: windows cannot be resized on Android.  The approach requires
     // calling vkGetPhysicalDeviceSurfaceCapabilitiesKHR.  However, that is
     // expensive; and there are troublesome timing issues for other parts of

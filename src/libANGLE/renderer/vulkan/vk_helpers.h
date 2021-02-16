@@ -1345,7 +1345,7 @@ class ImageHelper final : public Resource, public angle::Subject
     angle::Result initMSAASwapchain(Context *context,
                                     gl::TextureType textureType,
                                     const VkExtent3D &extents,
-                                    bool rotatedAspectRation,
+                                    bool rotatedAspectRatio,
                                     const Format &format,
                                     GLint samples,
                                     VkImageUsageFlags usage,
@@ -1453,6 +1453,7 @@ class ImageHelper final : public Resource, public angle::Subject
     void init2DWeakReference(Context *context,
                              VkImage handle,
                              const gl::Extents &glExtents,
+                             bool rotatedAspectRatio,
                              const Format &format,
                              GLint samples,
                              bool isRobustResourceInitEnabled);
@@ -1466,6 +1467,7 @@ class ImageHelper final : public Resource, public angle::Subject
     VkImageUsageFlags getUsage() const { return mUsage; }
     VkImageType getType() const { return mImageType; }
     const VkExtent3D &getExtents() const { return mExtents; }
+    const VkExtent3D getRotatedExtents() const;
     uint32_t getLayerCount() const { return mLayerCount; }
     uint32_t getLevelCount() const { return mLevelCount; }
     const Format &getFormat() const { return *mFormat; }
@@ -1485,6 +1487,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Helper function to calculate the extents of a render target created for a certain mip of the
     // image.
     gl::Extents getLevelExtents2D(LevelIndex levelVk) const;
+    gl::Extents getRotatedLevelExtents2D(LevelIndex levelVk) const;
     bool isDepthOrStencil() const;
 
     // Clear either color or depth/stencil based on image format.
@@ -1941,7 +1944,13 @@ class ImageHelper final : public Resource, public angle::Subject
     VkImageType mImageType;
     VkImageTiling mTilingMode;
     VkImageUsageFlags mUsage;
+    // For Android swapchain images, the Vulkan VkImage must be "rotated".  However, most of ANGLE
+    // uses non-rotated extents (i.e. the way the application views the extents--see "Introduction
+    // to Android rotation and pre-rotation" in "SurfaceVk.cpp").  Thus, mExtents are non-rotated.
+    // The rotated extents are also stored along with a bool that indicates if the aspect ratio is
+    // different between the rotated and non-rotated extents.
     VkExtent3D mExtents;
+    bool mRotatedAspectRatio;
     const Format *mFormat;
     GLint mSamples;
     ImageSerial mImageSerial;

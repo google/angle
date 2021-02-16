@@ -91,6 +91,7 @@ class RenderTargetVk final : public FramebufferAttachmentRenderTarget
 
     const vk::Format &getImageFormat() const;
     gl::Extents getExtents() const;
+    gl::Extents getRotatedExtents() const;
     gl::LevelIndex getLevelIndex() const { return mLevelIndexGL; }
     uint32_t getLayerIndex() const { return mLayerIndex; }
     uint32_t getLayerCount() const { return mLayerCount; }

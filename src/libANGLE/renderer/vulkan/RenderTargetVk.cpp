@@ -230,6 +230,13 @@ gl::Extents RenderTargetVk::getExtents() const
     return mImage->getLevelExtents2D(levelVk);
 }
 
+gl::Extents RenderTargetVk::getRotatedExtents() const
+{
+    ASSERT(mImage && mImage->valid());
+    vk::LevelIndex levelVk = mImage->toVkLevel(mLevelIndexGL);
+    return mImage->getRotatedLevelExtents2D(levelVk);
+}
+
 void RenderTargetVk::updateSwapchainImage(vk::ImageHelper *image,
                                           vk::ImageViewHelper *imageViews,
                                           vk::ImageHelper *resolveImage,
