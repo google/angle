@@ -16,6 +16,29 @@
       "message": "Thanks for the feedback Shabi!  Adding Tim now.",
       "revId": "d3cef8cb14f706c712e31c653b17a450e170ce7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff799de5_bf5eb8ba",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1944,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-16T19:01:20Z",
+      "side": 1,
+      "message": "Reword or just add: \"non-rotated extents\"?",
+      "range": {
+        "startLine": 1943,
+        "startChar": 67,
+        "endLine": 1944,
+        "endChar": 19
+      },
+      "revId": "d3cef8cb14f706c712e31c653b17a450e170ce7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
