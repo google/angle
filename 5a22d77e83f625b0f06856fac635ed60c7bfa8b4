@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e04d2591_c2f548c7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T19:07:28Z",
+      "side": 1,
+      "message": "Tim: could you consider adding a targeted regression test? Captures aren\u0027t the best for isolating specific root failures, and this seems pretty cut and dry.",
+      "revId": "5a22d77e83f625b0f06856fac635ed60c7bfa8b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8abcdcf4_3e90aee6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1860,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-16T19:07:28Z",
+      "side": 1,
+      "message": "Is it possible to use sample shading with \u003c\u003d 1 bit? Anyway LGTM, just seems like maybe one or more checks could be internal errors if we get here.",
+      "range": {
+        "startLine": 1859,
+        "startChar": 8,
+        "endLine": 1860,
+        "endChar": 83
+      },
+      "revId": "5a22d77e83f625b0f06856fac635ed60c7bfa8b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
