@@ -16,6 +16,24 @@
       "message": "jamie, there is a failure in \"angle_restricted_trace_gold_tests.kartrider_rush\" but i dont have an repro env. Can you provide some assistance?",
       "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "007bfd01_ecba6455",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-16T18:17:30Z",
+      "side": 1,
+      "message": "jamie, shabi - drawing your attention to the last bot failure for this change",
+      "parentUuid": "54d8e3c1_9974d697",
+      "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
