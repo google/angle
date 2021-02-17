@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "218b914e_8bcb48b3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T17:31:06Z",
+      "side": 1,
+      "message": "PTAL. Refactoring-only, in preparation for CL stuff. Geoff you might be more familiar with generate_entry_points other folks.",
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
