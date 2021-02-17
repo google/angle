@@ -1071,8 +1071,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     egl::ContextPriority mContextPriority;
 
-    const vk::BufferHelper *mCurrentIndirectBuffer;
-
     // Storage for vkUpdateDescriptorSets
     std::vector<VkDescriptorBufferInfo> mDescriptorBufferInfos;
     std::vector<VkDescriptorImageInfo> mDescriptorImageInfos;

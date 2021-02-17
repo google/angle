@@ -398,7 +398,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mPerfCounters{},
       mObjectPerfCounters{},
       mContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
-      mCurrentIndirectBuffer(nullptr),
       mShareGroupVk(vk::GetImpl(state.getShareGroup()))
 {
     ANGLE_TRACE_EVENT0("gpu.angle", "ContextVk::ContextVk");
@@ -922,17 +921,19 @@ angle::Result ContextVk::setupIndirectDraw(const gl::Context *context,
     GLsizei vertexCount   = 0;
     GLsizei instanceCount = 1;
 
-    if (indirectBuffer != mCurrentIndirectBuffer)
+    // Break the render pass if the indirect buffer was previously used as the output from transform
+    // feedback.
+    if (mCurrentTransformFeedbackBuffers.contains(indirectBuffer))
     {
         ANGLE_TRY(flushCommandsAndEndRenderPass());
-        mCurrentIndirectBuffer = indirectBuffer;
     }
-
-    mRenderPassCommands->bufferRead(this, VK_ACCESS_INDIRECT_COMMAND_READ_BIT,
-                                    vk::PipelineStage::DrawIndirect, indirectBuffer);
 
     ANGLE_TRY(setupDraw(context, mode, firstVertex, vertexCount, instanceCount,
                         gl::DrawElementsType::InvalidEnum, nullptr, dirtyBitMask));
+
+    // Process indirect buffer after render pass has started.
+    mRenderPassCommands->bufferRead(this, VK_ACCESS_INDIRECT_COMMAND_READ_BIT,
+                                    vk::PipelineStage::DrawIndirect, indirectBuffer);
 
     return angle::Result::Continue;
 }
@@ -2446,9 +2447,6 @@ angle::Result ContextVk::drawArraysIndirect(const gl::Context *context,
 
     if (mVertexArray->getStreamingVertexAttribsMask().any())
     {
-        mRenderPassCommands->bufferRead(this, VK_ACCESS_INDIRECT_COMMAND_READ_BIT,
-                                        vk::PipelineStage::DrawIndirect, currentIndirectBuf);
-
         // We have instanced vertex attributes that need to be emulated for Vulkan.
         // invalidate any cache and map the buffer so that we can read the indirect data.
         // Mapping the buffer will cause a flush.
@@ -2500,9 +2498,6 @@ angle::Result ContextVk::drawElementsIndirect(const gl::Context *context,
 
     if (mVertexArray->getStreamingVertexAttribsMask().any())
     {
-        mRenderPassCommands->bufferRead(this, VK_ACCESS_INDIRECT_COMMAND_READ_BIT,
-                                        vk::PipelineStage::DrawIndirect, currentIndirectBuf);
-
         // We have instanced vertex attributes that need to be emulated for Vulkan.
         // invalidate any cache and map the buffer so that we can read the indirect data.
         // Mapping the buffer will cause a flush.
@@ -3946,10 +3941,19 @@ angle::Result ContextVk::dispatchCompute(const gl::Context *context,
 
 angle::Result ContextVk::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
-    ANGLE_TRY(setupDispatch(context));
-
     gl::Buffer *glBuffer     = getState().getTargetBuffer(gl::BufferBinding::DispatchIndirect);
     vk::BufferHelper &buffer = vk::GetImpl(glBuffer)->getBuffer();
+
+    // Break the render pass if the indirect buffer was previously used as the output from transform
+    // feedback.
+    if (mCurrentTransformFeedbackBuffers.contains(&buffer))
+    {
+        ANGLE_TRY(flushCommandsAndEndRenderPass());
+    }
+
+    ANGLE_TRY(setupDispatch(context));
+
+    // Process indirect buffer after command buffer has started.
     mOutsideRenderPassCommands->bufferRead(this, VK_ACCESS_INDIRECT_COMMAND_READ_BIT,
                                            vk::PipelineStage::DrawIndirect, &buffer);
 
@@ -5083,7 +5087,6 @@ angle::Result ContextVk::flushCommandsAndEndRenderPassImpl()
     }
 
     mCurrentTransformFeedbackBuffers.clear();
-    mCurrentIndirectBuffer = nullptr;
 
     // Reset serials for XFB if active.
     if (mState.isTransformFeedbackActiveUnpaused())
