@@ -252,6 +252,30 @@
       },
       "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e7b7ca2_d5c58fe0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T21:51:53Z",
+      "side": 1,
+      "message": "IIRC, this is the code that sorts these:\n\n    # sort enums so the ones with the most waste ends up last, reducing the table size\n    enums.sort(key\u003dlambda enum: (1 \u003c\u003c (len(enum[1]) - 1).bit_length()) / float(len(enum[1])))\n\nBased on the comment, we don\u0027t want them sorted by name, but rather by \"waste\".  With equal waste though, sure we can add alphabetical sort to it. Looks like python\u0027s sort algorithm has changed in python3 (maybe the sort has become stable, because this is now the same order as is found in the json file).",
+      "parentUuid": "b323965f_9a4c3d89",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 2
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
