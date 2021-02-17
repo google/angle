@@ -22,6 +22,30 @@
       },
       "revId": "b6cb6c0137057bb9377c9bc41b1d83803ab331f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71dec8e8_063a1dc1",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 0,
+      "message": "Yea, as part of the \"EGL: Trim requested config parameters to EGL.\" patch before this, we don\u0027t need some of these parameters anymore.",
+      "parentUuid": "653e2927_ef763155",
+      "range": {
+        "startLine": 258,
+        "startChar": 31,
+        "endLine": 258,
+        "endChar": 39
+      },
+      "revId": "b6cb6c0137057bb9377c9bc41b1d83803ab331f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "25aee47d_9c57cbfe",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Virtualized contexts are the default and supported everywhere. DisplayEGL can go further and turn them off.",
+      "parentUuid": "79f34e2c_8a20dc2c",
+      "range": {
+        "startLine": 115,
+        "startChar": 24,
+        "endLine": 115,
+        "endChar": 44
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9dfb0543_81f2c8d4",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-02-12T21:08:24Z",
       "side": 1,
       "message": "nit: std::move()?",
+      "range": {
+        "startLine": 165,
+        "startChar": 41,
+        "endLine": 165,
+        "endChar": 64
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0a01502_ad3c381f",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9dfb0543_81f2c8d4",
       "range": {
         "startLine": 165,
         "startChar": 41,
@@ -127,6 +175,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b77ed66_ecddbba0",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Whoops. Fixed.",
+      "parentUuid": "c60758b5_b3e87fa9",
+      "range": {
+        "startLine": 216,
+        "startChar": 90,
+        "endLine": 216,
+        "endChar": 98
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ffb9b6e3_c7104a58",
@@ -140,6 +212,30 @@
       "writtenOn": "2021-02-12T21:08:24Z",
       "side": 1,
       "message": "nit: Do we want to use external context for all platforms with EGL?",
+      "range": {
+        "startLine": 469,
+        "startChar": 9,
+        "endLine": 469,
+        "endChar": 29
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f194438_49e7cb76",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Yea, no reason not to expose it as part of DisplayEGL.",
+      "parentUuid": "ffb9b6e3_c7104a58",
       "range": {
         "startLine": 469,
         "startChar": 9,
@@ -173,6 +269,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bac184ca_62594b19",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 488,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9f83ae0f_cfc3dd2e",
+      "range": {
+        "startLine": 488,
+        "startChar": 68,
+        "endLine": 488,
+        "endChar": 82
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6be7b2dd_2d2418c2",
@@ -186,6 +306,30 @@
       "writtenOn": "2021-02-12T21:08:24Z",
       "side": 1,
       "message": "nit: typo",
+      "range": {
+        "startLine": 768,
+        "startChar": 72,
+        "endLine": 768,
+        "endChar": 81
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cb8ebbd_63c755c5",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6be7b2dd_2d2418c2",
       "range": {
         "startLine": 768,
         "startChar": 72,
@@ -219,6 +363,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3636c228_383b8693",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 949,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f31df13_25823a68",
+      "range": {
+        "startLine": 948,
+        "startChar": 8,
+        "endLine": 949,
+        "endChar": 17
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "31905a6e_524b7236",
@@ -242,6 +410,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ac7de56_5a42ccba",
+        "filename": "src/libANGLE/renderer/gl/egl/DisplayEGL.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 952,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31905a6e_524b7236",
+      "range": {
+        "startLine": 952,
+        "startChar": 11,
+        "endLine": 952,
+        "endChar": 15
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "236e9ff5_c827fe57",
@@ -255,6 +447,30 @@
       "writtenOn": "2021-02-12T21:08:24Z",
       "side": 1,
       "message": "nit: this method is really simple, maybe move to base class as well?",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 6
+      },
+      "revId": "5e14e2f90af4de5b9040c34b3f2570692f6fa7d2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef6ac7b9_04630fe9",
+        "filename": "src/libANGLE/renderer/gl/egl/android/DisplayAndroid.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-17T15:34:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "236e9ff5_c827fe57",
       "range": {
         "startLine": 62,
         "startChar": 0,
