@@ -1255,6 +1255,12 @@ enum class SpirvVariableType
     Other,
 };
 
+enum class TransformationState
+{
+    Transformed,
+    Unchanged,
+};
+
 // Helper class that gathers IDs of interest.  This class would be largely unnecessary when the
 // translator generates SPIR-V directly, as it could communicate these IDs directly.
 class SpirvIDDiscoverer final : angle::NonCopyable
@@ -1666,18 +1672,18 @@ class SpirvTransformer final : public SpirvTransformerBase
 
     // Instructions that potentially need transformation.  They return true if the instruction is
     // transformed.  If false is returned, the instruction should be copied as-is.
-    bool transformAccessChain(const uint32_t *instruction);
-    bool transformCapability(const uint32_t *instruction, size_t wordCount);
-    bool transformDebugInfo(const uint32_t *instruction, spv::Op op);
-    bool transformEmitVertex(const uint32_t *instruction);
-    bool transformEntryPoint(const uint32_t *instruction);
-    bool transformDecorate(const uint32_t *instruction);
-    bool transformMemberDecorate(const uint32_t *instruction);
-    bool transformTypePointer(const uint32_t *instruction);
-    bool transformTypeStruct(const uint32_t *instruction);
-    bool transformReturn(const uint32_t *instruction);
-    bool transformVariable(const uint32_t *instruction);
-    bool transformExecutionMode(const uint32_t *instruction);
+    TransformationState transformAccessChain(const uint32_t *instruction);
+    TransformationState transformCapability(const uint32_t *instruction, size_t wordCount);
+    TransformationState transformDebugInfo(const uint32_t *instruction, spv::Op op);
+    TransformationState transformEmitVertex(const uint32_t *instruction);
+    TransformationState transformEntryPoint(const uint32_t *instruction);
+    TransformationState transformDecorate(const uint32_t *instruction);
+    TransformationState transformMemberDecorate(const uint32_t *instruction);
+    TransformationState transformTypePointer(const uint32_t *instruction);
+    TransformationState transformTypeStruct(const uint32_t *instruction);
+    TransformationState transformReturn(const uint32_t *instruction);
+    TransformationState transformVariable(const uint32_t *instruction);
+    TransformationState transformExecutionMode(const uint32_t *instruction);
 
     // Helpers:
     void visitTypeHelper(spirv::IdResult id, spirv::IdRef typeId);
@@ -1840,7 +1846,7 @@ void SpirvTransformer::transformInstruction()
     }
 
     // Only look at interesting instructions.
-    bool transformed = false;
+    TransformationState transformationState = TransformationState::Unchanged;
 
     if (mIsInFunctionSection)
     {
@@ -1863,14 +1869,14 @@ void SpirvTransformer::transformInstruction()
             case spv::OpInBoundsAccessChain:
             case spv::OpPtrAccessChain:
             case spv::OpInBoundsPtrAccessChain:
-                transformed = transformAccessChain(instruction);
+                transformationState = transformAccessChain(instruction);
                 break;
 
             case spv::OpEmitVertex:
-                transformed = transformEmitVertex(instruction);
+                transformationState = transformEmitVertex(instruction);
                 break;
             case spv::OpReturn:
-                transformed = transformReturn(instruction);
+                transformationState = transformReturn(instruction);
                 break;
             default:
                 break;
@@ -1887,31 +1893,31 @@ void SpirvTransformer::transformInstruction()
             case spv::OpLine:
             case spv::OpNoLine:
             case spv::OpModuleProcessed:
-                transformed = transformDebugInfo(instruction, opCode);
+                transformationState = transformDebugInfo(instruction, opCode);
                 break;
             case spv::OpCapability:
-                transformed = transformCapability(instruction, wordCount);
+                transformationState = transformCapability(instruction, wordCount);
                 break;
             case spv::OpEntryPoint:
-                transformed = transformEntryPoint(instruction);
+                transformationState = transformEntryPoint(instruction);
                 break;
             case spv::OpDecorate:
-                transformed = transformDecorate(instruction);
+                transformationState = transformDecorate(instruction);
                 break;
             case spv::OpMemberDecorate:
-                transformed = transformMemberDecorate(instruction);
+                transformationState = transformMemberDecorate(instruction);
                 break;
             case spv::OpTypePointer:
-                transformed = transformTypePointer(instruction);
+                transformationState = transformTypePointer(instruction);
                 break;
             case spv::OpTypeStruct:
-                transformed = transformTypeStruct(instruction);
+                transformationState = transformTypeStruct(instruction);
                 break;
             case spv::OpVariable:
-                transformed = transformVariable(instruction);
+                transformationState = transformVariable(instruction);
                 break;
             case spv::OpExecutionMode:
-                transformed = transformExecutionMode(instruction);
+                transformationState = transformExecutionMode(instruction);
                 break;
             default:
                 break;
@@ -1919,7 +1925,7 @@ void SpirvTransformer::transformInstruction()
     }
 
     // If the instruction was not transformed, copy it to output as is.
-    if (!transformed)
+    if (transformationState == TransformationState::Unchanged)
     {
         copyInstruction(instruction, wordCount);
     }
@@ -2325,7 +2331,7 @@ void SpirvTransformer::visitVariable(const uint32_t *instruction)
     }
 }
 
-bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruction)
 {
     spirv::IdRef id;
     spv::Decoration decoration;
@@ -2339,13 +2345,13 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
     // do.
     if (info == nullptr)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // If it's an inactive varying, remove the decoration altogether.
     if (!info->activeStages[mOptions.shaderType])
     {
-        return true;
+        return TransformationState::Transformed;
     }
 
     // If using relaxed precision, generate instructions for the replacement id instead.
@@ -2398,7 +2404,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
             }
         }
 
-        return false;
+        return TransformationState::Unchanged;
     }
 
     uint32_t newDecorationValue = ShaderInterfaceVariableInfo::kInvalid;
@@ -2419,7 +2425,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
             {
                 // Change the id to replacement variable
                 spirv::WriteDecorate(mSpirvBlobOut, id, decoration, decorationValues);
-                return true;
+                return TransformationState::Transformed;
             }
             break;
         default:
@@ -2429,7 +2435,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
     // If the decoration is not something we care about modifying, there's nothing to do.
     if (newDecorationValue == ShaderInterfaceVariableInfo::kInvalid)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // Modify the decoration value.
@@ -2441,7 +2447,7 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
     // encountered.
     if (decoration != spv::DecorationLocation)
     {
-        return true;
+        return TransformationState::Transformed;
     }
 
     // If any, the replacement variable is always reduced precision so add that decoration to
@@ -2487,10 +2493,10 @@ bool SpirvTransformer::transformDecorate(const uint32_t *instruction)
         }
     }
 
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvTransformer::transformMemberDecorate(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformMemberDecorate(const uint32_t *instruction)
 {
     spirv::IdRef typeId;
     spirv::LiteralInteger member;
@@ -2500,18 +2506,20 @@ bool SpirvTransformer::transformMemberDecorate(const uint32_t *instruction)
     // Transform only OpMemberDecorate %gl_PerVertex N BuiltIn B
     if (!mIds.isPerVertex(typeId) || decoration != spv::DecorationBuiltIn)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // Drop stripped fields.
-    return member > mIds.getPerVertexMaxActiveMember(typeId);
+    return member > mIds.getPerVertexMaxActiveMember(typeId) ? TransformationState::Transformed
+                                                             : TransformationState::Unchanged;
 }
 
-bool SpirvTransformer::transformCapability(const uint32_t *instruction, size_t wordCount)
+TransformationState SpirvTransformer::transformCapability(const uint32_t *instruction,
+                                                          size_t wordCount)
 {
     if (!mHasTransformFeedbackOutput)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     spv::Capability capability;
@@ -2525,7 +2533,7 @@ bool SpirvTransformer::transformCapability(const uint32_t *instruction, size_t w
     if (capability != spv::CapabilityShader && capability != spv::CapabilityGeometry &&
         capability != spv::CapabilityTessellation)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // Copy the original capability declaration.
@@ -2534,15 +2542,15 @@ bool SpirvTransformer::transformCapability(const uint32_t *instruction, size_t w
     // Write the TransformFeedback capability declaration.
     spirv::WriteCapability(mSpirvBlobOut, spv::CapabilityTransformFeedback);
 
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvTransformer::transformDebugInfo(const uint32_t *instruction, spv::Op op)
+TransformationState SpirvTransformer::transformDebugInfo(const uint32_t *instruction, spv::Op op)
 {
     if (mOptions.removeDebugInfo)
     {
         // Strip debug info to reduce binary size.
-        return true;
+        return TransformationState::Transformed;
     }
 
     // In the case of OpMemberName, unconditionally remove stripped gl_PerVertex members.
@@ -2554,7 +2562,9 @@ bool SpirvTransformer::transformDebugInfo(const uint32_t *instruction, spv::Op o
         spirv::ParseMemberName(instruction, &id, &member, &name);
 
         // Remove the instruction if it's a stripped member of gl_PerVertex.
-        return mIds.isPerVertex(id) && member > mIds.getPerVertexMaxActiveMember(id);
+        return mIds.isPerVertex(id) && member > mIds.getPerVertexMaxActiveMember(id)
+                   ? TransformationState::Transformed
+                   : TransformationState::Unchanged;
     }
 
     // In the case of ANGLEXfbN, unconditionally remove the variable names.  If transform
@@ -2568,14 +2578,14 @@ bool SpirvTransformer::transformDebugInfo(const uint32_t *instruction, spv::Op o
         // SPIR-V 1.0 Section 3.32 Instructions, OpName
         if (angle::BeginsWith(name, sh::vk::kXfbEmulationBufferName))
         {
-            return true;
+            return TransformationState::Transformed;
         }
     }
 
-    return false;
+    return TransformationState::Unchanged;
 }
 
-bool SpirvTransformer::transformEmitVertex(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformEmitVertex(const uint32_t *instruction)
 {
     // This is only possible in geometry shaders.
     ASSERT(mOptions.shaderType == gl::ShaderType::Geometry);
@@ -2583,10 +2593,10 @@ bool SpirvTransformer::transformEmitVertex(const uint32_t *instruction)
     // Write the temporary variables that hold varyings data before EmitVertex().
     writeOutputPrologue();
 
-    return false;
+    return TransformationState::Unchanged;
 }
 
-bool SpirvTransformer::transformEntryPoint(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformEntryPoint(const uint32_t *instruction)
 {
     // Should only have one EntryPoint
     ASSERT(!mEntryPointId.valid());
@@ -2632,10 +2642,10 @@ bool SpirvTransformer::transformEntryPoint(const uint32_t *instruction)
         spirv::WriteExecutionMode(mSpirvBlobOut, mEntryPointId, spv::ExecutionModeXfb);
     }
 
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvTransformer::transformTypePointer(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformTypePointer(const uint32_t *instruction)
 {
     spirv::IdResult id;
     spv::StorageClass storageClass;
@@ -2654,7 +2664,7 @@ bool SpirvTransformer::transformTypePointer(const uint32_t *instruction)
     // Cannot create a Private type declaration from builtins such as gl_PerVertex.
     if (mIds.getName(typeId) != nullptr && gl::IsBuiltInName(mIds.getName(typeId)))
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // Precision fixup needs this typeID
@@ -2662,7 +2672,7 @@ bool SpirvTransformer::transformTypePointer(const uint32_t *instruction)
 
     if (storageClass != spv::StorageClassOutput && storageClass != spv::StorageClassInput)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     const spirv::IdRef newPrivateTypeId(getNewId());
@@ -2676,10 +2686,10 @@ bool SpirvTransformer::transformTypePointer(const uint32_t *instruction)
 
     // The original instruction should still be present as well.  At this point, we don't know
     // whether we will need the original or Private type.
-    return false;
+    return TransformationState::Unchanged;
 }
 
-bool SpirvTransformer::transformTypeStruct(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformTypeStruct(const uint32_t *instruction)
 {
     spirv::IdResult id;
     spirv::IdRefList memberList;
@@ -2687,7 +2697,7 @@ bool SpirvTransformer::transformTypeStruct(const uint32_t *instruction)
 
     if (!mIds.isPerVertex(id))
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     const uint32_t maxMembers = mIds.getPerVertexMaxActiveMember(id);
@@ -2698,15 +2708,15 @@ bool SpirvTransformer::transformTypeStruct(const uint32_t *instruction)
 
     spirv::WriteTypeStruct(mSpirvBlobOut, id, memberList);
 
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvTransformer::transformReturn(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformReturn(const uint32_t *instruction)
 {
     if (mOpFunctionId != mEntryPointId)
     {
         // We only need to process the precision info when returning from the entry point function
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // For geometry shaders, this operations is done before every EmitVertex() instead.
@@ -2715,15 +2725,15 @@ bool SpirvTransformer::transformReturn(const uint32_t *instruction)
     if (mOptions.shaderType == gl::ShaderType::Geometry ||
         mOptions.shaderType == gl::ShaderType::Fragment)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     writeOutputPrologue();
 
-    return false;
+    return TransformationState::Unchanged;
 }
 
-bool SpirvTransformer::transformVariable(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformVariable(const uint32_t *instruction)
 {
     spirv::IdResultType typeId;
     spirv::IdResult id;
@@ -2736,7 +2746,7 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction)
     // do.
     if (info == nullptr)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // Furthermore, if it's not an inactive varying output, there's nothing to do.  Note that
@@ -2757,9 +2767,9 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction)
             spirv::WriteVariable(mSpirvBlobOut, mTypePointerTransformedId[typeId].privateID, id,
                                  spv::StorageClassPrivate, nullptr);
 
-            return true;
+            return TransformationState::Transformed;
         }
-        return false;
+        return TransformationState::Unchanged;
     }
 
     if (mOptions.shaderType == gl::ShaderType::Vertex && storageClass == spv::StorageClassUniform)
@@ -2772,7 +2782,7 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction)
                info == &mVariableInfoMap.get(mOptions.shaderType, GetXfbBufferName(3)));
 
         // Drop the declaration.
-        return true;
+        return TransformationState::Transformed;
     }
 
     ASSERT(storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassInput);
@@ -2785,10 +2795,10 @@ bool SpirvTransformer::transformVariable(const uint32_t *instruction)
     spirv::WriteVariable(mSpirvBlobOut, mTypePointerTransformedId[typeId].privateID, id,
                          spv::StorageClassPrivate, nullptr);
 
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvTransformer::transformAccessChain(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformAccessChain(const uint32_t *instruction)
 {
     spirv::IdResultType typeId;
     spirv::IdResult id;
@@ -2800,12 +2810,12 @@ bool SpirvTransformer::transformAccessChain(const uint32_t *instruction)
     const ShaderInterfaceVariableInfo *info = mVariableInfoById[baseId];
     if (info == nullptr)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     if (info->activeStages[mOptions.shaderType] && !info->useRelaxedPrecision)
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // Modifiy the instruction to use the private type.
@@ -2815,10 +2825,10 @@ bool SpirvTransformer::transformAccessChain(const uint32_t *instruction)
     spirv::WriteAccessChain(mSpirvBlobOut, mTypePointerTransformedId[typeId].privateID, id, baseId,
                             indexList);
 
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvTransformer::transformExecutionMode(const uint32_t *instruction)
+TransformationState SpirvTransformer::transformExecutionMode(const uint32_t *instruction)
 {
     spirv::IdRef entryPoint;
     spv::ExecutionMode mode;
@@ -2828,9 +2838,9 @@ bool SpirvTransformer::transformExecutionMode(const uint32_t *instruction)
         mOptions.removeEarlyFragmentTestsOptimization)
     {
         // Drop the instruction.
-        return true;
+        return TransformationState::Transformed;
     }
-    return false;
+    return TransformationState::Unchanged;
 }
 
 struct AliasingAttributeMap
@@ -2897,16 +2907,16 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
 
     // Instructions that potentially need transformation.  They return true if the instruction is
     // transformed.  If false is returned, the instruction should be copied as-is.
-    bool transformEntryPoint(const uint32_t *instruction);
-    bool transformName(const uint32_t *instruction);
-    bool transformDecorate(const uint32_t *instruction);
-    bool transformVariable(const uint32_t *instruction);
-    bool transformAccessChain(const uint32_t *instruction);
+    TransformationState transformEntryPoint(const uint32_t *instruction);
+    TransformationState transformName(const uint32_t *instruction);
+    TransformationState transformDecorate(const uint32_t *instruction);
+    TransformationState transformVariable(const uint32_t *instruction);
+    TransformationState transformAccessChain(const uint32_t *instruction);
     void transformLoadHelper(spirv::IdRef pointerId,
                              spirv::IdRef typeId,
                              spirv::IdRef replacementId,
                              spirv::IdRef resultId);
-    bool transformLoad(const uint32_t *instruction);
+    TransformationState transformLoad(const uint32_t *instruction);
 
     void declareExpandedMatrixVectors();
     void writeExpandedMatrixInitialization();
@@ -3105,7 +3115,7 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
     }
 
     // Only look at interesting instructions.
-    bool transformed = false;
+    TransformationState transformationState = TransformationState::Unchanged;
 
     if (mIsInFunctionSection)
     {
@@ -3124,10 +3134,10 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
         {
             case spv::OpAccessChain:
             case spv::OpInBoundsAccessChain:
-                transformed = transformAccessChain(instruction);
+                transformationState = transformAccessChain(instruction);
                 break;
             case spv::OpLoad:
-                transformed = transformLoad(instruction);
+                transformationState = transformLoad(instruction);
                 break;
             default:
                 break;
@@ -3153,16 +3163,16 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
                 break;
             // Instructions that may need transformation:
             case spv::OpEntryPoint:
-                transformed = transformEntryPoint(instruction);
+                transformationState = transformEntryPoint(instruction);
                 break;
             case spv::OpName:
-                transformed = transformName(instruction);
+                transformationState = transformName(instruction);
                 break;
             case spv::OpDecorate:
-                transformed = transformDecorate(instruction);
+                transformationState = transformDecorate(instruction);
                 break;
             case spv::OpVariable:
-                transformed = transformVariable(instruction);
+                transformationState = transformVariable(instruction);
                 break;
             default:
                 break;
@@ -3170,7 +3180,7 @@ void SpirvVertexAttributeAliasingTransformer::transformInstruction()
     }
 
     // If the instruction was not transformed, copy it to output as is.
-    if (!transformed)
+    if (transformationState == TransformationState::Unchanged)
     {
         copyInstruction(instruction, wordCount);
     }
@@ -3294,7 +3304,8 @@ void SpirvVertexAttributeAliasingTransformer::visitTypePointer(const uint32_t *i
     }
 }
 
-bool SpirvVertexAttributeAliasingTransformer::transformEntryPoint(const uint32_t *instruction)
+TransformationState SpirvVertexAttributeAliasingTransformer::transformEntryPoint(
+    const uint32_t *instruction)
 {
     // Should only have one EntryPoint
     ASSERT(!mEntryPointId.valid());
@@ -3363,10 +3374,11 @@ bool SpirvVertexAttributeAliasingTransformer::transformEntryPoint(const uint32_t
     // Write the entry point with the aliasing attributes removed.
     spirv::WriteEntryPoint(mSpirvBlobOut, executionModel, mEntryPointId, name, interfaceList);
 
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvVertexAttributeAliasingTransformer::transformName(const uint32_t *instruction)
+TransformationState SpirvVertexAttributeAliasingTransformer::transformName(
+    const uint32_t *instruction)
 {
     spirv::IdRef id;
     spirv::LiteralString name;
@@ -3376,14 +3388,15 @@ bool SpirvVertexAttributeAliasingTransformer::transformName(const uint32_t *inst
     ASSERT(id < mIsAliasingAttributeById.size());
     if (!mIsAliasingAttributeById[id])
     {
-        return false;
+        return TransformationState::Unchanged;
     }
 
     // Drop debug annotations for this id.
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvVertexAttributeAliasingTransformer::transformDecorate(const uint32_t *instruction)
+TransformationState SpirvVertexAttributeAliasingTransformer::transformDecorate(
+    const uint32_t *instruction)
 {
     spirv::IdRef id;
     spv::Decoration decoration;
@@ -3397,7 +3410,7 @@ bool SpirvVertexAttributeAliasingTransformer::transformDecorate(const uint32_t *
         // Keep all decorations except for Location.
         if (decoration != spv::DecorationLocation)
         {
-            return false;
+            return TransformationState::Unchanged;
         }
 
         const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
@@ -3425,29 +3438,30 @@ bool SpirvVertexAttributeAliasingTransformer::transformDecorate(const uint32_t *
         if (info == nullptr || info->attributeComponentCount == 0 ||
             !info->activeStages[gl::ShaderType::Vertex])
         {
-            return false;
+            return TransformationState::Unchanged;
         }
 
         // Always drop RelaxedPrecision from input attributes.  The temporary variable the attribute
         // is loaded into has RelaxedPrecision and will implicitly convert.
         if (decoration == spv::DecorationRelaxedPrecision)
         {
-            return true;
+            return TransformationState::Transformed;
         }
 
         // If id is not that of an aliasing attribute, there's nothing else to do.
         ASSERT(id < mIsAliasingAttributeById.size());
         if (!mIsAliasingAttributeById[id])
         {
-            return false;
+            return TransformationState::Unchanged;
         }
     }
 
     // Drop every decoration for this id.
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvVertexAttributeAliasingTransformer::transformVariable(const uint32_t *instruction)
+TransformationState SpirvVertexAttributeAliasingTransformer::transformVariable(
+    const uint32_t *instruction)
 {
     spirv::IdResultType typeId;
     spirv::IdResult id;
@@ -3461,17 +3475,18 @@ bool SpirvVertexAttributeAliasingTransformer::transformVariable(const uint32_t *
         ASSERT(id < mIsAliasingAttributeById.size());
         if (!mIsAliasingAttributeById[id])
         {
-            return false;
+            return TransformationState::Unchanged;
         }
     }
 
     ASSERT(storageClass == spv::StorageClassInput);
 
     // Drop the declaration.
-    return true;
+    return TransformationState::Transformed;
 }
 
-bool SpirvVertexAttributeAliasingTransformer::transformAccessChain(const uint32_t *instruction)
+TransformationState SpirvVertexAttributeAliasingTransformer::transformAccessChain(
+    const uint32_t *instruction)
 {
     spirv::IdResultType typeId;
     spirv::IdResult id;
@@ -3517,7 +3532,7 @@ bool SpirvVertexAttributeAliasingTransformer::transformAccessChain(const uint32_
         ASSERT(baseId < mIsAliasingAttributeById.size());
         if (!mIsAliasingAttributeById[baseId])
         {
-            return false;
+            return TransformationState::Unchanged;
         }
 
         // Find the replacement attribute for the aliasing one.
@@ -3541,7 +3556,7 @@ bool SpirvVertexAttributeAliasingTransformer::transformAccessChain(const uint32_
         spirv::WriteAccessChain(mSpirvBlobOut, typeId, id, replacementId, indexList);
     }
 
-    return true;
+    return TransformationState::Transformed;
 }
 
 void SpirvVertexAttributeAliasingTransformer::transformLoadHelper(spirv::IdRef pointerId,
@@ -3605,7 +3620,8 @@ void SpirvVertexAttributeAliasingTransformer::transformLoadHelper(spirv::IdRef p
     }
 }
 
-bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *instruction)
+TransformationState SpirvVertexAttributeAliasingTransformer::transformLoad(
+    const uint32_t *instruction)
 {
     spirv::IdResultType typeId;
     spirv::IdResult id;
@@ -3635,7 +3651,7 @@ bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *inst
         ASSERT(pointerId < mIsAliasingAttributeById.size());
         if (!mIsAliasingAttributeById[pointerId])
         {
-            return false;
+            return TransformationState::Unchanged;
         }
 
         // Find the replacement attribute for the aliasing one.
@@ -3645,7 +3661,7 @@ bool SpirvVertexAttributeAliasingTransformer::transformLoad(const uint32_t *inst
         transformLoadHelper(pointerId, typeId, replacementId, id);
     }
 
-    return true;
+    return TransformationState::Transformed;
 }
 
 void SpirvVertexAttributeAliasingTransformer::declareExpandedMatrixVectors()
