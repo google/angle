@@ -2550,6 +2550,19 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         mCurrentFramebufferDesc.updateUnresolveMask(MakeUnresolveAttachmentMask(mRenderPassDesc));
     }
 
+    bool framebufferFetchModeUpdated        = false;
+    const gl::State &glState                = contextVk->getState();
+    const gl::ProgramExecutable *executable = glState.getProgramExecutable();
+    bool programUsesFramebufferFetch = executable != nullptr && executable->usesFramebufferFetch();
+    if (programUsesFramebufferFetch != mRenderPassDesc.getFramebufferFetchMode())
+    {
+        framebufferFetchModeUpdated = true;
+        mRenderPassDesc.setFramebufferFetchMode(programUsesFramebufferFetch);
+        // Make sure framebuffer is recreated.
+        mFramebuffer = nullptr;
+        mCurrentFramebufferDesc.updateFramebufferFetchMode(programUsesFramebufferFetch);
+    }
+
     vk::Framebuffer *framebuffer = nullptr;
     ANGLE_TRY(getFramebuffer(contextVk, &framebuffer, nullptr));
 
@@ -2596,7 +2609,7 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
         contextVk->startNextSubpass();
     }
 
-    if (unresolveChanged || anyUnresolve)
+    if (unresolveChanged || anyUnresolve || framebufferFetchModeUpdated)
     {
         contextVk->onDrawFramebufferRenderPassDescChange(this, renderPassDescChangedOut);
     }

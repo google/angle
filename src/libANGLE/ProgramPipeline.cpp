@@ -370,6 +370,19 @@ void ProgramPipeline::updateExecutableTessellationProperties()
     }
 }
 
+void ProgramPipeline::updateFragmentInoutRange()
+{
+    Program *fragmentProgram = getShaderProgram(gl::ShaderType::Fragment);
+
+    if (!fragmentProgram)
+    {
+        return;
+    }
+
+    const ProgramExecutable &fragmentExecutable = fragmentProgram->getExecutable();
+    mState.mExecutable->mFragmentInoutRange     = fragmentExecutable.mFragmentInoutRange;
+}
+
 void ProgramPipeline::updateHasBooleans()
 {
     // Need to check all of the shader stages, not just linked, so we handle Compute correctly.
@@ -454,6 +467,9 @@ void ProgramPipeline::updateExecutable()
 
     // Tessellation Shaders ProgramExecutable properties
     updateExecutableTessellationProperties();
+
+    // Fragment Shader ProgramExecutable properties
+    updateFragmentInoutRange();
 
     // All Shader ProgramExecutable properties
     mState.updateExecutableTextures();

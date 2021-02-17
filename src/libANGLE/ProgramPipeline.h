@@ -153,6 +153,7 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     void updateImageBindings();
     void updateExecutableGeometryProperties();
     void updateExecutableTessellationProperties();
+    void updateFragmentInoutRange();
     void updateHasBooleans();
     void updateExecutable();
 

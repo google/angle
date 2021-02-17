@@ -294,6 +294,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     ANGLE_INLINE void invalidateTexture(gl::TextureType target) override {}
 
+    // EXT_shader_framebuffer_fetch_non_coherent
+    void framebufferFetchBarrier() override;
+
     VkDevice getDevice() const;
     egl::ContextPriority getPriority() const { return mContextPriority; }
 
@@ -617,6 +620,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS,
         DIRTY_BIT_TRANSFORM_FEEDBACK_RESUME,
         DIRTY_BIT_DESCRIPTOR_SETS,
+        DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER,
         DIRTY_BIT_MAX,
     };
 
@@ -799,6 +803,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                            DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsShaderResources(DirtyBits::Iterator *dirtyBitsIterator,
                                                      DirtyBits dirtyBitMask);
+    angle::Result handleDirtyGraphicsFramebufferFetchBarrier(DirtyBits::Iterator *dirtyBitsIterator,
+                                                             DirtyBits dirtyBitMask);
     angle::Result handleDirtyGraphicsTransformFeedbackBuffersEmulation(
         DirtyBits::Iterator *dirtyBitsIterator,
         DirtyBits dirtyBitMask);
@@ -1030,6 +1036,9 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     // vulkan.
     bool mEGLSyncObjectPendingFlush;
     bool mHasDeferredFlush;
+
+    // GL_EXT_shader_framebuffer_fetch_non_coherent
+    bool mLastProgramUsesFramebufferFetch;
 
     // Semaphores that must be waited on in the next submission.
     std::vector<VkSemaphore> mWaitSemaphores;

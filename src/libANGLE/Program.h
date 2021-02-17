@@ -282,6 +282,7 @@ class ProgramState final : angle::NonCopyable
     const RangeUI &getSamplerUniformRange() const { return mExecutable->getSamplerUniformRange(); }
     const RangeUI &getImageUniformRange() const { return mExecutable->getImageUniformRange(); }
     const RangeUI &getAtomicCounterUniformRange() const { return mAtomicCounterUniformRange; }
+    const RangeUI &getFragmentInoutRange() const { return mExecutable->getFragmentInoutRange(); }
 
     const std::vector<TransformFeedbackVarying> &getLinkedTransformFeedbackVaryings() const
     {

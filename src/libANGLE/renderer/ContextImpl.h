@@ -179,6 +179,9 @@ class ContextImpl : public GLImplFactory
     // GL_ANGLE_texture_storage_external
     virtual void invalidateTexture(gl::TextureType target);
 
+    // EXT_shader_framebuffer_fetch_non_coherent
+    virtual void framebufferFetchBarrier() {}
+
     // State sync with dirty bits.
     virtual angle::Result syncState(const gl::Context *context,
                                     const gl::State::DirtyBits &dirtyBits,

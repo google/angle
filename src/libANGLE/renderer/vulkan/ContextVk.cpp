@@ -392,6 +392,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mGpuEventsEnabled(false),
       mEGLSyncObjectPendingFlush(false),
       mHasDeferredFlush(false),
+      mLastProgramUsesFramebufferFetch(false),
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
       mPerfCounters{},
@@ -447,6 +448,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
         &ContextVk::handleDirtyGraphicsDriverUniformsBinding;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_SHADER_RESOURCES] =
         &ContextVk::handleDirtyGraphicsShaderResources;
+    mGraphicsDirtyBitHandlers[DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER] =
+        &ContextVk::handleDirtyGraphicsFramebufferFetchBarrier;
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
         mGraphicsDirtyBitHandlers[DIRTY_BIT_TRANSFORM_FEEDBACK_BUFFERS] =
@@ -1428,6 +1431,22 @@ angle::Result ContextVk::handleDirtyGraphicsIndexBuffer(DirtyBits::Iterator *dir
     return angle::Result::Continue;
 }
 
+angle::Result ContextVk::handleDirtyGraphicsFramebufferFetchBarrier(
+    DirtyBits::Iterator *dirtyBitsIterator,
+    DirtyBits dirtyBitMask)
+{
+    VkMemoryBarrier memoryBarrier = {};
+    memoryBarrier.sType           = VK_STRUCTURE_TYPE_MEMORY_BARRIER;
+    memoryBarrier.srcAccessMask   = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    memoryBarrier.dstAccessMask   = VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
+
+    mRenderPassCommandBuffer->pipelineBarrier(
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+        VK_DEPENDENCY_BY_REGION_BIT, 1, &memoryBarrier, 0, nullptr, 0, nullptr);
+
+    return angle::Result::Continue;
+}
+
 ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     vk::CommandBufferHelper *commandBufferHelper)
 {
@@ -1440,9 +1459,11 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyShaderResourcesImpl(
     }
 
     if (executable->hasUniformBuffers() || executable->hasStorageBuffers() ||
-        executable->hasAtomicCounterBuffers() || executable->hasImages())
+        executable->hasAtomicCounterBuffers() || executable->hasImages() ||
+        executable->usesFramebufferFetch())
     {
-        ANGLE_TRY(mExecutable->updateShaderResourcesDescriptorSet(this, commandBufferHelper));
+        ANGLE_TRY(mExecutable->updateShaderResourcesDescriptorSet(this, mDrawFramebuffer,
+                                                                  commandBufferHelper));
     }
     return angle::Result::Continue;
 }
@@ -2823,6 +2844,12 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
 
         ASSERT(mExecutable);
         mExecutable->updateEarlyFragmentTestsOptimization(this);
+
+        if (mLastProgramUsesFramebufferFetch != executable->usesFramebufferFetch())
+        {
+            mLastProgramUsesFramebufferFetch = executable->usesFramebufferFetch();
+            ANGLE_TRY(flushCommandsAndEndRenderPass());
+        }
     }
 
     return angle::Result::Continue;
@@ -3515,7 +3542,8 @@ void ContextVk::invalidateCurrentShaderResources()
     ASSERT(executable);
 
     if (executable->hasUniformBuffers() || executable->hasStorageBuffers() ||
-        executable->hasAtomicCounterBuffers() || executable->hasImages())
+        executable->hasAtomicCounterBuffers() || executable->hasImages() ||
+        executable->usesFramebufferFetch())
     {
         mGraphicsDirtyBits |= kResourcesAndDescSetDirtyBits;
         mComputeDirtyBits |= kResourcesAndDescSetDirtyBits;
@@ -3551,6 +3579,11 @@ void ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
 
     // Update scissor.
     updateScissor(mState);
+
+    if (mState.getProgramExecutable())
+    {
+        invalidateCurrentShaderResources();
+    }
 
     onDrawFramebufferRenderPassDescChange(framebufferVk, nullptr);
 }
@@ -3823,6 +3856,11 @@ angle::Result ContextVk::memoryBarrierImpl(GLbitfield barriers, VkPipelineStageF
                                                                  &memoryBarrier);
 
     return angle::Result::Continue;
+}
+
+void ContextVk::framebufferFetchBarrier()
+{
+    mGraphicsDirtyBits.set(DIRTY_BIT_FRAMEBUFFER_FETCH_BARRIER);
 }
 
 vk::DynamicQueryPool *ContextVk::getQueryPool(gl::QueryType queryType)

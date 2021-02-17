@@ -174,7 +174,7 @@ class alignas(4) RenderPassDesc final
     size_t depthStencilAttachmentIndex() const { return colorAttachmentRange(); }
 
     bool isColorAttachmentEnabled(size_t colorIndexGL) const;
-    bool hasDepthStencilAttachment() const { return mHasDepthStencilAttachment; }
+    bool hasDepthStencilAttachment() const;
     bool hasColorResolveAttachment(size_t colorIndexGL) const
     {
         return mColorResolveAttachmentMask.test(colorIndexGL);
@@ -220,6 +220,9 @@ class alignas(4) RenderPassDesc final
 
     uint8_t samples() const { return 1u << mLogSamples; }
 
+    void setFramebufferFetchMode(bool hasFramebufferFetch);
+    bool getFramebufferFetchMode() const { return mHasFramebufferFetch; }
+
     angle::FormatID operator[](size_t index) const
     {
         ASSERT(index < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1);
@@ -236,7 +239,7 @@ class alignas(4) RenderPassDesc final
     // Store log(samples), to be able to store it in 3 bits.
     uint8_t mLogSamples : 3;
     uint8_t mColorAttachmentRange : 4;
-    uint8_t mHasDepthStencilAttachment : 1;
+    uint8_t mHasFramebufferFetch : 1;
 
     // Whether each color attachment has a corresponding resolve attachment.  Color resolve
     // attachments can be used to optimize resolve through glBlitFramebuffer() as well as support
@@ -1176,13 +1179,15 @@ class FramebufferDesc
 
     void updateLayerCount(uint32_t layerCount);
     uint32_t getLayerCount() const { return mLayerCount; }
+    void updateFramebufferFetchMode(bool hasFramebufferFetch);
 
   private:
     void reset();
     void update(uint32_t index, ImageOrBufferViewSubresourceSerial serial);
 
     // Note: this is an exclusive index. If there is one index it will be "1".
-    uint16_t mMaxIndex : 7;
+    uint16_t mMaxIndex : 6;
+    uint16_t mHasFramebufferFetch : 1;
     static_assert(gl::IMPLEMENTATION_MAX_FRAMEBUFFER_LAYERS < (1 << 9) - 1,
                   "Not enough bits for mLayerCount");
     uint16_t mLayerCount : 9;
