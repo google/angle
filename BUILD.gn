@@ -184,7 +184,7 @@ config("extra_warnings") {
       "-Wnewline-eof",
       "-Wnon-virtual-dtor",
       "-Wredundant-parens",
-      "-Wreturn-std-move-in-c++11",
+      "-Wreturn-std-move",
       "-Wshadow-field",
       "-Wtautological-type-limit-compare",
       "-Wundefined-reinterpret-cast",
