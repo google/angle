@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8025c088_0d72c709",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T06:16:13Z",
+      "side": 1,
+      "message": "I believe the deqp failure to be a test bug (missing barrier). I have a fix for it here: https://github.com/ShabbyX/VK-GL-CTS/commit/5e44eec029813733a2ff5c688c00c488bc4f9c93\n\nNevertheless, I asked for clarification here whether my understanding of the spec is correct and the barrier is actually necessary): https://gitlab.khronos.org/opengl/API/-/issues/144",
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
