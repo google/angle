@@ -16,6 +16,29 @@
       "message": "Let\u0027s ship it!",
       "revId": "3ee16b0252e32e0c5ac13af846fd859b74433869",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1f9a6fa_cf1f4097",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 2559,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T16:44:04Z",
+      "side": 1,
+      "message": "Set a flag here, and then `||` that with the condition of the loop below that says:\n\n    if (unresolveChanged || anyUnresolve)\n    {\n        contextVk-\u003eonDrawFramebufferRenderPassDescChange(this);\n        ...\n    }",
+      "range": {
+        "startLine": 2559,
+        "startChar": 8,
+        "endLine": 2559,
+        "endChar": 63
+      },
+      "revId": "3ee16b0252e32e0c5ac13af846fd859b74433869",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
