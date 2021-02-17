@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "999112d8_700bcd7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-17T17:58:46Z",
+      "side": 1,
+      "message": "They seem to work:\nhttps://ci.chromium.org/ui/p/chromium/builders/try/win-angle-chromium-x64-try/2/overview\nhttps://ci.chromium.org/ui/p/chromium/builders/try/win-angle-x64-try/2/overview\n\nOne issue is that non-chromium bot builds chromium for some reason.\nI\u0027ll work on that in parallel.\n\nLanding this will facilitate removing the old win 64 bots and freeing up GCEs to migrate other bots.\nI\u0027d like to run them in parallel for a day, to confirm they work as expected.",
+      "revId": "7595f61aba17a6dcafc6c5ecfbcaa3ee9fa39738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
