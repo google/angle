@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50fbda8d_45f4b10d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T03:00:42Z",
+      "side": 1,
+      "message": "syncval approved.\n\nThere are two bits remaining to optimize; dispatch calls break the render pass (should be able to just not do that), and indirect draws which currently just break the render pass",
+      "revId": "97430fab91a27a5cd0688c42c1bce53e02a9183a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
