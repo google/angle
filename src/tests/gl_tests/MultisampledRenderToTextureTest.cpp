@@ -3753,6 +3753,9 @@ TEST_P(MultisampledRenderToTextureES3Test, ClearThenMaskedClearFramebufferTest)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
+    // TODO(anglebug:5655): This test is failing on Linux AMD Vulkan since it was added.
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     constexpr GLsizei kSize = 16;
 
     GLFramebuffer fboMS;
