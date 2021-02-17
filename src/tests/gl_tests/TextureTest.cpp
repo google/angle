@@ -2133,6 +2133,9 @@ TEST_P(Texture2DTest, TexStorageWithPBO)
     // http://anglebug.com/5081
     ANGLE_SKIP_TEST_IF(IsWindows() && IsNVIDIA() && IsOpenGL());
 
+    // http://anglebug.com/5651
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsNVIDIA() && IsOpenGL());
+
     // http://anglebug.com/5097
     ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL() && IsTSan());
 
