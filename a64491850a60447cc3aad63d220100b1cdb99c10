@@ -16,6 +16,24 @@
       "message": "oops, i need to remove the now dead code - FillImageFormatListInfo(...)",
       "revId": "a64491850a60447cc3aad63d220100b1cdb99c10",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb7a77f1_3a53a5ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-17T23:37:44Z",
+      "side": 1,
+      "message": "next patch will remove this",
+      "parentUuid": "1f711681_9c30942e",
+      "revId": "a64491850a60447cc3aad63d220100b1cdb99c10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
