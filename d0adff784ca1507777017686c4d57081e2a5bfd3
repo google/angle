@@ -69,6 +69,24 @@
       "parentUuid": "7583c170_0a0f35d1",
       "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbd01730_f063a4ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-17T22:52:31Z",
+      "side": 1,
+      "message": "trying to understand the issue here, is the trace/golden image being updated or do we suspect a bug in this CL\u0027s implementation?",
+      "parentUuid": "b0fb315f_28211958",
+      "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
