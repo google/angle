@@ -96,6 +96,86 @@
       "message": "LGTM, thanks for the test. I\u0027m not sure what that lock planes define is, hopefully other people can verify.",
       "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e417615f_286a6425",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T00:00:26Z",
+      "side": 1,
+      "message": "Thanks for digging into this.\n\nLGTM with Shabi\u0027s comments.",
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c95401d1_2d64b6c4",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2473,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T00:00:26Z",
+      "side": 1,
+      "message": "nit: bind",
+      "range": {
+        "startLine": 2473,
+        "startChar": 34,
+        "endLine": 2473,
+        "endChar": 39
+      },
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b08e91cd_77d8b295",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2484,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T00:00:26Z",
+      "side": 1,
+      "message": "bind",
+      "range": {
+        "startLine": 2484,
+        "startChar": 34,
+        "endLine": 2484,
+        "endChar": 39
+      },
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dcbbe25_ff34bcb6",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2529,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T00:00:26Z",
+      "side": 1,
+      "message": "It would probably be good add some ASSERT_GL_NO_ERROR() checks after these draw/finish calls.\n\nAlso, is there a way to check that the draw was done correctly?",
+      "revId": "27d790c32ab308234ed3b5432ad0afe91fe7901a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
