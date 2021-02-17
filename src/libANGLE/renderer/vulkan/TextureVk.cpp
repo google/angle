@@ -2666,23 +2666,18 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     gl_vk::GetExtentsAndLayerCount(mState.getType(), extents, &vkExtent, &layerCount);
     GLint samples = mState.getBaseLevelDesc().samples ? mState.getBaseLevelDesc().samples : 1;
 
-    VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    VkImageFormatListCreateInfoKHR formatListInfo        = {};
-    VkFormat imageListVkFormat                           = VK_FORMAT_UNDEFINED;
+    bool imageFormatListEnabled = false;
+    ANGLE_TRY(mImage->initExternal(
+        contextVk, mState.getType(), vkExtent, format, samples, mImageUsageFlags, mImageCreateFlags,
+        vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(mState.getEffectiveBaseLevel()),
+        gl::LevelIndex(mState.getEffectiveMaxLevel()), levelCount, layerCount,
+        contextVk->isRobustResourceInitEnabled(), &imageFormatListEnabled));
 
-    if (FillImageFormatListInfo(renderer, format, &imageListVkFormat, &mImageCreateFlags,
-                                &formatListInfo))
+    if (imageFormatListEnabled)
     {
+        mImageCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
         mRequiresMutableStorage = true;
-        additionalCreateInfo    = &formatListInfo;
     }
-
-    ANGLE_TRY(mImage->initExternal(contextVk, mState.getType(), vkExtent, format, samples,
-                                   mImageUsageFlags, mImageCreateFlags, vk::ImageLayout::Undefined,
-                                   additionalCreateInfo,
-                                   gl::LevelIndex(mState.getEffectiveBaseLevel()),
-                                   gl::LevelIndex(mState.getEffectiveMaxLevel()), levelCount,
-                                   layerCount, contextVk->isRobustResourceInitEnabled()));
 
     const VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 

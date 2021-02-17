@@ -78,17 +78,6 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
         mImageViews.init(renderer);
     }
 
-    VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    VkImageFormatListCreateInfoKHR formatListInfo        = {};
-    VkFormat imageListVkFormat                           = VK_FORMAT_UNDEFINED;
-    VkImageCreateFlags imageCreateFlags                  = vk::kVkImageCreateFlagsNone;
-
-    if (FillImageFormatListInfo(renderer, format, &imageListVkFormat, &imageCreateFlags,
-                                &formatListInfo))
-    {
-        additionalCreateInfo = &formatListInfo;
-    }
-
     const angle::Format &textureFormat = format.actualImageFormat();
     const bool isDepthStencilFormat    = textureFormat.hasDepthOrStencilBits();
     ASSERT(textureFormat.redBits > 0 || isDepthStencilFormat);
@@ -113,9 +102,9 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
 
     VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
     ANGLE_TRY(mImage->initExternal(contextVk, gl::TextureType::_2D, extents, format, imageSamples,
-                                   usage, imageCreateFlags, vk::ImageLayout::Undefined,
-                                   additionalCreateInfo, gl::LevelIndex(0), gl::LevelIndex(0), 1, 1,
-                                   robustInit));
+                                   usage, vk::kVkImageCreateFlagsNone, vk::ImageLayout::Undefined,
+                                   nullptr, gl::LevelIndex(0), gl::LevelIndex(0), 1, 1, robustInit,
+                                   nullptr));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));

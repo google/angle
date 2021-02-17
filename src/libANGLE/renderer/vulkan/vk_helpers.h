@@ -1315,12 +1315,6 @@ bool CanCopyWithTransfer(RendererVk *renderer,
                          const Format &destFormat,
                          VkImageTiling destTilingMode);
 
-bool FillImageFormatListInfo(RendererVk *rendererVk,
-                             const vk::Format &format,
-                             VkFormat *imageListVkFormat,
-                             VkImageCreateFlags *imageCreateFlags,
-                             VkImageFormatListCreateInfoKHR *imageFormatListCreateInfo);
-
 class ImageHelper final : public Resource, public angle::Subject
 {
   public:
@@ -1369,7 +1363,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                gl::LevelIndex maxLevel,
                                uint32_t mipLevels,
                                uint32_t layerCount,
-                               bool isRobustResourceInitEnabled);
+                               bool isRobustResourceInitEnabled,
+                               bool *imageFormatListEnabledOut);
     angle::Result initMemory(Context *context,
                              const MemoryProperties &memoryProperties,
                              VkMemoryPropertyFlags flags);

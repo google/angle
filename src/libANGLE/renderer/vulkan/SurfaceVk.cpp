@@ -123,7 +123,6 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
                               bool isRobustResourceInitEnabled,
                               vk::ImageHelper *imageHelper)
 {
-    RendererVk *renderer               = displayVk->getRenderer();
     const angle::Format &textureFormat = vkFormat.actualImageFormat();
     bool isDepthOrStencilFormat   = textureFormat.depthBits > 0 || textureFormat.stencilBits > 0;
     const VkImageUsageFlags usage = isDepthOrStencilFormat ? kSurfaceVkDepthStencilImageUsageFlags
@@ -132,21 +131,10 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
     VkExtent3D extents = {std::max(static_cast<uint32_t>(width), 1u),
                           std::max(static_cast<uint32_t>(height), 1u), 1u};
 
-    VkImageFormatListCreateInfoKHR *additionalCreateInfo = nullptr;
-    VkImageFormatListCreateInfoKHR formatListInfo        = {};
-    VkFormat imageListVkFormat                           = VK_FORMAT_UNDEFINED;
-    VkImageCreateFlags imageCreateFlags                  = vk::kVkImageCreateFlagsNone;
-
-    if (FillImageFormatListInfo(renderer, vkFormat, &imageListVkFormat, &imageCreateFlags,
-                                &formatListInfo))
-    {
-        additionalCreateInfo = &formatListInfo;
-    }
-
-    ANGLE_TRY(imageHelper->initExternal(displayVk, gl::TextureType::_2D, extents, vkFormat, samples,
-                                        usage, imageCreateFlags, vk::ImageLayout::Undefined,
-                                        additionalCreateInfo, gl::LevelIndex(0), gl::LevelIndex(0),
-                                        1, 1, isRobustResourceInitEnabled));
+    ANGLE_TRY(imageHelper->initExternal(
+        displayVk, gl::TextureType::_2D, extents, vkFormat, samples, usage,
+        vk::kVkImageCreateFlagsNone, vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(0),
+        gl::LevelIndex(0), 1, 1, isRobustResourceInitEnabled, nullptr));
 
     return angle::Result::Continue;
 }

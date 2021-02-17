@@ -204,18 +204,7 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
         imageTilingMode = VK_IMAGE_TILING_OPTIMAL;
     }
 
-    VkImageFormatListCreateInfoKHR formatListInfo = {};
-    VkFormat imageListVkFormat                    = VK_FORMAT_UNDEFINED;
-    VkImageCreateFlags imageCreateFlags           = vk::kVkImageCreateFlagsNone;
-
-    if (FillImageFormatListInfo(renderer, vkFormat, &imageListVkFormat, &imageCreateFlags,
-                                &formatListInfo))
-    {
-        externalFormat.pNext = &formatListInfo;
-    }
-
     VkExternalMemoryImageCreateInfo externalMemoryImageCreateInfo = {};
-
     externalMemoryImageCreateInfo.sType = VK_STRUCTURE_TYPE_EXTERNAL_MEMORY_IMAGE_CREATE_INFO;
     externalMemoryImageCreateInfo.pNext = &externalFormat;
     externalMemoryImageCreateInfo.handleTypes =
@@ -233,9 +222,9 @@ angle::Result HardwareBufferImageSiblingVkAndroid::initImpl(DisplayVk *displayVk
     ANGLE_TRY(mImage->initExternal(
         displayVk, gl::TextureType::_2D, vkExtents,
         bufferFormatProperties.format == VK_FORMAT_UNDEFINED ? externalVkFormat : vkFormat, 1,
-        usage, imageCreateFlags, vk::ImageLayout::ExternalPreInitialized,
+        usage, vk::kVkImageCreateFlagsNone, vk::ImageLayout::ExternalPreInitialized,
         &externalMemoryImageCreateInfo, gl::LevelIndex(0), gl::LevelIndex(0), 1, 1,
-        robustInitEnabled));
+        robustInitEnabled, nullptr));
 
     VkImportAndroidHardwareBufferInfoANDROID importHardwareBufferInfo = {};
     importHardwareBufferInfo.sType  = VK_STRUCTURE_TYPE_IMPORT_ANDROID_HARDWARE_BUFFER_INFO_ANDROID;
