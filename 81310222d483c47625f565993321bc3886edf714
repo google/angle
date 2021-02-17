@@ -16,6 +16,92 @@
       "message": "🔥  👍  💯 💯 💯\n",
       "revId": "81310222d483c47625f565993321bc3886edf714",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7dea7283_76f2544a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T19:30:33Z",
+      "side": 1,
+      "message": "More tests are always welcome and there\u0027s definitely a lot here.\n\nWith this number of tests, I\u0027m surprised there weren\u0027t any fixes required to get them all passing.   Does this imply the other testing we have is pretty good at finding issues already?",
+      "revId": "81310222d483c47625f565993321bc3886edf714",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4002592_c04b4265",
+        "filename": "src/tests/gl_tests/MemoryBarrierTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T19:30:33Z",
+      "side": 1,
+      "message": "I don\u0027t know if it makes a difference, but the GLES backend treats GL_OES_texture_buffer different than GL_EXT_texture_buffer.   It supports GL_EXT_texture_buffer, but not GL_OES_texture_buffer:\n\nC   20.490s Main  [ RUN      ] TextureBufferTestES31.SamplerBuffer/ES3_1_OpenGLES\nC   20.490s Main  WARNING: 0:2: extension \u0027GL_OES_texture_buffer\u0027 is not supported\nC   20.490s Main  ERROR: 0:4: \u0027samplerBuffer\u0027 : requires extension GL_EXT_texture_buffer to be enabled \nC   20.490s Main  ERROR: 1 compilation errors.  No code generated.\nC   20.490s Main  \nC   20.490s Main  shader compilation failed: WARNING: 0:2: extension \u0027GL_OES_texture_buffer\u0027 is not supported\nC   20.490s Main  ERROR: 0:4: \u0027samplerBuffer\u0027 : requires extension GL_EXT_texture_buffer to be enabled \nC   20.490s Main  ERROR: 1 compilation errors.  No code generated.",
+      "range": {
+        "startLine": 347,
+        "startChar": 33,
+        "endLine": 347,
+        "endChar": 54
+      },
+      "revId": "81310222d483c47625f565993321bc3886edf714",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ec2f061_d242415e",
+        "filename": "src/tests/gl_tests/MemoryBarrierTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 561,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T19:30:33Z",
+      "side": 1,
+      "message": "ANGLETestBase::GetQuadVertices()",
+      "range": {
+        "startLine": 554,
+        "startChar": 0,
+        "endLine": 561,
+        "endChar": 7
+      },
+      "revId": "81310222d483c47625f565993321bc3886edf714",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cfe0fb8_14bc3d12",
+        "filename": "src/tests/gl_tests/ShaderStorageBufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2532,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T19:30:33Z",
+      "side": 1,
+      "message": "Why isn\u0027t this crashing by dereferencing a junk pointer?",
+      "range": {
+        "startLine": 2532,
+        "startChar": 20,
+        "endLine": 2532,
+        "endChar": 60
+      },
+      "revId": "81310222d483c47625f565993321bc3886edf714",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
