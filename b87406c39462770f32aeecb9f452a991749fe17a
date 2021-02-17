@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9fd502e1_be1772aa",
+        "filename": "src/common/PackedEGLEnums_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-17T20:13:27Z",
+      "side": 1,
+      "message": "Bummer, we didn\u0027t get Lubosz\u0027s CL in to fix these dates.  Soon hopefully.",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "09792e05_523710ad",
         "filename": "src/libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000000.inc",
         "patchSetId": 2
@@ -31,6 +54,30 @@
       "writtenOn": "2021-02-17T19:01:34Z",
       "side": 1,
       "message": "These slash changes are probably not intentional, some python path change.",
+      "range": {
+        "startLine": 8,
+        "startChar": 10,
+        "endLine": 8,
+        "endChar": 15
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24de42ff_5060584f",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000000.inc",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-17T20:13:27Z",
+      "side": 1,
+      "message": "Probably Shabi authored initially on Linux, Jamie is updating from Windows.",
+      "parentUuid": "09792e05_523710ad",
       "range": {
         "startLine": 8,
         "startChar": 10,
@@ -59,6 +106,29 @@
         "startChar": 10,
         "endLine": 8,
         "endChar": 11
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49475493_92bb6d11",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-17T20:13:27Z",
+      "side": 1,
+      "message": "This is more than a re-ordering.  Do you know what drove the different numbering?  Also wondering if there is another change adjusting to the new flags.  Maybe it doesn\u0027t matter since they are all unique.  I guess the green bots would indicate \"it doesn\u0027t matter\".",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 2
       },
       "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
