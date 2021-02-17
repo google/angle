@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "badabb7a_efcd41a8",
+        "filename": "scripts/generate_loader.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-17T00:17:36Z",
+      "side": 1,
+      "message": "This is the only change made by hand.",
+      "range": {
+        "startLine": 145,
+        "startChar": 65,
+        "endLine": 145,
+        "endChar": 72
+      },
+      "revId": "2befd62083013ab6b92a8e6d08cb9d196ed73ef5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
