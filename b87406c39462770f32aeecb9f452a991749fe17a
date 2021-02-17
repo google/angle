@@ -156,6 +156,30 @@
       },
       "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0746b1be_1108d8fe",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T20:42:18Z",
+      "side": 1,
+      "message": "Yeah this is a pure re-ordering.\n\nShabi can you point me to what I need to sort() to get this stable? I looked for like 5 minutes and it was quite complicated.",
+      "parentUuid": "49475493_92bb6d11",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 2
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
