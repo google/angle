@@ -204,6 +204,30 @@
       },
       "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a3441a55_80b9764e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T21:30:36Z",
+      "side": 1,
+      "message": "It\u0027s most likely stable already, just that switching to python3 changed the order. I don\u0027t think there\u0027s anything you should bother with here.",
+      "parentUuid": "0746b1be_1108d8fe",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 2
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
