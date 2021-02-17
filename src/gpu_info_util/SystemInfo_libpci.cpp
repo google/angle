@@ -56,7 +56,9 @@ struct LibPCI : private angle::NonCopyable
             (FillInfo = reinterpret_cast<decltype(FillInfo)>(dlsym(mHandle, "pci_fill_info"))) !=
                 nullptr &&
             (LookupName = reinterpret_cast<decltype(LookupName)>(
-                 dlsym(mHandle, "pci_lookup_name"))) != nullptr;
+                 dlsym(mHandle, "pci_lookup_name"))) != nullptr &&
+            (PCIReadByte = reinterpret_cast<decltype(PCIReadByte)>(
+                 dlsym(mHandle, "pci_read_byte"))) != nullptr;
     }
 
     bool IsValid() const { return mValid; }
@@ -75,6 +77,7 @@ struct LibPCI : private angle::NonCopyable
     decltype(&::pci_scan_bus) ScanBus       = nullptr;
     decltype(&::pci_fill_info) FillInfo     = nullptr;
     decltype(&::pci_lookup_name) LookupName = nullptr;
+    decltype(&::pci_read_byte) PCIReadByte  = nullptr;
 
   private:
     void *mHandle = nullptr;
@@ -119,8 +122,9 @@ bool GetPCIDevicesWithLibPCI(std::vector<GPUDeviceInfo> *devices)
         }
 
         GPUDeviceInfo info;
-        info.vendorId = device->vendor_id;
-        info.deviceId = device->device_id;
+        info.vendorId   = device->vendor_id;
+        info.deviceId   = device->device_id;
+        info.revisionId = pci.PCIReadByte(device, PCI_REVISION_ID);
 
         devices->push_back(info);
     }

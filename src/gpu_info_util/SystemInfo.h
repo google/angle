@@ -16,8 +16,9 @@
 namespace angle
 {
 
-using VendorID = uint32_t;
-using DeviceID = uint32_t;
+using VendorID   = uint32_t;
+using DeviceID   = uint32_t;
+using RevisionID = uint32_t;
 
 struct VersionInfo
 {
@@ -34,8 +35,9 @@ struct GPUDeviceInfo
 
     GPUDeviceInfo(const GPUDeviceInfo &other);
 
-    VendorID vendorId = 0;
-    DeviceID deviceId = 0;
+    VendorID vendorId     = 0;
+    DeviceID deviceId     = 0;
+    RevisionID revisionId = 0;
 
     std::string driverVendor;
     std::string driverVersion;
