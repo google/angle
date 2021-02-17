@@ -132,6 +132,30 @@
       },
       "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74a3cfe1_e6d5f8ea",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T20:24:31Z",
+      "side": 1,
+      "message": "I looked into it. The generated files themselves have their contents reordered to match this. The change is ok.\n\nI\u0027m guessing it\u0027s something about the order of iteration changing with like iteritems() vs items() or something.",
+      "parentUuid": "49475493_92bb6d11",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 2
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
