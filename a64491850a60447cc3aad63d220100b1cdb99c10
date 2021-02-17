@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f711681_9c30942e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-17T23:37:25Z",
+      "side": 1,
+      "message": "oops, i need to remove the now dead code - FillImageFormatListInfo(...)",
+      "revId": "a64491850a60447cc3aad63d220100b1cdb99c10",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
