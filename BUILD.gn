@@ -927,6 +927,7 @@ config("library_name_config") {
 config("angle_static") {
   defines = [
     "ANGLE_EXPORT=",
+    "ANGLE_STATIC=1",
     "ANGLE_UTIL_EXPORT=",
     "EGLAPI=",
     "GL_APICALL=",
