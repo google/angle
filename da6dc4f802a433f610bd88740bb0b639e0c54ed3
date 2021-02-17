@@ -16,6 +16,47 @@
       "message": "Thanks for the reply.\nThe  linux_angle_deqp_rel_ng deqp seems start failing since patch-9 for this CL consistently. I checked other non workaround path and there\u0027s no difference compared to before (linux nvidia so shouldn\u0027t trigger any workaround). Any ideas for possible cause?",
       "revId": "da6dc4f802a433f610bd88740bb0b639e0c54ed3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b90ac2e_f9e9773b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-17T22:30:07Z",
+      "side": 1,
+      "message": "I can\u0027t repro any of these failures on my NVIDIA workstation, but it\u0027s pretty clear they only appear on your CL :/",
+      "parentUuid": "0057bb91_f09650fb",
+      "revId": "da6dc4f802a433f610bd88740bb0b639e0c54ed3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3caab899_e28ae7f7",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1947,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-17T22:30:07Z",
+      "side": 1,
+      "message": "nit: This comment doesn\u0027t directly relate to calling ReInitializeFeaturesAtGPUSwitch (which we might add to in the future)",
+      "range": {
+        "startLine": 1945,
+        "startChar": 4,
+        "endLine": 1947,
+        "endChar": 11
+      },
+      "revId": "da6dc4f802a433f610bd88740bb0b639e0c54ed3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
