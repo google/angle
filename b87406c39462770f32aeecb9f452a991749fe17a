@@ -228,6 +228,30 @@
       },
       "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b323965f_9a4c3d89",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T21:35:52Z",
+      "side": 1,
+      "message": "Just wondering - how would you change the python file (say in py2) to force these to be alphabetically sorted?",
+      "parentUuid": "a3441a55_80b9764e",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 2
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
