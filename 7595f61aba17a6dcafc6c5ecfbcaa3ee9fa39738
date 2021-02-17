@@ -34,6 +34,24 @@
       "parentUuid": "999112d8_700bcd7d",
       "revId": "7595f61aba17a6dcafc6c5ecfbcaa3ee9fa39738",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c26253b_67599eb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T18:38:55Z",
+      "side": 1,
+      "message": "SGTM - Maybe wait for that other CL to land, then land this?",
+      "parentUuid": "b3b1e791_dcb1f9fb",
+      "revId": "7595f61aba17a6dcafc6c5ecfbcaa3ee9fa39738",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
