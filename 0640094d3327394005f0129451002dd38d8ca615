@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7a1a282_a1b26a89",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3686,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-17T23:06:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "303de277_014627ac",
+      "range": {
+        "startLine": 3686,
+        "startChar": 65,
+        "endLine": 3686,
+        "endChar": 90
+      },
+      "revId": "0640094d3327394005f0129451002dd38d8ca615",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "792a8266_86cd39c6",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-17T22:53:37Z",
       "side": 1,
       "message": "nit: I\u0027d just leave this as initExternal if there\u0027s no other change to add a second API.",
+      "range": {
+        "startLine": 1359,
+        "startChar": 18,
+        "endLine": 1359,
+        "endChar": 49
+      },
+      "revId": "0640094d3327394005f0129451002dd38d8ca615",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ccfaaaa_363d0bef",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-17T23:06:01Z",
+      "side": 1,
+      "message": "i renamed it as a rudimentary marker for API change, would like to keep it that way. can change if it is !nit",
+      "parentUuid": "792a8266_86cd39c6",
       "range": {
         "startLine": 1359,
         "startChar": 18,
