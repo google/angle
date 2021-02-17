@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d61fd905_33e140da",
+        "filename": "src/common/PackedEGLEnums_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T22:41:15Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9fd502e1_be1772aa",
+      "range": {
+        "startLine": 4,
+        "startChar": 13,
+        "endLine": 4,
+        "endChar": 17
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "09792e05_523710ad",
@@ -112,6 +136,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "143219f5_2cba92d0",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.00000000.inc",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T22:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f96f28b_45f4a222",
+      "range": {
+        "startLine": 8,
+        "startChar": 10,
+        "endLine": 8,
+        "endChar": 15
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "466bf3d6_49f58d6d",
@@ -125,6 +173,30 @@
       "writtenOn": "2021-02-17T17:31:55Z",
       "side": 1,
       "message": "need to fix these",
+      "range": {
+        "startLine": 8,
+        "startChar": 10,
+        "endLine": 8,
+        "endChar": 11
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04ae7c13_7e4cbb30",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000000.inc",
+        "patchSetId": 2
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T22:41:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "466bf3d6_49f58d6d",
       "range": {
         "startLine": 8,
         "startChar": 10,
@@ -268,6 +340,30 @@
       "side": 1,
       "message": "IIRC, this is the code that sorts these:\n\n    # sort enums so the ones with the most waste ends up last, reducing the table size\n    enums.sort(key\u003dlambda enum: (1 \u003c\u003c (len(enum[1]) - 1).bit_length()) / float(len(enum[1])))\n\nBased on the comment, we don\u0027t want them sorted by name, but rather by \"waste\".  With equal waste though, sure we can add alphabetical sort to it. Looks like python\u0027s sort algorithm has changed in python3 (maybe the sort has become stable, because this is now the same order as is found in the json file).",
       "parentUuid": "b323965f_9a4c3d89",
+      "range": {
+        "startLine": 145,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 2
+      },
+      "revId": "b87406c39462770f32aeecb9f452a991749fe17a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2025d0a_33dd82fd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T22:41:15Z",
+      "side": 1,
+      "message": "OK, I put in the requested sort and it really played around with the order of things. I will split that off and maybe land that separately. I think what you\u0027re seeing here is just the non-determinism inherent in python\u0027s sort.",
+      "parentUuid": "4e7b7ca2_d5c58fe0",
       "range": {
         "startLine": 145,
         "startChar": 0,
