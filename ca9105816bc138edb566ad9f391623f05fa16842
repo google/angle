@@ -16,6 +16,24 @@
       "message": "Adrian: can you confirm the new option (-Wreturn-std-move) is enabled by default now? If not can you please add it?",
       "revId": "ca9105816bc138edb566ad9f391623f05fa16842",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39ad7b55_5a6b21fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1241380
+      },
+      "writtenOn": "2021-02-17T23:22:49Z",
+      "side": 1,
+      "message": "The `-Wreturn-std-move` option is somewhat different, so I wasn\u0027t sure if you wanted to add that or not.  Having had `Wreturn-std-move-c++11` didn\u0027t also imply `-Wreturn-std-move`.  But it\u0027s a reasonable thing to want, so I added it.",
+      "parentUuid": "3e616232_d6a4bb49",
+      "revId": "ca9105816bc138edb566ad9f391623f05fa16842",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
