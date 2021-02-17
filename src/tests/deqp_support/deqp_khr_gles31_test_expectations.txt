@@ -22,6 +22,9 @@
 //// General Vulkan expectations
 ////
 
+// Test bug with missing glMemoryBarrier call
+5673 VULKAN : KHR-GLES31.core.texture_buffer.texture_buffer_operations_transform_feedback = FAIL
+
 // Framebuffer without attachments:
 3579 VULKAN : KHR-GLES31.core.framebuffer_no_attachments.api = FAIL
 

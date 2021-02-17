@@ -4439,6 +4439,70 @@ void main()
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+// Tests that writing to a buffer with transform feedback in one draw call followed by reading from
+// it in a dispatch call works correctly.  This requires an implicit barrier in between the calls.
+TEST_P(SimpleStateChangeTestES31, TransformFeedbackThenReadWithCompute)
+{
+    constexpr GLsizei kBufferSize = sizeof(float) * 4 * 6;
+    GLBuffer buffer;
+    glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, buffer);
+    glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, kBufferSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
+
+    std::vector<std::string> tfVaryings = {"gl_Position"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, essl3_shaders::vs::Simple(),
+                                        essl3_shaders::fs::Green(), tfVaryings,
+                                        GL_INTERLEAVED_ATTRIBS);
+    glUseProgram(program);
+
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuad(program, essl3_shaders::PositionAttrib(), 0.0f);
+    glEndTransformFeedback();
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1) in;
+layout(binding = 0) uniform Input
+{
+    vec4 data[3];
+};
+layout(binding = 0, std430) buffer Output {
+    bool pass;
+};
+void main()
+{
+    pass = data[0] == vec4(-1, 1, 0, 1) &&
+           data[1] == vec4(-1, -1, 0, 1) &&
+           data[2] == vec4(1, -1, 0, 1);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(readProgram, kCS);
+    glUseProgram(readProgram);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+
+    constexpr GLsizei kResultSize = sizeof(uint32_t);
+    GLBuffer resultBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, resultBuffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, kResultSize, nullptr, GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, resultBuffer);
+
+    glDispatchCompute(1, 1, 1);
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify the output of rendering
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify the output from the compute shader
+    const uint32_t *ptr = reinterpret_cast<const uint32_t *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, kResultSize, GL_MAP_READ_BIT));
+
+    EXPECT_EQ(ptr[0], 1u);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Tests that deleting an in-flight image texture does not immediately delete the resource.
 TEST_P(SimpleStateChangeTestComputeES31, DeleteImageTextureInUse)
 {

@@ -1033,10 +1033,10 @@ angle::Result ContextVk::setupLineLoopDraw(const gl::Context *context,
 
 angle::Result ContextVk::setupDispatch(const gl::Context *context)
 {
-    // |setupDispatch| and |setupDraw| are special in that they flush dirty bits. Therefore they
-    // don't use the same APIs to record commands as the functions outside ContextVk.
-    // The following ensures prior commands are flushed before we start processing dirty bits.
-    ANGLE_TRY(flushCommandsAndEndRenderPass());
+    // Note: numerous tests miss a glMemoryBarrier call between the initial texture data upload and
+    // the dispatch call.  Flush the outside render pass command buffer as a workaround.
+    // TODO: Remove this and fix tests.  http://anglebug.com/5070
+    ANGLE_TRY(flushOutsideRenderPassCommands());
 
     // Create a local object to ensure we flush the descriptor updates to device when we leave this
     // function
@@ -3265,7 +3265,7 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 ASSERT(gl::State::DIRTY_BIT_TEXTURE_BINDINGS >
                        gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE);
                 iter.setLaterBit(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);
-                invalidateCurrentShaderResources();
+                ANGLE_TRY(invalidateCurrentShaderResources());
                 ANGLE_TRY(invalidateProgramExecutableHelper(context));
                 break;
             }
@@ -3283,17 +3283,17 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // Nothing to do.
                 break;
             case gl::State::DIRTY_BIT_SHADER_STORAGE_BUFFER_BINDING:
-                invalidateCurrentShaderResources();
+                ANGLE_TRY(invalidateCurrentShaderResources());
                 break;
             case gl::State::DIRTY_BIT_UNIFORM_BUFFER_BINDINGS:
-                invalidateCurrentShaderResources();
+                ANGLE_TRY(invalidateCurrentShaderResources());
                 break;
             case gl::State::DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING:
-                invalidateCurrentShaderResources();
+                ANGLE_TRY(invalidateCurrentShaderResources());
                 invalidateDriverUniforms();
                 break;
             case gl::State::DIRTY_BIT_IMAGE_BINDINGS:
-                invalidateCurrentShaderResources();
+                ANGLE_TRY(invalidateCurrentShaderResources());
                 break;
             case gl::State::DIRTY_BIT_MULTISAMPLING:
                 // TODO(syoussefi): this should configure the pipeline to render as if
@@ -3685,12 +3685,18 @@ angle::Result ContextVk::invalidateCurrentTextures(const gl::Context *context)
         mComputeDirtyBits |= kTexturesAndDescSetDirtyBits;
 
         ANGLE_TRY(updateActiveTextures(context));
+
+        // Take care of read-after-write hazards that require implicit synchronization.
+        if (executable->isCompute())
+        {
+            ANGLE_TRY(endRenderPassIfComputeReadAfterAttachmentWrite());
+        }
     }
 
     return angle::Result::Continue;
 }
 
-void ContextVk::invalidateCurrentShaderResources()
+angle::Result ContextVk::invalidateCurrentShaderResources()
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
     ASSERT(executable);
@@ -3706,6 +3712,12 @@ void ContextVk::invalidateCurrentShaderResources()
         mComputeDirtyBits |= kResourcesAndDescSetDirtyBits;
     }
 
+    // Take care of read-after-write hazards that require implicit synchronization.
+    if (hasUniformBuffers && executable->isCompute())
+    {
+        ANGLE_TRY(endRenderPassIfComputeReadAfterTransformFeedbackWrite());
+    }
+
     // If memory barrier has been issued but the command buffers haven't been flushed, make sure
     // they get a chance to do so if necessary on program and storage buffer/image binding change.
     const bool hasGLMemoryBarrierIssuedInCommandBuffers =
@@ -3717,6 +3729,8 @@ void ContextVk::invalidateCurrentShaderResources()
         mGraphicsDirtyBits.set(DIRTY_BIT_MEMORY_BARRIER);
         mComputeDirtyBits.set(DIRTY_BIT_MEMORY_BARRIER);
     }
+
+    return angle::Result::Continue;
 }
 
 void ContextVk::invalidateGraphicsDriverUniforms()
@@ -3730,13 +3744,13 @@ void ContextVk::invalidateDriverUniforms()
     mComputeDirtyBits |= kDriverUniformsAndBindingDirtyBits;
 }
 
-void ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
+angle::Result ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
 {
     // This is called from FramebufferVk::syncState.  Skip these updates if the framebuffer being
     // synced is the read framebuffer (which is not equal the draw framebuffer).
     if (framebufferVk != vk::GetImpl(mState.getDrawFramebuffer()))
     {
-        return;
+        return angle::Result::Continue;
     }
 
     // Ensure that the pipeline description is updated.
@@ -3751,10 +3765,12 @@ void ContextVk::onFramebufferChange(FramebufferVk *framebufferVk)
 
     if (mState.getProgramExecutable())
     {
-        invalidateCurrentShaderResources();
+        ANGLE_TRY(invalidateCurrentShaderResources());
     }
 
     onDrawFramebufferRenderPassDescChange(framebufferVk, nullptr);
+
+    return angle::Result::Continue;
 }
 
 void ContextVk::onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk,
@@ -5574,6 +5590,86 @@ angle::Result ContextVk::flushCommandBuffersIfNecessary(const vk::CommandBufferA
     if (shouldCloseOutsideRenderPassCommands)
     {
         return flushOutsideRenderPassCommands();
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::endRenderPassIfComputeReadAfterTransformFeedbackWrite()
+{
+    // Similar to flushCommandBuffersIfNecessary(), but using uniform buffers currently bound and
+    // used by the current (compute) program.  This is to handle read-after-write hazards where the
+    // write originates from transform feedback.
+    if (mCurrentTransformFeedbackBuffers.empty())
+    {
+        return angle::Result::Continue;
+    }
+
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    ASSERT(executable && executable->isCompute());
+
+    gl::ShaderMap<const gl::ProgramState *> programStates;
+    mExecutable->fillProgramStateMap(this, &programStates);
+
+    for (const gl::ShaderType shaderType : executable->getLinkedShaderStages())
+    {
+        const gl::ProgramState *programState = programStates[shaderType];
+        ASSERT(programState);
+
+        // Uniform buffers:
+        const std::vector<gl::InterfaceBlock> &blocks = programState->getUniformBlocks();
+
+        for (uint32_t bufferIndex = 0; bufferIndex < blocks.size(); ++bufferIndex)
+        {
+            const gl::InterfaceBlock &block = blocks[bufferIndex];
+            const gl::OffsetBindingPointer<gl::Buffer> &bufferBinding =
+                mState.getIndexedUniformBuffer(block.binding);
+
+            if (!block.isActive(shaderType) || bufferBinding.get() == nullptr)
+            {
+                continue;
+            }
+
+            vk::BufferHelper &buffer = vk::GetImpl(bufferBinding.get())->getBuffer();
+            if (mCurrentTransformFeedbackBuffers.contains(&buffer))
+            {
+                return flushCommandsAndEndRenderPass();
+            }
+        }
+    }
+
+    return angle::Result::Continue;
+}
+
+angle::Result ContextVk::endRenderPassIfComputeReadAfterAttachmentWrite()
+{
+    // Similar to flushCommandBuffersIfNecessary(), but using textures currently bound and used by
+    // the current (compute) program.  This is to handle read-after-write hazards where the write
+    // originates from a framebuffer attachment.
+    const gl::ProgramExecutable *executable = mState.getProgramExecutable();
+    ASSERT(executable && executable->isCompute() && executable->hasTextures());
+
+    const gl::ActiveTexturesCache &textures        = mState.getActiveTexturesCache();
+    const gl::ActiveTextureTypeArray &textureTypes = executable->getActiveSamplerTypes();
+
+    for (size_t textureUnit : executable->getActiveSamplersMask())
+    {
+        gl::Texture *texture        = textures[textureUnit];
+        gl::TextureType textureType = textureTypes[textureUnit];
+
+        if (texture == nullptr || textureType == gl::TextureType::Buffer)
+        {
+            continue;
+        }
+
+        TextureVk *textureVk = vk::GetImpl(texture);
+        ASSERT(textureVk != nullptr);
+        vk::ImageHelper &image = textureVk->getImage();
+
+        if (IsRenderPassStartedAndUsesImage(*mRenderPassCommands, image))
+        {
+            return flushCommandsAndEndRenderPass();
+        }
     }
 
     return angle::Result::Continue;

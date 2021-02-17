@@ -319,7 +319,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void invalidateDefaultAttribute(size_t attribIndex);
     void invalidateDefaultAttributes(const gl::AttributesMask &dirtyMask);
-    void onFramebufferChange(FramebufferVk *framebufferVk);
+    angle::Result onFramebufferChange(FramebufferVk *framebufferVk);
     void onDrawFramebufferRenderPassDescChange(FramebufferVk *framebufferVk,
                                                bool *renderPassDescChangedOut);
     void onHostVisibleBufferWrite() { mIsAnyHostVisibleBufferWritten = true; }
@@ -778,7 +778,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void invalidateCurrentDefaultUniforms();
     angle::Result invalidateCurrentTextures(const gl::Context *context);
-    void invalidateCurrentShaderResources();
+    angle::Result invalidateCurrentShaderResources();
     void invalidateGraphicsDriverUniforms();
     void invalidateDriverUniforms();
 
@@ -879,7 +879,22 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     void initIndexTypeMap();
 
+    // Read-after-write hazards are generally handled with |glMemoryBarrier| when the source of
+    // write is storage output.  When the write is outside render pass, the natural placement of the
+    // render pass after the current outside render pass commands ensures that the memory barriers
+    // and image layout transitions automatically take care of such synchronizations.
+    //
+    // There are a number of read-after-write cases that require breaking the render pass however to
+    // preserve the order of operations:
+    //
+    // - Transform feedback write (in render pass), then vertex/index read (in render pass)
+    // - Transform feedback write (in render pass), then ubo read (outside render pass)
+    // - Framebuffer attachment write (in render pass), then texture sample (outside render pass)
+    //   * Note that texture sampling inside render pass would cause a feedback loop
+    //
     angle::Result endRenderPassIfTransformFeedbackBuffer(const vk::BufferHelper *buffer);
+    angle::Result endRenderPassIfComputeReadAfterTransformFeedbackWrite();
+    angle::Result endRenderPassIfComputeReadAfterAttachmentWrite();
 
     void populateTransformFeedbackBufferSet(
         size_t bufferCount,
