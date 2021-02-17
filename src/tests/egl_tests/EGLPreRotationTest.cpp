@@ -2546,3 +2546,6 @@ ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationBlitFramebufferTest,
                                  WithNoFixture(ES2_VULKAN()),
                                  WithNoFixture(ES3_VULKAN()),
                                  WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
+
+// This test suite is not instantiated on some OSes.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationInterpolateAtOffsetTest);

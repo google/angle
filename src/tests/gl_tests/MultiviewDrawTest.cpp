@@ -2326,3 +2326,6 @@ ANGLE_INSTANTIATE_TEST(MultiviewLayeredRenderTest,
                        GeomShaderD3D11(ExtensionName::multiview),
                        VertexShaderOpenGL(ExtensionName::multiview2),
                        GeomShaderD3D11(ExtensionName::multiview2));
+
+// This test suite is not instantiated on some OSes.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewDrawValidationTest);

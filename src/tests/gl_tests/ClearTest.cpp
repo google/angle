@@ -2499,4 +2499,7 @@ ANGLE_INSTANTIATE_TEST(ClearTestRGB,
                        ES2_METAL(),
                        ES3_METAL());
 
+// This test suite is not instantiated on some OSes.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VulkanClearTest);
+
 }  // anonymous namespace
