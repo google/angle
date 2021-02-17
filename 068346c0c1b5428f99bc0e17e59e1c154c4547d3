@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ced0cb94_60bcd233",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T16:46:09Z",
+      "side": 1,
+      "message": "Nope. See comment I just posted on the previous change.\n\nWe should ideally stop changing the render pass desc when starting the render pass, but until that\u0027s done we go through a hoop like this:\n\n    - Create pipeline (may break render pass for transform feedback, so should be before DIRTY_BIT_RENDER_PASS)\n    - Start render pass\n        * if desc changed, recreate pipeline",
+      "parentUuid": "3ac8eaf5_a43b9d86",
+      "range": {
+        "startLine": 599,
+        "startChar": 8,
+        "endLine": 599,
+        "endChar": 29
+      },
+      "revId": "068346c0c1b5428f99bc0e17e59e1c154c4547d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "021d4087_0330e216",
         "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
         "patchSetId": 13
@@ -37,6 +61,30 @@
       "writtenOn": "2021-02-17T16:19:08Z",
       "side": 1,
       "message": "reverted this back to \"\u003d\u003d\" because the implementation uses gl::IMPLEMENTATION_MAX_DRAW_BUFFERS as the termination condition of the iteration loop",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 867,
+        "endChar": 74
+      },
+      "revId": "068346c0c1b5428f99bc0e17e59e1c154c4547d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32fb4b53_d094edbf",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-17T16:46:09Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "021d4087_0330e216",
       "range": {
         "startLine": 867,
         "startChar": 8,
