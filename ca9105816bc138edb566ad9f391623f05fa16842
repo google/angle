@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e616232_d6a4bb49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-17T22:22:50Z",
+      "side": 1,
+      "message": "Adrian: can you confirm the new option (-Wreturn-std-move) is enabled by default now? If not can you please add it?",
+      "revId": "ca9105816bc138edb566ad9f391623f05fa16842",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
