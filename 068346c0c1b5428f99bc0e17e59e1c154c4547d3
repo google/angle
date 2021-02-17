@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ac8eaf5_a43b9d86",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-17T16:19:08Z",
+      "side": 1,
+      "message": "shabi this reordering of dirty bits is fine? this is needed to get the end2end test to pass",
+      "range": {
+        "startLine": 599,
+        "startChar": 8,
+        "endLine": 599,
+        "endChar": 29
+      },
+      "revId": "068346c0c1b5428f99bc0e17e59e1c154c4547d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "021d4087_0330e216",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-17T16:19:08Z",
+      "side": 1,
+      "message": "reverted this back to \"\u003d\u003d\" because the implementation uses gl::IMPLEMENTATION_MAX_DRAW_BUFFERS as the termination condition of the iteration loop",
+      "range": {
+        "startLine": 867,
+        "startChar": 8,
+        "endLine": 867,
+        "endChar": 74
+      },
+      "revId": "068346c0c1b5428f99bc0e17e59e1c154c4547d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
