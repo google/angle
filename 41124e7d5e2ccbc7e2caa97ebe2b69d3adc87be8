@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72f37adf_c467e158",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T20:45:56Z",
+      "side": 1,
+      "message": "Since almost all of the work is queries on the ProgramExecutable and what it gives access to, this looks like something that should mostly live in there, possibly also broken up into something like ProgramExecutable::renderPassUsesStorageImage() and renderPassUsesStorageBuffers(), which this calls.",
+      "revId": "41124e7d5e2ccbc7e2caa97ebe2b69d3adc87be8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d0b4297_fc2cb214",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T20:45:56Z",
+      "side": 1,
+      "message": "This function has a TODO to remove it, so adding more dependencies isn\u0027t very desirable.\n\n    // TODO: http://anglebug.com/3570: Move/Copy all of the necessary information into\n    // the ProgramExecutable, so this function can be removed.\n    void ProgramExecutableVk::fillProgramStateMap(\n\nThe alternative is to just keep the function and remove the TODO if we don\u0027t think we\u0027ll ever get to that point.",
+      "revId": "41124e7d5e2ccbc7e2caa97ebe2b69d3adc87be8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a65fac5_b8efb0fb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3694,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T20:45:56Z",
+      "side": 1,
+      "message": "What happens if we switch to an executable where these are false and then back to one where it\u0027s true?   Since the dirty bit is meant to be passed along, is the memory barrier still issued correctly?",
+      "range": {
+        "startLine": 3694,
+        "startChar": 9,
+        "endLine": 3694,
+        "endChar": 39
+      },
+      "revId": "41124e7d5e2ccbc7e2caa97ebe2b69d3adc87be8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4852b8c_e020017f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 1229,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-17T20:45:56Z",
+      "side": 1,
+      "message": "Do we need this portion of the name?   CommandBufferHelpers are reset/recycled, to their lifetime is longer than the commands they are being used for.\n\nAlso, should there be a \"GL\" in the name to specify which type of barrier this is referring to?",
+      "range": {
+        "startLine": 1229,
+        "startChar": 32,
+        "endLine": 1229,
+        "endChar": 42
+      },
+      "revId": "41124e7d5e2ccbc7e2caa97ebe2b69d3adc87be8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
