@@ -4439,6 +4439,79 @@ void main()
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+// Tests that clearing a texture followed by sampling from it in a dispatch call works correctly.
+// In the Vulkan backend, the clear is deferred and should be flushed correctly.
+TEST_P(SimpleStateChangeTestES31, ClearThenSampleWithCompute)
+{
+    constexpr GLsizei kSize = 1;
+
+    GLTexture color;
+    glBindTexture(GL_TEXTURE_2D, color);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, kSize, kSize);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kSize, kSize, GL_RGBA, GL_UNSIGNED_BYTE, &GLColor::red);
+    EXPECT_GL_NO_ERROR();
+
+    GLFramebuffer fbo;
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color, 0);
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    // Make sure the update to the texture is effective.
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    // Clear the texture through the framebuffer
+    glClearColor(0, 1.0f, 0, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    constexpr std::array<float, 4> kBufferInitValue = {0.123f, 0.456f, 0.789f, 0.852f};
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferData(GL_SHADER_STORAGE_BUFFER, sizeof(kBufferInitValue), kBufferInitValue.data(),
+                 GL_STATIC_DRAW);
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1) in;
+uniform sampler2D tex;
+layout(binding = 0, std430) buffer Output {
+    vec4 vec;
+} b;
+void main()
+{
+    b.vec = texelFetch(tex, ivec2(gl_LocalInvocationID.xy), 0);
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(readProgram, kCS);
+    glUseProgram(readProgram);
+
+    glActiveTexture(GL_TEXTURE0);
+    glUniform1i(glGetUniformLocation(readProgram, "tex"), 0);
+
+    glUseProgram(readProgram);
+    glDispatchCompute(1, 1, 1);
+
+    glMemoryBarrier(GL_BUFFER_UPDATE_BARRIER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify the clear
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Verify the output from the compute shader
+    const float *ptr = reinterpret_cast<const float *>(
+        glMapBufferRange(GL_SHADER_STORAGE_BUFFER, 0, sizeof(kBufferInitValue), GL_MAP_READ_BIT));
+
+    EXPECT_EQ(ptr[0], 0.0f);
+    EXPECT_EQ(ptr[1], 1.0f);
+    EXPECT_EQ(ptr[2], 0.0f);
+    EXPECT_EQ(ptr[3], 1.0f);
+
+    glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
+}
+
 // Tests that writing to a buffer with transform feedback in one draw call followed by reading from
 // it in a dispatch call works correctly.  This requires an implicit barrier in between the calls.
 TEST_P(SimpleStateChangeTestES31, TransformFeedbackThenReadWithCompute)
