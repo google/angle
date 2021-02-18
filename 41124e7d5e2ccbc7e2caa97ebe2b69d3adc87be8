@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df7ac3ad_2a72aef3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1077,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T22:15:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bcc3584a_7e7e52a9",
+      "revId": "41124e7d5e2ccbc7e2caa97ebe2b69d3adc87be8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d0b4297_fc2cb214",
@@ -67,6 +85,24 @@
       "side": 1,
       "message": "I think the TODO is worthwhile to do, so let\u0027s keep it. This usage is identical to elsewhere, so whenever the TODO is addressed, the code fix here would not add any additional overhead IMO.",
       "parentUuid": "0d0b4297_fc2cb214",
+      "revId": "41124e7d5e2ccbc7e2caa97ebe2b69d3adc87be8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84c83734_122f5d76",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T22:15:55Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "648d0df0_f681622e",
       "revId": "41124e7d5e2ccbc7e2caa97ebe2b69d3adc87be8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
