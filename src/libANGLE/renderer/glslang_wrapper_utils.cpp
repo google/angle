@@ -1636,6 +1636,74 @@ void SpirvIDDiscoverer::writePendingDeclarations(SpirvTransformerBase *transform
                          spirv::LiteralContextDependentNumber(kFloatHalfAsUint));
 }
 
+// Helper class that trims input and output gl_PerVertex declarations to remove inactive builtins.
+class SpirvPerVertexTrimmer final : angle::NonCopyable
+{
+  public:
+    SpirvPerVertexTrimmer() {}
+
+    TransformationState transformMemberDecorate(const SpirvIDDiscoverer &ids,
+                                                spirv::IdRef typeId,
+                                                spirv::LiteralInteger member,
+                                                spv::Decoration decoration);
+    TransformationState transformMemberName(const SpirvIDDiscoverer &ids,
+                                            spirv::IdRef id,
+                                            spirv::LiteralInteger member,
+                                            const spirv::LiteralString &name);
+    TransformationState transformTypeStruct(const SpirvIDDiscoverer &ids,
+                                            spirv::IdResult id,
+                                            spirv::IdRefList *memberList,
+                                            SpirvBlob *blobOut);
+};
+
+TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(const SpirvIDDiscoverer &ids,
+                                                                   spirv::IdRef typeId,
+                                                                   spirv::LiteralInteger member,
+                                                                   spv::Decoration decoration)
+{
+    // Transform only OpMemberDecorate %gl_PerVertex N BuiltIn B
+    if (!ids.isPerVertex(typeId) || decoration != spv::DecorationBuiltIn)
+    {
+        return TransformationState::Unchanged;
+    }
+
+    // Drop stripped fields.
+    return member > ids.getPerVertexMaxActiveMember(typeId) ? TransformationState::Transformed
+                                                            : TransformationState::Unchanged;
+}
+
+TransformationState SpirvPerVertexTrimmer::transformMemberName(const SpirvIDDiscoverer &ids,
+                                                               spirv::IdRef id,
+                                                               spirv::LiteralInteger member,
+                                                               const spirv::LiteralString &name)
+{
+    // Remove the instruction if it's a stripped member of gl_PerVertex.
+    return ids.isPerVertex(id) && member > ids.getPerVertexMaxActiveMember(id)
+               ? TransformationState::Transformed
+               : TransformationState::Unchanged;
+}
+
+TransformationState SpirvPerVertexTrimmer::transformTypeStruct(const SpirvIDDiscoverer &ids,
+                                                               spirv::IdResult id,
+                                                               spirv::IdRefList *memberList,
+                                                               SpirvBlob *blobOut)
+{
+    if (!ids.isPerVertex(id))
+    {
+        return TransformationState::Unchanged;
+    }
+
+    const uint32_t maxMembers = ids.getPerVertexMaxActiveMember(id);
+
+    // Change the definition of the gl_PerVertex struct by stripping unused fields at the end.
+    const uint32_t memberCount = maxMembers + 1;
+    memberList->resize(memberCount);
+
+    spirv::WriteTypeStruct(blobOut, id, *memberList);
+
+    return TransformationState::Transformed;
+}
+
 // A SPIR-V transformer.  It walks the instructions and modifies them as necessary, for example to
 // assign bindings or locations.
 class SpirvTransformer final : public SpirvTransformerBase
@@ -1711,6 +1779,8 @@ class SpirvTransformer final : public SpirvTransformerBase
     SpirvIDDiscoverer mIds;
 
     // Transformation state:
+
+    SpirvPerVertexTrimmer mPerVertexTrimmer;
 
     // Each OpTypePointer instruction that defines a type with the Output storage class is
     // duplicated with a similar instruction but which defines a type with the Private storage
@@ -2503,15 +2573,7 @@ TransformationState SpirvTransformer::transformMemberDecorate(const uint32_t *in
     spv::Decoration decoration;
     spirv::ParseMemberDecorate(instruction, &typeId, &member, &decoration, nullptr);
 
-    // Transform only OpMemberDecorate %gl_PerVertex N BuiltIn B
-    if (!mIds.isPerVertex(typeId) || decoration != spv::DecorationBuiltIn)
-    {
-        return TransformationState::Unchanged;
-    }
-
-    // Drop stripped fields.
-    return member > mIds.getPerVertexMaxActiveMember(typeId) ? TransformationState::Transformed
-                                                             : TransformationState::Unchanged;
+    return mPerVertexTrimmer.transformMemberDecorate(mIds, typeId, member, decoration);
 }
 
 TransformationState SpirvTransformer::transformCapability(const uint32_t *instruction,
@@ -2561,10 +2623,7 @@ TransformationState SpirvTransformer::transformDebugInfo(const uint32_t *instruc
         spirv::LiteralString name;
         spirv::ParseMemberName(instruction, &id, &member, &name);
 
-        // Remove the instruction if it's a stripped member of gl_PerVertex.
-        return mIds.isPerVertex(id) && member > mIds.getPerVertexMaxActiveMember(id)
-                   ? TransformationState::Transformed
-                   : TransformationState::Unchanged;
+        return mPerVertexTrimmer.transformMemberName(mIds, id, member, name);
     }
 
     // In the case of ANGLEXfbN, unconditionally remove the variable names.  If transform
@@ -2695,20 +2754,7 @@ TransformationState SpirvTransformer::transformTypeStruct(const uint32_t *instru
     spirv::IdRefList memberList;
     ParseTypeStruct(instruction, &id, &memberList);
 
-    if (!mIds.isPerVertex(id))
-    {
-        return TransformationState::Unchanged;
-    }
-
-    const uint32_t maxMembers = mIds.getPerVertexMaxActiveMember(id);
-
-    // Change the definition of the gl_PerVertex struct by stripping unused fields at the end.
-    const uint32_t memberCount = maxMembers + 1;
-    memberList.resize(memberCount);
-
-    spirv::WriteTypeStruct(mSpirvBlobOut, id, memberList);
-
-    return TransformationState::Transformed;
+    return mPerVertexTrimmer.transformTypeStruct(mIds, id, &memberList, mSpirvBlobOut);
 }
 
 TransformationState SpirvTransformer::transformReturn(const uint32_t *instruction)
