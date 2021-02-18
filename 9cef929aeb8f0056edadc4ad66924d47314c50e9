@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c89ffce_562f444b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-18T20:04:49Z",
+      "side": 1,
+      "message": "Reply.\nStill looking into other comments",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2f44cfe_243379b1",
@@ -84,6 +101,24 @@
       "side": 1,
       "message": "I think we could reach a better understanding if you implemented my suggested test.\n\nOne problem is, in that scenario at step 2 we are returning the wrong age altogether. That\u0027s because mCurrentSwapchainImageIndex is not changed (as ANI is deferred). That\u0027s the reason you see the wrong age when updating mFrameCount in swapImpl; it\u0027s because before ANI we have the wrong index.\n\nSo my two suggestions go hand-in-hand. getBufferAge should make sure ANI is done (so the index is correct), then updating mFrameCount can move to swapImpl (though it would work if it stayed here, I believe it\u0027s more meaningful that way).",
       "parentUuid": "2725b6b4_95e468f0",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab3a8d80_f9943b20",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-18T20:04:49Z",
+      "side": 1,
+      "message": "\"I think we could reach a better understanding if you implemented my suggested test.\n\"\n\nThis test is different than what you requested? It uses buffer age to check that the buffer has the expected contents. See:\n\n// Verify contents of buffer are as expected\nTEST_P(EGLBufferAgeTest, VerifyContents)\n\n\nDebug logs: Loop 3 and 4 still have age age 0, so the color/content is not glReadPixels and defaults to black.  Not sure why but I have hacked and verified that the contents are indeed blue and cyan as expected. It is also odd that eglSwapBuffers comes after ANI. Otherwise the content is as expected.\n\n[ RUN      ] EGLBufferAgeTest.VerifyContents/ES3_Vulkan_NoFixture\n\nLoop: 0 age: 0 Color: Black\nCall eglSwapBuffers()\n\nLoop: 1 age: 0 Color: Black\nPre call to  acquireNextSwapchainImage(): ImageIndex: 0 FrameCount: 0\nPost call to acquireNextSwapchainImage(): ImageIndex: 1 FrameCount: 1\nCall eglSwapBuffers()\n\nLoop: 2 age: 0 Color: Black\nPre call to  acquireNextSwapchainImage(): ImageIndex: 1 FrameCount: 1\nPost call to acquireNextSwapchainImage(): ImageIndex: 2 FrameCount: 2\nCall eglSwapBuffers()\n\nLoop: 3 age: 0 Color: Black\nPre call to  acquireNextSwapchainImage(): ImageIndex: 2 FrameCount: 2\nPost call to acquireNextSwapchainImage(): ImageIndex: 0 FrameCount: 3\nCall eglSwapBuffers()\n\nLoop: 4 age: 0 Color: Black\nPre call to  acquireNextSwapchainImage(): ImageIndex: 0 FrameCount: 3\nPost call to acquireNextSwapchainImage(): ImageIndex: 1 FrameCount: 4\nCall eglSwapBuffers()\nPre call to  acquireNextSwapchainImage(): ImageIndex: 1 FrameCount: 4\nPost call to acquireNextSwapchainImage(): ImageIndex: 2 FrameCount: 5\n\nLoop: 5 age: 3 Color: (64, 64, 64, 255)\nCall eglSwapBuffers()\nPre call to  acquireNextSwapchainImage(): ImageIndex: 2 FrameCount: 5\nPost call to acquireNextSwapchainImage(): ImageIndex: 0 FrameCount: 6\n\nLoop: 6 age: 3 Color: Green\nCall eglSwapBuffers()\nPre call to  acquireNextSwapchainImage(): ImageIndex: 0 FrameCount: 6\nPost call to acquireNextSwapchainImage(): ImageIndex: 1 FrameCount: 7\n\nLoop: 7 age: 3 Color: Red\nCall eglSwapBuffers()\nPre call to  acquireNextSwapchainImage(): ImageIndex: 1 FrameCount: 7\nPost call to acquireNextSwapchainImage(): ImageIndex: 2 FrameCount: 8\n\n\n\nI am looking into your other comments",
+      "parentUuid": "bb196f92_c3842f9a",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
