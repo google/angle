@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06e94765_77b3efe9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T23:32:42Z",
+      "side": 1,
+      "message": "Done:\nhttps://gitlab.khronos.org/vulkan/vulkan/-/issues/2532\n\nI\u0027ve also tagged you in it, so please feel free to update/clarify/etc. anything that looks wrong.",
+      "parentUuid": "04d36795_0d65ce38",
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "345f3a4f_39b35e91",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-02-18T19:10:34Z",
       "side": 1,
       "message": "You can remove this now.",
+      "range": {
+        "startLine": 232,
+        "startChar": 0,
+        "endLine": 237,
+        "endChar": 5
+      },
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cd3b0e5_8cb55874",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T23:32:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "345f3a4f_39b35e91",
       "range": {
         "startLine": 232,
         "startChar": 0,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bffb0df0_17346dd7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T23:32:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b2c53c02_be5d14d5",
+      "range": {
+        "startLine": 250,
+        "startChar": 41,
+        "endLine": 250,
+        "endChar": 89
+      },
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23579514_649b8eee",
@@ -94,6 +160,30 @@
       "writtenOn": "2021-02-18T19:10:34Z",
       "side": 1,
       "message": "will",
+      "range": {
+        "startLine": 251,
+        "startChar": 89,
+        "endLine": 251,
+        "endChar": 92
+      },
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d32205c3_80104855",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T23:32:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23579514_649b8eee",
       "range": {
         "startLine": 251,
         "startChar": 89,
