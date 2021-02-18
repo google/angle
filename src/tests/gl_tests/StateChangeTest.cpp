@@ -4240,7 +4240,7 @@ void main()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
-    glMemoryBarrier(GL_TEXTURE_FETCH_BARRIER_BIT);
+    glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 
     glUseProgram(writeProgram);
     glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -4341,7 +4341,7 @@ void main()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
-    glMemoryBarrier(GL_UNIFORM_BARRIER_BIT);
+    glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 
     glUseProgram(writeProgram);
     glDrawArrays(GL_TRIANGLES, 0, 6);

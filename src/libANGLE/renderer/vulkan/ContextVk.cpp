@@ -4004,10 +4004,13 @@ angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield ba
         return angle::Result::Continue;
     }
 
-    // glMemoryBarrier acts as two barriers:
+    // glMemoryBarrier for barrier bit X_BARRIER_BIT implies:
     //
-    // - An execution+memory barrier: shader writes are made visible to subsequent accesses
-    // - Another execution barrier: shader accesses are finished before subsequent writes
+    // - An execution+memory barrier: shader writes are made visible to subsequent X accesses
+    //
+    // Additionally, SHADER_IMAGE_ACCESS_BARRIER_BIT and SHADER_STORAGE_BARRIER_BIT imply:
+    //
+    // - An execution+memory barrier: all accesses are finished before image/buffer writes
     //
     // For the first barrier, we can simplify the implementation by assuming that prior writes are
     // expected to be used right after this barrier, so we can close the render pass or flush the
@@ -4033,29 +4036,10 @@ angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield ba
     // To achieve this, a dirty bit is added that breaks the render pass if any storage
     // buffer/images are used in it.  Until the render pass breaks, changing the program or storage
     // buffer/image bindings should set this dirty bit again.
-    constexpr GLbitfield kBarrierBitsAffectinDrawDispatch =
-        GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT | GL_ELEMENT_ARRAY_BARRIER_BIT | GL_UNIFORM_BARRIER_BIT |
-        GL_TEXTURE_FETCH_BARRIER_BIT | GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_COMMAND_BARRIER_BIT |
-        GL_TRANSFORM_FEEDBACK_BARRIER_BIT | GL_ATOMIC_COUNTER_BARRIER_BIT |
-        GL_SHADER_STORAGE_BARRIER_BIT;
 
-    const bool hasAnyBitsAffectingDrawDispatch =
-        (barriers & ~kBarrierBitsAffectinDrawDispatch) != 0;
-
-    if (hasAnyBitsAffectingDrawDispatch)
-    {
-        mGraphicsDirtyBits.set(DIRTY_BIT_MEMORY_BARRIER);
-        mComputeDirtyBits.set(DIRTY_BIT_MEMORY_BARRIER);
-    }
-
-    // Make sure memory barrier is issued for future usages of storage buffers and images even if
-    // there's no binding change.
-    mGraphicsDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
-    mComputeDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
-
-    // Break the render pass if necessary as future non-draw commands can't know if they should.
     if (mRenderPassCommands->hasShaderStorageOutput())
     {
+        // Break the render pass if necessary as future non-draw commands can't know if they should.
         ANGLE_TRY(flushCommandsAndEndRenderPass());
     }
     else if (mOutsideRenderPassCommands->hasShaderStorageOutput())
@@ -4063,6 +4047,24 @@ angle::Result ContextVk::memoryBarrier(const gl::Context *context, GLbitfield ba
         // Otherwise flush the outside render pass commands if necessary.
         ANGLE_TRY(flushOutsideRenderPassCommands());
     }
+
+    constexpr GLbitfield kWriteAfterAccessBarriers =
+        GL_SHADER_IMAGE_ACCESS_BARRIER_BIT | GL_SHADER_STORAGE_BARRIER_BIT;
+
+    if ((barriers & kWriteAfterAccessBarriers) == 0)
+    {
+        return angle::Result::Continue;
+    }
+
+    // Defer flushing the command buffers until a draw/dispatch with storage buffer/image is
+    // encountered.
+    mGraphicsDirtyBits.set(DIRTY_BIT_MEMORY_BARRIER);
+    mComputeDirtyBits.set(DIRTY_BIT_MEMORY_BARRIER);
+
+    // Make sure memory barrier is issued for future usages of storage buffers and images even if
+    // there's no binding change.
+    mGraphicsDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
+    mComputeDirtyBits.set(DIRTY_BIT_SHADER_RESOURCES);
 
     // Mark the command buffers as affected by glMemoryBarrier, so future program and storage
     // buffer/image binding changes can set DIRTY_BIT_MEMORY_BARRIER again.
