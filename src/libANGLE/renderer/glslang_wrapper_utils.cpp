@@ -1163,6 +1163,7 @@ class SpirvTransformerBase : angle::NonCopyable
         return mVariableInfoById;
     }
 
+    static spirv::IdRef GetNewId(SpirvBlob *blob);
     spirv::IdRef getNewId();
 
   protected:
@@ -1243,9 +1244,14 @@ void SpirvTransformerBase::copyInstruction(const uint32_t *instruction, size_t w
     mSpirvBlobOut->insert(mSpirvBlobOut->end(), instruction, instruction + wordCount);
 }
 
+spirv::IdRef SpirvTransformerBase::GetNewId(SpirvBlob *blob)
+{
+    return spirv::IdRef((*blob)[kHeaderIndexIndexBound]++);
+}
+
 spirv::IdRef SpirvTransformerBase::getNewId()
 {
-    return spirv::IdRef((*mSpirvBlobOut)[kHeaderIndexIndexBound]++);
+    return GetNewId(mSpirvBlobOut);
 }
 
 enum class SpirvVariableType
@@ -1294,7 +1300,7 @@ class SpirvIDDiscoverer final : angle::NonCopyable
     // Helpers:
     void visitTypeHelper(spirv::IdResult id, spirv::IdRef typeId);
     void visitTransformFeedbackVariable(spirv::IdResult id, const spirv::LiteralString &name);
-    void writePendingDeclarations(SpirvTransformerBase *transformer, SpirvBlob *blobOut);
+    void writePendingDeclarations(SpirvBlob *blobOut);
 
     // Getters:
     const spirv::LiteralString &getName(spirv::IdRef id) const { return mNamesById[id]; }
@@ -1597,41 +1603,40 @@ void SpirvIDDiscoverer::visitTransformFeedbackVariable(spirv::IdResult id,
     }
 }
 
-void SpirvIDDiscoverer::writePendingDeclarations(SpirvTransformerBase *transformer,
-                                                 SpirvBlob *blobOut)
+void SpirvIDDiscoverer::writePendingDeclarations(SpirvBlob *blobOut)
 {
     if (!mFloatId.valid())
     {
-        mFloatId = transformer->getNewId();
+        mFloatId = SpirvTransformerBase::GetNewId(blobOut);
         spirv::WriteTypeFloat(blobOut, mFloatId, spirv::LiteralInteger(32));
     }
 
     if (!mVec4Id.valid())
     {
-        mVec4Id = transformer->getNewId();
+        mVec4Id = SpirvTransformerBase::GetNewId(blobOut);
         spirv::WriteTypeVector(blobOut, mVec4Id, mFloatId, spirv::LiteralInteger(4));
     }
 
     if (!mVec4OutTypePointerId.valid())
     {
-        mVec4OutTypePointerId = transformer->getNewId();
+        mVec4OutTypePointerId = SpirvTransformerBase::GetNewId(blobOut);
         spirv::WriteTypePointer(blobOut, mVec4OutTypePointerId, spv::StorageClassOutput, mVec4Id);
     }
 
     if (!mIntId.valid())
     {
-        mIntId = transformer->getNewId();
+        mIntId = SpirvTransformerBase::GetNewId(blobOut);
         spirv::WriteTypeInt(blobOut, mIntId, spirv::LiteralInteger(32), spirv::LiteralInteger(1));
     }
 
     ASSERT(!mInt0Id.valid());
-    mInt0Id = transformer->getNewId();
+    mInt0Id = SpirvTransformerBase::GetNewId(blobOut);
     spirv::WriteConstant(blobOut, mIntId, mInt0Id, spirv::LiteralContextDependentNumber(0));
 
     constexpr uint32_t kFloatHalfAsUint = 0x3F00'0000;
 
     ASSERT(!mFloatHalfId.valid());
-    mFloatHalfId = transformer->getNewId();
+    mFloatHalfId = SpirvTransformerBase::GetNewId(blobOut);
     spirv::WriteConstant(blobOut, mFloatId, mFloatHalfId,
                          spirv::LiteralContextDependentNumber(kFloatHalfAsUint));
 }
@@ -1700,6 +1705,167 @@ TransformationState SpirvPerVertexTrimmer::transformTypeStruct(const SpirvIDDisc
     memberList->resize(memberCount);
 
     spirv::WriteTypeStruct(blobOut, id, *memberList);
+
+    return TransformationState::Transformed;
+}
+
+// Helper class that removes inactive varyings and replaces them with Private variables.
+class SpirvInactiveVaryingRemover final : angle::NonCopyable
+{
+  public:
+    SpirvInactiveVaryingRemover() {}
+
+    void init(size_t indexCount);
+
+    TransformationState transformAccessChain(spirv::IdResultType typeId,
+                                             spirv::IdResult id,
+                                             spirv::IdRef baseId,
+                                             const spirv::IdRefList &indexList,
+                                             SpirvBlob *blobOut);
+    TransformationState transformDecorate(const ShaderInterfaceVariableInfo &info,
+                                          gl::ShaderType shaderType,
+                                          spirv::IdRef id,
+                                          spv::Decoration decoration,
+                                          const spirv::LiteralIntegerList &decorationValues,
+                                          SpirvBlob *blobOut);
+    TransformationState transformTypePointer(const SpirvIDDiscoverer &ids,
+                                             spirv::IdResult id,
+                                             spv::StorageClass storageClass,
+                                             spirv::IdRef typeId,
+                                             SpirvBlob *blobOut);
+    TransformationState transformVariable(spirv::IdResultType typeId,
+                                          spirv::IdResult id,
+                                          spv::StorageClass storageClass,
+                                          SpirvBlob *blobOut);
+
+    void modifyEntryPointInterfaceList(
+        const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
+        gl::ShaderType shaderType,
+        spirv::IdRefList *interfaceList);
+
+  private:
+    // Each OpTypePointer instruction that defines a type with the Output storage class is
+    // duplicated with a similar instruction but which defines a type with the Private storage
+    // class.  If inactive varyings are encountered, its type is changed to the Private one.  The
+    // following vector maps the Output type id to the corresponding Private one.
+    std::vector<spirv::IdRef> mTypePointerTransformedId;
+};
+
+void SpirvInactiveVaryingRemover::init(size_t indexBound)
+{
+    // Allocate storage for Output type pointer map.  At index i, this vector holds the identical
+    // type as %i except for its storage class turned to Private.
+    mTypePointerTransformedId.resize(indexBound);
+}
+
+TransformationState SpirvInactiveVaryingRemover::transformAccessChain(
+    spirv::IdResultType typeId,
+    spirv::IdResult id,
+    spirv::IdRef baseId,
+    const spirv::IdRefList &indexList,
+    SpirvBlob *blobOut)
+{
+    // Modifiy the instruction to use the private type.
+    ASSERT(typeId < mTypePointerTransformedId.size());
+    ASSERT(mTypePointerTransformedId[typeId].valid());
+
+    spirv::WriteAccessChain(blobOut, mTypePointerTransformedId[typeId], id, baseId, indexList);
+
+    return TransformationState::Transformed;
+}
+
+TransformationState SpirvInactiveVaryingRemover::transformDecorate(
+    const ShaderInterfaceVariableInfo &info,
+    gl::ShaderType shaderType,
+    spirv::IdRef id,
+    spv::Decoration decoration,
+    const spirv::LiteralIntegerList &decorationValues,
+    SpirvBlob *blobOut)
+{
+    // If it's an inactive varying, remove the decoration altogether.
+    return info.activeStages[shaderType] ? TransformationState::Unchanged
+                                         : TransformationState::Transformed;
+}
+
+void SpirvInactiveVaryingRemover::modifyEntryPointInterfaceList(
+    const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
+    gl::ShaderType shaderType,
+    spirv::IdRefList *interfaceList)
+{
+    // Filter out inactive varyings from entry point interface declaration.
+    size_t writeIndex = 0;
+    for (size_t index = 0; index < interfaceList->size(); ++index)
+    {
+        spirv::IdRef id((*interfaceList)[index]);
+        const ShaderInterfaceVariableInfo *info = variableInfoById[id];
+
+        ASSERT(info);
+
+        if (!info->activeStages[shaderType])
+        {
+            continue;
+        }
+
+        (*interfaceList)[writeIndex] = id;
+        ++writeIndex;
+    }
+
+    // Update the number of interface variables.
+    interfaceList->resize(writeIndex);
+}
+
+TransformationState SpirvInactiveVaryingRemover::transformTypePointer(
+    const SpirvIDDiscoverer &ids,
+    spirv::IdResult id,
+    spv::StorageClass storageClass,
+    spirv::IdRef typeId,
+    SpirvBlob *blobOut)
+{
+    // If the storage class is output, this may be used to create a variable corresponding to an
+    // inactive varying, or if that varying is a struct, an Op*AccessChain retrieving a field of
+    // that inactive varying.
+    //
+    // SPIR-V specifies the storage class both on the type and the variable declaration.  Otherwise
+    // it would have been sufficient to modify the OpVariable instruction. For simplicity, duplicate
+    // every "OpTypePointer Output" and "OpTypePointer Input" instruction except with the Private
+    // storage class, in case it may be necessary later.
+
+    // Cannot create a Private type declaration from builtins such as gl_PerVertex.
+    if (ids.getName(typeId) != nullptr && gl::IsBuiltInName(ids.getName(typeId)))
+    {
+        return TransformationState::Unchanged;
+    }
+
+    if (storageClass != spv::StorageClassOutput && storageClass != spv::StorageClassInput)
+    {
+        return TransformationState::Unchanged;
+    }
+
+    const spirv::IdRef newPrivateTypeId(SpirvTransformerBase::GetNewId(blobOut));
+
+    // Write OpTypePointer for the new PrivateType.
+    spirv::WriteTypePointer(blobOut, newPrivateTypeId, spv::StorageClassPrivate, typeId);
+
+    // Remember the id of the replacement.
+    ASSERT(id < mTypePointerTransformedId.size());
+    mTypePointerTransformedId[id] = newPrivateTypeId;
+
+    // The original instruction should still be present as well.  At this point, we don't know
+    // whether we will need the original or Private type.
+    return TransformationState::Unchanged;
+}
+
+TransformationState SpirvInactiveVaryingRemover::transformVariable(spirv::IdResultType typeId,
+                                                                   spirv::IdResult id,
+                                                                   spv::StorageClass storageClass,
+                                                                   SpirvBlob *blobOut)
+{
+    ASSERT(storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassInput);
+
+    ASSERT(typeId < mTypePointerTransformedId.size());
+    ASSERT(mTypePointerTransformedId[typeId].valid());
+    spirv::WriteVariable(blobOut, mTypePointerTransformedId[typeId], id, spv::StorageClassPrivate,
+                         nullptr);
 
     return TransformationState::Transformed;
 }
@@ -1781,17 +1947,9 @@ class SpirvTransformer final : public SpirvTransformerBase
     // Transformation state:
 
     SpirvPerVertexTrimmer mPerVertexTrimmer;
+    SpirvInactiveVaryingRemover mInactiveVaryingRemover;
 
-    // Each OpTypePointer instruction that defines a type with the Output storage class is
-    // duplicated with a similar instruction but which defines a type with the Private storage
-    // class.  If inactive varyings are encountered, its type is changed to the Private one.  The
-    // following vector maps the Output type id to the corresponding Private one.
-    struct TransformedIDs
-    {
-        spirv::IdRef privateID;
-        spirv::IdRef typeID;
-    };
-    std::vector<TransformedIDs> mTypePointerTransformedId;
+    std::vector<spirv::IdRef> mTypePointerTypeId;
     std::vector<spirv::IdRef> mFixedVaryingId;
     std::vector<spirv::IdRef> mFixedVaryingTypeId;
 };
@@ -1817,16 +1975,15 @@ void SpirvTransformer::resolveVariableIds()
     const size_t indexBound = mSpirvBlobIn[kHeaderIndexIndexBound];
 
     mIds.init(indexBound);
+    mInactiveVaryingRemover.init(indexBound);
 
     // Allocate storage for id-to-info map.  If %i is the id of a name in mVariableInfoMap, index i
     // in this vector will hold a pointer to the ShaderInterfaceVariableInfo object associated with
     // that name in mVariableInfoMap.
     mVariableInfoById.resize(indexBound, nullptr);
 
-    // Allocate storage for Output type pointer map.  At index i, this vector holds the identical
-    // type as %i except for its storage class turned to Private.
-    // Also store a FunctionID and TypeID for when we need to fix a precision mismatch
-    mTypePointerTransformedId.resize(indexBound);
+    // Allocate storage for precision mismatch fix up.
+    mTypePointerTypeId.resize(indexBound);
     mFixedVaryingId.resize(indexBound);
     mFixedVaryingTypeId.resize(indexBound);
 
@@ -2015,7 +2172,7 @@ void SpirvTransformer::writePendingDeclarations()
         return;
     }
 
-    mIds.writePendingDeclarations(this, mSpirvBlobOut);
+    mIds.writePendingDeclarations(mSpirvBlobOut);
 }
 
 // Called by transformInstruction to insert necessary instructions for casting varyings.
@@ -2041,8 +2198,7 @@ void SpirvTransformer::writeInputPreamble()
 
             // Build OpLoad instruction to load the mediump value into a temporary
             const spirv::IdRef tempVar(getNewId());
-            const spirv::IdRef tempVarType(
-                mTypePointerTransformedId[mFixedVaryingTypeId[id]].typeID);
+            const spirv::IdRef tempVarType(mTypePointerTypeId[mFixedVaryingTypeId[id]]);
             ASSERT(tempVarType.valid());
 
             spirv::WriteLoad(mSpirvBlobOut, tempVarType, tempVar, mFixedVaryingId[id], nullptr);
@@ -2076,8 +2232,7 @@ void SpirvTransformer::writeOutputPrologue()
 
             // Build OpLoad instruction to load the highp value into a temporary
             const spirv::IdRef tempVar(getNewId());
-            const spirv::IdRef tempVarType(
-                mTypePointerTransformedId[mFixedVaryingTypeId[id]].typeID);
+            const spirv::IdRef tempVarType(mTypePointerTypeId[mFixedVaryingTypeId[id]]);
             ASSERT(tempVarType.valid());
 
             spirv::WriteLoad(mSpirvBlobOut, tempVarType, tempVar, id, nullptr);
@@ -2418,8 +2573,9 @@ TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruct
         return TransformationState::Unchanged;
     }
 
-    // If it's an inactive varying, remove the decoration altogether.
-    if (!info->activeStages[mOptions.shaderType])
+    if (mInactiveVaryingRemover.transformDecorate(*info, mOptions.shaderType, id, decoration,
+                                                  decorationValues, mSpirvBlobOut) ==
+        TransformationState::Transformed)
     {
         return TransformationState::Transformed;
     }
@@ -2660,37 +2816,24 @@ TransformationState SpirvTransformer::transformEntryPoint(const uint32_t *instru
     // Should only have one EntryPoint
     ASSERT(!mEntryPointId.valid());
 
-    // Remove inactive varyings from the shader interface declaration.
     spv::ExecutionModel executionModel;
     spirv::LiteralString name;
     spirv::IdRefList interfaceList;
     spirv::ParseEntryPoint(instruction, &executionModel, &mEntryPointId, &name, &interfaceList);
 
-    // Filter out inactive varyings from entry point interface declaration.
-    size_t writeIndex = 0;
+    mInactiveVaryingRemover.modifyEntryPointInterfaceList(mVariableInfoById, mOptions.shaderType,
+                                                          &interfaceList);
+
+    // Modify interface list if any ID was replaced due to varying precision mismatch.
     for (size_t index = 0; index < interfaceList.size(); ++index)
     {
         spirv::IdRef id(interfaceList[index]);
-        const ShaderInterfaceVariableInfo *info = mVariableInfoById[id];
 
-        ASSERT(info);
-
-        if (!info->activeStages[mOptions.shaderType])
-        {
-            continue;
-        }
-
-        // If ID is one we had to replace due to varying mismatch, use the fixed ID.
         if (mFixedVaryingId[id].valid())
         {
-            id = mFixedVaryingId[id];
+            interfaceList[index] = mFixedVaryingId[id];
         }
-        interfaceList[writeIndex] = id;
-        ++writeIndex;
     }
-
-    // Update the number of interface variables.
-    interfaceList.resize(writeIndex);
 
     // Write the entry point with the inactive interface variables removed.
     spirv::WriteEntryPoint(mSpirvBlobOut, executionModel, mEntryPointId, name, interfaceList);
@@ -2711,41 +2854,11 @@ TransformationState SpirvTransformer::transformTypePointer(const uint32_t *instr
     spirv::IdRef typeId;
     spirv::ParseTypePointer(instruction, &id, &storageClass, &typeId);
 
-    // If the storage class is output, this may be used to create a variable corresponding to an
-    // inactive varying, or if that varying is a struct, an Op*AccessChain retrieving a field of
-    // that inactive varying.
-    //
-    // SPIR-V specifies the storage class both on the type and the variable declaration.  Otherwise
-    // it would have been sufficient to modify the OpVariable instruction. For simplicity, duplicate
-    // every "OpTypePointer Output" and "OpTypePointer Input" instruction except with the Private
-    // storage class, in case it may be necessary later.
-
-    // Cannot create a Private type declaration from builtins such as gl_PerVertex.
-    if (mIds.getName(typeId) != nullptr && gl::IsBuiltInName(mIds.getName(typeId)))
-    {
-        return TransformationState::Unchanged;
-    }
-
     // Precision fixup needs this typeID
-    mTypePointerTransformedId[id].typeID = typeId;
+    mTypePointerTypeId[id] = typeId;
 
-    if (storageClass != spv::StorageClassOutput && storageClass != spv::StorageClassInput)
-    {
-        return TransformationState::Unchanged;
-    }
-
-    const spirv::IdRef newPrivateTypeId(getNewId());
-
-    // Write OpTypePointer for the new PrivateType.
-    spirv::WriteTypePointer(mSpirvBlobOut, newPrivateTypeId, spv::StorageClassPrivate, typeId);
-
-    // Remember the id of the replacement.
-    ASSERT(id < mTypePointerTransformedId.size());
-    mTypePointerTransformedId[id].privateID = newPrivateTypeId;
-
-    // The original instruction should still be present as well.  At this point, we don't know
-    // whether we will need the original or Private type.
-    return TransformationState::Unchanged;
+    return mInactiveVaryingRemover.transformTypePointer(mIds, id, storageClass, typeId,
+                                                        mSpirvBlobOut);
 }
 
 TransformationState SpirvTransformer::transformTypeStruct(const uint32_t *instruction)
@@ -2809,11 +2922,8 @@ TransformationState SpirvTransformer::transformVariable(const uint32_t *instruct
             spirv::WriteVariable(mSpirvBlobOut, typeId, mFixedVaryingId[id], storageClass, nullptr);
 
             // Make original variable a private global
-            ASSERT(mTypePointerTransformedId[typeId].privateID.valid());
-            spirv::WriteVariable(mSpirvBlobOut, mTypePointerTransformedId[typeId].privateID, id,
-                                 spv::StorageClassPrivate, nullptr);
-
-            return TransformationState::Transformed;
+            return mInactiveVaryingRemover.transformVariable(typeId, id, storageClass,
+                                                             mSpirvBlobOut);
         }
         return TransformationState::Unchanged;
     }
@@ -2831,17 +2941,9 @@ TransformationState SpirvTransformer::transformVariable(const uint32_t *instruct
         return TransformationState::Transformed;
     }
 
-    ASSERT(storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassInput);
-
     // The variable is inactive.  Output a modified variable declaration, where the type is the
     // corresponding type with the Private storage class.
-    ASSERT(typeId < mTypePointerTransformedId.size());
-    ASSERT(mTypePointerTransformedId[typeId].privateID.valid());
-
-    spirv::WriteVariable(mSpirvBlobOut, mTypePointerTransformedId[typeId].privateID, id,
-                         spv::StorageClassPrivate, nullptr);
-
-    return TransformationState::Transformed;
+    return mInactiveVaryingRemover.transformVariable(typeId, id, storageClass, mSpirvBlobOut);
 }
 
 TransformationState SpirvTransformer::transformAccessChain(const uint32_t *instruction)
@@ -2864,14 +2966,8 @@ TransformationState SpirvTransformer::transformAccessChain(const uint32_t *instr
         return TransformationState::Unchanged;
     }
 
-    // Modifiy the instruction to use the private type.
-    ASSERT(typeId < mTypePointerTransformedId.size());
-    ASSERT(mTypePointerTransformedId[typeId].privateID.valid());
-
-    spirv::WriteAccessChain(mSpirvBlobOut, mTypePointerTransformedId[typeId].privateID, id, baseId,
-                            indexList);
-
-    return TransformationState::Transformed;
+    return mInactiveVaryingRemover.transformAccessChain(typeId, id, baseId, indexList,
+                                                        mSpirvBlobOut);
 }
 
 TransformationState SpirvTransformer::transformExecutionMode(const uint32_t *instruction)
