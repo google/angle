@@ -68,6 +68,24 @@
       "parentUuid": "e2f44cfe_243379b1",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb196f92_c3842f9a",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T19:03:30Z",
+      "side": 1,
+      "message": "I think we could reach a better understanding if you implemented my suggested test.\n\nOne problem is, in that scenario at step 2 we are returning the wrong age altogether. That\u0027s because mCurrentSwapchainImageIndex is not changed (as ANI is deferred). That\u0027s the reason you see the wrong age when updating mFrameCount in swapImpl; it\u0027s because before ANI we have the wrong index.\n\nSo my two suggestions go hand-in-hand. getBufferAge should make sure ANI is done (so the index is correct), then updating mFrameCount can move to swapImpl (though it would work if it stayed here, I believe it\u0027s more meaningful that way).",
+      "parentUuid": "2725b6b4_95e468f0",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

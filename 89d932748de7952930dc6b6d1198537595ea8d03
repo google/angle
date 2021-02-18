@@ -195,6 +195,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8ee680bc_1f57ae95",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T19:03:30Z",
+      "side": 1,
+      "message": "I\u0027d still like to at least see a guarantee that \"under normal circumstances\" the images allocated for the swapchain stay allocated even when they are neither accessed by the application nor the presentation engine.",
+      "parentUuid": "74116cf7_536503f4",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "257d0c4d_2c35a81b",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 7
