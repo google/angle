@@ -110,6 +110,30 @@
       },
       "revId": "0640094d3327394005f0129451002dd38d8ca615",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87812078_1f9bbd39",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1359,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T15:50:29Z",
+      "side": 1,
+      "message": "I also prefer if the name remained initExternal. There are many other parameters too, we don\u0027t want to add WithXWithYWithZ with every new parameter.",
+      "parentUuid": "9ccfaaaa_363d0bef",
+      "range": {
+        "startLine": 1359,
+        "startChar": 18,
+        "endLine": 1359,
+        "endChar": 49
+      },
+      "revId": "0640094d3327394005f0129451002dd38d8ca615",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
