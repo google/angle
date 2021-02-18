@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17321c41_04454222",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T02:56:34Z",
+      "side": 1,
+      "message": "Got clarification from Piers that this is indeed a test bug. Your quote seems inconsistent with the spec language for glMemoryBarrier, but it must be an oversight. According to Piers, nothing synchronizes implicitly with storage buffers and images.",
+      "parentUuid": "b36bbf3b_acd0ce5a",
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "577effa0_77ad0770",
@@ -49,6 +67,30 @@
       "writtenOn": "2021-02-18T00:24:15Z",
       "side": 1,
       "message": "Is this referring to ANGLE end2end types of tests, dEQP, or everything?",
+      "range": {
+        "startLine": 1037,
+        "startChar": 0,
+        "endLine": 1040,
+        "endChar": 48
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc637d19_cb89456e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T02:56:34Z",
+      "side": 1,
+      "message": "I noticed it with one ANGLE test failing, but I\u0027m sure we have this bug in a number of places (outside RP probably broke on its own in other tests). I added this before Piers\u0027 reply, so I wasn\u0027t 100% sure there\u0027s nothing implicit.\n\nI\u0027m planning on removing it as a follow up (since it\u0027s somewhat harmless), which if needs be could be reverted (if there are apps etc that are also similarly buggy).",
+      "parentUuid": "577effa0_77ad0770",
       "range": {
         "startLine": 1037,
         "startChar": 0,
@@ -95,6 +137,30 @@
       "writtenOn": "2021-02-18T00:24:15Z",
       "side": 1,
       "message": "It may be handled as part of your barrier test suite, but does the deferred clear stuff (and clearing with a draw vs command) play into this at all?   Will a render pass always be started in those cases?",
+      "range": {
+        "startLine": 5619,
+        "startChar": 0,
+        "endLine": 5622,
+        "endChar": 9
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5aa46d5_23e04420",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5622,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T02:56:34Z",
+      "side": 1,
+      "message": "Sigh it\u0027s not, and indeed there may be a bug. Actually a similar bug is:\n\n- Bind FBO 1 (with texture T as attachment), clear (gets staged in T)\n- Bind FBO 2, sample from T\n\nWho is flushing the deferred clear that is staged in T? If TextureVk::syncState is taking care of it, the same would make things work here too. Will right tests and see.",
+      "parentUuid": "86f150f9_c6d01347",
       "range": {
         "startLine": 5619,
         "startChar": 0,
