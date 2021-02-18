@@ -243,6 +243,24 @@
       "parentUuid": "fffdf451_0aac1aad",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cbb5d0e_36f07212",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T22:25:45Z",
+      "side": 1,
+      "message": "That\u0027s not what I was implying. The point was to have something drawn without ANI being triggered. The age is still queried from the surface, but because ANI hasn\u0027t happened, we can\u0027t know what image index to look at.\n\nThinking about it more, probably just taking the age right after the swap (as in your test) should result in the same problem. I need to dig deeper to understand why it\u0027s not a problem with your test.\n\nI\u0027ll get back to you about this tomorrow.",
+      "parentUuid": "0e32cdb6_1294d414",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
