@@ -16,6 +16,75 @@
       "message": "PTAL",
       "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbaee3b4_04bb0ba4",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T21:26:55Z",
+      "side": 1,
+      "message": "I thought we settled in not calling it with the Vulkan term in the frontend?",
+      "range": {
+        "startLine": 192,
+        "startChar": 8,
+        "endLine": 192,
+        "endChar": 23
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e333dfa3_cab25137",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T21:26:55Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 153,
+        "startChar": 7,
+        "endLine": 153,
+        "endChar": 14
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c849d61_4ea5323c",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T21:26:55Z",
+      "side": 1,
+      "message": "nit: hasAnyInputAttachments",
+      "range": {
+        "startLine": 931,
+        "startChar": 9,
+        "endLine": 931,
+        "endChar": 35
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
