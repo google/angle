@@ -16,6 +16,93 @@
       "message": "I believe the deqp failure to be a test bug (missing barrier). I have a fix for it here: https://github.com/ShabbyX/VK-GL-CTS/commit/5e44eec029813733a2ff5c688c00c488bc4f9c93\n\nNevertheless, I asked for clarification here whether my understanding of the spec is correct and the barrier is actually necessary): https://gitlab.khronos.org/opengl/API/-/issues/144",
       "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b36bbf3b_acd0ce5a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T00:24:15Z",
+      "side": 1,
+      "message": "From the GLES 3.1 spec:\n\n\u003e 5.3 Propagating Changes to Objects\n\u003e When the contents of an object T are changed, such changes are not always\n\u003e immediately visible, and do not always immediately affect GL operations involving\n\u003e that object. Changes may occur via any of the following means:\n\u003e ...\n\u003e • Data-setting through transform feedback operations followed by an EndTransformFeedback command.\n\n\u003e 5.3.1 Determining Completion of Changes to an object\n\u003e The contents of an object T are considered to have been changed once a command\nsuch as described in section 5.3 has completed.\n\nAlso:\n\n\u003e 5.3.3 Rules\n\u003e Once EndTransformFeedback has been issued,\n\u003e any subsequent command in the same context that uses the results of the transform feedback operation will see the results.\n\nIt really sounds like endTransformFeedback issues an implicit sync, though I can\u0027t find anything that states that explicitly.",
+      "parentUuid": "8025c088_0d72c709",
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "577effa0_77ad0770",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T00:24:15Z",
+      "side": 1,
+      "message": "Is this referring to ANGLE end2end types of tests, dEQP, or everything?",
+      "range": {
+        "startLine": 1037,
+        "startChar": 0,
+        "endLine": 1040,
+        "endChar": 48
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f247a744_96026ddb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5600,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T00:24:15Z",
+      "side": 1,
+      "message": "This can be an assert since it\u0027s already been checked by invalidateCurrentTextures().",
+      "range": {
+        "startLine": 5595,
+        "startChar": 0,
+        "endLine": 5600,
+        "endChar": 5
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86f150f9_c6d01347",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5622,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T00:24:15Z",
+      "side": 1,
+      "message": "It may be handled as part of your barrier test suite, but does the deferred clear stuff (and clearing with a draw vs command) play into this at all?   Will a render pass always be started in those cases?",
+      "range": {
+        "startLine": 5619,
+        "startChar": 0,
+        "endLine": 5622,
+        "endChar": 9
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
