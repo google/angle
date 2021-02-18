@@ -33,6 +33,24 @@
       "message": "Cody/Tim: flaky trace? Re-queuing.",
       "revId": "2d27b35ab4db3bc264560dfb541db8e7b1fa7f7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cfd0035_e2fcf252",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-18T19:56:31Z",
+      "side": 1,
+      "message": "No, we\u0027re periodically seeing bad pixel quads from the Intel driver.  I don\u0027t think it has anything to do with the trace.",
+      "parentUuid": "5c132645_b98fe7d0",
+      "revId": "2d27b35ab4db3bc264560dfb541db8e7b1fa7f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
