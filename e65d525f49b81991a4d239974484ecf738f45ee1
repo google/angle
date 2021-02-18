@@ -33,6 +33,24 @@
       "message": "Could use some context in the commit message.",
       "revId": "e65d525f49b81991a4d239974484ecf738f45ee1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "640fb77c_c3b97c98",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T19:59:12Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "e3997d10_47b569a3",
+      "revId": "e65d525f49b81991a4d239974484ecf738f45ee1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
