@@ -34,6 +34,24 @@
       "parentUuid": "686b589b_9da96380",
       "revId": "45735b0b8f4c78866242d8f25d77405eec97eadb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab6ad888_b9bf7f8b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T02:58:22Z",
+      "side": 1,
+      "message": "Ah, ok, that\u0027s what that\u0027s referring to.   I should have put that together when it\u0027s being read from mState.   Sounds good.",
+      "parentUuid": "acc9f692_9fc0267e",
+      "revId": "45735b0b8f4c78866242d8f25d77405eec97eadb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
