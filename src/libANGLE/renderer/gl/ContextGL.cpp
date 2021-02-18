@@ -210,9 +210,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
                                                          GLsizei count,
                                                          GLsizei instanceCount)
 {
-    const angle::FeaturesGL &features = getFeaturesGL();
-    if (context->getStateCache().hasAnyActiveClientAttrib() ||
-        (features.shiftInstancedArrayDataWithExtraOffset.enabled && first > 0))
+    if (context->getStateCache().hasAnyActiveClientAttrib())
     {
         const gl::State &glState                = context->getState();
         const gl::ProgramExecutable *executable = getState().getProgramExecutable();
@@ -226,16 +224,8 @@ ANGLE_INLINE angle::Result ContextGL::setDrawArraysState(const gl::Context *cont
         vaoGL->validateState(context);
 #endif  // ANGLE_STATE_VALIDATION_ENABLED
     }
-    else if (features.shiftInstancedArrayDataWithExtraOffset.enabled && first == 0)
-    {
-        // There could be previous draw call that has modified the attributes
-        // Instead of forcefully streaming attributes, we just rebind the original ones
-        const gl::State &glState   = context->getState();
-        const gl::VertexArray *vao = glState.getVertexArray();
-        const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-        vaoGL->recoverForcedStreamingAttributesForDrawArraysInstanced(context);
-    }
 
+    const angle::FeaturesGL &features = getFeaturesGL();
     if (features.setPrimitiveRestartFixedIndexForDrawArrays.enabled)
     {
         StateManagerGL *stateManager           = getStateManager();
@@ -258,15 +248,6 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
     const gl::VertexArray *vao              = glState.getVertexArray();
     const gl::StateCache &stateCache        = context->getStateCache();
 
-    const angle::FeaturesGL &features = getFeaturesGL();
-    if (features.shiftInstancedArrayDataWithExtraOffset.enabled)
-    {
-        // There might be instanced arrays that are forced streaming for drawArraysInstanced
-        // They cannot be ELEMENT_ARRAY_BUFFER
-        const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
-        vaoGL->recoverForcedStreamingAttributesForDrawArraysInstanced(context);
-    }
-
     if (stateCache.hasAnyActiveClientAttrib() || vao->getElementArrayBuffer() == nullptr)
     {
         const VertexArrayGL *vaoGL = GetImplAs<VertexArrayGL>(vao);
@@ -279,6 +260,7 @@ ANGLE_INLINE angle::Result ContextGL::setDrawElementsState(const gl::Context *co
         *outIndices = indices;
     }
 
+    const angle::FeaturesGL &features = getFeaturesGL();
     if (glState.isPrimitiveRestartEnabled() && features.emulatePrimitiveRestartFixedIndex.enabled)
     {
         StateManagerGL *stateManager = getStateManager();

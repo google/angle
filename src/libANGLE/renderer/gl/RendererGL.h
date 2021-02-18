@@ -135,8 +135,6 @@ class RendererGL : angle::NonCopyable
     void setNeedsFlushBeforeDeleteTextures();
     void flushIfNecessaryBeforeDeleteTextures();
 
-    void handleGPUSwitch();
-
   protected:
     virtual WorkerContext *createWorkerContext(std::string *infoLog) = 0;
 

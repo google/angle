@@ -658,8 +658,6 @@ egl::Error DisplayCGL::handleGPUSwitch()
             CGLSetCurrentContext(mContext);
             onStateChange(angle::SubjectMessage::SubjectChanged);
             mCurrentGPUID = gpuID;
-
-            mRenderer->handleGPUSwitch();
         }
     }
 
