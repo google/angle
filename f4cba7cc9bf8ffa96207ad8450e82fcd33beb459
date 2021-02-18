@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "624e11be_1507f48c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1328182
+      },
+      "writtenOn": "2021-02-18T04:19:37Z",
+      "side": 1,
+      "message": "Thanks Jonah for helping reproduce locally.\nI made some speculative fixes. And linux_angle_deqp_rel_ng is now green.\nI think the change that makes the difference might be in renderergl_utls.cpp enabling feature, instead of calling ReinitializeFeaturesAtGPUSwitch to get rid of redundant code, call the ANGLE_FEATURE_CONDITION directly. In that case there could be issues when getting system info multiple times.\nThanks for the review.",
+      "revId": "f4cba7cc9bf8ffa96207ad8450e82fcd33beb459",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
