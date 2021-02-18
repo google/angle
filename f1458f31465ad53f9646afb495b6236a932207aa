@@ -16,6 +16,46 @@
       "message": "Cleanup only, no functional change.",
       "revId": "f1458f31465ad53f9646afb495b6236a932207aa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "40c0d0be_4c9aa391",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-02-18T21:27:46Z",
+      "side": 1,
+      "message": "looks good.",
+      "revId": "f1458f31465ad53f9646afb495b6236a932207aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bda8cc2_c74e5053",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2066,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-02-18T21:27:46Z",
+      "side": 1,
+      "message": "Is this always initialized to 0 by default? I am only seeing it set to true at line 2084",
+      "range": {
+        "startLine": 2066,
+        "startChar": 9,
+        "endLine": 2066,
+        "endChar": 36
+      },
+      "revId": "f1458f31465ad53f9646afb495b6236a932207aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
