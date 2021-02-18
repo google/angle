@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe9dfe02_81a02964",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T18:23:36Z",
+      "side": 1,
+      "message": "This is a CL to gather thoughts on how to support GL_EXT_texture_buffer to fix app-compat problems.   In particular, \"Special Forces Group 2\" crashes without it.\n\nIt\u0027s obviously non-conformant, but dEQP doesn\u0027t seem to care too much.   I also wonder if this is worth trying to get a spec update/exemption for if there really aren\u0027t any drivers that support those formats anyway.\n\nAnother option is to make app-specific exceptions by looking at the package name, but I would prefer this approach of just enabling it for everyone and fixing issues that come up (if they ever do).",
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
