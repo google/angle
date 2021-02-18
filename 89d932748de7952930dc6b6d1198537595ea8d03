@@ -213,6 +213,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1dacbb5a_8ba143b7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-18T20:52:56Z",
+      "side": 1,
+      "message": "Looking in section 32.9 WSI Swapchain of the Vulkan spec:\nCreateSwapchain, AcquireNextImage, GetSwapchainImages ... return VkResult of:\nVK_ERROR_OUT_OF_HOST_MEMORY\nVK_ERROR_OUT_OF_DEVICE_MEMORY\nVK_ERROR_DEVICE_LOST\nVK_ERROR_SURFACE_LOST_KHR\nVK_ERROR_OUT_OF_DATE_KHR\nWould be the indicators that the resources are not/no-longer available.\nIn all cases the only response is to destroy the Swapchain and create a new one.\nI don\u0027t find or remember any discussion on reclaiming images in case of low resources.\nBut the error case are defined and need to be handled.",
+      "parentUuid": "8ee680bc_1f57ae95",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "257d0c4d_2c35a81b",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 7
