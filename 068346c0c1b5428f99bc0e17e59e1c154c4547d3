@@ -72,6 +72,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b08c71e5_998cf839",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 2563,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T21:11:17Z",
+      "side": 1,
+      "message": "Really glad you could remove this from this function!",
+      "revId": "068346c0c1b5428f99bc0e17e59e1c154c4547d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "021d4087_0330e216",
