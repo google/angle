@@ -86,6 +86,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d396ba46_b43e31bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T21:38:16Z",
+      "side": 1,
+      "message": "Going to -2 temporarily to avoid accidental submission, until we can figure out what to do with the interaction of this change with deferred ANI.",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2f44cfe_243379b1",
@@ -171,6 +188,24 @@
       "side": 1,
       "message": "\"getBufferAge should do this first:\n        if (mNeedToAcquireNextSwapchainImage)\n        {\n            // Acquire the next image (previously deferred).\n            ANGLE_TRY(doDeferredAcquireNextImage(context, false));\n        }\n   otherwise it would use the wrong index before ANI (step 2 in above scenario).\"\n\nUnfortunately there is no gl::Context when querying for a Surface attribute. It may or may not be current - IF, it referenced a context. Surface has no reference to gl::Context - not in scope.",
       "parentUuid": "ab3a8d80_f9943b20",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fffdf451_0aac1aad",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T21:38:16Z",
+      "side": 1,
+      "message": "\u003e This test is different than what you requested? It uses buffer age to check that the buffer has the expected contents. See:\n\u003e \n\u003e // Verify contents of buffer are as expected\n\u003e TEST_P(EGLBufferAgeTest, VerifyContents)\n\nYes very much so. Let me clarify the steps in the test I\u0027m proposing:\n\n1. Previous swap\n2. Draw to FBO \u003c------ note FBO, not swapchain.\n  2.5 verify age here\n3. ANI \u003c------ happens automatically when drawing to swapchain\n4. Draw to swapchain \u003c---- causes ANI\n  4.5 verify age again here\n5. swap\n\n\u003e Unfortunately there is no gl::Context when querying for a Surface attribute.\n\nHmm that may be a problem. At step 2.5 above, ANI hasn\u0027t happened yet. We don\u0027t know what buffer we are going to end up with. What age do you think should be reported there?\n\n+Ian for this discussion.\n\n---\n\nI would have suggested just reporting an age of 0 if mNeedToAcquireNextSwapchainImage, but given that at least one draw call should be submitted for ANI to take effect, that\u0027s probably not going to work for any application.",
+      "parentUuid": "b7af2de0_270f937f",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
