@@ -16,6 +16,92 @@
       "message": "This is a CL to gather thoughts on how to support GL_EXT_texture_buffer to fix app-compat problems.   In particular, \"Special Forces Group 2\" crashes without it.\n\nIt\u0027s obviously non-conformant, but dEQP doesn\u0027t seem to care too much.   I also wonder if this is worth trying to get a spec update/exemption for if there really aren\u0027t any drivers that support those formats anyway.\n\nAnother option is to make app-specific exceptions by looking at the package name, but I would prefer this approach of just enabling it for everyone and fixing issues that come up (if they ever do).",
       "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04d36795_0d65ce38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T19:10:34Z",
+      "side": 1,
+      "message": "Tim, could you please open an issue with Khronos [1] so we could discuss this?\n\n[1]: https://gitlab.khronos.org/vulkan/vulkan/-/issues/",
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "345f3a4f_39b35e91",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 237,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T19:10:34Z",
+      "side": 1,
+      "message": "You can remove this now.",
+      "range": {
+        "startLine": 232,
+        "startChar": 0,
+        "endLine": 237,
+        "endChar": 5
+      },
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2c53c02_be5d14d5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T19:10:34Z",
+      "side": 1,
+      "message": "just say \"texture buffers\". The user is a GL developer.",
+      "range": {
+        "startLine": 250,
+        "startChar": 41,
+        "endLine": 250,
+        "endChar": 89
+      },
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23579514_649b8eee",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 251,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T19:10:34Z",
+      "side": 1,
+      "message": "will",
+      "range": {
+        "startLine": 251,
+        "startChar": 89,
+        "endLine": 251,
+        "endChar": 92
+      },
+      "revId": "259063fba2498048b0d3f9d8cb13488748d11de0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
