@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "686b589b_9da96380",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T00:00:43Z",
+      "side": 1,
+      "message": "It doesn\u0027t look like this is necessary anymore, since it\u0027s not being checked to see if the buffer has changed (and flushCommandsAndEndRenderPass needs to be called).   Instead, wherever this is read, it can be replaced with:\n\n    gl::Buffer *indirectBuffer            \u003d mState.getTargetBuffer(gl::BufferBinding::DrawIndirect);\n    vk::BufferHelper *currentIndirectBuf  \u003d \u0026vk::GetImpl(indirectBuffer)-\u003egetBuffer();",
+      "revId": "45735b0b8f4c78866242d8f25d77405eec97eadb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
