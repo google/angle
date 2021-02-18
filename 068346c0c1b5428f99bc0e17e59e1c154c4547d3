@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "51e5c3eb_1ba6e275",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 599,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-18T20:28:43Z",
+      "side": 1,
+      "message": "Done. had to change things a bit",
+      "parentUuid": "ced0cb94_60bcd233",
+      "range": {
+        "startLine": 599,
+        "startChar": 8,
+        "endLine": 599,
+        "endChar": 29
+      },
+      "revId": "068346c0c1b5428f99bc0e17e59e1c154c4547d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "021d4087_0330e216",
