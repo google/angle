@@ -217,6 +217,30 @@
       },
       "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42516122_80b06dcf",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5622,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T21:02:31Z",
+      "side": 1,
+      "message": "Confirmed not a bug. ImageHelper::appendSubresourceUpdate does onStateChange(angle::SubjectMessage::SubjectChanged);, which makes the texture dirty. When the compute shader wants to sample from it, TextureVk::syncState flushes the deferred clear.",
+      "parentUuid": "8b67c00f_5e78dae8",
+      "range": {
+        "startLine": 5619,
+        "startChar": 0,
+        "endLine": 5622,
+        "endChar": 9
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
