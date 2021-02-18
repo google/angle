@@ -168,6 +168,8 @@
 
 // Not failing in last official run, but failed recently:
 4110 SWIFTSHADER : dEQP-GLES31.functional.shaders.helper_invocation.* = FAIL
+5662 SWIFTSHADER : dEQP-GLES31.functional.copy_image.compressed.* = FAIL
+5662 SWIFTSHADER : dEQP-GLES31.functional.copy_image.mixed.* = FAIL
 
 ////
 //// General Vulkan expectations

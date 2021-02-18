@@ -503,6 +503,7 @@
 // Fails on Windows + Linux.
 2222 OPENGL NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo2_rbo2_rbo0 = FAIL
 2222 OPENGL NVIDIA : dEQP-GLES3.functional.fbo.completeness.samples.rbo1_rbo2_rbo0 = FAIL
+5661 OPENGL NVIDIA : dEQP-GLES3.functional.ubo.single_nested_struct_mixed_matrix_packing.* = FAIL
 
 // Low memory warnings when run multi-process.
 5162 OPENGL NVIDIA WIN : dEQP-GLES3.functional.multisample.fbo_8_samples.constancy* = SKIP
