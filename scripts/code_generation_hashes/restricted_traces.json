@@ -1,6 +1,8 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "9f8c06acdef42593c7e64fc16c73ebd8",
+    "f515811fc13d80f8537a4645a316030d",
+  "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
+    "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
     "2b5d6505d6a8b6f3bbfbad2c8405a89d",
   "src/tests/restricted_traces/arena_of_valor.tar.gz.sha1":
@@ -80,13 +82,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "3268b18d8e847d9c799a85a0467d6ddf",
+    "76c5854d9b9924005f0dcb61720475ac",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "f0bef406ba544b4aad8276b3734004c7",
+    "530f704cfc2289698acc715a235e8b49",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "297936bf8a465953a24e94c408506017",
+    "7f98c20536e7486ec8b2757e36e8170d",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "9d4592e09551a0795ba7531f423d9ec0",
+    "bc47103e5dd89f5f16f9935503997cd2",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
