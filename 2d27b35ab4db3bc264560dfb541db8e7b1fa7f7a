@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "979cd7d2_bfa39ab5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1453272
+      },
+      "writtenOn": "2021-02-18T18:27:04Z",
+      "side": 1,
+      "message": "Annotating these for now to get googletest rolling, but the better long-term solution here might be to instantiate these for other configs or exclude them from non-Windows builds, as you mentioned via email.",
+      "revId": "2d27b35ab4db3bc264560dfb541db8e7b1fa7f7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
