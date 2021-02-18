@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c471fa50_e4e23619",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T22:44:27Z",
+      "side": 1,
+      "message": "Swapping to Charlie since he reviewed the rest of the chain.",
+      "revId": "1a125cf38999fa60e1394f1c657f6cb85db7fdc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
