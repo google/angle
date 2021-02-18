@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "795fded4_1ba5a52d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-18T00:05:58Z",
+      "side": 1,
+      "message": "Finally landing this before it slips off my radar again.  Tim is seeing texture buffer usage in his next app.",
+      "revId": "251a80a49ba284c922d90e53fce0c0d42c416984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
