@@ -16,6 +16,23 @@
       "message": "Cleanup only, no functional change.",
       "revId": "ddef4ba5860397015d0ab29010d0e5c9c45dc55a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4346257_17fb2618",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-02-18T21:35:11Z",
+      "side": 1,
+      "message": "looks good",
+      "revId": "ddef4ba5860397015d0ab29010d0e5c9c45dc55a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
