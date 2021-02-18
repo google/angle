@@ -85,6 +85,7 @@ enum class RestrictedTraceID
     manhattan_10,
     manhattan_31,
     marvel_contest_of_champions,
+    messenger_lite,
     minecraft,
     mobile_legends,
     nba2k20_800,

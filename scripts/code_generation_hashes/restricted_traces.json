@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "f515811fc13d80f8537a4645a316030d",
+    "2d8dfb6d78cc28197b5fa37a7dcf2b51",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/angry_birds_2_1500.tar.gz.sha1":
@@ -65,6 +65,8 @@
     "12256b955ea6f318e99c8bcd8ab97d2d",
   "src/tests/restricted_traces/marvel_contest_of_champions.tar.gz.sha1":
     "80cf00c9a348c2ea95d538e9257375dd",
+  "src/tests/restricted_traces/messenger_lite.tar.gz.sha1":
+    "8972e27c2d12ff8d3ac8f5b8104d6b4c",
   "src/tests/restricted_traces/minecraft.tar.gz.sha1":
     "f9f4e3d480c83b03a1de55d63a04a207",
   "src/tests/restricted_traces/mobile_legends.tar.gz.sha1":
@@ -82,13 +84,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "76c5854d9b9924005f0dcb61720475ac",
+    "030dab939ec64fcdabdfbe6b05662e53",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "530f704cfc2289698acc715a235e8b49",
+    "aea362cf1696f1014b8751c584748190",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "7f98c20536e7486ec8b2757e36e8170d",
+    "16b9118b91f903331c934c7b1786fe7f",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "bc47103e5dd89f5f16f9935503997cd2",
+    "d3e0d3469baea6837bcaae8a9d85a5d0",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
