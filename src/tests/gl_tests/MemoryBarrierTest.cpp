@@ -7,6 +7,27 @@
 //   Ensure that implementation of glMemoryBarrier is correct both in terms of memory barriers
 //   issued and potential reordering of commands.
 //
+// The barrier bits accepted by glMemoryBarrier are used for synchronization as such:
+//
+//     VERTEX_ATTRIB_ARRAY_BARRIER_BIT: shader write -> vertex read
+//     ELEMENT_ARRAY_BARRIER_BIT:       shader write -> index read
+//     UNIFORM_BARRIER_BIT:             shader write -> uniform read
+//     TEXTURE_FETCH_BARRIER_BIT:       shader write -> texture sample
+//     SHADER_IMAGE_ACCESS_BARRIER_BIT: shader write -> image access
+//                                      any access -> image write
+//     COMMAND_BARRIER_BIT:             shader write -> indirect buffer read
+//     PIXEL_BUFFER_BARRIER_BIT:        shader write -> pbo access
+//     TEXTURE_UPDATE_BARRIER_BIT:      shader write -> texture data upload
+//     BUFFER_UPDATE_BARRIER_BIT:       shader write -> buffer data upload/map
+//     FRAMEBUFFER_BARRIER_BIT:         shader write -> access through framebuffer
+//     TRANSFORM_FEEDBACK_BARRIER_BIT:  shader write -> transform feedback write
+//     ATOMIC_COUNTER_BARRIER_BIT:      shader write -> atomic counter access
+//     SHADER_STORAGE_BARRIER_BIT:      shader write -> buffer access
+//                                      any access -> buffer write
+//
+// In summary, every bit defines a memory barrier for some access after a shader write.
+// Additionally, SHADER_IMAGE_ACCESS_BARRIER_BIT and SHADER_STORAGE_BARRIER_BIT bits are used to
+// define a memory barrier for shader writes after other accesses.
 
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -3194,23 +3215,6 @@ TEST_P(MemoryBarrierBufferTest, VertexAtrribArrayBitWriteThenVertexRead)
                                                   postBarrierOp);
 }
 
-// Test GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT; vertex read -> shader write
-TEST_P(MemoryBarrierBufferTest, VertexAtrribArrayBitVertexReadThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    vertexAttribArrayBitVertexReadThenBufferWrite(writePipeline, writeResource, preBarrierOp,
-                                                  postBarrierOp,
-                                                  GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT);
-}
-
 // Test GL_ELEMENT_ARRAY_BARRIER_BIT; shader write -> index read
 TEST_P(MemoryBarrierBufferTest, ElementArrayBitWriteThenIndexRead)
 {
@@ -3225,22 +3229,6 @@ TEST_P(MemoryBarrierBufferTest, ElementArrayBitWriteThenIndexRead)
 
     elementArrayBitBufferWriteThenIndexRead(writePipeline, writeResource, preBarrierOp,
                                             postBarrierOp);
-}
-
-// Test GL_ELEMENT_ARRAY_BARRIER_BIT; index read -> shader write
-TEST_P(MemoryBarrierBufferTest, ElementArrayBitIndexReadThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    elementArrayBitIndexReadThenBufferWrite(writePipeline, writeResource, preBarrierOp,
-                                            postBarrierOp, GL_ELEMENT_ARRAY_BARRIER_BIT);
 }
 
 // Test GL_UNIFORM_BARRIER_BIT; shader write -> ubo read
@@ -3258,22 +3246,6 @@ TEST_P(MemoryBarrierBufferTest, UniformBitWriteThenUBORead)
     uniformBitBufferWriteThenUBORead(writePipeline, writeResource, preBarrierOp, postBarrierOp);
 }
 
-// Test GL_UNIFORM_BARRIER_BIT; ubo read -> shader write
-TEST_P(MemoryBarrierBufferTest, UniformBitUBOReadThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    uniformBitUBOReadThenBufferWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                     GL_UNIFORM_BARRIER_BIT);
-}
-
 // Test GL_TEXTURE_FETCH_BARRIER_BIT; shader write -> sampler read
 TEST_P(MemoryBarrierImageTest, TextureFetchBitWriteThenSamplerRead)
 {
@@ -3288,22 +3260,6 @@ TEST_P(MemoryBarrierImageTest, TextureFetchBitWriteThenSamplerRead)
 
     textureFetchBitImageWriteThenSamplerRead(writePipeline, writeResource, preBarrierOp,
                                              postBarrierOp);
-}
-
-// Test GL_TEXTURE_FETCH_BARRIER_BIT; sampler read -> shader write
-TEST_P(MemoryBarrierImageTest, TextureFetchBitSamplerReadThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    textureFetchBitSamplerReadThenImageWrite(writePipeline, writeResource, preBarrierOp,
-                                             postBarrierOp, GL_TEXTURE_FETCH_BARRIER_BIT);
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; shader write -> image read
@@ -3348,9 +3304,6 @@ TEST_P(MemoryBarrierImageTest, ShaderImageAccessBitImageReadThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; vertex read -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitVertexReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3368,9 +3321,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitVertexReadThenWrite
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; index read -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_ELEMENT_ARRAY_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitIndexReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3387,9 +3337,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitIndexReadThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; ubo read -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_UNIFORM_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitUBOReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3406,9 +3353,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitUBOReadThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; sampler read -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers GL_TEXTURE_FETCH_BARRIER_BIT in
-// this situation.
 TEST_P(MemoryBarrierImageTest, ShaderImageAccessBitSamplerReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3425,9 +3369,6 @@ TEST_P(MemoryBarrierImageTest, ShaderImageAccessBitSamplerReadThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; indirect read -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_COMMAND_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitIndirectReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3444,9 +3385,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitIndirectReadThenWri
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; pixel pack -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_PIXEL_BUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitPackThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3463,9 +3401,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitPackThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; pixel unpack -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_PIXEL_BUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitUnpackThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3482,9 +3417,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitUnpackThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; texture copy -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_TEXTURE_UPDATE_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitCopyThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3501,9 +3433,6 @@ TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitCopyThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; buffer copy -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_BUFFER_UPDATE_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitCopyThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3520,9 +3449,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitCopyThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; draw -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_FRAMEBUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitDrawThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3539,9 +3465,6 @@ TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitDrawThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; read pixels -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_FRAMEBUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitReadPixelsThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3558,9 +3481,6 @@ TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitReadPixelsThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; fbo copy -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_FRAMEBUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitFBOCopyThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3577,9 +3497,6 @@ TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitFBOCopyThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; blit -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_FRAMEBUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitBlitThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3596,9 +3513,6 @@ TEST_P(MemoryBarrierImageOnlyTest, ShaderImageAccessBitBlitThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; xfb capture -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_TRANSFORM_FEEDBACK_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitCaptureThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3615,9 +3529,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitCaptureThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; atomic write -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_ATOMIC_COUNTER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitAtomicThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3634,9 +3545,6 @@ TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitAtomicThenWrite)
 }
 
 // Test GL_SHADER_IMAGE_ACCESS_BARRIER_BIT; buffer read -> shader write
-//
-// Note that GL_SHADER_IMAGE_ACCESS_BARRIER_BIT redundantly covers
-// GL_SHADER_STORAGE_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierImageBufferOnlyTest, ShaderImageAccessBitBufferReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -3666,22 +3574,6 @@ TEST_P(MemoryBarrierBufferTest, CommandBitWriteThenIndirectRead)
 
     commandBitBufferWriteThenIndirectRead(writePipeline, writeResource, preBarrierOp,
                                           postBarrierOp);
-}
-
-// Test GL_COMMAND_BARRIER_BIT; indirect read -> shader write
-TEST_P(MemoryBarrierBufferTest, CommandBitIndirectReadThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    commandBitIndirectReadThenBufferWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                          GL_COMMAND_BARRIER_BIT);
 }
 
 // Test GL_PIXEL_BUFFER_BARRIER_BIT; shader write -> pixel pack
@@ -3714,38 +3606,6 @@ TEST_P(MemoryBarrierBufferTest, PixelBufferBitWriteThenUnpack)
     pixelBufferBitBufferWriteThenUnpack(writePipeline, writeResource, preBarrierOp, postBarrierOp);
 }
 
-// Test GL_PIXEL_BUFFER_BARRIER_BIT; pixel pack -> shader write
-TEST_P(MemoryBarrierBufferTest, PixelBufferBitPackThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    pixelBufferBitPackThenBufferWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                      GL_PIXEL_BUFFER_BARRIER_BIT);
-}
-
-// Test GL_PIXEL_BUFFER_BARRIER_BIT; pixel unpack -> shader write
-TEST_P(MemoryBarrierBufferTest, PixelBufferBitUnpackThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    pixelBufferBitUnpackThenBufferWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                        GL_PIXEL_BUFFER_BARRIER_BIT);
-}
-
 // Test GL_TEXTURE_UPDATE_BARRIER_BIT; shader write -> texture copy
 TEST_P(MemoryBarrierImageOnlyTest, TextureUpdateBitWriteThenCopy)
 {
@@ -3761,22 +3621,6 @@ TEST_P(MemoryBarrierImageOnlyTest, TextureUpdateBitWriteThenCopy)
     textureUpdateBitImageWriteThenCopy(writePipeline, writeResource, preBarrierOp, postBarrierOp);
 }
 
-// Test GL_TEXTURE_UPDATE_BARRIER_BIT; texture copy -> shader write
-TEST_P(MemoryBarrierImageOnlyTest, TextureUpdateBitCopyThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    textureUpdateBitCopyThenImageWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                       GL_TEXTURE_UPDATE_BARRIER_BIT);
-}
-
 // Test GL_BUFFER_UPDATE_BARRIER_BIT; shader write -> buffer copy
 TEST_P(MemoryBarrierBufferTest, BufferUpdateBitWriteThenCopy)
 {
@@ -3790,22 +3634,6 @@ TEST_P(MemoryBarrierBufferTest, BufferUpdateBitWriteThenCopy)
     ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
 
     bufferUpdateBitBufferWriteThenCopy(writePipeline, writeResource, preBarrierOp, postBarrierOp);
-}
-
-// Test GL_BUFFER_UPDATE_BARRIER_BIT; buffer copy -> shader write
-TEST_P(MemoryBarrierBufferTest, BufferUpdateBitCopyThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    bufferUpdateBitCopyThenBufferWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                       GL_BUFFER_UPDATE_BARRIER_BIT);
 }
 
 // Test GL_FRAMEBUFFER_BARRIER_BIT; shader write -> draw
@@ -3869,70 +3697,6 @@ TEST_P(MemoryBarrierImageOnlyTest, FramebufferBitWriteThenBlit)
     framebufferBitImageWriteThenBlit(writePipeline, writeResource, preBarrierOp, postBarrierOp);
 }
 
-// Test GL_FRAMEBUFFER_BARRIER_BIT; draw -> shader write
-TEST_P(MemoryBarrierImageOnlyTest, FramebufferBitDrawThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    framebufferBitDrawThenImageWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                     GL_FRAMEBUFFER_BARRIER_BIT);
-}
-
-// Test GL_FRAMEBUFFER_BARRIER_BIT; read pixels -> shader write
-TEST_P(MemoryBarrierImageOnlyTest, FramebufferBitReadPixelsThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    framebufferBitReadPixelsThenImageWrite(writePipeline, writeResource, preBarrierOp,
-                                           postBarrierOp, GL_FRAMEBUFFER_BARRIER_BIT);
-}
-
-// Test GL_FRAMEBUFFER_BARRIER_BIT; copy -> shader write
-TEST_P(MemoryBarrierImageOnlyTest, FramebufferBitCopyThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    framebufferBitCopyThenImageWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                     GL_FRAMEBUFFER_BARRIER_BIT);
-}
-
-// Test GL_FRAMEBUFFER_BARRIER_BIT; blit -> shader write
-TEST_P(MemoryBarrierImageOnlyTest, FramebufferBitBlitThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    framebufferBitBlitThenImageWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                     GL_FRAMEBUFFER_BARRIER_BIT);
-}
-
 // Test GL_TRANSFORM_FEEDBACK_BARRIER_BIT; shader write -> xfb capture
 TEST_P(MemoryBarrierBufferTest, TransformFeedbackBitWriteThenCapture)
 {
@@ -3947,22 +3711,6 @@ TEST_P(MemoryBarrierBufferTest, TransformFeedbackBitWriteThenCapture)
 
     transformFeedbackBitBufferWriteThenCapture(writePipeline, writeResource, preBarrierOp,
                                                postBarrierOp);
-}
-
-// Test GL_TRANSFORM_FEEDBACK_BARRIER_BIT; xfb capture -> shader write
-TEST_P(MemoryBarrierBufferTest, TransformFeedbackBitCaptureThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    transformFeedbackBitCaptureThenBufferWrite(writePipeline, writeResource, preBarrierOp,
-                                               postBarrierOp, GL_TRANSFORM_FEEDBACK_BARRIER_BIT);
 }
 
 // Test GL_ATOMIC_COUNTER_BARRIER_BIT; shader write -> atomic write
@@ -3981,22 +3729,6 @@ TEST_P(MemoryBarrierBufferTest, AtomicCounterBitWriteThenAtomic)
                                           postBarrierOp);
 }
 
-// Test GL_ATOMIC_COUNTER_BARRIER_BIT; atomic write -> shader write
-TEST_P(MemoryBarrierBufferTest, AtomicCounterBitAtomicThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    atomicCounterBitAtomicThenBufferWrite(writePipeline, writeResource, preBarrierOp, postBarrierOp,
-                                          GL_ATOMIC_COUNTER_BARRIER_BIT);
-}
-
 // Test GL_SHADER_STORAGE_BARRIER_BIT; shader write -> shader read
 TEST_P(MemoryBarrierBufferTest, ShaderStorageBitWriteThenRead)
 {
@@ -4013,8 +3745,8 @@ TEST_P(MemoryBarrierBufferTest, ShaderStorageBitWriteThenRead)
                                               postBarrierOp);
 }
 
-// Test GL_SHADER_STORAGE_BARRIER_BIT; shader read -> shader write
-TEST_P(MemoryBarrierBufferTest, ShaderStorageBitReadThenWrite)
+// Test GL_SHADER_STORAGE_BARRIER_BIT; shader read -> buffer write
+TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
     WriteResource writeResource;
@@ -4030,9 +3762,6 @@ TEST_P(MemoryBarrierBufferTest, ShaderStorageBitReadThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; vertex read -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_VERTEX_ATTRIB_ARRAY_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitVertexReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4049,9 +3778,6 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitVertexReadThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; index read -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_ELEMENT_ARRAY_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitIndexReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4068,9 +3794,6 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitIndexReadThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; ubo read -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_UNIFORM_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitUBOReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4086,29 +3809,7 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitUBOReadThenWrite)
                                      GL_SHADER_STORAGE_BARRIER_BIT);
 }
 
-// Test GL_SHADER_STORAGE_BARRIER_BIT; image read -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_SHADER_IMAGE_ACCESS_BARRIER_BIT in this situation.
-TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitBufferReadThenWrite)
-{
-    ShaderWritePipeline writePipeline;
-    WriteResource writeResource;
-    NoopOp preBarrierOp;
-    NoopOp postBarrierOp;
-    ParseMemoryBarrierVariationsTestParams(GetParam(), &writePipeline, &writeResource,
-                                           &preBarrierOp, &postBarrierOp);
-
-    ANGLE_SKIP_TEST_IF(!hasExtensions(writeResource));
-
-    shaderStorageBitBufferReadThenBufferWrite(writePipeline, writeResource, preBarrierOp,
-                                              postBarrierOp, GL_SHADER_STORAGE_BARRIER_BIT);
-}
-
 // Test GL_SHADER_STORAGE_BARRIER_BIT; indirect read -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_COMMAND_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitIndirectReadThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4125,9 +3826,6 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitIndirectReadThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; pixel pack -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_PIXEL_BUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitPackThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4144,9 +3842,6 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitPackThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; pixel unpack -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_PIXEL_BUFFER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitUnpackThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4163,9 +3858,6 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitUnpackThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; buffer copy -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_BUFFER_UPDATE_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitCopyThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4182,9 +3874,6 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitCopyThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; xfb capture -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_TRANSFORM_FEEDBACK_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitCaptureThenWrite)
 {
     ShaderWritePipeline writePipeline;
@@ -4201,9 +3890,6 @@ TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitCaptureThenWrite)
 }
 
 // Test GL_SHADER_STORAGE_BARRIER_BIT; atomic write -> shader write
-//
-// Note that GL_SHADER_STORAGE_BARRIER_BIT redundantly covers
-// GL_ATOMIC_COUNTER_BARRIER_BIT in this situation.
 TEST_P(MemoryBarrierBufferOnlyTest, ShaderStorageBitAtomicThenWrite)
 {
     ShaderWritePipeline writePipeline;
