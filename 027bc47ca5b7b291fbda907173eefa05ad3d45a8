@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5543ef6e_7fb945a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1119849
+      },
+      "writtenOn": "2021-02-18T09:31:39Z",
+      "side": 1,
+      "message": "This is failing these tests on the MacMini:\n\n* InstancingTest.IndexedAttrib0PointMemoryAngle/ES2_OpenGL\n* InstancingTest.IndexedAttrib0PointMemoryExt/ES2_OpenGL\n* InstancingTest.IndexedAttrib0QuadMemoryAngle/ES2_OpenGL\n* InstancingTest.IndexedAttrib0QuadMemoryExt/ES2_OpenGL\n* InstancingTest.IndexedAttrib1PointMemoryAngle/ES2_OpenGL\n* InstancingTest.IndexedAttrib1PointMemoryExt/ES2_OpenGL\n* InstancingTest.IndexedAttrib1QuadMemoryAngle/ES2_OpenGL\n* InstancingTest.IndexedAttrib1QuadMemoryExt/ES2_OpenGL\n\nAll of them use memory storage so maybe something\u0027s missing when handling the non-buffer path?\n\nI\u0027ll revert this CL, sorry :X",
+      "revId": "027bc47ca5b7b291fbda907173eefa05ad3d45a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
