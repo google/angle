@@ -159,6 +159,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "41d26600_9c2d050f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-18T00:48:39Z",
+      "side": 1,
+      "message": "I can go verify, its been a long time since I last looked at this. I have the privilege of asking the WSI WG too.",
+      "parentUuid": "bc584615_59dd0e58",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "257d0c4d_2c35a81b",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 7
