@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21103dc3_9d866a5d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-18T17:41:23Z",
+      "side": 1,
+      "message": "Reply to comments for more comments.",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2f44cfe_243379b1",
@@ -31,6 +48,24 @@
       "writtenOn": "2021-02-18T15:59:08Z",
       "side": 1,
       "message": "This is probably not the right place for this. Actually that means we have another bug too. Take this scenario:\n\n1. Previous swap\n2. Draw to FBO\n3. ANI\n4. Draw to swapchain\n5. swap\n\nIIUC, age should be the same at steps 2 and 4, but they wouldn\u0027t be with this change. You can add a regression test based on this. Currently, age at step 4 would show 0, don\u0027t you think?\n\nI think we need to make two changes:\n\n- Set this right before queue present (i.e. swap). In other words, the age remains \"old\" until swap time.\n- getBufferAge should do this first:\n\n        if (mNeedToAcquireNextSwapchainImage)\n        {\n            // Acquire the next image (previously deferred).\n            ANGLE_TRY(doDeferredAcquireNextImage(context, false));\n        }\n\n   otherwise it would use the wrong index before ANI (step 2 in above scenario).",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2725b6b4_95e468f0",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-18T17:41:23Z",
+      "side": 1,
+      "message": "What I noticed, I need to set the mFrameNumber of the current Image just before AcquireNextImage, because otherwise it gets updated to current mFrameCount and the age (ols mFrameNumber) is lost - resulting in a getBufferAge of 1. At AcquireNextImage, the index is moved forward to the next image. That\u0027s why this spot works.\n\nputting mFrameNumber assignment and mFrameCount in swapImpl, anywhere, results in an age of 1. \n\nAt step 3 above, we are switching Images, So the age is not the same.\n\nIt might be better to move \n    mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber \u003d mFrameCount++;\nto middle of WindowSurfaceVk::doDefferedAcquireNextImage(); before call to acquireNextSwapchainImage - this seems to skip some initialization paths that probably don\u0027t need it.",
+      "parentUuid": "e2f44cfe_243379b1",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

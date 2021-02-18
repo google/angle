@@ -177,6 +177,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "74116cf7_536503f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-18T17:41:23Z",
+      "side": 1,
+      "message": "With a Vulkan backend, freeing buffers would mean freeing the swapchain. In which case the new swapchain would start with age zero. And there is no \"allocates new buffer\" without a new swapchain. \n\nSo, I think the only scenario here, is if ANGLE handles \"power-management event\". I had at one point a buffer age reset, but unless the images of a swapchain are freed, then the content should be valid, except the current one, which the app has the age and Context Lost error.\n\nSo, do we need to do anything more?",
+      "parentUuid": "41d26600_9c2d050f",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "257d0c4d_2c35a81b",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 7
