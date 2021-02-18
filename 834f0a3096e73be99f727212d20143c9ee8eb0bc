@@ -124,6 +124,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "12652428_79dac34c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5600,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T20:54:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f247a744_96026ddb",
+      "range": {
+        "startLine": 5595,
+        "startChar": 0,
+        "endLine": 5600,
+        "endChar": 5
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "86f150f9_c6d01347",
@@ -161,6 +185,30 @@
       "side": 1,
       "message": "Sigh it\u0027s not, and indeed there may be a bug. Actually a similar bug is:\n\n- Bind FBO 1 (with texture T as attachment), clear (gets staged in T)\n- Bind FBO 2, sample from T\n\nWho is flushing the deferred clear that is staged in T? If TextureVk::syncState is taking care of it, the same would make things work here too. Will right tests and see.",
       "parentUuid": "86f150f9_c6d01347",
+      "range": {
+        "startLine": 5619,
+        "startChar": 0,
+        "endLine": 5622,
+        "endChar": 9
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b67c00f_5e78dae8",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5622,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-18T20:54:07Z",
+      "side": 1,
+      "message": "I\u0027ll follow up with a test for this in another change. Whether there\u0027s a bug or not, it\u0027s unrelated to this change.",
+      "parentUuid": "d5aa46d5_23e04420",
       "range": {
         "startLine": 5619,
         "startChar": 0,
