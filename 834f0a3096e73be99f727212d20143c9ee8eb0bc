@@ -101,6 +101,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6ad0267_60984aed",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T22:17:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "fc637d19_cb89456e",
+      "range": {
+        "startLine": 1037,
+        "startChar": 0,
+        "endLine": 1040,
+        "endChar": 48
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f247a744_96026ddb",
@@ -233,6 +257,30 @@
       "side": 1,
       "message": "Confirmed not a bug. ImageHelper::appendSubresourceUpdate does onStateChange(angle::SubjectMessage::SubjectChanged);, which makes the texture dirty. When the compute shader wants to sample from it, TextureVk::syncState flushes the deferred clear.",
       "parentUuid": "8b67c00f_5e78dae8",
+      "range": {
+        "startLine": 5619,
+        "startChar": 0,
+        "endLine": 5622,
+        "endChar": 9
+      },
+      "revId": "834f0a3096e73be99f727212d20143c9ee8eb0bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48185aed_40f7a82c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5622,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-18T22:17:37Z",
+      "side": 1,
+      "message": "Great, thanks for following up on this.",
+      "parentUuid": "42516122_80b06dcf",
       "range": {
         "startLine": 5619,
         "startChar": 0,
