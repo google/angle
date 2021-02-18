@@ -16,6 +16,24 @@
       "message": "-Wreturn-std-move is part of -Wmove which is part of -Wmost which is part of -Wall. As far as I know, all chromium //build-based builds use -Wall, so there\u0027s no need to explicitly enable it. (No harm either though.)",
       "revId": "f7e30f7bf0f4c14fbd2df8c1e169b4e3a29f2832",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38e8be72_b24b899e",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1241380
+      },
+      "writtenOn": "2021-02-18T00:52:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "291d3250_79521aed",
+      "revId": "f7e30f7bf0f4c14fbd2df8c1e169b4e3a29f2832",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
