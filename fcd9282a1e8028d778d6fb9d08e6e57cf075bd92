@@ -39,6 +39,30 @@
       },
       "revId": "fcd9282a1e8028d778d6fb9d08e6e57cf075bd92",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96106a95_dcaf1b15",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2372,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-18T01:40:31Z",
+      "side": 1,
+      "message": "Done. Copying from a PDF always trips me up, lots of hand edits.",
+      "parentUuid": "c2f26966_a897ec62",
+      "range": {
+        "startLine": 2372,
+        "startChar": 53,
+        "endLine": 2372,
+        "endChar": 65
+      },
+      "revId": "fcd9282a1e8028d778d6fb9d08e6e57cf075bd92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
