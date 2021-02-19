@@ -22,6 +22,30 @@
       },
       "revId": "ba4894f90d586ec1d3540a007ff7ddccc583c66e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54ab40d1_460b25e9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-19T03:03:59Z",
+      "side": 1,
+      "message": "Adjusted the bug. This whole chain is really just cleanup. I added more context to the other CLs, but can\u0027t see how I can make this one any clearer.",
+      "parentUuid": "a82f601a_aee30cf5",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "ba4894f90d586ec1d3540a007ff7ddccc583c66e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
