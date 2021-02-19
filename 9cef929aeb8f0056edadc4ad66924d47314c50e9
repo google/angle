@@ -313,6 +313,24 @@
       "parentUuid": "8cbb5d0e_36f07212",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77743665_b74d3eaf",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-19T02:55:27Z",
+      "side": 1,
+      "message": "\u003e So getBufferAge typically happens before any draw\n\nYes that\u0027s my point, if it happens before any draw, it happens before ANI.",
+      "parentUuid": "dfcdf6ff_195e15b2",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
