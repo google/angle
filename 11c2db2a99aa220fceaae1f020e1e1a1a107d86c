@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc1b558c_fe2130d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-19T23:24:42Z",
+      "side": 1,
+      "message": "Testing a new approach that calls ImageHelper::stageClearIfEmulatedFormat() each time vkAcquireNextImage (ANI) is done.  This helps Ragnarok which does its rendering directly to the swapchain images.\n\nDo we want a feature flag to enable/disable this?",
+      "revId": "11c2db2a99aa220fceaae1f020e1e1a1a107d86c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

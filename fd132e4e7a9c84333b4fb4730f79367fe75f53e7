@@ -34,6 +34,24 @@
       "parentUuid": "21580f6b_ca92b331",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fff07a53_e067df98",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-19T23:24:42Z",
+      "side": 0,
+      "message": "ImageHelper::stageClearIfEmulatedFormat() is being called for the MSAA and for each swapchain image, but only when the swapchain is created.  The game is rendering to the MSAA buffer early, and to the swapchain images later.  The render passes are clearing those buffers, with the colorWriteMask set to RGB (not alpha).  I\u0027m guessing that this is causing the alpha channel to be cleared to 0.  Hard to tell since debugging on Android is so poor.\n\nI found that by calling ImageHelper::stageClearIfEmulatedFormat() with each ANI eliminates the problem except for one brief moment when the game transitions from MSAA to non-MSAA.  It looks like there\u0027s a clear of the swapchain image to alpha\u003d0 just before the swapchain recreation.  This appears to leave the swapchain image in place for a brief moment.",
+      "parentUuid": "f37ed8dd_0d6bac90",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
