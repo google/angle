@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dd86de8_cee7f0fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-19T16:47:19Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "24b806c4ed34b96c2c8708cb211b89c85c98b5e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "054921c6_0225c1b3",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-19T16:47:19Z",
+      "side": 1,
+      "message": "this is a bit unfortunate that you need to walk the state so exhaustively... it would be nice if we could somehow make this determination simply in the RP. maybe leave a note.",
+      "range": {
+        "startLine": 1080,
+        "startChar": 16,
+        "endLine": 1080,
+        "endChar": 46
+      },
+      "revId": "24b806c4ed34b96c2c8708cb211b89c85c98b5e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
