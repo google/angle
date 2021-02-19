@@ -238,6 +238,10 @@ def path_to(folder, file):
     return os.path.join(script_relative(".."), "src", folder, file)
 
 
+def strip_api_prefix(cmd_name):
+    return cmd_name.lstrip("wegl")
+
+
 class CommandNames:
 
     def __init__(self):
@@ -365,6 +369,24 @@ class RegistryXML:
 
 class EntryPoints:
 
-    def __init__(self, api, xml):
-        for command in xml.all_commands:
-            pass
+    def __init__(self, api, xml, commands):
+        self.api = api
+        self._cmd_info = []
+
+        for command_node in xml.all_commands:
+            proto = command_node.find('proto')
+            cmd_name = proto.find('name').text
+
+            if api == apis.WGL:
+                cmd_name = cmd_name if cmd_name[:3] == 'wgl' else 'wgl' + cmd_name
+
+            if cmd_name not in commands:
+                continue
+
+            param_text = ["".join(param.itertext()) for param in command_node.findall('param')]
+            proto_text = "".join(proto.itertext())
+
+            self._cmd_info.append((cmd_name, command_node, param_text, proto_text))
+
+    def get_infos(self):
+        return self._cmd_info

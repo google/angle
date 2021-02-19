@@ -8,13 +8,13 @@
   "scripts/entry_point_packed_gl_enums.json":
     "4f7b43863a5e61991bba4010db463679",
   "scripts/generate_entry_points.py":
-    "195ba6eaeb6dcf6596720976f73755a5",
+    "09729fe8be0f242cc97058c2b5ab7310",
   "scripts/gl.xml":
     "f66967f3f3d696b5d8306fd80bbd49a8",
   "scripts/gl_angle_ext.xml":
     "0b4f3476d76a5ccc40af342d6c08739d",
   "scripts/registry_xml.py":
-    "c85875a215dcf74e2ed363684f18c26c",
+    "574c34b93db348eb2e13d8026c3014ff",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/common/entry_points_enum_autogen.cpp":
