@@ -331,6 +331,24 @@
       "parentUuid": "dfcdf6ff_195e15b2",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5a1525e_63b02d76",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-19T16:49:19Z",
+      "side": 1,
+      "message": "Sorry, I didn\u0027t get what you were saying until I could see the nature of triggering ANI. I\u0027ll get the fix pushed up here in a bit, one more test and remove debug code.",
+      "parentUuid": "77743665_b74d3eaf",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
