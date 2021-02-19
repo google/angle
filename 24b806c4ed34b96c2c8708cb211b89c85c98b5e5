@@ -39,6 +39,30 @@
       },
       "revId": "24b806c4ed34b96c2c8708cb211b89c85c98b5e5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94f9ac32_c6d24214",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-19T18:31:03Z",
+      "side": 1,
+      "message": "I opened a bug for it instead.\n\nGood news is that this only happens for programs that use storage images and buffers. So in a situation like this (i.e. Manhattan 3.1):\n\n1. draw\n2. draw\n3. draw\n4. glMemoryBarrier\n5. dispatch (only call using storage buffers/images)\n6. draw\n7. draw\n8. draw\n9. draw\n\nAt step 5 we are paying for this, but at step 6 we early out in handleDirtyMemorybarrierImpl and DIRTY_BIT_MEMORY_BARRIER is never set again.",
+      "parentUuid": "054921c6_0225c1b3",
+      "range": {
+        "startLine": 1080,
+        "startChar": 16,
+        "endLine": 1080,
+        "endChar": 46
+      },
+      "revId": "24b806c4ed34b96c2c8708cb211b89c85c98b5e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
