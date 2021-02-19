@@ -16,6 +16,24 @@
       "message": "Alternate suggestion, Nexus5x * \u003d SKIP ;)\n",
       "revId": "78e5b3eeb8de7df40317bfaad6c9befa79829781",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2568613a_3f74ef42",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-19T21:39:03Z",
+      "side": 1,
+      "message": "This would leave us with only webgl_conformance_gles_passthrough_tests testing MANGLE Android and I think it\u0027s insufficient.",
+      "parentUuid": "2c212df2_3622abbe",
+      "revId": "78e5b3eeb8de7df40317bfaad6c9befa79829781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
