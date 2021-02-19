@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68a15d26_3333758d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-19T21:59:23Z",
+      "side": 1,
+      "message": "Note to self: ASSERT that DIRTY_BIT_INDIRECT_BUFFER is cleared",
+      "revId": "63824457d3b08d0716c82d8090eb1d207f9a846e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
