@@ -120,6 +120,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "36c540f7_4fbead37",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-19T00:06:06Z",
+      "side": 1,
+      "message": "Comment",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e2f44cfe_243379b1",
@@ -259,6 +276,24 @@
       "side": 1,
       "message": "That\u0027s not what I was implying. The point was to have something drawn without ANI being triggered. The age is still queried from the surface, but because ANI hasn\u0027t happened, we can\u0027t know what image index to look at.\n\nThinking about it more, probably just taking the age right after the swap (as in your test) should result in the same problem. I need to dig deeper to understand why it\u0027s not a problem with your test.\n\nI\u0027ll get back to you about this tomorrow.",
       "parentUuid": "0e32cdb6_1294d414",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfcdf6ff_195e15b2",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-19T00:06:06Z",
+      "side": 1,
+      "message": "ANI is triggered by either glClear or glReadPixels, in the test, if I removed these and have no draw, then eglSwapBuffers triggers ANI. So getBufferAge typically happens before any draw, and as soon as there is a draw we are on to the next image.",
+      "parentUuid": "8cbb5d0e_36f07212",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
