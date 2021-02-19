@@ -221,8 +221,9 @@
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.output_write_always_vertex = FAIL
 1488 GLES ANDROID : dEQP-GLES2.functional.shaders.return.output_write_always_fragment = FAIL
 2631 GLES ANDROID : dEQP-GLES2.functional.shaders.operator.sequence.side_effects.affect_* = FAIL
-2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
-2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
+// TODO: uncomment this when anglebug.com/5665 is fixed
+//2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_* = FAIL
+//2630 GLES ANDROID : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_* = FAIL
 
 // Android Pixel 2 clear failures with Vulkan backend
 161540999 VULKAN PIXEL2ORXL : dEQP-GLES2.functional.color_clear.masked_rgb = FAIL
@@ -486,3 +487,41 @@
 5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.after_render_tex2d_rgba = FAIL
 5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgb = FAIL
 5169 NEXUS5X GLES : dEQP-GLES2.functional.fbo.render.texsubimage.between_render_tex2d_rgba = FAIL
+
+// AddressSanitizer:DEADLYSIGNAL on Nexus 5X
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.depth_mode_one_to_one = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.depth_mode_zero_to_one = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.errors = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.face_culling = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.initial = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.modify_get = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.origin = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.clip_control.viewport_bounds = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_rbo_none_tex = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.completeness.attachment_combinations.none_rbo_rbo_tex = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.color_clear.tex2d_rgb_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.recreate_colorbuffer.rebind_tex2d_rgb_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.resize.rbo_rgb565_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgba_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.resize.tex2d_rgb_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.rbo_rgb565_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.tex2d_rgba_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_colorbuffer.tex2d_rgb_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.rbo_rgb565_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.rbo_rgb5_a1_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.rbo_rgba4_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.shared_depthbuffer.tex2d_rgb_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil_clear.tex2d_rgb_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil.rbo_rgb5_a1_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgba_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.fbo.render.stencil.tex2d_rgb_depth_component16_stencil_index8 = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.multisample.common_edge_big_quad = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.multisample.common_edge_small_quads = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.multisample.num_samples_line = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.multisample.num_samples_polygon = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.multisample.stencil = SKIP
+// TODO: Uncomment suppression for anglebug.com/2630 when this one is lifted
+5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_fragment = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_vertex = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_fragment = SKIP
+5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_vertex = SKIP
