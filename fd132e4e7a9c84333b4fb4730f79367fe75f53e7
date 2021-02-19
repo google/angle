@@ -16,6 +16,24 @@
       "message": "The reason this works for FBOs is that when the format is emulated, we issue a one-time clear and make sure we never touch alpha afterwards. See ImageHelper::stageClearIfEmulatedFormat.\n\nWe should do something similar for the swapchain images.",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f37ed8dd_0d6bac90",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-19T16:10:25Z",
+      "side": 0,
+      "message": "Thank you Shabi!",
+      "parentUuid": "21580f6b_ca92b331",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
