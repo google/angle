@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c212df2_3622abbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-19T20:56:17Z",
+      "side": 1,
+      "message": "Alternate suggestion, Nexus5x * \u003d SKIP ;)\n",
+      "revId": "78e5b3eeb8de7df40317bfaad6c9befa79829781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
