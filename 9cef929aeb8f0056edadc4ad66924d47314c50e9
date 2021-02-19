@@ -139,6 +139,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "767950e6_efb0dabc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-19T01:53:19Z",
+      "side": 1,
+      "message": "I got this into getBufferAge and its working as expected. I\u0027ll do a bit more testing.\n\negl::Error WindowSurfaceVk::getBufferAge(const gl::Context *context, EGLint *age)\n{\n    if (mNeedToAcquireNextSwapchainImage)\n    {\n        // Acquire the next image (previously deferred).\n        (void)doDeferredAcquireNextImage(context, false);\n    }\n\n    if (age !\u003d nullptr)\n    {\n        uint64_t frameNumber \u003d mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber;\n        if (frameNumber \u003d\u003d 0)\n        {\n            *age \u003d 0;  // Has not been used for rendering yet, no age.\n        }\n        else\n        {\n            *age \u003d static_cast\u003cEGLint\u003e(mFrameCount - frameNumber);\n        }\n    }\n    return egl::NoError();\n}",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e2f44cfe_243379b1",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 9
