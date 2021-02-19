@@ -70,6 +70,24 @@
       "parentUuid": "9b0df236_16c577e3",
       "revId": "78e5b3eeb8de7df40317bfaad6c9befa79829781",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b84d576c_4dbe4c3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-19T22:37:13Z",
+      "side": 1,
+      "message": "2 is good enough, SGTM. Though I hope we have capacity to switch to P4s later on. If not, probably a good idea to request it proactively.",
+      "parentUuid": "d95fe9af_7ebf524a",
+      "revId": "78e5b3eeb8de7df40317bfaad6c9befa79829781",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
