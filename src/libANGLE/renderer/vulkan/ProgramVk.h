@@ -208,8 +208,11 @@ class ProgramVk : public ProgramImpl
         // specialization constants.
         if (!programInfo->valid(shaderType))
         {
+            const bool isTransformFeedbackProgram =
+                !mState.getLinkedTransformFeedbackVaryings().empty();
             ANGLE_TRY(programInfo->initProgram(contextVk, shaderType, isLastPreFragmentStage,
-                                               mOriginalShaderInfo, optionBits, variableInfoMap));
+                                               isTransformFeedbackProgram, mOriginalShaderInfo,
+                                               optionBits, variableInfoMap));
         }
         ASSERT(programInfo->valid(shaderType));
 

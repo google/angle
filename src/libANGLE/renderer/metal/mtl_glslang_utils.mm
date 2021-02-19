@@ -406,7 +406,6 @@ void TranslatedShaderInfo::reset()
 void GlslangGetShaderSource(const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             gl::ShaderMap<std::string> *shaderSourcesOut,
-                            std::string *xfbOnlyShaderSourceOut,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut,
                             ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut)
 {
@@ -416,32 +415,21 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
 
     options.supportsTransformFeedbackEmulation = true;
 
-    // This will generate shader source WITHOUT XFB emulated outputs.
+    // Get shader sources and fill variable info map with transform feedback disabled.
     rx::GlslangGetShaderSource(options, programState, resources, &programInterfaceInfo,
                                shaderSourcesOut, variableInfoMapOut);
 
-    // This will generate vertex shader source WITH XFB emulated outputs.
-    if (xfbOnlyShaderSourceOut && !programState.getLinkedTransformFeedbackVaryings().empty())
+    // Fill variable info map with transform feedback enabled.
+    if (!programState.getLinkedTransformFeedbackVaryings().empty())
     {
-        gl::Shader *glShader    = programState.getAttachedShader(gl::ShaderType::Vertex);
-        *xfbOnlyShaderSourceOut = glShader ? glShader->getTranslatedSource() : "";
-
         GlslangProgramInterfaceInfo xfbOnlyInterfaceInfo;
         ResetGlslangProgramInterfaceInfo(&xfbOnlyInterfaceInfo);
 
         options.enableTransformFeedbackEmulation = true;
 
-        rx::GlslangGenTransformFeedbackEmulationOutputs(
-            options, programState, &xfbOnlyInterfaceInfo, xfbOnlyShaderSourceOut,
-            xfbOnlyVSVariableInfoMapOut);
-
-        const bool isTransformFeedbackStage =
-            !programState.getLinkedTransformFeedbackVaryings().empty();
-
         GlslangAssignLocations(options, programState, resources.varyingPacking,
-                               gl::ShaderType::Vertex, gl::ShaderType::InvalidEnum,
-                               isTransformFeedbackStage, &xfbOnlyInterfaceInfo,
-                               xfbOnlyVSVariableInfoMapOut);
+                               gl::ShaderType::Vertex, gl::ShaderType::InvalidEnum, true,
+                               &xfbOnlyInterfaceInfo, xfbOnlyVSVariableInfoMapOut);
     }
 }
 
@@ -449,6 +437,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::ShaderBitSet &linkedShaderStages,
                                         const gl::Caps &glCaps,
                                         const gl::ShaderMap<std::string> &shaderSources,
+                                        bool isTransformFeedbackEnabled,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
 {
@@ -463,7 +452,9 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
         GlslangSpirvOptions options;
         options.shaderType                         = shaderType;
         options.transformPositionToVulkanClipSpace = true;
-        options.isTransformFeedbackStage           = shaderType == gl::ShaderType::Vertex;
+        options.isTransformFeedbackStage =
+            shaderType == gl::ShaderType::Vertex && isTransformFeedbackEnabled;
+        options.isTransformFeedbackEmulated = true;
 
         angle::Result status = GlslangTransformSpirvCode(
             [context](GlslangError error) { return HandleError(context, error); }, options,

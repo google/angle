@@ -178,6 +178,11 @@ TIntermBinary *DriverUniform::getAbcBufferOffsets() const
     return createDriverUniformRef(kAcbBufferOffsets);
 }
 
+TIntermBinary *DriverUniform::getXfbActiveUnpaused() const
+{
+    return createDriverUniformRef(kXfbActiveUnpaused);
+}
+
 TIntermBinary *DriverUniform::getXfbVerticesPerInstance() const
 {
     return createDriverUniformRef(kXfbVerticesPerInstance);

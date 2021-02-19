@@ -65,6 +65,7 @@ struct GlslangSpirvOptions
     bool removeEarlyFragmentTestsOptimization = false;
     bool removeDebugInfo                      = false;
     bool isTransformFeedbackStage             = false;
+    bool isTransformFeedbackEmulated          = false;
 };
 
 using SpirvBlob = std::vector<uint32_t>;
@@ -75,9 +76,19 @@ struct ShaderInterfaceVariableXfbInfo
 {
     static constexpr uint32_t kInvalid = std::numeric_limits<uint32_t>::max();
 
+    // Used by both extension and emulation
     uint32_t buffer = kInvalid;
     uint32_t offset = kInvalid;
     uint32_t stride = kInvalid;
+
+    // Used only by emulation (array index support is missing from VK_EXT_transform_feedback)
+    uint32_t arraySize   = kInvalid;
+    uint32_t columnCount = kInvalid;
+    uint32_t rowCount    = kInvalid;
+    uint32_t arrayIndex  = kInvalid;
+    GLenum componentType = GL_FLOAT;
+    // If empty, the whole array is captured.  Otherwise only the specified members are captured.
+    std::vector<ShaderInterfaceVariableXfbInfo> arrayElements;
 };
 
 // Information for each shader interface variable.  Not all fields are relevant to each shader
@@ -168,14 +179,6 @@ bool GetImageNameWithoutIndices(std::string *name);
 // Get the mapped sampler name after the source is transformed by GlslangGetShaderSource()
 std::string GlslangGetMappedSamplerName(const std::string &originalName);
 std::string GetXfbBufferName(const uint32_t bufferIndex);
-
-// NOTE: options.emulateTransformFeedback is ignored in this case. It is assumed to be always true.
-void GlslangGenTransformFeedbackEmulationOutputs(
-    const GlslangSourceOptions &options,
-    const gl::ProgramState &programState,
-    GlslangProgramInterfaceInfo *programInterfaceInfo,
-    std::string *vertexShader,
-    ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
 void GlslangAssignLocations(const GlslangSourceOptions &options,
                             const gl::ProgramState &programState,

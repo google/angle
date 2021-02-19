@@ -24,6 +24,42 @@ namespace rx
 {
 namespace
 {
+void LoadShaderInterfaceVariableXfbInfo(gl::BinaryInputStream *stream,
+                                        ShaderInterfaceVariableXfbInfo *xfb)
+{
+    xfb->buffer        = stream->readInt<uint32_t>();
+    xfb->offset        = stream->readInt<uint32_t>();
+    xfb->stride        = stream->readInt<uint32_t>();
+    xfb->arraySize     = stream->readInt<uint32_t>();
+    xfb->columnCount   = stream->readInt<uint32_t>();
+    xfb->rowCount      = stream->readInt<uint32_t>();
+    xfb->arrayIndex    = stream->readInt<uint32_t>();
+    xfb->componentType = stream->readInt<uint32_t>();
+    xfb->arrayElements.resize(stream->readInt<size_t>());
+    for (ShaderInterfaceVariableXfbInfo &arrayElement : xfb->arrayElements)
+    {
+        LoadShaderInterfaceVariableXfbInfo(stream, &arrayElement);
+    }
+}
+
+void SaveShaderInterfaceVariableXfbInfo(const ShaderInterfaceVariableXfbInfo &xfb,
+                                        gl::BinaryOutputStream *stream)
+{
+    stream->writeInt(xfb.buffer);
+    stream->writeInt(xfb.offset);
+    stream->writeInt(xfb.stride);
+    stream->writeInt(xfb.arraySize);
+    stream->writeInt(xfb.columnCount);
+    stream->writeInt(xfb.rowCount);
+    stream->writeInt(xfb.arrayIndex);
+    stream->writeInt(xfb.componentType);
+    stream->writeInt(xfb.arrayElements.size());
+    for (const ShaderInterfaceVariableXfbInfo &arrayElement : xfb.arrayElements)
+    {
+        SaveShaderInterfaceVariableXfbInfo(arrayElement, stream);
+    }
+}
+
 bool ValidateTransformedSpirV(ContextVk *contextVk,
                               const gl::ShaderBitSet &linkedShaderStages,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -125,6 +161,7 @@ ProgramInfo::~ProgramInfo() = default;
 angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
                                        const gl::ShaderType shaderType,
                                        bool isLastPreFragmentStage,
+                                       bool isTransformFeedbackProgram,
                                        const ShaderInfo &shaderInfo,
                                        ProgramTransformOptions optionBits,
                                        const ShaderInterfaceVariableInfoMap &variableInfoMap)
@@ -138,9 +175,10 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
     options.shaderType = shaderType;
     options.removeEarlyFragmentTestsOptimization =
         shaderType == gl::ShaderType::Fragment && optionBits.removeEarlyFragmentTestsOptimization;
-    options.removeDebugInfo           = !contextVk->getRenderer()->getEnableValidationLayers();
-    options.isTransformFeedbackStage  = isLastPreFragmentStage;
-    options.negativeViewportSupported = contextVk->getFeatures().supportsNegativeViewport.enabled;
+    options.removeDebugInfo             = !contextVk->getRenderer()->getEnableValidationLayers();
+    options.isTransformFeedbackStage    = isLastPreFragmentStage && isTransformFeedbackProgram;
+    options.isTransformFeedbackEmulated = contextVk->getFeatures().emulateTransformFeedback.enabled;
+    options.negativeViewportSupported   = contextVk->getFeatures().supportsNegativeViewport.enabled;
 
     if (isLastPreFragmentStage)
     {
@@ -245,15 +283,11 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(gl::BinaryInputStream *
             info.component     = stream->readInt<uint32_t>();
             // PackedEnumBitSet uses uint8_t
             info.activeStages = gl::ShaderBitSet(stream->readInt<uint8_t>());
-            info.xfb.buffer   = stream->readInt<uint32_t>();
-            info.xfb.offset   = stream->readInt<uint32_t>();
-            info.xfb.stride   = stream->readInt<uint32_t>();
+            LoadShaderInterfaceVariableXfbInfo(stream, &info.xfb);
             info.fieldXfb.resize(stream->readInt<size_t>());
             for (ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
             {
-                xfb.buffer = stream->readInt<uint32_t>();
-                xfb.offset = stream->readInt<uint32_t>();
-                xfb.stride = stream->readInt<uint32_t>();
+                LoadShaderInterfaceVariableXfbInfo(stream, &xfb);
             }
             info.useRelaxedPrecision     = stream->readBool();
             info.varyingIsInput          = stream->readBool();
@@ -283,15 +317,11 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
             stream->writeInt(info.component);
             // PackedEnumBitSet uses uint8_t
             stream->writeInt(info.activeStages.bits());
-            stream->writeInt(info.xfb.buffer);
-            stream->writeInt(info.xfb.offset);
-            stream->writeInt(info.xfb.stride);
+            SaveShaderInterfaceVariableXfbInfo(info.xfb, stream);
             stream->writeInt(info.fieldXfb.size());
             for (const ShaderInterfaceVariableXfbInfo &xfb : info.fieldXfb)
             {
-                stream->writeInt(xfb.buffer);
-                stream->writeInt(xfb.offset);
-                stream->writeInt(xfb.stride);
+                SaveShaderInterfaceVariableXfbInfo(xfb, stream);
             }
             stream->writeBool(info.useRelaxedPrecision);
             stream->writeBool(info.varyingIsInput);

@@ -271,17 +271,6 @@ ANGLE_NO_DISCARD bool ReplaceGLDepthRangeWithDriverUniform(TCompiler *compiler,
     return ReplaceVariableWithTyped(compiler, root, depthRangeVar, angleEmulatedDepthRangeRef);
 }
 
-ANGLE_NO_DISCARD bool AppendTransformFeedbackOutputToMain(TCompiler *compiler,
-                                                          TIntermBlock *root,
-                                                          TSymbolTable *symbolTable)
-{
-    TVariable *xfbPlaceholder = new TVariable(symbolTable, ImmutableString("@@ XFB-OUT @@"),
-                                              new TType(), SymbolType::AngleInternal);
-
-    // Append the assignment as a statement at the end of the shader.
-    return RunAtTheEndOfShader(compiler, root, new TIntermSymbol(xfbPlaceholder), symbolTable);
-}
-
 TVariable *AddANGLEPositionVaryingDeclaration(TIntermBlock *root,
                                               TSymbolTable *symbolTable,
                                               TQualifier qualifier)
@@ -441,6 +430,67 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
     // Insert the function declaration before main().
     const size_t mainIndex = FindMainIndex(root);
     root->insertChildNodes(mainIndex, {functionDef});
+
+    // Generate the following function and place it before main().  This function will be filled
+    // with transform feedback capture code at link time.
+    //
+    //     void ANGLECaptureXfb()
+    //     {
+    //     }
+    const TType *voidType = StaticType::GetBasic<EbtVoid>();
+
+    // Create the function body, which is empty.
+    body = new TIntermBlock;
+
+    // Declare the function
+    TFunction *xfbCaptureFunction =
+        new TFunction(symbolTable, ImmutableString(vk::kXfbEmulationCaptureFunctionName),
+                      SymbolType::AngleInternal, voidType, false);
+
+    // Insert the function declaration before main().
+    root->insertChildNodes(mainIndex,
+                           {CreateInternalFunctionDefinitionNode(*xfbCaptureFunction, body)});
+
+    // Create the following logic and add it at the end of main():
+    //
+    //     if (ANGLEUniforms.xfbActiveUnpaused)
+    //     {
+    //         ANGLECaptureXfb();
+    //     }
+    //
+
+    // Create a reference ANGLEUniforms.xfbActiveUnpaused
+    TIntermBinary *xfbActiveUnpaused = driverUniforms->getXfbActiveUnpaused();
+
+    // ANGLEUniforms.xfbActiveUnpaused != 0
+    TIntermBinary *isXfbActiveUnpaused =
+        new TIntermBinary(EOpNotEqual, xfbActiveUnpaused, CreateUIntNode(0));
+
+    // Create the function call
+    TIntermAggregate *captureXfbCall =
+        TIntermAggregate::CreateFunctionCall(*xfbCaptureFunction, {});
+
+    TIntermBlock *captureXfbBlock = new TIntermBlock;
+    captureXfbBlock->appendStatement(captureXfbCall);
+
+    // Create a call to ANGLEGetXfbOffsets too, for the sole purpose of preventing it from being
+    // culled as unused by glslang.
+    TIntermSequence zero;
+    zero.push_back(CreateIndexNode(0));
+    TIntermSequence ivec4Zero;
+    ivec4Zero.push_back(TIntermAggregate::CreateConstructor(*ivec4Type, &zero));
+    TIntermAggregate *getOffsetsCall =
+        TIntermAggregate::CreateFunctionCall(*getOffsetsFunction, &ivec4Zero);
+    captureXfbBlock->appendStatement(getOffsetsCall);
+
+    // Create the if
+    TIntermIfElse *captureXfb = new TIntermIfElse(isXfbActiveUnpaused, captureXfbBlock, nullptr);
+
+    // Run it at the end of the shader.
+    if (!RunAtTheEndOfShader(compiler, root, captureXfb, symbolTable))
+    {
+        return false;
+    }
 
     // Additionally, generate the following storage buffer declarations used to capture transform
     // feedback output.  Again, there's a maximum of four buffers.
@@ -947,15 +997,6 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
         {
             // Add support code for transform feedback extension.
             if (!AddXfbExtensionSupport(this, root, &getSymbolTable(), driverUniforms))
-            {
-                return false;
-            }
-        }
-
-        // Append a macro for transform feedback substitution prior to modifying depth.
-        if ((compileOptions & SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE) != 0)
-        {
-            if (!AppendTransformFeedbackOutputToMain(this, root, &getSymbolTable()))
             {
                 return false;
             }

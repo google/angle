@@ -148,8 +148,7 @@ struct UniformTypeInfo final : angle::NonCopyable
                                      size_t externalSize,
                                      bool isSampler,
                                      bool isMatrixType,
-                                     bool isImageType,
-                                     const char *glslAsFloat);
+                                     bool isImageType);
 
     GLenum type;
     GLenum componentType;
@@ -166,7 +165,6 @@ struct UniformTypeInfo final : angle::NonCopyable
     bool isSampler;
     bool isMatrixType;
     bool isImageType;
-    const char *glslAsFloat;
 };
 
 inline constexpr UniformTypeInfo::UniformTypeInfo(GLenum type,
@@ -183,8 +181,7 @@ inline constexpr UniformTypeInfo::UniformTypeInfo(GLenum type,
                                                   size_t externalSize,
                                                   bool isSampler,
                                                   bool isMatrixType,
-                                                  bool isImageType,
-                                                  const char *glslAsFloat)
+                                                  bool isImageType)
     : type(type),
       componentType(componentType),
       textureType(textureType),
@@ -199,8 +196,7 @@ inline constexpr UniformTypeInfo::UniformTypeInfo(GLenum type,
       externalSize(externalSize),
       isSampler(isSampler),
       isMatrixType(isMatrixType),
-      isImageType(isImageType),
-      glslAsFloat(glslAsFloat)
+      isImageType(isImageType)
 {}
 
 const UniformTypeInfo &GetUniformTypeInfo(GLenum uniformType);

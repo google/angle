@@ -892,6 +892,7 @@ extern const char kLineRasterEmulationPosition[];
 
 // Transform feedback emulation support
 extern const char kXfbEmulationGetOffsetsFunctionName[];
+extern const char kXfbEmulationCaptureFunctionName[];
 extern const char kXfbEmulationBufferBlockName[];
 extern const char kXfbEmulationBufferName[];
 extern const char kXfbEmulationBufferFieldName[];

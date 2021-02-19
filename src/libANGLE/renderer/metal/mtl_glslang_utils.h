@@ -41,12 +41,10 @@ struct TranslatedShaderInfo
     bool hasUBOArgumentBuffer;
 };
 
-// - shaderSourcesOut is result GLSL code per shader stage when XFB emulation is turned off.
-// - xfbOnlyShaderSourceOut will contain vertex shader's GLSL code when XFB emulation is turned on.
+// shaderSourcesOut is result GLSL code per shader stage.
 void GlslangGetShaderSource(const gl::ProgramState &programState,
                             const gl::ProgramLinkedResources &resources,
                             gl::ShaderMap<std::string> *shaderSourcesOut,
-                            std::string *xfbOnlyShaderSourceOut,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut,
                             ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut);
 
@@ -54,6 +52,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::ShaderBitSet &linkedShaderStages,
                                         const gl::Caps &glCaps,
                                         const gl::ShaderMap<std::string> &shaderSources,
+                                        bool isTransformFeedbackEnabled,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut);
 
