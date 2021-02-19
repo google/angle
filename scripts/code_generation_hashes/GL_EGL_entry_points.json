@@ -1,4 +1,6 @@
 {
+  "scripts/cl.xml":
+    "c7b7bf8184d73c991f3a1ca11e882894",
   "scripts/egl.xml":
     "013c552e6c523abdcf268268ea47e9fe",
   "scripts/egl_angle_ext.xml":
@@ -8,13 +10,13 @@
   "scripts/entry_point_packed_gl_enums.json":
     "4f7b43863a5e61991bba4010db463679",
   "scripts/generate_entry_points.py":
-    "09729fe8be0f242cc97058c2b5ab7310",
+    "1c1f236f9804be736409ffffc0869662",
   "scripts/gl.xml":
     "f66967f3f3d696b5d8306fd80bbd49a8",
   "scripts/gl_angle_ext.xml":
     "0b4f3476d76a5ccc40af342d6c08739d",
   "scripts/registry_xml.py":
-    "574c34b93db348eb2e13d8026c3014ff",
+    "7e9b9e8b735dadb417b2d10434f56a41",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/common/entry_points_enum_autogen.cpp":
@@ -162,5 +164,9 @@
   "src/libGLESv2/libGLESv2_no_capture_autogen.def":
     "a29336a4763b0ed66b9ddfe4847f68da",
   "src/libGLESv2/libGLESv2_with_capture_autogen.def":
-    "301a20588e14724b390409c71d5ccfcd"
+    "301a20588e14724b390409c71d5ccfcd",
+  "src/libOpenCL/entry_points_cl_autogen.cpp":
+    "359093faf2a825d10384d301009ad5b5",
+  "src/libOpenCL/entry_points_cl_autogen.h":
+    "3b4a3094e8fd9082b71915b5bd1e8fee"
 }

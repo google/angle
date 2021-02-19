@@ -17,6 +17,7 @@ import xml.etree.ElementTree as etree
 from enum import Enum
 
 xml_inputs = [
+    'cl.xml',
     'gl.xml',
     'gl_angle_ext.xml',
     'egl.xml',
@@ -220,6 +221,7 @@ DESKTOP_GL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (2, 0), (
 GLES_VERSIONS = [(2, 0), (3, 0), (3, 1), (3, 2), (1, 0)]
 EGL_VERSIONS = [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5)]
 WGL_VERSIONS = [(1, 0)]
+CL_VERSIONS = [(1, 0)]
 
 
 # API types
@@ -228,6 +230,7 @@ class apis:
     GLES = 'GLES'
     WGL = 'WGL'
     EGL = 'EGL'
+    CL = 'CL'
 
 
 def script_relative(path):
@@ -239,7 +242,13 @@ def path_to(folder, file):
 
 
 def strip_api_prefix(cmd_name):
-    return cmd_name.lstrip("wegl")
+    return cmd_name.lstrip("cwegl")
+
+
+def get_cmd_name(command_node):
+    proto = command_node.find('proto')
+    cmd_name = proto.find('name').text
+    return cmd_name
 
 
 class CommandNames:
@@ -374,8 +383,7 @@ class EntryPoints:
         self._cmd_info = []
 
         for command_node in xml.all_commands:
-            proto = command_node.find('proto')
-            cmd_name = proto.find('name').text
+            cmd_name = get_cmd_name(command_node)
 
             if api == apis.WGL:
                 cmd_name = cmd_name if cmd_name[:3] == 'wgl' else 'wgl' + cmd_name
@@ -384,6 +392,12 @@ class EntryPoints:
                 continue
 
             param_text = ["".join(param.itertext()) for param in command_node.findall('param')]
+
+            # Treat (void) as ()
+            if len(param_text) == 1 and param_text[0].strip() == 'void':
+                param_text = []
+
+            proto = command_node.find('proto')
             proto_text = "".join(proto.itertext())
 
             self._cmd_info.append((cmd_name, command_node, param_text, proto_text))
