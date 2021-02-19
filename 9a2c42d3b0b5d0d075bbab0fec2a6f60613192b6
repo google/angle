@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1e4737c_40bb69d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-19T00:01:03Z",
+      "side": 1,
+      "message": "should be good now",
+      "revId": "9a2c42d3b0b5d0d075bbab0fec2a6f60613192b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d09f1de4_fb15bb61",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2678,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-19T00:01:03Z",
+      "side": 1,
+      "message": "missed updating \u003cmImageCreateFlags\u003e in previous patch",
+      "range": {
+        "startLine": 2678,
+        "startChar": 8,
+        "endLine": 2678,
+        "endChar": 64
+      },
+      "revId": "9a2c42d3b0b5d0d075bbab0fec2a6f60613192b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
