@@ -349,6 +349,24 @@
       "parentUuid": "77743665_b74d3eaf",
       "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "401c2a3b_c341af2d",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 1564,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-19T18:38:23Z",
+      "side": 1,
+      "message": "Excellent. I hope getting the context in WindowSurfaceVk::getBufferAge works out!",
+      "parentUuid": "f5a1525e_63b02d76",
+      "revId": "9cef929aeb8f0056edadc4ad66924d47314c50e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
