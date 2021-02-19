@@ -274,8 +274,11 @@ def get_shader_variations(shader):
             elif len(value) > 0:
                 enums.append((key, value))
 
+        def bits(enum):
+            return (1 << (len(enum) - 1).bit_length()) / float(len(enum))
+
         # sort enums so the ones with the most waste ends up last, reducing the table size
-        enums.sort(key=lambda enum: (1 << (len(enum[1]) - 1).bit_length()) / float(len(enum[1])))
+        enums.sort(key=lambda enum: (bits(enum[1]), enum[0]))
 
         return (flags, enums)
 
