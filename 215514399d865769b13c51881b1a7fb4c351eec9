@@ -16,6 +16,23 @@
       "message": "Let\u0027s see if this breaks anything else",
       "revId": "215514399d865769b13c51881b1a7fb4c351eec9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dab04fb_0600e44b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-19T00:54:41Z",
+      "side": 1,
+      "message": "Shabi, I wanted you to see the cause of the Ragnarok game failure, and a change that fixes that, but causes other failures.  I\u0027d like to get your insights.",
+      "revId": "215514399d865769b13c51881b1a7fb4c351eec9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
