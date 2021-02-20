@@ -70,6 +70,24 @@
       "parentUuid": "fff07a53_e067df98",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb478dad_d89327cb",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-20T04:54:52Z",
+      "side": 0,
+      "message": "Shabi, the current ANGLE source seems to be doing what you suggest, but the result is wrong.  Something is clearing the alpha component after the staged clear.\n\nWhat could be causing the alpha channel to change to 0x00 after the staged clear set it to 0xFF?\n\n\u003e First off, we shouldn\u0027t need to clear the image on every ANI. It should be enough to stage it once per SwapchainImage::image.\n\nWith the current source, a vkCmdClearColorImage() is queued and executed the first time each is used.  At least that\u0027s what logcat-debugging is showing.\n\n\u003e Also, there should be one stageClearIfEmulatedFormat called for the the MSAA image (but maybe that\u0027s automatically done? Please check).\n\nWith the current source, a vkCmdClearColorImage() is queued and executed the first time the MSAA image is used.\n\nIn the steady-state (e.g. 4th-nth frames), the swapchain\u0027s image(s) are rendered to every frame.  The render passes have loadOp\u003dClear, and (since those images are emulated) ANGLE removes alpha from the colorWriteMask.  AGI shows the cleared/rendered-to/presented images have an alpha value of 0x00.  That also matches how SurfaceFlinger is treating them (as alpha\u003d0x00).\n\n\u003e \u003e The render passes are clearing those buffers, with the colorWriteMask set to RGB (not alpha)\n\n\u003e I don\u0027t quite understand. The clear should end up as loadOp\u003dCLEAR, what\u0027s the colorWriteMask about?\n\nIt was wrong speculation on my part (that the colorWriteMask is somehow messing with the loadOp\u003dCLEAR).  I also speculated that the MSAA resolve was somehow causing this, but the same alpha\u003d0x00 behavior occurs for MSAA and non-MSAA swapchains.\n\nAgain, what could be causing the alpha channel to change to 0x00 after the staged clear set it to 0xFF?",
+      "parentUuid": "4d235971_50314ee5",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
