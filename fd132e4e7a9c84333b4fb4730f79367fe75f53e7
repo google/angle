@@ -88,6 +88,24 @@
       "parentUuid": "4d235971_50314ee5",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9376a336_0770131f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-20T05:35:24Z",
+      "side": 0,
+      "message": "What\u0027s the clear color used for the loadOp\u003dCLEAR (the values in VkRenderPassBeginInfo::pClearValues)? Perhaps the alpha channel there is wrong.\n\nFramebufferVk::mEmulatedAlphaAttachmentMask is usually responsible for all this. See for example how FramebufferVk::mergeClearsWithDeferredClears is using this mask through getCorrectedColorClearValue() to set alpha\u003d1. An easy check would be to make sure mEmulatedAlphaAttachmentMask[0] (swapchain framebuffer has only one image attached, so other indices should be unused) is set.",
+      "parentUuid": "bb478dad_d89327cb",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
