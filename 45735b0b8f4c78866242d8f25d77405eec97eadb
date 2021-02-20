@@ -52,6 +52,24 @@
       "parentUuid": "acc9f692_9fc0267e",
       "revId": "45735b0b8f4c78866242d8f25d77405eec97eadb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d44fc4d_496e85c9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1073,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-20T18:33:49Z",
+      "side": 1,
+      "message": "Removed the dirty bit, so this is removed too.",
+      "parentUuid": "ab6ad888_b9bf7f8b",
+      "revId": "45735b0b8f4c78866242d8f25d77405eec97eadb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
