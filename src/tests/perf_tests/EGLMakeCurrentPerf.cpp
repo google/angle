@@ -145,6 +145,7 @@ TEST_P(EGLMakeCurrentPerfTest, Run)
     run();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLMakeCurrentPerfTest);
 #if !defined(ANGLE_PLATFORM_ANDROID)
 ANGLE_INSTANTIATE_TEST(EGLMakeCurrentPerfTest,
                        angle::ES2_D3D11(),

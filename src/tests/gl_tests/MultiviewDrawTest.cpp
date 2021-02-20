@@ -2273,11 +2273,14 @@ MultiviewRenderTestParams MultisampledVertexShaderD3D11(ExtensionName multiviewE
     return MultiviewRenderTestParams(2, VertexShaderD3D11(3, 1, multiviewExtension));
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewDrawValidationTest);
 ANGLE_INSTANTIATE_TEST(MultiviewDrawValidationTest,
                        VertexShaderOpenGL(3, 1, ExtensionName::multiview),
                        VertexShaderD3D11(3, 1, ExtensionName::multiview),
                        VertexShaderOpenGL(3, 1, ExtensionName::multiview2),
                        VertexShaderD3D11(3, 1, ExtensionName::multiview2));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewRenderDualViewTest);
 ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest,
                        VertexShaderOpenGL(ExtensionName::multiview),
                        MultisampledVertexShaderOpenGL(ExtensionName::multiview),
@@ -2289,6 +2292,8 @@ ANGLE_INSTANTIATE_TEST(MultiviewRenderDualViewTest,
                        GeomShaderD3D11(ExtensionName::multiview2),
                        VertexShaderD3D11(ExtensionName::multiview2),
                        MultisampledVertexShaderD3D11(ExtensionName::multiview2));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewRenderTest);
 ANGLE_INSTANTIATE_TEST(MultiviewRenderTest,
                        VertexShaderOpenGL(ExtensionName::multiview),
                        MultisampledVertexShaderOpenGL(ExtensionName::multiview),
@@ -2300,6 +2305,8 @@ ANGLE_INSTANTIATE_TEST(MultiviewRenderTest,
                        GeomShaderD3D11(ExtensionName::multiview2),
                        VertexShaderD3D11(ExtensionName::multiview2),
                        MultisampledVertexShaderD3D11(ExtensionName::multiview2));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewOcclusionQueryTest);
 ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest,
                        VertexShaderOpenGL(ExtensionName::multiview),
                        GeomShaderD3D11(ExtensionName::multiview),
@@ -2307,6 +2314,8 @@ ANGLE_INSTANTIATE_TEST(MultiviewOcclusionQueryTest,
                        VertexShaderOpenGL(ExtensionName::multiview2),
                        GeomShaderD3D11(ExtensionName::multiview2),
                        VertexShaderD3D11(ExtensionName::multiview2));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewProgramGenerationTest);
 ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest,
                        VertexShaderOpenGL(3, 0, ExtensionName::multiview),
                        GeomShaderD3D11(3, 0, ExtensionName::multiview),
@@ -2314,6 +2323,8 @@ ANGLE_INSTANTIATE_TEST(MultiviewProgramGenerationTest,
                        VertexShaderOpenGL(3, 0, ExtensionName::multiview2),
                        GeomShaderD3D11(3, 0, ExtensionName::multiview2),
                        VertexShaderD3D11(3, 0, ExtensionName::multiview2));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewRenderPrimitiveTest);
 ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest,
                        VertexShaderOpenGL(ExtensionName::multiview),
                        GeomShaderD3D11(ExtensionName::multiview),
@@ -2321,11 +2332,10 @@ ANGLE_INSTANTIATE_TEST(MultiviewRenderPrimitiveTest,
                        VertexShaderOpenGL(ExtensionName::multiview2),
                        GeomShaderD3D11(ExtensionName::multiview2),
                        VertexShaderD3D11(ExtensionName::multiview2));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewLayeredRenderTest);
 ANGLE_INSTANTIATE_TEST(MultiviewLayeredRenderTest,
                        VertexShaderOpenGL(ExtensionName::multiview),
                        GeomShaderD3D11(ExtensionName::multiview),
                        VertexShaderOpenGL(ExtensionName::multiview2),
                        GeomShaderD3D11(ExtensionName::multiview2));
-
-// This test suite is not instantiated on some OSes.
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultiviewDrawValidationTest);

@@ -410,10 +410,10 @@ TEST_P(GetImageTest, GetTexImageAlpha)
     }
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTest);
 ANGLE_INSTANTIATE_TEST(GetImageTest, ES2_VULKAN(), ES3_VULKAN());
-ANGLE_INSTANTIATE_TEST(GetImageTestNoExtensions, ES2_VULKAN(), ES3_VULKAN());
 
-// This test suite is not instantiated on some OSes.
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GetImageTestNoExtensions);
+ANGLE_INSTANTIATE_TEST(GetImageTestNoExtensions, ES2_VULKAN(), ES3_VULKAN());
 
 }  // namespace

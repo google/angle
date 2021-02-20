@@ -204,6 +204,7 @@ TEST_P(PreRotationBenchmark, Run)
 
 using namespace params;
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PreRotationBenchmark);
 ANGLE_INSTANTIATE_TEST(PreRotationBenchmark,
                        VulkanParams(PreRotation::_0),
                        VulkanParams(PreRotation::_90),

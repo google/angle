@@ -2524,28 +2524,32 @@ TEST_P(EGLPreRotationInterpolateAtOffsetTest, InterpolateAtOffsetWithCustomFBO)
 #    undef Bool
 #endif
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationInterpolateAtOffsetTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationInterpolateAtOffsetTest,
                                  PrintToStringParamName,
                                  testing::Bool(),
                                  WithNoFixture(ES31_VULKAN()));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationSurfaceTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationSurfaceTest,
                                  PrintToStringParamName,
                                  testing::Bool(),
                                  WithNoFixture(ES2_VULKAN()),
                                  WithNoFixture(ES3_VULKAN()),
                                  WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationLargeSurfaceTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationLargeSurfaceTest,
                                  PrintToStringParamName,
                                  testing::Bool(),
                                  WithNoFixture(ES2_VULKAN()),
                                  WithNoFixture(ES3_VULKAN()),
                                  WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationBlitFramebufferTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(EGLPreRotationBlitFramebufferTest,
                                  PrintToStringParamName,
                                  testing::Bool(),
                                  WithNoFixture(ES2_VULKAN()),
                                  WithNoFixture(ES3_VULKAN()),
                                  WithNoFixture(ES3_VULKAN_SWIFTSHADER()));
-
-// This test suite is not instantiated on some OSes.
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLPreRotationInterpolateAtOffsetTest);

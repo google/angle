@@ -4249,6 +4249,7 @@ constexpr NoopOp kNoopOps[] = {
 // Note: due to large number of tests, these are only run on Vulkan and a single configuration
 // (swiftshader).
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MemoryBarrierBufferTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierBufferTest,
                                  MemoryBarrierVariationsTestPrint,
                                  testing::ValuesIn(kWritePipelines),
@@ -4257,6 +4258,7 @@ ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierBufferTest,
                                  testing::ValuesIn(kNoopOps),
                                  ES31_VULKAN_SWIFTSHADER());
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MemoryBarrierImageTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierImageTest,
                                  MemoryBarrierVariationsTestPrint,
                                  testing::ValuesIn(kWritePipelines),
@@ -4265,6 +4267,7 @@ ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierImageTest,
                                  testing::ValuesIn(kNoopOps),
                                  ES31_VULKAN_SWIFTSHADER());
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MemoryBarrierImageBufferOnlyTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierImageBufferOnlyTest,
                                  MemoryBarrierVariationsTestPrint,
                                  testing::ValuesIn(kWritePipelines),
@@ -4273,6 +4276,7 @@ ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierImageBufferOnlyTest,
                                  testing::ValuesIn(kNoopOps),
                                  ES31_VULKAN_SWIFTSHADER());
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MemoryBarrierImageOnlyTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierImageOnlyTest,
                                  MemoryBarrierVariationsTestPrint,
                                  testing::ValuesIn(kWritePipelines),
@@ -4281,6 +4285,7 @@ ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierImageOnlyTest,
                                  testing::ValuesIn(kNoopOps),
                                  ES31_VULKAN_SWIFTSHADER());
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MemoryBarrierBufferOnlyTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_4(MemoryBarrierBufferOnlyTest,
                                  MemoryBarrierVariationsTestPrint,
                                  testing::ValuesIn(kWritePipelines),

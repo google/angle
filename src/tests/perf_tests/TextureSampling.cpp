@@ -343,4 +343,5 @@ ANGLE_INSTANTIATE_TEST(TextureSamplingBenchmark,
                        OpenGLOrGLESParams(),
                        VulkanParams());
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSamplingMutableFormatBenchmark);
 ANGLE_INSTANTIATE_TEST(TextureSamplingMutableFormatBenchmark, VulkanParams());

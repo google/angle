@@ -420,10 +420,12 @@ ANGLE_INSTANTIATE_TEST(TextureUploadFullMipBenchmark,
                        VulkanParams(false),
                        VulkanParams(true));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PBOSubImageBenchmark);
 ANGLE_INSTANTIATE_TEST(PBOSubImageBenchmark,
                        ES3OpenGLPBOParams(1024, 128),
                        VulkanPBOParams(1024, 128));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PBOCompressedSubImageBenchmark);
 ANGLE_INSTANTIATE_TEST(PBOCompressedSubImageBenchmark,
                        ES3OpenGLPBOParams(128, 128),
                        VulkanPBOParams(128, 128));

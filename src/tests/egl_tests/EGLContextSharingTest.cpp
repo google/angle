@@ -592,6 +592,7 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
 }
 }  // anonymous namespace
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLContextSharingTest);
 ANGLE_INSTANTIATE_TEST(EGLContextSharingTest,
                        ES2_D3D9(),
                        ES2_D3D11(),

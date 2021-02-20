@@ -179,6 +179,7 @@ TEST_P(EGLDebugTest, SetLabel)
     EXPECT_EGL_ERROR(EGL_BAD_PARAMETER);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(EGLDebugTest);
 ANGLE_INSTANTIATE_TEST(EGLDebugTest,
                        ES2_D3D9(),
                        ES2_D3D11(),
