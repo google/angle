@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acfa2917_099c74d5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-20T19:52:11Z",
+      "side": 1,
+      "message": "Comment - note extension spec detail -",
+      "revId": "bd276beb9af5fa903bb960414444b55a5d2b7d73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12d2eaf3_47cf9753",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 686,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-20T19:52:11Z",
+      "side": 1,
+      "message": "Extension spec: https://www.khronos.org/registry/EGL/extensions/KHR/EGL_KHR_fence_sync.txt\n\n“If the sync object being blocked upon will not be signaled in finite\n    time (for example, by an associated fence command issued previously,\n    but not yet flushed to the graphics pipeline), then\n    eglClientWaitSyncKHR may wait forever. \n“",
+      "revId": "bd276beb9af5fa903bb960414444b55a5d2b7d73",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
