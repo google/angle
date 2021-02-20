@@ -52,6 +52,24 @@
       "parentUuid": "f37ed8dd_0d6bac90",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d235971_50314ee5",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-20T02:46:53Z",
+      "side": 0,
+      "message": "First off, we shouldn\u0027t need to clear the image on every ANI. It should be enough to stage it once per SwapchainImage::image. There may be some FramebufferVk dirty bit trickery necessary to make sure the clears are staged (I\u0027m not sure, but I\u0027m guessing after the first FramebufferVk::syncState, the next ANI doesn\u0027t trigger any dirty bits that would allow deferred clears to be extracted from the new swapchain image).\n\nAlso, there should be one stageClearIfEmulatedFormat called for the the MSAA image (but maybe that\u0027s automatically done? Please check).\n\n\u003e The render passes are clearing those buffers, with the colorWriteMask set to RGB (not alpha)\n\nI don\u0027t quite understand. The clear should end up as loadOp\u003dCLEAR, what\u0027s the colorWriteMask about?",
+      "parentUuid": "fff07a53_e067df98",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
