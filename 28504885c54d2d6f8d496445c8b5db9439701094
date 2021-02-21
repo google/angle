@@ -273,6 +273,30 @@
       },
       "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcffb0e5_58c7319a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-21T20:17:22Z",
+      "side": 1,
+      "message": "there are a lot of places with code like -\n 1. for (uint32_t colorIndex \u003d 0; colorIndex \u003c gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; ++colorIndex) -\u003e\n\nif implementation maxDrawBuffers is greater, there is a real chance of incorrect iteration where we leave out indices \u003e \"gl::IMPLEMENTATION_MAX_DRAW_BUFFERS\"\n\n 2. programInterfaceInfo-\u003ecurrentShaderResourceBindingIndex +\u003d gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; -\u003e\n\nthis math will be wrong as well",
+      "parentUuid": "ce7be309_c8a69c94",
+      "range": {
+        "startLine": 867,
+        "startChar": 36,
+        "endLine": 867,
+        "endChar": 37
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
