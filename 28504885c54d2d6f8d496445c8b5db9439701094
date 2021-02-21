@@ -114,6 +114,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1eddbdbd_3a267dd0",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-21T20:08:51Z",
+      "side": 1,
+      "message": "shabi, \"EbtSubpassInput\" predated our change, introduced here -\u003e https://chromium-review.googlesource.com/c/angle/angle/+/1731550\n\nI\u0027m not sure i understand the ask here",
+      "parentUuid": "e333dfa3_cab25137",
+      "range": {
+        "startLine": 153,
+        "startChar": 7,
+        "endLine": 153,
+        "endChar": 14
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "258f189c_ac177d48",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 16
