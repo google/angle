@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11a5698c_af107457",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-22T11:44:36Z",
+      "side": 1,
+      "message": "@Jamie, PTAL.\n\nsniper3d on Linux/Intel is quite flaky. With this change, some box that was previously invisible is now visible. There\u0027s a building obviously missing from the GOLD image, and I\u0027ve encountered similar issues with this before too. We should suppress it IMO.",
+      "revId": "ef3b49f631d038621aa855e071841dad75d9a021",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
