@@ -33,6 +33,24 @@
       "message": "LGTM - it does seem a bit surprising to end the RP under these conditions.",
       "revId": "589118012a408c21af54b7168a722c8040374632",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d7c25ed_b418e3c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-22T17:19:23Z",
+      "side": 1,
+      "message": "\"xfb capture -\u003e ubo read\" and \"attachment write -\u003e texture sample\" are not covered by glMemoryBarrier. Previously we unconditionally broke the render pass on every dispatch call, which is why things worked. Without that, there was really nothing to break the render pass.\n\n\"xfb capture -\u003e vertex read\" broke the render pass similarly to this change (though it could luckily take advantage of dirty bits because there was necessarily a binding change). \"attachment write -\u003e graphics texture sample\" also worked because there needed to be an FBO change to avoid feedback loop. The two scenarios above are the only other possibilities I could think of that weren\u0027t handled and they both involve compute.",
+      "parentUuid": "c0f769f9_29acbc93",
+      "revId": "589118012a408c21af54b7168a722c8040374632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
