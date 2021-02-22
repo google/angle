@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2986624c_1b8410a8",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-22T18:37:35Z",
+      "side": 1,
+      "message": "\u003e FragmentInOut seems like a good name for these\n\nDone.\n\n\u003e And how is this index different from the location?\n\nindex and location are similar in that they refer to input draw buffer. Currently, the implementation uses \"FragmentInOut\" to figure out if it it a SubpassInput or not hence not reusing existing variables",
+      "parentUuid": "68371b6b_bfa52267",
+      "range": {
+        "startLine": 192,
+        "startChar": 8,
+        "endLine": 192,
+        "endChar": 23
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e333dfa3_cab25137",
         "filename": "src/compiler/translator/BaseTypes.h",
         "patchSetId": 16
@@ -155,6 +179,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8604d088_a703072f",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-22T18:37:35Z",
+      "side": 1,
+      "message": "pinging again on this to get some clarity",
+      "parentUuid": "1eddbdbd_3a267dd0",
+      "range": {
+        "startLine": 153,
+        "startChar": 7,
+        "endLine": 153,
+        "endChar": 14
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "258f189c_ac177d48",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 16
@@ -166,6 +214,30 @@
       "writtenOn": "2021-02-19T16:40:23Z",
       "side": 1,
       "message": "this should be ES2_extension_2_ES3_keyword",
+      "range": {
+        "startLine": 250,
+        "startChar": 19,
+        "endLine": 250,
+        "endChar": 34
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55d34b97_9ff53126",
+        "filename": "src/compiler/translator/glslang.l",
+        "patchSetId": 16
+      },
+      "lineNbr": 250,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-22T18:37:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "258f189c_ac177d48",
       "range": {
         "startLine": 250,
         "startChar": 19,
@@ -189,6 +261,30 @@
       "writtenOn": "2021-02-19T16:40:23Z",
       "side": 1,
       "message": "nit: fetch isn\u0027t implemented in D3D",
+      "range": {
+        "startLine": 225,
+        "startChar": 9,
+        "endLine": 225,
+        "endChar": 47
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a27298f7_bb8b7adf",
+        "filename": "src/libANGLE/renderer/d3d/ProgramD3D.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-22T18:37:35Z",
+      "side": 1,
+      "message": "Current class hierarchy -\n UniformEncodingVisitorD3D -- (inheritance) --\u003e BlockEncoderVisitor -- (inheritance) --\u003e VariableNameVisitor\n\nThe method of the abstract class for interfacing was changed (VariableNameVisitor). So, trickling it down to UniformEncodingVisitorD3D as well.\n\nDo you want a new method instead?",
+      "parentUuid": "6faa81e2_736ebb15",
       "range": {
         "startLine": 225,
         "startChar": 9,
@@ -246,6 +342,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d0f5636_3cd2f13a",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 931,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-22T18:37:35Z",
+      "side": 1,
+      "message": "\u003e hasFragmentInOutVars\n\nDone.",
+      "parentUuid": "cb5bc861_73abf34c",
+      "range": {
+        "startLine": 931,
+        "startChar": 9,
+        "endLine": 931,
+        "endChar": 35
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a22ff64_b2fa0011",
@@ -259,6 +379,30 @@
       "writtenOn": "2021-02-19T16:40:23Z",
       "side": 1,
       "message": "under what circumstances do we get here without a program bound? maybe add a comment.",
+      "range": {
+        "startLine": 1931,
+        "startChar": 0,
+        "endLine": 1942,
+        "endChar": 5
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9575f6a4_b5d3f6a8",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1942,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-22T18:37:35Z",
+      "side": 1,
+      "message": "Added a comment -\n // In case bound program uses shader framebuffer fetch and bound attachments are changed without\n // program change, we update framebuffer fetch mode in Renderpass here.",
+      "parentUuid": "3a22ff64_b2fa0011",
       "range": {
         "startLine": 1931,
         "startChar": 0,
