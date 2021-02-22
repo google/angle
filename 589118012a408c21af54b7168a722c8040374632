@@ -51,6 +51,24 @@
       "parentUuid": "c0f769f9_29acbc93",
       "revId": "589118012a408c21af54b7168a722c8040374632",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "046696d3_7c56e137",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-22T19:20:39Z",
+      "side": 1,
+      "message": "Come to think of it, \"xfb capture -\u003e graphics ubo read\" is probably broken too (independent bug from this CL).\n\nGonna write a test for it and open a bug if that\u0027s true.",
+      "parentUuid": "5d7c25ed_b418e3c5",
+      "revId": "589118012a408c21af54b7168a722c8040374632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
