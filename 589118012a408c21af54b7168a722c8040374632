@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04f5cbea_6f84ff41",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-22T11:49:28Z",
+      "side": 1,
+      "message": "@Jamie, ICYMI. Again, the failure is a dEQP bug I\u0027ve fixed here: https://gerrit.khronos.org/c/vk-gl-cts/+/7049",
+      "revId": "589118012a408c21af54b7168a722c8040374632",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
