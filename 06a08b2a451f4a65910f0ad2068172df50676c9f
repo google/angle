@@ -16,6 +16,24 @@
       "message": "Cody/Jamie - PTAL\n\nI opened a new bug (and updated the TODO) to add GL_RGB32 support, since the previous one was already closed.",
       "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b03df2d7_ff0eadbf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-22T18:48:40Z",
+      "side": 1,
+      "message": "I\u0027m okay with this approach if Jamie and Shabi are, this is a usability improvement.  I\u0027ve been running with exposeNonConformantExtensionsAndVersions pretty much constantly.",
+      "parentUuid": "82d30212_8de4b19d",
+      "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
