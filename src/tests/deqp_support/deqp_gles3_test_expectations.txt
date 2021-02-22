@@ -638,9 +638,11 @@
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat3_offset_1 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat4 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat4_offset_1 = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_vec3 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_vec4 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_float = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_mat2 = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_mat3 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.max_cond_vec3 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.2_samples.rg32f = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.4_samples.rg32f = SKIP
@@ -652,7 +654,9 @@
 5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.8_samples.rgb5_a1 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.8_samples.rgb8 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.8_samples.rgba16f = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.8_samples.rgba32f = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.8_samples.rgba8 = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.fbo.msaa.8_samples.stencil_index8 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.fbo.multiview.samples_1 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.multisample.default_framebuffer.common_edge_small_quads = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.multisample.default_framebuffer.constancy_alpha_to_coverage = SKIP
@@ -661,6 +665,7 @@
 5665 NEXUS5X : dEQP-GLES3.functional.multisample.default_framebuffer.proportionality_alpha_to_coverage = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.multisample.default_framebuffer.proportionality_sample_coverage = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.multisample.default_framebuffer.sample_coverage_invert = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.multisample.default_framebuffer.stencil = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.multisample.fbo_8_samples.common_edge_big_quad = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.multisample.fbo_8_samples.num_samples_polygon = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.2d_array.formats.srgb_r8_linear = SKIP
@@ -670,6 +675,7 @@
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.2d.formats.srgb_r8_linear_mipmap_linear = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.2d.formats.srgb_r8_linear_mipmap_nearest = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.2d.formats.srgb_r8_nearest_mipmap_linear = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.2d.formats.srgb_r8_nearest_mipmap_nearest = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.3d.formats.srgb_r8_linear = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.3d.formats.srgb_r8_linear_mipmap_linear = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.3d.formats.srgb_r8_nearest_mipmap_nearest = SKIP
@@ -679,6 +685,7 @@
 5665 NEXUS5X : dEQP-GLES3.functional.texture.filtering.cube.formats.srgb_r8_nearest_mipmap_linear = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.format.sized.2d_array.srgb_r8_npot = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.format.sized.2d.srgb_r8_npot = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.texture.format.sized.2d.srgb_r8_pot = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.format.sized.3d.srgb_r8_npot = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.format.sized.cube.srgb_r8_npot = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.texture.format.sized.cube.srgb_r8_pot = SKIP
@@ -690,6 +697,7 @@
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.lines.lowp_mat2x4 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.lines.lowp_mat3x2 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.lines.lowp_mat4x2 = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.lines.mediump_mat3 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.highp_mat2x3 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.highp_mat3x2 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.lowp_mat2x3 = SKIP
@@ -698,6 +706,7 @@
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.lowp_mat3x2 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.lowp_mat4x2 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.lowp_mat4x3 = SKIP
+5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.mediump_mat2x3 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.points.mediump_mat2x4 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.triangles.lowp_mat3 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.transform_feedback.basic_types.separate.triangles.lowp_mat3x4 = SKIP

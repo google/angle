@@ -205,9 +205,12 @@
 // AddressSanitizer:DEADLYSIGNAL on Nexus 5X
 5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb565_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb565_no_depth_no_stencil = SKIP
+5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb565_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb888_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb888_no_depth_no_stencil = SKIP
+5665 NEXUS5X : dEQP-EGL.functional.create_context.rgb888_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_context.rgba4444_depth_stencil = SKIP
+5665 NEXUS5X : dEQP-EGL.functional.create_context.rgba4444_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_context.rgba8888_no_depth_no_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_surface.pbuffer.rgb888_depth_no_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_surface.platform_ext_window.rgb888_no_depth_stencil = SKIP
@@ -216,6 +219,8 @@
 5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgb565_no_depth_no_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgb888_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgba4444_no_depth_no_stencil = SKIP
+5665 NEXUS5X : dEQP-EGL.functional.create_surface.window.rgba8888_depth_no_stencil = SKIP
+5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb565_pbuffer = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb565_pixmap = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb565_window = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgb888_pbuffer = SKIP
@@ -223,8 +228,10 @@
 5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgba4444_pbuffer = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.query_context.get_current_surface.rgba8888_window = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb565_depth_no_stencil = SKIP
+5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb565_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb565_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.query_surface.simple.window.rgb888_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_depth_no_stencil = SKIP
+5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb565_no_depth_stencil = SKIP
 5665 NEXUS5X : dEQP-EGL.functional.surfaceless_context.rgb888_no_depth_stencil = SKIP
