@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22745eb1_b78b2a49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T20:05:52Z",
+      "side": 1,
+      "message": "PTAL, esp at the ep generation script.",
+      "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
