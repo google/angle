@@ -33,6 +33,24 @@
       "message": "LGTM. Will these eventually stack up like the tree visitors?",
       "revId": "f51efc866180c0de332b59935674e2c39cf5220e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e884c208_b19f2afb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-22T17:14:01Z",
+      "side": 1,
+      "message": "I\u0027m hoping to keep the SPIR-V transformer single-pass. It does a number of things, yes, but there\u0027s nothing so far or that I have plans for that cannot be done simultaneously.\n\nEventually when generating SPIR-V from the translator a bunch of these changes would be simplified as the translator can directly say \"change X here, Y here and Z here\", so there would no longer be need for traversal.",
+      "parentUuid": "7de1dc71_2ba2e07f",
+      "revId": "f51efc866180c0de332b59935674e2c39cf5220e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
