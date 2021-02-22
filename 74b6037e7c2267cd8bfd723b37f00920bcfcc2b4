@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "28c856d0_65250fd2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-22T00:46:15Z",
+      "side": 1,
+      "message": "TBR\n\nBTW, I\u0027ve noticed that dEQP GLES3 Metal is skipped on Intel and NVIDIA, but you can\u0027t see this either in test stdout nor in JSON. Is there a bug for that? Should I open one?",
+      "revId": "74b6037e7c2267cd8bfd723b37f00920bcfcc2b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
