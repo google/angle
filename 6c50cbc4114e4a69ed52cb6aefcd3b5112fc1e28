@@ -16,6 +16,46 @@
       "message": "PTAL, esp at the ep generation script.",
       "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91512e10_91113368",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-22T21:24:48Z",
+      "side": 1,
+      "message": "Looks like these are working for the most part, how about defining a CL_EVENT macro that does nothing to make sure all the format strings compile?",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 252,
+        "endChar": 73
+      },
+      "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "464de30b_fb82661c",
+        "filename": "src/cl/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-22T21:24:48Z",
+      "side": 1,
+      "message": "It looks like the CL libraries are named OpenCL.dll or libOpenCL.so. We could name this folder libOpenCL for consistancy with libGLESv2/libEGL.",
+      "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
