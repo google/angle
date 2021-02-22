@@ -1954,7 +1954,7 @@ void SpirvVaryingPrecisionFixer::writeInputPreamble(
     }
 
     // Copy from corrected varyings to temp global variables with original precision.
-    for (uint32_t idIndex = 0; idIndex < variableInfoById.size(); idIndex++)
+    for (uint32_t idIndex = spirv::kMinValidId; idIndex < variableInfoById.size(); idIndex++)
     {
         const spirv::IdRef id(idIndex);
         const ShaderInterfaceVariableInfo *info = variableInfoById[id];
@@ -2004,7 +2004,7 @@ void SpirvVaryingPrecisionFixer::writeOutputPrologue(
     }
 
     // Copy from temp global variables with original precision to corrected varyings.
-    for (uint32_t idIndex = 0; idIndex < variableInfoById.size(); idIndex++)
+    for (uint32_t idIndex = spirv::kMinValidId; idIndex < variableInfoById.size(); idIndex++)
     {
         const spirv::IdRef id(idIndex);
         const ShaderInterfaceVariableInfo *info = variableInfoById[id];
@@ -3381,7 +3381,7 @@ void SpirvVertexAttributeAliasingTransformer::preprocessAliasingAttributes()
     mExpandedMatrixFirstVectorIdById.resize(indexBound);
 
     // Go through attributes and find out which alias which.
-    for (size_t idIndex = 0; idIndex < indexBound; ++idIndex)
+    for (size_t idIndex = spirv::kMinValidId; idIndex < indexBound; ++idIndex)
     {
         const spirv::IdRef id(idIndex);
 
@@ -4042,15 +4042,17 @@ TransformationState SpirvVertexAttributeAliasingTransformer::transformLoad(
 void SpirvVertexAttributeAliasingTransformer::declareExpandedMatrixVectors()
 {
     // Go through matrix attributes and expand them.
-    for (uint32_t matrixIdIndex = 0; matrixIdIndex < mExpandedMatrixFirstVectorIdById.size();
-         ++matrixIdIndex)
+    for (uint32_t matrixIdIndex = spirv::kMinValidId;
+         matrixIdIndex < mExpandedMatrixFirstVectorIdById.size(); ++matrixIdIndex)
     {
         const spirv::IdRef matrixId(matrixIdIndex);
-        const spirv::IdRef vec0Id(mExpandedMatrixFirstVectorIdById[matrixId]);
-        if (!vec0Id.valid())
+
+        if (!mExpandedMatrixFirstVectorIdById[matrixId].valid())
         {
             continue;
         }
+
+        const spirv::IdRef vec0Id(mExpandedMatrixFirstVectorIdById[matrixId]);
 
         const ShaderInterfaceVariableInfo *info = mVariableInfoById[matrixId];
         ValidateShaderInterfaceVariableIsAttribute(info);
@@ -4111,7 +4113,7 @@ void SpirvVertexAttributeAliasingTransformer::declareExpandedMatrixVectors()
     // Op*AccessChain instructions, if any).
     for (size_t n = 1; n < mFloatTypes.size(); ++n)
     {
-        if (mFloatTypes[n].valid() && mPrivateFloatTypePointers[n] == 0)
+        if (mFloatTypes[n].valid() && !mPrivateFloatTypePointers[n].valid())
         {
             const spirv::IdRef privateType(getNewId());
             mPrivateFloatTypePointers[n] = privateType;
@@ -4125,15 +4127,17 @@ void SpirvVertexAttributeAliasingTransformer::writeExpandedMatrixInitialization(
 {
     // Go through matrix attributes and initialize them.  Note that their declaration is replaced
     // with a Private storage class, but otherwise has the same id.
-    for (uint32_t matrixIdIndex = 0; matrixIdIndex < mExpandedMatrixFirstVectorIdById.size();
-         ++matrixIdIndex)
+    for (uint32_t matrixIdIndex = spirv::kMinValidId;
+         matrixIdIndex < mExpandedMatrixFirstVectorIdById.size(); ++matrixIdIndex)
     {
         const spirv::IdRef matrixId(matrixIdIndex);
-        const spirv::IdRef vec0Id(mExpandedMatrixFirstVectorIdById[matrixId]);
-        if (!vec0Id.valid())
+
+        if (!mExpandedMatrixFirstVectorIdById[matrixId].valid())
         {
             continue;
         }
+
+        const spirv::IdRef vec0Id(mExpandedMatrixFirstVectorIdById[matrixId]);
 
         // For every matrix, need to generate the following:
         //
