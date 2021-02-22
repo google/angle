@@ -922,6 +922,10 @@
 4235 METAL AMD : dEQP-GLES3.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
 4235 METAL AMD : dEQP-GLES3.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
 
+// Fails after a test fix in VK-GL-CTS
+5666 METAL AMD : dEQP-GLES3.functional.texture.filtering.2d_array.formats.rgb9_e5_linear_mipmap_linear = FAIL
+5666 METAL AMD : dEQP-GLES3.functional.texture.filtering.2d_array.formats.rgb9_e5_nearest_mipmap_linear = FAIL
+
 // Globally disable Metal testing on Intel & NVIDIA for now
 4235 METAL INTEL : dEQP-GLES3.* = SKIP
 4235 METAL NVIDIA : dEQP-GLES3.* = SKIP
