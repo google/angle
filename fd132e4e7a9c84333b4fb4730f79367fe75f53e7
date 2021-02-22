@@ -106,6 +106,24 @@
       "parentUuid": "bb478dad_d89327cb",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68c50066_bc3fee25",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-22T19:25:55Z",
+      "side": 0,
+      "message": "I was wrong!\n\nThe swapchain images are only cleared the first time they are used.  All of the render passes have loadOp \u003d DONT_CARE (i.e. undefined) for color attachments.  My old logcat instrumentation for loadOp/storeOp was busted.  Now that it\u0027s fixed, I see:\n\nCommandBufferHelper::endRenderPass(): colorAttachment[ 0]: loadOp\u003dDONT_CARE, storeOp\u003dSTORE\n\nSince no more staged clears are done, and the loadOp is DONT_CARE/undefined, it can be anything (including alpha\u003d0.0), instead of the alpha\u003d0.95 value that is in pClearValues.\n\nI have perf and Android triage to do, and so I may not get much farther today.  My next task is to figure out why ANGLE chose DONT_CARE.",
+      "parentUuid": "9376a336_0770131f",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
