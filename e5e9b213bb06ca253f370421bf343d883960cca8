@@ -3,6 +3,29 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "495417b0_bb3d26a8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T21:35:01Z",
+      "side": 1,
+      "message": "nit: no problems here, but in the future you don\u0027t have to maintain a log of the iterations of a CL.Jjust a reflection of the final state of the CL. Could make it easier for you going forward.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 62
+      },
+      "revId": "e5e9b213bb06ca253f370421bf343d883960cca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "b00064fd_6c2e1e10",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 3
@@ -14,6 +37,23 @@
       "writtenOn": "2021-02-12T20:08:42Z",
       "side": 1,
       "message": "This looks good to me, it\u0027s still marked as \"Work in Progress\" though so I wasn\u0027t sure if I should review. You need to \u0027reply\u0027 -\u003e \u0027send\u0027 with reviewers set to remove that tag.",
+      "revId": "e5e9b213bb06ca253f370421bf343d883960cca8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77f9defa_8fb5936c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T21:35:01Z",
+      "side": 1,
+      "message": "LGTM - feel free to squash this with the next CL, not mandatory.",
       "revId": "e5e9b213bb06ca253f370421bf343d883960cca8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
