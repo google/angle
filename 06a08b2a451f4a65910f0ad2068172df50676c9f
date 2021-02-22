@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cdffabf_367898ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-22T19:45:11Z",
+      "side": 1,
+      "message": "This isn\u0027t for a test, this is to support the app \"Special Forces Group 2\" without crashing.   We don\u0027t ship with that enabled by default, so this change is necessary to support the app.",
+      "parentUuid": "56dbad33_89fd1cf1",
+      "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e8b21ea_2fcc6e99",
@@ -66,6 +84,30 @@
       "writtenOn": "2021-02-22T19:35:22Z",
       "side": 1,
       "message": "I\u0027d suggest enabling if the \"non conformant versions and extensions\" feature is enabled if this is false.",
+      "range": {
+        "startLine": 242,
+        "startChar": 13,
+        "endLine": 242,
+        "endChar": 34
+      },
+      "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53340a1f_caf27d11",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-22T19:45:11Z",
+      "side": 1,
+      "message": "Done\n\nI\u0027ve restore the check to exposeNonConformantExtensionsAndVersions so we only output the warning when it\u0027s not enabled.",
+      "parentUuid": "1e8b21ea_2fcc6e99",
       "range": {
         "startLine": 242,
         "startChar": 13,
