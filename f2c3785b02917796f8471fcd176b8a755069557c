@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af7cc99b_8ed89253",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-22T21:18:56Z",
+      "side": 1,
+      "message": "SPIR-V Tools\u0027 validation message is as useful as \"something\u0027s wrong\" when a 0 id is used. This should prevent that from happening.",
+      "revId": "f2c3785b02917796f8471fcd176b8a755069557c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
