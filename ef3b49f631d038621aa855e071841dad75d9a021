@@ -33,6 +33,24 @@
       "message": "Cody/Tim, please see the comment about the flaky Sniper trace.",
       "revId": "ef3b49f631d038621aa855e071841dad75d9a021",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "441d187c_39aba4e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-22T17:16:06Z",
+      "side": 1,
+      "message": "I\u0027ve mentioned the same thing about that trace before where a sign or A/C unit will pop in and out of existence sometimes.   I\u0027d be fine with opening a bug and suppressing it.",
+      "parentUuid": "11a5698c_af107457",
+      "revId": "ef3b49f631d038621aa855e071841dad75d9a021",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
