@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9d975232_be97cf59",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T21:31:45Z",
+      "side": 1,
+      "message": "I had a tough time with the CreateContext and similar entry points:\n\ncl_context CL_API_ENTRY CL_CreateContext(const cl_context_properties *properties,\n                                         cl_uint num_devices,\n                                         const cl_device_id *devices,\n                                         void(CL_CALLBACK *pfn_notify)(const char *errinfo,\n                                                                       const void *private_info,\n                                                                       size_t cb,\n                                                                       void *user_data),\n                                         void *user_data,\n                                         cl_int *errcode_ret)\n\nThe XML looks like this:\n\n        \u003ccommand suffix\u003d\"CL_API_SUFFIX__VERSION_1_0\"\u003e\n            \u003cproto\u003e\u003ctype\u003ecl_context\u003c/type\u003e                              \u003cname\u003eclCreateContext\u003c/name\u003e\u003c/proto\u003e\n            \u003cparam\u003econst \u003ctype\u003ecl_context_properties\u003c/type\u003e*            \u003cname\u003eproperties\u003c/name\u003e\u003c/param\u003e\n            \u003cparam\u003e\u003ctype\u003ecl_uint\u003c/type\u003e                                 \u003cname\u003enum_devices\u003c/name\u003e\u003c/param\u003e\n            \u003cparam\u003econst \u003ctype\u003ecl_device_id\u003c/type\u003e*                     \u003cname\u003edevices\u003c/name\u003e\u003c/param\u003e\n            \u003cparam\u003evoid (CL_CALLBACK*                                   \u003cname\u003epfn_notify\u003c/name\u003e)(const char* errinfo, const void* private_info, size_t cb, void* user_data)\u003c/param\u003e\n            \u003cparam\u003e\u003ctype\u003evoid\u003c/type\u003e*                                   \u003cname\u003euser_data\u003c/name\u003e\u003c/param\u003e\n            \u003cparam\u003e\u003ctype\u003ecl_int\u003c/type\u003e*                                 \u003cname\u003eerrcode_ret\u003c/name\u003e\u003c/param\u003e\n        \u003c/command\u003e\n\nThe user_data param is super weird. Anyway it generates the protos fine but parsing the types of the parameter is messed up. I figured I would leave that for the future implementer.",
+      "parentUuid": "91512e10_91113368",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 252,
+        "endChar": 73
+      },
+      "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "464de30b_fb82661c",
         "filename": "src/cl/BUILD.gn",
         "patchSetId": 2
@@ -54,6 +78,24 @@
       "writtenOn": "2021-02-22T21:24:48Z",
       "side": 1,
       "message": "It looks like the CL libraries are named OpenCL.dll or libOpenCL.so. We could name this folder libOpenCL for consistancy with libGLESv2/libEGL.",
+      "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "980cc362_c321d72e",
+        "filename": "src/cl/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T21:31:45Z",
+      "side": 1,
+      "message": "Renamed to \"OpenCL\" -\u003e will be libOpenCL on Linux.\n\nI went with this folder name because I wanted to encapsulate the cl tracing and emulation work as well as the entry points themselves. i.e. there will be more targets than OpenCL.dll, but also tracing and maybe test targets. N/sure.",
+      "parentUuid": "464de30b_fb82661c",
       "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
