@@ -34,6 +34,29 @@
       "parentUuid": "82d30212_8de4b19d",
       "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e8b21ea_2fcc6e99",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T19:35:22Z",
+      "side": 1,
+      "message": "I\u0027d suggest enabling if the \"non conformant versions and extensions\" feature is enabled if this is false.",
+      "range": {
+        "startLine": 242,
+        "startChar": 13,
+        "endLine": 242,
+        "endChar": 34
+      },
+      "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
