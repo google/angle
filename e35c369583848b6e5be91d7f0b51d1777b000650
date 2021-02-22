@@ -22,6 +22,30 @@
       },
       "revId": "e35c369583848b6e5be91d7f0b51d1777b000650",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3303f888_dcfe6fb7",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T21:35:57Z",
+      "side": 1,
+      "message": "!is_clang \u0026\u0026 is_linux ~\u003d is_gcc. Maybe we should define an is_gcc variable. Although it might be better expressed as !is_clang \u0026\u0026 !is_windows.",
+      "parentUuid": "0e563b20_5d285d73",
+      "range": {
+        "startLine": 205,
+        "startChar": 13,
+        "endLine": 205,
+        "endChar": 21
+      },
+      "revId": "e35c369583848b6e5be91d7f0b51d1777b000650",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
