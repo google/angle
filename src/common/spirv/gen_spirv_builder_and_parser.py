@@ -301,7 +301,7 @@ class Writer:
             type_in = 'const ' + cpp_type + 'List &'
             type_out = cpp_type + 'List *'
         elif is_optional:
-            type_in = cpp_type + ' *'
+            type_in = 'const ' + cpp_type + ' *'
             type_out = cpp_type + ' *'
         else:
             type_in = cpp_type

@@ -59,8 +59,8 @@ void WriteSourceContinued(std::vector<uint32_t> *blob, LiteralString continuedSo
 void WriteSource(std::vector<uint32_t> *blob,
                  spv::SourceLanguage sourceLanguage,
                  LiteralInteger version,
-                 IdRef *file,
-                 LiteralString *source)
+                 const IdRef *file,
+                 const LiteralString *source)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -303,7 +303,7 @@ void WriteTypeImage(std::vector<uint32_t> *blob,
                     LiteralInteger mS,
                     LiteralInteger sampled,
                     spv::ImageFormat imageFormat,
-                    spv::AccessQualifier *accessQualifier)
+                    const spv::AccessQualifier *accessQualifier)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -551,7 +551,7 @@ void WriteVariable(std::vector<uint32_t> *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    spv::StorageClass storageClass,
-                   IdRef *initializer)
+                   const IdRef *initializer)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -584,7 +584,7 @@ void WriteLoad(std::vector<uint32_t> *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef pointer,
-               spv::MemoryAccessMask *memoryAccess)
+               const spv::MemoryAccessMask *memoryAccess)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -600,7 +600,7 @@ void WriteLoad(std::vector<uint32_t> *blob,
 void WriteStore(std::vector<uint32_t> *blob,
                 IdRef pointer,
                 IdRef object,
-                spv::MemoryAccessMask *memoryAccess)
+                const spv::MemoryAccessMask *memoryAccess)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -615,7 +615,7 @@ void WriteStore(std::vector<uint32_t> *blob,
 void WriteCopyMemory(std::vector<uint32_t> *blob,
                      IdRef target,
                      IdRef source,
-                     spv::MemoryAccessMask *memoryAccess)
+                     const spv::MemoryAccessMask *memoryAccess)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -631,7 +631,7 @@ void WriteCopyMemorySized(std::vector<uint32_t> *blob,
                           IdRef target,
                           IdRef source,
                           IdRef size,
-                          spv::MemoryAccessMask *memoryAccess)
+                          const spv::MemoryAccessMask *memoryAccess)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -920,7 +920,7 @@ void WriteImageSampleImplicitLod(std::vector<uint32_t> *blob,
                                  IdResult idResult,
                                  IdRef sampledImage,
                                  IdRef coordinate,
-                                 spv::ImageOperandsMask *imageOperands,
+                                 const spv::ImageOperandsMask *imageOperands,
                                  const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -966,7 +966,7 @@ void WriteImageSampleDrefImplicitLod(std::vector<uint32_t> *blob,
                                      IdRef sampledImage,
                                      IdRef coordinate,
                                      IdRef dref,
-                                     spv::ImageOperandsMask *imageOperands,
+                                     const spv::ImageOperandsMask *imageOperands,
                                      const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -1014,7 +1014,7 @@ void WriteImageSampleProjImplicitLod(std::vector<uint32_t> *blob,
                                      IdResult idResult,
                                      IdRef sampledImage,
                                      IdRef coordinate,
-                                     spv::ImageOperandsMask *imageOperands,
+                                     const spv::ImageOperandsMask *imageOperands,
                                      const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -1060,7 +1060,7 @@ void WriteImageSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
                                          IdRef sampledImage,
                                          IdRef coordinate,
                                          IdRef dref,
-                                         spv::ImageOperandsMask *imageOperands,
+                                         const spv::ImageOperandsMask *imageOperands,
                                          const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -1110,7 +1110,7 @@ void WriteImageFetch(std::vector<uint32_t> *blob,
                      IdResult idResult,
                      IdRef image,
                      IdRef coordinate,
-                     spv::ImageOperandsMask *imageOperands,
+                     const spv::ImageOperandsMask *imageOperands,
                      const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -1135,7 +1135,7 @@ void WriteImageGather(std::vector<uint32_t> *blob,
                       IdRef sampledImage,
                       IdRef coordinate,
                       IdRef component,
-                      spv::ImageOperandsMask *imageOperands,
+                      const spv::ImageOperandsMask *imageOperands,
                       const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -1161,7 +1161,7 @@ void WriteImageDrefGather(std::vector<uint32_t> *blob,
                           IdRef sampledImage,
                           IdRef coordinate,
                           IdRef dref,
-                          spv::ImageOperandsMask *imageOperands,
+                          const spv::ImageOperandsMask *imageOperands,
                           const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -1186,7 +1186,7 @@ void WriteImageRead(std::vector<uint32_t> *blob,
                     IdResult idResult,
                     IdRef image,
                     IdRef coordinate,
-                    spv::ImageOperandsMask *imageOperands,
+                    const spv::ImageOperandsMask *imageOperands,
                     const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -1209,7 +1209,7 @@ void WriteImageWrite(std::vector<uint32_t> *blob,
                      IdRef image,
                      IdRef coordinate,
                      IdRef texel,
-                     spv::ImageOperandsMask *imageOperands,
+                     const spv::ImageOperandsMask *imageOperands,
                      const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3064,7 +3064,7 @@ void WriteImageSparseSampleImplicitLod(std::vector<uint32_t> *blob,
                                        IdResult idResult,
                                        IdRef sampledImage,
                                        IdRef coordinate,
-                                       spv::ImageOperandsMask *imageOperands,
+                                       const spv::ImageOperandsMask *imageOperands,
                                        const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3112,7 +3112,7 @@ void WriteImageSparseSampleDrefImplicitLod(std::vector<uint32_t> *blob,
                                            IdRef sampledImage,
                                            IdRef coordinate,
                                            IdRef dref,
-                                           spv::ImageOperandsMask *imageOperands,
+                                           const spv::ImageOperandsMask *imageOperands,
                                            const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3162,7 +3162,7 @@ void WriteImageSparseSampleProjImplicitLod(std::vector<uint32_t> *blob,
                                            IdResult idResult,
                                            IdRef sampledImage,
                                            IdRef coordinate,
-                                           spv::ImageOperandsMask *imageOperands,
+                                           const spv::ImageOperandsMask *imageOperands,
                                            const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3210,7 +3210,7 @@ void WriteImageSparseSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
                                                IdRef sampledImage,
                                                IdRef coordinate,
                                                IdRef dref,
-                                               spv::ImageOperandsMask *imageOperands,
+                                               const spv::ImageOperandsMask *imageOperands,
                                                const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3260,7 +3260,7 @@ void WriteImageSparseFetch(std::vector<uint32_t> *blob,
                            IdResult idResult,
                            IdRef image,
                            IdRef coordinate,
-                           spv::ImageOperandsMask *imageOperands,
+                           const spv::ImageOperandsMask *imageOperands,
                            const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3285,7 +3285,7 @@ void WriteImageSparseGather(std::vector<uint32_t> *blob,
                             IdRef sampledImage,
                             IdRef coordinate,
                             IdRef component,
-                            spv::ImageOperandsMask *imageOperands,
+                            const spv::ImageOperandsMask *imageOperands,
                             const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3311,7 +3311,7 @@ void WriteImageSparseDrefGather(std::vector<uint32_t> *blob,
                                 IdRef sampledImage,
                                 IdRef coordinate,
                                 IdRef dref,
-                                spv::ImageOperandsMask *imageOperands,
+                                const spv::ImageOperandsMask *imageOperands,
                                 const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
@@ -3355,7 +3355,7 @@ void WriteImageSparseRead(std::vector<uint32_t> *blob,
                           IdResult idResult,
                           IdRef image,
                           IdRef coordinate,
-                          spv::ImageOperandsMask *imageOperands,
+                          const spv::ImageOperandsMask *imageOperands,
                           const IdRefList &imageOperandIdsList)
 {
     const size_t startSize = blob->size();
