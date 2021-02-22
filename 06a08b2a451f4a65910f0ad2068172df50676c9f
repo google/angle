@@ -36,6 +36,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56dbad33_89fd1cf1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-22T19:36:17Z",
+      "side": 1,
+      "message": "Why not just enable non conformant features and extensions for whatever testing situation comes up here?",
+      "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e8b21ea_2fcc6e99",
