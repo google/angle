@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "85404448_44d4833f",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 252,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-22T21:46:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9d975232_be97cf59",
+      "range": {
+        "startLine": 251,
+        "startChar": 0,
+        "endLine": 252,
+        "endChar": 73
+      },
+      "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "464de30b_fb82661c",
@@ -96,6 +120,24 @@
       "side": 1,
       "message": "Renamed to \"OpenCL\" -\u003e will be libOpenCL on Linux.\n\nI went with this folder name because I wanted to encapsulate the cl tracing and emulation work as well as the entry points themselves. i.e. there will be more targets than OpenCL.dll, but also tracing and maybe test targets. N/sure.",
       "parentUuid": "464de30b_fb82661c",
+      "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "66ac9f2b_f322b06f",
+        "filename": "src/cl/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-22T21:46:18Z",
+      "side": 1,
+      "message": "That can work. I could envision some of this moving into libANGLE in the long run too. It\u0027s the only way we could expose some of these interop extensions if ANGLE ends up being a CL driver.",
+      "parentUuid": "980cc362_c321d72e",
       "revId": "6c50cbc4114e4a69ed52cb6aefcd3b5112fc1e28",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
