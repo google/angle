@@ -16,6 +16,23 @@
       "message": "LGTM",
       "revId": "3f6bcdd1579bd10411df6063e70e003119e57f47",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1f9ae6c_f7f69cf0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-22T23:59:38Z",
+      "side": 1,
+      "message": "LGTM.  Lack of any diffs to the generated files tells me the changes are good, and the direction of migrating to classes makes the code easier to read.",
+      "revId": "3f6bcdd1579bd10411df6063e70e003119e57f47",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
