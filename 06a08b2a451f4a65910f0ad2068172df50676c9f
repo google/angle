@@ -89,6 +89,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03292faf_19c504c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-22T20:11:47Z",
+      "side": 1,
+      "message": "By shipping, I\u0027m referring to someone building ANGLE and running it on Android.   We are currently \"shipping\" ANGLE to several consumers, such as CuttleFish (via SwANGLE) and other internal Google projects, as well as to external contributors building and running ANGLE (ARM, IMG, Samsung, etc.).   The feature to expose non-conformant extensions is disabled by default for all of those use-cases, so ANGLE will not expose EXT_texture_buffer due to the lack of support from the underlying Vulkan drivers.   Specifically, this means that the application \"Special Forces Group 2\" cannot run on any Android platform when using ANGLE, since it crashes due to the lack of support for EXT_texture_buffer.\n\nThis isn\u0027t a testing configuration.   This is using ANGLE as it\u0027s intended as a GLES driver on Android with a real application.",
+      "parentUuid": "fd7f7abf_d7cc27c8",
+      "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e8b21ea_2fcc6e99",
