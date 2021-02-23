@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "804aa538_94941d09",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T19:45:54Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the translator be doing these, so they would be a compile error instead of a link error?",
+      "revId": "86a8885cc30ec302e9a6bb844e01cc16fa32f8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
