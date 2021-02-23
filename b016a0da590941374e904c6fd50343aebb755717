@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5372af5_c03a999d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-02-23T21:37:40Z",
+      "side": 1,
+      "message": "If Shabi\u0027s suggestion works it would be cleaner.\n\nThanks!",
+      "revId": "b016a0da590941374e904c6fd50343aebb755717",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d4fe813_a1f384e7",
