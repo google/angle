@@ -203,6 +203,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e4816c81_496578be",
+        "filename": "src/compiler/translator/BaseTypes.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T15:45:49Z",
+      "side": 1,
+      "message": "Ok, I thought renaming this was missed from an earlier commit of yours. It could be a nice follow up, but not necessary for this CL.",
+      "parentUuid": "8604d088_a703072f",
+      "range": {
+        "startLine": 153,
+        "startChar": 7,
+        "endLine": 153,
+        "endChar": 14
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "258f189c_ac177d48",
         "filename": "src/compiler/translator/glslang.l",
         "patchSetId": 16
