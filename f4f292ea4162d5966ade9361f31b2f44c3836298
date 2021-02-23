@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2343481d_48a93598",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:56:37Z",
+      "side": 1,
+      "message": "typo: a",
+      "range": {
+        "startLine": 9,
+        "startChar": 49,
+        "endLine": 9,
+        "endChar": 51
+      },
+      "revId": "f4f292ea4162d5966ade9361f31b2f44c3836298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3107fd23_968c8b36",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:56:37Z",
+      "side": 1,
+      "message": "typo: a",
+      "range": {
+        "startLine": 11,
+        "startChar": 11,
+        "endLine": 11,
+        "endChar": 13
+      },
+      "revId": "f4f292ea4162d5966ade9361f31b2f44c3836298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da913da4_22a4162b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:56:37Z",
+      "side": 1,
+      "message": "Even thought the class is in an anonymous namespace? Is this a gcc bug or a spec requirement?",
+      "revId": "f4f292ea4162d5966ade9361f31b2f44c3836298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9f18760_dfa91811",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:56:37Z",
+      "side": 1,
+      "message": "`",
+      "revId": "f4f292ea4162d5966ade9361f31b2f44c3836298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4dd1e799_56a84f89",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:56:37Z",
+      "side": 1,
+      "message": "Please remove static then, it\u0027s already in an anonymous namespace.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 6
+      },
+      "revId": "f4f292ea4162d5966ade9361f31b2f44c3836298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc6a9cb8_2be53a34",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:56:37Z",
+      "side": 1,
+      "message": "Also, please move these right above `class SpirvTransformFeedbackCodeGenerator`, so it\u0027s at least closer to where it\u0027s used.",
+      "revId": "f4f292ea4162d5966ade9361f31b2f44c3836298",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
