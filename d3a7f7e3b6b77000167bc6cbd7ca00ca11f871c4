@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1188ce2e_e1b2ef70",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 625,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:23:14Z",
+      "side": 1,
+      "message": "size_t is \"%zu\"",
+      "range": {
+        "startLine": 625,
+        "startChar": 15,
+        "endLine": 625,
+        "endChar": 17
+      },
+      "revId": "d3a7f7e3b6b77000167bc6cbd7ca00ca11f871c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9949b4d1_c33055d3",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 632,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:23:14Z",
+      "side": 1,
+      "message": "%ld and %lu?",
+      "range": {
+        "startLine": 632,
+        "startChar": 16,
+        "endLine": 632,
+        "endChar": 18
+      },
+      "revId": "d3a7f7e3b6b77000167bc6cbd7ca00ca11f871c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36bd8677_4bb54a5b",
         "filename": "src/cl/entry_points_cl_autogen.h",
         "patchSetId": 3
