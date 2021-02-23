@@ -3428,7 +3428,21 @@ void CaptureGetRenderbufferImageANGLE_pixels(const State &glState,
                                              void *pixels,
                                              angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (glState.getTargetBuffer(gl::BufferBinding::PixelPack))
+    {
+        // If a pixel pack buffer is bound, this is an offset, not a pointer
+        paramCapture->value.voidPointerVal = pixels;
+        return;
+    }
+
+    const Renderbuffer *renderbuffer = glState.getCurrentRenderbuffer();
+    ASSERT(renderbuffer);
+
+    // Use a conservative upper bound instead of an exact size to be simple.
+    static constexpr GLsizei kMaxPixelSize = 32;
+    size_t width                           = renderbuffer->getWidth();
+    size_t height                          = renderbuffer->getHeight();
+    paramCapture->readBufferSizeBytes      = kMaxPixelSize * width * height;
 }
 
 void CaptureBufferStorageEXT_data(const State &glState,
