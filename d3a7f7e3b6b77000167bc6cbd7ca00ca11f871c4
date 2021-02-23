@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36bd8677_4bb54a5b",
+        "filename": "src/cl/entry_points_cl_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-23T00:16:28Z",
+      "side": 1,
+      "message": "Very cool seeing all those changes come together to create these two files.",
+      "revId": "d3a7f7e3b6b77000167bc6cbd7ca00ca11f871c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
