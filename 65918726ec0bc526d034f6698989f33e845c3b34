@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59972d7c_4536708c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-02-23T11:18:35Z",
+      "side": 1,
+      "message": "Hi Jamie,Shahbaz\nThis patch is used to fix the issue https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5636.\nStopping adding the extension attributes (in patchset 3) will trigger some faliures on android, change the validation logic (in patchset 4) looks fine.",
+      "revId": "65918726ec0bc526d034f6698989f33e845c3b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
