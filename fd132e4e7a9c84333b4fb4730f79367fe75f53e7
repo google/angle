@@ -142,6 +142,24 @@
       "parentUuid": "68c50066_bc3fee25",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6541c5bd_ad39e619",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T16:23:03Z",
+      "side": 0,
+      "message": "I forgot to send the messages I wrote last night:\n\n\u003e I see what needs to be done.  Hopefully, I can push a fix by tomorrow morning.\n\nI did quickly try this last night and saw that changing loadOp\u003dCLEAR was needed for emulated alpha.\n\n\u003e On TBR devices ...\n\nSorry, what does \"TBR\" mean?\n\n\u003e On immediate mode devices ...\n\nSorry again, does \"immediate mode devices\" mean non-tilers (e.g. normal desktop GPUs)?",
+      "parentUuid": "68c50066_bc3fee25",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
