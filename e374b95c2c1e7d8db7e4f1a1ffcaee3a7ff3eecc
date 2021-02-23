@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa44d011_8843d935",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "Looks good.   Thanks for putting this together.",
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4eb0a47_0e681867",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "This is referred to as \"debug-utils markers\" in DebuggingTips.md:\n\n    ## Enabling Debug Markers\n\n    ANGLE can emit debug-utils markers for every GLES API command that are visible to both Android\n    GPU Inspector (AGI) and RenderDoc.  This support is compiled when the following GN args are set:\n    ```\n    angle_enable_trace \u003d true\n    angle_enable_annotator_run_time_checks \u003d true\n    ```\n\nThis should use the same terminology and point them to that section (rather than repeating it here), since ANGLE will output ERR/WARN/INFO events (what I\u0027d consider \"general logging\") without `angle_enable_trace \u003d true`.",
+      "range": {
+        "startLine": 9,
+        "startChar": 17,
+        "endLine": 9,
+        "endChar": 32
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddbc7de9_0f6fe4d9",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "I haven\u0027t read through the extension, but can there be allocations/frees for memory that ANGLE uses but is also shared by other processes, which this wouldn\u0027t call the callback for?   I\u0027m wondering if this would be clearer to just say:\n\n    - Allocation of GPU memory by ANGLE",
+      "range": {
+        "startLine": 22,
+        "startChar": 27,
+        "endLine": 22,
+        "endChar": 45
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53b26d94_43310b7c",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "nit: descriptor set (VK_OBJECT_TYPE_DESCRIPTOR_SET)",
+      "range": {
+        "startLine": 31,
+        "startChar": 82,
+        "endLine": 31,
+        "endChar": 96
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d4bb9b7_3c390a02",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "nit: descriptor set",
+      "range": {
+        "startLine": 32,
+        "startChar": 60,
+        "endLine": 32,
+        "endChar": 74
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "496d1351_c31ef71f",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "There should be an example what needs to be updated in RendererVk.cpp and how.\n\n    ANGLE_FEATURE_CONDITION(\u0026mFeatures, logMemoryReportCallbacks, false);\n    ANGLE_FEATURE_CONDITION(\u0026mFeatures, logMemoryReportStats, false);\n\nAlso, will this work when setting the values at runtime?\n\n    adb shell setprop debug.angle.feature_overrides_enabled logMemoryReportCallbacks\n\nOr does it *have* to be done in RendererVk.cpp so that the values are known when ANGLE is being initialized?",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 34
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0debcbf7_6bf4fd3d",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "Does it only work on Android, or does it work everywhere else but it has only been used/tested on Android?",
+      "range": {
+        "startLine": 43,
+        "startChar": 6,
+        "endLine": 43,
+        "endChar": 70
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "768dda52_76e65bd2",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-23T01:20:36Z",
+      "side": 1,
+      "message": "Similar above.   Rather than repeating this, point them to section \"Enabling Debug Markers\".",
+      "range": {
+        "startLine": 55,
+        "startChar": 94,
+        "endLine": 60,
+        "endChar": 3
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
