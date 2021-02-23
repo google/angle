@@ -456,6 +456,30 @@
       },
       "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a84ba66_8086f4c2",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T19:48:23Z",
+      "side": 1,
+      "message": "Ok, I thought there was some synergy. Yes, this is helpful.",
+      "parentUuid": "afb2c150_b58aa834",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 93
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
