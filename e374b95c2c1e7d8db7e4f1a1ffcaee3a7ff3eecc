@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2f2b003_e3091a39",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "I prefer it here.  This is less about the Vulkan implementation, and seems to fit with other info I see in this directory (e.g. that\u0027s in \"DebuggingTips.md\").",
+      "parentUuid": "5edc2c77_7ce034b2",
+      "range": {
+        "startLine": 5,
+        "startChar": 43,
+        "endLine": 5,
+        "endChar": 68
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4eb0a47_0e681867",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-02-23T01:20:36Z",
       "side": 1,
       "message": "This is referred to as \"debug-utils markers\" in DebuggingTips.md:\n\n    ## Enabling Debug Markers\n\n    ANGLE can emit debug-utils markers for every GLES API command that are visible to both Android\n    GPU Inspector (AGI) and RenderDoc.  This support is compiled when the following GN args are set:\n    ```\n    angle_enable_trace \u003d true\n    angle_enable_annotator_run_time_checks \u003d true\n    ```\n\nThis should use the same terminology and point them to that section (rather than repeating it here), since ANGLE will output ERR/WARN/INFO events (what I\u0027d consider \"general logging\") without `angle_enable_trace \u003d true`.",
+      "range": {
+        "startLine": 9,
+        "startChar": 17,
+        "endLine": 9,
+        "endChar": 32
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3583c14_041604c6",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "I reworked this and what it now points to ...\n\nIt actually changed from when I initially wrote the debug-utils marker doc.  Jamie wanted it split out separately from \"angle_enable_trace\", or what I\u0027m calling \"general logging\".  See what you think.",
+      "parentUuid": "b4eb0a47_0e681867",
       "range": {
         "startLine": 9,
         "startChar": 17,
@@ -104,6 +152,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e8758c8_3b065dba",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "I like the new language.\n\nI\u0027m not certain about your question, but I like the new language.",
+      "parentUuid": "ddbc7de9_0f6fe4d9",
+      "range": {
+        "startLine": 22,
+        "startChar": 27,
+        "endLine": 22,
+        "endChar": 45
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "53b26d94_43310b7c",
@@ -117,6 +189,30 @@
       "writtenOn": "2021-02-23T01:20:36Z",
       "side": 1,
       "message": "nit: descriptor set (VK_OBJECT_TYPE_DESCRIPTOR_SET)",
+      "range": {
+        "startLine": 31,
+        "startChar": 82,
+        "endLine": 31,
+        "endChar": 96
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4af4682_e3ad702d",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53b26d94_43310b7c",
       "range": {
         "startLine": 31,
         "startChar": 82,
@@ -150,6 +246,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8dcc1328_fcd4023a",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d4bb9b7_3c390a02",
+      "range": {
+        "startLine": 32,
+        "startChar": 60,
+        "endLine": 32,
+        "endChar": 74
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "496d1351_c31ef71f",
@@ -163,6 +283,30 @@
       "writtenOn": "2021-02-23T01:20:36Z",
       "side": 1,
       "message": "There should be an example what needs to be updated in RendererVk.cpp and how.\n\n    ANGLE_FEATURE_CONDITION(\u0026mFeatures, logMemoryReportCallbacks, false);\n    ANGLE_FEATURE_CONDITION(\u0026mFeatures, logMemoryReportStats, false);\n\nAlso, will this work when setting the values at runtime?\n\n    adb shell setprop debug.angle.feature_overrides_enabled logMemoryReportCallbacks\n\nOr does it *have* to be done in RendererVk.cpp so that the values are known when ANGLE is being initialized?",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 34
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "933c3091_ff15fdbe",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "Done.\n\nThanks, I didn\u0027t realize we could set a feature with adb.  Looks like only one feature can be set that way.",
+      "parentUuid": "496d1351_c31ef71f",
       "range": {
         "startLine": 40,
         "startChar": 0,
@@ -196,6 +340,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f9c5b8e_b076642d",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "It should work everywhere, but it\u0027s new enough that it\u0027s only been used/tested on Android.  I tweaked the language.",
+      "parentUuid": "0debcbf7_6bf4fd3d",
+      "range": {
+        "startLine": 43,
+        "startChar": 6,
+        "endLine": 43,
+        "endChar": 70
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "768dda52_76e65bd2",
@@ -219,6 +387,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e342e86_2a51ef55",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "I reworked it similar to above.  BTW, it\u0027s a different GN arg.",
+      "parentUuid": "768dda52_76e65bd2",
+      "range": {
+        "startLine": 55,
+        "startChar": 94,
+        "endLine": 60,
+        "endChar": 3
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3615a2e9_6b0c89a3",
@@ -232,6 +424,30 @@
       "writtenOn": "2021-02-23T17:34:34Z",
       "side": 1,
       "message": "How is that? Do you generate GPU debug markers with allocation stats?",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 93
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afb2c150_b58aa834",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T17:52:42Z",
+      "side": 1,
+      "message": "Unfortunately, no.  I\u0027ve discussed adding GPU memory info to AGI, but it\u0027s far down on the priority list at this point.\n\nI added some text to illustrate what I\u0027ve done.  PTAL.  Is it helpful?",
+      "parentUuid": "3615a2e9_6b0c89a3",
       "range": {
         "startLine": 64,
         "startChar": 0,
