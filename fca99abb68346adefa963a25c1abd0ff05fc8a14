@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb291495_522a83b0",
+        "filename": "src/compiler/translator/OutputVulkanGLSLForMetal.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-23T15:44:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "241f055d_e416ad86",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 65
+      },
+      "revId": "fca99abb68346adefa963a25c1abd0ff05fc8a14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c4f7e3d2_b4e1d5eb",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-12T19:26:19Z",
       "side": 1,
       "message": "Same here, let\u0027s remove the one in:\nsrc/compiler/translator/TranslatorMetal.cpp",
+      "range": {
+        "startLine": 2,
+        "startChar": 0,
+        "endLine": 2,
+        "endChar": 65
+      },
+      "revId": "fca99abb68346adefa963a25c1abd0ff05fc8a14",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80300525_51fd3e07",
+        "filename": "src/compiler/translator/TranslatorMetal.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-23T15:44:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "c4f7e3d2_b4e1d5eb",
       "range": {
         "startLine": 2,
         "startChar": 0,
