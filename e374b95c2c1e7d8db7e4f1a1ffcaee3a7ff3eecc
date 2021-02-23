@@ -18,6 +18,46 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "405a1d5b_a4ddf604",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:34:34Z",
+      "side": 1,
+      "message": "Thanks for the doc!",
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5edc2c77_7ce034b2",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:34:34Z",
+      "side": 1,
+      "message": "Maybe then move this doc to src/libANGLE/renderer/vulkan/docs?",
+      "range": {
+        "startLine": 5,
+        "startChar": 43,
+        "endLine": 5,
+        "endChar": 68
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b4eb0a47_0e681867",
@@ -174,6 +214,29 @@
         "startChar": 94,
         "endLine": 60,
         "endChar": 3
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3615a2e9_6b0c89a3",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:34:34Z",
+      "side": 1,
+      "message": "How is that? Do you generate GPU debug markers with allocation stats?",
+      "range": {
+        "startLine": 64,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 93
       },
       "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
