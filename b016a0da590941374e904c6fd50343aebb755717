@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d4fe813_a1f384e7",
+        "filename": "gni/angle.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T15:38:04Z",
+      "side": 1,
+      "message": "Can this work even with use_x11? How about is_ggp?\n\nMy question is, should this expressions instead be:\n\n    is_linux \u0026\u0026 (angle_vulkan_display_mode \u003d\u003d \"headless\" || (!use_x11 \u0026\u0026 !is_ggp \u0026\u0026 !use_ozone))\n\nIn other words, it either defaults to Display if nothing else is available, or if specifically requested by the args.",
+      "range": {
+        "startLine": 35,
+        "startChar": 21,
+        "endLine": 35,
+        "endChar": 60
+      },
+      "revId": "b016a0da590941374e904c6fd50343aebb755717",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
