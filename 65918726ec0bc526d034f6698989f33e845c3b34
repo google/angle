@@ -16,6 +16,23 @@
       "message": "Hi Jamie,Shahbaz\nThis patch is used to fix the issue https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5636.\nStopping adding the extension attributes (in patchset 3) will trigger some faliures on android, change the validation logic (in patchset 4) looks fine.",
       "revId": "65918726ec0bc526d034f6698989f33e845c3b34",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6445e2c3_69af9b99",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:50:56Z",
+      "side": 1,
+      "message": "This doesn\u0027t look like the right approach. Jamie\u0027s suggestion was to modify EGLWindow.cpp to not provide the attribute in the first place. That is in EGLWindow::initializeDisplay.\n\nFor example, in that file we have:\n\n    const bool hasFeatureControlANGLE \u003d\n        strstr(extensionString, \"EGL_ANGLE_feature_control\") !\u003d nullptr;\n\n    ...\n\n    if (hasFeatureControlANGLE)\n    {\n        ...\n        displayAttributes.push_back(EGL_FEATURE_OVERRIDES_ENABLED_ANGLE);\n        displayAttributes.push_back(reinterpret_cast\u003cEGLAttrib\u003e(enabledFeatureOverrides.data()));\n    }\n\nSo we only add the EGL_FEATURE_OVERRIDES_ENABLED_ANGLE attribute when the extension is available. The code that adds the EGL_PLATFORM_ANGLE_CONTEXT_VIRTUALIZATION_ANGLE attribute should do something similar.",
+      "revId": "65918726ec0bc526d034f6698989f33e845c3b34",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
