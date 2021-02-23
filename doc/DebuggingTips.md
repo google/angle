@@ -38,12 +38,21 @@ apitrace trace -o mytrace ./out/Debug/hello_triangle
 qapitrace mytrace
 ```
 
-## Enabling Debug Markers
+## Enabling General Logging
 
-ANGLE can emit debug-utils markers for every GLES API command that are visible to both Android
-GPU Inspector (AGI) and RenderDoc.  This support is compiled when the following GN args are set:
+Normally, ANGLE only logs errors and warnings (e.g. to Android logcat).  General logging, or
+additional levels of "trace" messages will be logged when the following GN arg is set:
 ```
 angle_enable_trace = true
+```
+
+## Enabling Debug-Utils Markers
+
+ANGLE can emit debug-utils markers for every GLES API command that are visible to both Android GPU
+Inspector (AGI) and RenderDoc.  This support requires
+[enabling general logging](#enabling-general-logging) as well as setting the following additional
+GN arg:
+```
 angle_enable_annotator_run_time_checks = true
 ```
 In addition, if the following GN arg is set, the API calls will output to Android's logcat:
