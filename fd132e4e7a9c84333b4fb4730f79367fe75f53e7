@@ -160,6 +160,24 @@
       "parentUuid": "68c50066_bc3fee25",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de54d80c_bafbec28",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T17:59:02Z",
+      "side": 0,
+      "message": "TBR \u003d Tile-Based Rendering, so mobile. Immediate mode rendering GPUs are desktop GPUs.",
+      "parentUuid": "6541c5bd_ad39e619",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
