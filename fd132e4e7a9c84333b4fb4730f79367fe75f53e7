@@ -124,6 +124,24 @@
       "parentUuid": "9376a336_0770131f",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5c36743_18ff88f7",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T16:13:26Z",
+      "side": 0,
+      "message": "Maybe due to some invalidate call. But that actually brings up a bug. If a format is emulated, we should never let it use loadOp\u003dDONT_CARE. storeOp\u003dDONT_CARE may be fine? Probably something like this could be used:\n\n- On TBR devices: use loadOp\u003dCLEAR instead of loadOp\u003dDONT_CARE if format is emulated. storeOp can remain DONT_CARE because next loadOp would clear the alpha anyway\n- On immediate mode devices: use loadOp\u003dLOAD instead of loadOp\u003dDONT_CARE, use storeOp\u003dSTORE instead of storeOp\u003dDONT_CARE if format is emulated.",
+      "parentUuid": "68c50066_bc3fee25",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
