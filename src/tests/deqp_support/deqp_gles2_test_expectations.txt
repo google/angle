@@ -525,3 +525,11 @@
 5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_array_function_arg_vertex = SKIP
 5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_fragment = SKIP
 5665 NEXUS5X : dEQP-GLES2.functional.shaders.struct.uniform.sampler_in_function_arg_vertex = SKIP
+
+// GL_R8 and GL_RG8 texture formats support on Metal
+5674 METAL AMD : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.r8 = FAIL
+5674 METAL AMD : dEQP-GLES2.functional.fbo.completeness.renderable.texture.color0.rg8 = FAIL
+5674 METAL AMD : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.r8 = FAIL
+5674 METAL AMD : dEQP-GLES2.functional.fbo.completeness.renderable.texture.depth.rg8 = FAIL
+5674 METAL AMD : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.r8 = FAIL
+5674 METAL AMD : dEQP-GLES2.functional.fbo.completeness.renderable.texture.stencil.rg8 = FAIL
