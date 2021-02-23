@@ -178,6 +178,24 @@
       "parentUuid": "6541c5bd_ad39e619",
       "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37b05322_a86768c4",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1631,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-23T19:06:19Z",
+      "side": 0,
+      "message": "Thanks.  For some reason, I could only think of \"to be reviewed\":-).\n\nI have tested a change that I\u0027ll push in PS3 that does a CLEAR.  Why is that not good for immediate mode devices?",
+      "parentUuid": "de54d80c_bafbec28",
+      "revId": "fd132e4e7a9c84333b4fb4730f79367fe75f53e7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
