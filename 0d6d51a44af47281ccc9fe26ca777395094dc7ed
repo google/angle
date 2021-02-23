@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfaa9be8_e7c500a6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-23T15:54:24Z",
+      "side": 1,
+      "message": "Turns out many of the barrier bits are one way, so about a third of the tests were not correct.",
+      "revId": "0d6d51a44af47281ccc9fe26ca777395094dc7ed",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
