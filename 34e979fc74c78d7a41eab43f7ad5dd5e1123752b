@@ -33,6 +33,24 @@
       "message": "Lubosz: can you rebase this to fix the conflicts with the scripts I modified? Then we can move forward and start landing these patches!",
       "revId": "34e979fc74c78d7a41eab43f7ad5dd5e1123752b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a25de9e_4e2e4e5a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-23T15:46:21Z",
+      "side": 1,
+      "message": "The conflicts were pretty straight forward to resolve. Luckily most of them were generated anyway.\nI left in my original change of putting 2018 as the year of origin for `gen_vk_internal_shaders.py`.",
+      "parentUuid": "3a2ceecb_15868c8e",
+      "revId": "34e979fc74c78d7a41eab43f7ad5dd5e1123752b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
