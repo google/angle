@@ -317,6 +317,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7880001f_969c738a",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T23:58:40Z",
+      "side": 1,
+      "message": "You can specify multiple properties, colon separated.  See the parameters passed to GetCachedStringsFromEnvironmentVarOrAndroidProperty.  If it didn\u0027t work for you, that\u0027s a bug.",
+      "parentUuid": "933c3091_ff15fdbe",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 34
+      },
+      "revId": "e374b95c2c1e7d8db7e4f1a1ffcaee3a7ff3eecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0debcbf7_6bf4fd3d",
