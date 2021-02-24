@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd8bdbf7_76e76392",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "We can certainly update this if we have data showing non-debug builds are noticeably faster.  Jank can really screw up a trace.  I do think it is important to at least get asserts on first pass, at least at this phase in development.",
+      "parentUuid": "d823f8c9_ab636856",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 141
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa4f3449_7db5f82f",
@@ -81,6 +105,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4fd080f_9448303d",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Cool, I\u0027ll add that, with the caveat that it is only for userdebug images.  Also added an `aapt` based method.",
+      "parentUuid": "fa4f3449_7db5f82f",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 174
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bdbec891_54ed6c64",
@@ -94,6 +142,30 @@
       "writtenOn": "2021-02-24T03:24:28Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 119,
+        "startChar": 81,
+        "endLine": 119,
+        "endChar": 90
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e19d0346_dcc75731",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdbec891_54ed6c64",
       "range": {
         "startLine": 119,
         "startChar": 81,
@@ -129,6 +201,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "56636cd2_ded4ad56",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Have you seen it do partial writes?  Doesn\u0027t is show up all at once?",
+      "parentUuid": "0aa8fef4_684b609e",
+      "range": {
+        "startLine": 143,
+        "startChar": 55,
+        "endLine": 143,
+        "endChar": 63
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bba4398d_e62328ec",
         "filename": "src/tests/restricted_traces/README.md",
         "patchSetId": 1
@@ -140,6 +236,30 @@
       "writtenOn": "2021-02-24T03:24:28Z",
       "side": 1,
       "message": "nit: This can just be a \u0027cd\u0027 since you never \u0027popd\u0027 later (and a \u0027cd -\u0027 gets you back anyway).",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 5
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccae423c_2cce0133",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Sure, done.",
+      "parentUuid": "bba4398d_e62328ec",
       "range": {
         "startLine": 166,
         "startChar": 0,
@@ -167,6 +287,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b428dcb8_e9b53ab8",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "590a1dbf_abd85326",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac016d1c_eec675ba",
@@ -180,6 +318,24 @@
       "writtenOn": "2021-02-24T03:24:28Z",
       "side": 1,
       "message": "same: ./scripts/run_code_generation.py",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d56c8908_588fdeb8",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac016d1c_eec675ba",
       "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -201,6 +357,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26a38539_85e3a467",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4048089a_784a3601",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3f1f9b36_b03ec38c",
@@ -214,6 +388,30 @@
       "writtenOn": "2021-02-24T03:24:28Z",
       "side": 1,
       "message": "nit: CL to submit it with",
+      "range": {
+        "startLine": 202,
+        "startChar": 89,
+        "endLine": 202,
+        "endChar": 106
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08233355_27f23760",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T16:38:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3f1f9b36_b03ec38c",
       "range": {
         "startLine": 202,
         "startChar": 89,
