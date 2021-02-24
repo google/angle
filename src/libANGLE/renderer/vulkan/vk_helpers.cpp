@@ -683,10 +683,9 @@ bool CanCopyWithTransferForCopyImage(RendererVk *renderer,
 }
 
 bool CanCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
-                                       const vk::Format *imageFormat)
+                                       const vk::Format *imageFormat,
+                                       const angle::Format *readFormat)
 {
-    const angle::Format *readFormat = &imageFormat->actualImageFormat();
-
     // Don't allow copies from emulated formats for simplicity.
     const bool isEmulatedFormat = imageFormat->hasEmulatedImageFormat();
 
@@ -697,7 +696,12 @@ bool CanCopyWithTransformForReadPixels(const PackPixelsParams &packPixelsParams,
     const bool needsTransformation =
         packPixelsParams.rotation != SurfaceRotation::Identity || packPixelsParams.reverseRowOrder;
 
-    return !isEmulatedFormat && isSameFormatCopy && !needsTransformation;
+    // Disallow copies when the output pitch cannot be correctly specified in Vulkan.
+    const bool isPitchMultipleOfTexelSize =
+        packPixelsParams.outputPitch % readFormat->pixelBytes == 0;
+
+    return !isEmulatedFormat && isSameFormatCopy && !needsTransformation &&
+           isPitchMultipleOfTexelSize;
 }
 
 void ReleaseBufferListToRenderer(RendererVk *renderer, BufferHelperPointerVector *buffers)
@@ -6354,7 +6358,8 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
     }
 
     // If PBO and if possible, copy directly on the GPU.
-    if (packPixelsParams.packBuffer && CanCopyWithTransformForReadPixels(packPixelsParams, mFormat))
+    if (packPixelsParams.packBuffer &&
+        CanCopyWithTransformForReadPixels(packPixelsParams, mFormat, readFormat))
     {
         BufferHelper &packBuffer = GetImpl(packPixelsParams.packBuffer)->getBuffer();
 
@@ -6364,6 +6369,8 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
         CommandBuffer *copyCommandBuffer;
         ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer(copyAccess, &copyCommandBuffer));
+
+        ASSERT(packPixelsParams.outputPitch % readFormat->pixelBytes == 0);
 
         VkBufferImageCopy region = {};
         region.bufferImageHeight = srcExtent.height;
