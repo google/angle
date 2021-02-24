@@ -177,7 +177,8 @@ bool HasRepeatingQualifiers(const TTypeQualifierBuilder::QualifierSequence &qual
                 // repetitions.
                 TQualifier currentQualifier =
                     static_cast<const TStorageQualifierWrapper *>(qualifiers[i])->getQualifier();
-                if (currentQualifier == EvqVertexOut || currentQualifier == EvqFragmentOut)
+                if (currentQualifier == EvqVertexOut || currentQualifier == EvqFragmentOut ||
+                    currentQualifier == EvqFragmentInOut)
                 {
                     isOut = true;
                 }
@@ -729,6 +730,10 @@ TLayoutQualifier JoinLayoutQualifiers(TLayoutQualifier leftQualifier,
     if (rightQualifier.blockStorage != EbsUnspecified)
     {
         joinedQualifier.blockStorage = rightQualifier.blockStorage;
+    }
+    if (rightQualifier.noncoherent != false)
+    {
+        joinedQualifier.noncoherent = rightQualifier.noncoherent;
     }
 
     for (size_t i = 0u; i < rightQualifier.localSize.size(); ++i)

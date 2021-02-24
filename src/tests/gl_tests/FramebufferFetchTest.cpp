@@ -72,25 +72,23 @@ TEST_P(FramebufferFetchNonCoherentES31, BasicInout)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color += u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
 
     GLProgram program;
     program.makeRaster(kVS, kFS);
@@ -128,25 +126,23 @@ TEST_P(FramebufferFetchNonCoherentES31, BasicLastFragData)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 100\n"
-        "attribute vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 100
+attribute vec4 a_position;
 
-    constexpr char kFS[] =
-        "#version 100\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent) mediump vec4 gl_LastFragData[gl_MaxDrawBuffers];\n"
-        "uniform highp vec4 u_color;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_FragColor = u_color + gl_LastFragData[0];\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 100
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent) mediump vec4 gl_LastFragData[gl_MaxDrawBuffers];
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    gl_FragColor = u_color + gl_LastFragData[0];
+})";
 
     GLProgram program;
     program.makeRaster(kVS, kFS);
@@ -185,31 +181,113 @@ TEST_P(FramebufferFetchNonCoherentES31, MultipleRenderTarget)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color0;\n"
-        "layout(noncoherent, location = 1) inout highp vec4 o_color1;\n"
-        "layout(noncoherent, location = 2) inout highp vec4 o_color2;\n"
-        "layout(noncoherent, location = 3) inout highp vec4 o_color3;\n"
-        "uniform highp vec4 u_color;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color0 += u_color;\n"
-        "    o_color1 += u_color;\n"
-        "    o_color2 += u_color;\n"
-        "    o_color3 += u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(noncoherent, location = 1) inout highp vec4 o_color1;
+layout(noncoherent, location = 2) inout highp vec4 o_color2;
+layout(noncoherent, location = 3) inout highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 += u_color;
+    o_color2 += u_color;
+    o_color3 += u_color;
+})";
+
+    GLProgram program;
+    program.makeRaster(kVS, kFS);
+    glUseProgram(program);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    std::vector<GLColor> color0(kViewportWidth * kViewportHeight, GLColor::black);
+    std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
+    std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
+    std::vector<GLColor> color3(kViewportWidth * kViewportHeight, GLColor::cyan);
+    GLTexture colorBufferTex[kMaxColorBuffer];
+    GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                                GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color0.data());
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color1.data());
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color2.data());
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[3]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color3.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
+    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                               colorBufferTex[i], 0);
+    }
+    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+
+    ASSERT_GL_NO_ERROR();
+
+    float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
+    GLint colorLocation = glGetUniformLocation(program, "u_color");
+    glUniform4fv(colorLocation, 1, color);
+
+    GLint positionLocation = glGetAttribLocation(program, "a_position");
+    render(positionLocation, GL_TRUE);
+
+    ASSERT_GL_NO_ERROR();
+
+    glReadBuffer(colorAttachments[0]);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+    glReadBuffer(colorAttachments[1]);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+    glReadBuffer(colorAttachments[2]);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+    glReadBuffer(colorAttachments[3]);
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::white);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+// Testing EXT_shader_framebuffer_fetch_non_coherent with multiple render target using inout array
+TEST_P(FramebufferFetchNonCoherentES31, MultipleRenderTargetWithInoutArray)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
+
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color[4];
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color[0] += u_color;
+    o_color[1] += u_color;
+    o_color[2] += u_color;
+    o_color[3] += u_color;
+})";
 
     GLProgram program;
     program.makeRaster(kVS, kFS);
@@ -274,25 +352,23 @@ TEST_P(FramebufferFetchNonCoherentES31, MultipleDraw)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color += u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
 
     GLProgram program;
     program.makeRaster(kVS, kFS);
@@ -336,35 +412,32 @@ TEST_P(FramebufferFetchNonCoherentES31, DrawNonFetchDrawFetch)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS1[] =
-        "#version 310 es\n"
-        "layout(location = 0) out highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color = u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
 
-    constexpr char kFS2[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color += u_color;\n"
-        "}\n";
+    constexpr char kFS1[] = R"(#version 310 es
+layout(location = 0) out highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+
+    constexpr char kFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
 
     GLProgram programNonFetch, programFetch;
     programNonFetch.makeRaster(kVS, kFS1);
@@ -433,35 +506,32 @@ TEST_P(FramebufferFetchNonCoherentES31, DrawFetchDrawNonFetch)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS1[] =
-        "#version 310 es\n"
-        "layout(location = 0) out highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color = u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
 
-    constexpr char kFS2[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color += u_color;\n"
-        "}\n";
+    constexpr char kFS1[] = R"(#version 310 es
+layout(location = 0) out highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+
+    constexpr char kFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
 
     GLProgram programNonFetch, programFetch;
     programFetch.makeRaster(kVS, kFS2);
@@ -530,41 +600,38 @@ TEST_P(FramebufferFetchNonCoherentES31, DrawNonFetchDrawFetchWithDifferentAttach
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS1[] =
-        "#version 310 es\n"
-        "layout(location = 0) out highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color = u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
 
-    constexpr char kFS2[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color0;\n"
-        "layout(location = 1) out highp vec4 o_color1;\n"
-        "layout(noncoherent, location = 2) inout highp vec4 o_color2;\n"
-        "layout(location = 3) out highp vec4 o_color3;\n"
-        "uniform highp vec4 u_color;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color0 += u_color;\n"
-        "    o_color1 = u_color;\n"
-        "    o_color2 += u_color;\n"
-        "    o_color3 = u_color;\n"
-        "}\n";
+    constexpr char kFS1[] = R"(#version 310 es
+layout(location = 0) out highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+
+    constexpr char kFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(noncoherent, location = 2) inout highp vec4 o_color2;
+layout(location = 3) out highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 += u_color;
+    o_color3 = u_color;
+})";
 
     GLProgram programNonFetch, programFetch1;
     programNonFetch.makeRaster(kVS, kFS1);
@@ -693,58 +760,54 @@ TEST_P(FramebufferFetchNonCoherentES31, DrawNonFetchDrawFetchWithDifferentProgra
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS1[] =
-        "#version 310 es\n"
-        "layout(location = 0) out highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color = u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
 
-    constexpr char kFS2[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color0;\n"
-        "layout(location = 1) out highp vec4 o_color1;\n"
-        "layout(noncoherent, location = 2) inout highp vec4 o_color2;\n"
-        "layout(location = 3) out highp vec4 o_color3;\n"
-        "uniform highp vec4 u_color;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color0 += u_color;\n"
-        "    o_color1 = u_color;\n"
-        "    o_color2 += u_color;\n"
-        "    o_color3 = u_color;\n"
-        "}\n";
+    constexpr char kFS1[] = R"(#version 310 es
+layout(location = 0) out highp vec4 o_color;
 
-    constexpr char kFS3[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color0;\n"
-        "layout(location = 1) out highp vec4 o_color1;\n"
-        "layout(location = 2) out highp vec4 o_color2;\n"
-        "layout(noncoherent, location = 3) inout highp vec4 o_color3;\n"
-        "uniform highp vec4 u_color;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color0 += u_color;\n"
-        "    o_color1 = u_color;\n"
-        "    o_color2 = u_color;\n"
-        "    o_color3 += u_color;\n"
-        "}\n";
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+
+    constexpr char kFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(noncoherent, location = 2) inout highp vec4 o_color2;
+layout(location = 3) out highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 += u_color;
+    o_color3 = u_color;
+})";
+
+    constexpr char kFS3[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(location = 2) out highp vec4 o_color2;
+layout(noncoherent, location = 3) inout highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 = u_color;
+    o_color3 += u_color;
+})";
 
     GLProgram programNonFetch, programFetch1, programFetch2;
     programNonFetch.makeRaster(kVS, kFS1);
@@ -858,31 +921,29 @@ TEST_P(FramebufferFetchNonCoherentES31, DrawFetchBlitDrawFetch)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    constexpr char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS1[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color0;\n"
-        "layout(location = 1) out highp vec4 o_color1;\n"
-        "layout(noncoherent, location = 2) inout highp vec4 o_color2;\n"
-        "layout(location = 3) out highp vec4 o_color3;\n"
-        "uniform highp vec4 u_color;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color0 += u_color;\n"
-        "    o_color1 = u_color;\n"
-        "    o_color2 += u_color;\n"
-        "    o_color3 = u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS1[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(noncoherent, location = 2) inout highp vec4 o_color2;
+layout(location = 3) out highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 += u_color;
+    o_color3 = u_color;
+})";
 
     GLProgram programFetch;
     programFetch.makeRaster(kVS, kFS1);
@@ -988,35 +1049,33 @@ TEST_P(FramebufferFetchNonCoherentES31, ProgramPipeline)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
-    const char kVS[] =
-        "#version 310 es\n"
-        "in highp vec4 a_position;\n"
-        "\n"
-        "void main (void)\n"
-        "{\n"
-        "    gl_Position = a_position;\n"
-        "}\n";
+    const char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
 
-    constexpr char kFS1[] =
-        "#version 310 es\n"
-        "layout(location = 0) out highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color = u_color;\n"
-        "}\n";
+void main (void)
+{
+    gl_Position = a_position;
+})";
 
-    constexpr char kFS2[] =
-        "#version 310 es\n"
-        "#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require\n"
-        "layout(noncoherent, location = 0) inout highp vec4 o_color;\n"
-        "\n"
-        "uniform highp vec4 u_color;\n"
-        "void main (void)\n"
-        "{\n"
-        "    o_color += u_color;\n"
-        "}\n";
+    constexpr char kFS1[] = R"(#version 310 es
+layout(location = 0) out highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+
+    constexpr char kFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
 
     GLProgram programVert, programNonFetch, programFetch;
     const char *sourceArray[3] = {kVS, kFS1, kFS2};
@@ -1118,6 +1177,218 @@ TEST_P(FramebufferFetchNonCoherentES31, ProgramPipeline)
     glActiveShaderProgram(pipeline4, programFetch);
     colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
     glUniform4fv(colorLocationFetch, 1, colorGreen);
+    render(positionLocation, GL_TRUE);
+
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+TEST_P(FramebufferFetchNonCoherentES31, UniformUsageCombinations)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
+out highp vec2 texCoord;
+
+void main()
+{
+    gl_Position = a_position;
+    texCoord = (a_position.xy * 0.5) + 0.5;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+
+layout(binding=0, offset=0) uniform atomic_uint atDiff;
+uniform sampler2D tex;
+
+layout(noncoherent, location = 0) inout highp vec4 o_color[4];
+in highp vec2 texCoord;
+
+void main()
+{
+    highp vec4 texColor = texture(tex, texCoord);
+
+    if (texColor != o_color[0])
+    {
+        atomicCounterIncrement(atDiff);
+        o_color[0] = texColor;
+    }
+    else
+    {
+        if (atomicCounter(atDiff) > 0u)
+        {
+            atomicCounterDecrement(atDiff);
+        }
+    }
+
+    if (texColor != o_color[1])
+    {
+        atomicCounterIncrement(atDiff);
+        o_color[1] = texColor;
+    }
+    else
+    {
+        if (atomicCounter(atDiff) > 0u)
+        {
+            atomicCounterDecrement(atDiff);
+        }
+    }
+
+    if (texColor != o_color[2])
+    {
+        atomicCounterIncrement(atDiff);
+        o_color[2] = texColor;
+    }
+    else
+    {
+        if (atomicCounter(atDiff) > 0u)
+        {
+            atomicCounterDecrement(atDiff);
+        }
+    }
+
+    if (texColor != o_color[3])
+    {
+        atomicCounterIncrement(atDiff);
+        o_color[3] = texColor;
+    }
+    else
+    {
+        if (atomicCounter(atDiff) > 0u)
+        {
+            atomicCounterDecrement(atDiff);
+        }
+    }
+})";
+
+    GLProgram program;
+    program.makeRaster(kVS, kFS);
+    glUseProgram(program);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    std::vector<GLColor> color0(kViewportWidth * kViewportHeight, GLColor::cyan);
+    std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
+    std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
+    std::vector<GLColor> color3(kViewportWidth * kViewportHeight, GLColor::black);
+    GLTexture colorBufferTex[kMaxColorBuffer];
+    GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                                GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color0.data());
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color1.data());
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color2.data());
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex[3]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, color3.data());
+    glBindTexture(GL_TEXTURE_2D, 0);
+    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+    {
+        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                               colorBufferTex[i], 0);
+    }
+    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLBuffer atomicBuffer;
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicBuffer);
+    glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_DRAW);
+
+    // Reset atomic counter buffer
+    GLuint *userCounters;
+    userCounters = static_cast<GLuint *>(glMapBufferRange(
+        GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint),
+        GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT));
+    memset(userCounters, 0, sizeof(GLuint));
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+
+    glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomicBuffer);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+
+    float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
+    GLint colorLocation = glGetUniformLocation(program, "u_color");
+    glUniform4fv(colorLocation, 1, color);
+
+    GLint positionLocation = glGetAttribLocation(program, "a_position");
+    render(positionLocation, GL_TRUE);
+
+    ASSERT_GL_NO_ERROR();
+
+    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+    {
+        glReadBuffer(colorAttachments[i]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::black);
+    }
+
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomicBuffer);
+    userCounters = static_cast<GLuint *>(
+        glMapBufferRange(GL_ATOMIC_COUNTER_BUFFER, 0, sizeof(GLuint), GL_MAP_READ_BIT));
+    EXPECT_EQ(*userCounters, kViewportWidth * kViewportHeight * 2);
+    glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
+    glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, 0);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+// Testing that binding the location value using GLES API is conflicted to the location value of the
+// fragment inout.
+TEST_P(FramebufferFetchNonCoherentES31, FixedUniformLocation)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+
+    constexpr char kVS[] = R"(#version 310 es
+in highp vec4 a_position;
+
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+
+layout(location = 0) uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
+
+    GLProgram program;
+    program.makeRaster(kVS, kFS);
+    glUseProgram(program);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+    GLTexture colorBufferTex;
+    glBindTexture(GL_TEXTURE_2D, colorBufferTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                 GL_UNSIGNED_BYTE, greenColor.data());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex, 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
+    GLint colorLocation = glGetUniformLocation(program, "u_color");
+    glUniform4fv(colorLocation, 1, color);
+
+    GLint positionLocation = glGetAttribLocation(program, "a_position");
     render(positionLocation, GL_TRUE);
 
     ASSERT_GL_NO_ERROR();

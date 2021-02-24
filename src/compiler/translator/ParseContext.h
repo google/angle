@@ -177,6 +177,7 @@ class TParseContext : angle::NonCopyable
     // Done only for empty declarations.
     void emptyDeclarationErrorCheck(const TType &type, const TSourceLoc &location);
 
+    void checkCanUseLayoutQualifier(const TSourceLoc &location);
     bool checkLayoutQualifierSupported(const TSourceLoc &location,
                                        const ImmutableString &layoutQualifierName,
                                        int versionRequired);
@@ -574,6 +575,10 @@ class TParseContext : angle::NonCopyable
     void checkYuvIsNotSpecified(const TSourceLoc &location, bool yuv);
 
     void checkEarlyFragmentTestsIsNotSpecified(const TSourceLoc &location, bool earlyFragmentTests);
+
+    void checkNoncoherentIsSpecified(const TSourceLoc &location, bool noncoherent);
+
+    void checkNoncoherentIsNotSpecified(const TSourceLoc &location, bool noncoherent);
 
     bool checkUnsizedArrayConstructorArgumentDimensionality(const TIntermSequence &arguments,
                                                             TType type,

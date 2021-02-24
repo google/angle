@@ -566,16 +566,17 @@ void ProgramExecutableVk::addInputAttachmentDescriptorSetDesc(
         return;
     }
 
-    const uint32_t baseUniformIndex   = executable.getFragmentInoutRange().low();
-    std::string baseMappedName        = uniforms[baseUniformIndex].mappedName;
-    ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(shaderType, baseMappedName);
-    uint32_t inputAttachmentBinding   = info.binding;
+    const uint32_t baseUniformIndex              = executable.getFragmentInoutRange().low();
+    const gl::LinkedUniform &baseInputAttachment = uniforms.at(baseUniformIndex);
+    std::string baseMappedName                   = baseInputAttachment.mappedName;
+    ShaderInterfaceVariableInfo &baseInfo        = mVariableInfoMap.get(shaderType, baseMappedName);
+    uint32_t baseBinding                         = baseInfo.binding - baseInputAttachment.location;
 
     for (uint32_t colorIndex = 0; colorIndex < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS; ++colorIndex)
     {
-        descOut->update(inputAttachmentBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1,
+        descOut->update(baseBinding, VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT, 1,
                         VK_SHADER_STAGE_FRAGMENT_BIT, nullptr);
-        inputAttachmentBinding++;
+        baseBinding++;
     }
 }
 
@@ -1423,10 +1424,11 @@ angle::Result ProgramExecutableVk::updateInputAttachmentDescriptorSet(
     VkDescriptorSet descriptorSet =
         mDescriptorSets[ToUnderlying(DescriptorSetIndex::ShaderResource)];
 
-    unsigned int baseUniformIndex     = executable.getFragmentInoutRange().low();
-    std::string baseMappedName        = uniforms[baseUniformIndex].mappedName;
-    ShaderInterfaceVariableInfo &info = mVariableInfoMap.get(shaderType, baseMappedName);
-    uint32_t baseBinding              = info.binding;
+    const uint32_t baseUniformIndex              = executable.getFragmentInoutRange().low();
+    const gl::LinkedUniform &baseInputAttachment = uniforms.at(baseUniformIndex);
+    std::string baseMappedName                   = baseInputAttachment.mappedName;
+    ShaderInterfaceVariableInfo &baseInfo        = mVariableInfoMap.get(shaderType, baseMappedName);
+    uint32_t baseBinding                         = baseInfo.binding - baseInputAttachment.location;
 
     for (size_t colorIndex : framebufferVk->getState().getColorAttachmentsMask())
     {

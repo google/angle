@@ -222,10 +222,10 @@ class UniformEncodingVisitorD3D : public sh::BlockEncoderVisitor
           mUniformMapOut(uniformMapOut)
     {}
 
-    void visitNamedSamplerOrImage(const sh::ShaderVariable &sampler,
-                                  const std::string &name,
-                                  const std::string &mappedName,
-                                  const std::vector<unsigned int> &arraySizes) override
+    void visitNamedOpaqueObject(const sh::ShaderVariable &sampler,
+                                const std::string &name,
+                                const std::string &mappedName,
+                                const std::vector<unsigned int> &arraySizes) override
     {
         auto uniformMapEntry = mUniformMapOut->find(name);
         if (uniformMapEntry == mUniformMapOut->end())

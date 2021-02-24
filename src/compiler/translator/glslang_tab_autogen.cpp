@@ -3795,7 +3795,7 @@ yyreduce:
         case 156:
 
         {
-            ES3_OR_NEWER("layout", (yylsp[-3]), "qualifier");
+            context->checkCanUseLayoutQualifier((yylsp[-3]));
             (yyval.interm.layoutQualifier) = (yyvsp[-1].interm.layoutQualifier);
         }
 

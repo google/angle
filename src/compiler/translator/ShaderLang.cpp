@@ -190,6 +190,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->EXT_shader_texture_lod                      = 0;
     resources->WEBGL_debug_shader_precision                = 0;
     resources->EXT_shader_framebuffer_fetch                = 0;
+    resources->EXT_shader_framebuffer_fetch_non_coherent   = 0;
     resources->NV_shader_framebuffer_fetch                 = 0;
     resources->ARM_shader_framebuffer_fetch                = 0;
     resources->OVR_multiview                               = 0;
@@ -931,6 +932,9 @@ const char kXfbEmulationBufferName[]             = "ANGLEXfb";
 const char kXfbEmulationBufferFieldName[]        = "xfbOut";
 
 const char kXfbExtensionPositionOutName[] = "ANGLEXfbPosition";
+
+// EXT_shader_framebuffer_fetch / EXT_shader_framebuffer_fetch_non_coherent
+const char kInputAttachmentName[] = "ANGLEInputAttachment";
 
 }  // namespace vk
 

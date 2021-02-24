@@ -845,6 +845,16 @@
                     }
                 }
             },
+            "EXTShaderFramebufferFetchNonCoherent":{
+                "variables":{
+                    "gl_LastFragData":{
+                        "essl_level":"ESSL1_BUILTINS",
+                        "suffix":"NonCoherent",
+                        "essl_extension":"EXT_shader_framebuffer_fetch_non_coherent",
+                        "initDynamicType":"TType *{type_name} = new TType(EbtFloat, EbpMedium, EvqLastFragData, 4, 1); {type_name}->makeArray(resources.MaxDrawBuffers);"
+                    }
+                }
+            },
             "NVShaderFramebufferFetch":{
                 "variables":{
                     "gl_LastFragColor":{

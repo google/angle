@@ -323,6 +323,8 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h",
   "src/compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.cpp",
   "src/compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.h",
+  "src/compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.cpp",
+  "src/compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.cpp",
   "src/compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteAtomicCounters.cpp",

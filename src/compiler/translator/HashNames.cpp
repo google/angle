@@ -69,7 +69,7 @@ ImmutableString HashName(const ImmutableString &name,
             // have as long names and could conflict.
             return name;
         }
-        if (name == "gl_ClipDistance" || name == "gl_CullDistance")
+        if (name == "gl_ClipDistance" || name == "gl_CullDistance" || name == "gl_LastFragData")
         {
             // NOTE(hqle): When gl_ClipDistance is re-declared, it will become an UserDefined
             // symbol. Normally, UserDefined symbols will have "_u" prefix added to their names by
@@ -95,6 +95,8 @@ ImmutableString HashName(const ImmutableString &name,
             // variable.
             // Compare to only this place has to be handled if re-declared gl_ClipDistance is
             // treated as an UserDefined symbol.
+            //
+            // Also, gl_LastFragData should be added.
             //
             return name;
         }

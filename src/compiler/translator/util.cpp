@@ -777,7 +777,7 @@ bool CanBeInvariantESSL1(TQualifier qualifier)
 bool CanBeInvariantESSL3OrGreater(TQualifier qualifier)
 {
     return IsVaryingOut(qualifier) || qualifier == EvqFragmentOut ||
-           IsBuiltinOutputVariable(qualifier);
+           IsBuiltinOutputVariable(qualifier) || qualifier == EvqFragmentInOut;
 }
 
 bool IsBuiltinOutputVariable(TQualifier qualifier)
@@ -793,6 +793,7 @@ bool IsBuiltinOutputVariable(TQualifier qualifier)
         case EvqFragData:
         case EvqSecondaryFragDataEXT:
         case EvqClipDistance:
+        case EvqLastFragData:
             return true;
         default:
             break;
@@ -808,6 +809,7 @@ bool IsBuiltinFragmentInputVariable(TQualifier qualifier)
         case EvqPointCoord:
         case EvqFrontFacing:
         case EvqHelperInvocation:
+        case EvqLastFragData:
             return true;
         default:
             break;

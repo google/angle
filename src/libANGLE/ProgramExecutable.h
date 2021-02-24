@@ -416,7 +416,8 @@ class ProgramExecutable final : public angle::Subject
     //  2. Sampler uniforms
     //  3. Image uniforms
     //  4. Atomic counter uniforms
-    //  5. Uniform block uniforms
+    //  5. Subpass Input uniforms (Only for Vulkan)
+    //  6. Uniform block uniforms
     // This makes opaque uniform validation easier, since we don't need a separate list.
     // For generating the entries and naming them we follow the spec: GLES 3.1 November 2016 section
     // 7.3.1.1 Naming Active Resources. There's a separate entry for each struct member and each

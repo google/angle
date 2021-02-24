@@ -3003,6 +3003,10 @@ angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *co
         {
             mLastProgramUsesFramebufferFetch = executable->usesFramebufferFetch();
             ANGLE_TRY(flushCommandsAndEndRenderPass());
+
+            ASSERT(mDrawFramebuffer);
+            mDrawFramebuffer->onSwitchProgramFramebufferFetch(this,
+                                                              executable->usesFramebufferFetch());
         }
     }
 

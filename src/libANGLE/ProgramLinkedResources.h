@@ -70,6 +70,7 @@ class UniformLinker final : angle::NonCopyable
                                               std::vector<LinkedUniform> &samplerUniforms,
                                               std::vector<LinkedUniform> &imageUniforms,
                                               std::vector<LinkedUniform> &atomicCounterUniforms,
+                                              std::vector<LinkedUniform> &inputAttachmentUniforms,
                                               std::vector<UnusedUniform> &unusedUniforms,
                                               InfoLog &infoLog);
 
@@ -196,18 +197,24 @@ class AtomicCounterBufferLinker final : angle::NonCopyable
 // TODO(jmadill): Integrate uniform linking/filtering as well as interface blocks.
 struct UnusedUniform
 {
-    UnusedUniform(std::string name, bool isSampler, bool isImage, bool isAtomicCounter)
+    UnusedUniform(std::string name,
+                  bool isSampler,
+                  bool isImage,
+                  bool isAtomicCounter,
+                  bool isFragmentInOut)
     {
         this->name            = name;
         this->isSampler       = isSampler;
         this->isImage         = isImage;
         this->isAtomicCounter = isAtomicCounter;
+        this->isFragmentInOut = isFragmentInOut;
     }
 
     std::string name;
     bool isSampler;
     bool isImage;
     bool isAtomicCounter;
+    bool isFragmentInOut;
 };
 
 struct ProgramLinkedResources

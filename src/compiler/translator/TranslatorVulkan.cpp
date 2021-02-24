@@ -24,6 +24,7 @@
 #include "compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.h"
+#include "compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteAtomicCounters.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteCubeMapSamplersAs2DArray.h"
@@ -968,6 +969,7 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
             bool usesPointCoord   = false;
             bool usesFragCoord    = false;
             bool usesSampleMaskIn = false;
+            bool usesLastFragData = false;
 
             // Search for the gl_PointCoord usage, if its used, we need to flip the y coordinate.
             for (const ShaderVariable &inputVarying : mInputVaryings)
@@ -992,6 +994,12 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 if (inputVarying.name == "gl_FragCoord")
                 {
                     usesFragCoord = true;
+                    break;
+                }
+
+                if (inputVarying.name == "gl_LastFragData")
+                {
+                    usesLastFragData = true;
                     break;
                 }
             }
@@ -1101,6 +1109,16 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 {
                     return false;
                 }
+            }
+
+            if (usesLastFragData && !ReplaceLastFragData(this, root, &getSymbolTable(), &mUniforms))
+            {
+                return false;
+            }
+
+            if (!ReplaceInOutVariables(this, root, &getSymbolTable(), &mUniforms))
+            {
+                return false;
             }
 
             if (!RewriteDfdy(this, compileOptions, root, getSymbolTable(), getShaderVersion(),

@@ -928,7 +928,7 @@ precision_qualifier
 
 layout_qualifier
     : LAYOUT LEFT_PAREN layout_qualifier_id_list RIGHT_PAREN {
-        ES3_OR_NEWER("layout", @1, "qualifier");
+        context->checkCanUseLayoutQualifier(@1);
         $$ = $3;
     }
     ;

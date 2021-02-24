@@ -917,6 +917,50 @@ void AssignUniformBindings(const GlslangSourceOptions &options,
 
 // TODO: http://anglebug.com/4512: Need to combine descriptor set bindings across
 // shader stages.
+void AssignInputAttachmentBindings(const GlslangSourceOptions &options,
+                                   const gl::ProgramExecutable &programExecutable,
+                                   const std::vector<gl::LinkedUniform> &uniforms,
+                                   const gl::RangeUI &inputAttachmentUniformRange,
+                                   const gl::ShaderType shaderType,
+                                   GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                   ShaderInterfaceVariableInfoMap *variableInfoMapOut)
+{
+    const uint32_t baseInputAttachmentBindingIndex =
+        programInterfaceInfo->currentShaderResourceBindingIndex;
+
+    bool hasFragmentInOutVars = false;
+
+    for (unsigned int uniformIndex : inputAttachmentUniformRange)
+    {
+        std::string mappedInputAttachmentName;
+        const gl::LinkedUniform &inputAttachmentUniform = uniforms[uniformIndex];
+        mappedInputAttachmentName                       = inputAttachmentUniform.mappedName;
+
+        if (programExecutable.hasLinkedShaderStage(shaderType) &&
+            inputAttachmentUniform.isActive(shaderType))
+        {
+            const uint32_t inputAttachmentBindingIndex =
+                baseInputAttachmentBindingIndex + inputAttachmentUniform.location;
+
+            AddResourceInfo(variableInfoMapOut, shaderType, mappedInputAttachmentName,
+                            programInterfaceInfo->shaderResourceDescriptorSetIndex,
+                            inputAttachmentBindingIndex);
+
+            hasFragmentInOutVars = true;
+        }
+    }
+
+    if (hasFragmentInOutVars)
+    {
+        // For input attachment uniform, the descriptor set binding indices are allocated as much as
+        // the maximum draw buffers.
+        programInterfaceInfo->currentShaderResourceBindingIndex +=
+            gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    }
+}
+
+// TODO: http://anglebug.com/4512: Need to combine descriptor set bindings across
+// shader stages.
 void AssignInterfaceBlockBindings(const GlslangSourceOptions &options,
                                   const gl::ProgramExecutable &programExecutable,
                                   const std::vector<gl::InterfaceBlock> &blocks,
@@ -997,6 +1041,11 @@ void AssignNonTextureBindings(const GlslangSourceOptions &options,
                               GlslangProgramInterfaceInfo *programInterfaceInfo,
                               ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
+    const std::vector<gl::LinkedUniform> &uniforms = programExecutable.getUniforms();
+    const gl::RangeUI &inputAttachmentUniformRange = programExecutable.getFragmentInoutRange();
+    AssignInputAttachmentBindings(options, programExecutable, uniforms, inputAttachmentUniformRange,
+                                  shaderType, programInterfaceInfo, variableInfoMapOut);
+
     const std::vector<gl::InterfaceBlock> &uniformBlocks = programExecutable.getUniformBlocks();
     AssignInterfaceBlockBindings(options, programExecutable, uniformBlocks, shaderType,
                                  programInterfaceInfo, variableInfoMapOut);
@@ -1011,8 +1060,7 @@ void AssignNonTextureBindings(const GlslangSourceOptions &options,
     AssignAtomicCounterBufferBindings(options, programExecutable, atomicCounterBuffers, shaderType,
                                       programInterfaceInfo, variableInfoMapOut);
 
-    const std::vector<gl::LinkedUniform> &uniforms = programExecutable.getUniforms();
-    const gl::RangeUI &imageUniformRange           = programExecutable.getImageUniformRange();
+    const gl::RangeUI &imageUniformRange = programExecutable.getImageUniformRange();
     AssignImageBindings(options, programExecutable, uniforms, imageUniformRange, shaderType,
                         programInterfaceInfo, variableInfoMapOut);
 }
