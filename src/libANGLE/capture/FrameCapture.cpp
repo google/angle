@@ -4949,30 +4949,32 @@ std::vector<uint8_t> &FrameCaptureShared::getCachedTextureLevelData(gl::Texture 
                                                                     EntryPoint entryPoint)
 {
     auto foundTextureLevels = mCachedTextureLevelData.find(texture->id());
-    if (foundTextureLevels == mCachedTextureLevelData.end() ||
-        entryPoint == EntryPoint::GLCompressedTexImage2D ||
-        entryPoint == EntryPoint::GLCompressedTexImage3D)
+    if (foundTextureLevels == mCachedTextureLevelData.end())
     {
-        // Delete the cached entry (if it exists) in case the caller is respecifying the texture.
-        mCachedTextureLevelData.erase(texture->id());
-
         // Initialize the texture ID data.
         auto emplaceResult = mCachedTextureLevelData.emplace(texture->id(), TextureLevels());
         ASSERT(emplaceResult.second);
         foundTextureLevels = emplaceResult.first;
-    }
-    else
-    {
-        ASSERT(entryPoint == EntryPoint::GLCompressedTexSubImage2D ||
-               entryPoint == EntryPoint::GLCompressedTexSubImage3D);
     }
 
     TextureLevels &foundLevels         = foundTextureLevels->second;
     TextureLevels::iterator foundLevel = foundLevels.find(level);
     if (foundLevel != foundLevels.end())
     {
-        // If we have a cache for this level, return it now
-        return foundLevel->second;
+        if (entryPoint == EntryPoint::GLCompressedTexImage2D ||
+            entryPoint == EntryPoint::GLCompressedTexImage3D)
+        {
+            // Delete the cached entry in case the caller is respecifying the level.
+            foundLevels.erase(level);
+        }
+        else
+        {
+            ASSERT(entryPoint == EntryPoint::GLCompressedTexSubImage2D ||
+                   entryPoint == EntryPoint::GLCompressedTexSubImage3D);
+
+            // If we have a cache for this level, return it now
+            return foundLevel->second;
+        }
     }
 
     // Otherwise, create an appropriately sized cache for this level
