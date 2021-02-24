@@ -33,6 +33,24 @@
       "message": "LGTM- odd that we regress a test.",
       "revId": "8deaa44da08586eb5c6a5f7ec06aa442fdbcfb50",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ad45b8a_0f7fa58d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-24T21:36:56Z",
+      "side": 1,
+      "message": "The test is missing a barrier. Fixed here: https://gerrit.khronos.org/c/vk-gl-cts/+/7062",
+      "parentUuid": "68457a46_bd273286",
+      "revId": "8deaa44da08586eb5c6a5f7ec06aa442fdbcfb50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
