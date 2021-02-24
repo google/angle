@@ -3389,14 +3389,46 @@ bool Program::linkValidateShaders(InfoLog &infoLog)
         Shader *tessControlShader = shaders[ShaderType::TessControl];
         if (tessControlShader)
         {
-            mState.mExecutable->mTessControlShaderVertices =
-                tessControlShader->getTessControlShaderVertices();
+            int tcsShaderVertices = tessControlShader->getTessControlShaderVertices();
+            if (tcsShaderVertices == 0)
+            {
+                // In tessellation control shader, output vertices should be specified at least
+                // once.
+                // > GLSL ES Version 3.20.6 spec:
+                // > 4.4.2. Output Layout Qualifiers
+                // > Tessellation Control Outputs
+                // > ...
+                // > There must be at least one layout qualifier specifying an output patch vertex
+                // > count in any program containing a tessellation control shader.
+                infoLog << "In Tessellation Control Shader, at least one layout qualifier "
+                           "specifying an output patch vertex count must exist.";
+                return false;
+            }
+
+            mState.mExecutable->mTessControlShaderVertices = tcsShaderVertices;
         }
 
         Shader *tessEvaluationShader = shaders[ShaderType::TessEvaluation];
         if (tessEvaluationShader)
         {
-            mState.mExecutable->mTessGenMode        = tessEvaluationShader->getTessGenMode();
+            GLenum tesPrimitiveMode = tessEvaluationShader->getTessGenMode();
+            if (tesPrimitiveMode == 0)
+            {
+                // In tessellation evaluation shader, a primitive mode should be specified at least
+                // once.
+                // > GLSL ES Version 3.20.6 spec:
+                // > 4.4.1. Input Layout Qualifiers
+                // > Tessellation Evaluation Inputs
+                // > ...
+                // > The tessellation evaluation shader object in a program must declare a primitive
+                // > mode in its input layout. Declaring vertex spacing, ordering, or point mode
+                // > identifiers is optional.
+                infoLog << "The Tessellation Evaluation Shader object in a program must declare a "
+                           "primitive mode in its input layout.";
+                return false;
+            }
+
+            mState.mExecutable->mTessGenMode        = tesPrimitiveMode;
             mState.mExecutable->mTessGenSpacing     = tessEvaluationShader->getTessGenSpacing();
             mState.mExecutable->mTessGenVertexOrder = tessEvaluationShader->getTessGenVertexOrder();
             mState.mExecutable->mTessGenPointMode   = tessEvaluationShader->getTessGenPointMode();

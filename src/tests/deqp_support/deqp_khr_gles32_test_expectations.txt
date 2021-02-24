@@ -48,7 +48,6 @@
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.vertex.vertex_ordering = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_control_to_tessellation_evaluation.gl_tessLevel = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.compilation_and_linking_errors.te_non_arrayed_per_vertex_input_blocks = SKIP
-5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.compilation_and_linking_errors.te_lacking_primitive_mode_declaration = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.compilation_and_linking_errors.tc_non_arrayed_per_vertex_input_variables = FAIL
 // Vulkan Validation error regarding buffer usage bits for transform feedback:
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.vertex.vertex_spacing = FAIL
