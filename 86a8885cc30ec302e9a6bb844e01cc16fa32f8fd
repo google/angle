@@ -16,6 +16,24 @@
       "message": "Shouldn\u0027t the translator be doing these, so they would be a compile error instead of a link error?",
       "revId": "86a8885cc30ec302e9a6bb844e01cc16fa32f8fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bdc0b5a_957442ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-24T19:35:27Z",
+      "side": 1,
+      "message": "shabi, if you take a look at the test - \"KHR-GLES32.core.tessellation_shader.compilation_and_linking_errors.te_lacking_primitive_mode_declaration\" this are the 2 methods of interest -\n\n /** Determines what compilation result is anticipated for each of the pipeline stages.\n *\n *  @param pipeline_stage Pipeline stage to return compilation result for.\n *\n *  @return Requested compilation result.\n **/\nTessellationShaderErrorsTestCaseBase::_compilation_result TessellationShaderError11::getCompilationResult(\n\t_pipeline_stage pipeline_stage)\n{\n\tDE_UNREF(pipeline_stage);\n\n\t/* All stages should compile */\n\treturn COMPILATION_RESULT_MUST_SUCCEED;\n}\n\n/** Determines what linking result is anticipated for all program objects created by the test.\n *\n *  @return Expected linking result.\n **/\nTessellationShaderErrorsTestCaseBase::_linking_result TessellationShaderError11::getLinkingResult()\n{\n\treturn LINKING_RESULT_MUST_FAIL;\n}\n\nHence returning a link failure",
+      "parentUuid": "804aa538_94941d09",
+      "revId": "86a8885cc30ec302e9a6bb844e01cc16fa32f8fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
