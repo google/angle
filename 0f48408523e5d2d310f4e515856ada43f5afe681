@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bcd6eb8_5e44e027",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T19:58:27Z",
+      "side": 1,
+      "message": "It\u0027s more of a user choice though what to name your output directories. GN flags standard - naming not.",
+      "parentUuid": "ac434ae3_39fd85e2",
+      "range": {
+        "startLine": 53,
+        "startChar": 17,
+        "endLine": 53,
+        "endChar": 28
+      },
+      "revId": "0f48408523e5d2d310f4e515856ada43f5afe681",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7d731b75_8ed99640",
