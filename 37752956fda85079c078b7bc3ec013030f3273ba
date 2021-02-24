@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43ffaa5d_33373c3c",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000B.inc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-24T19:47:53Z",
+      "side": 1,
+      "message": "Lubosz, how did this happen?",
+      "range": {
+        "startLine": 2,
+        "startChar": 16,
+        "endLine": 2,
+        "endChar": 76
+      },
+      "revId": "37752956fda85079c078b7bc3ec013030f3273ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
