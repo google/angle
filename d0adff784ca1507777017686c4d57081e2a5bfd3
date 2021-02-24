@@ -105,6 +105,24 @@
       "parentUuid": "dbd01730_f063a4ba",
       "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5343d14_86ef0c15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-24T21:07:03Z",
+      "side": 1,
+      "message": "\u003e I\u0027m not entirely sure it\u0027s not a bug in the CL\n\nagreed, Cody provided latest trace for kart rider. So, we have the repro env, will work on this next week to figure out if the issue lies with code or env/vendor",
+      "parentUuid": "49e6616d_98001f47",
+      "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
