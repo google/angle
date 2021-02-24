@@ -16,6 +16,212 @@
       "message": "These updates are a genericized version of what we\u0027ve been using in go/angle-app-traces",
       "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e36ecc05_fc42f67e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "Good stuff.",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d823f8c9_ab636856",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "Since you mention it here, I\u0027ve been thinking about if this really is the right thing to do.   It seems that capturing the trace, especially the first frame of a MEC, causes significant lag to the point where there is a huge jump in what\u0027s happening on the screen from frame 0-\u003e1.   I\u0027m not entirely certain it matters too much from a correctness point of view, but it does make visually validating the trace difficult since the animation is not smooth due to the reset jumps and the frame 0-\u003e1 jumps.\n\nI haven\u0027t tried capturing a trace with a non-debug build yet to see if it really makes any difference.   It\u0027s entirely possible the MEC state collection work far outweighs it and using a debug build for the extra checking doesn\u0027t really make any difference.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 141
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa4f3449_7db5f82f",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "The trick I always use is to look in logcat for the following, which is output for every app when it starts up:\n\n    GraphicsEnvironment: ANGLE Developer option for \u0027com.olzhas.carparking.multyplayer\u0027 set to: \u0027default\u0027\n\nThat also guarantees you use the same package name that GraphicsEnvironment will use to enable/disable ANGLE.",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 174
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdbec891_54ed6c64",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 119,
+        "startChar": 81,
+        "endLine": 119,
+        "endChar": 90
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0aa8fef4_684b609e",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "nit: and no longer growing",
+      "range": {
+        "startLine": 143,
+        "startChar": 55,
+        "endLine": 143,
+        "endChar": 63
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bba4398d_e62328ec",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "nit: This can just be a \u0027cd\u0027 since you never \u0027popd\u0027 later (and a \u0027cd -\u0027 gets you back anyway).",
+      "range": {
+        "startLine": 166,
+        "startChar": 0,
+        "endLine": 166,
+        "endChar": 5
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "590a1dbf_abd85326",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "nit: ./gen_restricted_traces.py\n\nSome day these scripts should be updated to python 3 and this syntax will allow us to update the script itself with which version to use without having to update the docs too.",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac016d1c_eec675ba",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "same: ./scripts/run_code_generation.py",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4048089a_784a3601",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "It\u0027s probably worth noting that the actual trace files will not be listed as part of the git diff, since they are ignored:\n\n    src/tests/restricted_traces/.gitignore\n\nUnfortunately, this makes it a bit of a pain to switch between branches while collecting/debugging traces, since those trace files aren\u0027t ignored by other branches yet.",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f1f9b36_b03ec38c",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-24T03:24:28Z",
+      "side": 1,
+      "message": "nit: CL to submit it with",
+      "range": {
+        "startLine": 202,
+        "startChar": 89,
+        "endLine": 202,
+        "endChar": 106
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
