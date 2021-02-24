@@ -16,6 +16,24 @@
       "message": "Lubosz: looks like this guy needs a rebase.",
       "revId": "32194d36c6bf049953cafc8cb9fa35517d5d0dc5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "969a30e2_8f677308",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-24T08:20:18Z",
+      "side": 1,
+      "message": "Rebased",
+      "parentUuid": "563edad5_6c8ebdef",
+      "revId": "32194d36c6bf049953cafc8cb9fa35517d5d0dc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
