@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b2f9b37_f17b2d78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T19:07:12Z",
+      "side": 1,
+      "message": "LGTM - thanks for the detailed steps.",
+      "revId": "0f48408523e5d2d310f4e515856ada43f5afe681",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24796b0a_525575c8",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T19:07:12Z",
+      "side": 1,
+      "message": "nit: maybe use a template here, e.g. out/\u003cconfig\u003e \n\n\"Performance\" isn\u0027t a standard thing.",
+      "range": {
+        "startLine": 53,
+        "startChar": 17,
+        "endLine": 53,
+        "endChar": 28
+      },
+      "revId": "0f48408523e5d2d310f4e515856ada43f5afe681",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d731b75_8ed99640",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T19:07:12Z",
+      "side": 1,
+      "message": "nit: wrap to 100 chars",
+      "range": {
+        "startLine": 61,
+        "startChar": 33,
+        "endLine": 61,
+        "endChar": 39
+      },
+      "revId": "0f48408523e5d2d310f4e515856ada43f5afe681",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
