@@ -16,6 +16,24 @@
       "message": "@Cheryl, this fixes the rgb16 pbo failure on Intel. Please confirm that it also fixes the test on ARM.",
       "revId": "8551df3d8f602358e083e7e826fe12c369f8ff95",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81f4e4d4_9c7a9a64",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1446209
+      },
+      "writtenOn": "2021-02-24T09:00:43Z",
+      "side": 1,
+      "message": "This fix could also make failed tests pass on mali platform,thanks for the patch!",
+      "parentUuid": "dfb7db74_d9fc6eb0",
+      "revId": "8551df3d8f602358e083e7e826fe12c369f8ff95",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
