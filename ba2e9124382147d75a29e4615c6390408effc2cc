@@ -16,6 +16,57 @@
       "message": "Thanks Tim, addressed most, one question though.",
       "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65b0ae00_1ebe1da9",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2021-02-24T18:01:06Z",
+      "side": 1,
+      "message": "Nit: This can generally be done by looking at the web-based Play Store entry for your app. For instance, Angry Birds 2 is listed here: https://play.google.com/store/apps/details?id\u003dcom.rovio.baba",
+      "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63441bdf_15420aeb",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2021-02-24T18:01:06Z",
+      "side": 1,
+      "message": "Nit: can these both be run from the angle root directory? If yes, that is a bit simpler and it can be easier when resuming the instructions at this step.",
+      "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39b052c7_f2a69f5c",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2021-02-24T18:01:06Z",
+      "side": 1,
+      "message": "I might be misremembering, but I feel like you may then need to re-run one of the previous generation scripts, as the sha of the sha file has changed!",
+      "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
