@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac434ae3_39fd85e2",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T19:53:39Z",
+      "side": 1,
+      "message": "It is standard on Android to use the Performance config.  I recommended it a few lines up, and it is the only way to get full perf on Android, specifically `is_official_build \u003d true` is critical. I went ahead and moved to \u003cconfig\u003e though since these steps are shared with desktop.",
+      "parentUuid": "24796b0a_525575c8",
+      "range": {
+        "startLine": 53,
+        "startChar": 17,
+        "endLine": 53,
+        "endChar": 28
+      },
+      "revId": "0f48408523e5d2d310f4e515856ada43f5afe681",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7d731b75_8ed99640",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-24T19:07:12Z",
       "side": 1,
       "message": "nit: wrap to 100 chars",
+      "range": {
+        "startLine": 61,
+        "startChar": 33,
+        "endLine": 61,
+        "endChar": 39
+      },
+      "revId": "0f48408523e5d2d310f4e515856ada43f5afe681",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9bb7c5c_203970b3",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T19:53:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7d731b75_8ed99640",
       "range": {
         "startLine": 61,
         "startChar": 33,
