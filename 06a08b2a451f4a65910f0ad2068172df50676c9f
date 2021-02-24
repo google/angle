@@ -107,6 +107,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7c19c08_ccbc80f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T21:02:53Z",
+      "side": 1,
+      "message": "OK, maybe let\u0027s enable it by default in these builds, whether we call them shipped or otherwise. They\u0027re internal only so it\u0027s okay if we expose some small non-conformant stuff, right?",
+      "parentUuid": "03292faf_19c504c6",
+      "revId": "06a08b2a451f4a65910f0ad2068172df50676c9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1e8b21ea_2fcc6e99",
