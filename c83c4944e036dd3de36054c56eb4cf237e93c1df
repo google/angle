@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a56c57de_7329ea0d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-24T05:10:22Z",
+      "side": 1,
+      "message": "This has an annoying amount of dealing with ids and types, but it\u0027s the last bit that\u0027s holding back compile-time SPIR-V generation. Again, a good chunk of it would be simplified when ANGLE generates SPIR-V itself.",
+      "revId": "c83c4944e036dd3de36054c56eb4cf237e93c1df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
