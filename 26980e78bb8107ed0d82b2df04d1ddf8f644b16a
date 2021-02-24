@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4840732_babfff2d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T00:37:45Z",
+      "side": 1,
+      "message": "These updates are a genericized version of what we\u0027ve been using in go/angle-app-traces",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
