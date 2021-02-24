@@ -479,7 +479,7 @@ CallCapture CaptureGetTexLevelParameterivANGLE(const State &glState,
 
     paramBuffer.addValueParam("targetPacked", ParamType::TTextureTarget, targetPacked);
     paramBuffer.addValueParam("level", ParamType::TGLint, level);
-    paramBuffer.addEnumParam("pname", GLenumGroup::DefaultGroup, ParamType::TGLenum, pname);
+    paramBuffer.addEnumParam("pname", GLenumGroup::GetTextureParameter, ParamType::TGLenum, pname);
 
     if (isCallValid)
     {

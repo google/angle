@@ -715,10 +715,10 @@
         </command>
        <command>
        <proto>void <name>glGetTexLevelParameterivANGLE</name></proto>
-            <param><ptype>GLenum</ptype> <name>target</name></param>
-            <param><ptype>GLint</ptype> <name>level</name></param>
-            <param><ptype>GLenum</ptype> <name>pname</name></param>
-            <param><ptype>GLint *</ptype> <name>params</name></param>
+            <param group="TextureTarget"><ptype>GLenum</ptype> <name>target</name></param>
+            <param group="CheckedInt32"><ptype>GLint</ptype> <name>level</name></param>
+            <param group="GetTextureParameter"><ptype>GLenum</ptype> <name>pname</name></param>
+            <param len="COMPSIZE(pname)"><ptype>GLint</ptype> *<name>params</name></param>
         </command>
         <command>
         <proto>void <name>glGetTexLevelParameterfvANGLE</name></proto>

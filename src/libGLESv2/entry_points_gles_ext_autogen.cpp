@@ -442,8 +442,8 @@ void GL_APIENTRY GL_GetTexLevelParameterivANGLE(GLenum target,
     Context *context = GetValidGlobalContext();
     EVENT(context, GLGetTexLevelParameterivANGLE,
           "context = %d, target = %s, level = %d, pname = %s, params = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
+          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
     if (context)
     {
@@ -33085,8 +33085,8 @@ void GL_APIENTRY GL_GetTexLevelParameterivANGLEContextANGLE(GLeglContext ctx,
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLGetTexLevelParameterivANGLE,
           "context = %d, target = %s, level = %d, pname = %s, params = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), level,
-          GLenumToString(GLenumGroup::DefaultGroup, pname), (uintptr_t)params);
+          CID(context), GLenumToString(GLenumGroup::TextureTarget, target), level,
+          GLenumToString(GLenumGroup::GetTextureParameter, pname), (uintptr_t)params);
 
     if (context && !context->isContextLost())
     {
