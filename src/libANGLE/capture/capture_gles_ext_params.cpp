@@ -1954,7 +1954,9 @@ void CaptureGetTexLevelParameterivANGLE_params(const State &glState,
                                                GLint *params,
                                                ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // page 190 https://www.khronos.org/registry/OpenGL/specs/es/3.2/es_spec_3.2.pdf
+    // TEXTURE_BORDER_COLOR: 4 floats, ints, uints
+    paramCapture->readBufferSizeBytes = sizeof(GLint) * 4;
 }
 
 void CaptureGetTexLevelParameterfvANGLE_params(const State &glState,
