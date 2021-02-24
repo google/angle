@@ -357,9 +357,12 @@ angle::Result TextureD3D::subImageCompressed(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-bool TextureD3D::isFastUnpackable(const gl::Buffer *unpackBuffer, GLenum sizedInternalFormat)
+bool TextureD3D::isFastUnpackable(const gl::Buffer *unpackBuffer,
+                                  const gl::PixelUnpackState &unpack,
+                                  GLenum sizedInternalFormat)
 {
-    return unpackBuffer != nullptr &&
+    return unpackBuffer != nullptr && unpack.skipRows == 0 && unpack.skipPixels == 0 &&
+           unpack.imageHeight == 0 && unpack.skipImages == 0 &&
            mRenderer->supportsFastCopyBufferToTexture(sizedInternalFormat);
 }
 
@@ -943,7 +946,7 @@ angle::Result TextureD3D_2D::setImage(const gl::Context *context,
     {
         ANGLE_TRY(mTexStorage->releaseMultisampledTexStorageForLevel(index.getLevelIndex()));
     }
-    if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) &&
+    if (isFastUnpackable(unpackBuffer, unpack, internalFormatInfo.sizedInternalFormat) &&
         isLevelComplete(index.getLevelIndex()))
     {
         // Will try to create RT storage if it does not exist
@@ -986,7 +989,7 @@ angle::Result TextureD3D_2D::setSubImage(const gl::Context *context,
     {
         ANGLE_TRY(mTexStorage->releaseMultisampledTexStorageForLevel(index.getLevelIndex()));
     }
-    if (isFastUnpackable(unpackBuffer, mipFormat) && isLevelComplete(index.getLevelIndex()))
+    if (isFastUnpackable(unpackBuffer, unpack, mipFormat) && isLevelComplete(index.getLevelIndex()))
     {
         RenderTargetD3D *renderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(context, index, getRenderToTextureSamples(), &renderTarget));
@@ -2474,8 +2477,8 @@ angle::Result TextureD3D_3D::setImage(const gl::Context *context,
     bool fastUnpacked = false;
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
-    if (isFastUnpackable(unpackBuffer, internalFormatInfo.sizedInternalFormat) && !size.empty() &&
-        isLevelComplete(index.getLevelIndex()))
+    if (isFastUnpackable(unpackBuffer, unpack, internalFormatInfo.sizedInternalFormat) &&
+        !size.empty() && isLevelComplete(index.getLevelIndex()))
     {
         // Will try to create RT storage if it does not exist
         RenderTargetD3D *destRenderTarget = nullptr;
@@ -2514,7 +2517,7 @@ angle::Result TextureD3D_3D::setSubImage(const gl::Context *context,
 
     // Attempt a fast gpu copy of the pixel data to the surface if the app bound an unpack buffer
     GLenum mipFormat = getInternalFormat(index.getLevelIndex());
-    if (isFastUnpackable(unpackBuffer, mipFormat) && isLevelComplete(index.getLevelIndex()))
+    if (isFastUnpackable(unpackBuffer, unpack, mipFormat) && isLevelComplete(index.getLevelIndex()))
     {
         RenderTargetD3D *destRenderTarget = nullptr;
         ANGLE_TRY(getRenderTarget(context, index, getRenderToTextureSamples(), &destRenderTarget));
