@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "347f7749_12a84282",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-24T23:33:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f049881d_8494b838",
+      "range": {
+        "startLine": 14,
+        "startChar": 59,
+        "endLine": 14,
+        "endChar": 62
+      },
+      "revId": "3592efc70bee425bd9cba9d6033461ff4d194b0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "87de84cc_5806234f",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fd949fe_511e2966",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-24T23:33:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87de84cc_5806234f",
+      "range": {
+        "startLine": 15,
+        "startChar": 95,
+        "endLine": 15,
+        "endChar": 98
+      },
+      "revId": "3592efc70bee425bd9cba9d6033461ff4d194b0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1066ef21_ebea9921",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-02-24T02:09:48Z",
       "side": 1,
       "message": "To avoid being too focused on Android, I think this should be reworded to:\n\n\u003e Complex forms of analysis can be done by enabling logging of every GLES and EGL API command.  This can be enabled at compilation time by [enabling general logging](#enabling-general-logging). \n\nThe section \"Enabling Debug-Utils Markers\" already mentions angle_enable_trace_android_logcat, so it should be referenced that way instead of repeating it here.   Also, if you\u0027d like to describe how to combine that feature with AGI/RenderDoc then it\u0027s probably worth referencing that section anyway to turn on the markers that those tools reference.",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 38
+      },
+      "revId": "3592efc70bee425bd9cba9d6033461ff4d194b0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92955825_fc321ec6",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-24T23:33:46Z",
+      "side": 1,
+      "message": "It would be nice.  To be clear, enabling general logging doesn\u0027t log API commands.  At one point it did, but no longer:-(.",
+      "parentUuid": "1066ef21_ebea9921",
       "range": {
         "startLine": 62,
         "startChar": 0,
