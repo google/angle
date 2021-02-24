@@ -674,6 +674,30 @@
       },
       "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d62f6ee2_6bf8b10f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T21:32:58Z",
+      "side": 1,
+      "message": "Right, is \u003e\u003d going to mess up things or can you safely make that change? It could be helpful for other users of ANGLE even if your specific target doesn\u0027t need this pattern.",
+      "parentUuid": "c1cf6433_9f921f16",
+      "range": {
+        "startLine": 867,
+        "startChar": 36,
+        "endLine": 867,
+        "endChar": 37
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
