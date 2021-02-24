@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc9e2f09_c05062bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-24T13:20:26Z",
+      "side": 1,
+      "message": "This patch set resolves the build issues and also captures correct enums in the trace.\nAlthough the test still fails due to invalid comparison results. I am currently trying to figure out why this is the case.",
+      "revId": "1ac62363b545b6011103f720ca7c2b10a07ffa65",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
