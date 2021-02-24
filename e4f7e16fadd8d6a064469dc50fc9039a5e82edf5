@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b0062b4_5766c4b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T05:00:07Z",
+      "side": 1,
+      "message": "This gets Asphalt 8 tracing again. Probably worth verifying Klondike Adventures still works, since that was app targeted by the original fixes.",
+      "revId": "e4f7e16fadd8d6a064469dc50fc9039a5e82edf5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
