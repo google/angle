@@ -247,6 +247,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "308b86f5_046bc944",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T17:59:28Z",
+      "side": 1,
+      "message": "Okay, updated the wording.",
+      "parentUuid": "650a1a50_f5386ed2",
+      "range": {
+        "startLine": 143,
+        "startChar": 55,
+        "endLine": 143,
+        "endChar": 63
+      },
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bba4398d_e62328ec",
@@ -343,6 +367,24 @@
       "side": 1,
       "message": "Oops, this was meant to imply that the \u0027python\u0027 portion is removed so the full command is:\n\n    $ ./gen_restricted_traces.py",
       "parentUuid": "b428dcb8_e9b53ab8",
+      "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4343898b_137bb195",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T17:59:28Z",
+      "side": 1,
+      "message": "The script isn\u0027t executable, so that doesn\u0027t work.  Let\u0027s go with this working command for now.",
+      "parentUuid": "87c44e22_3a56a09b",
       "revId": "26980e78bb8107ed0d82b2df04d1ddf8f644b16a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
