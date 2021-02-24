@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e50fc8f_43a317a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T14:28:31Z",
+      "side": 1,
+      "message": "LGTM, you can squash this with the \"don\u0027t skip\" CL if you like, as that\u0027ll make the CQ test the fix in the same CL as the fix.",
+      "revId": "2d8079602107dbf55d3cdf56226be11b43cfafb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
