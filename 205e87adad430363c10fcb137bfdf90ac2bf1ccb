@@ -16,6 +16,24 @@
       "message": "Jie, there was indeed a missing barrier. This should take care of that.",
       "revId": "205e87adad430363c10fcb137bfdf90ac2bf1ccb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52993bf4_0102ce96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1109831
+      },
+      "writtenOn": "2021-02-24T06:00:10Z",
+      "side": 1,
+      "message": "Great, thanks for the fix. I can find it in the new vkcmd log:\n\nThread 0, Frame 0:\nvkCmdCopyImageToBuffer(commandBuffer, srcImage, srcImageLayout, dstBuffer, regionCount, pRegions) returns void:\n    commandBuffer:                  VkCommandBuffer \u003d 00000206EF7DFBD8\n    srcImage:                       VkImage \u003d 042BF70000000032\n    srcImageLayout:                 VkImageLayout \u003d VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL (6)\n    dstBuffer:                      VkBuffer \u003d 57B9520000000037\n    regionCount:                    uint32_t \u003d 1\n    pRegions:                       const VkBufferImageCopy* \u003d 000002068B597048\n        pRegions[0]:                    const VkBufferImageCopy \u003d 000002068B597048:\n            bufferOffset:                   VkDeviceSize \u003d 0\n            bufferRowLength:                uint32_t \u003d 512\n            bufferImageHeight:              uint32_t \u003d 512\n            imageSubresource:               VkImageSubresourceLayers \u003d 000002068B597058:\n                aspectMask:                     VkImageAspectFlags \u003d 1 (VK_IMAGE_ASPECT_COLOR_BIT)\n                mipLevel:                       uint32_t \u003d 0\n                baseArrayLayer:                 uint32_t \u003d 0\n                layerCount:                     uint32_t \u003d 1\n            imageOffset:                    VkOffset3D \u003d 000002068B597068:\n                x:                              int32_t \u003d 0\n                y:                              int32_t \u003d 0\n                z:                              int32_t \u003d 0\n            imageExtent:                    VkExtent3D \u003d 000002068B597074:\n                width:                          uint32_t \u003d 512\n                height:                         uint32_t \u003d 512\n                depth:                          uint32_t \u003d 1\n\nThread 0, Frame 0:\nvkCmdPipelineBarrier(commandBuffer, srcStageMask, dstStageMask, dependencyFlags, memoryBarrierCount, pMemoryBarriers, bufferMemoryBarrierCount, pBufferMemoryBarriers, imageMemoryBarrierCount, pImageMemoryBarriers) returns void:\n    commandBuffer:                  VkCommandBuffer \u003d 00000206EF7DFBD8\n    srcStageMask:                   VkPipelineStageFlags \u003d 65536 (VK_PIPELINE_STAGE_ALL_COMMANDS_BIT)\n    dstStageMask:                   VkPipelineStageFlags \u003d 16384 (VK_PIPELINE_STAGE_HOST_BIT)\n    dependencyFlags:                VkDependencyFlags \u003d 0\n    memoryBarrierCount:             uint32_t \u003d 1\n    pMemoryBarriers:                const VkMemoryBarrier* \u003d 000002068B596FE4\n        pMemoryBarriers[0]:             const VkMemoryBarrier \u003d 000002068B596FE4:\n            sType:                          VkStructureType \u003d VK_STRUCTURE_TYPE_MEMORY_BARRIER (46)\n            pNext:                          const void* \u003d NULL\n            srcAccessMask:                  VkAccessFlags \u003d 65536 (VK_ACCESS_MEMORY_WRITE_BIT)\n            dstAccessMask:                  VkAccessFlags \u003d 24576 (VK_ACCESS_HOST_READ_BIT | VK_ACCESS_HOST_WRITE_BIT)\n    bufferMemoryBarrierCount:       uint32_t \u003d 0\n    pBufferMemoryBarriers:          const VkBufferMemoryBarrier* \u003d NULL\n    imageMemoryBarrierCount:        uint32_t \u003d 0\n    pImageMemoryBarriers:           const VkImageMemoryBarrier* \u003d NULL\n\nThread 0, Frame 0:\nvkEndCommandBuffer(commandBuffer) returns VkResult VK_SUCCESS (0):\n    commandBuffer:",
+      "parentUuid": "91bf0f04_9768ddaf",
+      "revId": "205e87adad430363c10fcb137bfdf90ac2bf1ccb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
