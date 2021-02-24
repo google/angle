@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ff8cd01b_ffc5d610",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-24T23:20:54Z",
+      "side": 1,
+      "message": "Noticed this weirdness in https://chromium-review.googlesource.com/c/angle/angle/+/2710783/2/src/tests/perf_tests/EGLMakeCurrentPerf.cpp",
+      "revId": "55d5c75d073eec415d34bc517dc434f169649076",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
