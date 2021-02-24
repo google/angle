@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c3df18c_a6b878f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T22:19:03Z",
+      "side": 1,
+      "message": "LGTM, added Cody for second review.\n\nGert could you please also start the review on the other two patches and add myself and Cody? As always feel free to squash a few together if needed. Split patches are appreciated but they don\u0027t have to be totally minimal.",
+      "revId": "7210fcf5811970aa1472c4083095aff981ebc609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cb2ff7e_49d5387d",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3453,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T22:19:03Z",
+      "side": 1,
+      "message": "nit: suggest we don\u0027t use auto except for cases where it makes reading the code much easier. following the style guide here:\n\nhttps://google.github.io/styleguide/cppguide.html#Type_deduction",
+      "range": {
+        "startLine": 3453,
+        "startChar": 4,
+        "endLine": 3453,
+        "endChar": 9
+      },
+      "revId": "7210fcf5811970aa1472c4083095aff981ebc609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b90251f3_a8bf881f",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3454,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T22:19:03Z",
+      "side": 1,
+      "message": "nit: we use upper case ASSERT in ANGLE, which implements a version of a runtime check that is controlled by ANGLE itself rather than the c runtime. In practice this allows us to easily have release assertions.",
+      "range": {
+        "startLine": 3454,
+        "startChar": 4,
+        "endLine": 3454,
+        "endChar": 10
+      },
+      "revId": "7210fcf5811970aa1472c4083095aff981ebc609",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
