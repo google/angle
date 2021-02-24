@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "324fd0c8_6bcdd6c5",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T18:31:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65b0ae00_1ebe1da9",
+      "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63441bdf_15420aeb",
@@ -52,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f288e82_2889aa58",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T18:31:20Z",
+      "side": 1,
+      "message": "No, they are relative:\n\n$ python src/tests/restricted_traces/gen_restricted_traces.py\nTraceback (most recent call last):\n  File \"src/tests/restricted_traces/gen_restricted_traces.py\", line 408, in \u003cmodule\u003e\n    sys.exit(main())\n  File \"src/tests/restricted_traces/gen_restricted_traces.py\", line 347, in main\n    json_data \u003d read_json(json_file)\n  File \"src/tests/restricted_traces/gen_restricted_traces.py\", line 337, in read_json\n    with open(json_file) as map_file:\nIOError: [Errno 2] No such file or directory: \u0027restricted_traces.json\u0027",
+      "parentUuid": "63441bdf_15420aeb",
+      "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "39b052c7_f2a69f5c",
@@ -65,6 +101,24 @@
       "writtenOn": "2021-02-24T18:01:06Z",
       "side": 1,
       "message": "I might be misremembering, but I feel like you may then need to re-run one of the previous generation scripts, as the sha of the sha file has changed!",
+      "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d42493d_caf20c35",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-24T18:31:20Z",
+      "side": 1,
+      "message": "Yes, you\u0027re right, the new sha1 changes the tracking code.  Updated to reflect that.",
+      "parentUuid": "39b052c7_f2a69f5c",
       "revId": "ba2e9124382147d75a29e4615c6390408effc2cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
