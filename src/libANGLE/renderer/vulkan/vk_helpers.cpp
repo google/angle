@@ -1797,7 +1797,6 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
         if (mBuffer)
         {
             ANGLE_TRY(flush(contextVk));
-            mBuffer->unmap(contextVk->getRenderer());
 
             mInFlightBuffers.push_back(std::move(mBuffer));
             ASSERT(!mBuffer);
@@ -1920,6 +1919,7 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
         }
         else
         {
+            bufferHelper->unmap(contextVk->getRenderer());
             mBufferFreeList.push_back(std::move(bufferHelper));
         }
     }
