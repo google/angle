@@ -16,6 +16,23 @@
       "message": "Jamie - PTAL",
       "revId": "99e4d478e4830e62841103f033bcef4715d306af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e25d2ac0_0755b981",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-24T21:28:07Z",
+      "side": 1,
+      "message": "LGTM, sorry, I think I misunderstood and thought you were taking out the check for the non-conformant features and extensions flag.",
+      "revId": "99e4d478e4830e62841103f033bcef4715d306af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
