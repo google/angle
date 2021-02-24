@@ -16,6 +16,24 @@
       "message": "New patch has been uploaded, sorry for my misunderstanding.",
       "revId": "21d467cad9f34f08401d666f7e83e65624443469",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eccd5b10_02e9f16d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-24T03:55:10Z",
+      "side": 1,
+      "message": "No problem, thanks for the fix!",
+      "parentUuid": "b77f46cd_ea235f00",
+      "revId": "21d467cad9f34f08401d666f7e83e65624443469",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
