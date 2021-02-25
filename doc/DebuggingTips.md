@@ -263,3 +263,48 @@ arguments:
 Note that in the above, only a single command line argument is supported with RenderDoc.  If testing
 dEQP on a non-default platform, the easiest way would be to modify `GetDefaultAPIName()` in
 `src/tests/deqp_support/angle_deqp_gtest.cpp` (and avoid `--use-angle=X`).
+
+## Testing with Chrome Canary
+
+Many of ANGLE's OpenGL ES entry points are exposed in Chromium as WebGL 1.0 and WebGL 2.0 APIs that
+are available via JavaScript. For testing purposes, custom ANGLE builds may be injected in Chrome
+Canary.
+
+### Setup
+
+#### Windows
+
+1. Download and install [Google Chrome Canary](https://www.google.com/chrome/canary/).
+2. Build ANGLE x64, Release.
+3. Run `python scripts\update_canary_angle.py` to replace Canary's ANGLE with your custom ANGLE
+(note: Canary must be closed).
+
+#### macOS
+
+1. Download and install [Google Chrome Canary](https://www.google.com/chrome/canary/).
+2. Clear all attributes.
+   ```
+   % xattr -cr /Applications/Google\ Chrome\ Canary.app
+   ```
+3. Build ANGLE x64 or arm64, Release.
+4. Replace ANGLE libraries, adjusting paths if needed.
+   ```
+   % cp angle/out/Release/{libEGL.dylib,libGLESv2.dylib} /Applications/Google\ Chrome\ Canary.app/Contents/Frameworks/Google\ Chrome\ Framework.framework/Libraries
+   ```
+5. Re-sign the application bundle.
+   ```
+   % codesign --force --sign - --deep /Applications/Google\ Chrome\ Canary.app
+   ```
+
+### Usage
+
+Run `%LOCALAPPDATA%\Google\Chrome SxS\chrome.exe` (Windows) or `./Google\ Chrome\ Canary.app/Contents/MacOS/Google\ Chrome\ Canary` (macOS) with the following command-line options:
+* `--use-cmd-decoder=passthrough --use-gl=angle` and one of
+  * `--use-angle=d3d9` (Direct3D 9 renderer, Windows only)
+  * `--use-angle=d3d11` (Direct3D 11 renderer, Windows only)
+  * `--use-angle=d3d11on12` (Direct3D 11on12 renderer, Windows only)
+  * `--use-angle=gl` (OpenGL renderer)
+  * `--use-angle=gles` (OpenGL ES renderer)
+  * `--use-angle=vulkan` (Vulkan renderer)
+  * `--use-angle=swiftshader` (SwiftShader renderer)
+  * `--use-angle=metal` (Metal renderer, macOS only)
