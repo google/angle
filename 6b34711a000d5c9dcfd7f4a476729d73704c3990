@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a21b1bb_839c35a1",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3379,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T15:46:45Z",
+      "side": 1,
+      "message": "This is a packed enum, why not have a constexpr table that this function looks up in?",
+      "range": {
+        "startLine": 3379,
+        "startChar": 13,
+        "endLine": 3379,
+        "endChar": 31
+      },
+      "revId": "6b34711a000d5c9dcfd7f4a476729d73704c3990",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
