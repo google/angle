@@ -16,6 +16,23 @@
       "message": "PTAL. I\u0027m not sure this is the right fix, but would appreciate a look.\n\nIt also needs a reduced test case.",
       "revId": "3567742fcfb0a92a0967c94dc6be3af503fbb98e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf713040_13a4fc5d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-25T19:24:50Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "3567742fcfb0a92a0967c94dc6be3af503fbb98e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
