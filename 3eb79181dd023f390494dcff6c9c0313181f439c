@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71284542_46cf0567",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2065,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T21:08:23Z",
+      "side": 1,
+      "message": "It was only a matter of time before someone had to invent it.",
+      "parentUuid": "9b1aa96c_d1a6932d",
+      "range": {
+        "startLine": 2065,
+        "startChar": 26,
+        "endLine": 2065,
+        "endChar": 34
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "57beff61_7cc09767",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-02-25T20:09:11Z",
       "side": 1,
       "message": "nit: relying on only",
+      "range": {
+        "startLine": 2069,
+        "startChar": 78,
+        "endLine": 2069,
+        "endChar": 90
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6813cb6d_67c7bb4c",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2069,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T21:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57beff61_7cc09767",
       "range": {
         "startLine": 2069,
         "startChar": 78,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1555b8c6_938bdcee",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2517,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T21:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39fb9a7e_2901d6af",
+      "range": {
+        "startLine": 2517,
+        "startChar": 48,
+        "endLine": 2517,
+        "endChar": 64
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "707b4c92_d1955fb5",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-02-25T20:09:11Z",
       "side": 1,
       "message": "Why isn\u0027t this:\n\n            //     4 3 2 0\n            //     ^ ^ ^ ^\n            //     | | | |\n            //     | | | column 0    \u003c\u003c--- component\n            //     | | row 2         \u003c\u003c--- col\n            //     | array element 3 \u003c\u003c--- row\n            //     field 4\n?",
+      "range": {
+        "startLine": 2524,
+        "startChar": 0,
+        "endLine": 2530,
+        "endChar": 26
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86b87c07_5a8f7798",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2530,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T21:08:23Z",
+      "side": 1,
+      "message": "Well, the component is really the column. Actually I got the row and column wrong. This should say:\n\n            //     4 3 2 0\n            //     ^ ^ ^ ^\n            //     | | | |\n            //     | | | row 0\n            //     | | column 2\n            //     | array element 3\n            //     field 4\n\nIn that example, member is like `mat4 [10]`. So the array element is really array element. Once indexed, you are left with a mat4. You can index it with [col][row] or [col].component, and it would be the same thing. I chose .x (over [0]) because that\u0027s I believe the more common way of writing it, but I\u0027ll change it to [0] for clearer mapping.",
+      "parentUuid": "707b4c92_d1955fb5",
       "range": {
         "startLine": 2524,
         "startChar": 0,
@@ -127,6 +223,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dce6bd57_c2959308",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2555,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T21:08:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "89438b65_376058e6",
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee35d750_0f8c9ac1",
@@ -140,6 +254,24 @@
       "writtenOn": "2021-02-25T20:09:11Z",
       "side": 1,
       "message": "Why don\u0027t the col/row loops match the ordering here?   I would expect to see them swapped so that col is the inner-most loop.   \n\nOn a CPU this is not very good for memory accesses if things really are laid out as [index][row][col], since it\u0027ll be bouncing all around rather than sequentially writing values.   However, I\u0027m not sure how important that is on a GPU.",
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b624bede_e3a9e059",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2589,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T21:08:23Z",
+      "side": 1,
+      "message": "Because GL matrices are column-major. Also, the order of components needs to respect the spec (column major), so in the end it doesn\u0027t matter if another order is more performant (which isn\u0027t).",
+      "parentUuid": "ee35d750_0f8c9ac1",
       "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
