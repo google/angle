@@ -561,11 +561,17 @@ class FastIntegerSet final
         return (sizedKey < capacity()) && (mKeyData[index].test(offset));
     }
 
-    ANGLE_INLINE void clear() { mKeyData.assign(mKeyData.capacity(), KeyBitSet::Zero()); }
+    ANGLE_INLINE void clear()
+    {
+        for (KeyBitSet &it : mKeyData)
+        {
+            it.reset();
+        }
+    }
 
     ANGLE_INLINE bool empty() const
     {
-        for (KeyBitSet it : mKeyData)
+        for (const KeyBitSet &it : mKeyData)
         {
             if (it.any())
             {
@@ -578,7 +584,7 @@ class FastIntegerSet final
     ANGLE_INLINE size_t size() const
     {
         size_t valid_entries = 0;
-        for (KeyBitSet it : mKeyData)
+        for (const KeyBitSet &it : mKeyData)
         {
             valid_entries += it.count();
         }
