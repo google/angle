@@ -4514,7 +4514,8 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
             continue;
         }
 
-        if (!isIncompleteTexture && shouldSwitchToReadOnlyDepthFeedbackLoopMode(context, texture))
+        if (!isIncompleteTexture && texture->isDepthOrStencil() &&
+            shouldSwitchToReadOnlyDepthFeedbackLoopMode(context, texture))
         {
             // The "readOnlyDepthMode" feature enables read-only depth-stencil feedback loops. We
             // only switch to "read-only" mode when there's loop. We track the depth-stencil access
@@ -5474,6 +5475,8 @@ angle::Result ContextVk::updateRenderPassDepthStencilAccess()
 bool ContextVk::shouldSwitchToReadOnlyDepthFeedbackLoopMode(const gl::Context *context,
                                                             gl::Texture *texture) const
 {
+    ASSERT(texture->isDepthOrStencil());
+
     const gl::ProgramExecutable *programExecutable = mState.getProgramExecutable();
 
     // When running compute we don't have a draw FBO.
@@ -5482,8 +5485,7 @@ bool ContextVk::shouldSwitchToReadOnlyDepthFeedbackLoopMode(const gl::Context *c
         return false;
     }
 
-    return texture->isDepthOrStencil() &&
-           texture->isBoundToFramebuffer(mDrawFramebuffer->getState().getFramebufferSerial()) &&
+    return texture->isBoundToFramebuffer(mDrawFramebuffer->getState().getFramebufferSerial()) &&
            !mDrawFramebuffer->isReadOnlyDepthFeedbackLoopMode();
 }
 
