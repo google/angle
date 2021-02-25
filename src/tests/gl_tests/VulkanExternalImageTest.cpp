@@ -574,6 +574,10 @@ TEST_P(VulkanExternalImageTest, TextureFormatCompatChromiumMutableNoStorageFd)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_memory_object_fd"));
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_ANGLE_memory_object_flags"));
+
+    // http://anglebug.com/5682
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
     RunTextureFormatCompatChromiumTest<OpaqueFdTraits>(true, kMutableImageCreateFlags,
                                                        kNoStorageImageUsageFlags, isSwiftshader(),
                                                        enableDebugLayers());
