@@ -46,6 +46,30 @@
       },
       "revId": "37752956fda85079c078b7bc3ec013030f3273ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6d0e8b3_3d025cb9",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000B.inc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-25T14:58:05Z",
+      "side": 1,
+      "message": "This behavior changed with Python 3.4:\nhttps://docs.python.org/3.4/whatsnew/3.4.html#other-language-changes\n\n\u003e Module __file__ attributes (and related values) should now always contain absolute paths by default, with the sole exception of __main__.__file__ when a script has been executed directly using a relative path. (Contributed by Brett Cannon in issue 18416.)",
+      "parentUuid": "55dc275d_5722b894",
+      "range": {
+        "startLine": 2,
+        "startChar": 16,
+        "endLine": 2,
+        "endChar": 76
+      },
+      "revId": "37752956fda85079c078b7bc3ec013030f3273ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
