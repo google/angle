@@ -722,6 +722,30 @@
       },
       "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f26cfdfc_fd40bb79",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 867,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-25T19:39:24Z",
+      "side": 1,
+      "message": "Thanks for changing... can follow up if we hear anything.",
+      "parentUuid": "dac3c50f_362cca30",
+      "range": {
+        "startLine": 867,
+        "startChar": 36,
+        "endLine": 867,
+        "endChar": 37
+      },
+      "revId": "28504885c54d2d6f8d496445c8b5db9439701094",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
