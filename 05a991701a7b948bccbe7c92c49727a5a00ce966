@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1561785e_d5758818",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-25T15:54:30Z",
+      "side": 1,
+      "message": "LGTM, although let\u0027s sort out whether you can use TextureTargetToType before landing.",
+      "revId": "05a991701a7b948bccbe7c92c49727a5a00ce966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
