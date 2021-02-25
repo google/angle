@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2de8ff9_66fb8843",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:09:11Z",
+      "side": 1,
+      "message": "Good stuff.",
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b1aa96c_d1a6932d",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2065,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:09:11Z",
+      "side": 1,
+      "message": "I think this is the first time I\u0027ve ever seen this word.",
+      "range": {
+        "startLine": 2065,
+        "startChar": 26,
+        "endLine": 2065,
+        "endChar": 34
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "57beff61_7cc09767",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2069,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:09:11Z",
+      "side": 1,
+      "message": "nit: relying on only",
+      "range": {
+        "startLine": 2069,
+        "startChar": 78,
+        "endLine": 2069,
+        "endChar": 90
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39fb9a7e_2901d6af",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2517,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:09:11Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 2517,
+        "startChar": 48,
+        "endLine": 2517,
+        "endChar": 64
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "707b4c92_d1955fb5",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2530,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:09:11Z",
+      "side": 1,
+      "message": "Why isn\u0027t this:\n\n            //     4 3 2 0\n            //     ^ ^ ^ ^\n            //     | | | |\n            //     | | | column 0    \u003c\u003c--- component\n            //     | | row 2         \u003c\u003c--- col\n            //     | array element 3 \u003c\u003c--- row\n            //     field 4\n?",
+      "range": {
+        "startLine": 2524,
+        "startChar": 0,
+        "endLine": 2530,
+        "endChar": 26
+      },
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89438b65_376058e6",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2555,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:09:11Z",
+      "side": 1,
+      "message": "Looks like this can be an \u0027else if\u0027 since arrayIndexEnd was already set in the previous conditional.",
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee35d750_0f8c9ac1",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 2589,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:09:11Z",
+      "side": 1,
+      "message": "Why don\u0027t the col/row loops match the ordering here?   I would expect to see them swapped so that col is the inner-most loop.   \n\nOn a CPU this is not very good for memory accesses if things really are laid out as [index][row][col], since it\u0027ll be bouncing all around rather than sequentially writing values.   However, I\u0027m not sure how important that is on a GPU.",
+      "revId": "3eb79181dd023f390494dcff6c9c0313181f439c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
