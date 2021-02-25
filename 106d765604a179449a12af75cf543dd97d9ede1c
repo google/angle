@@ -16,6 +16,70 @@
       "message": "Finally done with triage.  The test failures are from color-masked clears.  The FramebufferVk::clear() path will call UtilsVk::clearFramebuffer() which starts a render pass to do the clear.  That render pass doesn\u0027t know that the color mask applies.",
       "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1db8160_83855ead",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2365,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T15:37:32Z",
+      "side": 1,
+      "message": "UtilsVk::clearFramebuffer() just calls ContextVk::startRenderPass(). If this was missing from that path, doesn\u0027t it mean it\u0027s missing from every path?",
+      "parentUuid": "d25d2765_d6021440",
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf38db34_6330fe1d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2370,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T15:37:32Z",
+      "side": 1,
+      "message": "This should only be done if loadOp was going to be DONT_CARE.\n\nYou can move the `if (mEmulated...)` to after:\n\n            VkAttachmentLoadOp loadOp \u003d colorRenderTarget-\u003ehasDefinedContent()\n                                                  ? VK_ATTACHMENT_LOAD_OP_LOAD\n                                                  : VK_ATTACHMENT_LOAD_OP_DONT_CARE;\n\nbelow and modify loadOp in the if.",
+      "range": {
+        "startLine": 2370,
+        "startChar": 12,
+        "endLine": 2370,
+        "endChar": 95
+      },
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebcf7cff_20a6847f",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2372,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T15:37:32Z",
+      "side": 1,
+      "message": "Should deal with integer formats too. You could add RGB8I and RGB8UI tests that invalidate then draw, so this gets tested.",
+      "range": {
+        "startLine": 2372,
+        "startChar": 42,
+        "endLine": 2372,
+        "endChar": 49
+      },
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
