@@ -329,7 +329,7 @@ def write_compressed_spirv_blob_as_c_array(output_path, variable_name, compresse
     hex_array = ['0x{:02x}'.format(byte) for byte in compressed_blob]
     blob = ',\n    '.join(','.join(hex_array[i:i + 16]) for i in range(0, len(hex_array), 16))
     text = template_spirv_blob_inc.format(
-        script_name=__file__,
+        script_name=os.path.basename(__file__),
         out_file_name=output_path.replace('\\', '/'),
         variable_name=variable_name,
         blob=blob,
@@ -771,7 +771,7 @@ def main():
             [get_get_function_cpp(s) for s in input_shaders_and_variations])
 
         outcode = template_shader_library_cpp.format(
-            script_name=__file__,
+            script_name=os.path.basename(__file__),
             out_file_name=out_file_cpp.replace('\\', '/'),
             input_file_name='shaders/src/*',
             internal_shader_includes=includes,
@@ -788,7 +788,7 @@ def main():
             [get_get_function_h(s) for s in input_shaders_and_variations])
         shader_tables_h = '\n'.join([get_shader_table_h(s) for s in input_shaders_and_variations])
         outcode = template_shader_library_h.format(
-            script_name=__file__,
+            script_name=os.path.basename(__file__),
             out_file_name=out_file_h.replace('\\', '/'),
             input_file_name='shaders/src/*',
             shader_variation_definitions=shader_variation_definitions,
@@ -800,7 +800,7 @@ def main():
     # STEP 3: Create a gni file with the generated files.
     with io.open(out_file_gni, 'w', newline='\n') as outfile:
         outcode = template_shader_includes_gni.format(
-            script_name=__file__,
+            script_name=os.path.basename(__file__),
             out_file_name=out_file_gni.replace('\\', '/'),
             input_file_name='shaders/src/*',
             shaders_list=',\n'.join([shader_path(shader) for shader in output_shaders]))
