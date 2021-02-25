@@ -157,6 +157,30 @@
       },
       "revId": "3592efc70bee425bd9cba9d6033461ff4d194b0a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac12494e_e5830bb0",
+        "filename": "doc/GPUMemoryAnalysis.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-25T20:16:42Z",
+      "side": 1,
+      "message": "It works fine for me, so maybe I\u0027m misunderstanding something.\n\nOn Android, I get GLES commands output to logcat with the following GN args:\n\n    angle_enable_trace \u003d true\n    angle_enable_trace_android_logcat \u003d true\n\nOn Linux, GLES commands are output to angle_debug.txt with just:\n\n    angle_enable_trace \u003d true\n\nWhat isn\u0027t working for you?",
+      "parentUuid": "92955825_fc321ec6",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 38
+      },
+      "revId": "3592efc70bee425bd9cba9d6033461ff4d194b0a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
