@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98747a6c_8ffcdc36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-02-25T15:39:24Z",
+      "side": 1,
+      "message": "Hopefully bmonkey is okay with us dropping their reference.",
+      "revId": "df05945deed8fc440ef805d8c27d14a1da76c719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
