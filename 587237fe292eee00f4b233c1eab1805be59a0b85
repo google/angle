@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02ec4c60_6e268c4e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361388
+      },
+      "writtenOn": "2021-02-25T20:37:17Z",
+      "side": 1,
+      "message": "I don\u0027t have access to dry runs and can\u0027t commit.\n\nThis is an alternative approach for https://chromium-review.googlesource.com/c/angle/angle/+/2714644",
+      "revId": "587237fe292eee00f4b233c1eab1805be59a0b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
