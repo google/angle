@@ -223,10 +223,6 @@ angle_source_set("angle_vulkan_backend") {
     "$angle_root:angle_image_util",
   ]
 
-  if (dcheck_always_on || is_debug) {
-    deps += [ "$angle_spirv_tools_dir:spvtools_val" ]
-  }
-
   public_deps = [
     "$angle_root:angle_glslang_wrapper",
     "$angle_root:libANGLE_headers",

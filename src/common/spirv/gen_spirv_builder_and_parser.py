@@ -41,8 +41,6 @@ HEADER_TEMPLATE = """// GENERATED FILE - DO NOT EDIT.
 #ifndef COMMON_SPIRV_{file_name_capitalized}AUTOGEN_H_
 #define COMMON_SPIRV_{file_name_capitalized}AUTOGEN_H_
 
-#include <vector>
-
 #include "spirv_types.h"
 
 namespace angle

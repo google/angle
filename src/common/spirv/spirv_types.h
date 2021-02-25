@@ -14,6 +14,8 @@
 
 #include "common/FastVector.h"
 
+#include <vector>
+
 namespace angle
 {
 namespace spirv
@@ -106,6 +108,10 @@ using PairIdRefIdRefList          = FastVectorHelper<PairIdRefIdRef>;
 
 // Id 0 is invalid in SPIR-V.
 constexpr uint32_t kMinValidId = 1;
+
+// Returns whether SPIR-V is valid.  Useful for ASSERTs.  Automatically generates a warning if
+// SPIR-V is not valid.
+bool Validate(const std::vector<uint32_t> &blob);
 
 }  // namespace spirv
 }  // namespace angle
