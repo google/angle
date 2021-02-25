@@ -4001,7 +4001,7 @@ void GL_APIENTRY GL_DiscardFramebufferEXT(GLenum target,
     Context *context = GetValidGlobalContext();
     EVENT(context, GLDiscardFramebufferEXT,
           "context = %d, target = %s, numAttachments = %d, attachments = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), numAttachments,
+          CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target), numAttachments,
           (uintptr_t)attachments);
 
     if (context)
@@ -14270,7 +14270,7 @@ void GL_APIENTRY GL_DiscardFramebufferEXTContextANGLE(GLeglContext ctx,
     Context *context = static_cast<gl::Context *>(ctx);
     EVENT(context, GLDiscardFramebufferEXT,
           "context = %d, target = %s, numAttachments = %d, attachments = 0x%016" PRIxPTR "",
-          CID(context), GLenumToString(GLenumGroup::DefaultGroup, target), numAttachments,
+          CID(context), GLenumToString(GLenumGroup::FramebufferTarget, target), numAttachments,
           (uintptr_t)attachments);
 
     if (context && !context->isContextLost())

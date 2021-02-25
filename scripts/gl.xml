@@ -14033,9 +14033,9 @@ typedef unsigned int GLhandleARB;
         </command>
         <command>
             <proto>void <name>glDiscardFramebufferEXT</name></proto>
-            <param><ptype>GLenum</ptype> <name>target</name></param>
+            <param group="FramebufferTarget"><ptype>GLenum</ptype> <name>target</name></param>
             <param><ptype>GLsizei</ptype> <name>numAttachments</name></param>
-            <param len="numAttachments">const <ptype>GLenum</ptype> *<name>attachments</name></param>
+            <param len="numAttachments" group="FramebufferAttachment">const <ptype>GLenum</ptype> *<name>attachments</name></param>
         </command>
         <command>
             <proto>void <name>glDispatchCompute</name></proto>

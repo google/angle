@@ -4781,7 +4781,7 @@ CallCapture CaptureDiscardFramebufferEXT(const State &glState,
 {
     ParamBuffer paramBuffer;
 
-    paramBuffer.addEnumParam("target", GLenumGroup::DefaultGroup, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
     paramBuffer.addValueParam("numAttachments", ParamType::TGLsizei, numAttachments);
 
     if (isCallValid)

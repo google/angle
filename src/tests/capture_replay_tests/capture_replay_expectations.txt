@@ -63,7 +63,6 @@ CopyCompressedTextureTest.InternalFormat/*
 DebugMarkerTest.*
 DebugTest.*
 DepthStencilTest.*
-DiscardFramebufferEXTTest.*
 DrawBuffersTest.*
 EGLPrintEGLinfoTest.PrintGLESCapabilities/*
 EGLStreamTest.*
