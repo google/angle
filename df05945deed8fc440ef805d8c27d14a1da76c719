@@ -33,6 +33,23 @@
       "message": "Thanks. I was surprised as updating the shaders locally reverted to basepath. So `./scripts/run_code_generation.py` is behaving differently (as in choose between python 2 and 3) for us?",
       "revId": "df05945deed8fc440ef805d8c27d14a1da76c719",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e265099_d67e2f9c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-25T17:19:13Z",
+      "side": 1,
+      "message": "LGTM - technically we require depot_tools hermetically bundled version of Python for deterministic behaviour, but this change seems totally fine. Landing.",
+      "revId": "df05945deed8fc440ef805d8c27d14a1da76c719",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
