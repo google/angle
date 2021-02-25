@@ -33,6 +33,24 @@
       "message": "Duplicate of https://chromium-review.googlesource.com/c/angle/angle/+/2714644\n\nThat change hasn\u0027t landed as the author hasn\u0027t yet addressed review feedback.",
       "revId": "587237fe292eee00f4b233c1eab1805be59a0b85",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bdea1dd_d89678e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1361388
+      },
+      "writtenOn": "2021-02-25T21:27:17Z",
+      "side": 1,
+      "message": "That\u0027s why I said it is an alternative approach. I\u0027m in contact with José and he told me he has not time to take care of it, so I uploaded my patch.",
+      "parentUuid": "fb18cde8_2925d3d2",
+      "revId": "587237fe292eee00f4b233c1eab1805be59a0b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
