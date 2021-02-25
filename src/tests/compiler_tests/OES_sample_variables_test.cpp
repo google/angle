@@ -113,7 +113,7 @@ TEST_P(OESSampleVariablesTestES31, CompileFailsWithExtensionWithoutPragma)
 TEST_P(OESSampleVariablesTestES31, CompileSucceedsWithExtensionAndPragmaOnVulkan)
 {
     mResources.OES_sample_variables = 1;
-    InitializeCompiler(SH_GLSL_VULKAN_OUTPUT);
+    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
     EXPECT_TRUE(TestShaderCompile(OESPragma));
     // Test reset functionality.
     EXPECT_FALSE(TestShaderCompile(""));

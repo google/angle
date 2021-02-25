@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
                                 compileOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
                                 break;
                             case 'v':
-                                output = SH_GLSL_VULKAN_OUTPUT;
+                                output = SH_SPIRV_VULKAN_OUTPUT;
                                 compileOptions |= SH_INITIALIZE_UNINITIALIZED_LOCALS;
                                 break;
                             case 'h':

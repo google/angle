@@ -72,7 +72,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, EmulatesUniform)
     addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
     addOutputType(SH_ESSL_OUTPUT);
 #ifdef ANGLE_ENABLE_VULKAN
-    addOutputType(SH_GLSL_VULKAN_OUTPUT);
+    addOutputType(SH_SPIRV_VULKAN_OUTPUT);
 #endif
 #ifdef ANGLE_ENABLE_HLSL
     addOutputType(SH_HLSL_3_0_OUTPUT);
@@ -101,7 +101,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, EmulatesUniform)
 
 #ifdef ANGLE_ENABLE_VULKAN
     EXPECT_TRUE(foundInCode(
-        SH_GLSL_VULKAN_OUTPUT,
+        SH_SPIRV_VULKAN_OUTPUT,
         "uniform defaultUniformsVS\n{\n    int angle_BaseInstance;\n    int angle_BaseVertex;"));
 #endif
 #ifdef ANGLE_ENABLE_HLSL
@@ -191,7 +191,7 @@ TEST_F(EmulateGLBaseVertexBaseInstanceTest, AllowsUserDefinedANGLEDrawID)
     addOutputType(SH_GLSL_COMPATIBILITY_OUTPUT);
     addOutputType(SH_ESSL_OUTPUT);
 #ifdef ANGLE_ENABLE_VULKAN
-    addOutputType(SH_GLSL_VULKAN_OUTPUT);
+    addOutputType(SH_SPIRV_VULKAN_OUTPUT);
 #endif
 #ifdef ANGLE_ENABLE_HLSL
     addOutputType(SH_HLSL_3_0_OUTPUT);

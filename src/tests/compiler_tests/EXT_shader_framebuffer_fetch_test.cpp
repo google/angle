@@ -126,7 +126,7 @@ class EXTShaderFramebufferFetchNoncoherentTest : public sh::ShaderExtensionTest
         std::map<ShShaderOutput, std::string> shaderOutputList = {
             {SH_GLSL_450_CORE_OUTPUT, "SH_GLSL_450_CORE_OUTPUT"},
 #if defined(ANGLE_ENABLE_VULKAN)
-            {SH_GLSL_VULKAN_OUTPUT, "SH_GLSL_VULKAN_OUTPUT"}
+            {SH_SPIRV_VULKAN_OUTPUT, "SH_SPIRV_VULKAN_OUTPUT"}
 #endif
         };
 
@@ -330,7 +330,7 @@ class EXTShaderFramebufferFetchNoncoherentSuccessTest
     void SetUp() override
     {
         std::map<ShShaderOutput, std::string> shaderOutputList = {
-            {SH_GLSL_VULKAN_OUTPUT, "SH_GLSL_VULKAN_OUTPUT"}};
+            {SH_SPIRV_VULKAN_OUTPUT, "SH_SPIRV_VULKAN_OUTPUT"}};
 
         Initialize(shaderOutputList);
     }

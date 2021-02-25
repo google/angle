@@ -323,7 +323,7 @@ TEST_P(EXTClipCullDistanceForVertexShaderTest, CompileSucceedsVulkan)
     mResources.MaxCullDistances                = 8;
     mResources.MaxCombinedClipAndCullDistances = 8;
 
-    InitializeCompiler(SH_GLSL_VULKAN_OUTPUT);
+    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
     EXPECT_TRUE(TestShaderCompile(EXTPragma));
     EXPECT_FALSE(TestShaderCompile(""));
     EXPECT_TRUE(TestShaderCompile(EXTPragma));
@@ -358,7 +358,7 @@ TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileSucceedsVulkan)
     mResources.MaxCullDistances                = 8;
     mResources.MaxCombinedClipAndCullDistances = 8;
 
-    InitializeCompiler(SH_GLSL_VULKAN_OUTPUT);
+    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
     EXPECT_TRUE(TestShaderCompile(EXTPragma));
     EXPECT_FALSE(TestShaderCompile(""));
     EXPECT_TRUE(TestShaderCompile(EXTPragma));
@@ -380,7 +380,7 @@ TEST_P(EXTClipCullDistanceForVertexShaderCompileFailureTest, CompileFails)
     mResources.MaxCullDistances                = 8;
     mResources.MaxCombinedClipAndCullDistances = 8;
 
-    InitializeCompiler(SH_GLSL_VULKAN_OUTPUT);
+    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
     EXPECT_FALSE(TestShaderCompile(EXTPragma));
 }
 
@@ -392,7 +392,7 @@ TEST_P(EXTClipCullDistanceForFragmentShaderCompileFailureTest, CompileFails)
     mResources.MaxCullDistances                = 8;
     mResources.MaxCombinedClipAndCullDistances = 8;
 
-    InitializeCompiler(SH_GLSL_VULKAN_OUTPUT);
+    InitializeCompiler(SH_SPIRV_VULKAN_OUTPUT);
     EXPECT_FALSE(TestShaderCompile(EXTPragma));
 }
 #endif

@@ -20,7 +20,7 @@ CompilerMtl::~CompilerMtl() {}
 
 ShShaderOutput CompilerMtl::getTranslatorOutputType() const
 {
-    return SH_GLSL_METAL_OUTPUT;
+    return SH_SPIRV_METAL_OUTPUT;
 }
 
 }  // namespace rx

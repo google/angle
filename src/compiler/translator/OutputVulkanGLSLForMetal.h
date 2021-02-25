@@ -8,6 +8,9 @@
 //    considerations for Metal backend limitations.
 //
 
+#ifndef COMPILER_TRANSLATOR_OUTPUTVULKANGLSLFORMETAL_H_
+#define COMPILER_TRANSLATOR_OUTPUTVULKANGLSLFORMETAL_H_
+
 #include "compiler/translator/OutputVulkanGLSL.h"
 
 namespace sh
@@ -37,3 +40,5 @@ class TOutputVulkanGLSLForMetal : public TOutputVulkanGLSL
 };
 
 }  // namespace sh
+
+#endif  // COMPILER_TRANSLATOR_OUTPUTVULKANGLSLFORMETAL_H_

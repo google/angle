@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 253
+#define ANGLE_SH_VERSION 254
 
 enum ShShaderSpec
 {
@@ -69,12 +69,11 @@ enum ShShaderOutput
     SH_HLSL_4_1_OUTPUT       = 0x8B49,  // D3D 11
     SH_HLSL_4_0_FL9_3_OUTPUT = 0x8B4A,  // D3D 11 feature level 9_3
 
-    // Output specialized GLSL to be fed to glslang for Vulkan SPIR.
-    SH_GLSL_VULKAN_OUTPUT = 0x8B4B,
+    // Output SPIR-V for the Vulkan backend.
+    SH_SPIRV_VULKAN_OUTPUT = 0x8B4B,
 
-    // Output specialized GLSL to be fed to glslang for Vulkan SPIR to be cross compiled to Metal
-    // later.
-    SH_GLSL_METAL_OUTPUT = 0x8B4C,
+    // Output SPIR-V to be cross compiled to Metal.
+    SH_SPIRV_METAL_OUTPUT = 0x8B4C,
 };
 
 // Compile options.
