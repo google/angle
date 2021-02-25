@@ -2120,6 +2120,7 @@ void CaptureTextureStorage(std::vector<CallCapture> *setupCalls,
         }
         case gl::TextureType::_3D:
         case gl::TextureType::_2DArray:
+        case gl::TextureType::CubeMapArray:
         {
             Capture(setupCalls, CaptureTexStorage3D(
                                     *replayState, true, texture->getType(),
@@ -2171,7 +2172,8 @@ void CaptureTextureContents(std::vector<CallCapture> *setupCalls,
     }
 
     bool is3D =
-        (index.getType() == gl::TextureType::_3D || index.getType() == gl::TextureType::_2DArray);
+        (index.getType() == gl::TextureType::_3D || index.getType() == gl::TextureType::_2DArray ||
+         index.getType() == gl::TextureType::CubeMapArray);
 
     if (format.compressed)
     {
@@ -2679,7 +2681,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                    index.getType() == gl::TextureType::_3D ||
                    index.getType() == gl::TextureType::_2DArray ||
                    index.getType() == gl::TextureType::Buffer ||
-                   index.getType() == gl::TextureType::CubeMap);
+                   index.getType() == gl::TextureType::CubeMap ||
+                   index.getType() == gl::TextureType::CubeMapArray);
 
             if (index.getType() == gl::TextureType::Buffer)
             {
