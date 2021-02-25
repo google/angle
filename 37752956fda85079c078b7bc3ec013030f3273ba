@@ -22,6 +22,30 @@
       },
       "revId": "37752956fda85079c078b7bc3ec013030f3273ba",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55dc275d_5722b894",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/gen/BlitResolve.frag.0000000B.inc",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-02-25T14:50:56Z",
+      "side": 1,
+      "message": "Oh no. Sorry about that. I did not notice when submitting the patch. I am not entirely sure how this happened, but this is a hint:\n\n```\n$ cat foo.py \nprint(__file__)\n$ python2 foo.py \nfoo.py\n$ python3 foo.py \n/home/bmonkey/code/pythonpath/foo.py\n```\n\nMy python version:\n```\n$ python3 --version\nPython 3.9.2\n```\n\nThe `gen_vk_internal_shaders.py` has explicitly a python3 shebang:\n```\n#!/usr/bin/python3\n```\n\nThe fix would be to use `os.path.basename(__file__)` instead of `__file__`.",
+      "parentUuid": "43ffaa5d_33373c3c",
+      "range": {
+        "startLine": 2,
+        "startChar": 16,
+        "endLine": 2,
+        "endChar": 76
+      },
+      "revId": "37752956fda85079c078b7bc3ec013030f3273ba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
