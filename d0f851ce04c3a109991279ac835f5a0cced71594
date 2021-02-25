@@ -35,6 +35,41 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9b9d5a6_2aa43e52",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-25T16:53:45Z",
+      "side": 1,
+      "message": "Spec says we can return BAD_SURFACE if no current surface. So I added that and test for it.\n\nI also added test for BUFFER_PRESERVED (Which isn\u0027t implemented yet), in which case age is always 1 - per spec.",
+      "parentUuid": "dddac5d7_6df3ee3f",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c470d3b_15fb809c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-25T16:53:45Z",
+      "side": 1,
+      "message": "Responses added.\nTry to get back to you as soon as possible.\nMy current focus is in some training.",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "32f61a7d_da20df8d",
@@ -60,6 +95,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "43b34d1d_0b27a640",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-25T16:53:45Z",
+      "side": 1,
+      "message": "The tests are as I expect. But I could check into this. As I recall the 0 frame has same index as frame 1.\nI\u0027m in all week training, so my focus in elsewhere this week.",
+      "parentUuid": "32f61a7d_da20df8d",
+      "range": {
+        "startLine": 487,
+        "startChar": 18,
+        "endLine": 487,
+        "endChar": 19
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0a5d36dd_c533f1ec",
         "filename": "src/tests/egl_tests/EGLBufferAgeTest.cpp",
         "patchSetId": 14
@@ -71,6 +130,24 @@
       "writtenOn": "2021-02-25T15:26:25Z",
       "side": 1,
       "message": "Is there a bug here, or should this be uncommented?",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d80ca66_e0ed2ce1",
+        "filename": "src/tests/egl_tests/EGLBufferAgeTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-25T16:53:45Z",
+      "side": 1,
+      "message": "This was a comment to emphasize that I am making sure NOT to be current - hence no current context. \nI can rewrite or remove",
+      "parentUuid": "0a5d36dd_c533f1ec",
       "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
