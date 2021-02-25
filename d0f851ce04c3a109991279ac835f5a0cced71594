@@ -70,6 +70,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1676902_5fd9d080",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-25T19:10:53Z",
+      "side": 1,
+      "message": "I\u0027ll get to this ASAP.",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4693727d_8df2a194",
@@ -83,6 +100,30 @@
       "writtenOn": "2021-02-25T17:31:20Z",
       "side": 1,
       "message": "Talked with Shabi. Could you pass this into getBufferAge from the entry point (from egl::Thread) instead of caching it here? It seems to be an error if this is ever null when calling getBufferAge.",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 39
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "643bdba6_580b85e7",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-25T19:10:53Z",
+      "side": 1,
+      "message": "spec:\n\"\n        If querying EGL_BUFFER_AGE_EXT and \u003csurface\u003e is not bound as\n        the draw surface to the calling threads current context\n        an EGL_BAD_SURFACE error is generated.\"\n\nI\u0027ll need to be sure this is current context of thread and that surface is bound.",
+      "parentUuid": "4693727d_8df2a194",
       "range": {
         "startLine": 249,
         "startChar": 4,
