@@ -16,6 +16,63 @@
       "message": "Failures are inconsistent and show no indication that they are due to this change.",
       "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dddac5d7_6df3ee3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T15:26:25Z",
+      "side": 1,
+      "message": "Thank you for working through this with me Jeff, and fixing the ANI issue.\n\nMy last question is, is getBufferAge with no context valid, or an error? If that\u0027s valid, we many have to figure out a way to deal with that.",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32f61a7d_da20df8d",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T15:26:25Z",
+      "side": 1,
+      "message": "Should this start from 1 then, since 0 means not used for rendering? The mFrameCount++ code below makes the first image get mFrameNumber 0.",
+      "range": {
+        "startLine": 487,
+        "startChar": 18,
+        "endLine": 487,
+        "endChar": 19
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a5d36dd_c533f1ec",
+        "filename": "src/tests/egl_tests/EGLBufferAgeTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-25T15:26:25Z",
+      "side": 1,
+      "message": "Is there a bug here, or should this be uncommented?",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
