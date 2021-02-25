@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d25d2765_d6021440",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2365,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-25T03:23:38Z",
+      "side": 1,
+      "message": "Finally done with triage.  The test failures are from color-masked clears.  The FramebufferVk::clear() path will call UtilsVk::clearFramebuffer() which starts a render pass to do the clear.  That render pass doesn\u0027t know that the color mask applies.",
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
