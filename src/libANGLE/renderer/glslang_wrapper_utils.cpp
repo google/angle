@@ -2128,6 +2128,9 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
     gl::TransformFeedbackBuffersArray<std::vector<XfbVarying>> mXfbVaryings;
 };
 
+constexpr size_t SpirvTransformFeedbackCodeGenerator::kXfbDecorationCount;
+constexpr spv::Decoration SpirvTransformFeedbackCodeGenerator::kXfbDecorations[kXfbDecorationCount];
+
 void SpirvTransformFeedbackCodeGenerator::visitName(spirv::IdRef id,
                                                     const spirv::LiteralString &name)
 {
