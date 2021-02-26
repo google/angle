@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b3c65a7_d43dd270",
+        "filename": "src/common/spirv/spirv_types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-02-26T01:21:27Z",
+      "side": 1,
+      "message": "nit: I like \"spirv_utils\" if this is meant to be where more generic helper functions end up.",
+      "range": {
+        "startLine": 5,
+        "startChar": 3,
+        "endLine": 5,
+        "endChar": 14
+      },
+      "revId": "73e3142b68f5e12bc1174b0dca910d7331433134",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
