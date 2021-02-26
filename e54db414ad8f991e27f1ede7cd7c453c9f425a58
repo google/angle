@@ -16,6 +16,23 @@
       "message": "Still trying to figure out these infra errors.  I think I need to add skips the test exceptions.",
       "revId": "e54db414ad8f991e27f1ede7cd7c453c9f425a58",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8039f9de_3a09f4cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T17:26:16Z",
+      "side": 1,
+      "message": "Look in the test stdout, you can see:\n\nINFO:root:Compile failed tests:\nINFO:root:  AttributeLayoutMemoryIndexed.Test/ES2_Vulkan_SwiftShader\nINFO:root:  AttributeLayoutNonIndexed.Test/ES2_Vulkan_SwiftShader\nINFO:root:  BPTCCompressedTextureTest.CompressedTexImageBC6HNoCrash/ES2_Vulkan_SwiftShader\nINFO:root:  EGLRecordableTest.ExtensionAlwaysAvailable/ES2_Vulkan_SwiftShader\nINFO:root:  EGLSyncTest.AndroidNativeFence_ClientWait/ES2_Vulkan_SwiftShader\nINFO:root:  EGLSyncTest.AndroidNativeFence_DupNativeFenceFD/ES2_Vulkan_SwiftShader\nINFO:root:  GLSLTest.MaxVaryingVec3ArrayAndOneFloatArray/ES2_Vulkan_SwiftShader\nINFO:root:  GLSLTest.MaxVaryingVec4/ES2_Vulkan_SwiftShader\nINFO:root:  GLSLTest.MaxVaryingVec4_OneBuiltin/ES2_Vulkan_SwiftShader\nINFO:root:  InstancingTest.IndexedAttrib1PointMemoryExt/ES2_Vulkan_SwiftShader\nINFO:root:  InstancingTest.IndexedAttrib1QuadBufferAngle/ES2_Vulkan_SwiftShader\nINFO:root:  InstancingTest.IndexedAttrib1QuadBufferExt/ES2_Vulkan_SwiftShader\nINFO:root:  InstancingTest.NonIndexedAttrib0TriFanMemoryExtOffset8/ES2_Vulkan_SwiftShader\nINFO:root:  InstancingTest.NonIndexedAttrib1PointBufferAngleOffset0/ES2_Vulkan_SwiftShader\nINFO:root:  InstancingTest.NonIndexedAttrib1PointBufferAngleOffset2/ES2_Vulkan_SwiftShader\nINFO:root:  PointSpritesTest.PointCoordRegressionTest/ES2_Vulkan_SwiftShader\nINFO:root:  PointSpritesTest.PointSizeAboveMaxIsClamped/ES2_Vulkan_SwiftShader\nINFO:root:  PointSpritesTest.PointSizeDeclaredButUnused/ES2_Vulkan_SwiftShader\nINFO:root:  SimpleOperationTest.ThreeVertexAttributes/ES2_Vulkan_SwiftShader\nINFO:root:  SimpleStateChangeTest.ChangeFramebufferSizeBetweenTwoDraws/ES2_Vulkan_SwiftShader\nINFO:root:  SimpleStateChangeTest.ChangeTextureFilterModeBetweenTwoDraws/ES2_Vulkan_SwiftShader\nINFO:root:  Texture2DTest.CopySubImageFloat_RGBA_RG/ES2_Vulkan_SwiftShader\nINFO:root:  Texture2DTest.CopySubImageFloat_RGBA_RGB/ES2_Vulkan_SwiftShader\nINFO:root:  Texture2DTest.CopySubImageFloat_RGBA_RGBA/ES2_Vulkan_SwiftShader\n\nIdeally we could fix the purple to a red failure, and surface the list of failing tests.",
+      "revId": "e54db414ad8f991e27f1ede7cd7c453c9f425a58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
