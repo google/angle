@@ -1037,4 +1037,12 @@ WorkerContext *DisplayGbm::createWorkerContext(std::string *infoLog,
     return new WorkerContextGbm(context, mEGL);
 }
 
+EGLint DisplayGbm::fixSurfaceType(EGLint surfaceType) const
+{
+    EGLint type = DisplayEGL::fixSurfaceType(surfaceType);
+    // Ozone native surfaces don't support EGL_WINDOW_BIT,
+    // but ANGLE uses renderbuffers to emulate windows
+    return type | EGL_WINDOW_BIT;
+}
+
 }  // namespace rx

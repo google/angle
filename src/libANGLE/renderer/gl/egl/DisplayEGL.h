@@ -112,6 +112,8 @@ class DisplayEGL : public DisplayGL
 
     egl::Error makeCurrentSurfaceless(gl::Context *context) override;
 
+    virtual EGLint fixSurfaceType(EGLint surfaceType) const;
+
     template <typename T>
     void getConfigAttrib(EGLConfig config, EGLint attribute, T *value) const;
 

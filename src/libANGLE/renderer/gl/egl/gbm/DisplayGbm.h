@@ -136,6 +136,7 @@ class DisplayGbm final : public DisplayEGL
 
   private:
     void generateExtensions(egl::DisplayExtensions *outExtensions) const override;
+    EGLint fixSurfaceType(EGLint surfaceType) const override;
 
     GLuint makeShader(GLuint type, const char *src);
     void drawBuffer(const gl::Context *context, Buffer *buffer);
