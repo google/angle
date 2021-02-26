@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99087e57_6c80577c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 271,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T21:17:33Z",
+      "side": 1,
+      "message": "I\u0027d retitle this section \"Testing with Chrome Canary\" or something similar.\n\nCan you link to this new section from ContributingCode.md and Orientation.md?",
+      "range": {
+        "startLine": 271,
+        "startChar": 4,
+        "endLine": 271,
+        "endChar": 13
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0df726f_eb81bfed",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T21:17:33Z",
+      "side": 1,
+      "message": "\"\n\nBuild ANGLE x64, Release, and run \u0027python scripts/update_canary_angle.py\u0027 to replace Canary\u0027s\n  ANGLE with your custom ANGLE. (Note: Canary must be closed)\n\n\"",
+      "range": {
+        "startLine": 276,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 106
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "daaeac3e_7fea31ff",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T21:17:33Z",
+      "side": 1,
+      "message": "can you see if you can embed these steps into the update_canary_angle script? It would be quite nice if we could bundle everything together there.",
+      "range": {
+        "startLine": 280,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 0
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d95e4b5e_0858f396",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T21:17:33Z",
+      "side": 1,
+      "message": "is that correct? I thought it was just \"gles\"",
+      "range": {
+        "startLine": 302,
+        "startChar": 17,
+        "endLine": 302,
+        "endChar": 22
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
