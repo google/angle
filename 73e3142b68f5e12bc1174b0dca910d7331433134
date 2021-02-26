@@ -22,6 +22,30 @@
       },
       "revId": "73e3142b68f5e12bc1174b0dca910d7331433134",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "589abf37_831de26c",
+        "filename": "src/common/spirv/spirv_types.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T14:50:18Z",
+      "side": 1,
+      "message": "+1, or angle_spirv_utils",
+      "parentUuid": "2b3c65a7_d43dd270",
+      "range": {
+        "startLine": 5,
+        "startChar": 3,
+        "endLine": 5,
+        "endChar": 14
+      },
+      "revId": "73e3142b68f5e12bc1174b0dca910d7331433134",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
