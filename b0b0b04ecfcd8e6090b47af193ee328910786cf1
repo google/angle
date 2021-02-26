@@ -51,6 +51,47 @@
       "message": "Why is the buffer even mapped? Shouldn\u0027t whoever mapped it also have unmapped it? What happens if we turn this into an ASSERT(!notMapped)?",
       "revId": "b0b0b04ecfcd8e6090b47af193ee328910786cf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee508d63_87f40eba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-26T18:49:53Z",
+      "side": 1,
+      "message": "\u003e What happens if we turn this into an ASSERT(!notMapped)?\n\n2 reasons -\n1. DynamicBuffer::allocateWithAlignment(...) provides an optional parameter that caller can pass in to get a pointer, the caller never explicitly called map(). Dont need callers to break encapsulation and peek into whether a map happened\n2. persistently mapped buffers would always fail the assert condition",
+      "parentUuid": "1b56cf67_a704a03a",
+      "revId": "b0b0b04ecfcd8e6090b47af193ee328910786cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26a657b6_f24eebed",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1853,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-26T18:49:53Z",
+      "side": 1,
+      "message": "shabi, this is why it could be mapped",
+      "range": {
+        "startLine": 1852,
+        "startChar": 1,
+        "endLine": 1853,
+        "endChar": 15
+      },
+      "revId": "b0b0b04ecfcd8e6090b47af193ee328910786cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
