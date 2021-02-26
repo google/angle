@@ -119,8 +119,13 @@ using SetBinaryDataDirFunc = void (*)(const char *);
 
 static constexpr size_t kTraceInfoMaxNameLen = 32;
 
+static constexpr uint32_t kDefaultReplayContextClientMajorVersion = 3;
+static constexpr uint32_t kDefaultReplayContextClientMinorVersion = 1;
+
 struct TraceInfo
 {
+    uint32_t contextClientMajorVersion;
+    uint32_t contextClientMinorVersion;
     uint32_t startFrame;
     uint32_t endFrame;
     uint32_t drawSurfaceWidth;

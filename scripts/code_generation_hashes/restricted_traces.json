@@ -40,7 +40,7 @@
   "src/tests/restricted_traces/free_fire.tar.gz.sha1":
     "a4e7aba54fb48524bb4f3022623bc7cd",
   "src/tests/restricted_traces/gen_restricted_traces.py":
-    "eccb9514e9606eb56b24cf57598e596c",
+    "7df2fbfb890d54ea9932b443439ae97e",
   "src/tests/restricted_traces/google_maps.tar.gz.sha1":
     "5d7001969619570e80e5a39b1ab8b0c4",
   "src/tests/restricted_traces/happy_color.tar.gz.sha1":
@@ -86,11 +86,11 @@
   "src/tests/restricted_traces/restricted_traces.json":
     "030dab939ec64fcdabdfbe6b05662e53",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "aea362cf1696f1014b8751c584748190",
+    "8c3d796ac3b9bafd3a84cb33a708706a",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
     "16b9118b91f903331c934c7b1786fe7f",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "d3e0d3469baea6837bcaae8a9d85a5d0",
+    "8eb2d7cf7be4d567a041e219e2192a18",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
