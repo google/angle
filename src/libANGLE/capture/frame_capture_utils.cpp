@@ -659,6 +659,7 @@ void SerializeShaderState(gl::BinaryOutputStream *bos, const gl::ShaderState &sh
     bos->writeEnum(shaderState.getShaderType());
     bos->writeInt(shaderState.getShaderVersion());
     bos->writeString(shaderState.getTranslatedSource());
+    bos->writeIntVector(shaderState.getCompiledBinary());
     bos->writeString(shaderState.getSource());
     SerializeWorkGroupSize(bos, shaderState.getLocalSize());
     SerializeShaderVariablesVector(bos, shaderState.getInputVaryings());

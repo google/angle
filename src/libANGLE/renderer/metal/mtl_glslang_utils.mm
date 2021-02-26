@@ -33,12 +33,6 @@ constexpr uint32_t kGlslangShaderResourceDescSet       = 3;
 using OriginalSamplerBindingMap =
     angle::HashMap<std::string, std::vector<std::pair<uint32_t, uint32_t>>>;
 
-angle::Result HandleError(ErrorHandler *context, GlslangError)
-{
-    ANGLE_MTL_TRY(context, false);
-    return angle::Result::Stop;
-}
-
 void ResetGlslangProgramInterfaceInfo(GlslangProgramInterfaceInfo *programInterfaceInfo)
 {
     // These are binding options passed to glslang. The actual binding might be changed later
@@ -403,11 +397,11 @@ void TranslatedShaderInfo::reset()
     }
 }
 
-void GlslangGetShaderSource(const gl::ProgramState &programState,
-                            const gl::ProgramLinkedResources &resources,
-                            gl::ShaderMap<std::string> *shaderSourcesOut,
-                            ShaderInterfaceVariableInfoMap *variableInfoMapOut,
-                            ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut)
+void GlslangGetShaderSpirvCode(const gl::ProgramState &programState,
+                               const gl::ProgramLinkedResources &resources,
+                               gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,
+                               ShaderInterfaceVariableInfoMap *variableInfoMapOut,
+                               ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut)
 {
     GlslangSourceOptions options = CreateSourceOptions();
     GlslangProgramInterfaceInfo programInterfaceInfo;
@@ -416,8 +410,8 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
     options.supportsTransformFeedbackEmulation = true;
 
     // Get shader sources and fill variable info map with transform feedback disabled.
-    rx::GlslangGetShaderSource(options, programState, resources, &programInterfaceInfo,
-                               shaderSourcesOut, variableInfoMapOut);
+    rx::GlslangGetShaderSpirvCode(options, programState, resources, &programInterfaceInfo,
+                                  spirvBlobsOut, variableInfoMapOut);
 
     // Fill variable info map with transform feedback enabled.
     if (!programState.getLinkedTransformFeedbackVaryings().empty())
@@ -433,20 +427,12 @@ void GlslangGetShaderSource(const gl::ProgramState &programState,
     }
 }
 
-angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
-                                        const gl::ShaderBitSet &linkedShaderStages,
-                                        const gl::Caps &glCaps,
-                                        const gl::ShaderMap<std::string> &shaderSources,
+angle::Result GlslangTransformSpirvCode(const gl::ShaderBitSet &linkedShaderStages,
+                                        const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
                                         bool isTransformFeedbackEnabled,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<angle::spirv::Blob> *shaderCodeOut)
 {
-    gl::ShaderMap<angle::spirv::Blob> initialSpirvBlobs;
-
-    ANGLE_TRY(rx::GlslangGetShaderSpirvCode(
-        [context](GlslangError error) { return HandleError(context, error); }, linkedShaderStages,
-        glCaps, shaderSources, &initialSpirvBlobs));
-
     for (const gl::ShaderType shaderType : linkedShaderStages)
     {
         GlslangSpirvOptions options;
@@ -457,8 +443,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
         options.isTransformFeedbackEmulated = true;
 
         angle::Result status = GlslangTransformSpirvCode(
-            [context](GlslangError error) { return HandleError(context, error); }, options,
-            variableInfoMap, initialSpirvBlobs[shaderType], &(*shaderCodeOut)[shaderType]);
+            options, variableInfoMap, *spirvBlobs[shaderType], &(*shaderCodeOut)[shaderType]);
         if (status != angle::Result::Continue)
         {
             return status;

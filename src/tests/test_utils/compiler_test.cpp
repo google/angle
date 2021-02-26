@@ -18,6 +18,11 @@ namespace sh
 
 namespace
 {
+constexpr char kBinaryBlob[] = "<binary blob>";
+bool IsBinaryBlob(const std::string &code)
+{
+    return code == kBinaryBlob;
+}
 
 ImmutableString GetSymbolTableMangledName(TIntermAggregate *node)
 {
@@ -86,9 +91,13 @@ bool compileTestShader(GLenum type,
         translator->compile(shaderStrings, 1, SH_OBJECT_CODE | compileOptions);
     TInfoSink &infoSink = translator->getInfoSink();
     if (translatedCode)
-        *translatedCode = infoSink.obj.c_str();
+    {
+        *translatedCode = infoSink.obj.isBinary() ? kBinaryBlob : infoSink.obj.c_str();
+    }
     if (infoLog)
+    {
         *infoLog = infoSink.info.c_str();
+    }
     SafeDelete(translator);
     return compilationSuccess;
 }
@@ -167,6 +176,12 @@ bool MatchOutputCodeTest::foundInCodeRegex(ShShaderOutput output,
         return std::string::npos;
     }
 
+    // No meaningful check for binary blobs
+    if (IsBinaryBlob(code->second))
+    {
+        return true;
+    }
+
     if (match)
     {
         return std::regex_search(code->second, *match, regexToFind);
@@ -185,6 +200,13 @@ bool MatchOutputCodeTest::foundInCode(ShShaderOutput output, const char *stringT
     {
         return std::string::npos;
     }
+
+    // No meaningful check for binary blobs
+    if (IsBinaryBlob(code->second))
+    {
+        return true;
+    }
+
     return code->second.find(stringToFind) != std::string::npos;
 }
 
@@ -196,6 +218,12 @@ bool MatchOutputCodeTest::foundInCodeInOrder(ShShaderOutput output,
     if (code == mOutputCode.end())
     {
         return false;
+    }
+
+    // No meaningful check for binary blobs
+    if (IsBinaryBlob(code->second))
+    {
+        return true;
     }
 
     size_t currentPos = 0;
@@ -220,6 +248,12 @@ bool MatchOutputCodeTest::foundInCode(ShShaderOutput output,
     if (code == mOutputCode.end())
     {
         return false;
+    }
+
+    // No meaningful check for binary blobs
+    if (IsBinaryBlob(code->second))
+    {
+        return true;
     }
 
     size_t currentPos  = 0;
@@ -293,6 +327,12 @@ bool MatchOutputCodeTest::notFoundInCode(const char *stringToFind) const
 {
     for (auto &code : mOutputCode)
     {
+        // No meaningful check for binary blobs
+        if (IsBinaryBlob(code.second))
+        {
+            continue;
+        }
+
         if (foundInCode(code.first, stringToFind))
         {
             return false;

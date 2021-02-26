@@ -267,16 +267,15 @@ std::unique_ptr<LinkEvent> ProgramVk::link(const gl::Context *context,
     reset(contextVk);
     mExecutable.clearVariableInfoMap();
 
-    // Gather variable info and transform sources.
-    gl::ShaderMap<std::string> shaderSources;
-    GlslangWrapperVk::GetShaderSource(contextVk->getFeatures(), mState, resources,
-                                      &mGlslangProgramInterfaceInfo, &shaderSources,
-                                      &mExecutable.mVariableInfoMap);
+    // Gather variable info and compiled SPIR-V binaries.
+    gl::ShaderMap<const angle::spirv::Blob *> spirvBlobs;
+    GlslangWrapperVk::GetShaderCode(contextVk->getFeatures(), mState, resources,
+                                    &mGlslangProgramInterfaceInfo, &spirvBlobs,
+                                    &mExecutable.mVariableInfoMap);
 
     // Compile the shaders.
-    angle::Result status =
-        mOriginalShaderInfo.initShaders(contextVk, mState.getExecutable().getLinkedShaderStages(),
-                                        shaderSources, mExecutable.mVariableInfoMap);
+    angle::Result status = mOriginalShaderInfo.initShaders(
+        mState.getExecutable().getLinkedShaderStages(), spirvBlobs, mExecutable.mVariableInfoMap);
     if (status != angle::Result::Continue)
     {
         return std::make_unique<LinkEventDone>(status);

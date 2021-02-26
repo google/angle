@@ -312,6 +312,8 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/OutputVulkanGLSL.h",
   "src/compiler/translator/TranslatorVulkan.cpp",
   "src/compiler/translator/TranslatorVulkan.h",
+  "src/compiler/translator/glslang_wrapper.cpp",
+  "src/compiler/translator/glslang_wrapper.h",
   "src/compiler/translator/tree_ops/vulkan/EarlyFragmentTestsOptimization.cpp",
   "src/compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.cpp",
   "src/compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h",

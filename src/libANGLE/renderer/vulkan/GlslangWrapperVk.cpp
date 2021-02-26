@@ -13,16 +13,6 @@
 
 namespace rx
 {
-namespace
-{
-angle::Result ErrorHandler(vk::Context *context, GlslangError)
-{
-    ANGLE_VK_CHECK(context, false, VK_ERROR_INVALID_SHADER_NV);
-    return angle::Result::Stop;
-}
-
-}  // namespace
-
 // static
 GlslangSourceOptions GlslangWrapperVk::CreateSourceOptions(const angle::FeaturesVk &features)
 {
@@ -57,40 +47,25 @@ void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
 }
 
 // static
-void GlslangWrapperVk::GetShaderSource(const angle::FeaturesVk &features,
-                                       const gl::ProgramState &programState,
-                                       const gl::ProgramLinkedResources &resources,
-                                       GlslangProgramInterfaceInfo *programInterfaceInfo,
-                                       gl::ShaderMap<std::string> *shaderSourcesOut,
-                                       ShaderInterfaceVariableInfoMap *variableInfoMapOut)
+void GlslangWrapperVk::GetShaderCode(const angle::FeaturesVk &features,
+                                     const gl::ProgramState &programState,
+                                     const gl::ProgramLinkedResources &resources,
+                                     GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                     gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,
+                                     ShaderInterfaceVariableInfoMap *variableInfoMapOut)
 {
     GlslangSourceOptions options = CreateSourceOptions(features);
-    GlslangGetShaderSource(options, programState, resources, programInterfaceInfo, shaderSourcesOut,
-                           variableInfoMapOut);
-}
-
-// static
-angle::Result GlslangWrapperVk::GetShaderCode(vk::Context *context,
-                                              const gl::ShaderBitSet &linkedShaderStages,
-                                              const gl::Caps &glCaps,
-                                              const gl::ShaderMap<std::string> &shaderSources,
-                                              gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
-{
-    return GlslangGetShaderSpirvCode(
-        [context](GlslangError error) { return ErrorHandler(context, error); }, linkedShaderStages,
-        glCaps, shaderSources, shaderCodeOut);
+    GlslangGetShaderSpirvCode(options, programState, resources, programInterfaceInfo, spirvBlobsOut,
+                              variableInfoMapOut);
 }
 
 // static
 angle::Result GlslangWrapperVk::TransformSpirV(
-    vk::Context *context,
     const GlslangSpirvOptions &options,
     const ShaderInterfaceVariableInfoMap &variableInfoMap,
     const angle::spirv::Blob &initialSpirvBlob,
     angle::spirv::Blob *shaderCodeOut)
 {
-    return GlslangTransformSpirvCode(
-        [context](GlslangError error) { return ErrorHandler(context, error); }, options,
-        variableInfoMap, initialSpirvBlob, shaderCodeOut);
+    return GlslangTransformSpirvCode(options, variableInfoMap, initialSpirvBlob, shaderCodeOut);
 }
 }  // namespace rx

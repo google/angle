@@ -484,9 +484,6 @@ class RendererVk : angle::NonCopyable
     // Async Command Queue
     vk::CommandProcessor mCommandProcessor;
 
-    // track whether we initialized (or released) glslang
-    bool mGlslangInitialized;
-
     vk::Allocator mAllocator;
     SamplerCache mSamplerCache;
     SamplerYcbcrConversionCache mYuvConversionCache;

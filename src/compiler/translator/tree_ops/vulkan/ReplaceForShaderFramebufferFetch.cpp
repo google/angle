@@ -335,17 +335,13 @@ ImmutableString GetFunctionNameOfSubpassLoad(const InputType &inputType)
     switch (inputType)
     {
         case InputType::SubpassInput:
+        case InputType::ISubpassInput:
+        case InputType::USubpassInput:
             return ImmutableString("subpassLoad");
         case InputType::SubpassInputMS:
-            return ImmutableString("subpassLoadMS");
-        case InputType::ISubpassInput:
-            return ImmutableString("isubpassLoad");
         case InputType::ISubpassInputMS:
-            return ImmutableString("isubpassLoadMS");
-        case InputType::USubpassInput:
-            return ImmutableString("usubpassLoad");
         case InputType::USubpassInputMS:
-            return ImmutableString("usubpassLoadMS");
+            return ImmutableString("subpassLoadMS");
         default:
             UNREACHABLE();
             return kEmptyImmutableString;

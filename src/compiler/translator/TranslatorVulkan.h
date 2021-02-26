@@ -34,7 +34,8 @@ class TranslatorVulkan : public TCompiler
 
     // Subclass can call this method to transform the AST before writing the final output.
     // See TranslatorMetal.cpp.
-    ANGLE_NO_DISCARD bool translateImpl(TIntermBlock *root,
+    ANGLE_NO_DISCARD bool translateImpl(TInfoSinkBase &sink,
+                                        TIntermBlock *root,
                                         ShCompileOptions compileOptions,
                                         PerformanceDiagnostics *perfDiagnostics,
                                         SpecConst *specConst,
@@ -49,6 +50,9 @@ class TranslatorVulkan : public TCompiler
     {
         return true;
     }
+
+    // Generate SPIR-V out of intermediate GLSL through glslang.
+    ANGLE_NO_DISCARD bool compileToSpirv(const TInfoSinkBase &glsl);
 };
 
 }  // namespace sh

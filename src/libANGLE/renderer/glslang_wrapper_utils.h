@@ -17,12 +17,6 @@
 
 namespace rx
 {
-enum class GlslangError
-{
-    InvalidShader,
-    InvalidSpirv,
-};
-
 constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
     {gl::ShaderType::Vertex, sh::vk::kDefaultUniformsNameVS},
     {gl::ShaderType::TessControl, sh::vk::kDefaultUniformsNameTCS},
@@ -68,8 +62,6 @@ struct GlslangSpirvOptions
     bool isTransformFeedbackStage             = false;
     bool isTransformFeedbackEmulated          = false;
 };
-
-using GlslangErrorCallback = std::function<angle::Result(GlslangError)>;
 
 struct ShaderInterfaceVariableXfbInfo
 {
@@ -170,12 +162,9 @@ class ShaderInterfaceVariableInfoMap final : angle::NonCopyable
     gl::ShaderMap<VariableNameToInfoMap> mData;
 };
 
-void GlslangInitialize();
-void GlslangRelease();
-
 bool GetImageNameWithoutIndices(std::string *name);
 
-// Get the mapped sampler name after the source is transformed by GlslangGetShaderSource()
+// Get the mapped sampler name.
 std::string GlslangGetMappedSamplerName(const std::string &originalName);
 std::string GetXfbBufferName(const uint32_t bufferIndex);
 
@@ -188,28 +177,18 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
-// Transform the source to include actual binding points for various shader resources (textures,
-// buffers, xfb, etc).  For some variables, these values are instead output to the variableInfoMap
-// to be set during a SPIR-V transformation.  This is a transitory step towards moving all variables
-// to this map, at which point GlslangGetShaderSpirvCode will also be called by this function.
-void GlslangGetShaderSource(const GlslangSourceOptions &options,
-                            const gl::ProgramState &programState,
-                            const gl::ProgramLinkedResources &resources,
-                            GlslangProgramInterfaceInfo *programInterfaceInfo,
-                            gl::ShaderMap<std::string> *shaderSourcesOut,
-                            ShaderInterfaceVariableInfoMap *variableInfoMapOut);
+// Retrieves the compiled SPIR-V code for each shader stage, and calls |GlslangAssignLocations|.
+void GlslangGetShaderSpirvCode(const GlslangSourceOptions &options,
+                               const gl::ProgramState &programState,
+                               const gl::ProgramLinkedResources &resources,
+                               GlslangProgramInterfaceInfo *programInterfaceInfo,
+                               gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,
+                               ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
-angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
-                                        const GlslangSpirvOptions &options,
+angle::Result GlslangTransformSpirvCode(const GlslangSpirvOptions &options,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         const angle::spirv::Blob &initialSpirvBlob,
                                         angle::spirv::Blob *spirvBlobOut);
-
-angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
-                                        const gl::ShaderBitSet &linkedShaderStages,
-                                        const gl::Caps &glCaps,
-                                        const gl::ShaderMap<std::string> &shaderSources,
-                                        gl::ShaderMap<angle::spirv::Blob> *spirvBlobsOut);
 
 }  // namespace rx
 

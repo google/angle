@@ -15,6 +15,11 @@
 #include <vector>
 #include "angle_gl.h"
 
+#if defined(ANGLE_ENABLE_VULKAN)
+// SPIR-V tools include for disassembly.
+#    include <spirv-tools/libspirv.hpp>
+#endif
+
 //
 // Return codes from main.
 //
@@ -43,6 +48,8 @@ static void FreeShaderSource(ShaderSource &source);
 
 static bool ParseGLSLOutputVersion(const std::string &, ShShaderOutput *outResult);
 static bool ParseIntValue(const std::string &, int emptyDefault, int *outValue);
+
+static void PrintSpirv(const sh::BinaryBlob &blob);
 
 //
 // Set up the per compile resources
@@ -81,6 +88,9 @@ int main(int argc, char *argv[])
     ShShaderSpec spec               = SH_GLES2_SPEC;
     ShShaderOutput output           = SH_ESSL_OUTPUT;
 
+#if defined(ANGLE_ENABLE_VULKAN)
+    sh::InitializeGlslang();
+#endif
     sh::Initialize();
 
     ShBuiltInResources resources;
@@ -332,8 +342,16 @@ int main(int argc, char *argv[])
                 if (compiled && (compileOptions & SH_OBJECT_CODE))
                 {
                     LogMsg("BEGIN", "COMPILER", numCompiles, "OBJ CODE");
-                    std::string code = sh::GetObjectCode(compiler);
-                    puts(code.c_str());
+                    if (output != SH_SPIRV_VULKAN_OUTPUT)
+                    {
+                        const std::string &code = sh::GetObjectCode(compiler);
+                        puts(code.c_str());
+                    }
+                    else
+                    {
+                        const sh::BinaryBlob &blob = sh::GetObjectBinaryBlob(compiler);
+                        PrintSpirv(blob);
+                    }
                     LogMsg("END", "COMPILER", numCompiles, "OBJ CODE");
                     printf("\n\n");
                 }
@@ -371,6 +389,9 @@ int main(int argc, char *argv[])
         sh::Destruct(geometryCompiler);
 
     sh::Finalize();
+#if defined(ANGLE_ENABLE_VULKAN)
+    sh::FinalizeGlslang();
+#endif
 
     return failCode;
 }
@@ -400,7 +421,7 @@ void usage()
         "       -b=g     : output GLSL code (compatibility profile)\n"
         "       -b=g[NUM]: output GLSL code (NUM can be 130, 140, 150, 330, 400, 410, 420, 430, "
         "440, 450)\n"
-        "       -b=v     : output Vulkan GLSL code\n"
+        "       -b=v     : output Vulkan SPIR-V code\n"
         "       -b=h9    : output HLSL9 code\n"
         "       -b=h11   : output HLSL11 code\n"
         "       -x=i     : enable GL_OES_EGL_image_external\n"
@@ -847,4 +868,16 @@ static bool ParseIntValue(const std::string &num, int emptyDefault, int *outValu
     }
     *outValue = value;
     return true;
+}
+
+static void PrintSpirv(const sh::BinaryBlob &blob)
+{
+#if defined(ANGLE_ENABLE_VULKAN)
+    spvtools::SpirvTools spirvTools(SPV_ENV_VULKAN_1_1);
+
+    std::string readableSpirv;
+    spirvTools.Disassemble(blob, &readableSpirv, 0);
+
+    puts(readableSpirv.c_str());
+#endif
 }

@@ -42,7 +42,7 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
 
 std::string ShaderMtl::getDebugInfo() const
 {
-    return mState.getTranslatedSource();
+    return mState.getCompiledBinary().empty() ? "" : "<binary blob>";
 }
 
 }  // namespace rx

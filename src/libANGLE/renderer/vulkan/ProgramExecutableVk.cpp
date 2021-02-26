@@ -60,8 +60,7 @@ void SaveShaderInterfaceVariableXfbInfo(const ShaderInterfaceVariableXfbInfo &xf
     }
 }
 
-bool ValidateTransformedSpirV(ContextVk *contextVk,
-                              const gl::ShaderBitSet &linkedShaderStages,
+bool ValidateTransformedSpirV(const gl::ShaderBitSet &linkedShaderStages,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
                               const gl::ShaderMap<angle::spirv::Blob> &spirvBlobs)
 {
@@ -70,17 +69,15 @@ bool ValidateTransformedSpirV(ContextVk *contextVk,
     for (gl::ShaderType shaderType : linkedShaderStages)
     {
         GlslangSpirvOptions options;
-        options.shaderType  = shaderType;
-        options.preRotation = SurfaceRotation::FlippedRotated90Degrees;
-        options.negativeViewportSupported =
-            contextVk->getFeatures().supportsNegativeViewport.enabled;
+        options.shaderType                         = shaderType;
+        options.preRotation                        = SurfaceRotation::FlippedRotated90Degrees;
+        options.negativeViewportSupported          = false;
         options.transformPositionToVulkanClipSpace = true;
         options.removeDebugInfo                    = true;
         options.isTransformFeedbackStage           = shaderType == lastPreFragmentStage;
 
         angle::spirv::Blob transformed;
-        if (GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
-                                             spirvBlobs[shaderType],
+        if (GlslangWrapperVk::TransformSpirV(options, variableInfoMap, spirvBlobs[shaderType],
                                              &transformed) != angle::Result::Continue)
         {
             return false;
@@ -99,18 +96,22 @@ ShaderInfo::ShaderInfo() {}
 
 ShaderInfo::~ShaderInfo() = default;
 
-angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
-                                      const gl::ShaderBitSet &linkedShaderStages,
-                                      const gl::ShaderMap<std::string> &shaderSources,
+angle::Result ShaderInfo::initShaders(const gl::ShaderBitSet &linkedShaderStages,
+                                      const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
                                       const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
     ASSERT(!valid());
 
-    ANGLE_TRY(GlslangWrapperVk::GetShaderCode(contextVk, linkedShaderStages, contextVk->getCaps(),
-                                              shaderSources, &mSpirvBlobs));
+    for (const gl::ShaderType shaderType : gl::AllShaderTypes())
+    {
+        if (spirvBlobs[shaderType] != nullptr)
+        {
+            mSpirvBlobs[shaderType] = *spirvBlobs[shaderType];
+        }
+    }
 
     // Assert that SPIR-V transformation is correct, even if the test never issues a draw call.
-    ASSERT(ValidateTransformedSpirV(contextVk, linkedShaderStages, variableInfoMap, mSpirvBlobs));
+    ASSERT(ValidateTransformedSpirV(linkedShaderStages, variableInfoMap, mSpirvBlobs));
 
     mIsInitialized = true;
     return angle::Result::Continue;
@@ -186,8 +187,8 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
         options.transformPositionToVulkanClipSpace = optionBits.enableDepthCorrection;
     }
 
-    ANGLE_TRY(GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
-                                               originalSpirvBlob, &transformedSpirvBlob));
+    ANGLE_TRY(GlslangWrapperVk::TransformSpirV(options, variableInfoMap, originalSpirvBlob,
+                                               &transformedSpirvBlob));
     ANGLE_TRY(vk::InitShaderAndSerial(contextVk, &mShaders[shaderType].get(),
                                       transformedSpirvBlob.data(),
                                       transformedSpirvBlob.size() * sizeof(uint32_t)));

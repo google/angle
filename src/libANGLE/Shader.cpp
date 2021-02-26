@@ -298,6 +298,12 @@ const std::string &Shader::getTranslatedSource()
     return mState.mTranslatedSource;
 }
 
+const sh::BinaryBlob &Shader::getCompiledBinary()
+{
+    resolveCompile();
+    return mState.mCompiledBinary;
+}
+
 void Shader::getTranslatedSourceWithDebugInfo(GLsizei bufSize, GLsizei *length, char *buffer)
 {
     resolveCompile();
@@ -310,6 +316,7 @@ void Shader::compile(const Context *context)
     resolveCompile();
 
     mState.mTranslatedSource.clear();
+    mState.mCompiledBinary.clear();
     mInfoLog.clear();
     mState.mShaderVersion = 100;
     mState.mInputVaryings.clear();
@@ -407,36 +414,47 @@ void Shader::resolveCompile()
         return;
     }
 
-    mState.mTranslatedSource = sh::GetObjectCode(compilerHandle);
+    const ShShaderOutput outputType = mCompilingState->shCompilerInstance.getShaderOutputType();
+    const bool isBinaryOutput =
+        outputType == SH_SPIRV_VULKAN_OUTPUT || outputType == SH_SPIRV_METAL_OUTPUT;
+
+    if (isBinaryOutput)
+    {
+        mState.mCompiledBinary = sh::GetObjectBinaryBlob(compilerHandle);
+    }
+    else
+    {
+        mState.mTranslatedSource = sh::GetObjectCode(compilerHandle);
 
 #if !defined(NDEBUG)
-    // Prefix translated shader with commented out un-translated shader.
-    // Useful in diagnostics tools which capture the shader source.
-    std::ostringstream shaderStream;
-    shaderStream << "// GLSL\n";
-    shaderStream << "//\n";
+        // Prefix translated shader with commented out un-translated shader.
+        // Useful in diagnostics tools which capture the shader source.
+        std::ostringstream shaderStream;
+        shaderStream << "// GLSL\n";
+        shaderStream << "//\n";
 
-    std::istringstream inputSourceStream(mState.mSource);
-    std::string line;
-    while (std::getline(inputSourceStream, line))
-    {
-        // Remove null characters from the source line
-        line.erase(std::remove(line.begin(), line.end(), '\0'), line.end());
-
-        shaderStream << "// " << line;
-
-        // glslang complains if a comment ends with backslash
-        if (!line.empty() && line.back() == '\\')
+        std::istringstream inputSourceStream(mState.mSource);
+        std::string line;
+        while (std::getline(inputSourceStream, line))
         {
-            shaderStream << "\\";
-        }
+            // Remove null characters from the source line
+            line.erase(std::remove(line.begin(), line.end(), '\0'), line.end());
 
-        shaderStream << std::endl;
-    }
-    shaderStream << "\n\n";
-    shaderStream << mState.mTranslatedSource;
-    mState.mTranslatedSource = shaderStream.str();
+            shaderStream << "// " << line;
+
+            // glslang complains if a comment ends with backslash
+            if (!line.empty() && line.back() == '\\')
+            {
+                shaderStream << "\\";
+            }
+
+            shaderStream << std::endl;
+        }
+        shaderStream << "\n\n";
+        shaderStream << mState.mTranslatedSource;
+        mState.mTranslatedSource = shaderStream.str();
 #endif  // !defined(NDEBUG)
+    }
 
     // Gather the shader information
     mState.mShaderVersion = sh::GetShaderVersion(compilerHandle);
@@ -566,7 +584,7 @@ void Shader::resolveCompile()
             UNREACHABLE();
     }
 
-    ASSERT(!mState.mTranslatedSource.empty());
+    ASSERT(!mState.mTranslatedSource.empty() || !mState.mCompiledBinary.empty());
 
     bool success          = mCompilingState->compileEvent->postTranslate(&mInfoLog);
     mState.mCompileStatus = success ? CompileStatus::COMPILED : CompileStatus::NOT_COMPILED;

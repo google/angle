@@ -41,17 +41,15 @@ struct TranslatedShaderInfo
     bool hasUBOArgumentBuffer;
 };
 
-// shaderSourcesOut is result GLSL code per shader stage.
-void GlslangGetShaderSource(const gl::ProgramState &programState,
-                            const gl::ProgramLinkedResources &resources,
-                            gl::ShaderMap<std::string> *shaderSourcesOut,
-                            ShaderInterfaceVariableInfoMap *variableInfoMapOut,
-                            ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut);
+// spirvBlobsOut is the SPIR-V code per shader stage.
+void GlslangGetShaderSpirvCode(const gl::ProgramState &programState,
+                               const gl::ProgramLinkedResources &resources,
+                               gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,
+                               ShaderInterfaceVariableInfoMap *variableInfoMapOut,
+                               ShaderInterfaceVariableInfoMap *xfbOnlyVSVariableInfoMapOut);
 
-angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
-                                        const gl::ShaderBitSet &linkedShaderStages,
-                                        const gl::Caps &glCaps,
-                                        const gl::ShaderMap<std::string> &shaderSources,
+angle::Result GlslangTransformSpirvCode(const gl::ShaderBitSet &linkedShaderStages,
+                                        const gl::ShaderMap<const angle::spirv::Blob *> &spirvBlobs,
                                         bool isTransformFeedbackEnabled,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
                                         gl::ShaderMap<angle::spirv::Blob> *shaderCodeOut);

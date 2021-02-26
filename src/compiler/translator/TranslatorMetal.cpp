@@ -179,7 +179,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
                                 ShCompileOptions compileOptions,
                                 PerformanceDiagnostics *perfDiagnostics)
 {
-    TInfoSinkBase &sink = getInfoSink().obj;
+    TInfoSinkBase sink;
 
     TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
                                  getNameMap(), &getSymbolTable(), getShaderType(),
@@ -187,7 +187,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
 
     SpecConstMetal specConst(&getSymbolTable(), compileOptions, getShaderType());
     DriverUniformMetal driverUniforms;
-    if (!TranslatorVulkan::translateImpl(root, compileOptions, perfDiagnostics, &specConst,
+    if (!TranslatorVulkan::translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
                                          &driverUniforms, &outputGLSL))
     {
         return false;
@@ -210,14 +210,14 @@ bool TranslatorMetal::translate(TIntermBlock *root,
         }
 
         // Insert rasterizer discard logic
-        if (!insertRasterizerDiscardLogic(root))
+        if (!insertRasterizerDiscardLogic(sink, root))
         {
             return false;
         }
     }
     else if (getShaderType() == GL_FRAGMENT_SHADER)
     {
-        if (!insertSampleMaskWritingLogic(root, &driverUniforms))
+        if (!insertSampleMaskWritingLogic(sink, root, &driverUniforms))
         {
             return false;
         }
@@ -246,7 +246,7 @@ bool TranslatorMetal::translate(TIntermBlock *root,
     // Write translated shader.
     root->traverse(&outputGLSL);
 
-    return true;
+    return compileToSpirv(sink);
 }
 
 // Metal needs to inverse the depth if depthRange is is reverse order, i.e. depth near > depth far
@@ -280,10 +280,10 @@ bool TranslatorMetal::transformDepthBeforeCorrection(TIntermBlock *root,
 // Add sample_mask writing to main, guarded by the specialization constant
 // kCoverageMaskEnabledConstName
 ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
+    TInfoSinkBase &sink,
     TIntermBlock *root,
     const DriverUniformMetal *driverUniforms)
 {
-    TInfoSinkBase &sink       = getInfoSink().obj;
     TSymbolTable *symbolTable = &getSymbolTable();
 
     // Insert coverageMaskEnabled specialization constant and sample_mask writing function.
@@ -334,9 +334,9 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
     return RunAtTheEndOfShader(this, root, ifCall, symbolTable);
 }
 
-ANGLE_NO_DISCARD bool TranslatorMetal::insertRasterizerDiscardLogic(TIntermBlock *root)
+ANGLE_NO_DISCARD bool TranslatorMetal::insertRasterizerDiscardLogic(TInfoSinkBase &sink,
+                                                                    TIntermBlock *root)
 {
-    TInfoSinkBase &sink       = getInfoSink().obj;
     TSymbolTable *symbolTable = &getSymbolTable();
 
     // Insert rasterizationDisabled specialization constant.

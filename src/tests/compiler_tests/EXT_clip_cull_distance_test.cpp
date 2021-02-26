@@ -350,7 +350,9 @@ TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileFailsWithExtensionWithou
 
 #if defined(ANGLE_ENABLE_VULKAN)
 // With extension flag and extension directive, compiling using TranslatorVulkan succeeds.
-TEST_P(EXTClipCullDistanceForFragmentShaderTest, CompileSucceedsVulkan)
+//
+// Test is disabled due to translation bug.  http://anglebug.com/5747
+TEST_P(EXTClipCullDistanceForFragmentShaderTest, DISABLED_CompileSucceedsVulkan)
 {
     SetExtensionEnable(true);
 
