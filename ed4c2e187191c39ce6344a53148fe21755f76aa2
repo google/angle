@@ -33,6 +33,24 @@
       "message": "LGTM as the change is logically correct, but this kind of micro optimization can pretty easily get reverted in whatever refactoring may happen in the future.",
       "revId": "ed4c2e187191c39ce6344a53148fe21755f76aa2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4024cfc_7ec63944",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-26T18:51:34Z",
+      "side": 1,
+      "message": "this gets rid of 0.5% CPU overhead. Adding a gating perf test isn\u0027t complicated but not sure how strictly it will be enforced",
+      "parentUuid": "3f0a4ca7_e7ebce0e",
+      "revId": "ed4c2e187191c39ce6344a53148fe21755f76aa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
