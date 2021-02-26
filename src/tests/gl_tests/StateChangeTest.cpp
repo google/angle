@@ -4157,6 +4157,8 @@ TEST_P(SimpleStateChangeTestES31, DrawWithTextureThenDrawWithImage)
 {
     // http://anglebug.com/5593
     ANGLE_SKIP_TEST_IF(IsD3D11());
+    // http://anglebug.com/5686
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsDesktopOpenGL());
 
     GLint maxFragmentImageUniforms;
     glGetIntegerv(GL_MAX_FRAGMENT_IMAGE_UNIFORMS, &maxFragmentImageUniforms);
@@ -4443,6 +4445,9 @@ void main()
 // In the Vulkan backend, the clear is deferred and should be flushed correctly.
 TEST_P(SimpleStateChangeTestES31, ClearThenSampleWithCompute)
 {
+    // http://anglebug.com/5687
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsDesktopOpenGL());
+
     constexpr GLsizei kSize = 1;
 
     GLTexture color;
@@ -4516,6 +4521,9 @@ void main()
 // it in a dispatch call works correctly.  This requires an implicit barrier in between the calls.
 TEST_P(SimpleStateChangeTestES31, TransformFeedbackThenReadWithCompute)
 {
+    // http://anglebug.com/5687
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+
     constexpr GLsizei kBufferSize = sizeof(float) * 4 * 6;
     GLBuffer buffer;
     glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, buffer);
