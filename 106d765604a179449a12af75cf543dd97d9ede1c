@@ -54,6 +54,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "abe6d76a_68396bc6",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2365,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-26T02:54:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "190876fc_59896099",
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf38db34_6330fe1d",
@@ -186,6 +204,30 @@
       "side": 1,
       "message": "I like that idea!",
       "parentUuid": "6a66a0bb_f033e8fa",
+      "range": {
+        "startLine": 2372,
+        "startChar": 42,
+        "endLine": 2372,
+        "endChar": 49
+      },
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "732246ba_2c4d34ce",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2372,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-26T02:54:52Z",
+      "side": 1,
+      "message": "I\u0027ll work on this Friday",
+      "parentUuid": "1067418c_891770f3",
       "range": {
         "startLine": 2372,
         "startChar": 42,
