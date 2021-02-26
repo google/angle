@@ -16,6 +16,46 @@
       "message": "Hi Jamie, please see the referenced bug or ping in chat for further context on this. This is my first CL sent to the angle project, so please let me know if there\u0027s any considerations I need to make. Thanks!",
       "revId": "40ebef4f9fb8163011d8d3d3e542b1f270ee04b6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6412581_5aa71cc3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T00:13:08Z",
+      "side": 1,
+      "message": "LGTM, adding Jonah as a second reviewer since he\u0027s familiar with the system info library. (ANGLE typically uses a two-reviewer policy)",
+      "revId": "40ebef4f9fb8163011d8d3d3e542b1f270ee04b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "053870a6_4136d928",
+        "filename": "src/gpu_info_util/SystemInfo.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-02-26T00:13:08Z",
+      "side": 1,
+      "message": "nit: you can make this a uint32_t for simplicity. I don\u0027t think we\u0027ll be too concerned about space usage for this member.",
+      "range": {
+        "startLine": 21,
+        "startChar": 19,
+        "endLine": 21,
+        "endChar": 26
+      },
+      "revId": "40ebef4f9fb8163011d8d3d3e542b1f270ee04b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
