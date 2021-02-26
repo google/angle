@@ -16,6 +16,23 @@
       "message": "Should have fixed the failing end2end tests:\n* only do the workaround in streamAttributes when it\u0027s drawArrays (drawElements used to trigger when there\u0027s attribute in client memory)\n* The other issue might be because overlapping attributes range. But I just refactor the existing code which based on my understanding only works for when there\u0027s only one streaming attribute",
       "revId": "63fbbcb036ae3d5c485c95da98fa0787c8b5d3c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d052ba93_8c40dcce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-02-26T19:41:30Z",
+      "side": 1,
+      "message": "LGTM with applyWorkaroundForInstancedAttributes using a more descriptive name.",
+      "revId": "63fbbcb036ae3d5c485c95da98fa0787c8b5d3c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
