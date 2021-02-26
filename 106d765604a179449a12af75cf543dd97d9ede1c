@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "190876fc_59896099",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2365,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-26T01:23:55Z",
+      "side": 1,
+      "message": "UtilsVk::clearFramebuffer() has the desired color write mask (which it uses later).  However, ContextVk::getClearColorMasks() has the colorWriteMask set by the application.  I\u0027m trying that out for the next patchset.",
+      "parentUuid": "e1db8160_83855ead",
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cf38db34_6330fe1d",
         "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
         "patchSetId": 3
@@ -49,6 +67,30 @@
       "writtenOn": "2021-02-25T15:37:32Z",
       "side": 1,
       "message": "This should only be done if loadOp was going to be DONT_CARE.\n\nYou can move the `if (mEmulated...)` to after:\n\n            VkAttachmentLoadOp loadOp \u003d colorRenderTarget-\u003ehasDefinedContent()\n                                                  ? VK_ATTACHMENT_LOAD_OP_LOAD\n                                                  : VK_ATTACHMENT_LOAD_OP_DONT_CARE;\n\nbelow and modify loadOp in the if.",
+      "range": {
+        "startLine": 2370,
+        "startChar": 12,
+        "endLine": 2370,
+        "endChar": 95
+      },
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32c319d0_0d6f297b",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2370,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-26T01:23:55Z",
+      "side": 1,
+      "message": "Done\n\nAlso needed to set the clear color.  More testing and clean-up to do, but I want to see if there are surprises the bots find.",
+      "parentUuid": "cf38db34_6330fe1d",
       "range": {
         "startLine": 2370,
         "startChar": 12,
@@ -72,6 +114,30 @@
       "writtenOn": "2021-02-25T15:37:32Z",
       "side": 1,
       "message": "Should deal with integer formats too. You could add RGB8I and RGB8UI tests that invalidate then draw, so this gets tested.",
+      "range": {
+        "startLine": 2372,
+        "startChar": 42,
+        "endLine": 2372,
+        "endChar": 49
+      },
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab884585_f5bdccb4",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2372,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-26T01:23:55Z",
+      "side": 1,
+      "message": "I started looking at this, particularly adding tests to \"ClearTest.cpp\".  However, the spec for glCearColor says \"The result of clearing integer color buffers with Clear is undeﬁned.\"  Do you have other suggestions?",
+      "parentUuid": "ebcf7cff_20a6847f",
       "range": {
         "startLine": 2372,
         "startChar": 42,
