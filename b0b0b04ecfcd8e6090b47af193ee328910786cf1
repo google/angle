@@ -16,6 +16,24 @@
       "message": "LGTM - can you please indicate in the CL description how much this improves which test case?",
       "revId": "b0b0b04ecfcd8e6090b47af193ee328910786cf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c3bb9c8_fc8655c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-02-26T18:37:49Z",
+      "side": 1,
+      "message": "I have attached screenshots in the bug of the Manhattan vtune profile, each entry disappears with each CL in this chain. Will mention that in the commit message",
+      "parentUuid": "ec9b8bb6_12e5a30d",
+      "revId": "b0b0b04ecfcd8e6090b47af193ee328910786cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
