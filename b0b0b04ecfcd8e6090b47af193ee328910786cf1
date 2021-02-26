@@ -34,6 +34,23 @@
       "parentUuid": "ec9b8bb6_12e5a30d",
       "revId": "b0b0b04ecfcd8e6090b47af193ee328910786cf1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b56cf67_a704a03a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-26T18:45:18Z",
+      "side": 1,
+      "message": "Why is the buffer even mapped? Shouldn\u0027t whoever mapped it also have unmapped it? What happens if we turn this into an ASSERT(!notMapped)?",
+      "revId": "b0b0b04ecfcd8e6090b47af193ee328910786cf1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
