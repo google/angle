@@ -2382,9 +2382,24 @@ angle::Result FramebufferVk::startNewRenderPass(ContextVk *contextVk,
                                                   ? VK_ATTACHMENT_LOAD_OP_LOAD
                                                   : VK_ATTACHMENT_LOAD_OP_DONT_CARE;
 
-            renderPassAttachmentOps.setOps(colorIndexVk, loadOp, storeOp);
-            packedClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT,
-                                    kUninitializedClearValue);
+            if (loadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE &&
+                mEmulatedAlphaAttachmentMask[colorIndexGL])
+            {
+                // This color attachment has a format with no alpha channel, but is emulated with a
+                // format that does have an alpha channel, which must be cleared to 1.0 in order to
+                // be visible.
+                renderPassAttachmentOps.setOps(colorIndexVk, VK_ATTACHMENT_LOAD_OP_CLEAR, storeOp);
+                VkClearValue emulatedAlphaClearValue =
+                    getCorrectedColorClearValue(colorIndexGL, {});
+                packedClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT,
+                                        emulatedAlphaClearValue);
+            }
+            else
+            {
+                renderPassAttachmentOps.setOps(colorIndexVk, loadOp, storeOp);
+                packedClearValues.store(colorIndexVk, VK_IMAGE_ASPECT_COLOR_BIT,
+                                        kUninitializedClearValue);
+            }
         }
         renderPassAttachmentOps.setStencilOps(colorIndexVk, VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                                               vk::RenderPassStoreOp::DontCare);
