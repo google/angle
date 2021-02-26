@@ -87,6 +87,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a3e49d9_162b3bc7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-26T19:28:04Z",
+      "side": 1,
+      "message": "Comment, asking for feedback on adding context to entry point or alternative.",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4693727d_8df2a194",
@@ -148,6 +165,30 @@
       "side": 1,
       "message": "Yeap. I think it covers this case fully. Thanks!",
       "parentUuid": "643bdba6_580b85e7",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 39
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6490c207_7c9c72f2",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-02-26T19:28:04Z",
+      "side": 1,
+      "message": "so, eglQuerySurface doesn\u0027t take a context handle as parameter. So context is not passed around here, and dowwn to Surface.\n\nI changed Surface.cpp to get context from Thread, but this presubmit checks don\u0027t like #include of \"libGLESv2/global_state.h\" to use GetCurrentThread.\n\n\nError Surface::getBufferAge(EGLint *age) const\n{\n    // Spec: Current thread\u0027s draw surfaace must be this surface.\n    gl::Context *currentContext \u003d egl::GetCurrentThread()-\u003egetContext();\n    if ((currentContext \u003d\u003d nullptr) || (currentContext-\u003egetCurrentDrawSurface() !\u003d this))\n    {\n        return egl::EglBadSurface();\n    }\n    // When EGL_BUFFER_PRESERVED, the previous frame contents are copied to\n    // current frame, so the buffer age is always 1.\n    if (mSwapBehavior \u003d\u003d EGL_BUFFER_PRESERVED)\n    {\n        if (age !\u003d nullptr)\n        {\n            *age \u003d 1;\n        }\n        return egl::NoError();\n    }\n    return mImplementation-\u003egetBufferAge(currentContext, age);\n}\n\nOther suggestions? pass from entry point? goes to QuerySurfaceAttrib.\n\negl::Error QuerySurfaceAttrib(const Display *display,\n                              const Surface *surface,\n                              EGLint attribute,\n                              EGLint *value)\n\nCould be shoehorned in, but a little hacky looking.",
+      "parentUuid": "0bf56993_30b769fb",
       "range": {
         "startLine": 249,
         "startChar": 4,
