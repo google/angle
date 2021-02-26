@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "810e21a8_d06d7a0c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-02-26T21:43:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6cc1125a_a426da8d",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 269,
+        "endChar": 112
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99087e57_6c80577c",
@@ -94,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5d09b59_d8cb0ae2",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-02-26T21:43:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f0df726f_eb81bfed",
+      "range": {
+        "startLine": 276,
+        "startChar": 0,
+        "endLine": 276,
+        "endChar": 106
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "daaeac3e_7fea31ff",
@@ -117,6 +165,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "747b718b_350ac029",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 293,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-02-26T21:43:58Z",
+      "side": 1,
+      "message": "Will look into that once arm64 infra issue is fixed.",
+      "parentUuid": "daaeac3e_7fea31ff",
+      "range": {
+        "startLine": 280,
+        "startChar": 0,
+        "endLine": 293,
+        "endChar": 0
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d95e4b5e_0858f396",
@@ -130,6 +202,30 @@
       "writtenOn": "2021-02-26T21:17:33Z",
       "side": 1,
       "message": "is that correct? I thought it was just \"gles\"",
+      "range": {
+        "startLine": 302,
+        "startChar": 17,
+        "endLine": 302,
+        "endChar": 22
+      },
+      "revId": "b292910308e9c89b7e6400d750ce1a5cdce778c3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96720ac0_57432f19",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-02-26T21:43:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d95e4b5e_0858f396",
       "range": {
         "startLine": 302,
         "startChar": 17,
