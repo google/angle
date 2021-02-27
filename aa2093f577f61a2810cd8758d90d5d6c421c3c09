@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb1ee7f0_b1fb30a9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-27T03:10:45Z",
+      "side": 1,
+      "message": "Should we fix ValidateCreateWindowSurface too?",
+      "revId": "aa2093f577f61a2810cd8758d90d5d6c421c3c09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
