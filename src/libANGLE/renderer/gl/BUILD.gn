@@ -233,6 +233,9 @@ config("angle_gl_backend_config") {
   if (angle_enable_gl_null) {
     defines += [ "ANGLE_ENABLE_OPENGL_NULL" ]
   }
+  if (ozone_platform_gbm) {
+    defines += [ "ANGLE_USE_GBM" ]
+  }
   if (is_apple) {
     defines += [ "GL_SILENCE_DEPRECATION" ]
   }
@@ -244,7 +247,6 @@ angle_source_set("angle_gl_backend") {
 
   public_configs = [ ":angle_gl_backend_config" ]
   public_deps = [ "$angle_root:libANGLE_headers" ]
-  defines = []
 
   deps = [
     "$angle_root:angle_gpu_info_util",
@@ -277,8 +279,7 @@ angle_source_set("angle_gl_backend") {
     }
   }
   if (ozone_platform_gbm) {
-    configs += [ ":libdrm" ]
-    defines += [ "ANGLE_USE_GBM" ]
+    public_configs += [ ":libdrm" ]
     deps += [ "//third_party/minigbm" ]
   }
 }
