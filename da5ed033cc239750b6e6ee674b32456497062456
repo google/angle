@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a161afd6_9c9c942a",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2380,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-27T04:56:24Z",
+      "side": 1,
+      "message": "Replace with this:\n\n    VkClearValue emulatedAlphaClearValue \u003d getCorrectedColorClearValue(colorIndexGL, {});\n\nYou are not using the return value of the getCorrectedColorClearValue, nor do you need to set alpha.",
+      "range": {
+        "startLine": 2378,
+        "startChar": 0,
+        "endLine": 2380,
+        "endChar": 89
+      },
+      "revId": "da5ed033cc239750b6e6ee674b32456497062456",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
