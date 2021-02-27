@@ -16,6 +16,24 @@
       "message": "Should we fix ValidateCreateWindowSurface too?",
       "revId": "aa2093f577f61a2810cd8758d90d5d6c421c3c09",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "daba6592_8baae17c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-02-27T04:03:13Z",
+      "side": 1,
+      "message": "Maybe. Looks like it doesn\u0027t check many things, not just EGL_WINDOW_BIT.",
+      "parentUuid": "cb1ee7f0_b1fb30a9",
+      "revId": "aa2093f577f61a2810cd8758d90d5d6c421c3c09",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
