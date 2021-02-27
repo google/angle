@@ -121,7 +121,8 @@ ConversionBuffer::ConversionBuffer(RendererVk *renderer,
                                    bool hostVisible)
     : dirty(true), lastAllocationOffset(0)
 {
-    data.init(renderer, usageFlags, alignment, initialSize, hostVisible);
+    data.init(renderer, usageFlags, alignment, initialSize, hostVisible,
+              vk::DynamicBufferPolicy::OneShotUse);
 }
 
 ConversionBuffer::~ConversionBuffer() = default;
@@ -338,7 +339,8 @@ angle::Result BufferVk::setDataWithMemoryType(const gl::Context *context,
         constexpr size_t kBufferHelperPoolInitialSize = 0;
 
         mBufferPool.initWithFlags(contextVk->getRenderer(), usageFlags, kBufferHelperAlignment,
-                                  kBufferHelperPoolInitialSize, memoryPropertyFlags);
+                                  kBufferHelperPoolInitialSize, memoryPropertyFlags,
+                                  vk::DynamicBufferPolicy::FrequentSmallAllocations);
 
         ANGLE_TRY(acquireBufferHelper(contextVk, size, &mBuffer));
 

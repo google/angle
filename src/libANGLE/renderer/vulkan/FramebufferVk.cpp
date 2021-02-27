@@ -342,7 +342,7 @@ FramebufferVk::FramebufferVk(RendererVk *renderer,
       mReadOnlyDepthFeedbackLoopMode(false)
 {
     mReadPixelBuffer.init(renderer, VK_BUFFER_USAGE_TRANSFER_DST_BIT, kReadPixelsBufferAlignment,
-                          kMinReadPixelsBufferSize, true);
+                          kMinReadPixelsBufferSize, true, vk::DynamicBufferPolicy::OneShotUse);
 }
 
 FramebufferVk::~FramebufferVk() = default;

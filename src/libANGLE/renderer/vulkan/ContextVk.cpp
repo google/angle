@@ -344,7 +344,8 @@ void ContextVk::DriverUniformsDescriptorSet::init(RendererVk *rendererVk)
     size_t minAlignment = static_cast<size_t>(
         rendererVk->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
     dynamicBuffer.init(rendererVk, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, minAlignment,
-                       kDriverUniformsAllocatorPageSize, true);
+                       kDriverUniformsAllocatorPageSize, true,
+                       vk::DynamicBufferPolicy::FrequentSmallAllocations);
     descriptorSetCache.clear();
 }
 
@@ -664,7 +665,8 @@ angle::Result ContextVk::initialize()
     // Initialize current value/default attribute buffers.
     for (vk::DynamicBuffer &buffer : mDefaultAttribBuffers)
     {
-        buffer.init(mRenderer, kVertexBufferUsage, 1, kDefaultBufferSize, true);
+        buffer.init(mRenderer, kVertexBufferUsage, 1, kDefaultBufferSize, true,
+                    vk::DynamicBufferPolicy::FrequentSmallAllocations);
     }
 
 #if ANGLE_ENABLE_VULKAN_GPU_TRACE_EVENTS
@@ -703,7 +705,8 @@ angle::Result ContextVk::initialize()
     size_t minAlignment = static_cast<size_t>(
         mRenderer->getPhysicalDeviceProperties().limits.minUniformBufferOffsetAlignment);
     mDefaultUniformStorage.init(mRenderer, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, minAlignment,
-                                mRenderer->getDefaultUniformBufferSize(), true);
+                                mRenderer->getDefaultUniformBufferSize(), true,
+                                vk::DynamicBufferPolicy::FrequentSmallAllocations);
 
     // Initialize an "empty" buffer for use with default uniform blocks where there are no uniforms,
     // or atomic counter buffer array indices that are unused.
@@ -727,7 +730,7 @@ angle::Result ContextVk::initialize()
         static_cast<size_t>(mRenderer->getPhysicalDeviceProperties().limits.minMemoryMapAlignment);
     constexpr size_t kStagingBufferSize = 1024u * 1024u;  // 1M
     mStagingBuffer.init(mRenderer, kStagingBufferUsageFlags, stagingBufferAlignment,
-                        kStagingBufferSize, true);
+                        kStagingBufferSize, true, vk::DynamicBufferPolicy::SporadicTextureUpload);
 
     // Add context into the share group
     mShareGroupVk->getShareContextSet()->insert(this);

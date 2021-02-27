@@ -721,6 +721,23 @@ void DestroyBufferList(RendererVk *renderer, BufferHelperPointerVector *buffers)
     }
     buffers->clear();
 }
+
+bool ShouldReleaseFreeBuffer(const vk::BufferHelper &buffer,
+                             size_t dynamicBufferSize,
+                             DynamicBufferPolicy policy,
+                             size_t freeListSize)
+{
+    constexpr size_t kLimitedFreeListMaxSize = 1;
+
+    // If the dynamic buffer was resized we cannot reuse the retained buffer.  Additionally,
+    // only reuse the buffer if specifically requested.
+    const bool sizeMismatch    = buffer.getSize() != dynamicBufferSize;
+    const bool releaseByPolicy = policy == DynamicBufferPolicy::OneShotUse ||
+                                 (policy == DynamicBufferPolicy::SporadicTextureUpload &&
+                                  freeListSize >= kLimitedFreeListMaxSize);
+
+    return sizeMismatch || releaseByPolicy;
+}
 }  // anonymous namespace
 
 // This is an arbitrary max. We can change this later if necessary.
@@ -1666,6 +1683,7 @@ void CommandBufferHelper::growRenderArea(ContextVk *contextVk, const gl::Rectang
 DynamicBuffer::DynamicBuffer()
     : mUsage(0),
       mHostVisible(false),
+      mPolicy(DynamicBufferPolicy::OneShotUse),
       mInitialSize(0),
       mNextAllocationOffset(0),
       mLastFlushOrInvalidateOffset(0),
@@ -1677,6 +1695,7 @@ DynamicBuffer::DynamicBuffer()
 DynamicBuffer::DynamicBuffer(DynamicBuffer &&other)
     : mUsage(other.mUsage),
       mHostVisible(other.mHostVisible),
+      mPolicy(other.mPolicy),
       mInitialSize(other.mInitialSize),
       mBuffer(std::move(other.mBuffer)),
       mNextAllocationOffset(other.mNextAllocationOffset),
@@ -1692,23 +1711,26 @@ void DynamicBuffer::init(RendererVk *renderer,
                          VkBufferUsageFlags usage,
                          size_t alignment,
                          size_t initialSize,
-                         bool hostVisible)
+                         bool hostVisible,
+                         DynamicBufferPolicy policy)
 {
     VkMemoryPropertyFlags memoryPropertyFlags =
         (hostVisible) ? VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT : VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
 
-    initWithFlags(renderer, usage, alignment, initialSize, memoryPropertyFlags);
+    initWithFlags(renderer, usage, alignment, initialSize, memoryPropertyFlags, policy);
 }
 
 void DynamicBuffer::initWithFlags(RendererVk *renderer,
                                   VkBufferUsageFlags usage,
                                   size_t alignment,
                                   size_t initialSize,
-                                  VkMemoryPropertyFlags memoryPropertyFlags)
+                                  VkMemoryPropertyFlags memoryPropertyFlags,
+                                  DynamicBufferPolicy policy)
 {
     mUsage               = usage;
     mHostVisible         = ((memoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0);
     mMemoryPropertyFlags = memoryPropertyFlags;
+    mPolicy              = policy;
 
     // Check that we haven't overriden the initial size of the buffer in setMinimumSizeForTesting.
     if (mInitialSize == 0)
@@ -1817,11 +1839,7 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
             mSize = std::max(mInitialSize, sizeToAllocate);
 
             // Clear the free list since the free buffers are now too small.
-            for (std::unique_ptr<BufferHelper> &toFree : mBufferFreeList)
-            {
-                toFree->release(contextVk->getRenderer());
-            }
-            mBufferFreeList.clear();
+            ReleaseBufferListToRenderer(contextVk->getRenderer(), &mBufferFreeList);
         }
 
         // The front of the free list should be the oldest. Thus if it is in use the rest of the
@@ -1922,8 +1940,7 @@ void DynamicBuffer::releaseInFlightBuffersToResourceUseList(ContextVk *contextVk
     {
         bufferHelper->retain(resourceUseList);
 
-        // If the dynamic buffer was resized we cannot reuse the retained buffer.
-        if (bufferHelper->getSize() < mSize)
+        if (ShouldReleaseFreeBuffer(*bufferHelper, mSize, mPolicy, mBufferFreeList.size()))
         {
             bufferHelper->release(contextVk->getRenderer());
         }
@@ -1940,8 +1957,7 @@ void DynamicBuffer::releaseInFlightBuffers(ContextVk *contextVk)
 {
     for (std::unique_ptr<BufferHelper> &toRelease : mInFlightBuffers)
     {
-        // If the dynamic buffer was resized we cannot reuse the retained buffer.
-        if (toRelease->getSize() < mSize)
+        if (ShouldReleaseFreeBuffer(*toRelease, mSize, mPolicy, mBufferFreeList.size()))
         {
             toRelease->release(contextVk->getRenderer());
         }
@@ -2770,9 +2786,11 @@ LineLoopHelper::LineLoopHelper(RendererVk *renderer)
     // sum of offset and the address of the range of VkDeviceMemory object that is backing buffer,
     // must be a multiple of the type indicated by indexType'.
     mDynamicIndexBuffer.init(renderer, kLineLoopDynamicBufferUsage, sizeof(uint32_t),
-                             kLineLoopDynamicBufferInitialSize, true);
+                             kLineLoopDynamicBufferInitialSize, true,
+                             DynamicBufferPolicy::OneShotUse);
     mDynamicIndirectBuffer.init(renderer, kLineLoopDynamicIndirectBufferUsage, sizeof(uint32_t),
-                                kLineLoopDynamicIndirectBufferInitialSize, true);
+                                kLineLoopDynamicIndirectBufferInitialSize, true,
+                                DynamicBufferPolicy::OneShotUse);
 }
 
 LineLoopHelper::~LineLoopHelper() = default;
@@ -3609,7 +3627,8 @@ void ImageHelper::initStagingBuffer(RendererVk *renderer,
                                     VkBufferUsageFlags usageFlags,
                                     size_t initialSize)
 {
-    mStagingBuffer.init(renderer, usageFlags, imageCopyBufferAlignment, initialSize, true);
+    mStagingBuffer.init(renderer, usageFlags, imageCopyBufferAlignment, initialSize, true,
+                        DynamicBufferPolicy::OneShotUse);
 }
 
 angle::Result ImageHelper::init(Context *context,
@@ -6245,7 +6264,7 @@ angle::Result ImageHelper::readPixelsForGetImage(ContextVk *contextVk,
     // Use a temporary staging buffer. Could be optimized.
     RendererScoped<DynamicBuffer> stagingBuffer(contextVk->getRenderer());
     stagingBuffer.get().init(contextVk->getRenderer(), VK_BUFFER_USAGE_TRANSFER_DST_BIT, 1,
-                             kStagingBufferSize, true);
+                             kStagingBufferSize, true, DynamicBufferPolicy::OneShotUse);
 
     if (mExtents.depth > 1)
     {
