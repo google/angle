@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8c83cea_b7d43cab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-27T04:20:18Z",
+      "side": 1,
+      "message": "D3D11 also has issues with alpha (at least AMD bots and my Intel laptop)",
+      "parentUuid": "d8b42868_b2c48427",
+      "revId": "4ac8ed7efef5da6da6fc1d8705055dea2da62be7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5c779080_04091c36",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-02-27T03:21:17Z",
       "side": 1,
       "message": "Even if you don\u0027t get a chance to write the test, it should still be simple to write the correct code (which includes int/uint). See how FramebufferVk::getCorrectedColorClearValue does it (you can actually just call that function).",
+      "revId": "4ac8ed7efef5da6da6fc1d8705055dea2da62be7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f558b47_35883ee5",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2379,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-27T04:20:18Z",
+      "side": 1,
+      "message": "Done, thanks!",
+      "parentUuid": "5c779080_04091c36",
       "revId": "4ac8ed7efef5da6da6fc1d8705055dea2da62be7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
