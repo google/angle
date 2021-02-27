@@ -236,6 +236,30 @@
       },
       "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9b7498b_a0fc22ff",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2372,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-02-27T00:25:07Z",
+      "side": 1,
+      "message": "Instead of writing this test (I started), I created a new test for what this CL does.  From that effort, I\u0027ve not been able to reproduce exactly what the Ragnarok game does (it gets alpha\u003d0.0 despite that we think ANGLE won\u0027t allow it).\n\nMy thinking now is to land this CL, and unblock Ragnarok working.",
+      "parentUuid": "732246ba_2c4d34ce",
+      "range": {
+        "startLine": 2372,
+        "startChar": 42,
+        "endLine": 2372,
+        "endChar": 49
+      },
+      "revId": "106d765604a179449a12af75cf543dd97d9ede1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
