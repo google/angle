@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "6774b818d5755d4fed359ecb1e594273",
+    "2c6bceda61f25d17aa08e59810c3c04f",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -88,13 +88,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "adf881a74b4ba0ae975e0146dfa833ff",
+    "37845fba2e9a5e634ef01c0298369a08",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "ccd1f67bc81bfa25ed2672072e966346",
+    "8406d7fb0e514cd07b4ec1403105e39b",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "e8c7160bcd24831ed0e949e2a60c4110",
+    "3faae996663896654e31e17bb52f09ea",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "504c3ff34777a4a3a7e4be502d12e90e",
+    "c89b22aec600f136ef14ec31bdc00a6e",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
@@ -109,6 +109,8 @@
     "5ebf645e4ea83fc7da1baf6616742eeb",
   "src/tests/restricted_traces/subway_surfers.tar.gz.sha1":
     "647775e4cd6bc9969b69463c2ad99a39",
+  "src/tests/restricted_traces/talking_tom_hero_dash.tar.gz.sha1":
+    "e72092832f4642e7a2711820dcbc78e4",
   "src/tests/restricted_traces/temple_run_2.tar.gz.sha1":
     "6ba951f53dccc520995fc7cc17f86288",
   "src/tests/restricted_traces/temple_run_300.tar.gz.sha1":
