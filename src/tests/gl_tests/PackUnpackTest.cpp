@@ -237,6 +237,7 @@ TEST_P(PackUnpackTest, PackUnpackSnormOverflow)
     compareBeforeAfter(mSNormProgram, 67000.0f, -67000.0f, 1.0f, -1.0f);
 }
 
-ANGLE_INSTANTIATE_TEST(PackUnpackTest, ES3_OPENGL(), ES3_OPENGLES());
 // http://anglebug.com/4092 Not instantiating on other backends currently
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(PackUnpackTest);
+ANGLE_INSTANTIATE_TEST(PackUnpackTest, ES3_OPENGL(), ES3_OPENGLES());
 }  // namespace
