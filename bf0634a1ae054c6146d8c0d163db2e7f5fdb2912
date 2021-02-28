@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1d54299_3d92298e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-02-28T07:52:13Z",
+      "side": 1,
+      "message": "How does the perf test you added fare?\n\nAnd what would the numbers be if you used std::list instead of rolling your own implementation? What about std::vector?\n\nIn the past I did experience a FastVector-like implementation being slower, presumable because more-malloc-during-vector-build is faster than adding-if(spilled)-during-vector-access, at least in some scenarios, so I\u0027m not totally surprised. But I\u0027m not sure a list is the best choice.",
+      "range": {
+        "startLine": 14,
+        "startChar": 11,
+        "endLine": 14,
+        "endChar": 15
+      },
+      "revId": "bf0634a1ae054c6146d8c0d163db2e7f5fdb2912",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
