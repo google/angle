@@ -73,6 +73,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fb9e1310_739e3268",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:36:56Z",
+      "side": 1,
+      "message": "Why not move it into the first call for translation, or to ShInitialize? We could add an alternate ShInitialize command to hint we may need glslang.",
+      "parentUuid": "e8dc4636_13764227",
+      "range": {
+        "startLine": 702,
+        "startChar": 28,
+        "endLine": 702,
+        "endChar": 47
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "39a7ad08_3b42acfe",
         "filename": "src/compiler/translator/InfoSink.h",
         "patchSetId": 2
