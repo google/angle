@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "b8034e826db89cb2fc738959458fcf7af1e732d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3594bd3_13e51459",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T16:33:03Z",
+      "side": 1,
+      "message": "Kinda confused about when we need back traversal?",
+      "revId": "b8034e826db89cb2fc738959458fcf7af1e732d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
