@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3f0395a_d038892e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T16:37:41Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dede26be_406a4743",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T16:37:41Z",
+      "side": 1,
+      "message": "nit: \"Many of\"",
+      "range": {
+        "startLine": 269,
+        "startChar": 0,
+        "endLine": 269,
+        "endChar": 5
+      },
+      "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7046774_969f13df",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T16:37:41Z",
+      "side": 1,
+      "message": "nit: \"entry points\"",
+      "range": {
+        "startLine": 269,
+        "startChar": 23,
+        "endLine": 269,
+        "endChar": 34
+      },
+      "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40c7b155_1122184b",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T16:37:41Z",
+      "side": 1,
+      "message": "nit: missing prefix space",
+      "range": {
+        "startLine": 302,
+        "startChar": 1,
+        "endLine": 302,
+        "endChar": 2
+      },
+      "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "575d1519_c0d597b6",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T16:37:41Z",
+      "side": 1,
+      "message": "nit: I think these are default on many platforms, and eventually everywhere.",
+      "range": {
+        "startLine": 302,
+        "startChar": 3,
+        "endLine": 302,
+        "endChar": 47
+      },
+      "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
