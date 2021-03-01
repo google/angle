@@ -16,6 +16,121 @@
       "message": "PTAL",
       "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb49ea09_8f90b951",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:51:45Z",
+      "side": 1,
+      "message": "this shadows \u0027iterationsPerStep\u0027, use \u0027iterationsPerStep\u0027",
+      "range": {
+        "startLine": 40,
+        "startChar": 11,
+        "endLine": 40,
+        "endChar": 29
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49352d15_c8a3d6bc",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:51:45Z",
+      "side": 1,
+      "message": "use \u0027iterationsPerStep\u0027",
+      "range": {
+        "startLine": 114,
+        "startChar": 36,
+        "endLine": 114,
+        "endChar": 54
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83798c66_192d664e",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:51:45Z",
+      "side": 1,
+      "message": "nit: cache this to reduce test overhead",
+      "range": {
+        "startLine": 117,
+        "startChar": 45,
+        "endLine": 117,
+        "endChar": 56
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db84c0e5_64b7abd3",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:51:45Z",
+      "side": 1,
+      "message": "nit: cache this to reduce test overhead",
+      "range": {
+        "startLine": 120,
+        "startChar": 57,
+        "endLine": 120,
+        "endChar": 73
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5a430e0e_10975fdc",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:51:45Z",
+      "side": 1,
+      "message": "what\u0027s up with this weird indexing scheme? if you want to use a scheme that doesn\u0027t reuse the same sets of attachments, keep a pool of textures some odd size not divisible by the number of attachments, then cycle through them at a different rate. if you want the same attachments, I don\u0027t know why you use this reverse offset.",
+      "range": {
+        "startLine": 134,
+        "startChar": 38,
+        "endLine": 134,
+        "endChar": 68
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
