@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9b87c8c9_969f4ad2",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-01T20:34:21Z",
+      "side": 1,
+      "message": "might have misunderstood the math but isn\u0027t it \u003citerationsPerStep\u003e worth of benchmark::run() calls?",
+      "parentUuid": "bb49ea09_8f90b951",
+      "range": {
+        "startLine": 40,
+        "startChar": 11,
+        "endLine": 40,
+        "endChar": 29
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "49352d15_c8a3d6bc",
         "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
         "patchSetId": 3
@@ -123,6 +147,30 @@
       "writtenOn": "2021-03-01T19:51:45Z",
       "side": 1,
       "message": "what\u0027s up with this weird indexing scheme? if you want to use a scheme that doesn\u0027t reuse the same sets of attachments, keep a pool of textures some odd size not divisible by the number of attachments, then cycle through them at a different rate. if you want the same attachments, I don\u0027t know why you use this reverse offset.",
+      "range": {
+        "startLine": 134,
+        "startChar": 38,
+        "endLine": 134,
+        "endChar": 68
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "606787a1_d5a057e9",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-01T20:34:21Z",
+      "side": 1,
+      "message": "\u003e if you want the same attachments, I don\u0027t know why you use this reverse offset.\n\nthe point was to stress linear time complexity of any container, FastVector or std::list or std::vector. The more observers you have, the longer your list length which will have CPU overhead during remove.",
+      "parentUuid": "5a430e0e_10975fdc",
       "range": {
         "startLine": 134,
         "startChar": 38,
