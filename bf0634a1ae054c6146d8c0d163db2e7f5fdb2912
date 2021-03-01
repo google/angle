@@ -46,6 +46,30 @@
       },
       "revId": "bf0634a1ae054c6146d8c0d163db2e7f5fdb2912",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63ef325a_49c75ad9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-01T15:14:04Z",
+      "side": 1,
+      "message": "Thanks for testing. This change is basically implementing [1], which is why it\u0027s more efficient than std::list.\n\nThis stuff can get tricky though and would definitely need unit tests. We should think about doing this properly by introducing a new class for linked lists, add proper unit tests etc. We should be able to take advantage of inheritance as an alternative for container_of in [1]. I\u0027d be happy to work with you in designing the class.\n\n[1]: https://kernelnewbies.org/FAQ/LinkedLists",
+      "parentUuid": "c2020dac_2d09db7a",
+      "range": {
+        "startLine": 14,
+        "startChar": 11,
+        "endLine": 14,
+        "endChar": 15
+      },
+      "revId": "bf0634a1ae054c6146d8c0d163db2e7f5fdb2912",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
