@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e8dc4636_13764227",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-01T19:25:44Z",
+      "side": 1,
+      "message": "Yes unfortunately. The Vulkan backend still calls glslang directly once (on device-creation) to warm it up. That could be moved to the translator too, but I haven\u0027t yet found a good way of doing that.\n\nWhen we drop support for glslang it wouldn\u0027t matter, so I don\u0027t particularly plan on attempting to resolve this.",
+      "parentUuid": "5b4a3135_b59495ff",
+      "range": {
+        "startLine": 702,
+        "startChar": 28,
+        "endLine": 702,
+        "endChar": 47
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "39a7ad08_3b42acfe",
         "filename": "src/compiler/translator/InfoSink.h",
         "patchSetId": 2
