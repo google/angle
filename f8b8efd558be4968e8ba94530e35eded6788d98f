@@ -204,6 +204,54 @@
       },
       "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eef2c870_fe803a65",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:44:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "240f5114_530cf025",
+      "range": {
+        "startLine": 302,
+        "startChar": 3,
+        "endLine": 302,
+        "endChar": 47
+      },
+      "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91cb4119_504c1d97",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 302,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:44:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9ecf1232_4927e0bb",
+      "range": {
+        "startLine": 302,
+        "startChar": 1,
+        "endLine": 302,
+        "endChar": 2
+      },
+      "revId": "f8b8efd558be4968e8ba94530e35eded6788d98f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
