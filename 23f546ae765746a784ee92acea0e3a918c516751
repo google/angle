@@ -16,6 +16,29 @@
       "message": "Excellent, re-LGTM. Nice work.",
       "revId": "23f546ae765746a784ee92acea0e3a918c516751",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d843618f_cb3d390e",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T18:32:31Z",
+      "side": 1,
+      "message": "+ os.path.sep +",
+      "range": {
+        "startLine": 276,
+        "startChar": 28,
+        "endLine": 276,
+        "endChar": 35
+      },
+      "revId": "23f546ae765746a784ee92acea0e3a918c516751",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
