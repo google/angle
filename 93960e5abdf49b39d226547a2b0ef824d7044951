@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6857c508_e9734bf4",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T20:37:01Z",
+      "side": 1,
+      "message": "one run() is one step. iterationsPerStep means how many iterations of the test you run inside the step, opaque to the ANGLEPerfTest class. That\u0027s what you\u0027re doing with the count here.",
+      "parentUuid": "9b87c8c9_969f4ad2",
+      "range": {
+        "startLine": 40,
+        "startChar": 11,
+        "endLine": 40,
+        "endChar": 29
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "49352d15_c8a3d6bc",
         "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
         "patchSetId": 3
@@ -171,6 +195,30 @@
       "side": 1,
       "message": "\u003e if you want the same attachments, I don\u0027t know why you use this reverse offset.\n\nthe point was to stress linear time complexity of any container, FastVector or std::list or std::vector. The more observers you have, the longer your list length which will have CPU overhead during remove.",
       "parentUuid": "5a430e0e_10975fdc",
+      "range": {
+        "startLine": 134,
+        "startChar": 38,
+        "endLine": 134,
+        "endChar": 68
+      },
+      "revId": "93960e5abdf49b39d226547a2b0ef824d7044951",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32f37d46_58608251",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T20:37:01Z",
+      "side": 1,
+      "message": "sure, the count / number of textures makes sense, I\u0027m just not sure why you\u0027re swapping the indexing to be reversed?",
+      "parentUuid": "606787a1_d5a057e9",
       "range": {
         "startLine": 134,
         "startChar": 38,
