@@ -16,6 +16,29 @@
       "message": "Replies and new change.",
       "revId": "4fcfd77dc0e383d92d90faa099f1c758bfc5f9ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b636c753_fd9201de",
+        "filename": "src/libANGLE/Surface.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 594,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:06:28Z",
+      "side": 1,
+      "message": "please process this in the validation function for consistent behaviour - we do this for all the other entry points.",
+      "range": {
+        "startLine": 590,
+        "startChar": 0,
+        "endLine": 594,
+        "endChar": 5
+      },
+      "revId": "4fcfd77dc0e383d92d90faa099f1c758bfc5f9ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
