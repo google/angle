@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9bbbb7f_824f3e3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-01T15:16:01Z",
+      "side": 1,
+      "message": "Looks like some of these functions are used for non-ES3.2 entry points too?",
+      "revId": "3ce03571f2009c9c5c3387ae0b06a332ef741274",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
