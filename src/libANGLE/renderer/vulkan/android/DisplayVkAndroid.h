@@ -45,6 +45,8 @@ class DisplayVkAndroid : public DisplayVk
     const AHBFunctions &getAHBFunctions() const { return mAHBFunctions; }
 
   private:
+    void enableRecordableIfSupported(egl::Config *config);
+
     AHBFunctions mAHBFunctions;
 };
 
