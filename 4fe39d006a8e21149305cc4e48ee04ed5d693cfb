@@ -16,6 +16,24 @@
       "message": "Kinda weird that the platform (windows) is used to determine the compiler (msvc). gcc works on windows too. Does chromium only define `is_clang`?\n\n@Jamie, Is there a way to figure out if msvc is used? Then we can define is_msvc, and use `is_gcc \u003d !is_clang \u0026\u0026 !is_msvc`.",
       "revId": "4fe39d006a8e21149305cc4e48ee04ed5d693cfb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8f3b1bc_7858424d",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-01T19:46:17Z",
+      "side": 1,
+      "message": "Not right now, no.",
+      "parentUuid": "b0c1321f_4c2609ba",
+      "revId": "4fe39d006a8e21149305cc4e48ee04ed5d693cfb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
