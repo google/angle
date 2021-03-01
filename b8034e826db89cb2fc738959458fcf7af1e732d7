@@ -50,6 +50,24 @@
       "message": "Oh for insert/deletion. Maybe we should think about this.",
       "revId": "b8034e826db89cb2fc738959458fcf7af1e732d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5c97b7b_d516c11d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-01T16:40:55Z",
+      "side": 1,
+      "message": "AFAIK, constant time complexity for remove/contains with a singly linked list is not possible",
+      "parentUuid": "c21b12c8_62b6240e",
+      "revId": "b8034e826db89cb2fc738959458fcf7af1e732d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
