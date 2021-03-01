@@ -19,6 +19,7 @@ class Surface;
 
 namespace rx
 {
+
 class ShareGroupGL : public ShareGroupImpl
 {};
 

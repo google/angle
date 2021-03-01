@@ -164,6 +164,10 @@ angle_test("angle_unittests") {
     defines += [ "ANGLE_ENABLE_HLSL" ]
   }
 
+  if (angle_enable_gl) {
+    sources += angle_unittests_gl_sources
+  }
+
   deps = [
     ":angle_test_expectations",
     "$angle_root:angle_json_serializer",

@@ -155,6 +155,9 @@ angle_unittests_hlsl_sources = [
   "compiler_tests/UnrollFlatten_test.cpp",
 ]
 
+angle_unittests_gl_sources =
+    [ "../libANGLE/renderer/gl/DisplayGL_unittest.cpp" ]
+
 if (is_android) {
   angle_unittests_sources +=
       [ "compiler_tests/ImmutableString_test_ESSL_autogen.cpp" ]

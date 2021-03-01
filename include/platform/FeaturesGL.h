@@ -535,6 +535,13 @@ struct FeaturesGL : FeatureSetBase
         "sync_vertex_arrays_to_default", FeatureCategory::OpenGLWorkarounds,
         "Only use the default VAO because of missing support or driver bugs", &members,
         "http://anglebug.com/5577"};
+
+    // On desktop Linux/AMD when using the amdgpu drivers, the precise kernel and DRM version are
+    // leaked via GL_RENDERER. We workaround this to improve user privacy.
+    Feature sanitizeAmdGpuRendererString = {
+        "sanitize_amdgpu_renderer_string", FeatureCategory::OpenGLWorkarounds,
+        "Strip precise kernel and DRM version information from amdgpu renderer strings.", &members,
+        "http://crbug.com/1181193"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

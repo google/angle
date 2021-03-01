@@ -2089,6 +2089,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
                             IsApple() && IsIntel(vendor) && !IsHaswell(device));
     ANGLE_FEATURE_CONDITION(features, syncVertexArraysToDefault,
                             !nativegl::SupportsVertexArrayObjects(functions));
+
+    // http://crbug.com/1181193
+    // On desktop Linux/AMD when using the amdgpu drivers, the precise kernel and DRM version are
+    // leaked via GL_RENDERER. We workaround this too improve user security.
+    ANGLE_FEATURE_CONDITION(features, sanitizeAmdGpuRendererString, IsLinux() && hasAMD);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
@@ -2570,17 +2575,7 @@ std::string GetVendorString(const FunctionsGL *functions)
 
 std::string GetVersionString(const FunctionsGL *functions)
 {
-    std::string versionString = GetString(functions, GL_VERSION);
-    if (versionString.find("OpenGL") == std::string::npos)
-    {
-        std::string prefix = "OpenGL ";
-        if (functions->standard == STANDARD_GL_ES)
-        {
-            prefix += "ES ";
-        }
-        versionString = prefix + versionString;
-    }
-    return versionString;
+    return GetString(functions, GL_VERSION);
 }
 
 }  // namespace rx
