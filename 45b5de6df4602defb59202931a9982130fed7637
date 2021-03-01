@@ -16,6 +16,24 @@
       "message": "is_win instead of is_windows IIRC. Although defining an is_gcc might be a better solution.",
       "revId": "45b5de6df4602defb59202931a9982130fed7637",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1c236f0_fd62bf9c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-01T10:25:13Z",
+      "side": 1,
+      "message": "I\u0027ve added an is_gcc and used this.",
+      "parentUuid": "5bd07271_71bca235",
+      "revId": "45b5de6df4602defb59202931a9982130fed7637",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
