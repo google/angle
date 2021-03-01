@@ -39,6 +39,30 @@
       },
       "revId": "23f546ae765746a784ee92acea0e3a918c516751",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1268423e_36507765",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-01T18:37:11Z",
+      "side": 1,
+      "message": "The code as-is worked on Windows, but I can give the helper a try if this is bothersome.",
+      "parentUuid": "d843618f_cb3d390e",
+      "range": {
+        "startLine": 276,
+        "startChar": 28,
+        "endLine": 276,
+        "endChar": 35
+      },
+      "revId": "23f546ae765746a784ee92acea0e3a918c516751",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
