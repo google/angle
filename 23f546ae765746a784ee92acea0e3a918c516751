@@ -63,6 +63,30 @@
       },
       "revId": "23f546ae765746a784ee92acea0e3a918c516751",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c868b1b1_e19c7fb8",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T18:43:09Z",
+      "side": 1,
+      "message": "Yeah, it\u0027s better to avoid the \"/\" directly.   For consistency, it\u0027s probably best to use:\n\n    os.path.join(trace, file)\n\nBut if you\u0027d like to stick with this syntax, than using \u0027os.path.sep\u0027 is fine too.",
+      "parentUuid": "1268423e_36507765",
+      "range": {
+        "startLine": 276,
+        "startChar": 28,
+        "endLine": 276,
+        "endChar": 35
+      },
+      "revId": "23f546ae765746a784ee92acea0e3a918c516751",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
