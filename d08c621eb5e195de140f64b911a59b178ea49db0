@@ -97,6 +97,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "13e30c05_a0393ed8",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T21:49:04Z",
+      "side": 1,
+      "message": "It\u0027s been a little while since I\u0027ve tried to bridge these files and libANGLE/, but how much work is it for them to both use a common typedef like what\u0027s described in glslang_wrapper_utils.h?\n\n    using SpirvBlob \u003d std::vector\u003cuint32_t\u003e;\n\nI seem to remember it being a bit of a pain and possibly requiring some duplication, but may be worth it.",
+      "range": {
+        "startLine": 715,
+        "startChar": 6,
+        "endLine": 715,
+        "endChar": 27
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "39a7ad08_3b42acfe",
         "filename": "src/compiler/translator/InfoSink.h",
         "patchSetId": 2
@@ -114,6 +137,126 @@
         "endLine": 119,
         "endChar": 17
       },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab0a18b6_4c6b6d63",
+        "filename": "src/compiler/translator/TranslatorMetal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T21:49:04Z",
+      "side": 1,
+      "message": "nit: const ref, or pointer.",
+      "range": {
+        "startLine": 68,
+        "startChar": 55,
+        "endLine": 68,
+        "endChar": 74
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1818cc1_65c75556",
+        "filename": "src/compiler/translator/glslang_wrapper.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T21:49:04Z",
+      "side": 1,
+      "message": "Should be able to remove this since you\u0027re defining it at the start.",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 45
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1644d6aa_3c2fbe4f",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T21:49:04Z",
+      "side": 1,
+      "message": "SpirvBlob\n\nSame for the rest of these \u0027std::vector\u003cuint32_t\u003e\u0027 declarations.",
+      "range": {
+        "startLine": 70,
+        "startChar": 10,
+        "endLine": 70,
+        "endChar": 31
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9cc4cb37_fbaab05f",
+        "filename": "src/libANGLE/renderer/metal/ShaderMtl.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T21:49:04Z",
+      "side": 1,
+      "message": "I think should this be UNIMPLEMENTED() instead.   It looks like these are called for GL_ANGLE_translated_shader_source, and it may be a bit rough to crash rather than just return an (essentially) empty string.\n\nAlternatively, these could return the disassembled SPIR-V, since that is the native language that the GLSL was translated to.",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68210042_c03aed67",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T21:49:04Z",
+      "side": 1,
+      "message": "Why is this forced to \u0027false\u0027 now?",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f1f4419_3aeb7907",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-01T21:49:04Z",
+      "side": 1,
+      "message": "Is there a way to avoid this copy of the SpirvBlob data?\n\nIt looks like the gl::Shader::mCompiledBinary already has a copy.",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
