@@ -70,6 +70,30 @@
       },
       "revId": "bf0634a1ae054c6146d8c0d163db2e7f5fdb2912",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f1a0d40_5b220cdd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-01T16:13:31Z",
+      "side": 1,
+      "message": "\u003e std::list\n\nit takes linear time for remove even though its a double linked list, not sure why\n\n\u003e I\u0027d be happy to work with you in designing the class.\n\nthanks Shabi. I guess this is not the ideal place for design chat, will set up a design doc and invite you there",
+      "parentUuid": "63ef325a_49c75ad9",
+      "range": {
+        "startLine": 14,
+        "startChar": 11,
+        "endLine": 14,
+        "endChar": 15
+      },
+      "revId": "bf0634a1ae054c6146d8c0d163db2e7f5fdb2912",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
