@@ -225,6 +225,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb78bb5f_486cd987",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-01T18:41:27Z",
+      "side": 1,
+      "message": "As for ASSERT -\nThe \"current\" thread, context and surface current to the context can all be independent of this QuerySurface call to this surface. So its a valid state and error to call this if not current to current context, but not an internal error that should be an ASSERT - IMHO.",
+      "parentUuid": "061233f8_c27a2ddf",
+      "range": {
+        "startLine": 249,
+        "startChar": 4,
+        "endLine": 249,
+        "endChar": 39
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "32f61a7d_da20df8d",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 14
@@ -272,6 +296,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0cb24409_4ac7de98",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-01T18:41:27Z",
+      "side": 1,
+      "message": "I\u0027ve tried 1 and I\u0027ve tried 42. It shouldn\u0027t matter. However, I saw this before, there is something peculiar with frame 0 and frame 1 - both get index 0. \nAnyway using \"0\" works - everything else results in a first frame with age 1, second and third frame age 0 and there after age 3. weird. And as such tests fail because this is unexpected logic.\nSo, I\u0027d like to leave as 0 as this works. I think this first frame quirkiness has something to do with first time initialization.",
+      "parentUuid": "43b34d1d_0b27a640",
+      "range": {
+        "startLine": 487,
+        "startChar": 18,
+        "endLine": 487,
+        "endChar": 19
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0a5d36dd_c533f1ec",
         "filename": "src/tests/egl_tests/EGLBufferAgeTest.cpp",
         "patchSetId": 14
@@ -301,6 +349,24 @@
       "side": 1,
       "message": "This was a comment to emphasize that I am making sure NOT to be current - hence no current context. \nI can rewrite or remove",
       "parentUuid": "0a5d36dd_c533f1ec",
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7569cee_2dae6d3c",
+        "filename": "src/tests/egl_tests/EGLBufferAgeTest.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 249,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-01T18:41:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d80ca66_e0ed2ce1",
       "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

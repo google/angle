@@ -282,6 +282,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8872849d_786e2752",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-01T18:41:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2154429_c117c8d2",
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a5a8586a_5d7ce32e",
@@ -319,6 +337,30 @@
       "side": 1,
       "message": "Because of above, mFrameCount, and currentImage-\u003emFrameNumber are the same, and so getBufferAge always returns 0.\n\negl::Error WindowSurfaceVk::getBufferAge(EGLint *age) const\n{\n    // EGL_EXT_buffer_age - Age \u003d difference between the current frame number\n    // and the frame the image was last drawn.\n    const SwapchainImage *currentImage \u003d \n             \u0026mSwapchainImages[mCurrentSwapchainImageIndex];\n    if (currentImage-\u003emFrameNumber \u003d\u003d 0)\n    {\n        *age \u003d 0;  // Has not been used for rendering yet, no age.\n    }\n    else\n    {\n        *age \u003d static_cast\u003cEGLint\u003e(mFrameCount - currentImage-\u003emFrameNumber);\n    }\n    return egl::NoError();",
       "parentUuid": "a5a8586a_5d7ce32e",
+      "range": {
+        "startLine": 1909,
+        "startChar": 15,
+        "endLine": 1909,
+        "endChar": 25
+      },
+      "revId": "89d932748de7952930dc6b6d1198537595ea8d03",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b50b399_b468e738",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1909,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-01T18:41:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4469042b_997b6b99",
       "range": {
         "startLine": 1909,
         "startChar": 15,
