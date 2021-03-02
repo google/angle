@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10151ef4_ed1e962d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-02T00:13:41Z",
+      "side": 1,
+      "message": "I moved the current checking to validation. I investigated the FrameCount.",
+      "revId": "6705173c65e7d7b5f21b0a61a35d2b92e4e0cd4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

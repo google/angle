@@ -344,6 +344,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3cb1ece1_367777ca",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-02T00:13:41Z",
+      "side": 1,
+      "message": "First time ANI called from initiaizeImpl()\n    mCurrentSwapchainImageIndex is initialized to 0. Has not been set by ANI.\n\nSecond and subsequent ANI is called from doDefferedAquireNextImage().\n    mCurrentSwapchainImageIndex is moved forward by ANI.\n\nSo on first call, mCurrentSwapchainImageIndex is moved/set to 0. And FrameCount moves to 1 for the next loop. Age is skipped because mFrameNumber is 0.\n\nIf we start with FrameCount \u003d 1, then Image[0].mFrameNumber \u003d 1; and FrameCount \u003d 2. Then buffer Age, because FrameNumber !\u003d0, will report an Age of 1, when this buffer has not been written yet. Which is wrong.\nOnce all the Images have an age, its not an issue any more. So starting with 0 is OK and compensates - the 0 means no valid Age. Not a hidden initialization bug. So starting with 0 is good.\n\n\n    // FrameNumber the current image before acquiring the next.\n    mSwapchainImages[mCurrentSwapchainImageIndex].mFrameNumber \u003d mFrameCount++;\n\n    result \u003d vkAcquireNextImageKHR(device, mSwapchain, UINT64_MAX,\n                                   acquireImageSemaphore.get().getHandle(), VK_NULL_HANDLE,\n                                   \u0026mCurrentSwapchainImageIndex);\n\n(Starting with FrameCount \u003d 1) I was seeing Age: 1, 0, 0, 3, 3, 3,...\nThis first frame is wrong ang that throws off the test.\n\n(Starting with FrameCount \u003d 0) I was seeing Age: 0, 0, 0, 3, 3, 3,...\nThis is correct and what the test expects.",
+      "parentUuid": "6cec19e4_9b8f8000",
+      "range": {
+        "startLine": 487,
+        "startChar": 18,
+        "endLine": 487,
+        "endChar": 19
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0a5d36dd_c533f1ec",
         "filename": "src/tests/egl_tests/EGLBufferAgeTest.cpp",
         "patchSetId": 14
