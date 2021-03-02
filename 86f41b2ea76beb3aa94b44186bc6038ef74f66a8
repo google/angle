@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee44ecc0_1a20f7c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T18:33:07Z",
+      "side": 1,
+      "message": "LGTM, not sure the state of the progress on removing DEPS from buildtools.",
+      "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54a7acc9_a130aa2d",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T18:33:07Z",
+      "side": 1,
+      "message": "can we take this out? buildtools eliminated their DEPS file.",
+      "range": {
+        "startLine": 494,
+        "startChar": 2,
+        "endLine": 494,
+        "endChar": 15
+      },
+      "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
