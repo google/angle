@@ -191,3 +191,30 @@ is_official_build = true
 is_debug = false
 dcheck_always_on = true
 ```
+
+## Command line for launching chrome on Android
+[This Makefile](https://github.com/phuang/test/blob/master/chromium/Makefile) contains many useful command lines for launching chrome.
+
+Targets run_chrome_public_apk_* is for launching chrome on Android.
+
+To use this Makefile, download it into chrome build tree, and use below commands (for more targets please check Makefile)
+```
+# To edit gn args
+$ make args OUT=out_android/Release  # The OUT can be set in Makefile instead of passing it in command line
+
+# Build and run chrome on Android device with GLRenderer
+$ make run_chrome_public_apk_gl
+
+# Build and run chrome on Android device with SkiaRenderer
+$ make run_chrome_public_apk_skia
+
+# Run adb logcat
+$ make adb_logcat
+
+# Symbolize Android crash stack
+$ make android_symbol
+
+# Build and run gpu_unittests
+$ make gpu_unittests GTEST_FILTER="gtest-filters" # If GTEST_FILTER is not specified, all tests will be run.
+```
+
