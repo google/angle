@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "290f469e_053f6404",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2021-03-02T19:53:12Z",
+      "side": 1,
+      "message": "Thanks!",
+      "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54a7acc9_a130aa2d",
@@ -55,6 +72,30 @@
       "side": 1,
       "message": "I understand they are in the process and libc++abi moves out first.\nI\u0027m worried that buildtools/DEPS and Chromium\u0027s DEPS may get out of sync at the moment, so I\u0027m hesitant to pull other buildtools DEPS directly.\n\nNico, is it perhaps safe to do so?\nWhy are you changing only libc++abi and not in bulk?",
       "parentUuid": "54a7acc9_a130aa2d",
+      "range": {
+        "startLine": 494,
+        "startChar": 2,
+        "endLine": 494,
+        "endChar": 15
+      },
+      "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6382394_c08facc4",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2021-03-02T19:53:12Z",
+      "side": 1,
+      "message": "Correct, buildtools/DEPS is still there. This is the first move that affects you, but I\u0027ve moved out a few other things that you don\u0027t use already.\n\nFrom what I understand, you have a script that creates CLs like https://chromium-review.googlesource.com/c/angle/angle/+/2711724 . That script would ideally roll buildtools and libc++abi too. ...oh, this is that script :) Do you need to edit your DEPS file to have an entry for this too, in addition to updating this script here?\n\n\u003e Why are you changing only libc++abi and not in bulk?\n\nDo you mean why not libc++ and gn and clang_format scripts at the same time? It seems safer and easier for downstream projects this way. Or if you mean, why not move the checkout location too? In that case, also for smaller, more incremental changes (see https://bugs.chromium.org/p/chromium/issues/detail?id\u003d1182719)",
+      "parentUuid": "7ddb90e9_94bd69ee",
       "range": {
         "startLine": 494,
         "startChar": 2,
