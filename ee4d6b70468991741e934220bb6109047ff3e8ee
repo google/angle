@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "821534a1_3096f661",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-02T21:12:24Z",
+      "side": 1,
+      "message": "I monitored T-Rex, Manhattan 3.0 and Manhattan 3.1 with this. There are no sources of continuous allocation with or without this change. If this change introduces a handful of sporadic allocations, it\u0027s not discernible.",
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
