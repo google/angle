@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dff88933_c1caa66a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T17:45:59Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "e6dd3492d2f471a4a74aa5a1bf65ccc9d125dcad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35ac7d24_13825b54",
+        "filename": "src/libANGLE/validationEGL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 5000,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T17:45:59Z",
+      "side": 1,
+      "message": "nit: this is one sentence, so please amend, right now it reads as\n\n\u003e Surface must be current to current context. EGL_EXT_buffer_age.",
+      "range": {
+        "startLine": 4999,
+        "startChar": 29,
+        "endLine": 5000,
+        "endChar": 50
+      },
+      "revId": "e6dd3492d2f471a4a74aa5a1bf65ccc9d125dcad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
