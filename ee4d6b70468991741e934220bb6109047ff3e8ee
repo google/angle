@@ -16,6 +16,75 @@
       "message": "I monitored T-Rex, Manhattan 3.0 and Manhattan 3.1 with this. There are no sources of continuous allocation with or without this change. If this change introduces a handful of sporadic allocations, it\u0027s not discernible.",
       "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1d54568_fe1f8fe6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T21:45:41Z",
+      "side": 1,
+      "message": "ShouldReleaseDynamicBuffer ?",
+      "range": {
+        "startLine": 725,
+        "startChar": 5,
+        "endLine": 725,
+        "endChar": 28
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff76a48f_3942e6b1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T21:45:41Z",
+      "side": 1,
+      "message": "I\u0027d just call these ReleaseBuffers/ReuseBuffers/LimitedReuseBuffers",
+      "range": {
+        "startLine": 68,
+        "startChar": 4,
+        "endLine": 68,
+        "endChar": 22
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fdbdc34_afbcf10b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T21:45:41Z",
+      "side": 1,
+      "message": "I\u0027m curious what led you to this design, or if it\u0027s proactive? Would anything change in Manhattan if we took it out? I\u0027d lean to simplifying if so, although not a big deal.",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 28
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
