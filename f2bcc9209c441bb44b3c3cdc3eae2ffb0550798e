@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dad083d_28e94143",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T22:21:00Z",
+      "side": 1,
+      "message": "nit: Vulkan: Use \u003cx\u003e layout and tiling for AHB\n\nCan you also please document a bit what this change does?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "f2bcc9209c441bb44b3c3cdc3eae2ffb0550798e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f411ad18_1fd35d69",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T22:21:00Z",
+      "side": 1,
+      "message": "ISTR there\u0027s an extension somewhere that specifically mentions the input attachment layout. Don\u0027t recall where that\u0027s laid out. LGTM anyway. Would be good to dig that up though.",
+      "revId": "f2bcc9209c441bb44b3c3cdc3eae2ffb0550798e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
