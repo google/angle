@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "49a978ec_4bda0cc3",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-02T22:30:52Z",
+      "side": 1,
+      "message": "Remember that you asked me to add ImageHelper::getRotatedExtents()?\n\nI\u0027m not sure, because I\u0027m not familiar with the overlay code), but I wonder if it makes sense to call getRotatedExtents() instead?\n\nIt would mean that everything below this (including in UtilsVk and shaders) would be working with rotated extents.  It looks like the code is designed to work with non-rotated coordinates and do the swap in the shader.  On the other hand, it seems like culling (and rendering) would benefit from knowing that the window is rotated.\n\nFor example, I think you wouldn\u0027t have to modify \"OverlayCull.comp\" to do the rotation there.  I\u0027m not as sure about \"OverlayDraw.comp\"",
+      "range": {
+        "startLine": 230,
+        "startChar": 52,
+        "endLine": 230,
+        "endChar": 62
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17419314_fb89cd44",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2854,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-02T22:30:52Z",
+      "side": 1,
+      "message": "I think you wouldn\u0027t have to do this if you used the getRotatedExtents() method in the calling method.",
+      "range": {
+        "startLine": 2851,
+        "startChar": 0,
+        "endLine": 2854,
+        "endChar": 5
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b5eea8b_e6d9031a",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/OverlayCull.comp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-02T22:30:52Z",
+      "side": 1,
+      "message": "See my comment in \"OverlayVk.cpp\".  I think you wouldn\u0027t have to do this if OverlayVk::onPresent() called getRotatedExtents() instead of getExtents().",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 5
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1347989a_ee982859",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.comp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-02T22:30:52Z",
+      "side": 1,
+      "message": "See my comment in \"OverlayVk.cpp\".  I think you wouldn\u0027t have to do this if OverlayVk::onPresent() called getRotatedExtents() instead of getExtents().  I\u0027m not sure about the next line though.",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 44
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
