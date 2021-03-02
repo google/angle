@@ -18,6 +18,46 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f5abc2e_bd7a64b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T17:48:41Z",
+      "side": 1,
+      "message": "Could add a test to ContextNoErrorTest.cpp.",
+      "revId": "efe6a623a3e1086a4c8baf5fd3bc1760140b70d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af796e26_fc1a96dc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T17:48:41Z",
+      "side": 1,
+      "message": "you can remove this ASSERT as it is not doing much now.",
+      "range": {
+        "startLine": 70,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 41
+      },
+      "revId": "efe6a623a3e1086a4c8baf5fd3bc1760140b70d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fe578bd6_c02bcefd",
@@ -31,6 +71,24 @@
       "writtenOn": "2021-03-02T17:09:13Z",
       "side": 1,
       "message": "Please add a comment saying this is to support buggy applications that use EGL_CONTEXT_OPENGL_NO_ERROR_KHR.\n\nOut of curiosity, what application is triggering this?",
+      "revId": "efe6a623a3e1086a4c8baf5fd3bc1760140b70d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c1d4792_dfe7bc9a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-02T17:48:41Z",
+      "side": 1,
+      "message": "+1, I wonder if there\u0027s some other thing going on here?",
+      "parentUuid": "fe578bd6_c02bcefd",
       "revId": "efe6a623a3e1086a4c8baf5fd3bc1760140b70d4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
