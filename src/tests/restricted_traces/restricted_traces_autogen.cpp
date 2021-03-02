@@ -12,6 +12,7 @@
 #include "common/PackedEnums.h"
 
 #include "aliexpress/aliexpress_capture_context1.h"
+#include "among_us/among_us_capture_context2.h"
 #include "angry_birds_2_1500/angry_birds_2_1500_capture_context1.h"
 #include "arena_of_valor/arena_of_valor_capture_context1.h"
 #include "asphalt_8/asphalt_8_capture_context2.h"
@@ -74,6 +75,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {aliexpress::kReplayContextClientMajorVersion, aliexpress::kReplayContextClientMinorVersion,
       aliexpress::kReplayFrameStart, aliexpress::kReplayFrameEnd,
       aliexpress::kReplayDrawSurfaceWidth, aliexpress::kReplayDrawSurfaceHeight, "aliexpress"}},
+    {RestrictedTraceID::among_us,
+     {among_us::kReplayContextClientMajorVersion, among_us::kReplayContextClientMinorVersion,
+      among_us::kReplayFrameStart, among_us::kReplayFrameEnd, among_us::kReplayDrawSurfaceWidth,
+      among_us::kReplayDrawSurfaceHeight, "among_us"}},
     {RestrictedTraceID::angry_birds_2_1500,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       angry_birds_2_1500::kReplayFrameStart, angry_birds_2_1500::kReplayFrameEnd,
@@ -334,6 +339,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::aliexpress:
             aliexpress::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::among_us:
+            among_us::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::angry_birds_2_1500:
             angry_birds_2_1500::ReplayContext1Frame(frameIndex);
             break;
@@ -503,6 +511,9 @@ void ResetReplay(RestrictedTraceID traceID)
     {
         case RestrictedTraceID::aliexpress:
             aliexpress::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::among_us:
+            among_us::ResetContext2Replay();
             break;
         case RestrictedTraceID::angry_birds_2_1500:
             angry_birds_2_1500::ResetContext1Replay();
@@ -674,6 +685,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::aliexpress:
             aliexpress::SetupContext1Replay();
             break;
+        case RestrictedTraceID::among_us:
+            among_us::SetupContext2Replay();
+            break;
         case RestrictedTraceID::angry_birds_2_1500:
             angry_birds_2_1500::SetupContext1Replay();
             break;
@@ -844,6 +858,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::aliexpress:
             aliexpress::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::among_us:
+            among_us::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::angry_birds_2_1500:
             angry_birds_2_1500::SetBinaryDataDir(dataDir);
             break;
@@ -1013,6 +1030,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
     {
         case RestrictedTraceID::aliexpress:
             aliexpress::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::among_us:
+            among_us::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::angry_birds_2_1500:
             angry_birds_2_1500::SetBinaryDataDecompressCallback(callback);

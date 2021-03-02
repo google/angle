@@ -55,6 +55,7 @@ namespace angle
 enum class RestrictedTraceID
 {
     aliexpress,
+    among_us,
     angry_birds_2_1500,
     arena_of_valor,
     asphalt_8,
