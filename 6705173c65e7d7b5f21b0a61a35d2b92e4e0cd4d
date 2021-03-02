@@ -16,6 +16,23 @@
       "message": "I moved the current checking to validation. I investigated the FrameCount.",
       "revId": "6705173c65e7d7b5f21b0a61a35d2b92e4e0cd4d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47f30725_62179a99",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 1553,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-02T03:40:10Z",
+      "side": 1,
+      "message": "The reason you see 1 initially if you start mFrameCount with 1 is that mCurrentSwapchainImageIndex is really invalid before the first ANI, but we default it 0, so this line makes it look like image 0 was used.\n\nThe issue will be fixed if you moved this line to WindowSurfaceVk::present, and then any initial mFrameCount value should end up working correctly. At present is really the right place to update this IMO. Doing it here is just delaying it until next ANI for no good reason.",
+      "revId": "6705173c65e7d7b5f21b0a61a35d2b92e4e0cd4d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -368,6 +368,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "458380b9_a31578e1",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-02T03:40:10Z",
+      "side": 1,
+      "message": "See other comment.",
+      "parentUuid": "3cb1ece1_367777ca",
+      "range": {
+        "startLine": 487,
+        "startChar": 18,
+        "endLine": 487,
+        "endChar": 19
+      },
+      "revId": "d0f851ce04c3a109991279ac835f5a0cced71594",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0a5d36dd_c533f1ec",
         "filename": "src/tests/egl_tests/EGLBufferAgeTest.cpp",
         "patchSetId": 14
