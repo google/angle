@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d27f3845_722cf728",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-02T18:36:00Z",
+      "side": 1,
+      "message": "Thanks for the patience. I\u0027m still working to understand the architecture.",
+      "revId": "8c6a6de2f14d3883a96de5d807a42c90f41c183a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
