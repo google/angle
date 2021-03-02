@@ -85,6 +85,30 @@
       },
       "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "02913f0d_3cb70ee1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-02T22:08:14Z",
+      "side": 1,
+      "message": "I originally didn\u0027t have this, but it did lead to noticeable allocations both in T-Rex and Manhattan. Noticeable as in one allocation every other frame during some periods.\n\nIt kinda makes sense for the only place it\u0027s used (ContextVk\u0027s texture upload staging buffer shared by all immutable textures), because you know it will be used again in the future (texture streaming), but you also don\u0027t want to have it hold on to too much memory.",
+      "parentUuid": "9fdbdc34_afbcf10b",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 28
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
