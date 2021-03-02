@@ -123,6 +123,23 @@
       "parentUuid": "49e6616d_98001f47",
       "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e84080b_5a0c9506",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-02T00:03:46Z",
+      "side": 1,
+      "message": "cody/jamie - with the kartrider traces you provided we dont see issues on our dev environments",
+      "revId": "d0adff784ca1507777017686c4d57081e2a5bfd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
