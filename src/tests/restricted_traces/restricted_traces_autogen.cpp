@@ -19,6 +19,7 @@
 #include "brawl_stars/brawl_stars_capture_context1.h"
 #include "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1.h"
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
+#include "car_parking_multiplayer/car_parking_multiplayer_capture_context2.h"
 #include "clash_of_clans/clash_of_clans_capture_context1.h"
 #include "clash_royale/clash_royale_capture_context2.h"
 #include "cod_mobile/cod_mobile_capture_context1.h"
@@ -109,6 +110,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       candy_crush_500::kReplayFrameStart, candy_crush_500::kReplayFrameEnd,
       candy_crush_500::kReplayDrawSurfaceWidth, candy_crush_500::kReplayDrawSurfaceHeight,
       "candy_crush_500"}},
+    {RestrictedTraceID::car_parking_multiplayer,
+     {car_parking_multiplayer::kReplayContextClientMajorVersion,
+      car_parking_multiplayer::kReplayContextClientMinorVersion,
+      car_parking_multiplayer::kReplayFrameStart, car_parking_multiplayer::kReplayFrameEnd,
+      car_parking_multiplayer::kReplayDrawSurfaceWidth,
+      car_parking_multiplayer::kReplayDrawSurfaceHeight, "car_parking_multiplayer"}},
     {RestrictedTraceID::clash_of_clans,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       clash_of_clans::kReplayFrameStart, clash_of_clans::kReplayFrameEnd,
@@ -365,6 +372,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::car_parking_multiplayer:
+            car_parking_multiplayer::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::clash_of_clans:
             clash_of_clans::ReplayContext1Frame(frameIndex);
             break;
@@ -540,6 +550,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::car_parking_multiplayer:
+            car_parking_multiplayer::ResetContext2Replay();
             break;
         case RestrictedTraceID::clash_of_clans:
             clash_of_clans::ResetContext1Replay();
@@ -717,6 +730,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetupContext1Replay();
             break;
+        case RestrictedTraceID::car_parking_multiplayer:
+            car_parking_multiplayer::SetupContext2Replay();
+            break;
         case RestrictedTraceID::clash_of_clans:
             clash_of_clans::SetupContext1Replay();
             break;
@@ -893,6 +909,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::car_parking_multiplayer:
+            car_parking_multiplayer::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::clash_of_clans:
             clash_of_clans::SetBinaryDataDir(dataDir);
             break;
@@ -1068,6 +1087,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::candy_crush_500:
             candy_crush_500::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::car_parking_multiplayer:
+            car_parking_multiplayer::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::clash_of_clans:
             clash_of_clans::SetBinaryDataDecompressCallback(callback);

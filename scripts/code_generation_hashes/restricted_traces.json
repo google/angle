@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "efb830bf196eac9e942b8bd996cfaae4",
+    "6774b818d5755d4fed359ecb1e594273",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -17,6 +17,8 @@
     "0d9c9de640f997cec3aee06f6a38de89",
   "src/tests/restricted_traces/candy_crush_500.tar.gz.sha1":
     "b0772c8cf2d3d49e49fea9fe7cff0446",
+  "src/tests/restricted_traces/car_parking_multiplayer.tar.gz.sha1":
+    "99f13305fcca8315a941f6c2efeeddf0",
   "src/tests/restricted_traces/clash_of_clans.tar.gz.sha1":
     "4e3190f8b3cdded405172d6ef1fa7fa3",
   "src/tests/restricted_traces/clash_royale.tar.gz.sha1":
@@ -86,13 +88,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "906d4c3e0ebb06004aeda46bc43d3230",
+    "adf881a74b4ba0ae975e0146dfa833ff",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "7a139aa6e641addb70e008ab52efb01a",
+    "ccd1f67bc81bfa25ed2672072e966346",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "c50227eea387a131a1740959f1f260e0",
+    "e8c7160bcd24831ed0e949e2a60c4110",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "de749fc53c784e3dc84da74c37d74955",
+    "504c3ff34777a4a3a7e4be502d12e90e",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
