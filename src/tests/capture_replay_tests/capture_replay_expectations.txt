@@ -108,9 +108,6 @@ EGLSyncTest.AndroidNativeFence_WaitSync/*
 ExplicitContextTest.GetProcAddress/*
 GetImageTest.*
 GetTexLevelParameterTest.Queries/*
-MemoryObjectTest.MemoryObjectQueries/*
-MemoryObjectTest.MemoryObjectShouldBeMemoryObject/*
-MemoryObjectTest.ShouldFailValidationOnImportFdUnsupportedHandleType/*
 PointSpritesTest.PointWithoutAttributesCompliance/*
 RobustBufferAccessBehaviorTest.EmptyBuffer/*
 RobustClientMemoryTest.*

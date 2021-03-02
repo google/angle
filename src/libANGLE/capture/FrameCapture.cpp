@@ -1750,6 +1750,14 @@ void MaybeCaptureUpdateResourceIDs(std::vector<CallCapture> *callsOut)
             break;
         }
 
+        case EntryPoint::GLCreateMemoryObjectsEXT:
+        {
+            const ParamCapture &memoryObjects =
+                call.params.getParam("memoryObjectsPacked", ParamType::TMemoryObjectIDPointer, 1);
+            CaptureUpdateResourceIDs<gl::MemoryObjectID>(call, memoryObjects, callsOut);
+            break;
+        }
+
         default:
             break;
     }

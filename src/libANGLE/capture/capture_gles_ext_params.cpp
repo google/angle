@@ -2464,7 +2464,7 @@ void CaptureCreateMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
                                                        MemoryObjectID *memoryObjects,
                                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGenHandles(n, memoryObjects, paramCapture);
 }
 
 void CaptureDeleteMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
@@ -2473,7 +2473,7 @@ void CaptureDeleteMemoryObjectsEXT_memoryObjectsPacked(const State &glState,
                                                        const MemoryObjectID *memoryObjects,
                                                        ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(memoryObjects, sizeof(MemoryObjectID) * n, paramCapture);
 }
 
 void CaptureGetMemoryObjectParameterivEXT_params(const State &glState,
@@ -2483,7 +2483,7 @@ void CaptureGetMemoryObjectParameterivEXT_params(const State &glState,
                                                  GLint *params,
                                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetUnsignedBytevEXT_data(const State &glState,
@@ -2512,7 +2512,7 @@ void CaptureMemoryObjectParameterivEXT_params(const State &glState,
                                               const GLint *params,
                                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLint), paramCapture);
 }
 
 void CaptureGetnUniformfvEXT_params(const State &glState,
