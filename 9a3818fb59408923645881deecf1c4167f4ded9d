@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0be4f69_973466af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-02T22:15:54Z",
+      "side": 1,
+      "message": "The win-trace-rel bot doesn\u0027t do anything with application traces yet.\n\nAlso, it looks like the bots cleared up:\nhttps://ci.chromium.org/p/angle/builders/ci/win-trace-rel",
+      "revId": "9a3818fb59408923645881deecf1c4167f4ded9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
