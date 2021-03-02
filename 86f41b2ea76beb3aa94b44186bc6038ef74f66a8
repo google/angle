@@ -39,6 +39,30 @@
       },
       "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ddb90e9_94bd69ee",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-02T18:40:39Z",
+      "side": 1,
+      "message": "I understand they are in the process and libc++abi moves out first.\nI\u0027m worried that buildtools/DEPS and Chromium\u0027s DEPS may get out of sync at the moment, so I\u0027m hesitant to pull other buildtools DEPS directly.\n\nNico, is it perhaps safe to do so?\nWhy are you changing only libc++abi and not in bulk?",
+      "parentUuid": "54a7acc9_a130aa2d",
+      "range": {
+        "startLine": 494,
+        "startChar": 2,
+        "endLine": 494,
+        "endChar": 15
+      },
+      "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
