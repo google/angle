@@ -100,6 +100,7 @@ enum class RestrictedTraceID
     saint_seiya_awakening,
     shadow_fight_2,
     sniper_3d,
+    standoff_2,
     subway_surfers,
     temple_run_2,
     temple_run_300,

@@ -57,6 +57,7 @@
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context2.h"
 #include "shadow_fight_2/shadow_fight_2_capture_context2.h"
 #include "sniper_3d/sniper_3d_capture_context3.h"
+#include "standoff_2/standoff_2_capture_context2.h"
 #include "subway_surfers/subway_surfers_capture_context2.h"
 #include "temple_run_2/temple_run_2_capture_context1.h"
 #include "temple_run_300/temple_run_300_capture_context1.h"
@@ -287,6 +288,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {sniper_3d::kReplayContextClientMajorVersion, sniper_3d::kReplayContextClientMinorVersion,
       sniper_3d::kReplayFrameStart, sniper_3d::kReplayFrameEnd, sniper_3d::kReplayDrawSurfaceWidth,
       sniper_3d::kReplayDrawSurfaceHeight, "sniper_3d"}},
+    {RestrictedTraceID::standoff_2,
+     {standoff_2::kReplayContextClientMajorVersion, standoff_2::kReplayContextClientMinorVersion,
+      standoff_2::kReplayFrameStart, standoff_2::kReplayFrameEnd,
+      standoff_2::kReplayDrawSurfaceWidth, standoff_2::kReplayDrawSurfaceHeight, "standoff_2"}},
     {RestrictedTraceID::subway_surfers,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       subway_surfers::kReplayFrameStart, subway_surfers::kReplayFrameEnd,
@@ -474,6 +479,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::sniper_3d:
             sniper_3d::ReplayContext3Frame(frameIndex);
             break;
+        case RestrictedTraceID::standoff_2:
+            standoff_2::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::subway_surfers:
             subway_surfers::ReplayContext2Frame(frameIndex);
             break;
@@ -646,6 +654,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::sniper_3d:
             sniper_3d::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::standoff_2:
+            standoff_2::ResetContext2Replay();
             break;
         case RestrictedTraceID::subway_surfers:
             subway_surfers::ResetContext2Replay();
@@ -820,6 +831,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::sniper_3d:
             sniper_3d::SetupContext3Replay();
             break;
+        case RestrictedTraceID::standoff_2:
+            standoff_2::SetupContext2Replay();
+            break;
         case RestrictedTraceID::subway_surfers:
             subway_surfers::SetupContext2Replay();
             break;
@@ -993,6 +1007,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::sniper_3d:
             sniper_3d::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::standoff_2:
+            standoff_2::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::subway_surfers:
             subway_surfers::SetBinaryDataDir(dataDir);
             break;
@@ -1165,6 +1182,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::sniper_3d:
             sniper_3d::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::standoff_2:
+            standoff_2::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::subway_surfers:
             subway_surfers::SetBinaryDataDecompressCallback(callback);
