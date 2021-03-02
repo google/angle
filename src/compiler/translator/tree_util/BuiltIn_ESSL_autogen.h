@@ -1211,91 +1211,91 @@ class BuiltInId
         TSymbolUniqueId(3920);
     static constexpr const TSymbolUniqueId textureGather_SamplerCubeShadow1_Float3_Float1 =
         TSymbolUniqueId(3921);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_4xInt2_Int1 =
-        TSymbolUniqueId(3922);
-    static constexpr const TSymbolUniqueId pt10Dx4 = TSymbolUniqueId(3923);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_4xInt2_Int1 =
-        TSymbolUniqueId(3924);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_4xInt2_Int1 =
-        TSymbolUniqueId(3925);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_4xInt2_Int1 =
-        TSymbolUniqueId(3926);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsets_ISampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3927);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsets_USampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3928);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2_Int1 =
-        TSymbolUniqueId(3929);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2_Int1 =
-        TSymbolUniqueId(3930);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_4xInt2_Int1 =
-        TSymbolUniqueId(3931);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3932);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3933);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3934);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_4xInt2 =
-        TSymbolUniqueId(3935);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_4xInt2 =
-        TSymbolUniqueId(3936);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_4xInt2 =
-        TSymbolUniqueId(3937);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_4xInt2 =
-        TSymbolUniqueId(3938);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2DArray1_Float3_4xInt2 =
-        TSymbolUniqueId(3939);
-    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2DArray1_Float3_4xInt2 =
-        TSymbolUniqueId(3940);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsets_Sampler2DShadow1_Float2_Float1_4xInt2 = TSymbolUniqueId(3941);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_4xInt2 = TSymbolUniqueId(3942);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2 =
-        TSymbolUniqueId(3943);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2 =
-        TSymbolUniqueId(3944);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_4xInt2 =
-        TSymbolUniqueId(3945);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2 =
-        TSymbolUniqueId(3946);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2 =
-        TSymbolUniqueId(3947);
-    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2 =
-        TSymbolUniqueId(3948);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_4xInt2 = TSymbolUniqueId(3949);
-    static constexpr const TSymbolUniqueId
-        textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_4xInt2 = TSymbolUniqueId(3950);
-    static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2D1_Float2_Int2_Int1 =
-        TSymbolUniqueId(3951);
-    static constexpr const TSymbolUniqueId textureGatherOffset_ISampler2D1_Float2_Int2_Int1 =
-        TSymbolUniqueId(3952);
-    static constexpr const TSymbolUniqueId textureGatherOffset_USampler2D1_Float2_Int2_Int1 =
-        TSymbolUniqueId(3953);
-    static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2DArray1_Float3_Int2_Int1 =
-        TSymbolUniqueId(3954);
-    static constexpr const TSymbolUniqueId textureGatherOffset_ISampler2DArray1_Float3_Int2_Int1 =
-        TSymbolUniqueId(3955);
-    static constexpr const TSymbolUniqueId textureGatherOffset_USampler2DArray1_Float3_Int2_Int1 =
-        TSymbolUniqueId(3956);
     static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2D1_Float2_Int2 =
-        TSymbolUniqueId(3957);
+        TSymbolUniqueId(3922);
     static constexpr const TSymbolUniqueId textureGatherOffset_ISampler2D1_Float2_Int2 =
-        TSymbolUniqueId(3958);
+        TSymbolUniqueId(3923);
     static constexpr const TSymbolUniqueId textureGatherOffset_USampler2D1_Float2_Int2 =
-        TSymbolUniqueId(3959);
+        TSymbolUniqueId(3924);
     static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2DArray1_Float3_Int2 =
-        TSymbolUniqueId(3960);
+        TSymbolUniqueId(3925);
     static constexpr const TSymbolUniqueId textureGatherOffset_ISampler2DArray1_Float3_Int2 =
-        TSymbolUniqueId(3961);
+        TSymbolUniqueId(3926);
     static constexpr const TSymbolUniqueId textureGatherOffset_USampler2DArray1_Float3_Int2 =
-        TSymbolUniqueId(3962);
+        TSymbolUniqueId(3927);
     static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2DShadow1_Float2_Float1_Int2 =
-        TSymbolUniqueId(3963);
+        TSymbolUniqueId(3928);
     static constexpr const TSymbolUniqueId
-        textureGatherOffset_Sampler2DArrayShadow1_Float3_Float1_Int2       = TSymbolUniqueId(3964);
+        textureGatherOffset_Sampler2DArrayShadow1_Float3_Float1_Int2 = TSymbolUniqueId(3929);
+    static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2D1_Float2_Int2_Int1 =
+        TSymbolUniqueId(3930);
+    static constexpr const TSymbolUniqueId textureGatherOffset_ISampler2D1_Float2_Int2_Int1 =
+        TSymbolUniqueId(3931);
+    static constexpr const TSymbolUniqueId textureGatherOffset_USampler2D1_Float2_Int2_Int1 =
+        TSymbolUniqueId(3932);
+    static constexpr const TSymbolUniqueId textureGatherOffset_Sampler2DArray1_Float3_Int2_Int1 =
+        TSymbolUniqueId(3933);
+    static constexpr const TSymbolUniqueId textureGatherOffset_ISampler2DArray1_Float3_Int2_Int1 =
+        TSymbolUniqueId(3934);
+    static constexpr const TSymbolUniqueId textureGatherOffset_USampler2DArray1_Float3_Int2_Int1 =
+        TSymbolUniqueId(3935);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_4xInt2 =
+        TSymbolUniqueId(3936);
+    static constexpr const TSymbolUniqueId pt10Dx4 = TSymbolUniqueId(3937);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_4xInt2 =
+        TSymbolUniqueId(3938);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_4xInt2 =
+        TSymbolUniqueId(3939);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_4xInt2 =
+        TSymbolUniqueId(3940);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2DArray1_Float3_4xInt2 =
+        TSymbolUniqueId(3941);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2DArray1_Float3_4xInt2 =
+        TSymbolUniqueId(3942);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsets_Sampler2DShadow1_Float2_Float1_4xInt2 = TSymbolUniqueId(3943);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsets_Sampler2DArrayShadow1_Float3_Float1_4xInt2 = TSymbolUniqueId(3944);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2 =
+        TSymbolUniqueId(3945);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2 =
+        TSymbolUniqueId(3946);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_4xInt2 =
+        TSymbolUniqueId(3947);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2 =
+        TSymbolUniqueId(3948);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2 =
+        TSymbolUniqueId(3949);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2 =
+        TSymbolUniqueId(3950);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsetsExt_Sampler2DShadow1_Float2_Float1_4xInt2 = TSymbolUniqueId(3951);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsetsExt_Sampler2DArrayShadow1_Float3_Float1_4xInt2 = TSymbolUniqueId(3952);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2D1_Float2_4xInt2_Int1 =
+        TSymbolUniqueId(3953);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_ISampler2D1_Float2_4xInt2_Int1 =
+        TSymbolUniqueId(3954);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_USampler2D1_Float2_4xInt2_Int1 =
+        TSymbolUniqueId(3955);
+    static constexpr const TSymbolUniqueId textureGatherOffsets_Sampler2DArray1_Float3_4xInt2_Int1 =
+        TSymbolUniqueId(3956);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsets_ISampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3957);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsets_USampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3958);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_Sampler2D1_Float2_4xInt2_Int1 =
+        TSymbolUniqueId(3959);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_ISampler2D1_Float2_4xInt2_Int1 =
+        TSymbolUniqueId(3960);
+    static constexpr const TSymbolUniqueId textureGatherOffsetsExt_USampler2D1_Float2_4xInt2_Int1 =
+        TSymbolUniqueId(3961);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsetsExt_Sampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3962);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsetsExt_ISampler2DArray1_Float3_4xInt2_Int1 = TSymbolUniqueId(3963);
+    static constexpr const TSymbolUniqueId
+        textureGatherOffsetsExt_USampler2DArray1_Float3_4xInt2_Int1        = TSymbolUniqueId(3964);
     static constexpr const TSymbolUniqueId dFdx_Float1                     = TSymbolUniqueId(3965);
     static constexpr const TSymbolUniqueId dFdx_Float2                     = TSymbolUniqueId(3966);
     static constexpr const TSymbolUniqueId dFdx_Float3                     = TSymbolUniqueId(3967);
@@ -1404,1190 +1404,1190 @@ class BuiltInId
     static constexpr const TSymbolUniqueId pt01h                            = TSymbolUniqueId(4056);
     static constexpr const TSymbolUniqueId imageSize_UImageBuffer1          = TSymbolUniqueId(4057);
     static constexpr const TSymbolUniqueId pt01i                            = TSymbolUniqueId(4058);
-    static constexpr const TSymbolUniqueId imageLoad_Image2D1_Int2          = TSymbolUniqueId(4059);
-    static constexpr const TSymbolUniqueId imageLoad_IImage2D1_Int2         = TSymbolUniqueId(4060);
-    static constexpr const TSymbolUniqueId imageLoad_UImage2D1_Int2         = TSymbolUniqueId(4061);
-    static constexpr const TSymbolUniqueId imageLoad_Image3D1_Int3          = TSymbolUniqueId(4062);
-    static constexpr const TSymbolUniqueId imageLoad_IImage3D1_Int3         = TSymbolUniqueId(4063);
-    static constexpr const TSymbolUniqueId imageLoad_UImage3D1_Int3         = TSymbolUniqueId(4064);
-    static constexpr const TSymbolUniqueId imageLoad_Image2DArray1_Int3     = TSymbolUniqueId(4065);
-    static constexpr const TSymbolUniqueId imageLoad_IImage2DArray1_Int3    = TSymbolUniqueId(4066);
-    static constexpr const TSymbolUniqueId imageLoad_UImage2DArray1_Int3    = TSymbolUniqueId(4067);
-    static constexpr const TSymbolUniqueId imageLoad_ImageCube1_Int3        = TSymbolUniqueId(4068);
-    static constexpr const TSymbolUniqueId imageLoad_IImageCube1_Int3       = TSymbolUniqueId(4069);
-    static constexpr const TSymbolUniqueId imageLoad_UImageCube1_Int3       = TSymbolUniqueId(4070);
-    static constexpr const TSymbolUniqueId imageLoad_ImageCubeArray1_Int3   = TSymbolUniqueId(4071);
-    static constexpr const TSymbolUniqueId imageLoad_IImageCubeArray1_Int3  = TSymbolUniqueId(4072);
-    static constexpr const TSymbolUniqueId imageLoad_UImageCubeArray1_Int3  = TSymbolUniqueId(4073);
-    static constexpr const TSymbolUniqueId imageLoad_ImageBuffer1_Int1      = TSymbolUniqueId(4074);
-    static constexpr const TSymbolUniqueId imageLoad_IImageBuffer1_Int1     = TSymbolUniqueId(4075);
-    static constexpr const TSymbolUniqueId imageLoad_UImageBuffer1_Int1     = TSymbolUniqueId(4076);
+    static constexpr const TSymbolUniqueId imageStore_Image2D1_Int2_Float4  = TSymbolUniqueId(4059);
+    static constexpr const TSymbolUniqueId imageStore_IImage2D1_Int2_Int4   = TSymbolUniqueId(4060);
+    static constexpr const TSymbolUniqueId imageStore_UImage2D1_Int2_UInt4  = TSymbolUniqueId(4061);
+    static constexpr const TSymbolUniqueId imageStore_Image3D1_Int3_Float4  = TSymbolUniqueId(4062);
+    static constexpr const TSymbolUniqueId imageStore_IImage3D1_Int3_Int4   = TSymbolUniqueId(4063);
+    static constexpr const TSymbolUniqueId imageStore_UImage3D1_Int3_UInt4  = TSymbolUniqueId(4064);
+    static constexpr const TSymbolUniqueId imageStore_Image2DArray1_Int3_Float4 =
+        TSymbolUniqueId(4065);
+    static constexpr const TSymbolUniqueId imageStore_IImage2DArray1_Int3_Int4 =
+        TSymbolUniqueId(4066);
+    static constexpr const TSymbolUniqueId imageStore_UImage2DArray1_Int3_UInt4 =
+        TSymbolUniqueId(4067);
+    static constexpr const TSymbolUniqueId imageStore_ImageCube1_Int3_Float4 =
+        TSymbolUniqueId(4068);
+    static constexpr const TSymbolUniqueId imageStore_IImageCube1_Int3_Int4 = TSymbolUniqueId(4069);
+    static constexpr const TSymbolUniqueId imageStore_UImageCube1_Int3_UInt4 =
+        TSymbolUniqueId(4070);
+    static constexpr const TSymbolUniqueId imageStore_ImageCubeArray1_Int3_Float4 =
+        TSymbolUniqueId(4071);
+    static constexpr const TSymbolUniqueId imageStore_IImageCubeArray1_Int3_Int4 =
+        TSymbolUniqueId(4072);
+    static constexpr const TSymbolUniqueId imageStore_UImageCubeArray1_Int3_UInt4 =
+        TSymbolUniqueId(4073);
+    static constexpr const TSymbolUniqueId imageStore_ImageBuffer1_Int1_Float4 =
+        TSymbolUniqueId(4074);
+    static constexpr const TSymbolUniqueId imageStore_IImageBuffer1_Int1_Int4 =
+        TSymbolUniqueId(4075);
+    static constexpr const TSymbolUniqueId imageStore_UImageBuffer1_Int1_UInt4 =
+        TSymbolUniqueId(4076);
+    static constexpr const TSymbolUniqueId imageLoad_Image2D1_Int2         = TSymbolUniqueId(4077);
+    static constexpr const TSymbolUniqueId imageLoad_IImage2D1_Int2        = TSymbolUniqueId(4078);
+    static constexpr const TSymbolUniqueId imageLoad_UImage2D1_Int2        = TSymbolUniqueId(4079);
+    static constexpr const TSymbolUniqueId imageLoad_Image3D1_Int3         = TSymbolUniqueId(4080);
+    static constexpr const TSymbolUniqueId imageLoad_IImage3D1_Int3        = TSymbolUniqueId(4081);
+    static constexpr const TSymbolUniqueId imageLoad_UImage3D1_Int3        = TSymbolUniqueId(4082);
+    static constexpr const TSymbolUniqueId imageLoad_Image2DArray1_Int3    = TSymbolUniqueId(4083);
+    static constexpr const TSymbolUniqueId imageLoad_IImage2DArray1_Int3   = TSymbolUniqueId(4084);
+    static constexpr const TSymbolUniqueId imageLoad_UImage2DArray1_Int3   = TSymbolUniqueId(4085);
+    static constexpr const TSymbolUniqueId imageLoad_ImageCube1_Int3       = TSymbolUniqueId(4086);
+    static constexpr const TSymbolUniqueId imageLoad_IImageCube1_Int3      = TSymbolUniqueId(4087);
+    static constexpr const TSymbolUniqueId imageLoad_UImageCube1_Int3      = TSymbolUniqueId(4088);
+    static constexpr const TSymbolUniqueId imageLoad_ImageCubeArray1_Int3  = TSymbolUniqueId(4089);
+    static constexpr const TSymbolUniqueId imageLoad_IImageCubeArray1_Int3 = TSymbolUniqueId(4090);
+    static constexpr const TSymbolUniqueId imageLoad_UImageCubeArray1_Int3 = TSymbolUniqueId(4091);
+    static constexpr const TSymbolUniqueId imageLoad_ImageBuffer1_Int1     = TSymbolUniqueId(4092);
+    static constexpr const TSymbolUniqueId imageLoad_IImageBuffer1_Int1    = TSymbolUniqueId(4093);
+    static constexpr const TSymbolUniqueId imageLoad_UImageBuffer1_Int1    = TSymbolUniqueId(4094);
     static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2D1_Int2_UInt1 =
-        TSymbolUniqueId(4077);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2D1_Int2_UInt1 =
-        TSymbolUniqueId(4078);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2D1_Int2_UInt1 =
-        TSymbolUniqueId(4079);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image3D1_Int3_UInt1 =
-        TSymbolUniqueId(4080);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage3D1_Int3_UInt1 =
-        TSymbolUniqueId(4081);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage3D1_Int3_UInt1 =
-        TSymbolUniqueId(4082);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCube1_Int3_UInt1 =
-        TSymbolUniqueId(4083);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCube1_Int3_UInt1 =
-        TSymbolUniqueId(4084);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCube1_Int3_UInt1 =
-        TSymbolUniqueId(4085);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageBuffer1_Int1_UInt1 =
-        TSymbolUniqueId(4086);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageBuffer1_Int1_UInt1 =
-        TSymbolUniqueId(4087);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageBuffer1_Int1_UInt1 =
-        TSymbolUniqueId(4088);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DArray1_Int3_UInt1 =
-        TSymbolUniqueId(4089);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DArray1_Int3_UInt1 =
-        TSymbolUniqueId(4090);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DArray1_Int3_UInt1 =
-        TSymbolUniqueId(4091);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCubeArray1_Int3_UInt1 =
-        TSymbolUniqueId(4092);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCubeArray1_Int3_UInt1 =
-        TSymbolUniqueId(4093);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCubeArray1_Int3_UInt1 =
-        TSymbolUniqueId(4094);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4095);
-    static constexpr const TSymbolUniqueId pt01L = TSymbolUniqueId(4096);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2D1_Int2_UInt1 =
+        TSymbolUniqueId(4096);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4097);
-    static constexpr const TSymbolUniqueId pt01M = TSymbolUniqueId(4098);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image3D1_Int3_UInt1 =
+        TSymbolUniqueId(4098);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4099);
-    static constexpr const TSymbolUniqueId pt01N = TSymbolUniqueId(4100);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage3D1_Int3_UInt1 =
+        TSymbolUniqueId(4100);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4101);
-    static constexpr const TSymbolUniqueId pt01O = TSymbolUniqueId(4102);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCube1_Int3_UInt1 =
+        TSymbolUniqueId(4102);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4103);
-    static constexpr const TSymbolUniqueId pt01P = TSymbolUniqueId(4104);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageBuffer1_Int1_UInt1 =
+        TSymbolUniqueId(4104);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4105);
-    static constexpr const TSymbolUniqueId pt01Q = TSymbolUniqueId(4106);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageBuffer1_Int1_UInt1 =
+        TSymbolUniqueId(4106);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4107);
-    static constexpr const TSymbolUniqueId pt01X = TSymbolUniqueId(4108);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DArray1_Int3_UInt1 =
+        TSymbolUniqueId(4108);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4109);
-    static constexpr const TSymbolUniqueId pt01Y = TSymbolUniqueId(4110);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCubeArray1_Int3_UInt1 =
+        TSymbolUniqueId(4110);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4111);
-    static constexpr const TSymbolUniqueId pt01Z = TSymbolUniqueId(4112);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCubeArray1_Int3_UInt1 =
+        TSymbolUniqueId(4112);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4113);
-    static constexpr const TSymbolUniqueId pt01R = TSymbolUniqueId(4114);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId pt01L = TSymbolUniqueId(4114);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4115);
-    static constexpr const TSymbolUniqueId pt01S = TSymbolUniqueId(4116);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId pt01M = TSymbolUniqueId(4116);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4117);
-    static constexpr const TSymbolUniqueId pt01T = TSymbolUniqueId(4118);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId pt01N = TSymbolUniqueId(4118);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4119);
-    static constexpr const TSymbolUniqueId pt01U = TSymbolUniqueId(4120);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId pt01O = TSymbolUniqueId(4120);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4121);
-    static constexpr const TSymbolUniqueId pt01V = TSymbolUniqueId(4122);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId pt01P = TSymbolUniqueId(4122);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4123);
-    static constexpr const TSymbolUniqueId pt01W = TSymbolUniqueId(4124);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId pt01Q = TSymbolUniqueId(4124);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4125);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2D1_Int2_Int1 =
-        TSymbolUniqueId(4126);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId pt01X = TSymbolUniqueId(4126);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4127);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image3D1_Int3_Int1 =
-        TSymbolUniqueId(4128);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId pt01Y = TSymbolUniqueId(4128);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4129);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage3D1_Int3_Int1 =
-        TSymbolUniqueId(4130);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId pt01Z = TSymbolUniqueId(4130);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4131);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCube1_Int3_Int1 =
-        TSymbolUniqueId(4132);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId pt01R = TSymbolUniqueId(4132);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4133);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageBuffer1_Int1_Int1 =
-        TSymbolUniqueId(4134);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId pt01S = TSymbolUniqueId(4134);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4135);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageBuffer1_Int1_Int1 =
-        TSymbolUniqueId(4136);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId pt01T = TSymbolUniqueId(4136);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4137);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DArray1_Int3_Int1 =
-        TSymbolUniqueId(4138);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId pt01U = TSymbolUniqueId(4138);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4139);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCubeArray1_Int3_Int1 =
-        TSymbolUniqueId(4140);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId pt01V = TSymbolUniqueId(4140);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4141);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCubeArray1_Int3_Int1 =
-        TSymbolUniqueId(4142);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId pt01W = TSymbolUniqueId(4142);
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2D1_Int2_Int1 =
         TSymbolUniqueId(4143);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2D1_Int2_Int1 =
         TSymbolUniqueId(4144);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2D1_Int2_Int1 =
         TSymbolUniqueId(4145);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image3D1_Int3_Int1 =
         TSymbolUniqueId(4146);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage3D1_Int3_Int1 =
         TSymbolUniqueId(4147);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage3D1_Int3_Int1 =
         TSymbolUniqueId(4148);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCube1_Int3_Int1 =
         TSymbolUniqueId(4149);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCube1_Int3_Int1 =
         TSymbolUniqueId(4150);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCube1_Int3_Int1 =
         TSymbolUniqueId(4151);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4152);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4153);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4154);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DArray1_Int3_Int1 =
         TSymbolUniqueId(4155);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4156);
-    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4157);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_ImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4158);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4159);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4160);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1D1_Int1_Int1 =
         TSymbolUniqueId(4161);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1D1_Int1_Int1 =
         TSymbolUniqueId(4162);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1D1_Int1_Int1 =
         TSymbolUniqueId(4163);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image1DArray1_Int2_Int1 =
         TSymbolUniqueId(4164);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4165);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4166);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DRect1_Int2_Int1 =
         TSymbolUniqueId(4167);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4168);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4169);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4170);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4171);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4172);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_Image2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4173);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_IImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4174);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAddExt_UImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4175);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2D1_Int2_UInt1 =
         TSymbolUniqueId(4176);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4177);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4178);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image3D1_Int3_UInt1 =
         TSymbolUniqueId(4179);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4180);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4181);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4182);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4183);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4184);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4185);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4186);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4187);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4188);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4189);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4190);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4191);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4192);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4193);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4194);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4195);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4196);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4197);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4198);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4199);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4200);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4201);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4202);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4203);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4204);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4205);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4206);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4207);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4208);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2D1_Int2_Int1 =
         TSymbolUniqueId(4209);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2D1_Int2_Int1 =
         TSymbolUniqueId(4210);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2D1_Int2_Int1 =
         TSymbolUniqueId(4211);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image3D1_Int3_Int1 =
         TSymbolUniqueId(4212);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage3D1_Int3_Int1 =
         TSymbolUniqueId(4213);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage3D1_Int3_Int1 =
         TSymbolUniqueId(4214);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCube1_Int3_Int1 =
         TSymbolUniqueId(4215);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCube1_Int3_Int1 =
         TSymbolUniqueId(4216);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCube1_Int3_Int1 =
         TSymbolUniqueId(4217);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4218);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4219);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4220);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DArray1_Int3_Int1 =
         TSymbolUniqueId(4221);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4222);
-    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4223);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_ImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4224);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4225);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4226);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1D1_Int1_Int1 =
         TSymbolUniqueId(4227);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1D1_Int1_Int1 =
         TSymbolUniqueId(4228);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1D1_Int1_Int1 =
         TSymbolUniqueId(4229);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image1DArray1_Int2_Int1 =
         TSymbolUniqueId(4230);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4231);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4232);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DRect1_Int2_Int1 =
         TSymbolUniqueId(4233);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4234);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4235);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4236);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4237);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4238);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_Image2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4239);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_IImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4240);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMinExt_UImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4241);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2D1_Int2_UInt1 =
         TSymbolUniqueId(4242);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4243);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4244);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image3D1_Int3_UInt1 =
         TSymbolUniqueId(4245);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4246);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4247);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4248);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4249);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4250);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4251);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4252);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4253);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4254);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4255);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4256);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4257);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4258);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4259);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4260);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4261);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4262);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4263);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4264);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4265);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4266);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4267);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4268);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4269);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4270);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4271);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4272);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4273);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4274);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2D1_Int2_Int1 =
         TSymbolUniqueId(4275);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2D1_Int2_Int1 =
         TSymbolUniqueId(4276);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2D1_Int2_Int1 =
         TSymbolUniqueId(4277);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image3D1_Int3_Int1 =
         TSymbolUniqueId(4278);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage3D1_Int3_Int1 =
         TSymbolUniqueId(4279);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage3D1_Int3_Int1 =
         TSymbolUniqueId(4280);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCube1_Int3_Int1 =
         TSymbolUniqueId(4281);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCube1_Int3_Int1 =
         TSymbolUniqueId(4282);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCube1_Int3_Int1 =
         TSymbolUniqueId(4283);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4284);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4285);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4286);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DArray1_Int3_Int1 =
         TSymbolUniqueId(4287);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4288);
-    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4289);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_ImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4290);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4291);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4292);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1D1_Int1_Int1 =
         TSymbolUniqueId(4293);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1D1_Int1_Int1 =
         TSymbolUniqueId(4294);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1D1_Int1_Int1 =
         TSymbolUniqueId(4295);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image1DArray1_Int2_Int1 =
         TSymbolUniqueId(4296);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4297);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4298);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DRect1_Int2_Int1 =
         TSymbolUniqueId(4299);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4300);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4301);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4302);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4303);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4304);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_Image2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4305);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_IImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4306);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicMaxExt_UImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4307);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2D1_Int2_UInt1 =
         TSymbolUniqueId(4308);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4309);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4310);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image3D1_Int3_UInt1 =
         TSymbolUniqueId(4311);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4312);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4313);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4314);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4315);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4316);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4317);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4318);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4319);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4320);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4321);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4322);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4323);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4324);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4325);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4326);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4327);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4328);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4329);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4330);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4331);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4332);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4333);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4334);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4335);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4336);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4337);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4338);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4339);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4340);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2D1_Int2_Int1 =
         TSymbolUniqueId(4341);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2D1_Int2_Int1 =
         TSymbolUniqueId(4342);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2D1_Int2_Int1 =
         TSymbolUniqueId(4343);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image3D1_Int3_Int1 =
         TSymbolUniqueId(4344);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage3D1_Int3_Int1 =
         TSymbolUniqueId(4345);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage3D1_Int3_Int1 =
         TSymbolUniqueId(4346);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCube1_Int3_Int1 =
         TSymbolUniqueId(4347);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCube1_Int3_Int1 =
         TSymbolUniqueId(4348);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCube1_Int3_Int1 =
         TSymbolUniqueId(4349);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4350);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4351);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4352);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DArray1_Int3_Int1 =
         TSymbolUniqueId(4353);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4354);
-    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4355);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_ImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4356);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4357);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4358);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1D1_Int1_Int1 =
         TSymbolUniqueId(4359);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1D1_Int1_Int1 =
         TSymbolUniqueId(4360);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1D1_Int1_Int1 =
         TSymbolUniqueId(4361);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image1DArray1_Int2_Int1 =
         TSymbolUniqueId(4362);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4363);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4364);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DRect1_Int2_Int1 =
         TSymbolUniqueId(4365);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4366);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4367);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4368);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4369);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4370);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_Image2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4371);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_IImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4372);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicAndExt_UImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4373);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2D1_Int2_UInt1 =
         TSymbolUniqueId(4374);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4375);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4376);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image3D1_Int3_UInt1 =
         TSymbolUniqueId(4377);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4378);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4379);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4380);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4381);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4382);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4383);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4384);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4385);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4386);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4387);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4388);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4389);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4390);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4391);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4392);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4393);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4394);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4395);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4396);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4397);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4398);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4399);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4400);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4401);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4402);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4403);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4404);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4405);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4406);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2D1_Int2_Int1 =
         TSymbolUniqueId(4407);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2D1_Int2_Int1 =
         TSymbolUniqueId(4408);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2D1_Int2_Int1 =
         TSymbolUniqueId(4409);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image3D1_Int3_Int1 =
         TSymbolUniqueId(4410);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage3D1_Int3_Int1 =
         TSymbolUniqueId(4411);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage3D1_Int3_Int1 =
         TSymbolUniqueId(4412);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCube1_Int3_Int1 =
         TSymbolUniqueId(4413);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCube1_Int3_Int1 =
         TSymbolUniqueId(4414);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCube1_Int3_Int1 =
         TSymbolUniqueId(4415);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4416);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4417);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4418);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DArray1_Int3_Int1 =
         TSymbolUniqueId(4419);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4420);
-    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4421);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_ImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4422);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4423);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4424);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1D1_Int1_Int1 =
         TSymbolUniqueId(4425);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1D1_Int1_Int1 =
         TSymbolUniqueId(4426);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1D1_Int1_Int1 =
         TSymbolUniqueId(4427);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image1DArray1_Int2_Int1 =
         TSymbolUniqueId(4428);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4429);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4430);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DRect1_Int2_Int1 =
         TSymbolUniqueId(4431);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4432);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4433);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4434);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4435);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4436);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_Image2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4437);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_IImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4438);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicOrExt_UImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4439);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2D1_Int2_UInt1 =
         TSymbolUniqueId(4440);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4441);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4442);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image3D1_Int3_UInt1 =
         TSymbolUniqueId(4443);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4444);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4445);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4446);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4447);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4448);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4449);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4450);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4451);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4452);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4453);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4454);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4455);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4456);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4457);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4458);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4459);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4460);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4461);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4462);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4463);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4464);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4465);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4466);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4467);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4468);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4469);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4470);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4471);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4472);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2D1_Int2_Int1 =
         TSymbolUniqueId(4473);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2D1_Int2_Int1 =
         TSymbolUniqueId(4474);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2D1_Int2_Int1 =
         TSymbolUniqueId(4475);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image3D1_Int3_Int1 =
         TSymbolUniqueId(4476);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage3D1_Int3_Int1 =
         TSymbolUniqueId(4477);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage3D1_Int3_Int1 =
         TSymbolUniqueId(4478);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCube1_Int3_Int1 =
         TSymbolUniqueId(4479);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCube1_Int3_Int1 =
         TSymbolUniqueId(4480);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCube1_Int3_Int1 =
         TSymbolUniqueId(4481);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4482);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4483);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4484);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DArray1_Int3_Int1 =
         TSymbolUniqueId(4485);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4486);
-    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4487);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_ImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4488);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4489);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2D1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4490);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1D1_Int1_Int1 =
         TSymbolUniqueId(4491);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1D1_Int1_Int1 =
         TSymbolUniqueId(4492);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage3D1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1D1_Int1_Int1 =
         TSymbolUniqueId(4493);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image1DArray1_Int2_Int1 =
         TSymbolUniqueId(4494);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4495);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCube1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4496);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DRect1_Int2_Int1 =
         TSymbolUniqueId(4497);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4498);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageBuffer1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4499);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4500);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4501);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4502);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_Image2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4503);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_IImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4504);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCubeArray1_Int3_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicXorExt_UImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4505);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2D1_Int2_UInt1 =
         TSymbolUniqueId(4506);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4507);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1D1_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2D1_Int2_UInt1 =
         TSymbolUniqueId(4508);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image3D1_Int3_UInt1 =
         TSymbolUniqueId(4509);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4510);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1DArray1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage3D1_Int3_UInt1 =
         TSymbolUniqueId(4511);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4512);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4513);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DRect1_Int2_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCube1_Int3_UInt1 =
         TSymbolUniqueId(4514);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4515);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4516);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMS1_Int2_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageBuffer1_Int1_UInt1 =
         TSymbolUniqueId(4517);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4518);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4519);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMSArray1_Int3_Int1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DArray1_Int3_UInt1 =
         TSymbolUniqueId(4520);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4521);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4522);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2D1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCubeArray1_Int3_UInt1 =
         TSymbolUniqueId(4523);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1D1_Int1_UInt1 =
         TSymbolUniqueId(4524);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4525);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage3D1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1D1_Int1_UInt1 =
         TSymbolUniqueId(4526);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4527);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4528);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCube1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1DArray1_Int2_UInt1 =
         TSymbolUniqueId(4529);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4530);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4531);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageBuffer1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DRect1_Int2_UInt1 =
         TSymbolUniqueId(4532);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4533);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4534);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMS1_Int2_Int1_UInt1 =
         TSymbolUniqueId(4535);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4536);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4537);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCubeArray1_Int3_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMSArray1_Int3_Int1_UInt1 =
         TSymbolUniqueId(4538);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2D1_Int2_Int1 =
         TSymbolUniqueId(4539);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2D1_Int2_Int1 =
         TSymbolUniqueId(4540);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1D1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2D1_Int2_Int1 =
         TSymbolUniqueId(4541);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image3D1_Int3_Int1 =
         TSymbolUniqueId(4542);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage3D1_Int3_Int1 =
         TSymbolUniqueId(4543);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1DArray1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage3D1_Int3_Int1 =
         TSymbolUniqueId(4544);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCube1_Int3_Int1 =
         TSymbolUniqueId(4545);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCube1_Int3_Int1 =
         TSymbolUniqueId(4546);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DRect1_Int2_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCube1_Int3_Int1 =
         TSymbolUniqueId(4547);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4548);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4549);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMS1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageBuffer1_Int1_Int1 =
         TSymbolUniqueId(4550);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DArray1_Int3_Int1 =
         TSymbolUniqueId(4551);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4552);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMSArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DArray1_Int3_Int1 =
         TSymbolUniqueId(4553);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2D1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4554);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2D1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4555);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2D1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCubeArray1_Int3_Int1 =
         TSymbolUniqueId(4556);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image3D1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1D1_Int1_Int1 =
         TSymbolUniqueId(4557);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage3D1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1D1_Int1_Int1 =
         TSymbolUniqueId(4558);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage3D1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1D1_Int1_Int1 =
         TSymbolUniqueId(4559);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCube1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1DArray1_Int2_Int1 =
         TSymbolUniqueId(4560);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCube1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4561);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCube1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1DArray1_Int2_Int1 =
         TSymbolUniqueId(4562);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageBuffer1_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DRect1_Int2_Int1 =
         TSymbolUniqueId(4563);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageBuffer1_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4564);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageBuffer1_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DRect1_Int2_Int1 =
         TSymbolUniqueId(4565);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DArray1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4566);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DArray1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4567);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DArray1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMS1_Int2_Int1_Int1 =
         TSymbolUniqueId(4568);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCubeArray1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4569);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCubeArray1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4570);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCubeArray1_Int3_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMSArray1_Int3_Int1_Int1 =
         TSymbolUniqueId(4571);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1D1_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2D1_Int2_Float1 =
         TSymbolUniqueId(4572);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1D1_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2D1_Int2_Float1 =
         TSymbolUniqueId(4573);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1D1_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2D1_Int2_Float1 =
         TSymbolUniqueId(4574);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1DArray1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image3D1_Int3_Float1 =
         TSymbolUniqueId(4575);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1DArray1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage3D1_Int3_Float1 =
         TSymbolUniqueId(4576);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1DArray1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage3D1_Int3_Float1 =
         TSymbolUniqueId(4577);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DRect1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCube1_Int3_Float1 =
         TSymbolUniqueId(4578);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DRect1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCube1_Int3_Float1 =
         TSymbolUniqueId(4579);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DRect1_Int2_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCube1_Int3_Float1 =
         TSymbolUniqueId(4580);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMS1_Int2_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageBuffer1_Int1_Float1 =
         TSymbolUniqueId(4581);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMS1_Int2_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageBuffer1_Int1_Float1 =
         TSymbolUniqueId(4582);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMS1_Int2_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageBuffer1_Int1_Float1 =
         TSymbolUniqueId(4583);
-    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMSArray1_Int3_Int1_Float1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DArray1_Int3_Float1 =
         TSymbolUniqueId(4584);
-    static constexpr const TSymbolUniqueId
-        imageAtomicExchangeExt_IImage2DMSArray1_Int3_Int1_Float1 = TSymbolUniqueId(4585);
-    static constexpr const TSymbolUniqueId
-        imageAtomicExchangeExt_UImage2DMSArray1_Int3_Int1_Float1 = TSymbolUniqueId(4586);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2D1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DArray1_Int3_Float1 =
+        TSymbolUniqueId(4585);
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DArray1_Int3_Float1 =
+        TSymbolUniqueId(4586);
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_ImageCubeArray1_Int3_Float1 =
         TSymbolUniqueId(4587);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2D1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImageCubeArray1_Int3_Float1 =
         TSymbolUniqueId(4588);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2D1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImageCubeArray1_Int3_Float1 =
         TSymbolUniqueId(4589);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image3D1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1D1_Int1_Float1 =
         TSymbolUniqueId(4590);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage3D1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1D1_Int1_Float1 =
         TSymbolUniqueId(4591);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage3D1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1D1_Int1_Float1 =
         TSymbolUniqueId(4592);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCube1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image1DArray1_Int2_Float1 =
         TSymbolUniqueId(4593);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageCube1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage1DArray1_Int2_Float1 =
         TSymbolUniqueId(4594);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageCube1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage1DArray1_Int2_Float1 =
         TSymbolUniqueId(4595);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageBuffer1_Int1_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DRect1_Int2_Float1 =
         TSymbolUniqueId(4596);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageBuffer1_Int1_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DRect1_Int2_Float1 =
         TSymbolUniqueId(4597);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageBuffer1_Int1_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DRect1_Int2_Float1 =
         TSymbolUniqueId(4598);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DArray1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMS1_Int2_Int1_Float1 =
         TSymbolUniqueId(4599);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DArray1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_IImage2DMS1_Int2_Int1_Float1 =
         TSymbolUniqueId(4600);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DArray1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_UImage2DMS1_Int2_Int1_Float1 =
         TSymbolUniqueId(4601);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCubeArray1_Int3_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicExchangeExt_Image2DMSArray1_Int3_Int1_Float1 =
         TSymbolUniqueId(4602);
     static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_IImageCubeArray1_Int3_UInt1_UInt1 = TSymbolUniqueId(4603);
+        imageAtomicExchangeExt_IImage2DMSArray1_Int3_Int1_Float1 = TSymbolUniqueId(4603);
     static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_UImageCubeArray1_Int3_UInt1_UInt1 = TSymbolUniqueId(4604);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1D1_Int1_UInt1_UInt1 =
+        imageAtomicExchangeExt_UImage2DMSArray1_Int3_Int1_Float1 = TSymbolUniqueId(4604);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2D1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4605);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1D1_Int1_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2D1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4606);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1D1_Int1_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2D1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4607);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1DArray1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image3D1_Int3_UInt1_UInt1 =
         TSymbolUniqueId(4608);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1DArray1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage3D1_Int3_UInt1_UInt1 =
         TSymbolUniqueId(4609);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1DArray1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage3D1_Int3_UInt1_UInt1 =
         TSymbolUniqueId(4610);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DRect1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCube1_Int3_UInt1_UInt1 =
         TSymbolUniqueId(4611);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DRect1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageCube1_Int3_UInt1_UInt1 =
         TSymbolUniqueId(4612);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DRect1_Int2_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageCube1_Int3_UInt1_UInt1 =
         TSymbolUniqueId(4613);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DMS1_Int2_Int1_UInt1_UInt1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageBuffer1_Int1_UInt1_UInt1 =
         TSymbolUniqueId(4614);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_IImage2DMS1_Int2_Int1_UInt1_UInt1 = TSymbolUniqueId(4615);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_UImage2DMS1_Int2_Int1_UInt1_UInt1 = TSymbolUniqueId(4616);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_Image2DMSArray1_Int3_Int1_UInt1_UInt1 = TSymbolUniqueId(4617);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_IImage2DMSArray1_Int3_Int1_UInt1_UInt1 = TSymbolUniqueId(4618);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_UImage2DMSArray1_Int3_Int1_UInt1_UInt1 = TSymbolUniqueId(4619);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2D1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageBuffer1_Int1_UInt1_UInt1 =
+        TSymbolUniqueId(4615);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageBuffer1_Int1_UInt1_UInt1 =
+        TSymbolUniqueId(4616);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DArray1_Int3_UInt1_UInt1 =
+        TSymbolUniqueId(4617);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DArray1_Int3_UInt1_UInt1 =
+        TSymbolUniqueId(4618);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DArray1_Int3_UInt1_UInt1 =
+        TSymbolUniqueId(4619);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCubeArray1_Int3_UInt1_UInt1 =
         TSymbolUniqueId(4620);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2D1_Int2_Int1_Int1 =
-        TSymbolUniqueId(4621);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2D1_Int2_Int1_Int1 =
-        TSymbolUniqueId(4622);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image3D1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_IImageCubeArray1_Int3_UInt1_UInt1 = TSymbolUniqueId(4621);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_UImageCubeArray1_Int3_UInt1_UInt1 = TSymbolUniqueId(4622);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1D1_Int1_UInt1_UInt1 =
         TSymbolUniqueId(4623);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage3D1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1D1_Int1_UInt1_UInt1 =
         TSymbolUniqueId(4624);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage3D1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1D1_Int1_UInt1_UInt1 =
         TSymbolUniqueId(4625);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCube1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1DArray1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4626);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageCube1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1DArray1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4627);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageCube1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1DArray1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4628);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageBuffer1_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DRect1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4629);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageBuffer1_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DRect1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4630);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageBuffer1_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DRect1_Int2_UInt1_UInt1 =
         TSymbolUniqueId(4631);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DArray1_Int3_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DMS1_Int2_Int1_UInt1_UInt1 =
         TSymbolUniqueId(4632);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DArray1_Int3_Int1_Int1 =
-        TSymbolUniqueId(4633);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DArray1_Int3_Int1_Int1 =
-        TSymbolUniqueId(4634);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCubeArray1_Int3_Int1_Int1 =
-        TSymbolUniqueId(4635);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageCubeArray1_Int3_Int1_Int1 =
-        TSymbolUniqueId(4636);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageCubeArray1_Int3_Int1_Int1 =
-        TSymbolUniqueId(4637);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1D1_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_IImage2DMS1_Int2_Int1_UInt1_UInt1 = TSymbolUniqueId(4633);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_UImage2DMS1_Int2_Int1_UInt1_UInt1 = TSymbolUniqueId(4634);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_Image2DMSArray1_Int3_Int1_UInt1_UInt1 = TSymbolUniqueId(4635);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_IImage2DMSArray1_Int3_Int1_UInt1_UInt1 = TSymbolUniqueId(4636);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_UImage2DMSArray1_Int3_Int1_UInt1_UInt1 = TSymbolUniqueId(4637);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2D1_Int2_Int1_Int1 =
         TSymbolUniqueId(4638);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1D1_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2D1_Int2_Int1_Int1 =
         TSymbolUniqueId(4639);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1D1_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2D1_Int2_Int1_Int1 =
         TSymbolUniqueId(4640);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1DArray1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image3D1_Int3_Int1_Int1 =
         TSymbolUniqueId(4641);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1DArray1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage3D1_Int3_Int1_Int1 =
         TSymbolUniqueId(4642);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1DArray1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage3D1_Int3_Int1_Int1 =
         TSymbolUniqueId(4643);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DRect1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCube1_Int3_Int1_Int1 =
         TSymbolUniqueId(4644);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DRect1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageCube1_Int3_Int1_Int1 =
         TSymbolUniqueId(4645);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DRect1_Int2_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageCube1_Int3_Int1_Int1 =
         TSymbolUniqueId(4646);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DMS1_Int2_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageBuffer1_Int1_Int1_Int1 =
         TSymbolUniqueId(4647);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DMS1_Int2_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageBuffer1_Int1_Int1_Int1 =
         TSymbolUniqueId(4648);
-    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DMS1_Int2_Int1_Int1_Int1 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageBuffer1_Int1_Int1_Int1 =
         TSymbolUniqueId(4649);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_Image2DMSArray1_Int3_Int1_Int1_Int1 = TSymbolUniqueId(4650);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_IImage2DMSArray1_Int3_Int1_Int1_Int1 = TSymbolUniqueId(4651);
-    static constexpr const TSymbolUniqueId
-        imageAtomicCompSwapExt_UImage2DMSArray1_Int3_Int1_Int1_Int1        = TSymbolUniqueId(4652);
-    static constexpr const TSymbolUniqueId imageStore_Image2D1_Int2_Float4 = TSymbolUniqueId(4653);
-    static constexpr const TSymbolUniqueId imageStore_IImage2D1_Int2_Int4  = TSymbolUniqueId(4654);
-    static constexpr const TSymbolUniqueId imageStore_UImage2D1_Int2_UInt4 = TSymbolUniqueId(4655);
-    static constexpr const TSymbolUniqueId imageStore_Image3D1_Int3_Float4 = TSymbolUniqueId(4656);
-    static constexpr const TSymbolUniqueId imageStore_IImage3D1_Int3_Int4  = TSymbolUniqueId(4657);
-    static constexpr const TSymbolUniqueId imageStore_UImage3D1_Int3_UInt4 = TSymbolUniqueId(4658);
-    static constexpr const TSymbolUniqueId imageStore_Image2DArray1_Int3_Float4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DArray1_Int3_Int1_Int1 =
+        TSymbolUniqueId(4650);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DArray1_Int3_Int1_Int1 =
+        TSymbolUniqueId(4651);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DArray1_Int3_Int1_Int1 =
+        TSymbolUniqueId(4652);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_ImageCubeArray1_Int3_Int1_Int1 =
+        TSymbolUniqueId(4653);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImageCubeArray1_Int3_Int1_Int1 =
+        TSymbolUniqueId(4654);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImageCubeArray1_Int3_Int1_Int1 =
+        TSymbolUniqueId(4655);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1D1_Int1_Int1_Int1 =
+        TSymbolUniqueId(4656);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1D1_Int1_Int1_Int1 =
+        TSymbolUniqueId(4657);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1D1_Int1_Int1_Int1 =
+        TSymbolUniqueId(4658);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image1DArray1_Int2_Int1_Int1 =
         TSymbolUniqueId(4659);
-    static constexpr const TSymbolUniqueId imageStore_IImage2DArray1_Int3_Int4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage1DArray1_Int2_Int1_Int1 =
         TSymbolUniqueId(4660);
-    static constexpr const TSymbolUniqueId imageStore_UImage2DArray1_Int3_UInt4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage1DArray1_Int2_Int1_Int1 =
         TSymbolUniqueId(4661);
-    static constexpr const TSymbolUniqueId imageStore_ImageCube1_Int3_Float4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DRect1_Int2_Int1_Int1 =
         TSymbolUniqueId(4662);
-    static constexpr const TSymbolUniqueId imageStore_IImageCube1_Int3_Int4 = TSymbolUniqueId(4663);
-    static constexpr const TSymbolUniqueId imageStore_UImageCube1_Int3_UInt4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DRect1_Int2_Int1_Int1 =
+        TSymbolUniqueId(4663);
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DRect1_Int2_Int1_Int1 =
         TSymbolUniqueId(4664);
-    static constexpr const TSymbolUniqueId imageStore_ImageCubeArray1_Int3_Float4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_Image2DMS1_Int2_Int1_Int1_Int1 =
         TSymbolUniqueId(4665);
-    static constexpr const TSymbolUniqueId imageStore_IImageCubeArray1_Int3_Int4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_IImage2DMS1_Int2_Int1_Int1_Int1 =
         TSymbolUniqueId(4666);
-    static constexpr const TSymbolUniqueId imageStore_UImageCubeArray1_Int3_UInt4 =
+    static constexpr const TSymbolUniqueId imageAtomicCompSwapExt_UImage2DMS1_Int2_Int1_Int1_Int1 =
         TSymbolUniqueId(4667);
-    static constexpr const TSymbolUniqueId imageStore_ImageBuffer1_Int1_Float4 =
-        TSymbolUniqueId(4668);
-    static constexpr const TSymbolUniqueId imageStore_IImageBuffer1_Int1_Int4 =
-        TSymbolUniqueId(4669);
-    static constexpr const TSymbolUniqueId imageStore_UImageBuffer1_Int1_UInt4 =
-        TSymbolUniqueId(4670);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_Image2DMSArray1_Int3_Int1_Int1_Int1 = TSymbolUniqueId(4668);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_IImage2DMSArray1_Int3_Int1_Int1_Int1 = TSymbolUniqueId(4669);
+    static constexpr const TSymbolUniqueId
+        imageAtomicCompSwapExt_UImage2DMSArray1_Int3_Int1_Int1_Int1   = TSymbolUniqueId(4670);
     static constexpr const TSymbolUniqueId memoryBarrier              = TSymbolUniqueId(4671);
     static constexpr const TSymbolUniqueId memoryBarrierAtomicCounter = TSymbolUniqueId(4672);
     static constexpr const TSymbolUniqueId memoryBarrierBuffer        = TSymbolUniqueId(4673);

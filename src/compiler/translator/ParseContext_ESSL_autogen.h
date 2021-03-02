@@ -28,35 +28,35 @@ bool isTextureOffsetBias(const TFunction *func)
     int id = func->uniqueId().get();
     return id >= 3865 && id <= 3884;
 }
-bool isTextureGatherOffsetsComp(const TFunction *func)
+bool isTextureGatherOffsetNoComp(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3922 && id <= 3934;
-}
-bool isTextureGatherOffsetsNoComp(const TFunction *func)
-{
-    int id = func->uniqueId().get();
-    return id >= 3935 && id <= 3950;
-}
-bool isTextureGatherOffsets(const TFunction *func)
-{
-    int id = func->uniqueId().get();
-    return id >= 3922 && id <= 3950;
+    return id >= 3922 && id <= 3929;
 }
 bool isTextureGatherOffsetComp(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3951 && id <= 3956;
-}
-bool isTextureGatherOffsetNoComp(const TFunction *func)
-{
-    int id = func->uniqueId().get();
-    return id >= 3957 && id <= 3964;
+    return id >= 3930 && id <= 3935;
 }
 bool isTextureGatherOffset(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3951 && id <= 3964;
+    return id >= 3922 && id <= 3935;
+}
+bool isTextureGatherOffsetsNoComp(const TFunction *func)
+{
+    int id = func->uniqueId().get();
+    return id >= 3936 && id <= 3952;
+}
+bool isTextureGatherOffsetsComp(const TFunction *func)
+{
+    int id = func->uniqueId().get();
+    return id >= 3953 && id <= 3964;
+}
+bool isTextureGatherOffsets(const TFunction *func)
+{
+    int id = func->uniqueId().get();
+    return id >= 3936 && id <= 3964;
 }
 bool isTextureGather(const TFunction *func)
 {
@@ -73,20 +73,20 @@ bool isAtomicMemory(const TFunction *func)
     int id = func->uniqueId().get();
     return id >= 4005 && id <= 4022;
 }
-bool isImageLoad(const TFunction *func)
+bool isImageStore(const TFunction *func)
 {
     int id = func->uniqueId().get();
     return id >= 4059 && id <= 4076;
 }
+bool isImageLoad(const TFunction *func)
+{
+    int id = func->uniqueId().get();
+    return id >= 4077 && id <= 4094;
+}
 bool isImageAtomic(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 4077 && id <= 4652;
-}
-bool isImageStore(const TFunction *func)
-{
-    int id = func->uniqueId().get();
-    return id >= 4653 && id <= 4670;
+    return id >= 4095 && id <= 4670;
 }
 bool isImage(const TFunction *func)
 {

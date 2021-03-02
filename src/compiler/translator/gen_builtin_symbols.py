@@ -1,4 +1,4 @@
-#!/usr/bin/env vpython
+#!/usr/bin/env vpython3
 #
 # [VPYTHON:BEGIN]
 # wheel: <
@@ -880,7 +880,7 @@ class UnmangledGroupedList:
 class TType:
 
     def __init__(self, glsl_header_type):
-        if isinstance(glsl_header_type, basestring):
+        if isinstance(glsl_header_type, str):
             self.data = self.parse_type(glsl_header_type)
         else:
             self.data = glsl_header_type
@@ -1189,16 +1189,16 @@ def get_function_names(group, mangled_names, unmangled_names):
                 parameters = get_parameters(function_props)
                 mangled_names.append(get_function_mangled_name(function_name, parameters))
     if 'subgroups' in group:
-        for subgroup_name, subgroup in group['subgroups'].iteritems():
+        for subgroup_name, subgroup in group['subgroups'].items():
             get_function_names(subgroup, mangled_names, unmangled_names)
 
 
 def get_variable_names(group, mangled_names):
     if 'variables' in group:
-        for variable_name, props in group['variables'].iteritems():
+        for variable_name, props in group['variables'].items():
             mangled_names.append(variable_name)
     if 'subgroups' in group:
-        for subgroup_name, subgroup in group['subgroups'].iteritems():
+        for subgroup_name, subgroup in group['subgroups'].items():
             get_variable_names(subgroup, mangled_names)
 
 
@@ -1578,7 +1578,7 @@ def process_function_group(
                                   unmangled_script_generated_hash_tests, mangled_builtins)
 
     if 'subgroups' in group:
-        for subgroup_name, subgroup in group['subgroups'].iteritems():
+        for subgroup_name, subgroup in group['subgroups'].items():
             process_function_group(
                 group_name + subgroup_name, subgroup, parameter_declarations, name_declarations,
                 unmangled_function_if_statements, defined_function_variants,
@@ -1602,7 +1602,7 @@ def prune_parameters_arrays(parameter_declarations, function_declarations):
     parameter_variable_name_replacements = {}
     used_param_variable_names = set()
     for param_variable_name, param_declaration in sorted(
-            parameter_declarations.iteritems(), key=lambda item: -len(item[0])):
+            parameter_declarations.items(), key=lambda item: -len(item[0])):
         replaced = False
         for used in used_param_variable_names:
             if used.startswith(param_variable_name):
@@ -1612,14 +1612,13 @@ def prune_parameters_arrays(parameter_declarations, function_declarations):
         if not replaced:
             used_param_variable_names.add(param_variable_name)
 
-    for i in xrange(len(function_declarations)):
-        for replaced, replacement in parameter_variable_name_replacements.iteritems():
+    for i in range(len(function_declarations)):
+        for replaced, replacement in parameter_variable_name_replacements.items():
             function_declarations[i] = function_declarations[i].replace(
                 'BuiltInParameters::' + replaced + ',', 'BuiltInParameters::' + replacement + ',')
 
     return [
-        value for key, value in parameter_declarations.iteritems()
-        if key in used_param_variable_names
+        value for key, value in parameter_declarations.items() if key in used_param_variable_names
     ]
 
 
@@ -1678,7 +1677,7 @@ def process_single_variable(shader_type, variable_name, props, builtin_id_declar
         template_args['fields'] = 'fields_{name_with_suffix}'.format(**template_args)
         init_member_variables.append(
             '    TFieldList *{fields} = new TFieldList();'.format(**template_args))
-        for field_name, field_type in props['fields'].iteritems():
+        for field_name, field_type in props['fields'].items():
             template_args['field_name'] = field_name
             template_args['field_type'] = TType(field_type).get_dynamic_type_string()
             template_name_declaration = 'constexpr const ImmutableString {field_name}("{field_name}");'
@@ -1780,7 +1779,7 @@ def process_single_variable_group(shader_type, group, builtin_id_declarations,
     global id_counter
     if 'variables' not in group:
         return
-    for variable_name, props in group['variables'].iteritems():
+    for variable_name, props in group['variables'].items():
         process_single_variable(shader_type, variable_name, props, builtin_id_declarations,
                                 builtin_id_definitions, name_declarations, init_member_variables,
                                 get_variable_declarations, mangled_builtins,
@@ -1824,7 +1823,7 @@ def process_variable_group(shader_type, group_name, group, builtin_id_declaratio
                                   get_variable_definitions, script_generated_hash_tests)
 
     if 'subgroups' in group:
-        for subgroup_name, subgroup in group['subgroups'].iteritems():
+        for subgroup_name, subgroup in group['subgroups'].items():
             process_variable_group(
                 shader_type, subgroup_name, subgroup, builtin_id_declarations,
                 builtin_id_definitions, name_declarations, init_member_variables,
@@ -1899,9 +1898,9 @@ def generate_files(essl_only, args, functions_txt_filename, variables_json_filen
     # This script uses a perfect hash function to avoid dealing with collisions
     mangled_names = []
     unmangled_names = []
-    for group_name, group in parsed_functions.iteritems():
+    for group_name, group in parsed_functions.items():
         get_function_names(group, mangled_names, unmangled_names)
-    for group_name, group in parsed_variables.iteritems():
+    for group_name, group in parsed_variables.items():
         get_variable_names(group, mangled_names)
 
     # Hashing mangled names
@@ -1928,7 +1927,7 @@ def generate_files(essl_only, args, functions_txt_filename, variables_json_filen
     # Array for querying unmangled builtins
     unmangled_function_if_statements = UnmangledGroupedList(unmangled_hashfn, num_unmangled_names)
 
-    for group_name, group in parsed_functions.iteritems():
+    for group_name, group in parsed_functions.items():
         process_function_group(
             group_name, group, parameter_declarations, name_declarations,
             unmangled_function_if_statements, defined_function_variants, builtin_id_declarations,
@@ -1938,7 +1937,7 @@ def generate_files(essl_only, args, functions_txt_filename, variables_json_filen
 
     parameter_declarations = prune_parameters_arrays(parameter_declarations, function_declarations)
 
-    for group_name, group in parsed_variables.iteritems():
+    for group_name, group in parsed_variables.items():
         process_variable_group('NONE', group_name, group, builtin_id_declarations,
                                builtin_id_definitions, name_declarations, init_member_variables,
                                get_variable_declarations, mangled_builtins,
@@ -1997,9 +1996,9 @@ def generate_files(essl_only, args, functions_txt_filename, variables_json_filen
         'num_mangled_names':
             num_mangled_names,
         'script_generated_hash_tests':
-            '\n'.join(script_generated_hash_tests.iterkeys()),
+            '\n'.join(script_generated_hash_tests.keys()),
         'unmangled_script_generated_hash_tests':
-            '\n'.join(unmangled_script_generated_hash_tests.iterkeys()),
+            '\n'.join(unmangled_script_generated_hash_tests.keys()),
         'mangled_S1':
             str(mangled_S1).replace('[', ' ').replace(']', ' '),
         'mangled_S2':
@@ -2090,9 +2089,9 @@ def main():
         ]
 
         if args.auto_script_command == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif args.auto_script_command == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
