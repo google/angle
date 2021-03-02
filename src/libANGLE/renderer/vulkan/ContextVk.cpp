@@ -1832,6 +1832,12 @@ void ContextVk::updateOverlayOnPresent()
         descriptorSetAllocationCount->next();
         mPerfCounters.descriptorSetAllocations = descriptorSetAllocations;
     }
+
+    {
+        gl::RunningGraphWidget *dynamicBufferAllocations =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanDynamicBufferAllocations);
+        dynamicBufferAllocations->next();
+    }
 }
 
 void ContextVk::addOverlayUsedBuffersCount(vk::CommandBufferHelper *commandBuffer)

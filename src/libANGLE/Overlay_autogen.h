@@ -28,6 +28,8 @@ enum class WidgetId
     VulkanWriteDescriptorSetCount,
     // Descriptor Set Allocations.
     VulkanDescriptorSetAllocations,
+    // Buffer Allocations Made By vk::DynamicBuffer.
+    VulkanDynamicBufferAllocations,
 
     InvalidEnum,
     EnumCount = InvalidEnum,
@@ -42,6 +44,7 @@ enum class WidgetId
     PROC(VulkanRenderPassBufferCount)           \
     PROC(VulkanSecondaryCommandBufferPoolWaste) \
     PROC(VulkanWriteDescriptorSetCount)         \
-    PROC(VulkanDescriptorSetAllocations)
+    PROC(VulkanDescriptorSetAllocations)        \
+    PROC(VulkanDynamicBufferAllocations)
 
 }  // namespace gl

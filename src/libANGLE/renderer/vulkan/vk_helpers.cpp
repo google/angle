@@ -1736,6 +1736,16 @@ DynamicBuffer::~DynamicBuffer()
 
 angle::Result DynamicBuffer::allocateNewBuffer(ContextVk *contextVk)
 {
+    // Gather statistics
+    const gl::OverlayType *overlay = contextVk->getOverlay();
+    if (overlay->isEnabled())
+    {
+        gl::RunningGraphWidget *dynamicBufferAllocations =
+            overlay->getRunningGraphWidget(gl::WidgetId::VulkanDynamicBufferAllocations);
+        dynamicBufferAllocations->add(1);
+    }
+
+    // Allocate the buffer
     ASSERT(!mBuffer);
     mBuffer = std::make_unique<BufferHelper>();
 

@@ -223,7 +223,10 @@ void main()
         if (blendedWidgets.a > 0)
         {
             const vec4 color = imageLoad(blendOutput, ivec2(imageCoords));
-            blendedColor += color.rgb * color.a * blendedWidgets.a;
+            // Note: assume color.a is 1.  We don't have a use-case for correct blending of
+            // semi-transparent applications, but we do encounter applications that contain garbage
+            // in the alpha channel.
+            blendedColor += color.rgb * blendedWidgets.a;
         }
         imageStore(blendOutput, ivec2(imageCoords), vec4(blendedColor, 1));
     }
