@@ -104,6 +104,30 @@
       },
       "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72b0d581_1a13b1d7",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-02T19:56:06Z",
+      "side": 1,
+      "message": "I guess the main question is - is it safe to switch ANGLE off the other recursedeps of buildtools and pull the version in Chromium\u0027s DEPS?\nIs Chromium\u0027s DEPS the source of truth for latest version of libc++, clang_format, etc.?",
+      "parentUuid": "f6382394_c08facc4",
+      "range": {
+        "startLine": 494,
+        "startChar": 2,
+        "endLine": 494,
+        "endChar": 15
+      },
+      "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
