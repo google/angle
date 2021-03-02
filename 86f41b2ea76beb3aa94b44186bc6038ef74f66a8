@@ -128,6 +128,30 @@
       },
       "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d261274_41e77a95",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 494,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2021-03-02T20:00:15Z",
+      "side": 1,
+      "message": "Ah, I see. Chromium\u0027s DEPS and buildtools/DEPS are in sync (verified by a presubmit) so at the moment they\u0027re equally source of truth. So yes, if you could switch everything to chromium\u0027s DEPS, that\u0027d be fantastic.",
+      "parentUuid": "72b0d581_1a13b1d7",
+      "range": {
+        "startLine": 494,
+        "startChar": 2,
+        "endLine": 494,
+        "endChar": 15
+      },
+      "revId": "86f41b2ea76beb3aa94b44186bc6038ef74f66a8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
