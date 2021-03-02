@@ -33,6 +33,29 @@
       "message": "Maybe:\n  [This Makefile]\n?",
       "revId": "a4f5e3a73ad06f1eb343f6e7d8c739c3aaf9f4cd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26837ef2_39c32232",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-02T01:10:45Z",
+      "side": 1,
+      "message": "Also, if you could include just one example of how to build and then invoke your Makefile\u0027s targets, that\u0027d be great. Thanks.",
+      "range": {
+        "startLine": 199,
+        "startChar": 8,
+        "endLine": 199,
+        "endChar": 30
+      },
+      "revId": "a4f5e3a73ad06f1eb343f6e7d8c739c3aaf9f4cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
