@@ -69,6 +69,8 @@ layout(set = 0, binding = 4) uniform texture2DArray font;
 layout (push_constant) uniform PushConstants
 {
     uvec2 outputSize;
+    // Prerotation support
+    bool rotateXY;
 } params;
 
 bool intersects(const uvec2 imageCoords, const uvec4 widgetCoords)
@@ -168,7 +170,7 @@ vec4 blend(const vec4 blendedSoFar, const vec4 color)
 
 void main()
 {
-    const uvec2 imageCoords = gl_GlobalInvocationID.xy;
+    uvec2 imageCoords = gl_GlobalInvocationID.xy;
     if (any(greaterThanEqual(imageCoords, params.outputSize)))
     {
         return;
@@ -257,6 +259,14 @@ void main()
 
     if (blendedWidgets.a < 1)
     {
+        // Account for pre-rotation
+        if (params.rotateXY)
+        {
+            // Rotate by 90 degrees
+            imageCoords.xy = imageCoords.yx;
+            imageCoords.x = params.outputSize.y - 1 - imageCoords.x;
+        }
+
         vec3 blendedColor = blendedWidgets.rgb;
         if (blendedWidgets.a > 0)
         {
@@ -266,6 +276,7 @@ void main()
             // in the alpha channel.
             blendedColor += color.rgb * blendedWidgets.a;
         }
+
         imageStore(blendOutput, ivec2(imageCoords), vec4(blendedColor, 1));
     }
 }

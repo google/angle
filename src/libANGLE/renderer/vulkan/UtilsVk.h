@@ -162,6 +162,7 @@ class UtilsVk : angle::NonCopyable
     struct OverlayDrawParameters
     {
         uint32_t subgroupSize[2];
+        bool rotateXY;
     };
 
     struct GenerateMipmapParameters
@@ -411,6 +412,7 @@ class UtilsVk : angle::NonCopyable
     {
         // Structure matching PushConstants in OverlayDraw.comp
         uint32_t outputSize[2] = {};
+        uint32_t rotateXY;
     };
 
     struct GenerateMipmapShaderParams

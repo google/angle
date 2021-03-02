@@ -2842,6 +2842,7 @@ angle::Result UtilsVk::cullOverlayWidgets(ContextVk *contextVk,
     ANGLE_TRY(setupProgram(contextVk, Function::OverlayCull, shader, nullptr,
                            &mOverlayCullPrograms[flags], nullptr, descriptorSet, nullptr, 0,
                            commandBuffer));
+
     commandBuffer->dispatch(dest->getExtents().width, dest->getExtents().height, 1);
     descriptorPoolBinding.reset();
 
@@ -2864,6 +2865,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
     OverlayDrawShaderParams shaderParams;
     shaderParams.outputSize[0] = dest->getExtents().width;
     shaderParams.outputSize[1] = dest->getExtents().height;
+    shaderParams.rotateXY      = params.rotateXY;
 
     ASSERT(params.subgroupSize[0] == 8 &&
            (params.subgroupSize[1] == 8 || params.subgroupSize[1] == 4));

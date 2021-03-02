@@ -30,7 +30,8 @@ class OverlayVk : public OverlayImpl
 
     angle::Result onPresent(ContextVk *contextVk,
                             vk::ImageHelper *imageToPresent,
-                            const vk::ImageView *imageToPresentView);
+                            const vk::ImageView *imageToPresentView,
+                            bool is90DegreeRotation);
 
     uint32_t getEnabledWidgetCount() const { return mState.getEnabledWidgetCount(); }
 

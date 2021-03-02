@@ -235,7 +235,7 @@ class WindowSurfaceVk : public SurfaceVk
 
     vk::Semaphore getAcquireImageSemaphore();
 
-    VkSurfaceTransformFlagBitsKHR getPreTransform()
+    VkSurfaceTransformFlagBitsKHR getPreTransform() const
     {
         if (mEmulatedPreTransform != VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR)
         {

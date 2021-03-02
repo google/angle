@@ -1897,7 +1897,8 @@ angle::Result WindowSurfaceVk::drawOverlay(ContextVk *contextVk, SwapchainImage 
     const vk::ImageView *imageView = nullptr;
     ANGLE_TRY(image->imageViews.getLevelLayerDrawImageView(contextVk, image->image,
                                                            vk::LevelIndex(0), 0, &imageView));
-    ANGLE_TRY(overlayVk->onPresent(contextVk, &image->image, imageView));
+    ANGLE_TRY(overlayVk->onPresent(contextVk, &image->image, imageView,
+                                   Is90DegreeRotation(getPreTransform())));
 
     return angle::Result::Continue;
 }
