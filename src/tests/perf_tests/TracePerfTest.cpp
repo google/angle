@@ -385,6 +385,15 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
+    if (param.testID == RestrictedTraceID::car_parking_multiplayer)
+    {
+        // TODO: https://anglebug.com/5613 Nvidia native driver spews undefined behavior warnings
+        if (IsNVIDIA() && param.getRenderer() != EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 
