@@ -84,6 +84,20 @@ bool IsAdreno42xOr3xx(const FunctionsGL *functions)
     return adrenoNumber < 430;
 }
 
+void ClearErrors(const FunctionsGL *functions,
+                 const char *file,
+                 const char *function,
+                 unsigned int line)
+{
+    GLenum error = functions->getError();
+    while (error != GL_NO_ERROR)
+    {
+        ERR() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
+              << function << ":" << line << ". ";
+        error = functions->getError();
+    }
+}
+
 }  // namespace
 
 SwapControlData::SwapControlData()
@@ -365,9 +379,17 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
             queryInternalFormat = GL_RGBA8;
         }
 
+        ClearErrors(functions, __FILE__, __FUNCTION__, __LINE__);
         GLint numSamples = 0;
         functions->getInternalformativ(GL_RENDERBUFFER, queryInternalFormat, GL_NUM_SAMPLE_COUNTS,
                                        1, &numSamples);
+        GLenum error = functions->getError();
+        if (error != GL_NO_ERROR)
+        {
+            ERR() << "glGetInternalformativ generated error " << gl::FmtHex(error) << " for format "
+                  << gl::FmtHex(queryInternalFormat) << ". Skipping multisample checks.";
+            numSamples = 0;
+        }
 
         if (numSamples > 0)
         {
@@ -2219,14 +2241,7 @@ void ClearErrors(const gl::Context *context,
                  unsigned int line)
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
-
-    GLenum error = functions->getError();
-    while (error != GL_NO_ERROR)
-    {
-        ERR() << "Preexisting GL error " << gl::FmtHex(error) << " as of " << file << ", "
-              << function << ":" << line << ". ";
-        error = functions->getError();
-    }
+    ClearErrors(functions, file, function, line);
 }
 
 angle::Result CheckError(const gl::Context *context,
