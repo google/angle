@@ -16,6 +16,23 @@
       "message": "PTAL - ListNode",
       "revId": "ae3e63e589aaa936961c42887d53e08c662220de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c9f839b_8f77a7e1",
+        "filename": "src/common/ListNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-03T23:40:42Z",
+      "side": 1,
+      "message": "Why doesn\u0027t the copy constructor actually copy the values?",
+      "revId": "ae3e63e589aaa936961c42887d53e08c662220de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
