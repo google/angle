@@ -33,6 +33,24 @@
       "message": "Can you reference the upstream CL in the description? Has it landed yet?",
       "revId": "6ed99a94624f9288e4ee3bfe565622d1e5e408fa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9238a98c_8efde076",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-03T16:15:38Z",
+      "side": 1,
+      "message": "It has landed in Chromium, but hasn\u0027t been rolled here yet.",
+      "parentUuid": "42d3d040_9bf0c0ec",
+      "revId": "6ed99a94624f9288e4ee3bfe565622d1e5e408fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
