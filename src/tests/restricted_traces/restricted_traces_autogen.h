@@ -98,6 +98,7 @@ enum class RestrictedTraceID
     real_gangster_crime,
     rise_of_kingdoms,
     romancing_saga,
+    rope_hero_vice_town,
     saint_seiya_awakening,
     shadow_fight_2,
     sniper_3d,
