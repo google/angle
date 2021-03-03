@@ -146,6 +146,24 @@
       "parentUuid": "3d26007c_ab39e399",
       "revId": "66411fa3da4870dbf851946272ae02826fd65188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3fc4568_4ac826ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T17:52:14Z",
+      "side": 1,
+      "message": "Stephen, we have a number of tests in gl_tests/ReadPixelsTest.cpp that use pack buffers. There are others too if you search for GL_PIXEL_PACK_BUFFER in src/tests/gl_tests.\n\nMy suggestion is to add a breakpoint (or ASSERT(false) in the path you are modifying), run the end2end tests and see which test hits it. Then duplicate that test and change the offset to be non zero.",
+      "parentUuid": "8a169220_5292b372",
+      "revId": "66411fa3da4870dbf851946272ae02826fd65188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
