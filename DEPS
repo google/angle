@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '2a5fa91089627ed34d1d1de62a3e609ee211f049',
+  'chromium_revision': '143c12daa39f07c30ab193a9cb6d00e70767b0e2',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -65,7 +65,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'df7850dcfe6d8270d224d49c5a8b63fb315c822f',
+  'catapult_revision': '9b6e926febfd2d8a3a626c337779d458b6290080',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -76,12 +76,12 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@ed3af53eeafbc80ec8e4a0836b8e52e7107f4561',
+    'url': '{chromium_git}/chromium/src/build.git@122de421bd59f94c3e63c41ce589a527d7cf7e59',
     'condition': 'not build_with_chromium',
   },
 
   'buildtools': {
-    'url': '{chromium_git}/chromium/src/buildtools.git@aa09fa765938e5e16c6309bd9f4ac2a01744ac1d',
+    'url': '{chromium_git}/chromium/src/buildtools.git@b60d41f762d6126f92989a2068070f9505ffbc66',
     'condition': 'not build_with_chromium',
   },
 
@@ -118,7 +118,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@6918862bfc2bff22b45058fac22b1596c49982fb',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@8f03866f94918e446203e82ee5d1654230584eb6',
     'condition': 'not build_with_chromium',
   },
 
@@ -134,7 +134,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@4138b13c164ce60bb99115a078957b7a952ce32f',
+    'url': '{chromium_git}/chromium/src/testing@33e44690c0878ef683c14b28be9ef9044cc2d1fc',
     'condition': 'not build_with_chromium',
   },
 
@@ -304,7 +304,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@b3546dc126b8ac6819c54190ade5811ab6a9f4b3',
+    'url': '{chromium_git}/chromium/src/tools/mb@ee85ae1c8334112abac16aaf9199b2e22ee128b1',
     'condition': 'not build_with_chromium',
   },
 
@@ -319,7 +319,7 @@ deps = {
   },
 
   'tools/protoc_wrapper': {
-    'url': '{chromium_git}/chromium/src/tools/protoc_wrapper@0bdacc02464650c583db63806913af47ea0fe97d',
+    'url': '{chromium_git}/chromium/src/tools/protoc_wrapper@4d4e1824fc1a93147a2f640a25812d1db9d3c2d2',
     'condition': 'not build_with_chromium',
   },
 
