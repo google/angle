@@ -213,6 +213,30 @@
       },
       "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87ff7020_bcbbe29d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T20:43:19Z",
+      "side": 1,
+      "message": "\u003e It does set the limit of how much it hold on to\n\nWhere is this happening Charlie?\n\n\u003e A hard limit of kLimitedFreeListMaxSize for all dynamic buffer doesn\u0027t seem offer enough flexibility here.\n\nTo be clear, this hard limit is only for the single user of LimitedReuseFreeBuffers (i.e. the context\u0027s staging buffer). I agree the limit of 1 likely needs more tuning though, and I\u0027m hoping to leave that for another time / another person. I was thinking a limit in bytes may be more appropriate for example, but I don\u0027t particularly plan to go too deep on the tuning.\n\n\u003e if app is not actively rendering for a while, or have switched to background, lets delete all buffers in free list\n\nThat\u0027s not going to cut it. What Manhattan does (and most apps likely) is to upload a lot of data to textures at load time, then render for a long time. You don\u0027t want to hold on to all that staging buffer memory after the initial upload. In Manhattan, that\u0027s over 1GB of memory sitting idle while the benchmark runs.\n\nIf I did this change in a way that had the Context decide what to do with the free list, it would look practically the same (where the context would ask DynamicBuffer to trim its free list every frame). This at least only does it when the buffer is used.",
+      "parentUuid": "9d0c1380_18b4a393",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 28
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
