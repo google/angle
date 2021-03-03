@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "db59fe5c_4581350f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:55:21Z",
+      "side": 1,
+      "message": "\u003e why wasn\u0027t the size check good enough in the first place?\n\nNot sure what size check you are referring to. The one I can think of doesn\u0027t make sense.\n\n---\n\nThe DynamicBuffer class originally did this:\n\n- Allocate buffer\n * Suballocate from it many times\n- Release buffer and allocate a new one, loop\n\nAn optimization which significantly reduced the number of allocations with default uniforms, driver uniforms etc, made it work like this:\n\n- Allocate buffer, or take from free list\n * Suballocate from it many times\n- Add the buffer to in flight list and allocate a new one, move \"finished\" buffers to free list, loop\n\nThere was no trimming in place in the design of DynamicBuffer.\n\nCharlie made a good optimization in the past that made textures free their staging memory:\n\n    ImageHelper::flushStagedUpdates()\n    {\n        ...\n\n        // If no updates left, release the staging buffers to save memory.\n        if (mSubresourceUpdates.empty())\n        {\n            mStagingBuffer.releaseInFlightBuffers(contextVk);\n            mStagingBuffer.release(contextVk-\u003egetRenderer());\n        }\n\n        ...\n    }\n\nA similar thing was never done for ContextVk\u0027s staging buffer, so it\u0027s free list just grew (until stabilized).\n\nWith this change, Charlie\u0027s optimization above is most likely obsolete too (this change takes care of that), but I haven\u0027t verified it.",
+      "parentUuid": "5bb34caa_3e5ee5c6",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 5
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f35734fe_fae84cd0",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-03T03:40:07Z",
       "side": 1,
       "message": "nit: the life of the application",
+      "range": {
+        "startLine": 12,
+        "startChar": 18,
+        "endLine": 12,
+        "endChar": 33
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f2dc9cc_6678b7fc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:55:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f35734fe_fae84cd0",
       "range": {
         "startLine": 12,
         "startChar": 18,

@@ -46,6 +46,30 @@
       },
       "revId": "d6e408c6e6d305b9b39c2fd10b67700e5ebbbeca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "edd1560e_71af662f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:55:21Z",
+      "side": 1,
+      "message": "You still get to the else part kLimitedFreeListMaxSize times. I do see that this has a positive effect on the number of allocations this class makes in T-Rex (basically makes it the same pattern as before this change, while kLimitedFreeListMaxSize \u003d\u003d 0 (or equivalently OneShotUse instead of SporadicTextureUpload) would result in a few extra allocations).\n\nNot sure how you read this, but it doesn\u0027t depend on size mismatch to trigger anything. Size mismatch and drop-by-policy are ||ed.\n\n\u003e I see, so you try to limit the free behavior to the initial load time (when mBufferFreeList.size() will be 0). I guess this might work.\n\nNot sure what you mean by this either. The app behavior is this:\n\n1. Upload a lot\n2. Render a lot, while streaming textures\n\nIn step 1, a lot of buffers are allocated and are placed in mInFlightBuffers. When the frame is finished, only kLimitedFreeListMaxSize of them are kept in the free list, and the rest are released. When new textures are streamed, they take advantage of the buffer in the free list.",
+      "parentUuid": "11686fcb_09256511",
+      "range": {
+        "startLine": 1943,
+        "startChar": 67,
+        "endLine": 1943,
+        "endChar": 89
+      },
+      "revId": "d6e408c6e6d305b9b39c2fd10b67700e5ebbbeca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
