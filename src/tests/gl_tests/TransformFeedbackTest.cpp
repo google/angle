@@ -852,6 +852,9 @@ TEST_P(TransformFeedbackTest, MultiContext)
     // Flaky on Win Intel Vulkan. http://anglebug.com/4497
     ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
 
+    // Flaky on Metal. http://anglebug.com/5713
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
     EGLint contextAttributes[] = {
         EGL_CONTEXT_MAJOR_VERSION_KHR,
         GetParam().majorVersion,
