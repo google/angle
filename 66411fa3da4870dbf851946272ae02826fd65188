@@ -92,6 +92,24 @@
       "parentUuid": "53403363_b4eba257",
       "revId": "66411fa3da4870dbf851946272ae02826fd65188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7abdcfc_e9911a20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-03T17:24:14Z",
+      "side": 1,
+      "message": "Hmm, looks like NV_pixel_buffer_object isn\u0027t exposed on the Vulkan backend (or the OpenGL backend, for that matter), so these tests aren\u0027t run. They seem to pass if I force them (this looks like stuff that should run in ES3, I think?). They don\u0027t use the fast path, though, so I\u0027ll probably need to add a new case.",
+      "parentUuid": "b33677bd_14bd76b0",
+      "revId": "66411fa3da4870dbf851946272ae02826fd65188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
