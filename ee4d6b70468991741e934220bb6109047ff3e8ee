@@ -1,6 +1,52 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bb34caa_3e5ee5c6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-03T03:40:07Z",
+      "side": 1,
+      "message": "Why is this?   It doesn\u0027t look like you\u0027re adding any new release() calls, so why wasn\u0027t the size check good enough in the first place?\n\nI\u0027m mostly wondering if this is working around a bug or fixing one that was always there to begin with in the DynamicBuffer design.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 5
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f35734fe_fae84cd0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-03T03:40:07Z",
+      "side": 1,
+      "message": "nit: the life of the application",
+      "range": {
+        "startLine": 12,
+        "startChar": 18,
+        "endLine": 12,
+        "endChar": 33
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "821534a1_3096f661",
