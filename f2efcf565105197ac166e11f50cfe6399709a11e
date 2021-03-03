@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb531812_c694e8f6",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-03T18:18:48Z",
+      "side": 1,
+      "message": "Let\u0027s assert and clear the errors.  If this is not true in the wild, it may still be possible to recover.",
+      "range": {
+        "startLine": 368,
+        "startChar": 8,
+        "endLine": 368,
+        "endChar": 53
+      },
+      "revId": "f2efcf565105197ac166e11f50cfe6399709a11e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bbee6426_46451870",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-03T18:18:48Z",
+      "side": 1,
+      "message": "Think we can skip this GL_DEPTH_COMPONENT32_OES is not in the isRequiredRenderbufferFormat list.",
+      "range": {
+        "startLine": 434,
+        "startChar": 39,
+        "endLine": 434,
+        "endChar": 85
+      },
+      "revId": "f2efcf565105197ac166e11f50cfe6399709a11e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
