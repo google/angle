@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e56194f_dc4a1081",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-03T21:43:14Z",
+      "side": 1,
+      "message": "ping, I\u0027d like to suppress these failures so that I can see what else fails on this bot that was defunct for half a year.",
+      "revId": "f9052016933ec9140797baff4dee91c5ae797b22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
