@@ -81,6 +81,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c7ac0dd_e464a984",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-03T18:16:19Z",
+      "side": 1,
+      "message": "Nice work! I do have concern on context staging buffer (see bellow). All other dynamic buffer usage looks good to me.",
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f1d54568_fe1f8fe6",
@@ -164,6 +181,30 @@
       "side": 1,
       "message": "I originally didn\u0027t have this, but it did lead to noticeable allocations both in T-Rex and Manhattan. Noticeable as in one allocation every other frame during some periods.\n\nIt kinda makes sense for the only place it\u0027s used (ContextVk\u0027s texture upload staging buffer shared by all immutable textures), because you know it will be used again in the future (texture streaming), but you also don\u0027t want to have it hold on to too much memory.",
       "parentUuid": "9fdbdc34_afbcf10b",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 28
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d0c1380_18b4a393",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-03T18:16:19Z",
+      "side": 1,
+      "message": "For per context staging buffer, I think you should just let context manage it how it want to free the buffer. So I am also incline to not having LimitedReuseFreeBuffers, but let context staging buffer adopt ReuseFreeBuffers. It does set the limit of how much it hold on to it and we can tune that to strike balance between perf and memory. A hard limit of kLimitedFreeListMaxSize for all dynamic buffer doesn\u0027t seem offer enough flexibility here. My original thinking for context staging buffer is to free based on idle time, i.e., if app is not actively rendering for a while, or have switched to background, lets delete all buffers in free list, otherwise just keep them in free list up to the max count. Anyway, my main point is context staging buffer should be managed explicitly.",
+      "parentUuid": "02913f0d_3cb70ee1",
       "range": {
         "startLine": 72,
         "startChar": 0,
