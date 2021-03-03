@@ -33,6 +33,24 @@
       "message": "Can we get a regression test for this? Seems like fairly major functionality.",
       "revId": "66411fa3da4870dbf851946272ae02826fd65188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53403363_b4eba257",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-03T16:35:25Z",
+      "side": 1,
+      "message": "Sure. Should it go in PBOExtensionTest?\n\nIn fact, there\u0027s already a test in there that *should* be exercising this, I think: it\u0027s a glReadPixels into a PBO with a non-zero \"pixels\" param. But it doesn\u0027t end up in ImageHelper::readPixels() at all.\n\nShabi: halp?",
+      "parentUuid": "570f74d4_185c1842",
+      "revId": "66411fa3da4870dbf851946272ae02826fd65188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
