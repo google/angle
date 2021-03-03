@@ -16,6 +16,23 @@
       "message": "Shabi: PTAL. Thanks!\n\nKind of surprised there\u0027s no coverage of this; I can look into a unit test if you like.",
       "revId": "66411fa3da4870dbf851946272ae02826fd65188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "570f74d4_185c1842",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-03T15:42:31Z",
+      "side": 1,
+      "message": "Can we get a regression test for this? Seems like fairly major functionality.",
+      "revId": "66411fa3da4870dbf851946272ae02826fd65188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
