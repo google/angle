@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8eb86653_df79ec96",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-03T21:14:29Z",
+      "side": 1,
+      "message": "I see, so you try to limit the free behavior to the initial load time (when mBufferFreeList.size() will be 0). I guess this might work. But do make sure you run gfxbench to check on perf.",
+      "range": {
+        "startLine": 1943,
+        "startChar": 67,
+        "endLine": 1943,
+        "endChar": 89
+      },
+      "revId": "d6e408c6e6d305b9b39c2fd10b67700e5ebbbeca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
