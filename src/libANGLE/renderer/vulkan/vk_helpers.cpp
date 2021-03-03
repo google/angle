@@ -6384,7 +6384,7 @@ angle::Result ImageHelper::readPixels(ContextVk *contextVk,
 
         VkBufferImageCopy region = {};
         region.bufferImageHeight = srcExtent.height;
-        region.bufferOffset      = packPixelsParams.offset;
+        region.bufferOffset      = packPixelsParams.offset + reinterpret_cast<ptrdiff_t>(pixels);
         region.bufferRowLength   = packPixelsParams.outputPitch / readFormat->pixelBytes;
         region.imageExtent       = srcExtent;
         region.imageOffset       = srcOffset;
