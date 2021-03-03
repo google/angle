@@ -16,6 +16,23 @@
       "message": "PTAL - updated test with large observer count",
       "revId": "964bad29c620ab84ec30ba99a4dca83fe691f7c6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "369f5b73_75b08423",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T22:02:47Z",
+      "side": 1,
+      "message": "Thanks",
+      "revId": "964bad29c620ab84ec30ba99a4dca83fe691f7c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
