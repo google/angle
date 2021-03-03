@@ -428,6 +428,7 @@ angle_static_library("angle_gpu_info_util") {
   if (!is_chromeos && angle_has_build) {
     sources += libangle_gpu_info_util_vulkan_sources
     deps += [ "$angle_vulkan_headers_dir:vulkan_headers" ]
+    defines += [ "ANGLE_HAS_VULKAN_SYSTEM_INFO" ]
   }
 
   if (is_android) {
