@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6cd45870_a66944e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-03T21:40:09Z",
+      "side": 1,
+      "message": "Jonah, PTAL.\n\nBTW, this script gives me a bunch of warnings like:\nWARNING: Step info empty for \u0027chromium/ci/Linux FYI dEQP Release (NVIDIA)/112750\u0027: \u0027angle_deqp_egl_gl_tests on NVIDIA GPU on Linux on Ubuntu-19.04\u0027\n\nSo probably it doesn\u0027t work anymore (maybe after Jamie switched to new harness).\nAnd in the end it says I don\u0027t have a permission to update the speadsheet.",
+      "revId": "25873bdf14502a2248bf063fe746f9ff9d8e0c4f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
