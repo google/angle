@@ -821,6 +821,7 @@ TEST_P(ProgramBinaryTest, SRGBDecodeWithSamplerAndTexelFetchTest)
     glDeleteProgram(reloadedProgram);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryES3Test);
 ANGLE_INSTANTIATE_TEST_ES3(ProgramBinaryES3Test);
 
 class ProgramBinaryES31Test : public ANGLETest
@@ -1010,6 +1011,7 @@ TEST_P(ProgramBinaryES31Test, ImageTextureBinding)
     ASSERT_GL_NO_ERROR();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryES31Test);
 ANGLE_INSTANTIATE_TEST_ES31(ProgramBinaryES31Test);
 
 class ProgramBinaryTransformFeedbackTest : public ANGLETest
@@ -1121,8 +1123,7 @@ TEST_P(ProgramBinaryTransformFeedbackTest, GetTransformFeedbackVarying)
     EXPECT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinaryTransformFeedbackTest);
 ANGLE_INSTANTIATE_TEST_ES3(ProgramBinaryTransformFeedbackTest);
 
 // For the ProgramBinariesAcrossPlatforms tests, we need two sets of params:
@@ -1353,6 +1354,7 @@ TEST_P(ProgramBinariesAcrossPlatforms, CreateAndReloadBinary)
 }
 
 // clang-format off
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinariesAcrossPlatforms);
 ANGLE_INSTANTIATE_TEST(ProgramBinariesAcrossPlatforms,
                        //                     | Save the program   | Load the program      | Expected
                        //                     | using these params | using these params    | link result
@@ -1364,6 +1366,3 @@ ANGLE_INSTANTIATE_TEST(ProgramBinariesAcrossPlatforms,
                        PlatformsWithLinkResult(ES3_VULKAN(),        ES31_VULKAN(),          false        ), // Switching to newer client version shouldn't work with Vulkan
                        );
 // clang-format on
-
-// This test suite is not instantiated on some OSes.
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramBinariesAcrossPlatforms);

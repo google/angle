@@ -957,11 +957,15 @@ TEST_P(BufferStorageTestES3, StorageBufferMapBufferOES)
     EXPECT_EQ(data, actualData);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2(BufferDataTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferDataTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(BufferDataTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BufferStorageTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(BufferStorageTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(IndexedBufferCopyTest);
 ANGLE_INSTANTIATE_TEST_ES3(IndexedBufferCopyTest);
 
 #ifdef _WIN64

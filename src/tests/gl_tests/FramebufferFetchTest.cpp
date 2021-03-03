@@ -1398,5 +1398,6 @@ void main (void)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchNonCoherentES31);
 ANGLE_INSTANTIATE_TEST_ES31(FramebufferFetchNonCoherentES31);
 }  // namespace angle

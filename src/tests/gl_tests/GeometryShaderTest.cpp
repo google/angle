@@ -1764,7 +1764,10 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GeometryShaderTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(GeometryShaderTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GeometryShaderTest);
 ANGLE_INSTANTIATE_TEST_ES31_AND(GeometryShaderTest,
                                 WithEmulatedPrerotation(ES31_VULKAN(), 90),
                                 WithEmulatedPrerotation(ES31_VULKAN(), 180),

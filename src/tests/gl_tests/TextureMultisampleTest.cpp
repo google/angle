@@ -1182,8 +1182,15 @@ void main()
     glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMultisampleTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(TextureMultisampleTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(NegativeTextureMultisampleTest);
 ANGLE_INSTANTIATE_TEST_ES3(NegativeTextureMultisampleTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureMultisampleArrayWebGLTest);
 ANGLE_INSTANTIATE_TEST_ES31(TextureMultisampleArrayWebGLTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureSampleShadingTest);
 ANGLE_INSTANTIATE_TEST_ES31(TextureSampleShadingTest);
 }  // anonymous namespace

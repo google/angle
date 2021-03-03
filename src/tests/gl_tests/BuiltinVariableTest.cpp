@@ -195,6 +195,7 @@ TEST_P(BuiltinVariableVertexIdTest, Triangles)
     runTest(GL_TRIANGLES, indices, 6);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BuiltinVariableVertexIdTest);
 ANGLE_INSTANTIATE_TEST_ES3(BuiltinVariableVertexIdTest);
 
 class BuiltinVariableFragDepthClampingFloatRBOTest : public ANGLETest
@@ -289,6 +290,7 @@ TEST_P(BuiltinVariableFragDepthClampingFloatRBOTest, Below1)
     CheckDepthWritten(1.0f, 42.0f);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BuiltinVariableFragDepthClampingFloatRBOTest);
 ANGLE_INSTANTIATE_TEST(BuiltinVariableFragDepthClampingFloatRBOTest,
                        ES3_D3D11(),
                        ES3_OPENGL(),

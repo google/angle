@@ -3653,6 +3653,7 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
                                              /* hasBarrier */ false,
                                              /* cheapRenderPass */ false));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VertexAttributeTestES3);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     VertexAttributeTestES3,
     WithMetalMemoryBarrierAndCheapRenderPass(ES3_METAL(),
@@ -3662,6 +3663,7 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
                                              /* hasBarrier */ false,
                                              /* cheapRenderPass */ false));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(VertexAttributeTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(VertexAttributeTestES31);
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(

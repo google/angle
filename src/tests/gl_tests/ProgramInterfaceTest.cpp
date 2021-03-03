@@ -1217,6 +1217,7 @@ void main() {
     glDeleteProgram(program);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramInterfaceTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(ProgramInterfaceTestES31);
 
 }  // anonymous namespace

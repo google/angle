@@ -767,7 +767,7 @@ TEST_P(OcclusionQueriesTest, MultiContext)
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(OcclusionQueriesTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(OcclusionQueriesTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(OcclusionQueriesTestES3);

@@ -593,6 +593,8 @@ TEST_P(AtomicCounterBufferTest31, AtomicCounterMemoryBarrier)
 // on Vulkan makes every shard our bots currently make do have at least some OpenGL test run before
 // any Vulkan test. When these tests can be enabled on Vulkan, can replace the current macros with
 // the updated macros below that include Vulkan:
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AtomicCounterBufferTest);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(AtomicCounterBufferTest31);
 #if !defined(ANGLE_PLATFORM_WINDOWS)
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(AtomicCounterBufferTest);
 ANGLE_INSTANTIATE_TEST_ES31(AtomicCounterBufferTest31);

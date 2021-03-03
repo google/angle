@@ -3867,8 +3867,8 @@ TEST_P(ImageTest, DeletedImageWithSameSizeAndFormat)
     glDeleteTextures(1, &texture);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ImageTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ImageTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(ImageTestES3);
 }  // namespace angle

@@ -2659,6 +2659,7 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ShaderStorageBufferTest31);
 ANGLE_INSTANTIATE_TEST_ES31(ShaderStorageBufferTest31);
 
 }  // namespace

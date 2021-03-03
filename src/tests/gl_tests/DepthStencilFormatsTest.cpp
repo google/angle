@@ -1118,9 +1118,9 @@ TEST_P(DepthStencilFormatsTest, VerifyDepth16UploadData)
     ASSERT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2(DepthStencilFormatsTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DepthStencilFormatsTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(DepthStencilFormatsTestES3);
 
 class TinyDepthStencilWorkaroundTest : public ANGLETest
@@ -1258,4 +1258,5 @@ TEST_P(TinyDepthStencilWorkaroundTest, DepthTexturesStick)
     }
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TinyDepthStencilWorkaroundTest);
 ANGLE_INSTANTIATE_TEST_ES3(TinyDepthStencilWorkaroundTest);

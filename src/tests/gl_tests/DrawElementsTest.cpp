@@ -403,6 +403,8 @@ TEST_P(WebGLDrawElementsTest, DrawElementsTypeAlignment)
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawElementsTest);
 ANGLE_INSTANTIATE_TEST_ES3(DrawElementsTest);
+
 ANGLE_INSTANTIATE_TEST_ES2(WebGLDrawElementsTest);
 }  // namespace

@@ -224,5 +224,6 @@ TEST_P(ExternalBufferTestES31, MapBuffer)
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ExternalBufferTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(ExternalBufferTestES31);
 }  // namespace angle

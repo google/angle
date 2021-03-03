@@ -333,7 +333,7 @@ TEST_P(FenceSyncTest, MultipleFenceDraw)
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FenceNVTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FenceSyncTest);
 ANGLE_INSTANTIATE_TEST_ES3(FenceSyncTest);

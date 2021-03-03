@@ -459,6 +459,10 @@ TEST_P(TextureRectangleTestES3, CopyTexSubImage)
 }
 
 ANGLE_INSTANTIATE_TEST_ES2(TextureRectangleTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureRectangleTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(TextureRectangleTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TextureRectangleTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(TextureRectangleTestES31);
 }  // anonymous namespace

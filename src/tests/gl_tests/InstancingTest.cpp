@@ -816,8 +816,10 @@ TEST_P(InstancingTestES3, LargestDivisor)
         << "Vertex attrib divisor read was not the same that was passed in.";
 }
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(InstancingTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(InstancingTestES3);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(InstancingTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(InstancingTestES31);
 
 ANGLE_INSTANTIATE_TEST_ES2(InstancingTest);

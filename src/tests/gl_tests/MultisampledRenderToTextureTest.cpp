@@ -3809,6 +3809,10 @@ TEST_P(MultisampledRenderToTextureES3Test, ClearThenMaskedClearFramebufferTest)
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31(MultisampledRenderToTextureTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampledRenderToTextureES3Test);
 ANGLE_INSTANTIATE_TEST_ES3(MultisampledRenderToTextureES3Test);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampledRenderToTextureES31Test);
 ANGLE_INSTANTIATE_TEST_ES31(MultisampledRenderToTextureES31Test);
 }  // namespace

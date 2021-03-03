@@ -10419,18 +10419,17 @@ void main()
 }
 }  // anonymous namespace
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTest);
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTestNoValidation);
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES3);
 ANGLE_INSTANTIATE_TEST_ES3(GLSLTest_ES3);
 
 ANGLE_INSTANTIATE_TEST_ES2(WebGLGLSLTest);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(WebGL2GLSLTest);
 ANGLE_INSTANTIATE_TEST_ES3(WebGL2GLSLTest);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(GLSLTest_ES31);
 ANGLE_INSTANTIATE_TEST_ES31(GLSLTest_ES31);

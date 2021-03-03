@@ -551,9 +551,9 @@ TEST_P(DebugTestES3, ObjectPtrLabels)
     EXPECT_GL_ERROR(GL_INVALID_VALUE);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DebugTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(DebugTestES3);
+
 ANGLE_INSTANTIATE_TEST(DebugTest,
                        ANGLE_ALL_TEST_PLATFORMS_ES1,
                        ANGLE_ALL_TEST_PLATFORMS_ES2,

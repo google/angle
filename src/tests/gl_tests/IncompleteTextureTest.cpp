@@ -408,8 +408,10 @@ void main()
     EXPECT_PIXEL_EQ(width, height, blackColor[0], blackColor[1], blackColor[2], blackColor[3]);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2(IncompleteTextureTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(IncompleteTextureTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(IncompleteTextureTestES3);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(IncompleteTextureTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(IncompleteTextureTestES31);

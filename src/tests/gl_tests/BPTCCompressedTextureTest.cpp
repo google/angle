@@ -453,4 +453,5 @@ TEST_P(BPTCCompressedTextureTestES3, CompressedTexSubImage3DValidation)
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(BPTCCompressedTextureTest);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(BPTCCompressedTextureTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(BPTCCompressedTextureTestES3);

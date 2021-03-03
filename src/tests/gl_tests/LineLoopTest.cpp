@@ -474,10 +474,9 @@ TEST_P(LineLoopIndirectTest, UShortIndexIndirectBuffer)
     runTest(GL_UNSIGNED_SHORT, reinterpret_cast<const void *>(indices), sizeof(indices), 1);
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2(LineLoopTest);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LineLoopPrimitiveRestartTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND(
     LineLoopPrimitiveRestartTest,
     WithMetalForcedBufferGPUStorage(ES3_METAL()),
@@ -485,4 +484,5 @@ ANGLE_INSTANTIATE_TEST_ES3_AND(
                                              /* hasBarrier */ false,
                                              /* cheapRenderPass */ false));
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(LineLoopIndirectTest);
 ANGLE_INSTANTIATE_TEST_ES31(LineLoopIndirectTest);

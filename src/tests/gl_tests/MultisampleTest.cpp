@@ -505,6 +505,7 @@ ANGLE_INSTANTIATE_TEST_COMBINE_1(MultisampleTest,
                                  WithNoFixture(ES2_METAL()));
 }  // namespace store_and_resolve_feature_off
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultisampleTestES3);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(MultisampleTestES3,
                                  PrintToStringParamName,
                                  testing::Values(false),

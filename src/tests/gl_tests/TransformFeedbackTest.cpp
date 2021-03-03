@@ -3008,17 +3008,18 @@ void main()
     }
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTest);
 ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackLifetimeTest);
 ANGLE_INSTANTIATE_TEST_ES3(TransformFeedbackLifetimeTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(TransformFeedbackTestES31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestES32);
 ANGLE_INSTANTIATE_TEST_ES32(TransformFeedbackTestES32);
 
-ANGLE_INSTANTIATE_TEST(TransformFeedbackWithDepthBufferTest, ES3_METAL());
-
-// These test suites are not instantiated on some OSes.
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackTestES32);
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(TransformFeedbackWithDepthBufferTest);
-
+ANGLE_INSTANTIATE_TEST(TransformFeedbackWithDepthBufferTest, ES3_METAL());
 }  // anonymous namespace

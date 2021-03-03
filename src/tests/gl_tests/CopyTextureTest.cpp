@@ -2529,8 +2529,6 @@ TEST_P(CopyTextureTestES3, InvalidateBlitThenBlend1000Layers)
 #    undef Bool
 #endif
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2(CopyTextureTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_5(CopyTextureVariationsTest,
                                  CopyTextureVariationsTestPrint,
@@ -2552,6 +2550,8 @@ ANGLE_INSTANTIATE_TEST(CopyTextureTestDest,
                        ES2_OPENGLES(),
                        ES2_VULKAN(),
                        ES2_METAL());
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(CopyTextureTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(CopyTextureTestES3);
 
 }  // namespace angle

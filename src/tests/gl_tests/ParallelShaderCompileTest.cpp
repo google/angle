@@ -394,6 +394,7 @@ TEST_P(ParallelShaderCompileTestES31, LinkAndDispatchManyPrograms)
 
 ANGLE_INSTANTIATE_TEST_ES2(ParallelShaderCompileTest);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ParallelShaderCompileTestES31);
 ANGLE_INSTANTIATE_TEST_ES31(ParallelShaderCompileTestES31);
 
 }  // namespace

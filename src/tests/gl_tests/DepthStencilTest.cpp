@@ -310,6 +310,8 @@ TEST_P(DepthStencilTestES3, ClearThenDraw)
 }
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(DepthStencilTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DepthStencilTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(DepthStencilTestES3);
 
 }  // anonymous namespace

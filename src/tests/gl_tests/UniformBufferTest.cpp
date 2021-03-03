@@ -3142,10 +3142,13 @@ void main(void){
     EXPECT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformBufferTest);
 ANGLE_INSTANTIATE_TEST_ES3(UniformBufferTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformBlockWithOneLargeArrayMemberTest);
 ANGLE_INSTANTIATE_TEST_ES3(UniformBlockWithOneLargeArrayMemberTest);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformBufferTest31);
 ANGLE_INSTANTIATE_TEST_ES31(UniformBufferTest31);
 
 }  // namespace

@@ -1013,14 +1013,16 @@ TEST_P(ColorMaskForDrawBuffersTest, Blit)
     EXPECT_GL_NO_ERROR();
 }
 
-// Use this to select which configurations (e.g. which renderer, which GLES major version) these
-// tests should be run against.
 ANGLE_INSTANTIATE_TEST(DrawBuffersTest,
                        ANGLE_ALL_TEST_PLATFORMS_ES2,
                        ANGLE_ALL_TEST_PLATFORMS_ES3,
                        WithNoTransformFeedback(ES2_VULKAN()));
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawBuffersWebGL2Test);
 ANGLE_INSTANTIATE_TEST_ES3(DrawBuffersWebGL2Test);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(DrawBuffersTestES3);
 ANGLE_INSTANTIATE_TEST_ES3(DrawBuffersTestES3);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ColorMaskForDrawBuffersTest);
 ANGLE_INSTANTIATE_TEST_ES3(ColorMaskForDrawBuffersTest);
