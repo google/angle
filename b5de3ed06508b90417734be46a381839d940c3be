@@ -16,6 +16,149 @@
       "message": "PTAL - refactored with ListNode inheritance",
       "revId": "b5de3ed06508b90417734be46a381839d940c3be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ac06af1_1d30c457",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:37:01Z",
+      "side": 1,
+      "message": "Did you forget to upload the actual implementation of ListNode?",
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "617a9fb5_9eef3e28",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:37:01Z",
+      "side": 1,
+      "message": "You should be able to add a basic iterator to the class, so this can turn into a range-based loop.\n\nUnfortunate that it can\u0027t be used for resetObservers.",
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6320d7e1_0d3e4abc",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:37:01Z",
+      "side": 1,
+      "message": "You can add a `getContainer\u003ctype\u003e()` method to the node, so it can do the cast itself.",
+      "range": {
+        "startLine": 41,
+        "startChar": 39,
+        "endLine": 41,
+        "endChar": 73
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "554355bf_e061466c",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:37:01Z",
+      "side": 1,
+      "message": "nit: detach?",
+      "range": {
+        "startLine": 61,
+        "startChar": 21,
+        "endLine": 61,
+        "endChar": 31
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69698687_c28a43df",
+        "filename": "src/libANGLE/Observer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:37:01Z",
+      "side": 1,
+      "message": "nit: small i",
+      "range": {
+        "startLine": 106,
+        "startChar": 22,
+        "endLine": 106,
+        "endChar": 23
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b3da1ba_073e0d7d",
+        "filename": "src/libANGLE/Observer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:37:01Z",
+      "side": 1,
+      "message": "Don\u0027t need this, you can always use `\u0026mSentinelNode` where necessary.",
+      "range": {
+        "startLine": 113,
+        "startChar": 21,
+        "endLine": 113,
+        "endChar": 49
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2aa0d869_705f8a55",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T21:37:01Z",
+      "side": 1,
+      "message": "Not needed?",
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
