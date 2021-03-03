@@ -50,6 +50,24 @@
       "message": "The bot says some failures:\n\nINFO:root:Crashed tests:\nINFO:root:  BPTCCompressedTextureTest.CompressedTexImageBC6HNoCrash/ES2_Vulkan_SwiftShader\nINFO:root:  BPTCCompressedTextureTest.CompressedTexSubImageValidation/ES2_Vulkan_SwiftShader\nINFO:root:  CHROMIUMFramebufferMixedSamplesTest.CoverageModulation/ES2_Vulkan_SwiftShader\nINFO:root:  CHROMIUMFramebufferMixedSamplesTest.MultisampleStencilEffective/ES2_Vulkan_SwiftShader\nINFO:root:  CHROMIUMFramebufferMixedSamplesTest.StateSettingTest/ES2_Vulkan_SwiftShader\nINFO:root:  ClearTest.ChangeFramebufferAttachmentFromRGBAtoRGB/ES2_Vulkan_SwiftShader\nINFO:root:  ClearTest.ScissoredClearThenNonScissoredDraw/ES2_Vulkan_SwiftShader\nINFO:root:  ClearTest.Stencil8Scissored/ES2_Vulkan_SwiftShader\nINFO:root:  ContextNoErrorTest.NoError/ES2_Vulkan_SwiftShader\nINFO:root:  CopyCompressedTextureTest.Basic/ES2_Vulkan_SwiftShader\n\u003csnip\u003e",
       "revId": "2357ec14b6b1361edd5f11edbea8b957282a6e1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54945fac_7b9a4a89",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-03T08:48:19Z",
+      "side": 1,
+      "message": "So did the rerun on `win-trace-rel` go through, or why was this submitted in the end?",
+      "parentUuid": "e5e853ee_236ff740",
+      "revId": "2357ec14b6b1361edd5f11edbea8b957282a6e1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
