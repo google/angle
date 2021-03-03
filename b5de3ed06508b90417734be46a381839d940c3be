@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bc9727cc_376be986",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-03T21:56:05Z",
+      "side": 1,
+      "message": "i thought about it and felt that utility class should be independent of usage (followed pattern from BitSetArray)\n\nI can squash them if you want but thought merging would be easier with split CL",
+      "parentUuid": "c1df918d_9173927d",
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "617a9fb5_9eef3e28",
         "filename": "src/libANGLE/Observer.cpp",
         "patchSetId": 5
