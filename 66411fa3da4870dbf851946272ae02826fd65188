@@ -110,6 +110,24 @@
       "parentUuid": "b33677bd_14bd76b0",
       "revId": "66411fa3da4870dbf851946272ae02826fd65188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d26007c_ab39e399",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-03T17:24:52Z",
+      "side": 1,
+      "message": "The storage test above uses GL_RED / GL_UNSIGNED_INT, IIRC. But another test that fails is using plain ol\u0027 RGBA8.",
+      "parentUuid": "d7abdcfc_e9911a20",
+      "revId": "66411fa3da4870dbf851946272ae02826fd65188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
