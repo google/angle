@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1240169d_7e291188",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-03T22:44:12Z",
+      "side": 1,
+      "message": "\u003e ... which are all in non-rotated (front-end) extents.\n\nFollows the pattern I\u0027ve seen elsewhere.\n\n\u003e That said, I was double-flipping ...\n\nI understand.",
+      "parentUuid": "23b05661_300b5b2c",
+      "range": {
+        "startLine": 230,
+        "startChar": 52,
+        "endLine": 230,
+        "endChar": 62
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17419314_fb89cd44",
