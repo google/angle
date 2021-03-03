@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b8b8b28_c9554351",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-03T09:41:32Z",
+      "side": 1,
+      "message": "This change should be landed only after Chromium into ANGLE roll succeeds.",
+      "revId": "6ed99a94624f9288e4ee3bfe565622d1e5e408fa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
