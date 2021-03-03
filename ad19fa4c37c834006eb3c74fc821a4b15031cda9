@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b382dd9d_b22ff3eb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-03T16:31:07Z",
+      "side": 1,
+      "message": "OK, rolling Chrome -\u003e ANGLE in https://chromium-review.googlesource.com/c/angle/angle/+/2732747 , please wait until that lands.",
+      "revId": "ad19fa4c37c834006eb3c74fc821a4b15031cda9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
