@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f941e53c_5041ce71",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-03T18:41:43Z",
+      "side": 1,
+      "message": "Test is done, BTW. It fails without the patch, passes with it.",
+      "revId": "974a5864e4e2284f67ad88a753effe45a44f4ee7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
