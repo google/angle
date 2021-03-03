@@ -276,9 +276,9 @@
   "src/libANGLE/renderer/vulkan/shaders/gen/OverlayCull.comp.00000005.inc":
     "83626be8291a8a4364076cf82e714507",
   "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000000.inc":
-    "c90e21e33a7daf11c63827936ced29ef",
+    "cccfaa2f3f70dfb8d204689a4a17e355",
   "src/libANGLE/renderer/vulkan/shaders/gen/OverlayDraw.comp.00000001.inc":
-    "b4dec496fa2f6ab0c07806f80a33cf8f",
+    "e3d99398731135cd072661d5789ba7d1",
   "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag":
     "0b16d3ad95d7dbc2ce7175462152e4f9",
   "src/libANGLE/renderer/vulkan/shaders/src/BlitResolve.frag.json":
@@ -322,7 +322,7 @@
   "src/libANGLE/renderer/vulkan/shaders/src/OverlayCull.comp.json":
     "e5fd5bb63707753601e197635316430e",
   "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.comp":
-    "ff28c3ff9b8c0f990afe5407b18c7baa",
+    "e3e098b2349352c9e12ab34bc5f0a53c",
   "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.comp.json":
     "af79e5153c99cdb1e6b551b11bbf7f6b",
   "src/libANGLE/renderer/vulkan/vk_internal_shaders_autogen.cpp":
