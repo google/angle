@@ -70,6 +70,30 @@
       },
       "revId": "d6e408c6e6d305b9b39c2fd10b67700e5ebbbeca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ea241c6_25ee6223",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-03T22:04:46Z",
+      "side": 1,
+      "message": "I get it now. I think I was thinking the condition of returning true the opposite of \"freeListSize \u003e\u003d kLimitedFreeListMaxSize\". So this implementtaion will get to the else part kLimitedFreeListMaxSize times and then will start freeing. I guess as long as you run benchmark to ensure no regression, that is fine.",
+      "parentUuid": "edd1560e_71af662f",
+      "range": {
+        "startLine": 1943,
+        "startChar": 67,
+        "endLine": 1943,
+        "endChar": 89
+      },
+      "revId": "d6e408c6e6d305b9b39c2fd10b67700e5ebbbeca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
