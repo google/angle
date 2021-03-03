@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23b05661_300b5b2c",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T20:32:23Z",
+      "side": 1,
+      "message": "I switched to getRotatedExtents() in a few places, but that doesn\u0027t work everywhere. In particular, the shader is given a number of coordinates, which are all in non-rotated (front-end) extents. The Overlay does everything non-rotated, and does a rotate in the last moment when writing to the final image. That allows many places in the code to be agnostic to pre-rotation.\n\nThat said, I was double-flipping in the cull path, which was actually totally unnecessary. I removed the changes there altogether.",
+      "parentUuid": "49a978ec_4bda0cc3",
+      "range": {
+        "startLine": 230,
+        "startChar": 52,
+        "endLine": 230,
+        "endChar": 62
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17419314_fb89cd44",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-02T22:30:52Z",
       "side": 1,
       "message": "I think you wouldn\u0027t have to do this if you used the getRotatedExtents() method in the calling method.",
+      "range": {
+        "startLine": 2851,
+        "startChar": 0,
+        "endLine": 2854,
+        "endChar": 5
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96a6619a_f0a53158",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2854,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T20:32:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17419314_fb89cd44",
       "range": {
         "startLine": 2851,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ca875b9_385c9186",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/OverlayCull.comp",
+        "patchSetId": 1
+      },
+      "lineNbr": 154,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T20:32:23Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0b5eea8b_e6d9031a",
+      "range": {
+        "startLine": 151,
+        "startChar": 0,
+        "endLine": 154,
+        "endChar": 5
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1347989a_ee982859",
@@ -83,6 +155,30 @@
       "writtenOn": "2021-03-02T22:30:52Z",
       "side": 1,
       "message": "See my comment in \"OverlayVk.cpp\".  I think you wouldn\u0027t have to do this if OverlayVk::onPresent() called getRotatedExtents() instead of getExtents().  I\u0027m not sure about the next line though.",
+      "range": {
+        "startLine": 227,
+        "startChar": 12,
+        "endLine": 227,
+        "endChar": 44
+      },
+      "revId": "ae1159ec12afa6663f75fe4fd0783ce9d1bbd24e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13579ff1_5ab5a818",
+        "filename": "src/libANGLE/renderer/vulkan/shaders/src/OverlayDraw.comp",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-03T20:32:23Z",
+      "side": 1,
+      "message": "Ack\n\nNext line is turning the flip into a 90-degree rotation (otherwise the text is backwards).",
+      "parentUuid": "1347989a_ee982859",
       "range": {
         "startLine": 227,
         "startChar": 12,
