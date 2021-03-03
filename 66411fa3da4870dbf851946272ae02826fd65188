@@ -128,6 +128,24 @@
       "parentUuid": "d7abdcfc_e9911a20",
       "revId": "66411fa3da4870dbf851946272ae02826fd65188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a169220_5292b372",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-03T17:33:49Z",
+      "side": 1,
+      "message": "Looking a bit more, it doesn\u0027t exercise the fast path because it\u0027s reading from BGRA into RGBA.",
+      "parentUuid": "3d26007c_ab39e399",
+      "revId": "66411fa3da4870dbf851946272ae02826fd65188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
