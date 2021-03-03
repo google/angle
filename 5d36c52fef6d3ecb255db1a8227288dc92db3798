@@ -56,6 +56,30 @@
       },
       "revId": "5d36c52fef6d3ecb255db1a8227288dc92db3798",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07c26248_4c25c7cf",
+        "filename": "src/tests/perf_tests/FramebufferAttachmentPerfTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-03T21:05:07Z",
+      "side": 1,
+      "message": "\u003e Have you verified that this actually results in a traversal of the list?\n\nyes\n\n\u003e at least using 8 or 16 would be better IMO\n\ni have modified the state update benchmark to use 16 fbos (observers)\n\nThese are the updated results -\n\nwith FastVector\n\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from FramebufferAttachmentStateUpdateBenchmark\n[ RUN      ] FramebufferAttachmentStateUpdateBenchmark.Run/vulkan_null_8_attach_detach_count\n*RESULT Framebuffers_vulkan_null.wall_time: 8_attach_detach_count\u003d 21.5035579425 ns\nRESULT Framebuffers_vulkan_null.trial_steps: 8_attach_detach_count\u003d 165084 count\nRESULT Framebuffers_vulkan_null.total_steps: 8_attach_detach_count\u003d 848722 count\n*RESULT Framebuffers_vulkan_null.wall_time: 8_attach_detach_count\u003d 21.6464799740 ns\nRESULT Framebuffers_vulkan_null.trial_steps: 8_attach_detach_count\u003d 165084 count\nRESULT Framebuffers_vulkan_null.total_steps: 8_attach_detach_count\u003d 1013806 count\n*RESULT Framebuffers_vulkan_null.wall_time: 8_attach_detach_count\u003d 21.5081980987 ns\nRESULT Framebuffers_vulkan_null.trial_steps: 8_attach_detach_count\u003d 165084 count\nRESULT Framebuffers_vulkan_null.total_steps: 8_attach_detach_count\u003d 1178890 count\n[       OK ] FramebufferAttachmentStateUpdateBenchmark.Run/vulkan_null_8_attach_detach_count (6818 ms)\n[----------] 1 test from FramebufferAttachmentStateUpdateBenchmark (6819 ms total)\n\n[----------] Global test environment tear-down\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 1 test from 1 test suite ran. (6820 ms total)\n[  PASSED  ] 1 test.\n\n\nwith circular doubly linked list\n\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] Running 1 test from 1 test suite.\n[----------] Global test environment set-up.\n[----------] 1 test from FramebufferAttachmentStateUpdateBenchmark\n[ RUN      ] FramebufferAttachmentStateUpdateBenchmark.Run/vulkan_null_8_attach_detach_count\n*RESULT Framebuffers_vulkan_null.wall_time: 8_attach_detach_count\u003d 20.9705881426 ns\nRESULT Framebuffers_vulkan_null.trial_steps: 8_attach_detach_count\u003d 179648 count\nRESULT Framebuffers_vulkan_null.total_steps: 8_attach_detach_count\u003d 886228 count\n*RESULT Framebuffers_vulkan_null.wall_time: 8_attach_detach_count\u003d 20.6883869798 ns\nRESULT Framebuffers_vulkan_null.trial_steps: 8_attach_detach_count\u003d 179648 count\nRESULT Framebuffers_vulkan_null.total_steps: 8_attach_detach_count\u003d 1065876 count\n*RESULT Framebuffers_vulkan_null.wall_time: 8_attach_detach_count\u003d 20.8952150500 ns\nRESULT Framebuffers_vulkan_null.trial_steps: 8_attach_detach_count\u003d 179648 count\nRESULT Framebuffers_vulkan_null.total_steps: 8_attach_detach_count\u003d 1245524 count\n[       OK ] FramebufferAttachmentStateUpdateBenchmark.Run/vulkan_null_8_attach_detach_count (7562 ms)\n[----------] 1 test from FramebufferAttachmentStateUpdateBenchmark (7565 ms total)\n\n[----------] Global test environment tear-down\n[\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d] 1 test from 1 test suite ran. (7569 ms total)\n[  PASSED  ] 1 test.",
+      "parentUuid": "9b6928e1_d704bd7f",
+      "range": {
+        "startLine": 203,
+        "startChar": 43,
+        "endLine": 203,
+        "endChar": 64
+      },
+      "revId": "5d36c52fef6d3ecb255db1a8227288dc92db3798",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
