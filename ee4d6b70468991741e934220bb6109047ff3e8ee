@@ -237,6 +237,30 @@
       },
       "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "171a1230_4e581509",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-03T21:09:49Z",
+      "side": 1,
+      "message": "Did you run gfxbench to ensure no perf regressions? I know last time when I worked on that area perf is very sensitive to memory size. There are other ways we can accommodate the specific situations you mentioned above (like free memory above the threshold if not used in past N frames etc).",
+      "parentUuid": "87ff7020_bcbbe29d",
+      "range": {
+        "startLine": 72,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 28
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
