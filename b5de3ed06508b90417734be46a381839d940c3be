@@ -90,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "daad5421_2cc06288",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-03T22:05:05Z",
+      "side": 1,
+      "message": "ListNode is not a container, hence dint feel the need to add an iterator.\n\nI suppose the idea could be that given a circular list, any node can become the \"sentinel\" node as long as we go once around the loop. But then there is the real sentinel node which will crash if we try to perform static_cast\u003c\u003e.\n\nReally, only a sentinel node can call for iteration, didn\u0027t know how to enforce this",
+      "parentUuid": "617a9fb5_9eef3e28",
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6320d7e1_0d3e4abc",
         "filename": "src/libANGLE/Observer.cpp",
         "patchSetId": 5
@@ -101,6 +119,30 @@
       "writtenOn": "2021-03-03T21:37:01Z",
       "side": 1,
       "message": "You can add a `getContainer\u003ctype\u003e()` method to the node, so it can do the cast itself.",
+      "range": {
+        "startLine": 41,
+        "startChar": 39,
+        "endLine": 41,
+        "endChar": 73
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f47bf2e_3495008a",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-03T22:05:05Z",
+      "side": 1,
+      "message": "\u003e You can add a `getContainer\u003ctype\u003e()` method to the node\n\nto ListNode? so just a templated member that performs static_cast\u003c\u003e() while callers can just call -\n node-\u003egetContainer\u003cObserverBindingBase *\u003e()",
+      "parentUuid": "6320d7e1_0d3e4abc",
       "range": {
         "startLine": 41,
         "startChar": 39,
@@ -182,6 +224,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0cde7ebb_fa37f8ee",
+        "filename": "src/libANGLE/Observer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-03T22:05:05Z",
+      "side": 1,
+      "message": "helped with debugging, much quicker to see address of ptr in VS than objects. Can get rid of it",
+      "parentUuid": "7b3da1ba_073e0d7d",
+      "range": {
+        "startLine": 113,
+        "startChar": 21,
+        "endLine": 113,
+        "endChar": 49
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2aa0d869_705f8a55",
         "filename": "src/libANGLE/angletypes.h",
         "patchSetId": 5
@@ -193,6 +259,24 @@
       "writtenOn": "2021-03-03T21:37:01Z",
       "side": 1,
       "message": "Not needed?",
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f9804ea_20fed027",
+        "filename": "src/libANGLE/angletypes.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-03T22:05:05Z",
+      "side": 1,
+      "message": "line 864 -\n using BarrierVector \u003d angle::FastVector\u003cT, kBarrierVectorDefaultSize\u003e;",
+      "parentUuid": "2aa0d869_705f8a55",
       "revId": "b5de3ed06508b90417734be46a381839d940c3be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
