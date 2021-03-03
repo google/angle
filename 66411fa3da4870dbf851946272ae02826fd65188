@@ -164,6 +164,24 @@
       "parentUuid": "8a169220_5292b372",
       "revId": "66411fa3da4870dbf851946272ae02826fd65188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "870e0afe_64af09ea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-03T17:54:41Z",
+      "side": 1,
+      "message": "Thanks, Shabi. Will take a look. (I did actually already add such an assert, just to see if I could get the PBOExtensionTest to hit it.)\n\nFor posterity: PBOExtensionTest still doesn\u0027t hit the fast path (even if BGRA) since it\u0027s reading from the Vulkan framebuffer, which has \"flipY\" set so it gets reverseRowOrder \u003d true.",
+      "parentUuid": "d3fc4568_4ac826ee",
+      "revId": "66411fa3da4870dbf851946272ae02826fd65188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
