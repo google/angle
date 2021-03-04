@@ -98,6 +98,8 @@ void ClearErrors(const FunctionsGL *functions,
     }
 }
 
+#define ANGLE_GL_CLEAR_ERRORS() ClearErrors(functions, __FILE__, __FUNCTION__, __LINE__)
+
 }  // namespace
 
 SwapControlData::SwapControlData()
@@ -260,6 +262,12 @@ static bool CheckSizedInternalFormatTextureRenderability(const FunctionsGL *func
     functions->deleteTextures(1, &texture);
     functions->bindTexture(GL_TEXTURE_2D, static_cast<GLuint>(oldTextureBinding));
 
+    if (!supported)
+    {
+        ANGLE_GL_CLEAR_ERRORS();
+    }
+
+    ASSERT(functions->getError() == GL_NO_ERROR);
     return supported;
 }
 
@@ -306,6 +314,12 @@ static bool CheckInternalFormatRenderbufferRenderability(const FunctionsGL *func
     functions->deleteRenderbuffers(1, &renderbuffer);
     functions->bindRenderbuffer(GL_RENDERBUFFER, static_cast<GLuint>(oldRenderbufferBinding));
 
+    if (!supported)
+    {
+        ANGLE_GL_CLEAR_ERRORS();
+    }
+
+    ASSERT(functions->getError() == GL_NO_ERROR);
     return supported;
 }
 
@@ -379,7 +393,7 @@ static gl::TextureCaps GenerateTextureFormatCaps(const FunctionsGL *functions,
             queryInternalFormat = GL_RGBA8;
         }
 
-        ClearErrors(functions, __FILE__, __FUNCTION__, __LINE__);
+        ANGLE_GL_CLEAR_ERRORS();
         GLint numSamples = 0;
         functions->getInternalformativ(GL_RENDERBUFFER, queryInternalFormat, GL_NUM_SAMPLE_COUNTS,
                                        1, &numSamples);
