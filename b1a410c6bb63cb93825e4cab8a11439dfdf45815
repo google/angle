@@ -16,6 +16,23 @@
       "message": "This CL updates the main codegen runner and the static builtins generator to Python 3. The static builtins generator relies on random values so its output varies from run to run. The main runner was updated just in case as all scripts should migrate to Python 3 anyway.",
       "revId": "b1a410c6bb63cb93825e4cab8a11439dfdf45815",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b99c925_6bef76ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-04T16:45:35Z",
+      "side": 1,
+      "message": "LGTM, thanks for fixing this up!",
+      "revId": "b1a410c6bb63cb93825e4cab8a11439dfdf45815",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
