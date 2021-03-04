@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2c721d41_9d040849",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:40:05Z",
+      "side": 1,
+      "message": "1) I misunderstood which size check you are referring to (I didn\u0027t see ref :D). That size check is for oversized allocations, which makes DynamicBuffer change `mSize` altogether. So for example DynamicBuffer could be suballocating from a 1MB buffer, then another 1MB buffer, then another 1MB buffer (all of which go in the free list eventually), then an allocation of 4MB comes, at which point DynamicBuffer switches to 4MB allocations. Since the buffers in the free list don\u0027t match this size anymore, yes they are all discarded. DynamicBuffer then continues making 4MB allocations which again end up in the free list.",
+      "parentUuid": "280d2abb_0d80f5d4",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 5
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f35734fe_fae84cd0",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
