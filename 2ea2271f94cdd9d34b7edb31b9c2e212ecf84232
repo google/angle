@@ -43,6 +43,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dc7012a2_bb80a173",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1889,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:57:36Z",
+      "side": 1,
+      "message": "Unfortunately not. See comment on the previous change that explains a bit more how DynamicBuffer works.\n\nWhen we reach here, we are in the \"oversized allocation\" mode. Say DynamicBuffer has been making 1MB allocations so far. A texture upload comes in that needs 16MB of memory. We want to allocate 16MB*4/3 instead. There\u0027s no way to make OneShotUse work like this, unless the caller is the one who instead calls this same function.\n\nDon\u0027t you think it\u0027s better if this call is made in one place, instead of every (relevant) call site?",
+      "parentUuid": "278b227e_9a1ce3d6",
+      "revId": "2ea2271f94cdd9d34b7edb31b9c2e212ecf84232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "322a0635_ce36a656",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 4
