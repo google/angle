@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fedae64f_f19adbb8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-03-04T12:47:53Z",
+      "side": 1,
+      "message": "Hi Geoff, PTAL. Thanks",
+      "revId": "c4ce0a2fbfb3045190173fd0137ea94ad9772b99",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
