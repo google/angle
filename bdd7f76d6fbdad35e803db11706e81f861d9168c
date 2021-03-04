@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d2c4d23_2b498363",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-04T16:47:41Z",
+      "side": 1,
+      "message": "I don\u0027t think we should include unit tests even only in debug. They should be part of a separate file which is included in angle_unittests.",
+      "range": {
+        "startLine": 1084,
+        "startChar": 15,
+        "endLine": 1084,
+        "endChar": 38
+      },
+      "revId": "bdd7f76d6fbdad35e803db11706e81f861d9168c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
