@@ -260,6 +260,8 @@ class StateManagerGL final : angle::NonCopyable
     }
     GLuint getBufferID(gl::BufferBinding binding) const { return mBuffers[binding]; }
 
+    bool getHasSeparateFramebufferBindings() const { return mHasSeparateFramebufferBindings; }
+
     void validateState() const;
 
     void syncFromNativeContext(const gl::Extensions &extensions, ExternalContextState *state);
@@ -449,6 +451,7 @@ class StateManagerGL final : angle::NonCopyable
 
     bool mFramebufferSRGBAvailable;
     bool mFramebufferSRGBEnabled;
+    const bool mHasSeparateFramebufferBindings;
 
     bool mDitherEnabled;
     bool mTextureCubemapSeamlessEnabled;
