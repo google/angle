@@ -16,6 +16,23 @@
       "message": "ping, I\u0027d like to suppress these failures so that I can see what else fails on this bot that was defunct for half a year.",
       "revId": "f9052016933ec9140797baff4dee91c5ae797b22",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db42f544_1e3edba5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-03-04T15:57:15Z",
+      "side": 1,
+      "message": "My one nit would that it would probably be easier to maintain by just adding the suppression to the definitions of ANGLE_INSTANTIATE_TEST_ES3 and ANGLE_INSTANTIATE_TEST_ES31\n\nLGTM with whatever you decide.",
+      "revId": "f9052016933ec9140797baff4dee91c5ae797b22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
