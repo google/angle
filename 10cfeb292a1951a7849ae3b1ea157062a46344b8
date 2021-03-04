@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fc95f644_d0e67df1",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T21:30:30Z",
+      "side": 1,
+      "message": "\u003e But that CL refers to Samsung ICD specific functionality\n\nnot quite, the code has nothing specific to any vendor\u0027s ICD. The vulkan spec says this about \"VK_IMAGE_TILING_OPTIMAL\" -\n VK_IMAGE_TILING_OPTIMAL specifies optimal tiling (texels are laid out in an\n implementation-dependent arrangement, for more optimal memory access).\n\nHow is an app/user going to CPU read/write data from/to a buffer that has \"implementation-dependent arrangement\" without corrupting it?",
+      "parentUuid": "68f7bf74_950a4f55",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1695e854_822d6c7a",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 2
