@@ -82,7 +82,7 @@ OcclusionQueriesTest.*
 PBOExtensionTest.*
 PixmapTest.Clearing/*
 RobustClientMemoryTest.*
-SemaphoreTest.SemaphoreShouldBeSemaphore/*
+SemaphoreTest.*
 SRGBFramebufferTest.Validation/*
 StateChangeRenderTest.GenerateMipmap/*
 SyncQueriesTest.*
@@ -95,6 +95,13 @@ VertexAttributeCachingTest.*
 VertexAttributeOORTest.*
 VertexAttributeTest.*
 ViewportTest.*
+VulkanExternalImageTest.ShouldClearMutableNoStorageUsageOpaqueFdRGBA8/*
+VulkanExternalImageTest.ShouldClearOpaqueFdWithSemaphores/*
+VulkanExternalImageTest.ShouldClearZirconVmoRGBA8/*
+VulkanExternalImageTest.ShouldClearZirconWithFlagsVmoRGBA8/*
+VulkanExternalImageTest.ShouldImportSemaphoreOpaqueFd/*
+VulkanExternalImageTest.TextureFormatCompatChromiumMutableNoStorageZirconVmo/*
+VulkanExternalImageTest.TextureFormatCompatChromiumZirconVmo/*
 WebGLCompatibilityTest.*
 WebGLFramebufferTest.*
 
@@ -108,5 +115,3 @@ MipmapTest.DISABLED_ThreeLevelsInitData/*
 GetImageTest.*
 GetTexLevelParameterTest.Queries/*
 RobustResourceInitTest.*
-SemaphoreTest.*
-VulkanExternalImageTest.*
