@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9a422e7_e534d55c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:42:44Z",
+      "side": 1,
+      "message": "... of objects that already exist without needing to encapsulate them in a container.",
+      "range": {
+        "startLine": 13,
+        "startChar": 29,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "ae3e63e589aaa936961c42887d53e08c662220de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "206bd28c_c53aff20",
@@ -67,6 +90,24 @@
       "side": 1,
       "message": "I don\u0027t quite understand, since the point of a copy constructor and operator\u003d is to copy the pointer values.\n\nRegardless, if we don\u0027t want these to copy the values, we should put an UNREACHABLE() in them since they don\u0027t do what they claim.   Otherwise, this will likely waste an hour or two of some developer\u0027s time trying to track down why the pointers aren\u0027t set when they do `node1 \u003d node2`.",
       "parentUuid": "5207f4e0_8786d827",
+      "revId": "ae3e63e589aaa936961c42887d53e08c662220de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19b1030f_9cb6eb7c",
+        "filename": "src/common/ListNode.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:42:44Z",
+      "side": 1,
+      "message": "Do we even need a copy constructor? Can we inherit from angle::NonCopyable?",
+      "parentUuid": "656cdb10_a629afb1",
       "revId": "ae3e63e589aaa936961c42887d53e08c662220de",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
