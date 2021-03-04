@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aac3651c_63e26adc",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T04:15:21Z",
+      "side": 1,
+      "message": "Can you mark this with a TODO and a bug number?\n\nDo we need an Android or Khronos bug (or both) to try and get the support we need added?",
+      "revId": "d725884de74e3c6811c916aef2348765089ccf06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
