@@ -22,6 +22,30 @@
       },
       "revId": "4a77ddb75cf4411b777f09ad3a7acde08c9befea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a73fe73f_1655c862",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-04T22:30:44Z",
+      "side": 1,
+      "message": "It\u0027s not. You can have CPU usage backed by optimal tiling with much better performance sampling as texture or use as color attachment, then transfer to/from linear layout once the user actually uses the CPU usage.",
+      "parentUuid": "f2e6fd3e_6b3b767a",
+      "range": {
+        "startLine": 13,
+        "startChar": 30,
+        "endLine": 14,
+        "endChar": 26
+      },
+      "revId": "4a77ddb75cf4411b777f09ad3a7acde08c9befea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
