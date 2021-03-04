@@ -309,6 +309,30 @@
       },
       "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41ad5b03_e57aed68",
+        "filename": "src/tests/deqp_support/deqp_gles31_test_expectations.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T22:05:37Z",
+      "side": 1,
+      "message": "http://anglebug.com/5641",
+      "parentUuid": "aaf13d2c_cc6f1ba5",
+      "range": {
+        "startLine": 324,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 5
+      },
+      "revId": "cf865c0cd7e571a5580e509c2618eba01a580698",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
