@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "60f032e8_17fb6df2",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 541,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0be2c5ce_625f4f24",
+      "range": {
+        "startLine": 538,
+        "startChar": 0,
+        "endLine": 541,
+        "endChar": 44
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5b4a3135_b59495ff",
@@ -95,6 +119,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6692471b_db3f3ad4",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 702,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "First call for translation won\u0027t work. Slowness there was the whole reason warmup on startup was added. Same with ShInitialize, it\u0027s lazily allocated on first compile if I\u0027m not mistaken.\n\nI can certainly add another function for it. Done as a follow up as it also moves the glslang init/finalize call and I have a feeling may get more iterations (see next change in chain)",
+      "parentUuid": "fb9e1310_739e3268",
+      "range": {
+        "startLine": 702,
+        "startChar": 28,
+        "endLine": 702,
+        "endChar": 47
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "13e30c05_a0393ed8",
@@ -108,6 +156,30 @@
       "writtenOn": "2021-03-01T21:49:04Z",
       "side": 1,
       "message": "It\u0027s been a little while since I\u0027ve tried to bridge these files and libANGLE/, but how much work is it for them to both use a common typedef like what\u0027s described in glslang_wrapper_utils.h?\n\n    using SpirvBlob \u003d std::vector\u003cuint32_t\u003e;\n\nI seem to remember it being a bit of a pain and possibly requiring some duplication, but may be worth it.",
+      "range": {
+        "startLine": 715,
+        "startChar": 6,
+        "endLine": 715,
+        "endChar": 27
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6f9f0eb_241e9896",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 715,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "I specifically didn\u0027t want to use SpirvBlob, because technically this could be any binary (like metal or dx bytecode). I chose vector\u003cuint32_t\u003e (same as SpirvBlob) to make life easier until other binaries are supported.\n\nSo we do need two types IMO, but I could give this a name. Done. (also moved SpirvBlob to common/ so it can be used in this change where applicable)",
+      "parentUuid": "13e30c05_a0393ed8",
       "range": {
         "startLine": 715,
         "startChar": 6,
@@ -141,6 +213,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bed8bea_53309b98",
+        "filename": "src/compiler/translator/InfoSink.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39a7ad08_3b42acfe",
+      "range": {
+        "startLine": 119,
+        "startChar": 9,
+        "endLine": 119,
+        "endChar": 17
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab0a18b6_4c6b6d63",
@@ -154,6 +250,30 @@
       "writtenOn": "2021-03-01T21:49:04Z",
       "side": 1,
       "message": "nit: const ref, or pointer.",
+      "range": {
+        "startLine": 68,
+        "startChar": 55,
+        "endLine": 68,
+        "endChar": 74
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f71f3f8_6ce99248",
+        "filename": "src/compiler/translator/TranslatorMetal.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "Nack. It\u0027s used like this all over the place in translator/, so I\u0027m keeping with the style of this code.",
+      "parentUuid": "ab0a18b6_4c6b6d63",
       "range": {
         "startLine": 68,
         "startChar": 55,
@@ -187,6 +307,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3017d422_d50273ce",
+        "filename": "src/compiler/translator/glslang_wrapper.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1818cc1_65c75556",
+      "range": {
+        "startLine": 142,
+        "startChar": 4,
+        "endLine": 142,
+        "endChar": 45
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1644d6aa_3c2fbe4f",
@@ -200,6 +344,30 @@
       "writtenOn": "2021-03-01T21:49:04Z",
       "side": 1,
       "message": "SpirvBlob\n\nSame for the rest of these \u0027std::vector\u003cuint32_t\u003e\u0027 declarations.",
+      "range": {
+        "startLine": 70,
+        "startChar": 10,
+        "endLine": 70,
+        "endChar": 31
+      },
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e17d1f10_db724d93",
+        "filename": "src/libANGLE/Shader.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1644d6aa_3c2fbe4f",
       "range": {
         "startLine": 70,
         "startChar": 10,
@@ -227,6 +395,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "93916661_8dc5f89f",
+        "filename": "src/libANGLE/renderer/metal/ShaderMtl.mm",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "I disabled that extension in this change, hence the UNREACHABLE().\n\nI did consider (and still do) returning the disassembly, but my tests showed a 400KB increase in binary size calling into SPIR-V Tools. Summary of discussion I had offline with Jamie regarding this:\n\n- We could generate our own disassembler which will likely be smaller (though unknown by how much)\n- The disassembly might not be useful at all, since this extension is used only by some webgl developers (which may not know or care about ANGLE using Vulkan in the background).\n\nWe decided this could be done later, if and whenever needed.",
+      "parentUuid": "9cc4cb37_fbaab05f",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68210042_c03aed67",
@@ -244,6 +430,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cb8a1ec_a60e7371",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "I removed the ContextVk parameter, so I changed it to a constant. I used false because that\u0027s the less likely configuration to be tested.",
+      "parentUuid": "68210042_c03aed67",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f1f4419_3aeb7907",
@@ -257,6 +461,24 @@
       "writtenOn": "2021-03-01T21:49:04Z",
       "side": 1,
       "message": "Is there a way to avoid this copy of the SpirvBlob data?\n\nIt looks like the gl::Shader::mCompiledBinary already has a copy.",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d19eb9f5_828faee7",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T20:50:55Z",
+      "side": 1,
+      "message": "I think the shader can be deleted after linking, so gl::Shader::mCompiledBinary can\u0027t be relied on. std::move is not an option either I think.",
+      "parentUuid": "7f1f4419_3aeb7907",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
