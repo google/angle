@@ -203,14 +203,14 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
     short_name = "dbg" if debug else "rel"
 
     luci.console_view_entry(
-        console_view = "CI Console View",
+        console_view = "ci",
         builder = "ci/" + name,
         category = config + "|" + os + "|" + compiler + "|" + cpu,
         short_name = short_name,
     )
 
     luci.list_view_entry(
-        list_view = "Try List View",
+        list_view = "try",
         builder = "try/" + name,
     )
 
@@ -297,19 +297,19 @@ angle_standalone_builder("winuwp-x64-rel", clang = False, debug = False, cpu = "
 # Views
 
 luci.console_view(
-    name = "CI Console View",
+    name = "ci",
     title = "ANGLE CI Builders",
     repo = "https://chromium.googlesource.com/angle/angle",
     refs = ["refs/heads/master"],
 )
 
 luci.list_view(
-    name = "Try List View",
+    name = "try",
     title = "ANGLE Try Builders",
 )
 
 luci.list_view_entry(
-    list_view = "Try List View",
+    list_view = "try",
     builder = "try/presubmit",
 )
 
