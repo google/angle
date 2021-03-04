@@ -94,6 +94,30 @@
       },
       "revId": "d6e408c6e6d305b9b39c2fd10b67700e5ebbbeca",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8d7625f_e8c90082",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T18:51:16Z",
+      "side": 1,
+      "message": "I verified that there\u0027s no regression in the benchmarks.\n\nFYI, the memory stats (for both this and the next change) from running TRex and Manhattan on Android is (stats are used/allocated, so the diff is memory waste):\n\nManhattan: peak: 141MB/181MB -\u003e 141MB/168MB, mid-execution: 46MB/181MB -\u003e 46MB/73MB\nTRex: peak: 50MB/66MB -\u003e 50MB/54MB, mid-execution: 24MB/30MB -\u003e 24MB/28MB",
+      "parentUuid": "6ea241c6_25ee6223",
+      "range": {
+        "startLine": 1943,
+        "startChar": 67,
+        "endLine": 1943,
+        "endChar": 89
+      },
+      "revId": "d6e408c6e6d305b9b39c2fd10b67700e5ebbbeca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
