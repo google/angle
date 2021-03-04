@@ -16,6 +16,24 @@
       "message": "Not sure we want to use lists in ANGLE - we haven\u0027t needed them so far. If there are other low hanging fruit can we tackle those first?",
       "revId": "e3145282d9df8bff82f6072c2b479ec1841a267f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "062dc474_894e2923",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T19:10:16Z",
+      "side": 1,
+      "message": "\u003e Not sure we want to use lists in ANGLE\n\nis there something inherently bad about lists?\n\n\u003e If there are other low hanging fruit can we tackle those first?\n\nworking on serial stuff but then will be back to this",
+      "parentUuid": "0e096040_c567d8dc",
+      "revId": "e3145282d9df8bff82f6072c2b479ec1841a267f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
