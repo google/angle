@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2e6fd3e_6b3b767a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T21:33:18Z",
+      "side": 1,
+      "message": "infact, linear tiling is a penalty that we need to live with incase the user indicates CPU usage.",
+      "range": {
+        "startLine": 13,
+        "startChar": 30,
+        "endLine": 14,
+        "endChar": 26
+      },
+      "revId": "4a77ddb75cf4411b777f09ad3a7acde08c9befea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
