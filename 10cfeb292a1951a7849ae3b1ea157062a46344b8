@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "309cb9fa_beb02f38",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-04T22:29:27Z",
+      "side": 1,
+      "message": "No, the code is specific to Samsung ICDs and any Vulkan ICD that allows creation of linear + input attachment images.\n\n\u003e How is an app/user going to CPU read/write data from/to a buffer that has \"implementation-dependent arrangement\" without corrupting it?\n\nThat\u0027s up to the AHardwareBuffer implementation, and it\u0027s NOT through Vulkan. The user uses AHardwareBuffer_lock/unlock to perform CPU read/write operations on an AHB, NOT Vulkan. The vendor implements AHB lock/unlock in a way that ensures the buffer exposed to the user is the right tiling. For example, in minigbm, amdgpu driver implements a transfer operation in lock() if the tiling is different.\n\nAgain, Vulkan !\u003d AHardwareBuffer and Android does allow for creation of optimal images against AHB, there is NO requirement that the GPU Android running on is UMA.",
+      "parentUuid": "fc95f644_d0e67df1",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1695e854_822d6c7a",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 2
