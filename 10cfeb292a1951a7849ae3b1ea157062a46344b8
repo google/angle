@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "601217fd_57919a81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:49:51Z",
+      "side": 1,
+      "message": "-1ing temporarily to avoid it slipping through.",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af707038_fbaea965",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:49:51Z",
+      "side": 1,
+      "message": "Nack. This is reverting https://chromium-review.googlesource.com/c/angle/angle/+/2241780\n\nWhy is a CPU-accessible AHB getting optimal tiling?",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1695e854_822d6c7a",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:49:51Z",
+      "side": 1,
+      "message": "Could potentially be a problem with framebuffer fetch.\n\nCan we instead \u0026 the result of this function with the actual usage support for the format, and let it automatically drop whatever usage is not supported?",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
