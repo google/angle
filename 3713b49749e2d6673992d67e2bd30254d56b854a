@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "85ded9f4_e39e841d",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:35:59Z",
+      "side": 1,
+      "message": "Manhattan. It\u0027s also generally in the order of what you want it to be for UBOs. For example Vulkan\u0027s maxUniformBufferRange has a minimum value of 16384, so this should allow a handful of suballocations before the buffer is exhausted. The danger of using 0 is that DynamicBuffer would \"adapt\" to the size the application uses, and if the application always uses say 64 byte ubos, then DynamicBuffer will end up making 64 byte allocations for every one of them.",
+      "parentUuid": "51598822_876351df",
+      "revId": "3713b49749e2d6673992d67e2bd30254d56b854a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "1e4fe2fc_c3725364",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5

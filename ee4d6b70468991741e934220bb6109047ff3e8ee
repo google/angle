@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "280d2abb_0d80f5d4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T09:35:59Z",
+      "side": 1,
+      "message": "1) To avoid reallocating later, instead of freeing the memory, DynamicBuffer keeps the buffer around in a free list. On next allocation, a buffer is picked out of the free list if any. This is useful with default uniforms, driver uniforms, ubo updates etc, which is something that requires allocations very frequently and DynamicBuffer ends up joggling between a handful of buffers, never allocating new ones.\n\n2) Basically yes. Doing that would be the equivalent of using the OneShotUse policy in this change. The SporadicTextureUpload policy lets us (eventually) have fine-grained control over how much we want to keep in the free list. Some ideas I have are:\n\n- Use 0 for memory constrained systems like Fuchsia\n- Maybe change the 1 buffer limit to nMB limit\n- Potential tuning based on application",
+      "parentUuid": "e0ec9f2d_eaf4a122",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 5
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f35734fe_fae84cd0",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
