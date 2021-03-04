@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35feae37_d60dd4ac",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T04:09:41Z",
+      "side": 1,
+      "message": "nit: that a texture data upload is followed up by the data upload for the whole mipchain",
+      "range": {
+        "startLine": 9,
+        "startChar": 49,
+        "endLine": 10,
+        "endChar": 46
+      },
+      "revId": "2ea2271f94cdd9d34b7edb31b9c2e212ecf84232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "278b227e_9a1ce3d6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1889,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T04:09:41Z",
+      "side": 1,
+      "message": "Why is this done here, rather than ImageHelper::initStagingBuffer() where we know it\u0027s a texture upload?\n\nMoving this to ImageHelper::initStagingBuffer() would allow DynamicBufferPolicy to revert back to just OneShotUse, since DynamicBuffer wouldn\u0027t have to detect and perform the special handling.   That would also remove the extra overhead of the extra branching, along with reducing the size of this CL pretty significantly.",
+      "revId": "2ea2271f94cdd9d34b7edb31b9c2e212ecf84232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "322a0635_ce36a656",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T04:09:41Z",
+      "side": 1,
+      "message": "nit (if these are kept): Can you indicate what the differences in the buffer vs texture policies are?   For example, add something like:\n\n    OneShotBufferUse,     // Allocate exact size specified\n    OneShotTextureUpload, // Allocate size*4/3",
+      "revId": "2ea2271f94cdd9d34b7edb31b9c2e212ecf84232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
