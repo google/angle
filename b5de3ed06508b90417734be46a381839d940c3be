@@ -176,6 +176,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "774cde16_53b5506f",
+        "filename": "src/libANGLE/Observer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T18:05:21Z",
+      "side": 1,
+      "message": "going to maintain the pattern and call it \u0027detachListNode()\u0027",
+      "parentUuid": "554355bf_e061466c",
+      "range": {
+        "startLine": 61,
+        "startChar": 21,
+        "endLine": 61,
+        "endChar": 31
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "69698687_c28a43df",
@@ -189,6 +213,30 @@
       "writtenOn": "2021-03-03T21:37:01Z",
       "side": 1,
       "message": "nit: small i",
+      "range": {
+        "startLine": 106,
+        "startChar": 22,
+        "endLine": 106,
+        "endChar": 23
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "371fe1e0_aebf73f6",
+        "filename": "src/libANGLE/Observer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T18:05:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69698687_c28a43df",
       "range": {
         "startLine": 106,
         "startChar": 22,
@@ -236,6 +284,30 @@
       "side": 1,
       "message": "helped with debugging, much quicker to see address of ptr in VS than objects. Can get rid of it",
       "parentUuid": "7b3da1ba_073e0d7d",
+      "range": {
+        "startLine": 113,
+        "startChar": 21,
+        "endLine": 113,
+        "endChar": 49
+      },
+      "revId": "b5de3ed06508b90417734be46a381839d940c3be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab47a4a1_1b804d83",
+        "filename": "src/libANGLE/Observer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T18:05:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cde7ebb_fa37f8ee",
       "range": {
         "startLine": 113,
         "startChar": 21,
