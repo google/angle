@@ -27,7 +27,7 @@ void ValidateSpirvMessage(spv_message_level_t level,
 }
 }  // anonymous namespace
 
-bool Validate(const std::vector<uint32_t> &blob)
+bool Validate(const Blob &blob)
 {
     spvtools::SpirvTools spirvTools(SPV_ENV_VULKAN_1_1);
 
@@ -44,7 +44,7 @@ bool Validate(const std::vector<uint32_t> &blob)
     return result;
 }
 #else   // ANGLE_ENABLE_ASSERTS
-bool Validate(const std::vector<uint32_t> &blob)
+bool Validate(const Blob &blob)
 {
     // Placeholder implementation since this is only used inside an ASSERT().
     // Return false to indicate an error in case this is ever accidentally used somewhere else.

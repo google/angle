@@ -1066,9 +1066,9 @@ angle::Result LinkProgram(const GlslangErrorCallback &callback, glslang::TProgra
 class SpirvTransformerBase : angle::NonCopyable
 {
   public:
-    SpirvTransformerBase(const std::vector<uint32_t> &spirvBlobIn,
+    SpirvTransformerBase(const spirv::Blob &spirvBlobIn,
                          const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                         SpirvBlob *spirvBlobOut)
+                         spirv::Blob *spirvBlobOut)
         : mSpirvBlobIn(spirvBlobIn), mVariableInfoMap(variableInfoMap), mSpirvBlobOut(spirvBlobOut)
     {
         gl::ShaderBitSet allStages;
@@ -1081,7 +1081,7 @@ class SpirvTransformerBase : angle::NonCopyable
         return mVariableInfoById;
     }
 
-    static spirv::IdRef GetNewId(SpirvBlob *blob);
+    static spirv::IdRef GetNewId(spirv::Blob *blob);
     spirv::IdRef getNewId();
 
   protected:
@@ -1102,13 +1102,13 @@ class SpirvTransformerBase : angle::NonCopyable
     void copyInstruction(const uint32_t *instruction, size_t wordCount);
 
     // SPIR-V to transform:
-    const SpirvBlob &mSpirvBlobIn;
+    const spirv::Blob &mSpirvBlobIn;
 
     // Input shader variable info map:
     const ShaderInterfaceVariableInfoMap &mVariableInfoMap;
 
     // Transformed SPIR-V:
-    SpirvBlob *mSpirvBlobOut;
+    spirv::Blob *mSpirvBlobOut;
 
     // Traversal state:
     size_t mCurrentWord       = 0;
@@ -1133,10 +1133,10 @@ void SpirvTransformerBase::onTransformBegin()
     ASSERT(mCurrentWord == 0);
     ASSERT(mIsInFunctionSection == false);
 
-    // Make sure the SpirvBlob is not reused.
+    // Make sure the spirv::Blob is not reused.
     ASSERT(mSpirvBlobOut->empty());
 
-    // Copy the header to SpirvBlob, we need that to be defined for SpirvTransformerBase::getNewId
+    // Copy the header to SPIR-V blob, we need that to be defined for SpirvTransformerBase::getNewId
     // to work.
     mSpirvBlobOut->assign(mSpirvBlobIn.begin(), mSpirvBlobIn.begin() + kHeaderIndexInstructions);
 
@@ -1162,7 +1162,7 @@ void SpirvTransformerBase::copyInstruction(const uint32_t *instruction, size_t w
     mSpirvBlobOut->insert(mSpirvBlobOut->end(), instruction, instruction + wordCount);
 }
 
-spirv::IdRef SpirvTransformerBase::GetNewId(SpirvBlob *blob)
+spirv::IdRef SpirvTransformerBase::GetNewId(spirv::Blob *blob)
 {
     return spirv::IdRef((*blob)[kHeaderIndexIndexBound]++);
 }
@@ -1217,7 +1217,7 @@ class SpirvIDDiscoverer final : angle::NonCopyable
 
     // Helpers:
     void visitTypeHelper(spirv::IdResult id, spirv::IdRef typeId);
-    void writePendingDeclarations(SpirvBlob *blobOut);
+    void writePendingDeclarations(spirv::Blob *blobOut);
 
     // Getters:
     const spirv::LiteralString &getName(spirv::IdRef id) const { return mNamesById[id]; }
@@ -1515,7 +1515,7 @@ SpirvVariableType SpirvIDDiscoverer::visitVariable(spirv::IdResultType typeId,
     return SpirvVariableType::InterfaceVariable;
 }
 
-void SpirvIDDiscoverer::writePendingDeclarations(SpirvBlob *blobOut)
+void SpirvIDDiscoverer::writePendingDeclarations(spirv::Blob *blobOut)
 {
     if (!mFloatId.valid())
     {
@@ -1570,7 +1570,7 @@ class SpirvPerVertexTrimmer final : angle::NonCopyable
     TransformationState transformTypeStruct(const SpirvIDDiscoverer &ids,
                                             spirv::IdResult id,
                                             spirv::IdRefList *memberList,
-                                            SpirvBlob *blobOut);
+                                            spirv::Blob *blobOut);
 };
 
 TransformationState SpirvPerVertexTrimmer::transformMemberDecorate(const SpirvIDDiscoverer &ids,
@@ -1603,7 +1603,7 @@ TransformationState SpirvPerVertexTrimmer::transformMemberName(const SpirvIDDisc
 TransformationState SpirvPerVertexTrimmer::transformTypeStruct(const SpirvIDDiscoverer &ids,
                                                                spirv::IdResult id,
                                                                spirv::IdRefList *memberList,
-                                                               SpirvBlob *blobOut)
+                                                               spirv::Blob *blobOut)
 {
     if (!ids.isPerVertex(id))
     {
@@ -1633,22 +1633,22 @@ class SpirvInactiveVaryingRemover final : angle::NonCopyable
                                              spirv::IdResult id,
                                              spirv::IdRef baseId,
                                              const spirv::IdRefList &indexList,
-                                             SpirvBlob *blobOut);
+                                             spirv::Blob *blobOut);
     TransformationState transformDecorate(const ShaderInterfaceVariableInfo &info,
                                           gl::ShaderType shaderType,
                                           spirv::IdRef id,
                                           spv::Decoration decoration,
                                           const spirv::LiteralIntegerList &decorationValues,
-                                          SpirvBlob *blobOut);
+                                          spirv::Blob *blobOut);
     TransformationState transformTypePointer(const SpirvIDDiscoverer &ids,
                                              spirv::IdResult id,
                                              spv::StorageClass storageClass,
                                              spirv::IdRef typeId,
-                                             SpirvBlob *blobOut);
+                                             spirv::Blob *blobOut);
     TransformationState transformVariable(spirv::IdResultType typeId,
                                           spirv::IdResult id,
                                           spv::StorageClass storageClass,
-                                          SpirvBlob *blobOut);
+                                          spirv::Blob *blobOut);
 
     void modifyEntryPointInterfaceList(
         const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
@@ -1675,7 +1675,7 @@ TransformationState SpirvInactiveVaryingRemover::transformAccessChain(
     spirv::IdResult id,
     spirv::IdRef baseId,
     const spirv::IdRefList &indexList,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     // Modifiy the instruction to use the private type.
     ASSERT(typeId < mTypePointerTransformedId.size());
@@ -1692,7 +1692,7 @@ TransformationState SpirvInactiveVaryingRemover::transformDecorate(
     spirv::IdRef id,
     spv::Decoration decoration,
     const spirv::LiteralIntegerList &decorationValues,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     // If it's an inactive varying, remove the decoration altogether.
     return info.activeStages[shaderType] ? TransformationState::Unchanged
@@ -1731,7 +1731,7 @@ TransformationState SpirvInactiveVaryingRemover::transformTypePointer(
     spirv::IdResult id,
     spv::StorageClass storageClass,
     spirv::IdRef typeId,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     // If the storage class is output, this may be used to create a variable corresponding to an
     // inactive varying, or if that varying is a struct, an Op*AccessChain retrieving a field of
@@ -1770,7 +1770,7 @@ TransformationState SpirvInactiveVaryingRemover::transformTypePointer(
 TransformationState SpirvInactiveVaryingRemover::transformVariable(spirv::IdResultType typeId,
                                                                    spirv::IdResult id,
                                                                    spv::StorageClass storageClass,
-                                                                   SpirvBlob *blobOut)
+                                                                   spirv::Blob *blobOut)
 {
     ASSERT(storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassInput);
 
@@ -1796,24 +1796,24 @@ class SpirvVaryingPrecisionFixer final : angle::NonCopyable
                        spirv::IdResultType typeId,
                        spirv::IdResult id,
                        spv::StorageClass storageClass,
-                       SpirvBlob *blobOut);
+                       spirv::Blob *blobOut);
 
     TransformationState transformVariable(const ShaderInterfaceVariableInfo &info,
                                           spirv::IdResultType typeId,
                                           spirv::IdResult id,
                                           spv::StorageClass storageClass,
-                                          SpirvBlob *blobOut);
+                                          spirv::Blob *blobOut);
 
     void modifyEntryPointInterfaceList(spirv::IdRefList *interfaceList);
-    void addDecorate(spirv::IdRef replacedId, SpirvBlob *blobOut);
+    void addDecorate(spirv::IdRef replacedId, spirv::Blob *blobOut);
     void writeInputPreamble(
         const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
         gl::ShaderType shaderType,
-        SpirvBlob *blobOut);
+        spirv::Blob *blobOut);
     void writeOutputPrologue(
         const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
         gl::ShaderType shaderType,
-        SpirvBlob *blobOut);
+        spirv::Blob *blobOut);
 
     bool isReplaced(spirv::IdRef id) const { return mFixedVaryingId[id].valid(); }
     spirv::IdRef getReplacementId(spirv::IdRef id) const
@@ -1847,7 +1847,7 @@ void SpirvVaryingPrecisionFixer::visitVariable(const ShaderInterfaceVariableInfo
                                                spirv::IdResultType typeId,
                                                spirv::IdResult id,
                                                spv::StorageClass storageClass,
-                                               SpirvBlob *blobOut)
+                                               spirv::Blob *blobOut)
 {
     if (info.useRelaxedPrecision && info.activeStages[shaderType] && !mFixedVaryingId[id].valid())
     {
@@ -1861,7 +1861,7 @@ TransformationState SpirvVaryingPrecisionFixer::transformVariable(
     spirv::IdResultType typeId,
     spirv::IdResult id,
     spv::StorageClass storageClass,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     if (info.useRelaxedPrecision &&
         (storageClass == spv::StorageClassOutput || storageClass == spv::StorageClassInput))
@@ -1878,7 +1878,7 @@ TransformationState SpirvVaryingPrecisionFixer::transformVariable(
 void SpirvVaryingPrecisionFixer::writeInputPreamble(
     const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
     gl::ShaderType shaderType,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     if (shaderType == gl::ShaderType::Vertex || shaderType == gl::ShaderType::Compute)
     {
@@ -1920,7 +1920,7 @@ void SpirvVaryingPrecisionFixer::modifyEntryPointInterfaceList(spirv::IdRefList 
     }
 }
 
-void SpirvVaryingPrecisionFixer::addDecorate(spirv::IdRef replacedId, SpirvBlob *blobOut)
+void SpirvVaryingPrecisionFixer::addDecorate(spirv::IdRef replacedId, spirv::Blob *blobOut)
 {
     spirv::WriteDecorate(blobOut, replacedId, spv::DecorationRelaxedPrecision, {});
 }
@@ -1928,7 +1928,7 @@ void SpirvVaryingPrecisionFixer::addDecorate(spirv::IdRef replacedId, SpirvBlob 
 void SpirvVaryingPrecisionFixer::writeOutputPrologue(
     const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
     gl::ShaderType shaderType,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     if (shaderType == gl::ShaderType::Fragment || shaderType == gl::ShaderType::Compute)
     {
@@ -1979,7 +1979,7 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
                        spirv::IdResult id,
                        spv::StorageClass storageClass);
 
-    TransformationState transformCapability(spv::Capability capability, SpirvBlob *blobOut);
+    TransformationState transformCapability(spv::Capability capability, spirv::Blob *blobOut);
     TransformationState transformName(spirv::IdRef id, spirv::LiteralString name);
     TransformationState transformVariable(const ShaderInterfaceVariableInfo &info,
                                           const ShaderInterfaceVariableInfoMap &variableInfoMap,
@@ -1991,20 +1991,22 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
     void writePendingDeclarations(
         const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
         const SpirvIDDiscoverer &ids,
-        SpirvBlob *blobOut);
+        spirv::Blob *blobOut);
     void writeTransformFeedbackExtensionOutput(const SpirvIDDiscoverer &ids,
                                                spirv::IdRef positionId,
-                                               SpirvBlob *blobOut);
+                                               spirv::Blob *blobOut);
     void writeTransformFeedbackEmulationOutput(
         const SpirvIDDiscoverer &ids,
         const SpirvVaryingPrecisionFixer &varyingPrecisionFixer,
         spirv::IdRef currentFunctionId,
-        SpirvBlob *blobOut);
-    void addExecutionMode(spirv::IdRef entryPointId, SpirvBlob *blobOut);
+        spirv::Blob *blobOut);
+    void addExecutionMode(spirv::IdRef entryPointId, spirv::Blob *blobOut);
     void addMemberDecorate(const ShaderInterfaceVariableInfo &info,
                            spirv::IdRef id,
-                           SpirvBlob *blobOut);
-    void addDecorate(const ShaderInterfaceVariableInfo &info, spirv::IdRef id, SpirvBlob *blobOut);
+                           spirv::Blob *blobOut);
+    void addDecorate(const ShaderInterfaceVariableInfo &info,
+                     spirv::IdRef id,
+                     spirv::Blob *blobOut);
 
   private:
     void gatherXfbVaryings(const ShaderInterfaceVariableInfo &info, spirv::IdRef id);
@@ -2014,13 +2016,13 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
     void writeIntConstant(const SpirvIDDiscoverer &ids,
                           uint32_t value,
                           spirv::IdRef intId,
-                          SpirvBlob *blobOut);
+                          spirv::Blob *blobOut);
     void getVaryingTypeIds(const SpirvIDDiscoverer &ids,
                            GLenum componentType,
                            bool isPrivate,
                            spirv::IdRef *typeIdOut,
                            spirv::IdRef *typePtrOut);
-    void writeGetOffsetsCall(spirv::IdRef xfbOffsets, SpirvBlob *blobOut);
+    void writeGetOffsetsCall(spirv::IdRef xfbOffsets, spirv::Blob *blobOut);
     void writeComponentCapture(const SpirvIDDiscoverer &ids,
                                uint32_t bufferIndex,
                                spirv::IdRef xfbOffset,
@@ -2029,7 +2031,7 @@ class SpirvTransformFeedbackCodeGenerator final : angle::NonCopyable
                                spirv::IdRef varyingBaseId,
                                const spirv::IdRefList &accessChainIndices,
                                GLenum componentType,
-                               SpirvBlob *blobOut);
+                               spirv::Blob *blobOut);
 
     static constexpr size_t kXfbDecorationCount                           = 3;
     static constexpr spv::Decoration kXfbDecorations[kXfbDecorationCount] = {
@@ -2179,7 +2181,7 @@ void SpirvTransformFeedbackCodeGenerator::visitVariable(const ShaderInterfaceVar
 
 TransformationState SpirvTransformFeedbackCodeGenerator::transformCapability(
     spv::Capability capability,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     if (!mHasTransformFeedbackOutput || mIsEmulated)
     {
@@ -2276,7 +2278,7 @@ void SpirvTransformFeedbackCodeGenerator::visitXfbVarying(const ShaderInterfaceV
 void SpirvTransformFeedbackCodeGenerator::writeIntConstant(const SpirvIDDiscoverer &ids,
                                                            uint32_t value,
                                                            spirv::IdRef intId,
-                                                           SpirvBlob *blobOut)
+                                                           spirv::Blob *blobOut)
 {
     if (value == ShaderInterfaceVariableXfbInfo::kInvalid)
     {
@@ -2300,7 +2302,7 @@ void SpirvTransformFeedbackCodeGenerator::writeIntConstant(const SpirvIDDiscover
 void SpirvTransformFeedbackCodeGenerator::writePendingDeclarations(
     const std::vector<const ShaderInterfaceVariableInfo *> &variableInfoById,
     const SpirvIDDiscoverer &ids,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     if (!mIsEmulated)
     {
@@ -2396,7 +2398,7 @@ void SpirvTransformFeedbackCodeGenerator::writePendingDeclarations(
 void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackExtensionOutput(
     const SpirvIDDiscoverer &ids,
     spirv::IdRef positionId,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     if (mIsEmulated)
     {
@@ -2440,7 +2442,7 @@ void SpirvTransformFeedbackCodeGenerator::writeTransformFeedbackEmulationOutput(
     const SpirvIDDiscoverer &ids,
     const SpirvVaryingPrecisionFixer &varyingPrecisionFixer,
     spirv::IdRef currentFunctionId,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     if (!mIsEmulated || !mXfbCaptureFuncId.valid() || currentFunctionId != mXfbCaptureFuncId)
     {
@@ -2649,7 +2651,7 @@ void SpirvTransformFeedbackCodeGenerator::getVaryingTypeIds(const SpirvIDDiscove
 }
 
 void SpirvTransformFeedbackCodeGenerator::writeGetOffsetsCall(spirv::IdRef xfbOffsets,
-                                                              SpirvBlob *blobOut)
+                                                              spirv::Blob *blobOut)
 {
     const spirv::IdRef xfbGetOffsetsParam(SpirvTransformerBase::GetNewId(blobOut));
     const spirv::IdRef xfbOffsetsResult(SpirvTransformerBase::GetNewId(blobOut));
@@ -2685,7 +2687,7 @@ void SpirvTransformFeedbackCodeGenerator::writeComponentCapture(
     spirv::IdRef varyingBaseId,
     const spirv::IdRefList &accessChainIndices,
     GLenum componentType,
-    SpirvBlob *blobOut)
+    spirv::Blob *blobOut)
 {
     spirv::IdRef component(SpirvTransformerBase::GetNewId(blobOut));
     spirv::IdRef xfbOutPtr(SpirvTransformerBase::GetNewId(blobOut));
@@ -2723,7 +2725,7 @@ void SpirvTransformFeedbackCodeGenerator::writeComponentCapture(
 }
 
 void SpirvTransformFeedbackCodeGenerator::addExecutionMode(spirv::IdRef entryPointId,
-                                                           SpirvBlob *blobOut)
+                                                           spirv::Blob *blobOut)
 {
     if (mIsEmulated)
     {
@@ -2738,7 +2740,7 @@ void SpirvTransformFeedbackCodeGenerator::addExecutionMode(spirv::IdRef entryPoi
 
 void SpirvTransformFeedbackCodeGenerator::addMemberDecorate(const ShaderInterfaceVariableInfo &info,
                                                             spirv::IdRef id,
-                                                            SpirvBlob *blobOut)
+                                                            spirv::Blob *blobOut)
 {
     if (mIsEmulated || info.fieldXfb.empty())
     {
@@ -2779,7 +2781,7 @@ void SpirvTransformFeedbackCodeGenerator::addMemberDecorate(const ShaderInterfac
 
 void SpirvTransformFeedbackCodeGenerator::addDecorate(const ShaderInterfaceVariableInfo &info,
                                                       spirv::IdRef id,
-                                                      SpirvBlob *blobOut)
+                                                      spirv::Blob *blobOut)
 {
     if (mIsEmulated || info.xfb.buffer == ShaderInterfaceVariableXfbInfo::kInvalid)
     {
@@ -2816,7 +2818,7 @@ class SpirvPositionTransformer final : angle::NonCopyable
     void writePositionTransformation(const SpirvIDDiscoverer &ids,
                                      spirv::IdRef positionPointerId,
                                      spirv::IdRef positionId,
-                                     SpirvBlob *blobOut);
+                                     spirv::Blob *blobOut);
 
   private:
     void preRotateXY(const SpirvIDDiscoverer &ids,
@@ -2824,12 +2826,12 @@ class SpirvPositionTransformer final : angle::NonCopyable
                      spirv::IdRef yId,
                      spirv::IdRef *rotatedXIdOut,
                      spirv::IdRef *rotatedYIdOut,
-                     SpirvBlob *blobOut);
+                     spirv::Blob *blobOut);
     void transformZToVulkanClipSpace(const SpirvIDDiscoverer &ids,
                                      spirv::IdRef zId,
                                      spirv::IdRef wId,
                                      spirv::IdRef *correctedZIdOut,
-                                     SpirvBlob *blobOut);
+                                     spirv::Blob *blobOut);
 
     GlslangSpirvOptions mOptions;
 };
@@ -2837,7 +2839,7 @@ class SpirvPositionTransformer final : angle::NonCopyable
 void SpirvPositionTransformer::writePositionTransformation(const SpirvIDDiscoverer &ids,
                                                            spirv::IdRef positionPointerId,
                                                            spirv::IdRef positionId,
-                                                           SpirvBlob *blobOut)
+                                                           spirv::Blob *blobOut)
 {
     // In GL the viewport transformation is slightly different - see the GL 2.0 spec section "2.12.1
     // Controlling the Viewport".  In Vulkan the corresponding spec section is currently "23.4.
@@ -2902,7 +2904,7 @@ void SpirvPositionTransformer::preRotateXY(const SpirvIDDiscoverer &ids,
                                            spirv::IdRef yId,
                                            spirv::IdRef *rotatedXIdOut,
                                            spirv::IdRef *rotatedYIdOut,
-                                           SpirvBlob *blobOut)
+                                           spirv::Blob *blobOut)
 {
     switch (mOptions.preRotation)
     {
@@ -2963,7 +2965,7 @@ void SpirvPositionTransformer::transformZToVulkanClipSpace(const SpirvIDDiscover
                                                            spirv::IdRef zId,
                                                            spirv::IdRef wId,
                                                            spirv::IdRef *correctedZIdOut,
-                                                           SpirvBlob *blobOut)
+                                                           spirv::Blob *blobOut)
 {
     if (!mOptions.transformPositionToVulkanClipSpace)
     {
@@ -2986,10 +2988,10 @@ void SpirvPositionTransformer::transformZToVulkanClipSpace(const SpirvIDDiscover
 class SpirvTransformer final : public SpirvTransformerBase
 {
   public:
-    SpirvTransformer(const SpirvBlob &spirvBlobIn,
+    SpirvTransformer(const spirv::Blob &spirvBlobIn,
                      const GlslangSpirvOptions &options,
                      const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                     SpirvBlob *spirvBlobOut)
+                     spirv::Blob *spirvBlobOut)
         : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut),
           mOptions(options),
           mXfbCodeGenerator(options.isTransformFeedbackEmulated),
@@ -3832,10 +3834,10 @@ class SpirvVertexAttributeAliasingTransformer final : public SpirvTransformerBas
 {
   public:
     SpirvVertexAttributeAliasingTransformer(
-        const SpirvBlob &spirvBlobIn,
+        const spirv::Blob &spirvBlobIn,
         const ShaderInterfaceVariableInfoMap &variableInfoMap,
         std::vector<const ShaderInterfaceVariableInfo *> &&variableInfoById,
-        SpirvBlob *spirvBlobOut)
+        spirv::Blob *spirvBlobOut)
         : SpirvTransformerBase(spirvBlobIn, variableInfoMap, spirvBlobOut)
     {
         mVariableInfoById = std::move(variableInfoById);
@@ -5042,8 +5044,8 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
                                         const GlslangSpirvOptions &options,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                        const SpirvBlob &initialSpirvBlob,
-                                        SpirvBlob *spirvBlobOut)
+                                        const spirv::Blob &initialSpirvBlob,
+                                        spirv::Blob *spirvBlobOut)
 {
     if (initialSpirvBlob.empty())
     {
@@ -5065,7 +5067,7 @@ angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
     // If there are aliasing vertex attributes, transform the SPIR-V again to remove them.
     if (options.shaderType == gl::ShaderType::Vertex && HasAliasingAttributes(variableInfoMap))
     {
-        SpirvBlob preTransformBlob = std::move(*spirvBlobOut);
+        spirv::Blob preTransformBlob = std::move(*spirvBlobOut);
         SpirvVertexAttributeAliasingTransformer aliasingTransformer(
             preTransformBlob, variableInfoMap, std::move(transformer.getVariableInfoByIdMap()),
             spirvBlobOut);
@@ -5081,7 +5083,7 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
                                         const gl::ShaderBitSet &linkedShaderStages,
                                         const gl::Caps &glCaps,
                                         const gl::ShaderMap<std::string> &shaderSources,
-                                        gl::ShaderMap<SpirvBlob> *spirvBlobsOut)
+                                        gl::ShaderMap<spirv::Blob> *spirvBlobsOut)
 {
     TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
     GetBuiltInResourcesFromCaps(glCaps, &builtInResources);

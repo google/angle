@@ -54,7 +54,7 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::ShaderMap<std::string> &shaderSources,
                                         bool isTransformFeedbackEnabled,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut);
+                                        gl::ShaderMap<angle::spirv::Blob> *shaderCodeOut);
 
 // Translate from SPIR-V code to Metal shader source code.
 // - spirvShaderCode is SPIRV code per shader stage when XFB emulation is turned off.
@@ -64,8 +64,8 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 angle::Result SpirvCodeToMsl(Context *context,
                              const gl::ProgramState &programState,
                              const ShaderInterfaceVariableInfoMap &xfbVSVariableInfoMap,
-                             gl::ShaderMap<std::vector<uint32_t>> *spirvShaderCode,
-                             std::vector<uint32_t> *xfbOnlySpirvCode /** nullable */,
+                             gl::ShaderMap<angle::spirv::Blob> *spirvShaderCode,
+                             angle::spirv::Blob *xfbOnlySpirvCode /** nullable */,
                              gl::ShaderMap<TranslatedShaderInfo> *mslShaderInfoOut,
                              TranslatedShaderInfo *mslXfbOnlyShaderInfoOut /** nullable */);
 

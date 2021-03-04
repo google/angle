@@ -51,14 +51,14 @@ void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t idCount)
     blob->push_back(0x00000000);
 }
 
-void WriteNop(std::vector<uint32_t> *blob)
+void WriteNop(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpNop);
 }
-void WriteUndef(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult)
+void WriteUndef(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -66,7 +66,7 @@ void WriteUndef(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUndef);
 }
-void WriteSourceContinued(std::vector<uint32_t> *blob, LiteralString continuedSource)
+void WriteSourceContinued(Blob *blob, LiteralString continuedSource)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -78,7 +78,7 @@ void WriteSourceContinued(std::vector<uint32_t> *blob, LiteralString continuedSo
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSourceContinued);
 }
-void WriteSource(std::vector<uint32_t> *blob,
+void WriteSource(Blob *blob,
                  spv::SourceLanguage sourceLanguage,
                  LiteralInteger version,
                  const IdRef *file,
@@ -103,7 +103,7 @@ void WriteSource(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSource);
 }
-void WriteSourceExtension(std::vector<uint32_t> *blob, LiteralString extension)
+void WriteSourceExtension(Blob *blob, LiteralString extension)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -115,7 +115,7 @@ void WriteSourceExtension(std::vector<uint32_t> *blob, LiteralString extension)
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSourceExtension);
 }
-void WriteName(std::vector<uint32_t> *blob, IdRef target, LiteralString name)
+void WriteName(Blob *blob, IdRef target, LiteralString name)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -128,10 +128,7 @@ void WriteName(std::vector<uint32_t> *blob, IdRef target, LiteralString name)
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpName);
 }
-void WriteMemberName(std::vector<uint32_t> *blob,
-                     IdRef type,
-                     LiteralInteger member,
-                     LiteralString name)
+void WriteMemberName(Blob *blob, IdRef type, LiteralInteger member, LiteralString name)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -145,7 +142,7 @@ void WriteMemberName(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpMemberName);
 }
-void WriteString(std::vector<uint32_t> *blob, IdResult idResult, LiteralString string)
+void WriteString(Blob *blob, IdResult idResult, LiteralString string)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -158,7 +155,7 @@ void WriteString(std::vector<uint32_t> *blob, IdResult idResult, LiteralString s
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpString);
 }
-void WriteLine(std::vector<uint32_t> *blob, IdRef file, LiteralInteger line, LiteralInteger column)
+void WriteLine(Blob *blob, IdRef file, LiteralInteger line, LiteralInteger column)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -167,7 +164,7 @@ void WriteLine(std::vector<uint32_t> *blob, IdRef file, LiteralInteger line, Lit
     blob->push_back(column);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLine);
 }
-void WriteExtension(std::vector<uint32_t> *blob, LiteralString name)
+void WriteExtension(Blob *blob, LiteralString name)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -179,7 +176,7 @@ void WriteExtension(std::vector<uint32_t> *blob, LiteralString name)
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpExtension);
 }
-void WriteExtInstImport(std::vector<uint32_t> *blob, IdResult idResult, LiteralString name)
+void WriteExtInstImport(Blob *blob, IdResult idResult, LiteralString name)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -192,7 +189,7 @@ void WriteExtInstImport(std::vector<uint32_t> *blob, IdResult idResult, LiteralS
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpExtInstImport);
 }
-void WriteExtInst(std::vector<uint32_t> *blob,
+void WriteExtInst(Blob *blob,
                   IdResultType idResultType,
                   IdResult idResult,
                   IdRef set,
@@ -211,7 +208,7 @@ void WriteExtInst(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpExtInst);
 }
-void WriteMemoryModel(std::vector<uint32_t> *blob,
+void WriteMemoryModel(Blob *blob,
                       spv::AddressingModel addressingModel,
                       spv::MemoryModel memoryModel)
 {
@@ -221,7 +218,7 @@ void WriteMemoryModel(std::vector<uint32_t> *blob,
     blob->push_back(memoryModel);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpMemoryModel);
 }
-void WriteEntryPoint(std::vector<uint32_t> *blob,
+void WriteEntryPoint(Blob *blob,
                      spv::ExecutionModel executionModel,
                      IdRef entryPoint,
                      LiteralString name,
@@ -243,7 +240,7 @@ void WriteEntryPoint(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpEntryPoint);
 }
-void WriteExecutionMode(std::vector<uint32_t> *blob, IdRef entryPoint, spv::ExecutionMode mode)
+void WriteExecutionMode(Blob *blob, IdRef entryPoint, spv::ExecutionMode mode)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -251,31 +248,28 @@ void WriteExecutionMode(std::vector<uint32_t> *blob, IdRef entryPoint, spv::Exec
     blob->push_back(mode);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpExecutionMode);
 }
-void WriteCapability(std::vector<uint32_t> *blob, spv::Capability capability)
+void WriteCapability(Blob *blob, spv::Capability capability)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(capability);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCapability);
 }
-void WriteTypeVoid(std::vector<uint32_t> *blob, IdResult idResult)
+void WriteTypeVoid(Blob *blob, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeVoid);
 }
-void WriteTypeBool(std::vector<uint32_t> *blob, IdResult idResult)
+void WriteTypeBool(Blob *blob, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeBool);
 }
-void WriteTypeInt(std::vector<uint32_t> *blob,
-                  IdResult idResult,
-                  LiteralInteger width,
-                  LiteralInteger signedness)
+void WriteTypeInt(Blob *blob, IdResult idResult, LiteralInteger width, LiteralInteger signedness)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -284,7 +278,7 @@ void WriteTypeInt(std::vector<uint32_t> *blob,
     blob->push_back(signedness);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeInt);
 }
-void WriteTypeFloat(std::vector<uint32_t> *blob, IdResult idResult, LiteralInteger width)
+void WriteTypeFloat(Blob *blob, IdResult idResult, LiteralInteger width)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -292,7 +286,7 @@ void WriteTypeFloat(std::vector<uint32_t> *blob, IdResult idResult, LiteralInteg
     blob->push_back(width);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeFloat);
 }
-void WriteTypeVector(std::vector<uint32_t> *blob,
+void WriteTypeVector(Blob *blob,
                      IdResult idResult,
                      IdRef componentType,
                      LiteralInteger componentCount)
@@ -304,10 +298,7 @@ void WriteTypeVector(std::vector<uint32_t> *blob,
     blob->push_back(componentCount);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeVector);
 }
-void WriteTypeMatrix(std::vector<uint32_t> *blob,
-                     IdResult idResult,
-                     IdRef columnType,
-                     LiteralInteger columnCount)
+void WriteTypeMatrix(Blob *blob, IdResult idResult, IdRef columnType, LiteralInteger columnCount)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -316,7 +307,7 @@ void WriteTypeMatrix(std::vector<uint32_t> *blob,
     blob->push_back(columnCount);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeMatrix);
 }
-void WriteTypeImage(std::vector<uint32_t> *blob,
+void WriteTypeImage(Blob *blob,
                     IdResult idResult,
                     IdRef sampledType,
                     spv::Dim dim,
@@ -343,14 +334,14 @@ void WriteTypeImage(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeImage);
 }
-void WriteTypeSampler(std::vector<uint32_t> *blob, IdResult idResult)
+void WriteTypeSampler(Blob *blob, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeSampler);
 }
-void WriteTypeSampledImage(std::vector<uint32_t> *blob, IdResult idResult, IdRef imageType)
+void WriteTypeSampledImage(Blob *blob, IdResult idResult, IdRef imageType)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -358,7 +349,7 @@ void WriteTypeSampledImage(std::vector<uint32_t> *blob, IdResult idResult, IdRef
     blob->push_back(imageType);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeSampledImage);
 }
-void WriteTypeArray(std::vector<uint32_t> *blob, IdResult idResult, IdRef elementType, IdRef length)
+void WriteTypeArray(Blob *blob, IdResult idResult, IdRef elementType, IdRef length)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -367,7 +358,7 @@ void WriteTypeArray(std::vector<uint32_t> *blob, IdResult idResult, IdRef elemen
     blob->push_back(length);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeArray);
 }
-void WriteTypeRuntimeArray(std::vector<uint32_t> *blob, IdResult idResult, IdRef elementType)
+void WriteTypeRuntimeArray(Blob *blob, IdResult idResult, IdRef elementType)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -375,7 +366,7 @@ void WriteTypeRuntimeArray(std::vector<uint32_t> *blob, IdResult idResult, IdRef
     blob->push_back(elementType);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeRuntimeArray);
 }
-void WriteTypeStruct(std::vector<uint32_t> *blob, IdResult idResult, const IdRefList &memberList)
+void WriteTypeStruct(Blob *blob, IdResult idResult, const IdRefList &memberList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -386,10 +377,7 @@ void WriteTypeStruct(std::vector<uint32_t> *blob, IdResult idResult, const IdRef
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeStruct);
 }
-void WriteTypePointer(std::vector<uint32_t> *blob,
-                      IdResult idResult,
-                      spv::StorageClass storageClass,
-                      IdRef type)
+void WriteTypePointer(Blob *blob, IdResult idResult, spv::StorageClass storageClass, IdRef type)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -398,7 +386,7 @@ void WriteTypePointer(std::vector<uint32_t> *blob,
     blob->push_back(type);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypePointer);
 }
-void WriteTypeFunction(std::vector<uint32_t> *blob,
+void WriteTypeFunction(Blob *blob,
                        IdResult idResult,
                        IdRef returnType,
                        const IdRefList &parameterList)
@@ -413,9 +401,7 @@ void WriteTypeFunction(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeFunction);
 }
-void WriteTypeForwardPointer(std::vector<uint32_t> *blob,
-                             IdRef pointerType,
-                             spv::StorageClass storageClass)
+void WriteTypeForwardPointer(Blob *blob, IdRef pointerType, spv::StorageClass storageClass)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -423,7 +409,7 @@ void WriteTypeForwardPointer(std::vector<uint32_t> *blob,
     blob->push_back(storageClass);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTypeForwardPointer);
 }
-void WriteConstantTrue(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult)
+void WriteConstantTrue(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -431,7 +417,7 @@ void WriteConstantTrue(std::vector<uint32_t> *blob, IdResultType idResultType, I
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConstantTrue);
 }
-void WriteConstantFalse(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult)
+void WriteConstantFalse(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -439,7 +425,7 @@ void WriteConstantFalse(std::vector<uint32_t> *blob, IdResultType idResultType, 
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConstantFalse);
 }
-void WriteConstant(std::vector<uint32_t> *blob,
+void WriteConstant(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    LiteralContextDependentNumber value)
@@ -451,7 +437,7 @@ void WriteConstant(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConstant);
 }
-void WriteConstantComposite(std::vector<uint32_t> *blob,
+void WriteConstantComposite(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             const IdRefList &constituentsList)
@@ -466,7 +452,7 @@ void WriteConstantComposite(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConstantComposite);
 }
-void WriteConstantNull(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult)
+void WriteConstantNull(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -474,9 +460,7 @@ void WriteConstantNull(std::vector<uint32_t> *blob, IdResultType idResultType, I
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConstantNull);
 }
-void WriteSpecConstantTrue(std::vector<uint32_t> *blob,
-                           IdResultType idResultType,
-                           IdResult idResult)
+void WriteSpecConstantTrue(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -484,9 +468,7 @@ void WriteSpecConstantTrue(std::vector<uint32_t> *blob,
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSpecConstantTrue);
 }
-void WriteSpecConstantFalse(std::vector<uint32_t> *blob,
-                            IdResultType idResultType,
-                            IdResult idResult)
+void WriteSpecConstantFalse(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -494,7 +476,7 @@ void WriteSpecConstantFalse(std::vector<uint32_t> *blob,
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSpecConstantFalse);
 }
-void WriteSpecConstant(std::vector<uint32_t> *blob,
+void WriteSpecConstant(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        LiteralContextDependentNumber value)
@@ -506,7 +488,7 @@ void WriteSpecConstant(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSpecConstant);
 }
-void WriteSpecConstantComposite(std::vector<uint32_t> *blob,
+void WriteSpecConstantComposite(Blob *blob,
                                 IdResultType idResultType,
                                 IdResult idResult,
                                 const IdRefList &constituentsList)
@@ -521,7 +503,7 @@ void WriteSpecConstantComposite(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSpecConstantComposite);
 }
-void WriteFunction(std::vector<uint32_t> *blob,
+void WriteFunction(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    spv::FunctionControlMask functionControl,
@@ -535,9 +517,7 @@ void WriteFunction(std::vector<uint32_t> *blob,
     blob->push_back(functionType);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFunction);
 }
-void WriteFunctionParameter(std::vector<uint32_t> *blob,
-                            IdResultType idResultType,
-                            IdResult idResult)
+void WriteFunctionParameter(Blob *blob, IdResultType idResultType, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -545,14 +525,14 @@ void WriteFunctionParameter(std::vector<uint32_t> *blob,
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFunctionParameter);
 }
-void WriteFunctionEnd(std::vector<uint32_t> *blob)
+void WriteFunctionEnd(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFunctionEnd);
 }
-void WriteFunctionCall(std::vector<uint32_t> *blob,
+void WriteFunctionCall(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef function,
@@ -569,7 +549,7 @@ void WriteFunctionCall(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFunctionCall);
 }
-void WriteVariable(std::vector<uint32_t> *blob,
+void WriteVariable(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    spv::StorageClass storageClass,
@@ -586,7 +566,7 @@ void WriteVariable(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpVariable);
 }
-void WriteImageTexelPointer(std::vector<uint32_t> *blob,
+void WriteImageTexelPointer(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef image,
@@ -602,7 +582,7 @@ void WriteImageTexelPointer(std::vector<uint32_t> *blob,
     blob->push_back(sample);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageTexelPointer);
 }
-void WriteLoad(std::vector<uint32_t> *blob,
+void WriteLoad(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef pointer,
@@ -619,10 +599,7 @@ void WriteLoad(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLoad);
 }
-void WriteStore(std::vector<uint32_t> *blob,
-                IdRef pointer,
-                IdRef object,
-                const spv::MemoryAccessMask *memoryAccess)
+void WriteStore(Blob *blob, IdRef pointer, IdRef object, const spv::MemoryAccessMask *memoryAccess)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -634,7 +611,7 @@ void WriteStore(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpStore);
 }
-void WriteCopyMemory(std::vector<uint32_t> *blob,
+void WriteCopyMemory(Blob *blob,
                      IdRef target,
                      IdRef source,
                      const spv::MemoryAccessMask *memoryAccess)
@@ -649,7 +626,7 @@ void WriteCopyMemory(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCopyMemory);
 }
-void WriteCopyMemorySized(std::vector<uint32_t> *blob,
+void WriteCopyMemorySized(Blob *blob,
                           IdRef target,
                           IdRef source,
                           IdRef size,
@@ -666,7 +643,7 @@ void WriteCopyMemorySized(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCopyMemorySized);
 }
-void WriteAccessChain(std::vector<uint32_t> *blob,
+void WriteAccessChain(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef base,
@@ -683,7 +660,7 @@ void WriteAccessChain(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAccessChain);
 }
-void WriteInBoundsAccessChain(std::vector<uint32_t> *blob,
+void WriteInBoundsAccessChain(Blob *blob,
                               IdResultType idResultType,
                               IdResult idResult,
                               IdRef base,
@@ -700,7 +677,7 @@ void WriteInBoundsAccessChain(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpInBoundsAccessChain);
 }
-void WriteArrayLength(std::vector<uint32_t> *blob,
+void WriteArrayLength(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef structure,
@@ -714,7 +691,7 @@ void WriteArrayLength(std::vector<uint32_t> *blob,
     blob->push_back(arraymember);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpArrayLength);
 }
-void WriteInBoundsPtrAccessChain(std::vector<uint32_t> *blob,
+void WriteInBoundsPtrAccessChain(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef base,
@@ -733,7 +710,7 @@ void WriteInBoundsPtrAccessChain(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpInBoundsPtrAccessChain);
 }
-void WriteDecorate(std::vector<uint32_t> *blob,
+void WriteDecorate(Blob *blob,
                    IdRef target,
                    spv::Decoration decoration,
                    const LiteralIntegerList &valuesPairList)
@@ -748,7 +725,7 @@ void WriteDecorate(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDecorate);
 }
-void WriteMemberDecorate(std::vector<uint32_t> *blob,
+void WriteMemberDecorate(Blob *blob,
                          IdRef structureType,
                          LiteralInteger member,
                          spv::Decoration decoration,
@@ -765,16 +742,14 @@ void WriteMemberDecorate(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpMemberDecorate);
 }
-void WriteDecorationGroup(std::vector<uint32_t> *blob, IdResult idResult)
+void WriteDecorationGroup(Blob *blob, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDecorationGroup);
 }
-void WriteGroupDecorate(std::vector<uint32_t> *blob,
-                        IdRef decorationGroup,
-                        const IdRefList &targetsList)
+void WriteGroupDecorate(Blob *blob, IdRef decorationGroup, const IdRefList &targetsList)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -785,7 +760,7 @@ void WriteGroupDecorate(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupDecorate);
 }
-void WriteGroupMemberDecorate(std::vector<uint32_t> *blob,
+void WriteGroupMemberDecorate(Blob *blob,
                               IdRef decorationGroup,
                               const PairIdRefLiteralIntegerList &targetsPairList)
 {
@@ -799,7 +774,7 @@ void WriteGroupMemberDecorate(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupMemberDecorate);
 }
-void WriteVectorExtractDynamic(std::vector<uint32_t> *blob,
+void WriteVectorExtractDynamic(Blob *blob,
                                IdResultType idResultType,
                                IdResult idResult,
                                IdRef vector,
@@ -813,7 +788,7 @@ void WriteVectorExtractDynamic(std::vector<uint32_t> *blob,
     blob->push_back(index);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpVectorExtractDynamic);
 }
-void WriteVectorInsertDynamic(std::vector<uint32_t> *blob,
+void WriteVectorInsertDynamic(Blob *blob,
                               IdResultType idResultType,
                               IdResult idResult,
                               IdRef vector,
@@ -829,7 +804,7 @@ void WriteVectorInsertDynamic(std::vector<uint32_t> *blob,
     blob->push_back(index);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpVectorInsertDynamic);
 }
-void WriteVectorShuffle(std::vector<uint32_t> *blob,
+void WriteVectorShuffle(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
                         IdRef vector1,
@@ -848,7 +823,7 @@ void WriteVectorShuffle(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpVectorShuffle);
 }
-void WriteCompositeConstruct(std::vector<uint32_t> *blob,
+void WriteCompositeConstruct(Blob *blob,
                              IdResultType idResultType,
                              IdResult idResult,
                              const IdRefList &constituentsList)
@@ -863,7 +838,7 @@ void WriteCompositeConstruct(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCompositeConstruct);
 }
-void WriteCompositeExtract(std::vector<uint32_t> *blob,
+void WriteCompositeExtract(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef composite,
@@ -880,7 +855,7 @@ void WriteCompositeExtract(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCompositeExtract);
 }
-void WriteCompositeInsert(std::vector<uint32_t> *blob,
+void WriteCompositeInsert(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef object,
@@ -899,10 +874,7 @@ void WriteCompositeInsert(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCompositeInsert);
 }
-void WriteCopyObject(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef operand)
+void WriteCopyObject(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -911,10 +883,7 @@ void WriteCopyObject(std::vector<uint32_t> *blob,
     blob->push_back(operand);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpCopyObject);
 }
-void WriteTranspose(std::vector<uint32_t> *blob,
-                    IdResultType idResultType,
-                    IdResult idResult,
-                    IdRef matrix)
+void WriteTranspose(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef matrix)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -923,7 +892,7 @@ void WriteTranspose(std::vector<uint32_t> *blob,
     blob->push_back(matrix);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpTranspose);
 }
-void WriteSampledImage(std::vector<uint32_t> *blob,
+void WriteSampledImage(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef image,
@@ -937,7 +906,7 @@ void WriteSampledImage(std::vector<uint32_t> *blob,
     blob->push_back(sampler);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSampledImage);
 }
-void WriteImageSampleImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleImplicitLod(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef sampledImage,
@@ -961,7 +930,7 @@ void WriteImageSampleImplicitLod(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSampleImplicitLod);
 }
-void WriteImageSampleExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleExplicitLod(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef sampledImage,
@@ -982,7 +951,7 @@ void WriteImageSampleExplicitLod(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSampleExplicitLod);
 }
-void WriteImageSampleDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleDrefImplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
@@ -1008,7 +977,7 @@ void WriteImageSampleDrefImplicitLod(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSampleDrefImplicitLod);
 }
-void WriteImageSampleDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleDrefExplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
@@ -1031,7 +1000,7 @@ void WriteImageSampleDrefExplicitLod(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSampleDrefExplicitLod);
 }
-void WriteImageSampleProjImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjImplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
@@ -1055,7 +1024,7 @@ void WriteImageSampleProjImplicitLod(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSampleProjImplicitLod);
 }
-void WriteImageSampleProjExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjExplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
@@ -1076,7 +1045,7 @@ void WriteImageSampleProjExplicitLod(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSampleProjExplicitLod);
 }
-void WriteImageSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjDrefImplicitLod(Blob *blob,
                                          IdResultType idResultType,
                                          IdResult idResult,
                                          IdRef sampledImage,
@@ -1103,7 +1072,7 @@ void WriteImageSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSampleProjDrefImplicitLod);
 }
-void WriteImageSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjDrefExplicitLod(Blob *blob,
                                          IdResultType idResultType,
                                          IdResult idResult,
                                          IdRef sampledImage,
@@ -1127,7 +1096,7 @@ void WriteImageSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSampleProjDrefExplicitLod);
 }
-void WriteImageFetch(std::vector<uint32_t> *blob,
+void WriteImageFetch(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef image,
@@ -1151,7 +1120,7 @@ void WriteImageFetch(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageFetch);
 }
-void WriteImageGather(std::vector<uint32_t> *blob,
+void WriteImageGather(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef sampledImage,
@@ -1177,7 +1146,7 @@ void WriteImageGather(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageGather);
 }
-void WriteImageDrefGather(std::vector<uint32_t> *blob,
+void WriteImageDrefGather(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef sampledImage,
@@ -1203,7 +1172,7 @@ void WriteImageDrefGather(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageDrefGather);
 }
-void WriteImageRead(std::vector<uint32_t> *blob,
+void WriteImageRead(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef image,
@@ -1227,7 +1196,7 @@ void WriteImageRead(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageRead);
 }
-void WriteImageWrite(std::vector<uint32_t> *blob,
+void WriteImageWrite(Blob *blob,
                      IdRef image,
                      IdRef coordinate,
                      IdRef texel,
@@ -1249,10 +1218,7 @@ void WriteImageWrite(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageWrite);
 }
-void WriteImage(std::vector<uint32_t> *blob,
-                IdResultType idResultType,
-                IdResult idResult,
-                IdRef sampledImage)
+void WriteImage(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef sampledImage)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1261,7 +1227,7 @@ void WriteImage(std::vector<uint32_t> *blob,
     blob->push_back(sampledImage);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImage);
 }
-void WriteImageQueryLod(std::vector<uint32_t> *blob,
+void WriteImageQueryLod(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
                         IdRef sampledImage,
@@ -1275,10 +1241,7 @@ void WriteImageQueryLod(std::vector<uint32_t> *blob,
     blob->push_back(coordinate);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageQueryLod);
 }
-void WriteConvertFToU(std::vector<uint32_t> *blob,
-                      IdResultType idResultType,
-                      IdResult idResult,
-                      IdRef floatValue)
+void WriteConvertFToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1287,10 +1250,7 @@ void WriteConvertFToU(std::vector<uint32_t> *blob,
     blob->push_back(floatValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertFToU);
 }
-void WriteConvertFToS(std::vector<uint32_t> *blob,
-                      IdResultType idResultType,
-                      IdResult idResult,
-                      IdRef floatValue)
+void WriteConvertFToS(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1299,10 +1259,7 @@ void WriteConvertFToS(std::vector<uint32_t> *blob,
     blob->push_back(floatValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertFToS);
 }
-void WriteConvertSToF(std::vector<uint32_t> *blob,
-                      IdResultType idResultType,
-                      IdResult idResult,
-                      IdRef signedValue)
+void WriteConvertSToF(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef signedValue)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1311,10 +1268,7 @@ void WriteConvertSToF(std::vector<uint32_t> *blob,
     blob->push_back(signedValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertSToF);
 }
-void WriteConvertUToF(std::vector<uint32_t> *blob,
-                      IdResultType idResultType,
-                      IdResult idResult,
-                      IdRef unsignedValue)
+void WriteConvertUToF(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef unsignedValue)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1323,10 +1277,7 @@ void WriteConvertUToF(std::vector<uint32_t> *blob,
     blob->push_back(unsignedValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertUToF);
 }
-void WriteUConvert(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef unsignedValue)
+void WriteUConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef unsignedValue)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1335,10 +1286,7 @@ void WriteUConvert(std::vector<uint32_t> *blob,
     blob->push_back(unsignedValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUConvert);
 }
-void WriteSConvert(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef signedValue)
+void WriteSConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef signedValue)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1347,10 +1295,7 @@ void WriteSConvert(std::vector<uint32_t> *blob,
     blob->push_back(signedValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSConvert);
 }
-void WriteFConvert(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef floatValue)
+void WriteFConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1359,10 +1304,7 @@ void WriteFConvert(std::vector<uint32_t> *blob,
     blob->push_back(floatValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFConvert);
 }
-void WriteQuantizeToF16(std::vector<uint32_t> *blob,
-                        IdResultType idResultType,
-                        IdResult idResult,
-                        IdRef value)
+void WriteQuantizeToF16(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef value)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1371,10 +1313,7 @@ void WriteQuantizeToF16(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpQuantizeToF16);
 }
-void WriteConvertPtrToU(std::vector<uint32_t> *blob,
-                        IdResultType idResultType,
-                        IdResult idResult,
-                        IdRef pointer)
+void WriteConvertPtrToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef pointer)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1383,7 +1322,7 @@ void WriteConvertPtrToU(std::vector<uint32_t> *blob,
     blob->push_back(pointer);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertPtrToU);
 }
-void WriteConvertUToPtr(std::vector<uint32_t> *blob,
+void WriteConvertUToPtr(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
                         IdRef integerValue)
@@ -1395,10 +1334,7 @@ void WriteConvertUToPtr(std::vector<uint32_t> *blob,
     blob->push_back(integerValue);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpConvertUToPtr);
 }
-void WriteBitcast(std::vector<uint32_t> *blob,
-                  IdResultType idResultType,
-                  IdResult idResult,
-                  IdRef operand)
+void WriteBitcast(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1407,10 +1343,7 @@ void WriteBitcast(std::vector<uint32_t> *blob,
     blob->push_back(operand);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitcast);
 }
-void WriteSNegate(std::vector<uint32_t> *blob,
-                  IdResultType idResultType,
-                  IdResult idResult,
-                  IdRef operand)
+void WriteSNegate(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1419,10 +1352,7 @@ void WriteSNegate(std::vector<uint32_t> *blob,
     blob->push_back(operand);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSNegate);
 }
-void WriteFNegate(std::vector<uint32_t> *blob,
-                  IdResultType idResultType,
-                  IdResult idResult,
-                  IdRef operand)
+void WriteFNegate(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1431,7 +1361,7 @@ void WriteFNegate(std::vector<uint32_t> *blob,
     blob->push_back(operand);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFNegate);
 }
-void WriteIAdd(std::vector<uint32_t> *blob,
+void WriteIAdd(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1445,7 +1375,7 @@ void WriteIAdd(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpIAdd);
 }
-void WriteFAdd(std::vector<uint32_t> *blob,
+void WriteFAdd(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1459,7 +1389,7 @@ void WriteFAdd(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFAdd);
 }
-void WriteISub(std::vector<uint32_t> *blob,
+void WriteISub(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1473,7 +1403,7 @@ void WriteISub(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpISub);
 }
-void WriteFSub(std::vector<uint32_t> *blob,
+void WriteFSub(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1487,7 +1417,7 @@ void WriteFSub(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFSub);
 }
-void WriteIMul(std::vector<uint32_t> *blob,
+void WriteIMul(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1501,7 +1431,7 @@ void WriteIMul(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpIMul);
 }
-void WriteFMul(std::vector<uint32_t> *blob,
+void WriteFMul(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1515,7 +1445,7 @@ void WriteFMul(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFMul);
 }
-void WriteUDiv(std::vector<uint32_t> *blob,
+void WriteUDiv(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1529,7 +1459,7 @@ void WriteUDiv(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUDiv);
 }
-void WriteSDiv(std::vector<uint32_t> *blob,
+void WriteSDiv(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1543,7 +1473,7 @@ void WriteSDiv(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSDiv);
 }
-void WriteFDiv(std::vector<uint32_t> *blob,
+void WriteFDiv(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1557,7 +1487,7 @@ void WriteFDiv(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFDiv);
 }
-void WriteUMod(std::vector<uint32_t> *blob,
+void WriteUMod(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1571,7 +1501,7 @@ void WriteUMod(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUMod);
 }
-void WriteSRem(std::vector<uint32_t> *blob,
+void WriteSRem(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1585,7 +1515,7 @@ void WriteSRem(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSRem);
 }
-void WriteSMod(std::vector<uint32_t> *blob,
+void WriteSMod(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1599,7 +1529,7 @@ void WriteSMod(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSMod);
 }
-void WriteFRem(std::vector<uint32_t> *blob,
+void WriteFRem(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1613,7 +1543,7 @@ void WriteFRem(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFRem);
 }
-void WriteFMod(std::vector<uint32_t> *blob,
+void WriteFMod(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
@@ -1627,7 +1557,7 @@ void WriteFMod(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFMod);
 }
-void WriteVectorTimesScalar(std::vector<uint32_t> *blob,
+void WriteVectorTimesScalar(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef vector,
@@ -1641,7 +1571,7 @@ void WriteVectorTimesScalar(std::vector<uint32_t> *blob,
     blob->push_back(scalar);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpVectorTimesScalar);
 }
-void WriteMatrixTimesScalar(std::vector<uint32_t> *blob,
+void WriteMatrixTimesScalar(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef matrix,
@@ -1655,7 +1585,7 @@ void WriteMatrixTimesScalar(std::vector<uint32_t> *blob,
     blob->push_back(scalar);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpMatrixTimesScalar);
 }
-void WriteVectorTimesMatrix(std::vector<uint32_t> *blob,
+void WriteVectorTimesMatrix(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef vector,
@@ -1669,7 +1599,7 @@ void WriteVectorTimesMatrix(std::vector<uint32_t> *blob,
     blob->push_back(matrix);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpVectorTimesMatrix);
 }
-void WriteMatrixTimesVector(std::vector<uint32_t> *blob,
+void WriteMatrixTimesVector(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef matrix,
@@ -1683,7 +1613,7 @@ void WriteMatrixTimesVector(std::vector<uint32_t> *blob,
     blob->push_back(vector);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpMatrixTimesVector);
 }
-void WriteMatrixTimesMatrix(std::vector<uint32_t> *blob,
+void WriteMatrixTimesMatrix(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef leftMatrix,
@@ -1697,7 +1627,7 @@ void WriteMatrixTimesMatrix(std::vector<uint32_t> *blob,
     blob->push_back(rightMatrix);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpMatrixTimesMatrix);
 }
-void WriteOuterProduct(std::vector<uint32_t> *blob,
+void WriteOuterProduct(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef vector1,
@@ -1711,7 +1641,7 @@ void WriteOuterProduct(std::vector<uint32_t> *blob,
     blob->push_back(vector2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpOuterProduct);
 }
-void WriteDot(std::vector<uint32_t> *blob,
+void WriteDot(Blob *blob,
               IdResultType idResultType,
               IdResult idResult,
               IdRef vector1,
@@ -1725,7 +1655,7 @@ void WriteDot(std::vector<uint32_t> *blob,
     blob->push_back(vector2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDot);
 }
-void WriteIAddCarry(std::vector<uint32_t> *blob,
+void WriteIAddCarry(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
@@ -1739,7 +1669,7 @@ void WriteIAddCarry(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpIAddCarry);
 }
-void WriteISubBorrow(std::vector<uint32_t> *blob,
+void WriteISubBorrow(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
@@ -1753,7 +1683,7 @@ void WriteISubBorrow(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpISubBorrow);
 }
-void WriteUMulExtended(std::vector<uint32_t> *blob,
+void WriteUMulExtended(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
@@ -1767,7 +1697,7 @@ void WriteUMulExtended(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUMulExtended);
 }
-void WriteSMulExtended(std::vector<uint32_t> *blob,
+void WriteSMulExtended(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
@@ -1781,10 +1711,7 @@ void WriteSMulExtended(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSMulExtended);
 }
-void WriteAny(std::vector<uint32_t> *blob,
-              IdResultType idResultType,
-              IdResult idResult,
-              IdRef vector)
+void WriteAny(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef vector)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1793,10 +1720,7 @@ void WriteAny(std::vector<uint32_t> *blob,
     blob->push_back(vector);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAny);
 }
-void WriteAll(std::vector<uint32_t> *blob,
-              IdResultType idResultType,
-              IdResult idResult,
-              IdRef vector)
+void WriteAll(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef vector)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1805,7 +1729,7 @@ void WriteAll(std::vector<uint32_t> *blob,
     blob->push_back(vector);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAll);
 }
-void WriteIsNan(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef x)
+void WriteIsNan(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef x)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1814,7 +1738,7 @@ void WriteIsNan(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpIsNan);
 }
-void WriteIsInf(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef x)
+void WriteIsInf(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef x)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1823,7 +1747,7 @@ void WriteIsInf(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpIsInf);
 }
-void WriteLogicalEqual(std::vector<uint32_t> *blob,
+void WriteLogicalEqual(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
@@ -1837,7 +1761,7 @@ void WriteLogicalEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLogicalEqual);
 }
-void WriteLogicalNotEqual(std::vector<uint32_t> *blob,
+void WriteLogicalNotEqual(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef operand1,
@@ -1851,7 +1775,7 @@ void WriteLogicalNotEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLogicalNotEqual);
 }
-void WriteLogicalOr(std::vector<uint32_t> *blob,
+void WriteLogicalOr(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
@@ -1865,7 +1789,7 @@ void WriteLogicalOr(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLogicalOr);
 }
-void WriteLogicalAnd(std::vector<uint32_t> *blob,
+void WriteLogicalAnd(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
@@ -1879,10 +1803,7 @@ void WriteLogicalAnd(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLogicalAnd);
 }
-void WriteLogicalNot(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef operand)
+void WriteLogicalNot(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -1891,7 +1812,7 @@ void WriteLogicalNot(std::vector<uint32_t> *blob,
     blob->push_back(operand);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLogicalNot);
 }
-void WriteSelect(std::vector<uint32_t> *blob,
+void WriteSelect(Blob *blob,
                  IdResultType idResultType,
                  IdResult idResult,
                  IdRef condition,
@@ -1907,7 +1828,7 @@ void WriteSelect(std::vector<uint32_t> *blob,
     blob->push_back(object2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSelect);
 }
-void WriteIEqual(std::vector<uint32_t> *blob,
+void WriteIEqual(Blob *blob,
                  IdResultType idResultType,
                  IdResult idResult,
                  IdRef operand1,
@@ -1921,7 +1842,7 @@ void WriteIEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpIEqual);
 }
-void WriteINotEqual(std::vector<uint32_t> *blob,
+void WriteINotEqual(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
@@ -1935,7 +1856,7 @@ void WriteINotEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpINotEqual);
 }
-void WriteUGreaterThan(std::vector<uint32_t> *blob,
+void WriteUGreaterThan(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
@@ -1949,7 +1870,7 @@ void WriteUGreaterThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUGreaterThan);
 }
-void WriteSGreaterThan(std::vector<uint32_t> *blob,
+void WriteSGreaterThan(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
@@ -1963,7 +1884,7 @@ void WriteSGreaterThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSGreaterThan);
 }
-void WriteUGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteUGreaterThanEqual(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
@@ -1977,7 +1898,7 @@ void WriteUGreaterThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUGreaterThanEqual);
 }
-void WriteSGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteSGreaterThanEqual(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
@@ -1991,7 +1912,7 @@ void WriteSGreaterThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSGreaterThanEqual);
 }
-void WriteULessThan(std::vector<uint32_t> *blob,
+void WriteULessThan(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
@@ -2005,7 +1926,7 @@ void WriteULessThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpULessThan);
 }
-void WriteSLessThan(std::vector<uint32_t> *blob,
+void WriteSLessThan(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
@@ -2019,7 +1940,7 @@ void WriteSLessThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSLessThan);
 }
-void WriteULessThanEqual(std::vector<uint32_t> *blob,
+void WriteULessThanEqual(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
@@ -2033,7 +1954,7 @@ void WriteULessThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpULessThanEqual);
 }
-void WriteSLessThanEqual(std::vector<uint32_t> *blob,
+void WriteSLessThanEqual(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
@@ -2047,7 +1968,7 @@ void WriteSLessThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSLessThanEqual);
 }
-void WriteFOrdEqual(std::vector<uint32_t> *blob,
+void WriteFOrdEqual(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
@@ -2061,7 +1982,7 @@ void WriteFOrdEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFOrdEqual);
 }
-void WriteFUnordEqual(std::vector<uint32_t> *blob,
+void WriteFUnordEqual(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef operand1,
@@ -2075,7 +1996,7 @@ void WriteFUnordEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFUnordEqual);
 }
-void WriteFOrdNotEqual(std::vector<uint32_t> *blob,
+void WriteFOrdNotEqual(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
@@ -2089,7 +2010,7 @@ void WriteFOrdNotEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFOrdNotEqual);
 }
-void WriteFUnordNotEqual(std::vector<uint32_t> *blob,
+void WriteFUnordNotEqual(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
@@ -2103,7 +2024,7 @@ void WriteFUnordNotEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFUnordNotEqual);
 }
-void WriteFOrdLessThan(std::vector<uint32_t> *blob,
+void WriteFOrdLessThan(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
@@ -2117,7 +2038,7 @@ void WriteFOrdLessThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFOrdLessThan);
 }
-void WriteFUnordLessThan(std::vector<uint32_t> *blob,
+void WriteFUnordLessThan(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
@@ -2131,7 +2052,7 @@ void WriteFUnordLessThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFUnordLessThan);
 }
-void WriteFOrdGreaterThan(std::vector<uint32_t> *blob,
+void WriteFOrdGreaterThan(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef operand1,
@@ -2145,7 +2066,7 @@ void WriteFOrdGreaterThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFOrdGreaterThan);
 }
-void WriteFUnordGreaterThan(std::vector<uint32_t> *blob,
+void WriteFUnordGreaterThan(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
@@ -2159,7 +2080,7 @@ void WriteFUnordGreaterThan(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFUnordGreaterThan);
 }
-void WriteFOrdLessThanEqual(std::vector<uint32_t> *blob,
+void WriteFOrdLessThanEqual(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
@@ -2173,7 +2094,7 @@ void WriteFOrdLessThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFOrdLessThanEqual);
 }
-void WriteFUnordLessThanEqual(std::vector<uint32_t> *blob,
+void WriteFUnordLessThanEqual(Blob *blob,
                               IdResultType idResultType,
                               IdResult idResult,
                               IdRef operand1,
@@ -2187,7 +2108,7 @@ void WriteFUnordLessThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFUnordLessThanEqual);
 }
-void WriteFOrdGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteFOrdGreaterThanEqual(Blob *blob,
                                IdResultType idResultType,
                                IdResult idResult,
                                IdRef operand1,
@@ -2201,7 +2122,7 @@ void WriteFOrdGreaterThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFOrdGreaterThanEqual);
 }
-void WriteFUnordGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteFUnordGreaterThanEqual(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef operand1,
@@ -2215,7 +2136,7 @@ void WriteFUnordGreaterThanEqual(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFUnordGreaterThanEqual);
 }
-void WriteShiftRightLogical(std::vector<uint32_t> *blob,
+void WriteShiftRightLogical(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef base,
@@ -2229,7 +2150,7 @@ void WriteShiftRightLogical(std::vector<uint32_t> *blob,
     blob->push_back(shift);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpShiftRightLogical);
 }
-void WriteShiftRightArithmetic(std::vector<uint32_t> *blob,
+void WriteShiftRightArithmetic(Blob *blob,
                                IdResultType idResultType,
                                IdResult idResult,
                                IdRef base,
@@ -2243,7 +2164,7 @@ void WriteShiftRightArithmetic(std::vector<uint32_t> *blob,
     blob->push_back(shift);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpShiftRightArithmetic);
 }
-void WriteShiftLeftLogical(std::vector<uint32_t> *blob,
+void WriteShiftLeftLogical(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef base,
@@ -2257,7 +2178,7 @@ void WriteShiftLeftLogical(std::vector<uint32_t> *blob,
     blob->push_back(shift);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpShiftLeftLogical);
 }
-void WriteBitwiseOr(std::vector<uint32_t> *blob,
+void WriteBitwiseOr(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
@@ -2271,7 +2192,7 @@ void WriteBitwiseOr(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitwiseOr);
 }
-void WriteBitwiseXor(std::vector<uint32_t> *blob,
+void WriteBitwiseXor(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
@@ -2285,7 +2206,7 @@ void WriteBitwiseXor(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitwiseXor);
 }
-void WriteBitwiseAnd(std::vector<uint32_t> *blob,
+void WriteBitwiseAnd(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
@@ -2299,10 +2220,7 @@ void WriteBitwiseAnd(std::vector<uint32_t> *blob,
     blob->push_back(operand2);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitwiseAnd);
 }
-void WriteNot(std::vector<uint32_t> *blob,
-              IdResultType idResultType,
-              IdResult idResult,
-              IdRef operand)
+void WriteNot(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2311,7 +2229,7 @@ void WriteNot(std::vector<uint32_t> *blob,
     blob->push_back(operand);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpNot);
 }
-void WriteBitFieldInsert(std::vector<uint32_t> *blob,
+void WriteBitFieldInsert(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef base,
@@ -2329,7 +2247,7 @@ void WriteBitFieldInsert(std::vector<uint32_t> *blob,
     blob->push_back(count);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitFieldInsert);
 }
-void WriteBitFieldSExtract(std::vector<uint32_t> *blob,
+void WriteBitFieldSExtract(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef base,
@@ -2345,7 +2263,7 @@ void WriteBitFieldSExtract(std::vector<uint32_t> *blob,
     blob->push_back(count);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitFieldSExtract);
 }
-void WriteBitFieldUExtract(std::vector<uint32_t> *blob,
+void WriteBitFieldUExtract(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef base,
@@ -2361,10 +2279,7 @@ void WriteBitFieldUExtract(std::vector<uint32_t> *blob,
     blob->push_back(count);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitFieldUExtract);
 }
-void WriteBitReverse(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef base)
+void WriteBitReverse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef base)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2373,10 +2288,7 @@ void WriteBitReverse(std::vector<uint32_t> *blob,
     blob->push_back(base);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitReverse);
 }
-void WriteBitCount(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef base)
+void WriteBitCount(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef base)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2385,7 +2297,7 @@ void WriteBitCount(std::vector<uint32_t> *blob,
     blob->push_back(base);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBitCount);
 }
-void WriteDPdx(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef p)
+void WriteDPdx(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2394,7 +2306,7 @@ void WriteDPdx(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult 
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDPdx);
 }
-void WriteDPdy(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef p)
+void WriteDPdy(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2403,7 +2315,7 @@ void WriteDPdy(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult 
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDPdy);
 }
-void WriteFwidth(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef p)
+void WriteFwidth(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2412,10 +2324,7 @@ void WriteFwidth(std::vector<uint32_t> *blob, IdResultType idResultType, IdResul
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFwidth);
 }
-void WriteDPdxFine(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef p)
+void WriteDPdxFine(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2424,10 +2333,7 @@ void WriteDPdxFine(std::vector<uint32_t> *blob,
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDPdxFine);
 }
-void WriteDPdyFine(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef p)
+void WriteDPdyFine(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2436,10 +2342,7 @@ void WriteDPdyFine(std::vector<uint32_t> *blob,
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDPdyFine);
 }
-void WriteFwidthFine(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef p)
+void WriteFwidthFine(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2448,10 +2351,7 @@ void WriteFwidthFine(std::vector<uint32_t> *blob,
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFwidthFine);
 }
-void WriteDPdxCoarse(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef p)
+void WriteDPdxCoarse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2460,10 +2360,7 @@ void WriteDPdxCoarse(std::vector<uint32_t> *blob,
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDPdxCoarse);
 }
-void WriteDPdyCoarse(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef p)
+void WriteDPdyCoarse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2472,10 +2369,7 @@ void WriteDPdyCoarse(std::vector<uint32_t> *blob,
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpDPdyCoarse);
 }
-void WriteFwidthCoarse(std::vector<uint32_t> *blob,
-                       IdResultType idResultType,
-                       IdResult idResult,
-                       IdRef p)
+void WriteFwidthCoarse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2484,38 +2378,35 @@ void WriteFwidthCoarse(std::vector<uint32_t> *blob,
     blob->push_back(p);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpFwidthCoarse);
 }
-void WriteEmitVertex(std::vector<uint32_t> *blob)
+void WriteEmitVertex(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpEmitVertex);
 }
-void WriteEndPrimitive(std::vector<uint32_t> *blob)
+void WriteEndPrimitive(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpEndPrimitive);
 }
-void WriteEmitStreamVertex(std::vector<uint32_t> *blob, IdRef stream)
+void WriteEmitStreamVertex(Blob *blob, IdRef stream)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(stream);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpEmitStreamVertex);
 }
-void WriteEndStreamPrimitive(std::vector<uint32_t> *blob, IdRef stream)
+void WriteEndStreamPrimitive(Blob *blob, IdRef stream)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(stream);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpEndStreamPrimitive);
 }
-void WriteControlBarrier(std::vector<uint32_t> *blob,
-                         IdScope execution,
-                         IdScope memory,
-                         IdMemorySemantics semantics)
+void WriteControlBarrier(Blob *blob, IdScope execution, IdScope memory, IdMemorySemantics semantics)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2524,7 +2415,7 @@ void WriteControlBarrier(std::vector<uint32_t> *blob,
     blob->push_back(semantics);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpControlBarrier);
 }
-void WriteMemoryBarrier(std::vector<uint32_t> *blob, IdScope memory, IdMemorySemantics semantics)
+void WriteMemoryBarrier(Blob *blob, IdScope memory, IdMemorySemantics semantics)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2532,7 +2423,7 @@ void WriteMemoryBarrier(std::vector<uint32_t> *blob, IdScope memory, IdMemorySem
     blob->push_back(semantics);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpMemoryBarrier);
 }
-void WriteAtomicLoad(std::vector<uint32_t> *blob,
+void WriteAtomicLoad(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
@@ -2548,7 +2439,7 @@ void WriteAtomicLoad(std::vector<uint32_t> *blob,
     blob->push_back(semantics);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicLoad);
 }
-void WriteAtomicStore(std::vector<uint32_t> *blob,
+void WriteAtomicStore(Blob *blob,
                       IdRef pointer,
                       IdScope scope,
                       IdMemorySemantics semantics,
@@ -2562,7 +2453,7 @@ void WriteAtomicStore(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicStore);
 }
-void WriteAtomicExchange(std::vector<uint32_t> *blob,
+void WriteAtomicExchange(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef pointer,
@@ -2580,7 +2471,7 @@ void WriteAtomicExchange(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicExchange);
 }
-void WriteAtomicCompareExchange(std::vector<uint32_t> *blob,
+void WriteAtomicCompareExchange(Blob *blob,
                                 IdResultType idResultType,
                                 IdResult idResult,
                                 IdRef pointer,
@@ -2602,7 +2493,7 @@ void WriteAtomicCompareExchange(std::vector<uint32_t> *blob,
     blob->push_back(comparator);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicCompareExchange);
 }
-void WriteAtomicIIncrement(std::vector<uint32_t> *blob,
+void WriteAtomicIIncrement(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef pointer,
@@ -2618,7 +2509,7 @@ void WriteAtomicIIncrement(std::vector<uint32_t> *blob,
     blob->push_back(semantics);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicIIncrement);
 }
-void WriteAtomicIDecrement(std::vector<uint32_t> *blob,
+void WriteAtomicIDecrement(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef pointer,
@@ -2634,7 +2525,7 @@ void WriteAtomicIDecrement(std::vector<uint32_t> *blob,
     blob->push_back(semantics);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicIDecrement);
 }
-void WriteAtomicIAdd(std::vector<uint32_t> *blob,
+void WriteAtomicIAdd(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
@@ -2652,7 +2543,7 @@ void WriteAtomicIAdd(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicIAdd);
 }
-void WriteAtomicISub(std::vector<uint32_t> *blob,
+void WriteAtomicISub(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
@@ -2670,7 +2561,7 @@ void WriteAtomicISub(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicISub);
 }
-void WriteAtomicSMin(std::vector<uint32_t> *blob,
+void WriteAtomicSMin(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
@@ -2688,7 +2579,7 @@ void WriteAtomicSMin(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicSMin);
 }
-void WriteAtomicUMin(std::vector<uint32_t> *blob,
+void WriteAtomicUMin(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
@@ -2706,7 +2597,7 @@ void WriteAtomicUMin(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicUMin);
 }
-void WriteAtomicSMax(std::vector<uint32_t> *blob,
+void WriteAtomicSMax(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
@@ -2724,7 +2615,7 @@ void WriteAtomicSMax(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicSMax);
 }
-void WriteAtomicUMax(std::vector<uint32_t> *blob,
+void WriteAtomicUMax(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
@@ -2742,7 +2633,7 @@ void WriteAtomicUMax(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicUMax);
 }
-void WriteAtomicAnd(std::vector<uint32_t> *blob,
+void WriteAtomicAnd(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef pointer,
@@ -2760,7 +2651,7 @@ void WriteAtomicAnd(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicAnd);
 }
-void WriteAtomicOr(std::vector<uint32_t> *blob,
+void WriteAtomicOr(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    IdRef pointer,
@@ -2778,7 +2669,7 @@ void WriteAtomicOr(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicOr);
 }
-void WriteAtomicXor(std::vector<uint32_t> *blob,
+void WriteAtomicXor(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef pointer,
@@ -2796,7 +2687,7 @@ void WriteAtomicXor(std::vector<uint32_t> *blob,
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpAtomicXor);
 }
-void WritePhi(std::vector<uint32_t> *blob,
+void WritePhi(Blob *blob,
               IdResultType idResultType,
               IdResult idResult,
               const PairIdRefIdRefList &variableParentPairList)
@@ -2812,7 +2703,7 @@ void WritePhi(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpPhi);
 }
-void WriteLoopMerge(std::vector<uint32_t> *blob,
+void WriteLoopMerge(Blob *blob,
                     IdRef mergeBlock,
                     IdRef continueTarget,
                     spv::LoopControlMask loopControl)
@@ -2824,9 +2715,7 @@ void WriteLoopMerge(std::vector<uint32_t> *blob,
     blob->push_back(loopControl);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLoopMerge);
 }
-void WriteSelectionMerge(std::vector<uint32_t> *blob,
-                         IdRef mergeBlock,
-                         spv::SelectionControlMask selectionControl)
+void WriteSelectionMerge(Blob *blob, IdRef mergeBlock, spv::SelectionControlMask selectionControl)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
@@ -2834,21 +2723,21 @@ void WriteSelectionMerge(std::vector<uint32_t> *blob,
     blob->push_back(selectionControl);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSelectionMerge);
 }
-void WriteLabel(std::vector<uint32_t> *blob, IdResult idResult)
+void WriteLabel(Blob *blob, IdResult idResult)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(idResult);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpLabel);
 }
-void WriteBranch(std::vector<uint32_t> *blob, IdRef targetLabel)
+void WriteBranch(Blob *blob, IdRef targetLabel)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(targetLabel);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBranch);
 }
-void WriteBranchConditional(std::vector<uint32_t> *blob,
+void WriteBranchConditional(Blob *blob,
                             IdRef condition,
                             IdRef trueLabel,
                             IdRef falseLabel,
@@ -2865,7 +2754,7 @@ void WriteBranchConditional(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpBranchConditional);
 }
-void WriteSwitch(std::vector<uint32_t> *blob,
+void WriteSwitch(Blob *blob,
                  IdRef selector,
                  IdRef default_,
                  const PairLiteralIntegerIdRefList &targetPairList)
@@ -2881,35 +2770,35 @@ void WriteSwitch(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpSwitch);
 }
-void WriteKill(std::vector<uint32_t> *blob)
+void WriteKill(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpKill);
 }
-void WriteReturn(std::vector<uint32_t> *blob)
+void WriteReturn(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpReturn);
 }
-void WriteReturnValue(std::vector<uint32_t> *blob, IdRef value)
+void WriteReturnValue(Blob *blob, IdRef value)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
     blob->push_back(value);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpReturnValue);
 }
-void WriteUnreachable(std::vector<uint32_t> *blob)
+void WriteUnreachable(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpUnreachable);
 }
-void WriteGroupAll(std::vector<uint32_t> *blob,
+void WriteGroupAll(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    IdScope execution,
@@ -2923,7 +2812,7 @@ void WriteGroupAll(std::vector<uint32_t> *blob,
     blob->push_back(predicate);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupAll);
 }
-void WriteGroupAny(std::vector<uint32_t> *blob,
+void WriteGroupAny(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    IdScope execution,
@@ -2937,7 +2826,7 @@ void WriteGroupAny(std::vector<uint32_t> *blob,
     blob->push_back(predicate);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupAny);
 }
-void WriteGroupBroadcast(std::vector<uint32_t> *blob,
+void WriteGroupBroadcast(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdScope execution,
@@ -2953,7 +2842,7 @@ void WriteGroupBroadcast(std::vector<uint32_t> *blob,
     blob->push_back(localId);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupBroadcast);
 }
-void WriteGroupIAdd(std::vector<uint32_t> *blob,
+void WriteGroupIAdd(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -2969,7 +2858,7 @@ void WriteGroupIAdd(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupIAdd);
 }
-void WriteGroupFAdd(std::vector<uint32_t> *blob,
+void WriteGroupFAdd(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -2985,7 +2874,7 @@ void WriteGroupFAdd(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupFAdd);
 }
-void WriteGroupFMin(std::vector<uint32_t> *blob,
+void WriteGroupFMin(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -3001,7 +2890,7 @@ void WriteGroupFMin(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupFMin);
 }
-void WriteGroupUMin(std::vector<uint32_t> *blob,
+void WriteGroupUMin(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -3017,7 +2906,7 @@ void WriteGroupUMin(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupUMin);
 }
-void WriteGroupSMin(std::vector<uint32_t> *blob,
+void WriteGroupSMin(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -3033,7 +2922,7 @@ void WriteGroupSMin(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupSMin);
 }
-void WriteGroupFMax(std::vector<uint32_t> *blob,
+void WriteGroupFMax(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -3049,7 +2938,7 @@ void WriteGroupFMax(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupFMax);
 }
-void WriteGroupUMax(std::vector<uint32_t> *blob,
+void WriteGroupUMax(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -3065,7 +2954,7 @@ void WriteGroupUMax(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupUMax);
 }
-void WriteGroupSMax(std::vector<uint32_t> *blob,
+void WriteGroupSMax(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
@@ -3081,7 +2970,7 @@ void WriteGroupSMax(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupSMax);
 }
-void WriteImageSparseSampleImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleImplicitLod(Blob *blob,
                                        IdResultType idResultType,
                                        IdResult idResult,
                                        IdRef sampledImage,
@@ -3106,7 +2995,7 @@ void WriteImageSparseSampleImplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleImplicitLod);
 }
-void WriteImageSparseSampleExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleExplicitLod(Blob *blob,
                                        IdResultType idResultType,
                                        IdResult idResult,
                                        IdRef sampledImage,
@@ -3128,7 +3017,7 @@ void WriteImageSparseSampleExplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleExplicitLod);
 }
-void WriteImageSparseSampleDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleDrefImplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
@@ -3155,7 +3044,7 @@ void WriteImageSparseSampleDrefImplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleDrefImplicitLod);
 }
-void WriteImageSparseSampleDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleDrefExplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
@@ -3179,7 +3068,7 @@ void WriteImageSparseSampleDrefExplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleDrefExplicitLod);
 }
-void WriteImageSparseSampleProjImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjImplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
@@ -3204,7 +3093,7 @@ void WriteImageSparseSampleProjImplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleProjImplicitLod);
 }
-void WriteImageSparseSampleProjExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjExplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
@@ -3226,7 +3115,7 @@ void WriteImageSparseSampleProjExplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleProjExplicitLod);
 }
-void WriteImageSparseSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjDrefImplicitLod(Blob *blob,
                                                IdResultType idResultType,
                                                IdResult idResult,
                                                IdRef sampledImage,
@@ -3253,7 +3142,7 @@ void WriteImageSparseSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleProjDrefImplicitLod);
 }
-void WriteImageSparseSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjDrefExplicitLod(Blob *blob,
                                                IdResultType idResultType,
                                                IdResult idResult,
                                                IdRef sampledImage,
@@ -3277,7 +3166,7 @@ void WriteImageSparseSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
     (*blob)[startSize] =
         MakeLengthOp(blob->size() - startSize, spv::OpImageSparseSampleProjDrefExplicitLod);
 }
-void WriteImageSparseFetch(std::vector<uint32_t> *blob,
+void WriteImageSparseFetch(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef image,
@@ -3301,7 +3190,7 @@ void WriteImageSparseFetch(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSparseFetch);
 }
-void WriteImageSparseGather(std::vector<uint32_t> *blob,
+void WriteImageSparseGather(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef sampledImage,
@@ -3327,7 +3216,7 @@ void WriteImageSparseGather(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSparseGather);
 }
-void WriteImageSparseDrefGather(std::vector<uint32_t> *blob,
+void WriteImageSparseDrefGather(Blob *blob,
                                 IdResultType idResultType,
                                 IdResult idResult,
                                 IdRef sampledImage,
@@ -3353,7 +3242,7 @@ void WriteImageSparseDrefGather(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSparseDrefGather);
 }
-void WriteImageSparseTexelsResident(std::vector<uint32_t> *blob,
+void WriteImageSparseTexelsResident(Blob *blob,
                                     IdResultType idResultType,
                                     IdResult idResult,
                                     IdRef residentCode)
@@ -3365,14 +3254,14 @@ void WriteImageSparseTexelsResident(std::vector<uint32_t> *blob,
     blob->push_back(residentCode);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSparseTexelsResident);
 }
-void WriteNoLine(std::vector<uint32_t> *blob)
+void WriteNoLine(Blob *blob)
 {
     const size_t startSize = blob->size();
     blob->push_back(0);
 
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpNoLine);
 }
-void WriteImageSparseRead(std::vector<uint32_t> *blob,
+void WriteImageSparseRead(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef image,
@@ -3396,7 +3285,7 @@ void WriteImageSparseRead(std::vector<uint32_t> *blob,
     }
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpImageSparseRead);
 }
-void WriteGroupIAddNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupIAddNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
@@ -3412,7 +3301,7 @@ void WriteGroupIAddNonUniformAMD(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupIAddNonUniformAMD);
 }
-void WriteGroupFAddNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupFAddNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
@@ -3428,7 +3317,7 @@ void WriteGroupFAddNonUniformAMD(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupFAddNonUniformAMD);
 }
-void WriteGroupFMinNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupFMinNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
@@ -3444,7 +3333,7 @@ void WriteGroupFMinNonUniformAMD(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupFMinNonUniformAMD);
 }
-void WriteGroupUMinNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupUMinNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
@@ -3460,7 +3349,7 @@ void WriteGroupUMinNonUniformAMD(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupUMinNonUniformAMD);
 }
-void WriteGroupSMinNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupSMinNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
@@ -3476,7 +3365,7 @@ void WriteGroupSMinNonUniformAMD(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupSMinNonUniformAMD);
 }
-void WriteGroupFMaxNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupFMaxNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
@@ -3492,7 +3381,7 @@ void WriteGroupFMaxNonUniformAMD(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupFMaxNonUniformAMD);
 }
-void WriteGroupUMaxNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupUMaxNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
@@ -3508,7 +3397,7 @@ void WriteGroupUMaxNonUniformAMD(std::vector<uint32_t> *blob,
     blob->push_back(x);
     (*blob)[startSize] = MakeLengthOp(blob->size() - startSize, spv::OpGroupUMaxNonUniformAMD);
 }
-void WriteGroupSMaxNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupSMaxNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,

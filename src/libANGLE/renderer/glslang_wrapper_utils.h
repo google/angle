@@ -11,6 +11,7 @@
 
 #include <functional>
 
+#include "common/spirv/spirv_types.h"
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
@@ -67,8 +68,6 @@ struct GlslangSpirvOptions
     bool isTransformFeedbackStage             = false;
     bool isTransformFeedbackEmulated          = false;
 };
-
-using SpirvBlob = std::vector<uint32_t>;
 
 using GlslangErrorCallback = std::function<angle::Result(GlslangError)>;
 
@@ -203,14 +202,14 @@ void GlslangGetShaderSource(const GlslangSourceOptions &options,
 angle::Result GlslangTransformSpirvCode(const GlslangErrorCallback &callback,
                                         const GlslangSpirvOptions &options,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                        const SpirvBlob &initialSpirvBlob,
-                                        SpirvBlob *spirvBlobOut);
+                                        const angle::spirv::Blob &initialSpirvBlob,
+                                        angle::spirv::Blob *spirvBlobOut);
 
 angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
                                         const gl::ShaderBitSet &linkedShaderStages,
                                         const gl::Caps &glCaps,
                                         const gl::ShaderMap<std::string> &shaderSources,
-                                        gl::ShaderMap<SpirvBlob> *spirvBlobsOut);
+                                        gl::ShaderMap<angle::spirv::Blob> *spirvBlobsOut);
 
 }  // namespace rx
 

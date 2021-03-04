@@ -11,6 +11,8 @@
 #ifndef COMMON_SPIRV_SPIRVINSTRUCTIONPARSERAUTOGEN_H_
 #define COMMON_SPIRV_SPIRVINSTRUCTIONPARSERAUTOGEN_H_
 
+#include <spirv/unified1/spirv.hpp>
+
 #include "spirv_types.h"
 
 namespace angle

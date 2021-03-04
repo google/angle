@@ -41,6 +41,8 @@ HEADER_TEMPLATE = """// GENERATED FILE - DO NOT EDIT.
 #ifndef COMMON_SPIRV_{file_name_capitalized}AUTOGEN_H_
 #define COMMON_SPIRV_{file_name_capitalized}AUTOGEN_H_
 
+#include <spirv/unified1/spirv.hpp>
+
 #include "spirv_types.h"
 
 namespace angle
@@ -132,7 +134,7 @@ PARSER_FIXED_FUNCTIONS = """void GetInstructionOpAndLength(const uint32_t *_inst
 }
 """
 
-TEMPLATE_BUILDER_FUNCTION_PROTOTYPE = """void Write{op}(std::vector<uint32_t> *blob {param_list})"""
+TEMPLATE_BUILDER_FUNCTION_PROTOTYPE = """void Write{op}(Blob *blob {param_list})"""
 TEMPLATE_BUILDER_FUNCTION_BODY = """{{
     const size_t startSize = blob->size();
     blob->push_back(0);

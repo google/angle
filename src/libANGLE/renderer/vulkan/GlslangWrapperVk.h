@@ -46,8 +46,8 @@ class GlslangWrapperVk
     static angle::Result TransformSpirV(vk::Context *context,
                                         const GlslangSpirvOptions &options,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                        const SpirvBlob &initialSpirvBlob,
-                                        SpirvBlob *shaderCodeOut);
+                                        const angle::spirv::Blob &initialSpirvBlob,
+                                        angle::spirv::Blob *shaderCodeOut);
 };
 }  // namespace rx
 

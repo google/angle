@@ -10,8 +10,6 @@
 #ifndef COMMON_SPIRV_TYPES_H_
 #define COMMON_SPIRV_TYPES_H_
 
-#include <spirv/unified1/spirv.hpp>
-
 #include "common/FastVector.h"
 
 #include <vector>
@@ -44,7 +42,7 @@ class BoxedUint32
 
 struct IdRefHelper
 {
-    spv::Id value;
+    uint32_t value;
 };
 struct LiteralIntegerHelper
 {
@@ -109,9 +107,12 @@ using PairIdRefIdRefList          = FastVectorHelper<PairIdRefIdRef>;
 // Id 0 is invalid in SPIR-V.
 constexpr uint32_t kMinValidId = 1;
 
+// The SPIR-V blob is a sequence of uint32_t's
+using Blob = std::vector<uint32_t>;
+
 // Returns whether SPIR-V is valid.  Useful for ASSERTs.  Automatically generates a warning if
 // SPIR-V is not valid.
-bool Validate(const std::vector<uint32_t> &blob);
+bool Validate(const Blob &blob);
 
 }  // namespace spirv
 }  // namespace angle

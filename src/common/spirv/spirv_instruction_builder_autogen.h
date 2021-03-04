@@ -11,6 +11,8 @@
 #ifndef COMMON_SPIRV_SPIRVINSTRUCTIONBUILDERAUTOGEN_H_
 #define COMMON_SPIRV_SPIRVINSTRUCTIONBUILDERAUTOGEN_H_
 
+#include <spirv/unified1/spirv.hpp>
+
 #include "spirv_types.h"
 
 namespace angle
@@ -19,56 +21,47 @@ namespace spirv
 {
 
 void WriteSpirvHeader(std::vector<uint32_t> *blob, uint32_t idCount);
-void WriteNop(std::vector<uint32_t> *blob);
-void WriteUndef(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult);
-void WriteSourceContinued(std::vector<uint32_t> *blob, LiteralString continuedSource);
-void WriteSource(std::vector<uint32_t> *blob,
+void WriteNop(Blob *blob);
+void WriteUndef(Blob *blob, IdResultType idResultType, IdResult idResult);
+void WriteSourceContinued(Blob *blob, LiteralString continuedSource);
+void WriteSource(Blob *blob,
                  spv::SourceLanguage sourceLanguage,
                  LiteralInteger version,
                  const IdRef *file,
                  const LiteralString *source);
-void WriteSourceExtension(std::vector<uint32_t> *blob, LiteralString extension);
-void WriteName(std::vector<uint32_t> *blob, IdRef target, LiteralString name);
-void WriteMemberName(std::vector<uint32_t> *blob,
-                     IdRef type,
-                     LiteralInteger member,
-                     LiteralString name);
-void WriteString(std::vector<uint32_t> *blob, IdResult idResult, LiteralString string);
-void WriteLine(std::vector<uint32_t> *blob, IdRef file, LiteralInteger line, LiteralInteger column);
-void WriteExtension(std::vector<uint32_t> *blob, LiteralString name);
-void WriteExtInstImport(std::vector<uint32_t> *blob, IdResult idResult, LiteralString name);
-void WriteExtInst(std::vector<uint32_t> *blob,
+void WriteSourceExtension(Blob *blob, LiteralString extension);
+void WriteName(Blob *blob, IdRef target, LiteralString name);
+void WriteMemberName(Blob *blob, IdRef type, LiteralInteger member, LiteralString name);
+void WriteString(Blob *blob, IdResult idResult, LiteralString string);
+void WriteLine(Blob *blob, IdRef file, LiteralInteger line, LiteralInteger column);
+void WriteExtension(Blob *blob, LiteralString name);
+void WriteExtInstImport(Blob *blob, IdResult idResult, LiteralString name);
+void WriteExtInst(Blob *blob,
                   IdResultType idResultType,
                   IdResult idResult,
                   IdRef set,
                   LiteralExtInstInteger instruction,
                   const IdRefList &operandList);
-void WriteMemoryModel(std::vector<uint32_t> *blob,
+void WriteMemoryModel(Blob *blob,
                       spv::AddressingModel addressingModel,
                       spv::MemoryModel memoryModel);
-void WriteEntryPoint(std::vector<uint32_t> *blob,
+void WriteEntryPoint(Blob *blob,
                      spv::ExecutionModel executionModel,
                      IdRef entryPoint,
                      LiteralString name,
                      const IdRefList &interfaceList);
-void WriteExecutionMode(std::vector<uint32_t> *blob, IdRef entryPoint, spv::ExecutionMode mode);
-void WriteCapability(std::vector<uint32_t> *blob, spv::Capability capability);
-void WriteTypeVoid(std::vector<uint32_t> *blob, IdResult idResult);
-void WriteTypeBool(std::vector<uint32_t> *blob, IdResult idResult);
-void WriteTypeInt(std::vector<uint32_t> *blob,
-                  IdResult idResult,
-                  LiteralInteger width,
-                  LiteralInteger signedness);
-void WriteTypeFloat(std::vector<uint32_t> *blob, IdResult idResult, LiteralInteger width);
-void WriteTypeVector(std::vector<uint32_t> *blob,
+void WriteExecutionMode(Blob *blob, IdRef entryPoint, spv::ExecutionMode mode);
+void WriteCapability(Blob *blob, spv::Capability capability);
+void WriteTypeVoid(Blob *blob, IdResult idResult);
+void WriteTypeBool(Blob *blob, IdResult idResult);
+void WriteTypeInt(Blob *blob, IdResult idResult, LiteralInteger width, LiteralInteger signedness);
+void WriteTypeFloat(Blob *blob, IdResult idResult, LiteralInteger width);
+void WriteTypeVector(Blob *blob,
                      IdResult idResult,
                      IdRef componentType,
                      LiteralInteger componentCount);
-void WriteTypeMatrix(std::vector<uint32_t> *blob,
-                     IdResult idResult,
-                     IdRef columnType,
-                     LiteralInteger columnCount);
-void WriteTypeImage(std::vector<uint32_t> *blob,
+void WriteTypeMatrix(Blob *blob, IdResult idResult, IdRef columnType, LiteralInteger columnCount);
+void WriteTypeImage(Blob *blob,
                     IdResult idResult,
                     IdRef sampledType,
                     spv::Dim dim,
@@ -78,190 +71,165 @@ void WriteTypeImage(std::vector<uint32_t> *blob,
                     LiteralInteger sampled,
                     spv::ImageFormat imageFormat,
                     const spv::AccessQualifier *accessQualifier);
-void WriteTypeSampler(std::vector<uint32_t> *blob, IdResult idResult);
-void WriteTypeSampledImage(std::vector<uint32_t> *blob, IdResult idResult, IdRef imageType);
-void WriteTypeArray(std::vector<uint32_t> *blob,
-                    IdResult idResult,
-                    IdRef elementType,
-                    IdRef length);
-void WriteTypeRuntimeArray(std::vector<uint32_t> *blob, IdResult idResult, IdRef elementType);
-void WriteTypeStruct(std::vector<uint32_t> *blob, IdResult idResult, const IdRefList &memberList);
-void WriteTypePointer(std::vector<uint32_t> *blob,
-                      IdResult idResult,
-                      spv::StorageClass storageClass,
-                      IdRef type);
-void WriteTypeFunction(std::vector<uint32_t> *blob,
+void WriteTypeSampler(Blob *blob, IdResult idResult);
+void WriteTypeSampledImage(Blob *blob, IdResult idResult, IdRef imageType);
+void WriteTypeArray(Blob *blob, IdResult idResult, IdRef elementType, IdRef length);
+void WriteTypeRuntimeArray(Blob *blob, IdResult idResult, IdRef elementType);
+void WriteTypeStruct(Blob *blob, IdResult idResult, const IdRefList &memberList);
+void WriteTypePointer(Blob *blob, IdResult idResult, spv::StorageClass storageClass, IdRef type);
+void WriteTypeFunction(Blob *blob,
                        IdResult idResult,
                        IdRef returnType,
                        const IdRefList &parameterList);
-void WriteTypeForwardPointer(std::vector<uint32_t> *blob,
-                             IdRef pointerType,
-                             spv::StorageClass storageClass);
-void WriteConstantTrue(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult);
-void WriteConstantFalse(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult);
-void WriteConstant(std::vector<uint32_t> *blob,
+void WriteTypeForwardPointer(Blob *blob, IdRef pointerType, spv::StorageClass storageClass);
+void WriteConstantTrue(Blob *blob, IdResultType idResultType, IdResult idResult);
+void WriteConstantFalse(Blob *blob, IdResultType idResultType, IdResult idResult);
+void WriteConstant(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    LiteralContextDependentNumber value);
-void WriteConstantComposite(std::vector<uint32_t> *blob,
+void WriteConstantComposite(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             const IdRefList &constituentsList);
-void WriteConstantNull(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult);
-void WriteSpecConstantTrue(std::vector<uint32_t> *blob,
-                           IdResultType idResultType,
-                           IdResult idResult);
-void WriteSpecConstantFalse(std::vector<uint32_t> *blob,
-                            IdResultType idResultType,
-                            IdResult idResult);
-void WriteSpecConstant(std::vector<uint32_t> *blob,
+void WriteConstantNull(Blob *blob, IdResultType idResultType, IdResult idResult);
+void WriteSpecConstantTrue(Blob *blob, IdResultType idResultType, IdResult idResult);
+void WriteSpecConstantFalse(Blob *blob, IdResultType idResultType, IdResult idResult);
+void WriteSpecConstant(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        LiteralContextDependentNumber value);
-void WriteSpecConstantComposite(std::vector<uint32_t> *blob,
+void WriteSpecConstantComposite(Blob *blob,
                                 IdResultType idResultType,
                                 IdResult idResult,
                                 const IdRefList &constituentsList);
-void WriteFunction(std::vector<uint32_t> *blob,
+void WriteFunction(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    spv::FunctionControlMask functionControl,
                    IdRef functionType);
-void WriteFunctionParameter(std::vector<uint32_t> *blob,
-                            IdResultType idResultType,
-                            IdResult idResult);
-void WriteFunctionEnd(std::vector<uint32_t> *blob);
-void WriteFunctionCall(std::vector<uint32_t> *blob,
+void WriteFunctionParameter(Blob *blob, IdResultType idResultType, IdResult idResult);
+void WriteFunctionEnd(Blob *blob);
+void WriteFunctionCall(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef function,
                        const IdRefList &argumentList);
-void WriteVariable(std::vector<uint32_t> *blob,
+void WriteVariable(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    spv::StorageClass storageClass,
                    const IdRef *initializer);
-void WriteImageTexelPointer(std::vector<uint32_t> *blob,
+void WriteImageTexelPointer(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef image,
                             IdRef coordinate,
                             IdRef sample);
-void WriteLoad(std::vector<uint32_t> *blob,
+void WriteLoad(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef pointer,
                const spv::MemoryAccessMask *memoryAccess);
-void WriteStore(std::vector<uint32_t> *blob,
-                IdRef pointer,
-                IdRef object,
-                const spv::MemoryAccessMask *memoryAccess);
-void WriteCopyMemory(std::vector<uint32_t> *blob,
+void WriteStore(Blob *blob, IdRef pointer, IdRef object, const spv::MemoryAccessMask *memoryAccess);
+void WriteCopyMemory(Blob *blob,
                      IdRef target,
                      IdRef source,
                      const spv::MemoryAccessMask *memoryAccess);
-void WriteCopyMemorySized(std::vector<uint32_t> *blob,
+void WriteCopyMemorySized(Blob *blob,
                           IdRef target,
                           IdRef source,
                           IdRef size,
                           const spv::MemoryAccessMask *memoryAccess);
-void WriteAccessChain(std::vector<uint32_t> *blob,
+void WriteAccessChain(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef base,
                       const IdRefList &indexesList);
-void WriteInBoundsAccessChain(std::vector<uint32_t> *blob,
+void WriteInBoundsAccessChain(Blob *blob,
                               IdResultType idResultType,
                               IdResult idResult,
                               IdRef base,
                               const IdRefList &indexesList);
-void WriteArrayLength(std::vector<uint32_t> *blob,
+void WriteArrayLength(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef structure,
                       LiteralInteger arraymember);
-void WriteInBoundsPtrAccessChain(std::vector<uint32_t> *blob,
+void WriteInBoundsPtrAccessChain(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef base,
                                  IdRef element,
                                  const IdRefList &indexesList);
-void WriteDecorate(std::vector<uint32_t> *blob,
+void WriteDecorate(Blob *blob,
                    IdRef target,
                    spv::Decoration decoration,
                    const LiteralIntegerList &valuesPairList);
-void WriteMemberDecorate(std::vector<uint32_t> *blob,
+void WriteMemberDecorate(Blob *blob,
                          IdRef structureType,
                          LiteralInteger member,
                          spv::Decoration decoration,
                          const LiteralIntegerList &valuesPairList);
-void WriteDecorationGroup(std::vector<uint32_t> *blob, IdResult idResult);
-void WriteGroupDecorate(std::vector<uint32_t> *blob,
-                        IdRef decorationGroup,
-                        const IdRefList &targetsList);
-void WriteGroupMemberDecorate(std::vector<uint32_t> *blob,
+void WriteDecorationGroup(Blob *blob, IdResult idResult);
+void WriteGroupDecorate(Blob *blob, IdRef decorationGroup, const IdRefList &targetsList);
+void WriteGroupMemberDecorate(Blob *blob,
                               IdRef decorationGroup,
                               const PairIdRefLiteralIntegerList &targetsPairList);
-void WriteVectorExtractDynamic(std::vector<uint32_t> *blob,
+void WriteVectorExtractDynamic(Blob *blob,
                                IdResultType idResultType,
                                IdResult idResult,
                                IdRef vector,
                                IdRef index);
-void WriteVectorInsertDynamic(std::vector<uint32_t> *blob,
+void WriteVectorInsertDynamic(Blob *blob,
                               IdResultType idResultType,
                               IdResult idResult,
                               IdRef vector,
                               IdRef component,
                               IdRef index);
-void WriteVectorShuffle(std::vector<uint32_t> *blob,
+void WriteVectorShuffle(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
                         IdRef vector1,
                         IdRef vector2,
                         const LiteralIntegerList &componentsPairList);
-void WriteCompositeConstruct(std::vector<uint32_t> *blob,
+void WriteCompositeConstruct(Blob *blob,
                              IdResultType idResultType,
                              IdResult idResult,
                              const IdRefList &constituentsList);
-void WriteCompositeExtract(std::vector<uint32_t> *blob,
+void WriteCompositeExtract(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef composite,
                            const LiteralIntegerList &indexesPairList);
-void WriteCompositeInsert(std::vector<uint32_t> *blob,
+void WriteCompositeInsert(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef object,
                           IdRef composite,
                           const LiteralIntegerList &indexesPairList);
-void WriteCopyObject(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef operand);
-void WriteTranspose(std::vector<uint32_t> *blob,
-                    IdResultType idResultType,
-                    IdResult idResult,
-                    IdRef matrix);
-void WriteSampledImage(std::vector<uint32_t> *blob,
+void WriteCopyObject(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
+void WriteTranspose(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef matrix);
+void WriteSampledImage(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef image,
                        IdRef sampler);
-void WriteImageSampleImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleImplicitLod(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef sampledImage,
                                  IdRef coordinate,
                                  const spv::ImageOperandsMask *imageOperands,
                                  const IdRefList &imageOperandIdsList);
-void WriteImageSampleExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleExplicitLod(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef sampledImage,
                                  IdRef coordinate,
                                  spv::ImageOperandsMask imageOperands,
                                  const IdRefList &imageOperandIdsList);
-void WriteImageSampleDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleDrefImplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
@@ -269,7 +237,7 @@ void WriteImageSampleDrefImplicitLod(std::vector<uint32_t> *blob,
                                      IdRef dref,
                                      const spv::ImageOperandsMask *imageOperands,
                                      const IdRefList &imageOperandIdsList);
-void WriteImageSampleDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleDrefExplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
@@ -277,21 +245,21 @@ void WriteImageSampleDrefExplicitLod(std::vector<uint32_t> *blob,
                                      IdRef dref,
                                      spv::ImageOperandsMask imageOperands,
                                      const IdRefList &imageOperandIdsList);
-void WriteImageSampleProjImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjImplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
                                      IdRef coordinate,
                                      const spv::ImageOperandsMask *imageOperands,
                                      const IdRefList &imageOperandIdsList);
-void WriteImageSampleProjExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjExplicitLod(Blob *blob,
                                      IdResultType idResultType,
                                      IdResult idResult,
                                      IdRef sampledImage,
                                      IdRef coordinate,
                                      spv::ImageOperandsMask imageOperands,
                                      const IdRefList &imageOperandIdsList);
-void WriteImageSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjDrefImplicitLod(Blob *blob,
                                          IdResultType idResultType,
                                          IdResult idResult,
                                          IdRef sampledImage,
@@ -299,7 +267,7 @@ void WriteImageSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
                                          IdRef dref,
                                          const spv::ImageOperandsMask *imageOperands,
                                          const IdRefList &imageOperandIdsList);
-void WriteImageSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSampleProjDrefExplicitLod(Blob *blob,
                                          IdResultType idResultType,
                                          IdResult idResult,
                                          IdRef sampledImage,
@@ -307,14 +275,14 @@ void WriteImageSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
                                          IdRef dref,
                                          spv::ImageOperandsMask imageOperands,
                                          const IdRefList &imageOperandIdsList);
-void WriteImageFetch(std::vector<uint32_t> *blob,
+void WriteImageFetch(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef image,
                      IdRef coordinate,
                      const spv::ImageOperandsMask *imageOperands,
                      const IdRefList &imageOperandIdsList);
-void WriteImageGather(std::vector<uint32_t> *blob,
+void WriteImageGather(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef sampledImage,
@@ -322,7 +290,7 @@ void WriteImageGather(std::vector<uint32_t> *blob,
                       IdRef component,
                       const spv::ImageOperandsMask *imageOperands,
                       const IdRefList &imageOperandIdsList);
-void WriteImageDrefGather(std::vector<uint32_t> *blob,
+void WriteImageDrefGather(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef sampledImage,
@@ -330,474 +298,399 @@ void WriteImageDrefGather(std::vector<uint32_t> *blob,
                           IdRef dref,
                           const spv::ImageOperandsMask *imageOperands,
                           const IdRefList &imageOperandIdsList);
-void WriteImageRead(std::vector<uint32_t> *blob,
+void WriteImageRead(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef image,
                     IdRef coordinate,
                     const spv::ImageOperandsMask *imageOperands,
                     const IdRefList &imageOperandIdsList);
-void WriteImageWrite(std::vector<uint32_t> *blob,
+void WriteImageWrite(Blob *blob,
                      IdRef image,
                      IdRef coordinate,
                      IdRef texel,
                      const spv::ImageOperandsMask *imageOperands,
                      const IdRefList &imageOperandIdsList);
-void WriteImage(std::vector<uint32_t> *blob,
-                IdResultType idResultType,
-                IdResult idResult,
-                IdRef sampledImage);
-void WriteImageQueryLod(std::vector<uint32_t> *blob,
+void WriteImage(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef sampledImage);
+void WriteImageQueryLod(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
                         IdRef sampledImage,
                         IdRef coordinate);
-void WriteConvertFToU(std::vector<uint32_t> *blob,
-                      IdResultType idResultType,
-                      IdResult idResult,
-                      IdRef floatValue);
-void WriteConvertFToS(std::vector<uint32_t> *blob,
-                      IdResultType idResultType,
-                      IdResult idResult,
-                      IdRef floatValue);
-void WriteConvertSToF(std::vector<uint32_t> *blob,
-                      IdResultType idResultType,
-                      IdResult idResult,
-                      IdRef signedValue);
-void WriteConvertUToF(std::vector<uint32_t> *blob,
+void WriteConvertFToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue);
+void WriteConvertFToS(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue);
+void WriteConvertSToF(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef signedValue);
+void WriteConvertUToF(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef unsignedValue);
-void WriteUConvert(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef unsignedValue);
-void WriteSConvert(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef signedValue);
-void WriteFConvert(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef floatValue);
-void WriteQuantizeToF16(std::vector<uint32_t> *blob,
-                        IdResultType idResultType,
-                        IdResult idResult,
-                        IdRef value);
-void WriteConvertPtrToU(std::vector<uint32_t> *blob,
-                        IdResultType idResultType,
-                        IdResult idResult,
-                        IdRef pointer);
-void WriteConvertUToPtr(std::vector<uint32_t> *blob,
+void WriteUConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef unsignedValue);
+void WriteSConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef signedValue);
+void WriteFConvert(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef floatValue);
+void WriteQuantizeToF16(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef value);
+void WriteConvertPtrToU(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef pointer);
+void WriteConvertUToPtr(Blob *blob,
                         IdResultType idResultType,
                         IdResult idResult,
                         IdRef integerValue);
-void WriteBitcast(std::vector<uint32_t> *blob,
-                  IdResultType idResultType,
-                  IdResult idResult,
-                  IdRef operand);
-void WriteSNegate(std::vector<uint32_t> *blob,
-                  IdResultType idResultType,
-                  IdResult idResult,
-                  IdRef operand);
-void WriteFNegate(std::vector<uint32_t> *blob,
-                  IdResultType idResultType,
-                  IdResult idResult,
-                  IdRef operand);
-void WriteIAdd(std::vector<uint32_t> *blob,
+void WriteBitcast(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
+void WriteSNegate(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
+void WriteFNegate(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
+void WriteIAdd(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteFAdd(std::vector<uint32_t> *blob,
+void WriteFAdd(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteISub(std::vector<uint32_t> *blob,
+void WriteISub(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteFSub(std::vector<uint32_t> *blob,
+void WriteFSub(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteIMul(std::vector<uint32_t> *blob,
+void WriteIMul(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteFMul(std::vector<uint32_t> *blob,
+void WriteFMul(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteUDiv(std::vector<uint32_t> *blob,
+void WriteUDiv(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteSDiv(std::vector<uint32_t> *blob,
+void WriteSDiv(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteFDiv(std::vector<uint32_t> *blob,
+void WriteFDiv(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteUMod(std::vector<uint32_t> *blob,
+void WriteUMod(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteSRem(std::vector<uint32_t> *blob,
+void WriteSRem(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteSMod(std::vector<uint32_t> *blob,
+void WriteSMod(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteFRem(std::vector<uint32_t> *blob,
+void WriteFRem(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteFMod(std::vector<uint32_t> *blob,
+void WriteFMod(Blob *blob,
                IdResultType idResultType,
                IdResult idResult,
                IdRef operand1,
                IdRef operand2);
-void WriteVectorTimesScalar(std::vector<uint32_t> *blob,
+void WriteVectorTimesScalar(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef vector,
                             IdRef scalar);
-void WriteMatrixTimesScalar(std::vector<uint32_t> *blob,
+void WriteMatrixTimesScalar(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef matrix,
                             IdRef scalar);
-void WriteVectorTimesMatrix(std::vector<uint32_t> *blob,
+void WriteVectorTimesMatrix(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef vector,
                             IdRef matrix);
-void WriteMatrixTimesVector(std::vector<uint32_t> *blob,
+void WriteMatrixTimesVector(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef matrix,
                             IdRef vector);
-void WriteMatrixTimesMatrix(std::vector<uint32_t> *blob,
+void WriteMatrixTimesMatrix(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef leftMatrix,
                             IdRef rightMatrix);
-void WriteOuterProduct(std::vector<uint32_t> *blob,
+void WriteOuterProduct(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef vector1,
                        IdRef vector2);
-void WriteDot(std::vector<uint32_t> *blob,
+void WriteDot(Blob *blob,
               IdResultType idResultType,
               IdResult idResult,
               IdRef vector1,
               IdRef vector2);
-void WriteIAddCarry(std::vector<uint32_t> *blob,
+void WriteIAddCarry(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
                     IdRef operand2);
-void WriteISubBorrow(std::vector<uint32_t> *blob,
+void WriteISubBorrow(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
                      IdRef operand2);
-void WriteUMulExtended(std::vector<uint32_t> *blob,
+void WriteUMulExtended(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
                        IdRef operand2);
-void WriteSMulExtended(std::vector<uint32_t> *blob,
+void WriteSMulExtended(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
                        IdRef operand2);
-void WriteAny(std::vector<uint32_t> *blob,
-              IdResultType idResultType,
-              IdResult idResult,
-              IdRef vector);
-void WriteAll(std::vector<uint32_t> *blob,
-              IdResultType idResultType,
-              IdResult idResult,
-              IdRef vector);
-void WriteIsNan(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef x);
-void WriteIsInf(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef x);
-void WriteLogicalEqual(std::vector<uint32_t> *blob,
+void WriteAny(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef vector);
+void WriteAll(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef vector);
+void WriteIsNan(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef x);
+void WriteIsInf(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef x);
+void WriteLogicalEqual(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
                        IdRef operand2);
-void WriteLogicalNotEqual(std::vector<uint32_t> *blob,
+void WriteLogicalNotEqual(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef operand1,
                           IdRef operand2);
-void WriteLogicalOr(std::vector<uint32_t> *blob,
+void WriteLogicalOr(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
                     IdRef operand2);
-void WriteLogicalAnd(std::vector<uint32_t> *blob,
+void WriteLogicalAnd(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
                      IdRef operand2);
-void WriteLogicalNot(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef operand);
-void WriteSelect(std::vector<uint32_t> *blob,
+void WriteLogicalNot(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
+void WriteSelect(Blob *blob,
                  IdResultType idResultType,
                  IdResult idResult,
                  IdRef condition,
                  IdRef object1,
                  IdRef object2);
-void WriteIEqual(std::vector<uint32_t> *blob,
+void WriteIEqual(Blob *blob,
                  IdResultType idResultType,
                  IdResult idResult,
                  IdRef operand1,
                  IdRef operand2);
-void WriteINotEqual(std::vector<uint32_t> *blob,
+void WriteINotEqual(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
                     IdRef operand2);
-void WriteUGreaterThan(std::vector<uint32_t> *blob,
+void WriteUGreaterThan(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
                        IdRef operand2);
-void WriteSGreaterThan(std::vector<uint32_t> *blob,
+void WriteSGreaterThan(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
                        IdRef operand2);
-void WriteUGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteUGreaterThanEqual(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
                             IdRef operand2);
-void WriteSGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteSGreaterThanEqual(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
                             IdRef operand2);
-void WriteULessThan(std::vector<uint32_t> *blob,
+void WriteULessThan(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
                     IdRef operand2);
-void WriteSLessThan(std::vector<uint32_t> *blob,
+void WriteSLessThan(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
                     IdRef operand2);
-void WriteULessThanEqual(std::vector<uint32_t> *blob,
+void WriteULessThanEqual(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
                          IdRef operand2);
-void WriteSLessThanEqual(std::vector<uint32_t> *blob,
+void WriteSLessThanEqual(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
                          IdRef operand2);
-void WriteFOrdEqual(std::vector<uint32_t> *blob,
+void WriteFOrdEqual(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
                     IdRef operand2);
-void WriteFUnordEqual(std::vector<uint32_t> *blob,
+void WriteFUnordEqual(Blob *blob,
                       IdResultType idResultType,
                       IdResult idResult,
                       IdRef operand1,
                       IdRef operand2);
-void WriteFOrdNotEqual(std::vector<uint32_t> *blob,
+void WriteFOrdNotEqual(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
                        IdRef operand2);
-void WriteFUnordNotEqual(std::vector<uint32_t> *blob,
+void WriteFUnordNotEqual(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
                          IdRef operand2);
-void WriteFOrdLessThan(std::vector<uint32_t> *blob,
+void WriteFOrdLessThan(Blob *blob,
                        IdResultType idResultType,
                        IdResult idResult,
                        IdRef operand1,
                        IdRef operand2);
-void WriteFUnordLessThan(std::vector<uint32_t> *blob,
+void WriteFUnordLessThan(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef operand1,
                          IdRef operand2);
-void WriteFOrdGreaterThan(std::vector<uint32_t> *blob,
+void WriteFOrdGreaterThan(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef operand1,
                           IdRef operand2);
-void WriteFUnordGreaterThan(std::vector<uint32_t> *blob,
+void WriteFUnordGreaterThan(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
                             IdRef operand2);
-void WriteFOrdLessThanEqual(std::vector<uint32_t> *blob,
+void WriteFOrdLessThanEqual(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef operand1,
                             IdRef operand2);
-void WriteFUnordLessThanEqual(std::vector<uint32_t> *blob,
+void WriteFUnordLessThanEqual(Blob *blob,
                               IdResultType idResultType,
                               IdResult idResult,
                               IdRef operand1,
                               IdRef operand2);
-void WriteFOrdGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteFOrdGreaterThanEqual(Blob *blob,
                                IdResultType idResultType,
                                IdResult idResult,
                                IdRef operand1,
                                IdRef operand2);
-void WriteFUnordGreaterThanEqual(std::vector<uint32_t> *blob,
+void WriteFUnordGreaterThanEqual(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdRef operand1,
                                  IdRef operand2);
-void WriteShiftRightLogical(std::vector<uint32_t> *blob,
+void WriteShiftRightLogical(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef base,
                             IdRef shift);
-void WriteShiftRightArithmetic(std::vector<uint32_t> *blob,
+void WriteShiftRightArithmetic(Blob *blob,
                                IdResultType idResultType,
                                IdResult idResult,
                                IdRef base,
                                IdRef shift);
-void WriteShiftLeftLogical(std::vector<uint32_t> *blob,
+void WriteShiftLeftLogical(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef base,
                            IdRef shift);
-void WriteBitwiseOr(std::vector<uint32_t> *blob,
+void WriteBitwiseOr(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef operand1,
                     IdRef operand2);
-void WriteBitwiseXor(std::vector<uint32_t> *blob,
+void WriteBitwiseXor(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
                      IdRef operand2);
-void WriteBitwiseAnd(std::vector<uint32_t> *blob,
+void WriteBitwiseAnd(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef operand1,
                      IdRef operand2);
-void WriteNot(std::vector<uint32_t> *blob,
-              IdResultType idResultType,
-              IdResult idResult,
-              IdRef operand);
-void WriteBitFieldInsert(std::vector<uint32_t> *blob,
+void WriteNot(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef operand);
+void WriteBitFieldInsert(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef base,
                          IdRef insert,
                          IdRef offset,
                          IdRef count);
-void WriteBitFieldSExtract(std::vector<uint32_t> *blob,
+void WriteBitFieldSExtract(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef base,
                            IdRef offset,
                            IdRef count);
-void WriteBitFieldUExtract(std::vector<uint32_t> *blob,
+void WriteBitFieldUExtract(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef base,
                            IdRef offset,
                            IdRef count);
-void WriteBitReverse(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef base);
-void WriteBitCount(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef base);
-void WriteDPdx(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef p);
-void WriteDPdy(std::vector<uint32_t> *blob, IdResultType idResultType, IdResult idResult, IdRef p);
-void WriteFwidth(std::vector<uint32_t> *blob,
-                 IdResultType idResultType,
-                 IdResult idResult,
-                 IdRef p);
-void WriteDPdxFine(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef p);
-void WriteDPdyFine(std::vector<uint32_t> *blob,
-                   IdResultType idResultType,
-                   IdResult idResult,
-                   IdRef p);
-void WriteFwidthFine(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef p);
-void WriteDPdxCoarse(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef p);
-void WriteDPdyCoarse(std::vector<uint32_t> *blob,
-                     IdResultType idResultType,
-                     IdResult idResult,
-                     IdRef p);
-void WriteFwidthCoarse(std::vector<uint32_t> *blob,
-                       IdResultType idResultType,
-                       IdResult idResult,
-                       IdRef p);
-void WriteEmitVertex(std::vector<uint32_t> *blob);
-void WriteEndPrimitive(std::vector<uint32_t> *blob);
-void WriteEmitStreamVertex(std::vector<uint32_t> *blob, IdRef stream);
-void WriteEndStreamPrimitive(std::vector<uint32_t> *blob, IdRef stream);
-void WriteControlBarrier(std::vector<uint32_t> *blob,
+void WriteBitReverse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef base);
+void WriteBitCount(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef base);
+void WriteDPdx(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteDPdy(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteFwidth(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteDPdxFine(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteDPdyFine(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteFwidthFine(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteDPdxCoarse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteDPdyCoarse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteFwidthCoarse(Blob *blob, IdResultType idResultType, IdResult idResult, IdRef p);
+void WriteEmitVertex(Blob *blob);
+void WriteEndPrimitive(Blob *blob);
+void WriteEmitStreamVertex(Blob *blob, IdRef stream);
+void WriteEndStreamPrimitive(Blob *blob, IdRef stream);
+void WriteControlBarrier(Blob *blob,
                          IdScope execution,
                          IdScope memory,
                          IdMemorySemantics semantics);
-void WriteMemoryBarrier(std::vector<uint32_t> *blob, IdScope memory, IdMemorySemantics semantics);
-void WriteAtomicLoad(std::vector<uint32_t> *blob,
+void WriteMemoryBarrier(Blob *blob, IdScope memory, IdMemorySemantics semantics);
+void WriteAtomicLoad(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
                      IdScope scope,
                      IdMemorySemantics semantics);
-void WriteAtomicStore(std::vector<uint32_t> *blob,
+void WriteAtomicStore(Blob *blob,
                       IdRef pointer,
                       IdScope scope,
                       IdMemorySemantics semantics,
                       IdRef value);
-void WriteAtomicExchange(std::vector<uint32_t> *blob,
+void WriteAtomicExchange(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdRef pointer,
                          IdScope scope,
                          IdMemorySemantics semantics,
                          IdRef value);
-void WriteAtomicCompareExchange(std::vector<uint32_t> *blob,
+void WriteAtomicCompareExchange(Blob *blob,
                                 IdResultType idResultType,
                                 IdResult idResult,
                                 IdRef pointer,
@@ -806,186 +699,184 @@ void WriteAtomicCompareExchange(std::vector<uint32_t> *blob,
                                 IdMemorySemantics unequal,
                                 IdRef value,
                                 IdRef comparator);
-void WriteAtomicIIncrement(std::vector<uint32_t> *blob,
+void WriteAtomicIIncrement(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef pointer,
                            IdScope scope,
                            IdMemorySemantics semantics);
-void WriteAtomicIDecrement(std::vector<uint32_t> *blob,
+void WriteAtomicIDecrement(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef pointer,
                            IdScope scope,
                            IdMemorySemantics semantics);
-void WriteAtomicIAdd(std::vector<uint32_t> *blob,
+void WriteAtomicIAdd(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
                      IdScope scope,
                      IdMemorySemantics semantics,
                      IdRef value);
-void WriteAtomicISub(std::vector<uint32_t> *blob,
+void WriteAtomicISub(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
                      IdScope scope,
                      IdMemorySemantics semantics,
                      IdRef value);
-void WriteAtomicSMin(std::vector<uint32_t> *blob,
+void WriteAtomicSMin(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
                      IdScope scope,
                      IdMemorySemantics semantics,
                      IdRef value);
-void WriteAtomicUMin(std::vector<uint32_t> *blob,
+void WriteAtomicUMin(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
                      IdScope scope,
                      IdMemorySemantics semantics,
                      IdRef value);
-void WriteAtomicSMax(std::vector<uint32_t> *blob,
+void WriteAtomicSMax(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
                      IdScope scope,
                      IdMemorySemantics semantics,
                      IdRef value);
-void WriteAtomicUMax(std::vector<uint32_t> *blob,
+void WriteAtomicUMax(Blob *blob,
                      IdResultType idResultType,
                      IdResult idResult,
                      IdRef pointer,
                      IdScope scope,
                      IdMemorySemantics semantics,
                      IdRef value);
-void WriteAtomicAnd(std::vector<uint32_t> *blob,
+void WriteAtomicAnd(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef pointer,
                     IdScope scope,
                     IdMemorySemantics semantics,
                     IdRef value);
-void WriteAtomicOr(std::vector<uint32_t> *blob,
+void WriteAtomicOr(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    IdRef pointer,
                    IdScope scope,
                    IdMemorySemantics semantics,
                    IdRef value);
-void WriteAtomicXor(std::vector<uint32_t> *blob,
+void WriteAtomicXor(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdRef pointer,
                     IdScope scope,
                     IdMemorySemantics semantics,
                     IdRef value);
-void WritePhi(std::vector<uint32_t> *blob,
+void WritePhi(Blob *blob,
               IdResultType idResultType,
               IdResult idResult,
               const PairIdRefIdRefList &variableParentPairList);
-void WriteLoopMerge(std::vector<uint32_t> *blob,
+void WriteLoopMerge(Blob *blob,
                     IdRef mergeBlock,
                     IdRef continueTarget,
                     spv::LoopControlMask loopControl);
-void WriteSelectionMerge(std::vector<uint32_t> *blob,
-                         IdRef mergeBlock,
-                         spv::SelectionControlMask selectionControl);
-void WriteLabel(std::vector<uint32_t> *blob, IdResult idResult);
-void WriteBranch(std::vector<uint32_t> *blob, IdRef targetLabel);
-void WriteBranchConditional(std::vector<uint32_t> *blob,
+void WriteSelectionMerge(Blob *blob, IdRef mergeBlock, spv::SelectionControlMask selectionControl);
+void WriteLabel(Blob *blob, IdResult idResult);
+void WriteBranch(Blob *blob, IdRef targetLabel);
+void WriteBranchConditional(Blob *blob,
                             IdRef condition,
                             IdRef trueLabel,
                             IdRef falseLabel,
                             const LiteralIntegerList &branchweightsPairList);
-void WriteSwitch(std::vector<uint32_t> *blob,
+void WriteSwitch(Blob *blob,
                  IdRef selector,
                  IdRef default_,
                  const PairLiteralIntegerIdRefList &targetPairList);
-void WriteKill(std::vector<uint32_t> *blob);
-void WriteReturn(std::vector<uint32_t> *blob);
-void WriteReturnValue(std::vector<uint32_t> *blob, IdRef value);
-void WriteUnreachable(std::vector<uint32_t> *blob);
-void WriteGroupAll(std::vector<uint32_t> *blob,
+void WriteKill(Blob *blob);
+void WriteReturn(Blob *blob);
+void WriteReturnValue(Blob *blob, IdRef value);
+void WriteUnreachable(Blob *blob);
+void WriteGroupAll(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    IdScope execution,
                    IdRef predicate);
-void WriteGroupAny(std::vector<uint32_t> *blob,
+void WriteGroupAny(Blob *blob,
                    IdResultType idResultType,
                    IdResult idResult,
                    IdScope execution,
                    IdRef predicate);
-void WriteGroupBroadcast(std::vector<uint32_t> *blob,
+void WriteGroupBroadcast(Blob *blob,
                          IdResultType idResultType,
                          IdResult idResult,
                          IdScope execution,
                          IdRef value,
                          IdRef localId);
-void WriteGroupIAdd(std::vector<uint32_t> *blob,
+void WriteGroupIAdd(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteGroupFAdd(std::vector<uint32_t> *blob,
+void WriteGroupFAdd(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteGroupFMin(std::vector<uint32_t> *blob,
+void WriteGroupFMin(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteGroupUMin(std::vector<uint32_t> *blob,
+void WriteGroupUMin(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteGroupSMin(std::vector<uint32_t> *blob,
+void WriteGroupSMin(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteGroupFMax(std::vector<uint32_t> *blob,
+void WriteGroupFMax(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteGroupUMax(std::vector<uint32_t> *blob,
+void WriteGroupUMax(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteGroupSMax(std::vector<uint32_t> *blob,
+void WriteGroupSMax(Blob *blob,
                     IdResultType idResultType,
                     IdResult idResult,
                     IdScope execution,
                     spv::GroupOperation operation,
                     IdRef x);
-void WriteImageSparseSampleImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleImplicitLod(Blob *blob,
                                        IdResultType idResultType,
                                        IdResult idResult,
                                        IdRef sampledImage,
                                        IdRef coordinate,
                                        const spv::ImageOperandsMask *imageOperands,
                                        const IdRefList &imageOperandIdsList);
-void WriteImageSparseSampleExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleExplicitLod(Blob *blob,
                                        IdResultType idResultType,
                                        IdResult idResult,
                                        IdRef sampledImage,
                                        IdRef coordinate,
                                        spv::ImageOperandsMask imageOperands,
                                        const IdRefList &imageOperandIdsList);
-void WriteImageSparseSampleDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleDrefImplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
@@ -993,7 +884,7 @@ void WriteImageSparseSampleDrefImplicitLod(std::vector<uint32_t> *blob,
                                            IdRef dref,
                                            const spv::ImageOperandsMask *imageOperands,
                                            const IdRefList &imageOperandIdsList);
-void WriteImageSparseSampleDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleDrefExplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
@@ -1001,21 +892,21 @@ void WriteImageSparseSampleDrefExplicitLod(std::vector<uint32_t> *blob,
                                            IdRef dref,
                                            spv::ImageOperandsMask imageOperands,
                                            const IdRefList &imageOperandIdsList);
-void WriteImageSparseSampleProjImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjImplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
                                            IdRef coordinate,
                                            const spv::ImageOperandsMask *imageOperands,
                                            const IdRefList &imageOperandIdsList);
-void WriteImageSparseSampleProjExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjExplicitLod(Blob *blob,
                                            IdResultType idResultType,
                                            IdResult idResult,
                                            IdRef sampledImage,
                                            IdRef coordinate,
                                            spv::ImageOperandsMask imageOperands,
                                            const IdRefList &imageOperandIdsList);
-void WriteImageSparseSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjDrefImplicitLod(Blob *blob,
                                                IdResultType idResultType,
                                                IdResult idResult,
                                                IdRef sampledImage,
@@ -1023,7 +914,7 @@ void WriteImageSparseSampleProjDrefImplicitLod(std::vector<uint32_t> *blob,
                                                IdRef dref,
                                                const spv::ImageOperandsMask *imageOperands,
                                                const IdRefList &imageOperandIdsList);
-void WriteImageSparseSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
+void WriteImageSparseSampleProjDrefExplicitLod(Blob *blob,
                                                IdResultType idResultType,
                                                IdResult idResult,
                                                IdRef sampledImage,
@@ -1031,14 +922,14 @@ void WriteImageSparseSampleProjDrefExplicitLod(std::vector<uint32_t> *blob,
                                                IdRef dref,
                                                spv::ImageOperandsMask imageOperands,
                                                const IdRefList &imageOperandIdsList);
-void WriteImageSparseFetch(std::vector<uint32_t> *blob,
+void WriteImageSparseFetch(Blob *blob,
                            IdResultType idResultType,
                            IdResult idResult,
                            IdRef image,
                            IdRef coordinate,
                            const spv::ImageOperandsMask *imageOperands,
                            const IdRefList &imageOperandIdsList);
-void WriteImageSparseGather(std::vector<uint32_t> *blob,
+void WriteImageSparseGather(Blob *blob,
                             IdResultType idResultType,
                             IdResult idResult,
                             IdRef sampledImage,
@@ -1046,7 +937,7 @@ void WriteImageSparseGather(std::vector<uint32_t> *blob,
                             IdRef component,
                             const spv::ImageOperandsMask *imageOperands,
                             const IdRefList &imageOperandIdsList);
-void WriteImageSparseDrefGather(std::vector<uint32_t> *blob,
+void WriteImageSparseDrefGather(Blob *blob,
                                 IdResultType idResultType,
                                 IdResult idResult,
                                 IdRef sampledImage,
@@ -1054,61 +945,61 @@ void WriteImageSparseDrefGather(std::vector<uint32_t> *blob,
                                 IdRef dref,
                                 const spv::ImageOperandsMask *imageOperands,
                                 const IdRefList &imageOperandIdsList);
-void WriteImageSparseTexelsResident(std::vector<uint32_t> *blob,
+void WriteImageSparseTexelsResident(Blob *blob,
                                     IdResultType idResultType,
                                     IdResult idResult,
                                     IdRef residentCode);
-void WriteNoLine(std::vector<uint32_t> *blob);
-void WriteImageSparseRead(std::vector<uint32_t> *blob,
+void WriteNoLine(Blob *blob);
+void WriteImageSparseRead(Blob *blob,
                           IdResultType idResultType,
                           IdResult idResult,
                           IdRef image,
                           IdRef coordinate,
                           const spv::ImageOperandsMask *imageOperands,
                           const IdRefList &imageOperandIdsList);
-void WriteGroupIAddNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupIAddNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
                                  spv::GroupOperation operation,
                                  IdRef x);
-void WriteGroupFAddNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupFAddNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
                                  spv::GroupOperation operation,
                                  IdRef x);
-void WriteGroupFMinNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupFMinNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
                                  spv::GroupOperation operation,
                                  IdRef x);
-void WriteGroupUMinNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupUMinNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
                                  spv::GroupOperation operation,
                                  IdRef x);
-void WriteGroupSMinNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupSMinNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
                                  spv::GroupOperation operation,
                                  IdRef x);
-void WriteGroupFMaxNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupFMaxNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
                                  spv::GroupOperation operation,
                                  IdRef x);
-void WriteGroupUMaxNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupUMaxNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,
                                  spv::GroupOperation operation,
                                  IdRef x);
-void WriteGroupSMaxNonUniformAMD(std::vector<uint32_t> *blob,
+void WriteGroupSMaxNonUniformAMD(Blob *blob,
                                  IdResultType idResultType,
                                  IdResult idResult,
                                  IdScope execution,

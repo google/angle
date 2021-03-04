@@ -63,7 +63,7 @@ void SaveShaderInterfaceVariableXfbInfo(const ShaderInterfaceVariableXfbInfo &xf
 bool ValidateTransformedSpirV(ContextVk *contextVk,
                               const gl::ShaderBitSet &linkedShaderStages,
                               const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                              const gl::ShaderMap<SpirvBlob> &spirvBlobs)
+                              const gl::ShaderMap<angle::spirv::Blob> &spirvBlobs)
 {
     const gl::ShaderType lastPreFragmentStage = gl::GetLastPreFragmentStage(linkedShaderStages);
 
@@ -78,7 +78,7 @@ bool ValidateTransformedSpirV(ContextVk *contextVk,
         options.removeDebugInfo                    = true;
         options.isTransformFeedbackStage           = shaderType == lastPreFragmentStage;
 
-        SpirvBlob transformed;
+        angle::spirv::Blob transformed;
         if (GlslangWrapperVk::TransformSpirV(contextVk, options, variableInfoMap,
                                              spirvBlobs[shaderType],
                                              &transformed) != angle::Result::Continue)
@@ -118,7 +118,7 @@ angle::Result ShaderInfo::initShaders(ContextVk *contextVk,
 
 void ShaderInfo::release(ContextVk *contextVk)
 {
-    for (SpirvBlob &spirvBlob : mSpirvBlobs)
+    for (angle::spirv::Blob &spirvBlob : mSpirvBlobs)
     {
         spirvBlob.clear();
     }
@@ -130,7 +130,7 @@ void ShaderInfo::load(gl::BinaryInputStream *stream)
     // Read in shader codes for all shader types
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        SpirvBlob *spirvBlob = &mSpirvBlobs[shaderType];
+        angle::spirv::Blob *spirvBlob = &mSpirvBlobs[shaderType];
 
         // Read the SPIR-V
         stream->readIntVector<uint32_t>(spirvBlob);
@@ -146,7 +146,7 @@ void ShaderInfo::save(gl::BinaryOutputStream *stream)
     // Write out shader codes for all shader types
     for (const gl::ShaderType shaderType : gl::AllShaderTypes())
     {
-        const SpirvBlob &spirvBlob = mSpirvBlobs[shaderType];
+        const angle::spirv::Blob &spirvBlob = mSpirvBlobs[shaderType];
 
         // Write the SPIR-V
         stream->writeIntVector(spirvBlob);
@@ -166,10 +166,10 @@ angle::Result ProgramInfo::initProgram(ContextVk *contextVk,
                                        ProgramTransformOptions optionBits,
                                        const ShaderInterfaceVariableInfoMap &variableInfoMap)
 {
-    const gl::ShaderMap<SpirvBlob> &originalSpirvBlobs = shaderInfo.getSpirvBlobs();
-    const SpirvBlob &originalSpirvBlob                 = originalSpirvBlobs[shaderType];
-    gl::ShaderMap<SpirvBlob> transformedSpirvBlobs;
-    SpirvBlob &transformedSpirvBlob = transformedSpirvBlobs[shaderType];
+    const gl::ShaderMap<angle::spirv::Blob> &originalSpirvBlobs = shaderInfo.getSpirvBlobs();
+    const angle::spirv::Blob &originalSpirvBlob                 = originalSpirvBlobs[shaderType];
+    gl::ShaderMap<angle::spirv::Blob> transformedSpirvBlobs;
+    angle::spirv::Blob &transformedSpirvBlob = transformedSpirvBlobs[shaderType];
 
     GlslangSpirvOptions options;
     options.shaderType = shaderType;

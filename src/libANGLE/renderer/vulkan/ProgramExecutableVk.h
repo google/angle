@@ -37,14 +37,14 @@ class ShaderInfo final : angle::NonCopyable
 
     ANGLE_INLINE bool valid() const { return mIsInitialized; }
 
-    const gl::ShaderMap<SpirvBlob> &getSpirvBlobs() const { return mSpirvBlobs; }
+    const gl::ShaderMap<angle::spirv::Blob> &getSpirvBlobs() const { return mSpirvBlobs; }
 
     // Save and load implementation for GLES Program Binary support.
     void load(gl::BinaryInputStream *stream);
     void save(gl::BinaryOutputStream *stream);
 
   private:
-    gl::ShaderMap<SpirvBlob> mSpirvBlobs;
+    gl::ShaderMap<angle::spirv::Blob> mSpirvBlobs;
     bool mIsInitialized = false;
 };
 

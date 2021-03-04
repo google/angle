@@ -621,7 +621,7 @@ enum
 void InsertPreamble(uint32_t colorAttachmentCount,
                     bool unresolveDepth,
                     bool unresolveStencil,
-                    SpirvBlob *blobOut)
+                    angle::spirv::Blob *blobOut)
 {
     spirv::WriteCapability(blobOut, spv::CapabilityShader);
     spirv::WriteCapability(blobOut, spv::CapabilityInputAttachment);
@@ -663,7 +663,7 @@ void InsertPreamble(uint32_t colorAttachmentCount,
 void InsertInputDecorations(spirv::IdRef id,
                             uint32_t attachmentIndex,
                             uint32_t binding,
-                            SpirvBlob *blobOut)
+                            angle::spirv::Blob *blobOut)
 {
     spirv::WriteDecorate(blobOut, id, spv::DecorationDescriptorSet,
                          {spirv::LiteralInteger(DescriptorSetIndex::InternalShader)});
@@ -672,7 +672,7 @@ void InsertInputDecorations(spirv::IdRef id,
                          {spirv::LiteralInteger(attachmentIndex)});
 }
 
-void InsertColorDecorations(uint32_t colorIndex, SpirvBlob *blobOut)
+void InsertColorDecorations(uint32_t colorIndex, angle::spirv::Blob *blobOut)
 {
     // Decorate the output color attachment with Location
     spirv::WriteDecorate(blobOut, spirv::IdRef(kIdColor0Out + colorIndex), spv::DecorationLocation,
@@ -685,7 +685,7 @@ void InsertDepthStencilDecorations(uint32_t depthStencilInputIndex,
                                    uint32_t depthStencilBindingIndex,
                                    bool unresolveDepth,
                                    bool unresolveStencil,
-                                   SpirvBlob *blobOut)
+                                   angle::spirv::Blob *blobOut)
 {
     if (unresolveDepth)
     {
@@ -716,7 +716,7 @@ void InsertDerivativeTypes(spirv::IdRef baseId,
                            spirv::IdRef vec4OutId,
                            spirv::IdRef imageTypeId,
                            spirv::IdRef inputTypeId,
-                           SpirvBlob *blobOut)
+                           angle::spirv::Blob *blobOut)
 {
     spirv::WriteTypeVector(blobOut, vec4Id, baseId, spirv::LiteralInteger(4));
     spirv::WriteTypePointer(blobOut, vec4OutId, spv::StorageClassOutput, vec4Id);
@@ -732,7 +732,7 @@ void InsertDerivativeTypes(spirv::IdRef baseId,
     spirv::WriteTypePointer(blobOut, inputTypeId, spv::StorageClassUniformConstant, imageTypeId);
 }
 
-void InsertCommonTypes(SpirvBlob *blobOut)
+void InsertCommonTypes(angle::spirv::Blob *blobOut)
 {
     // Types to support main().
     spirv::WriteTypeVoid(blobOut, spirv::IdRef(kIdVoid));
@@ -777,7 +777,7 @@ void InsertVariableDecl(spirv::IdRef outType,
                         spirv::IdRef outId,
                         spirv::IdRef inType,
                         spirv::IdRef inId,
-                        SpirvBlob *blobOut)
+                        angle::spirv::Blob *blobOut)
 {
     // Declare both the output and subpass input variables.
     spirv::WriteVariable(blobOut, outType, outId, spv::StorageClassOutput, nullptr);
@@ -786,7 +786,7 @@ void InsertVariableDecl(spirv::IdRef outType,
 
 void InsertColorVariableDecl(uint32_t colorIndex,
                              UnresolveColorAttachmentType type,
-                             SpirvBlob *blobOut)
+                             angle::spirv::Blob *blobOut)
 {
     // Find the correct types for color variable declarations.
     spirv::IdRef outType(kIdFloat4OutType);
@@ -809,7 +809,9 @@ void InsertColorVariableDecl(uint32_t colorIndex,
     InsertVariableDecl(outType, outId, inType, inId, blobOut);
 }
 
-void InsertDepthStencilVariableDecl(bool unresolveDepth, bool unresolveStencil, SpirvBlob *blobOut)
+void InsertDepthStencilVariableDecl(bool unresolveDepth,
+                                    bool unresolveStencil,
+                                    angle::spirv::Blob *blobOut)
 {
     if (unresolveDepth)
     {
@@ -825,7 +827,7 @@ void InsertDepthStencilVariableDecl(bool unresolveDepth, bool unresolveStencil, 
     }
 }
 
-void InsertTopOfMain(SpirvBlob *blobOut)
+void InsertTopOfMain(angle::spirv::Blob *blobOut)
 {
     spirv::WriteFunction(blobOut, spirv::IdRef(kIdVoid), spirv::IdRef(kIdMain),
                          spv::FunctionControlMaskNone, spirv::IdRef(kIdMainType));
@@ -834,7 +836,7 @@ void InsertTopOfMain(SpirvBlob *blobOut)
 
 void InsertColorUnresolveLoadStore(uint32_t colorIndex,
                                    UnresolveColorAttachmentType type,
-                                   SpirvBlob *blobOut)
+                                   angle::spirv::Blob *blobOut)
 {
     spirv::IdRef loadResult(kIdColor0Load + colorIndex * 2);
     spirv::IdRef imageReadResult(loadResult + 1);
@@ -867,7 +869,7 @@ void InsertColorUnresolveLoadStore(uint32_t colorIndex,
 
 void InsertDepthStencilUnresolveLoadStore(bool unresolveDepth,
                                           bool unresolveStencil,
-                                          SpirvBlob *blobOut)
+                                          angle::spirv::Blob *blobOut)
 {
     if (unresolveDepth)
     {
@@ -913,19 +915,19 @@ void InsertDepthStencilUnresolveLoadStore(bool unresolveDepth,
     }
 }
 
-void InsertBottomOfMain(SpirvBlob *blobOut)
+void InsertBottomOfMain(angle::spirv::Blob *blobOut)
 {
     spirv::WriteReturn(blobOut);
     spirv::WriteFunctionEnd(blobOut);
 }
 
-std::vector<uint32_t> MakeFragShader(
+angle::spirv::Blob MakeFragShader(
     uint32_t colorAttachmentCount,
     gl::DrawBuffersArray<UnresolveColorAttachmentType> &colorAttachmentTypes,
     bool unresolveDepth,
     bool unresolveStencil)
 {
-    SpirvBlob code;
+    angle::spirv::Blob code;
 
     // Reserve a sensible amount of memory.  A single-attachment shader is 169 words.
     code.reserve(169);
@@ -987,7 +989,7 @@ angle::Result GetUnresolveFrag(
         return angle::Result::Continue;
     }
 
-    std::vector<uint32_t> shaderCode = unresolve::MakeFragShader(
+    angle::spirv::Blob shaderCode = unresolve::MakeFragShader(
         colorAttachmentCount, colorAttachmentTypes, unresolveDepth, unresolveStencil);
 
     ASSERT(spirv::Validate(shaderCode));

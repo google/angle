@@ -323,8 +323,8 @@ angle::Result ProgramMtl::linkImpl(const gl::Context *glContext,
                                 &xfbOnlyVariableInfoMap);
 
     // Convert GLSL to spirv code
-    gl::ShaderMap<std::vector<uint32_t>> shaderCodes;
-    gl::ShaderMap<std::vector<uint32_t>> xfbOnlyShaderCodes;  // only vertex shader is needed.
+    gl::ShaderMap<angle::spirv::Blob> shaderCodes;
+    gl::ShaderMap<angle::spirv::Blob> xfbOnlyShaderCodes;  // only vertex shader is needed.
     ANGLE_TRY(mtl::GlslangGetShaderSpirvCode(
         contextMtl, mState.getExecutable().getLinkedShaderStages(), contextMtl->getCaps(),
         shaderSources, false, variableInfoMap, &shaderCodes));

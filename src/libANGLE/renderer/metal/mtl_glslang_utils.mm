@@ -272,7 +272,7 @@ std::string PostProcessTranslatedMsl(const std::string &translatedSource)
 class SpirvToMslCompiler : public spirv_cross::CompilerMSL
 {
   public:
-    SpirvToMslCompiler(std::vector<uint32_t> &&spriv) : spirv_cross::CompilerMSL(spriv) {}
+    SpirvToMslCompiler(angle::spirv::Blob &&spriv) : spirv_cross::CompilerMSL(spriv) {}
 
     void compileEx(gl::ShaderType shaderType,
                    const angle::HashMap<std::string, uint32_t> &uboOriginalBindings,
@@ -358,7 +358,7 @@ angle::Result ConvertSpirvToMsl(Context *context,
                                 const angle::HashMap<uint32_t, uint32_t> &xfbOriginalBindings,
                                 const OriginalSamplerBindingMap &originalSamplerBindings,
                                 bool disableRasterization,
-                                std::vector<uint32_t> *sprivCode,
+                                angle::spirv::Blob *sprivCode,
                                 TranslatedShaderInfo *translatedShaderInfoOut)
 {
     if (!sprivCode || sprivCode->empty())
@@ -439,9 +439,9 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
                                         const gl::ShaderMap<std::string> &shaderSources,
                                         bool isTransformFeedbackEnabled,
                                         const ShaderInterfaceVariableInfoMap &variableInfoMap,
-                                        gl::ShaderMap<std::vector<uint32_t>> *shaderCodeOut)
+                                        gl::ShaderMap<angle::spirv::Blob> *shaderCodeOut)
 {
-    gl::ShaderMap<SpirvBlob> initialSpirvBlobs;
+    gl::ShaderMap<angle::spirv::Blob> initialSpirvBlobs;
 
     ANGLE_TRY(rx::GlslangGetShaderSpirvCode(
         [context](GlslangError error) { return HandleError(context, error); }, linkedShaderStages,
@@ -471,8 +471,8 @@ angle::Result GlslangGetShaderSpirvCode(ErrorHandler *context,
 angle::Result SpirvCodeToMsl(Context *context,
                              const gl::ProgramState &programState,
                              const ShaderInterfaceVariableInfoMap &xfbVSVariableInfoMap,
-                             gl::ShaderMap<std::vector<uint32_t>> *spirvShaderCode,
-                             std::vector<uint32_t> *xfbOnlySpirvCode /** nullable */,
+                             gl::ShaderMap<angle::spirv::Blob> *spirvShaderCode,
+                             angle::spirv::Blob *xfbOnlySpirvCode /** nullable */,
                              gl::ShaderMap<TranslatedShaderInfo> *mslShaderInfoOut,
                              TranslatedShaderInfo *mslXfbOnlyShaderInfoOut /** nullable */)
 {
@@ -518,7 +518,7 @@ angle::Result SpirvCodeToMsl(Context *context,
     // Do the actual translation
     for (gl::ShaderType shaderType : gl::kAllGLES2ShaderTypes)
     {
-        std::vector<uint32_t> &sprivCode = spirvShaderCode->at(shaderType);
+        angle::spirv::Blob &sprivCode = spirvShaderCode->at(shaderType);
         ANGLE_TRY(ConvertSpirvToMsl(context, shaderType, uboOriginalBindings, xfbOriginalBindings,
                                     originalSamplerBindings, /* disableRasterization */ false,
                                     &sprivCode, &mslShaderInfoOut->at(shaderType)));
