@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1c13b42_d8907699",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-03-04T16:13:26Z",
+      "side": 1,
+      "message": "Added the FIXME with Android bug.",
+      "parentUuid": "aac3651c_63e26adc",
+      "revId": "d725884de74e3c6811c916aef2348765089ccf06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c2303eb1_c97938d1",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-04T14:40:35Z",
       "side": 1,
       "message": "I generally dislike the use of this function, because it discerns between implementations based on their name rather than their actual capabilities.\n\nFor this specific case it forces SwiftShader to support recordable EGL configs unconditionally. If we break that in subtle ways, it could be hard to find the root cause and fix it for just the configs that are really needed.\n\nIt\u0027s fine if this is needed to enable SwANGLE for Cuttlefish asap, but a comment which mentions FIXME(b/181163023) seems in order.",
+      "range": {
+        "startLine": 75,
+        "startChar": 8,
+        "endLine": 75,
+        "endChar": 21
+      },
+      "revId": "d725884de74e3c6811c916aef2348765089ccf06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b115e876_4f960f57",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1379716
+      },
+      "writtenOn": "2021-03-04T16:13:26Z",
+      "side": 1,
+      "message": "Ack. Added the fixme with a note saying that this is a hack to unblock SwANGLE on Cuttlefish as I couldn\u0027t figure out how to properly query for this.",
+      "parentUuid": "c2303eb1_c97938d1",
       "range": {
         "startLine": 75,
         "startChar": 8,
