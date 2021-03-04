@@ -16,6 +16,24 @@
       "message": "Mohan, could we make a regression test for this functionality? It would help prevent incorrect changes creeping in.",
       "revId": "0eae0d6cf10246342f910416b77e40c34249b746",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "473c19de_9aa568a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-04T20:01:57Z",
+      "side": 1,
+      "message": "Well, to that point, if we ran any Android on discrete GPU bots, this CL would have broken them from the outset, as it assumes linear + input attachment usage is available in the underlying Vulkan driver.",
+      "parentUuid": "2140c1bd_b2edc4d3",
+      "revId": "0eae0d6cf10246342f910416b77e40c34249b746",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
