@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d872288a_8afb05a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T10:04:08Z",
+      "side": 1,
+      "message": "Thanks for the contribution! Feel free to split the change so we can land the fallback-to-Vulkan change faster.",
+      "revId": "22a2531039a53bd4e68a962022ca4b102cd0e88d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "096ece09_7a97e24e",
+        "filename": "src/gpu_info_util/SystemInfo_vulkan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T10:04:08Z",
+      "side": 1,
+      "message": "OpenSharedLibraryWithExtension is making an allocation with \"new\", so there\u0027s a leak here if `mLibVulkan-\u003egetNative()` is nullptr.\n\nCould you add a SafeDelete after the if?\n\nBetter yet, you could change OpenSharedLibraryWithExtension and mLibVulkan to use unique_ptr.",
+      "revId": "22a2531039a53bd4e68a962022ca4b102cd0e88d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
