@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "17c4caad_480d40cc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-04T00:52:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3dad083d_28e94143",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 30
+      },
+      "revId": "f2bcc9209c441bb44b3c3cdc3eae2ffb0550798e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f411ad18_1fd35d69",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
@@ -37,6 +61,24 @@
       "writtenOn": "2021-03-02T22:21:00Z",
       "side": 1,
       "message": "ISTR there\u0027s an extension somewhere that specifically mentions the input attachment layout. Don\u0027t recall where that\u0027s laid out. LGTM anyway. Would be good to dig that up though.",
+      "revId": "f2bcc9209c441bb44b3c3cdc3eae2ffb0550798e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4297ed09_2e550df1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-04T00:52:47Z",
+      "side": 1,
+      "message": "Ack, I think the original worry was this table:\n\n```\nTable 14. AHardwareBuffer Usage Equivalence\nAHardwareBuffer Usage\tVulkan Usage or Creation Flag\n\nNone \u003c- VK_IMAGE_USAGE_TRANSFER_SRC_BIT\nNone \u003c- VK_IMAGE_USAGE_TRANSFER_DST_BIT\nAHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE \u003c- VK_IMAGE_USAGE_SAMPLED_BIT\nAHARDWAREBUFFER_USAGE_GPU_SAMPLED_IMAGE \u003c- VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT\nAHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER \u003c- VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT\nAHARDWAREBUFFER_USAGE_GPU_FRAMEBUFFER \u003c- VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT\nAHARDWAREBUFFER_USAGE_GPU_CUBE_MAP \u003c- VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT\nAHARDWAREBUFFER_USAGE_GPU_MIPMAP_COMPLETE \u003c- None\nAHARDWAREBUFFER_USAGE_PROTECTED_CONTENT \u003c- VK_IMAGE_CREATE_PROTECTED_BIT\nNone \u003c- VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT\nNone \u003c- VK_IMAGE_CREATE_EXTENDED_USAGE_BIT\n```\n\nwhere we thought ahb sampled images would be used as input attachments but conclusion was no one did it. Reviewing this further I will go ahead and try with optimal tiling but still allowing `| VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT` in case people rely on\n\n```\nglEGLImageTargetTexture2DOES\nglFramebufferTexture2D\n*read in shader*\n```",
+      "parentUuid": "f411ad18_1fd35d69",
       "revId": "f2bcc9209c441bb44b3c3cdc3eae2ffb0550798e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
