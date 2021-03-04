@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68aa1c6b_552733f8",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-03-04T16:10:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "caacb856_fe6007e6",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 9
+      },
+      "revId": "0f8205f1bd4dbbda4a97ec1fb62d71b0516c46f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c204c387_467be1e4",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-03-04T16:02:13Z",
       "side": 1,
       "message": "We have a helper for this: angle::BeginsWith().",
+      "range": {
+        "startLine": 91,
+        "startChar": 11,
+        "endLine": 91,
+        "endChar": 18
+      },
+      "revId": "0f8205f1bd4dbbda4a97ec1fb62d71b0516c46f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc69121a_c9586faf",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-03-04T16:10:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c204c387_467be1e4",
       "range": {
         "startLine": 91,
         "startChar": 11,
