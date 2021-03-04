@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "68f7bf74_950a4f55",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-04T19:44:49Z",
+      "side": 1,
+      "message": "But that CL refers to Samsung ICD specific functionality. Linear tiling isn\u0027t going to work on NVIDIA, and we really access AHB CPU via AHB lock/unlock anyway. The previous CL is not correct as it assumes things about the Vulkan ICD based on AHB usage.",
+      "parentUuid": "af707038_fbaea965",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1695e854_822d6c7a",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 2
@@ -48,6 +66,24 @@
       "writtenOn": "2021-03-04T09:49:51Z",
       "side": 1,
       "message": "Could potentially be a problem with framebuffer fetch.\n\nCan we instead \u0026 the result of this function with the actual usage support for the format, and let it automatically drop whatever usage is not supported?",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba370fb4_385c0bd7",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-04T19:44:49Z",
+      "side": 1,
+      "message": "We don\u0027t actually need to exclude input attachemnt usage, it turnsout.",
+      "parentUuid": "1695e854_822d6c7a",
       "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
