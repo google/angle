@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51598822_876351df",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T03:54:04Z",
+      "side": 1,
+      "message": "Did this value come from anywhere in particular?",
+      "revId": "3713b49749e2d6673992d67e2bd30254d56b854a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e4fe2fc_c3725364",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1843,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T03:54:04Z",
+      "side": 1,
+      "message": "Ref",
+      "range": {
+        "startLine": 1837,
+        "startChar": 0,
+        "endLine": 1843,
+        "endChar": 9
+      },
+      "revId": "3713b49749e2d6673992d67e2bd30254d56b854a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e0ec9f2d_eaf4a122",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T03:54:04Z",
+      "side": 1,
+      "message": "Hm, I don\u0027t think I\u0027ve dug into the details of DynamicBuffer enough to provide many meaningful comments.   I\u0027m thinking that my understanding of what\u0027s actually being released is a bit confused.\n\nFor my own sake, just a couple more questions:\n\n1.) The size check I was referring to is in DynamicBuffer::allocateWithAlignment() (see the ref).   It looks like we should be releasing the buffer once all of the sub-allocations have been exhausted.   Why doesn\u0027t that free the memory?\n\n2.) Looking at ImageHelper::flushStagedUpdates(), ContextVk::flushImpl() does something similar for ContextVk::mStagingBuffer, which is how your changes to releaseInFlightBuffersToResourceUseList() get called:\n\n    angle::Result ContextVk::flushImpl(const vk::Semaphore *signalSemaphore)\n    {\n    ...\n        // We must add the per context dynamic buffers into mResourceUseList before submission so that\n        // they get retained properly until GPU completes. We do not add current buffer into\n        // mResourceUseList since they never get reused or freed until context gets destroyed, at which\n        // time we always wait for GPU to finish before destroying the dynamic buffers.\n        for (DriverUniformsDescriptorSet \u0026driverUniform : mDriverUniforms)\n        {\n            driverUniform.dynamicBuffer.releaseInFlightBuffersToResourceUseList(this);\n        }\n        mDefaultUniformStorage.releaseInFlightBuffersToResourceUseList(this);\n        mStagingBuffer.releaseInFlightBuffersToResourceUseList(this);\n\nWhy don\u0027t we issue a mStagingBuffer.release() there also, so it matches ImageHelper::flushStagedUpdates()?   Is the issue that\u0027s too large of a hammer since we actually want to keep at least 1 buffer to prevent a re-allocation later?",
+      "parentUuid": "db59fe5c_4581350f",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 5
+      },
+      "revId": "ee4d6b70468991741e934220bb6109047ff3e8ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f35734fe_fae84cd0",
         "filename": "/COMMIT_MSG",
         "patchSetId": 2
