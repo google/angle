@@ -51,6 +51,24 @@
       "parentUuid": "096ece09_7a97e24e",
       "revId": "22a2531039a53bd4e68a962022ca4b102cd0e88d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45b0dd0d_8db6f0c7",
+        "filename": "src/gpu_info_util/SystemInfo_vulkan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T10:48:57Z",
+      "side": 1,
+      "message": "Ack. Thanks for the fix, I won\u0027t block you on this.",
+      "parentUuid": "a3980c72_3c5cd22c",
+      "revId": "22a2531039a53bd4e68a962022ca4b102cd0e88d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
