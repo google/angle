@@ -3139,7 +3139,7 @@ void CapturePointSizePointerOES_pointer(const State &glState,
                                         const void *pointer,
                                         ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureVertexPointerGLES1(glState, ClientVertexArrayType::PointSize, pointer, paramCapture);
 }
 
 void CaptureQueryMatrixxOES_mantissa(const State &glState,

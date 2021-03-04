@@ -481,6 +481,10 @@ std::ostream &operator<<(std::ostream &os, const ParamCapture &capture);
 void CaptureMemory(const void *source, size_t size, ParamCapture *paramCapture);
 void CaptureString(const GLchar *str, ParamCapture *paramCapture);
 void CaptureStringLimit(const GLchar *str, uint32_t limit, ParamCapture *paramCapture);
+void CaptureVertexPointerGLES1(const gl::State &glState,
+                               gl::ClientVertexArrayType type,
+                               const void *pointer,
+                               ParamCapture *paramCapture);
 
 gl::Program *GetProgramForCapture(const gl::State &glState, gl::ShaderProgramID handle);
 

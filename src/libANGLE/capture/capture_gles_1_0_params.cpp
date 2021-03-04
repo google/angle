@@ -39,7 +39,7 @@ void CaptureColorPointer_pointer(const State &glState,
                                  const void *pointer,
                                  ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureVertexPointerGLES1(glState, ClientVertexArrayType::Color, pointer, paramCapture);
 }
 
 void CaptureFogfv_params(const State &glState,
@@ -264,7 +264,7 @@ void CaptureNormalPointer_pointer(const State &glState,
                                   const void *pointer,
                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureVertexPointerGLES1(glState, ClientVertexArrayType::Normal, pointer, paramCapture);
 }
 
 void CapturePointParameterfv_params(const State &glState,
@@ -293,7 +293,7 @@ void CaptureTexCoordPointer_pointer(const State &glState,
                                     const void *pointer,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureVertexPointerGLES1(glState, ClientVertexArrayType::TextureCoord, pointer, paramCapture);
 }
 
 void CaptureTexEnvfv_params(const State &glState,
@@ -344,7 +344,7 @@ void CaptureVertexPointer_pointer(const State &glState,
                                   const void *pointer,
                                   ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureVertexPointerGLES1(glState, ClientVertexArrayType::Vertex, pointer, paramCapture);
 }
 
 }  // namespace gl
