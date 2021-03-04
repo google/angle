@@ -73,8 +73,7 @@ bool GetSystemInfo(SystemInfo *info)
 {
     if (!GetPCIDevicesWithLibPCI(&(info->gpus)))
     {
-        // Try vulkan backend to get GPU info
-        return GetSystemInfoVulkan(info);
+        return false;
     }
 
     if (info->gpus.size() == 0)
