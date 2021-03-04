@@ -84,7 +84,7 @@ void CaptureGetFixedv_params(const State &glState,
                              GLfixed *params,
                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureGetParameter(glState, pname, sizeof(GLfixed), paramCapture);
 }
 
 void CaptureGetLightfv_params(const State &glState,
@@ -202,7 +202,7 @@ void CaptureLightxv_params(const State &glState,
                            const GLfixed *params,
                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLfixed), paramCapture);
 }
 
 void CaptureLoadMatrixf_m(const State &glState,
@@ -210,7 +210,7 @@ void CaptureLoadMatrixf_m(const State &glState,
                           const GLfloat *m,
                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(m, sizeof(GLfloat) * 16, paramCapture);
 }
 
 void CaptureLoadMatrixx_m(const State &glState,
@@ -246,7 +246,7 @@ void CaptureMultMatrixf_m(const State &glState,
                           const GLfloat *m,
                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(m, sizeof(GLfloat) * 16, paramCapture);
 }
 
 void CaptureMultMatrixx_m(const State &glState,
@@ -323,7 +323,7 @@ void CaptureTexEnvxv_params(const State &glState,
                             const GLfixed *params,
                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(params, sizeof(GLfixed), paramCapture);
 }
 
 void CaptureTexParameterxv_params(const State &glState,
