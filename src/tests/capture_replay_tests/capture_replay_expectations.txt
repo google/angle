@@ -81,6 +81,7 @@ IndexedPointsTestUShort.*
 OcclusionQueriesTest.*
 PBOExtensionTest.*
 PixmapTest.Clearing/*
+RobustClientMemoryTest.*
 SemaphoreTest.SemaphoreShouldBeSemaphore/*
 SRGBFramebufferTest.Validation/*
 StateChangeRenderTest.GenerateMipmap/*
@@ -106,7 +107,6 @@ MipmapTest.DISABLED_ThreeLevelsInitData/*
 # Compile failed tests
 GetImageTest.*
 GetTexLevelParameterTest.Queries/*
-RobustClientMemoryTest.*
 RobustResourceInitTest.*
 SemaphoreTest.*
 VulkanExternalImageTest.*
