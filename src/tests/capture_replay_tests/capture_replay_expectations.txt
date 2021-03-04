@@ -104,12 +104,8 @@ LineLoopTest.DISABLED_DrawArraysWithLargeCount/*
 MipmapTest.DISABLED_ThreeLevelsInitData/*
 
 # Compile failed tests
-EGLSyncTest.AndroidNativeFence_WaitSync/*
-ExplicitContextTest.GetProcAddress/*
 GetImageTest.*
 GetTexLevelParameterTest.Queries/*
-PointSpritesTest.PointWithoutAttributesCompliance/*
-RobustBufferAccessBehaviorTest.EmptyBuffer/*
 RobustClientMemoryTest.*
 RobustResourceInitTest.*
 SemaphoreTest.*
