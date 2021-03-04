@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc7a45a9_32aca14d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-04T19:59:15Z",
+      "side": 1,
+      "message": "Ian, if i understood correctly - if the Vulkan ICD natively supported RGB8 format (so ANGLE doesn\u0027t have to fallback to RGBA8 format) this would not be an issue?",
+      "revId": "6af0c03f9eadf548a42623a4692565b577142141",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
