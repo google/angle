@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee25b0e7_d656176a",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T15:54:35Z",
+      "side": 1,
+      "message": "nit: {}",
+      "revId": "3d163ab97891930b9a923e7b277d04d29685e390",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e8a28d6_521ea87c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T15:54:35Z",
+      "side": 1,
+      "message": "same nit",
+      "revId": "3d163ab97891930b9a923e7b277d04d29685e390",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
