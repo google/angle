@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcac8b3f_374f5941",
+        "filename": "src/libANGLE/renderer/vulkan/android/DisplayVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-04T18:27:41Z",
+      "side": 1,
+      "message": "ANGLE uses \"TODO\".",
+      "range": {
+        "startLine": 74,
+        "startChar": 7,
+        "endLine": 74,
+        "endChar": 12
+      },
+      "revId": "96f38be6edf69541a8ed9fcb1902984109e63827",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
