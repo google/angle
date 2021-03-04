@@ -33,6 +33,24 @@
       "message": "My one nit would that it would probably be easier to maintain by just adding the suppression to the definitions of ANGLE_INSTANTIATE_TEST_ES3 and ANGLE_INSTANTIATE_TEST_ES31\n\nLGTM with whatever you decide.",
       "revId": "f9052016933ec9140797baff4dee91c5ae797b22",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47540125_203c82ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-04T16:23:43Z",
+      "side": 1,
+      "message": "Yes, I thought about this, but the warning says:\n\nTo suppress this error for this test suite, insert the following line (in a non-header) in the namespace it is defined in:\n\nSince ANGLE_INSTANTIATE_TEST_ES3 is in a header, this shouldn\u0027t work (though I didn\u0027t try it).",
+      "parentUuid": "db42f544_1e3edba5",
+      "revId": "f9052016933ec9140797baff4dee91c5ae797b22",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
