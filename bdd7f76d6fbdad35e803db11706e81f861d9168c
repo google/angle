@@ -22,6 +22,30 @@
       },
       "revId": "bdd7f76d6fbdad35e803db11706e81f861d9168c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e44e251_a20dd5a8",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-04T18:54:28Z",
+      "side": 1,
+      "message": "Yeah actually I forgot to take this out. The unittests are unnecessary as the end2end tests exercise (most of) these anyway, and I had written them before to get quick testing.\n\nRemoved.",
+      "parentUuid": "0d2c4d23_2b498363",
+      "range": {
+        "startLine": 1084,
+        "startChar": 15,
+        "endLine": 1084,
+        "endChar": 38
+      },
+      "revId": "bdd7f76d6fbdad35e803db11706e81f861d9168c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
