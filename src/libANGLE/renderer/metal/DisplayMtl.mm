@@ -485,7 +485,7 @@ void DisplayMtl::ensureCapsInitialized() const
     mNativeCaps.maxVaryingVectors         = 31 - 1;
     mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxFragmentInputComponents = 124 - 4;
 #else
-    if (supportsIOSGPUFamily(3))
+    if (supportsAppleGPUFamily(3))
     {
         mNativeCaps.max2DTextureSize          = 16384;
         mNativeCaps.maxVertexOutputComponents = mNativeCaps.maxFragmentInputComponents = 124;
@@ -764,10 +764,10 @@ void DisplayMtl::initializeFeatures()
 
     // Base Vertex drawing is only supported since GPU family 3.
     ANGLE_FEATURE_CONDITION((&mFeatures), hasBaseVertexInstancedDraw,
-                            isOSX || isCatalyst || supportsIOSGPUFamily(3));
+                            isOSX || isCatalyst || supportsAppleGPUFamily(3));
 
     ANGLE_FEATURE_CONDITION((&mFeatures), hasNonUniformDispatch,
-                            isOSX || isCatalyst || supportsIOSGPUFamily(4));
+                            isOSX || isCatalyst || supportsAppleGPUFamily(4));
 
     ANGLE_FEATURE_CONDITION((&mFeatures), allowSeparatedDepthStencilBuffers,
                             !isOSX && !isCatalyst && !isSimulator);
@@ -838,14 +838,15 @@ id<MTLLibrary> DisplayMtl::getDefaultShadersLib()
     return mDefaultShadersAsyncInfo->defaultShaders;
 }
 
-bool DisplayMtl::supportsIOSGPUFamily(uint8_t iOSFamily) const
+bool DisplayMtl::supportsAppleGPUFamily(uint8_t iOSFamily) const
 {
-#if (!TARGET_OS_IOS && !TARGET_OS_TV) || TARGET_OS_MACCATALYST
+#if TARGET_OS_MACCATALYST
     return false;
 #else
-#    if (__IPHONE_OS_VERSION_MAX_ALLOWED >= 130000) || (__TV_OS_VERSION_MAX_ALLOWED >= 130000)
+#    if (__IPHONE_OS_VERSION_MAX_ALLOWED >= 130000) || (__TV_OS_VERSION_MAX_ALLOWED >= 130000) || \
+        (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101500)
     // If device supports [MTLDevice supportsFamily:], then use it.
-    if (ANGLE_APPLE_AVAILABLE_I(13.0))
+    if (ANGLE_APPLE_AVAILABLE_XI(10.15, 13.0))
     {
         MTLGPUFamily family;
         switch (iOSFamily)
@@ -865,9 +866,15 @@ bool DisplayMtl::supportsIOSGPUFamily(uint8_t iOSFamily) const
             case 5:
                 family = MTLGPUFamilyApple5;
                 break;
-#        if TARGET_OS_IOS
+#        if TARGET_OS_IOS || (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
             case 6:
                 family = MTLGPUFamilyApple6;
+                break;
+#        endif
+#        if (TARGET_OS_IOS && (__IPHONE_OS_VERSION_MAX_ALLOWED >= 140000)) || \
+            (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
+            case 7:
+                family = MTLGPUFamilyApple7;
                 break;
 #        endif
             default:
@@ -982,7 +989,7 @@ bool DisplayMtl::supportsMacGPUFamily(uint8_t macFamily) const
 
 bool DisplayMtl::supportsEitherGPUFamily(uint8_t iOSFamily, uint8_t macFamily) const
 {
-    return supportsIOSGPUFamily(iOSFamily) || supportsMacGPUFamily(macFamily);
+    return supportsAppleGPUFamily(iOSFamily) || supportsMacGPUFamily(macFamily);
 }
 
 bool DisplayMtl::isAMD() const

@@ -2623,7 +2623,7 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** colorRenderable*/ true, /** depthRenderable*/ false);
 
     setFormatCaps(MTLPixelFormatBGRA8Unorm_sRGB, /** filterable*/ true,
-                  /** writable*/ display->supportsIOSGPUFamily(2), /** blendable*/ true,
+                  /** writable*/ display->supportsAppleGPUFamily(2), /** blendable*/ true,
                   /** multisample*/ true, /** resolve*/ true, /** colorRenderable*/ true,
                   /** depthRenderable*/ false);
 
@@ -2759,11 +2759,11 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** depthRenderable*/ false);
 
     setFormatCaps(MTLPixelFormatRGB9E5Float, /** filterable*/ true,
-                  /** writable*/ display->supportsIOSGPUFamily(3),
-                  /** blendable*/ display->supportsIOSGPUFamily(1),
-                  /** multisample*/ display->supportsIOSGPUFamily(1),
-                  /** resolve*/ display->supportsIOSGPUFamily(1),
-                  /** colorRenderable*/ display->supportsIOSGPUFamily(1),
+                  /** writable*/ display->supportsAppleGPUFamily(3),
+                  /** blendable*/ display->supportsAppleGPUFamily(1),
+                  /** multisample*/ display->supportsAppleGPUFamily(1),
+                  /** resolve*/ display->supportsAppleGPUFamily(1),
+                  /** colorRenderable*/ display->supportsAppleGPUFamily(1),
                   /** depthRenderable*/ false);
 
     setFormatCaps(MTLPixelFormatRGBA16Float, /** filterable*/ true, /** writable*/ true,
@@ -2820,7 +2820,7 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** colorRenderable*/ true, /** depthRenderable*/ false);
 
     setFormatCaps(MTLPixelFormatRGBA8Unorm_sRGB, /** filterable*/ true,
-                  /** writable*/ display->supportsIOSGPUFamily(2), /** blendable*/ true,
+                  /** writable*/ display->supportsAppleGPUFamily(2), /** blendable*/ true,
                   /** multisample*/ true, /** resolve*/ true, /** colorRenderable*/ true,
                   /** depthRenderable*/ false);
 
@@ -2905,115 +2905,118 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** blendable*/ true, /** multisample*/ true, /** resolve*/ true,
                   /** colorRenderable*/ true, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x10_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_10x10_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x10_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_10x10_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(2), /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatASTC_10x5_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x5_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_10x5_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x5_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_10x6_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x6_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_10x6_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x6_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_10x8_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x8_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_10x8_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_10x8_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_12x10_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_12x10_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_12x10_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(2), /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatASTC_12x12_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_12x10_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_12x12_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(2), /** writable*/ false,
+                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
+                  /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatASTC_4x4_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_12x12_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_4x4_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_12x12_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_5x4_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_4x4_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_5x4_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_4x4_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_5x5_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_5x4_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_5x5_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_5x4_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_6x5_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_5x5_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_6x5_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_5x5_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_6x6_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_6x5_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_6x6_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_6x5_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_8x5_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_6x6_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_8x5_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_6x6_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_8x6_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_8x5_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_8x6_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_8x5_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_8x8_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatASTC_8x6_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
-                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
-                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatASTC_8x6_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
-                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
-                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatASTC_8x8_LDR, /** filterable*/ display->supportsIOSGPUFamily(2),
-                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
-                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatASTC_8x8_sRGB, /** filterable*/ display->supportsIOSGPUFamily(2),
+    setFormatCaps(MTLPixelFormatASTC_8x8_sRGB, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
