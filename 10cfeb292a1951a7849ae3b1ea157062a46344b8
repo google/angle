@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c9c6b099_a94ca359",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-05T20:50:44Z",
+      "side": 1,
+      "message": "IIUC, you are erroring out while creating the vkimage since the tiling mode doesnt support desired usage.\n\nim curious, if we force the tiling mode to optimal all the time for AHBs (since ANGLE has no other information to deduce tiling mode) how do you handle the case where the AHB actually was allocated in a layout which vulkan understands as linear? wouldn\u0027t that be a conflict as well?",
+      "parentUuid": "309cb9fa_beb02f38",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1695e854_822d6c7a",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 2
