@@ -16,6 +16,23 @@
       "message": "I wonder why the CI runs a test that is expected to fail here, since `GetTexLevelParameterTest.ExtensionStringExposed/*` is still in the `capture_replay_expectations.txt`.",
       "revId": "7ee2f913a285fb3e2ef9a233121ddcd71d396896",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1cc7f08_c054fbab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-05T17:20:45Z",
+      "side": 1,
+      "message": "Closing in favor of https://chromium-review.googlesource.com/c/angle/angle/+/2739726",
+      "revId": "7ee2f913a285fb3e2ef9a233121ddcd71d396896",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
