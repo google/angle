@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0067662e_fa546e62",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-05T15:38:48Z",
+      "side": 1,
+      "message": "After these changes the test crashes. I wonder if the implementation of the capture functions is correct. Comments appreciated.",
+      "revId": "d0ea63e0a8a89e884d351bac2fb3165536e1d1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
