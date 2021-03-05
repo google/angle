@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d9e3181_d4f65495",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-05T15:14:43Z",
+      "side": 1,
+      "message": "Reverted this as it was exposing an unrelated bug, which is fixed here: https://chromium-review.googlesource.com/c/angle/angle/+/2738650",
+      "range": {
+        "startLine": 339,
+        "startChar": 56,
+        "endLine": 339,
+        "endChar": 57
+      },
+      "revId": "1984a83067d0c6b064431f747174dfae6f3279d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
