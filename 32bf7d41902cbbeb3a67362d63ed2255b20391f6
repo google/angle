@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e0a04de_78a83854",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-05T20:28:42Z",
+      "side": 1,
+      "message": "Thanks for the contribution Alexey!\n\nCC\u0027ing Dean as FYI.\n",
+      "revId": "32bf7d41902cbbeb3a67362d63ed2255b20391f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
