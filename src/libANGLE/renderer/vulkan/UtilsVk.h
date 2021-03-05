@@ -58,6 +58,7 @@ class UtilsVk : angle::NonCopyable
     struct ConvertIndexIndirectParameters
     {
         uint32_t srcIndirectBufOffset = 0;
+        uint32_t srcIndexBufOffset    = 0;
         uint32_t dstIndexBufOffset    = 0;
         uint32_t maxIndex             = 0;
         uint32_t dstIndirectBufOffset = 0;
@@ -67,6 +68,7 @@ class UtilsVk : angle::NonCopyable
     {
         uint32_t indirectBufferOffset    = 0;
         uint32_t dstIndirectBufferOffset = 0;
+        uint32_t srcIndexBufferOffset    = 0;
         uint32_t dstIndexBufferOffset    = 0;
         uint32_t indicesBitsWidth        = 0;
     };
@@ -301,6 +303,7 @@ class UtilsVk : angle::NonCopyable
     struct ConvertIndexIndirectShaderParams
     {
         uint32_t srcIndirectOffsetDiv4 = 0;
+        uint32_t srcOffset             = 0;
         uint32_t dstOffsetDiv4         = 0;
         uint32_t maxIndex              = 0;
         uint32_t dstIndirectOffsetDiv4 = 0;
@@ -310,6 +313,7 @@ class UtilsVk : angle::NonCopyable
     {
         uint32_t cmdOffsetDiv4    = 0;
         uint32_t dstCmdOffsetDiv4 = 0;
+        uint32_t srcOffset        = 0;
         uint32_t dstOffsetDiv4    = 0;
         uint32_t isRestartEnabled = 0;
     };

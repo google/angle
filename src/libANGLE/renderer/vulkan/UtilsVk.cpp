@@ -1570,7 +1570,7 @@ angle::Result UtilsVk::convertIndexBuffer(ContextVk *contextVk,
 
     constexpr uint32_t kInvocationsPerGroup = 64;
     constexpr uint32_t kInvocationsPerIndex = 2;
-    const uint32_t kIndexCount              = params.maxIndex - params.srcOffset;
+    const uint32_t kIndexCount              = params.maxIndex;
     const uint32_t kGroupCount =
         UnsignedCeilDivide(kIndexCount * kInvocationsPerIndex, kInvocationsPerGroup);
     commandBuffer->dispatch(kGroupCount, 1, 1);
@@ -1620,9 +1620,9 @@ angle::Result UtilsVk::convertIndexIndirectBuffer(ContextVk *contextVk,
 
     vkUpdateDescriptorSets(contextVk->getDevice(), 1, &writeInfo, 0, nullptr);
 
-    ConvertIndexIndirectShaderParams shaderParams = {params.srcIndirectBufOffset >> 2,
-                                                     params.dstIndexBufOffset >> 2, params.maxIndex,
-                                                     params.dstIndirectBufOffset >> 2};
+    ConvertIndexIndirectShaderParams shaderParams = {
+        params.srcIndirectBufOffset >> 2, params.srcIndexBufOffset, params.dstIndexBufOffset >> 2,
+        params.maxIndex, params.dstIndirectBufOffset >> 2};
 
     uint32_t flags = vk::InternalShader::ConvertIndex_comp::kIsIndirect;
     if (contextVk->getState().isPrimitiveRestartEnabled())
@@ -1692,7 +1692,8 @@ angle::Result UtilsVk::convertLineLoopIndexIndirectBuffer(
 
     ConvertIndexIndirectLineLoopShaderParams shaderParams = {
         params.indirectBufferOffset >> 2, params.dstIndirectBufferOffset >> 2,
-        params.dstIndexBufferOffset >> 2, contextVk->getState().isPrimitiveRestartEnabled()};
+        params.srcIndexBufferOffset, params.dstIndexBufferOffset >> 2,
+        contextVk->getState().isPrimitiveRestartEnabled()};
 
     uint32_t flags = GetConvertIndexIndirectLineLoopFlag(params.indicesBitsWidth);
 

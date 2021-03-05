@@ -505,7 +505,8 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
     if (unpackBuffer)
     {
         BufferVk *unpackBufferVk       = vk::GetImpl(unpackBuffer);
-        vk::BufferHelper &bufferHelper = unpackBufferVk->getBuffer();
+        VkDeviceSize bufferOffset      = 0;
+        vk::BufferHelper &bufferHelper = unpackBufferVk->getBufferAndOffset(&bufferOffset);
         uintptr_t offset               = reinterpret_cast<uintptr_t>(pixels);
         GLuint inputRowPitch           = 0;
         GLuint inputDepthPitch         = 0;
@@ -515,7 +516,7 @@ angle::Result TextureVk::setSubImageImpl(const gl::Context *context,
             contextVk, gl::Extents(area.width, area.height, area.depth), formatInfo, unpack, type,
             index.usesTex3D(), &inputRowPitch, &inputDepthPitch, &inputSkipBytes));
 
-        size_t offsetBytes = static_cast<size_t>(offset + inputSkipBytes);
+        size_t offsetBytes = static_cast<size_t>(bufferOffset + offset + inputSkipBytes);
 
         // Note: cannot directly copy from a depth/stencil PBO.  GL requires depth and stencil data
         // to be packed, while Vulkan requires them to be separate.
@@ -2731,10 +2732,12 @@ angle::Result TextureVk::getBufferViewAndRecordUse(ContextVk *contextVk,
     }
 
     // Create a view for the required format.
-    const vk::BufferHelper &buffer = vk::GetImpl(mState.getBuffer().get())->getBuffer();
+    VkDeviceSize bufferOffset = 0;
+    const vk::BufferHelper &buffer =
+        vk::GetImpl(mState.getBuffer().get())->getBufferAndOffset(&bufferOffset);
 
     retainBufferViews(&contextVk->getResourceUseList());
-    return mBufferViews.getView(contextVk, buffer, *imageUniformFormat, viewOut);
+    return mBufferViews.getView(contextVk, buffer, bufferOffset, *imageUniformFormat, viewOut);
 }
 
 angle::Result TextureVk::initImage(ContextVk *contextVk,

@@ -87,9 +87,7 @@ constexpr uint8_t kConvertIndex_comp_00000000[] = {
 //
 // uint PullIndex(uint index)
 // {
-//
 //     uint srcIndex = index + srcIndexOffset;
-//
 //     uint srcBlock = srcIndexBuf[srcIndex >> 2];
 //     uint srcComponent =(srcIndex & 3);
 //

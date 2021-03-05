@@ -161,6 +161,8 @@ class DynamicBuffer : angle::NonCopyable
         return (mMemoryPropertyFlags & VK_MEMORY_PROPERTY_HOST_COHERENT_BIT) != 0;
     }
 
+    bool valid() const { return mSize != 0; }
+
   private:
     void reset();
     angle::Result allocateNewBuffer(ContextVk *contextVk);
@@ -608,6 +610,7 @@ class LineLoopHelper final : angle::NonCopyable
     angle::Result streamIndicesIndirect(ContextVk *contextVk,
                                         gl::DrawElementsType glIndexType,
                                         BufferHelper *indexBuffer,
+                                        VkDeviceSize indexBufferOffset,
                                         BufferHelper *indirectBuffer,
                                         VkDeviceSize indirectBufferOffset,
                                         BufferHelper **indexBufferOut,
@@ -2361,6 +2364,7 @@ class BufferViewHelper final : public Resource
 
     angle::Result getView(ContextVk *contextVk,
                           const BufferHelper &buffer,
+                          VkDeviceSize bufferOffset,
                           const Format &format,
                           const BufferView **viewOut);
 

@@ -65,8 +65,9 @@ void TransformFeedbackVk::initializeXFBBuffersDesc(ContextVk *contextVk, size_t 
 
         if (bufferVk->isBufferValid())
         {
-            mBufferHelpers[bufferIndex] = &bufferVk->getBuffer();
-            mBufferOffsets[bufferIndex] = binding.getOffset();
+            VkDeviceSize bufferOffset   = 0;
+            mBufferHelpers[bufferIndex] = &bufferVk->getBufferAndOffset(&bufferOffset);
+            mBufferOffsets[bufferIndex] = binding.getOffset() + bufferOffset;
             mBufferSizes[bufferIndex]   = gl::GetBoundBufferAvailableSize(binding);
         }
         else
