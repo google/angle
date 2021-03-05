@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "354df036_2bc13829",
+        "filename": "BUILD.gn",
+        "patchSetId": 6
+      },
+      "lineNbr": 546,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-05T18:46:59Z",
+      "side": 1,
+      "message": "nit: prefix with angle. Also this seems to be for SPIR-V and glslang, so angle_uses_spirv ?",
+      "range": {
+        "startLine": 546,
+        "startChar": 6,
+        "endLine": 546,
+        "endChar": 32
+      },
+      "revId": "97e6f63ec3b916eb61c1d634c845dd06e5ac471f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84d320d9_de5c5947",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 716,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-05T18:46:59Z",
+      "side": 1,
+      "message": "nit: GetObjectBinaryBlob?",
+      "range": {
+        "startLine": 716,
+        "startChar": 18,
+        "endLine": 716,
+        "endChar": 37
+      },
+      "revId": "97e6f63ec3b916eb61c1d634c845dd06e5ac471f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

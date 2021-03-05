@@ -499,6 +499,24 @@
       "parentUuid": "d19eb9f5_828faee7",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "214a87fd_973b13f1",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-05T18:46:59Z",
+      "side": 1,
+      "message": "It does seem odd to have mOriginalShaderInfo and mSpirvBlobs as well.",
+      "parentUuid": "ddc9bd4d_455b17a4",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
