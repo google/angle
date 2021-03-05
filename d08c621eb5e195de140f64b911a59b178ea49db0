@@ -481,6 +481,24 @@
       "parentUuid": "7f1f4419_3aeb7907",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddc9bd4d_455b17a4",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T06:28:54Z",
+      "side": 1,
+      "message": "While you\u0027re right that a shader can be deleted after a program is linked, I don\u0027t think that also deletes the ShaderInfo, since that\u0027s currently holding the compiled SPIR-V blob that\u0027s used to create the compute/graphics pipeline in ProgramInfo::initProgram().\n\nI think what you may be able to do instead is something like:\n\n    // Gather variable info and compiled SPIR-V binaries.\n    GlslangWrapperVk::GetShaderCode(contextVk-\u003egetFeatures(), mState, resources,\n                                    \u0026mGlslangProgramInterfaceInfo, \u0026mOriginalShaderInfo.getSpirvBlobs(), \u003c\u003c--- update this\n                                    \u0026mExecutable.mVariableInfoMap);\n\n    // Compile the shaders.\n    angle::Result status \u003d mOriginalShaderInfo.initShaders(\n        mState.getExecutable().getLinkedShaderStages(), [[ no spirvBlobs ]] mExecutable.mVariableInfoMap);\n\nThen you should be able to remove this copy since it already has the right data.",
+      "parentUuid": "d19eb9f5_828faee7",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
