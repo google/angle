@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4eb4aa7_ba1f0b68",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T03:43:05Z",
+      "side": 1,
+      "message": "LGTM. Thanks for the cleanup. I didn\u0027t realize how many places we had those vectors declared.",
+      "revId": "1e9ff4aeebef24b45f9c14424bd2cb16b77d85f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
