@@ -16,6 +16,23 @@
       "message": "These tests succeed for me, let\u0027s see if the CI bots share this opinion.",
       "revId": "450a22fadc71f4b6db4dae1015fa49b0a4cdcce7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26d74c86_2d052acf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-05T17:23:51Z",
+      "side": 1,
+      "message": "LGTM!",
+      "revId": "450a22fadc71f4b6db4dae1015fa49b0a4cdcce7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
