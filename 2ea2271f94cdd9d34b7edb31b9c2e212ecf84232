@@ -59,6 +59,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fbc37b7_036434cb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1889,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T06:11:47Z",
+      "side": 1,
+      "message": "Ah, right, all the other ImageHelper::mStagingBuffer-\u003eallocateWithAlignment() calls would need to be updated also to do the *4/3 resizing.   Makes sense.",
+      "parentUuid": "dc7012a2_bb80a173",
+      "revId": "2ea2271f94cdd9d34b7edb31b9c2e212ecf84232",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "322a0635_ce36a656",
