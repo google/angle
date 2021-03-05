@@ -16,6 +16,23 @@
       "message": "FYI, like Charlie I had noticed that disabling the free list altogether causes gfxbench to crash easily and randomly. It looks like there\u0027s a bug with DynamicBuffer (something with serials likely). Same bug is likely the reason for failures in this change.\n\nI\u0027m investigating the bug, but it\u0027s most likely unrelated to this change itself.",
       "revId": "72aeccfa4ccd4636457aed19f6e161cd00de5de6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e852637_5be5f0aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T05:44:28Z",
+      "side": 1,
+      "message": "+2 assuming the CQ failures do turn out to be unrelated.",
+      "revId": "72aeccfa4ccd4636457aed19f6e161cd00de5de6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
