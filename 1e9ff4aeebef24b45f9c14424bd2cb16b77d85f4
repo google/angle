@@ -16,6 +16,23 @@
       "message": "LGTM. Thanks for the cleanup. I didn\u0027t realize how many places we had those vectors declared.",
       "revId": "1e9ff4aeebef24b45f9c14424bd2cb16b77d85f4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e168a522_e8a4aebc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-05T18:40:11Z",
+      "side": 1,
+      "message": "This is missing a BUILD.gn update.",
+      "revId": "1e9ff4aeebef24b45f9c14424bd2cb16b77d85f4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
