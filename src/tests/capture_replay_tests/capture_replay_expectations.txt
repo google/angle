@@ -9,42 +9,22 @@
 
 # Failed tests
 BindGeneratesResourceTest.*
-BindUniformLocationTest.Basic/*
-BindUniformLocationTest.Compositor/*
-BindUniformLocationTest.SameLocationForUsedAndUnusedUniform/*
-BindUniformLocationTest.SamplerLocation/*
-BindUniformLocationTest.UnusedUniformUpdate/*
-BindUniformLocationTest.UnusedUniformUpdateComplex/*
-BindUniformLocationTest.UseSamplerWhenUnusedUniforms/*
 ClearTest.Depth16Scissored/*
 ClearTest.InceptionScissorClears/*
 ClientArraysTest.*
-CopyTexImageTest.*
-CopyTextureTestWebGL.*
+CopyTextureTestWebGL.NPOT/*
 D3DImageFormatConversionTest.*
 DifferentStencilMasksTest.*
-EGLContextASANTest.*
-EGLContextSharingTest.TextureLifetime/*
 FramebufferTest.MultiContextNoRenderingFeedbackLoops/*
-GLSLTest.InactiveVaryingInVertexActiveInFragment/*
 InstancingTest.LineLoop/*
-MaxTextureSizeTest.*
-MultisampledRenderToTextureTest.FramebufferCompleteness/*
-MultisampledRenderToTextureTest.TextureCubeMapParameterCheck/*
 PbufferTest.BindTexImage/*
 PbufferTest.Clearing/*
 PbufferTest.TextureSizeReset/*
-RequestExtensionTest.ExtensionsDisabledByDefault/*
-RequestExtensionTest.Queries/*
-RobustBufferAccessBehaviorTest.DynamicBuffer/*
 SimpleStateChangeTest.DrawAndClearTextureRepeatedly/*
 SimpleStateChangeTest.RebindTranslatedAttribute/*
 StateChangeTest.DrawAfterFlushWithNoStateChange/*
-Texture2DDepthTest.DepthTextureES2Compatibility/*
-TextureCubeTest.*
-VulkanClearTest.*
-WebGL2ReadOutsideFramebufferTest.*
-WebGLDrawElementsTest.*
+WebGL2ReadOutsideFramebufferTest.CopyTexSubImage3D/*
+WebGLDrawElementsTest.DrawElementsTypeAlignment/*
 WebGLGLSLTest.*
 WebGLReadOutsideFramebufferTest.*
 
