@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1afd488_b0fd3876",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-05T06:16:08Z",
+      "side": 1,
+      "message": "This patch will cause cts-runner to cost more time to run the whole ES3/ES31 tests. Ask to revert this patch firstly. After fixing the performance regression of big blob cache, re-land this patch. Thanks!",
+      "revId": "9e47eb0db0cf5a9f80aa1aaca926895f61e8ef90",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
