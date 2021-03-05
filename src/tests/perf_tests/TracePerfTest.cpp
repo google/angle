@@ -392,6 +392,11 @@ TracePerfTest::TracePerfTest()
         {
             mSkipTest = true;
         }
+        // TODO: https://anglebug.com/5724 Device lost on Win Intel
+        if (IsWindows() && IsIntel() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            mSkipTest = true;
+        }
     }
 
     if (param.testID == RestrictedTraceID::rope_hero_vice_town)
