@@ -26,7 +26,6 @@ DifferentStencilMasksTest.*
 EGLContextASANTest.*
 EGLContextSharingTest.TextureLifetime/*
 FramebufferTest.MultiContextNoRenderingFeedbackLoops/*
-GetTexLevelParameterTest.ExtensionStringExposed/*
 GLSLTest.InactiveVaryingInVertexActiveInFragment/*
 InstancingTest.LineLoop/*
 MaxTextureSizeTest.*
@@ -113,5 +112,4 @@ MipmapTest.DISABLED_ThreeLevelsInitData/*
 
 # Compile failed tests
 GetImageTest.*
-GetTexLevelParameterTest.Queries/*
 RobustResourceInitTest.*

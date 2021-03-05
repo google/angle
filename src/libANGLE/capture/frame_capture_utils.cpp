@@ -85,7 +85,11 @@ void SerializeBindingPointerVector(
 {
     for (size_t i = 0; i < bindingPointerVector.size(); i++)
     {
-        bos->writeInt(bindingPointerVector[i].id().value);
+        // Do not serialize zero bindings, as this will create unwanted diffs
+        if (bindingPointerVector[i].id().value != 0)
+        {
+            bos->writeInt(bindingPointerVector[i].id().value);
+        }
     }
 }
 
