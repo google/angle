@@ -1252,7 +1252,30 @@ egl::Error WindowSurfaceVk::swapWithDamage(const gl::Context *context,
                                            EGLint n_rects)
 {
     DisplayVk *displayVk = vk::GetImpl(context->getDisplay());
-    angle::Result result = swapImpl(context, rects, n_rects, nullptr);
+    angle::Result result;
+    if (n_rects == 1 && rects[0] == 0 && rects[1] == 0 && rects[2] == getWidth() &&
+        rects[3] == getHeight())
+    {
+        // Work-around a defect on at least the Pixel 4 family, likely in the hardware composer
+        // (HWC) driver that SurfaceFlinger (SF) uses to composite results to the display.  When
+        // some games switch FROM one EGLSurface and using eglSwapBuffers() TO a new EGLSurface and
+        // using eglSwapBuffersWithDamageKHR(), the user will frequently see the right half of the
+        // window stick with previous contents.  Causing SF to composite the window differently
+        // (e.g. swiping to show the nagivation buttons or to show the list of apps) immediately
+        // stops the problem, further pointing to a HWC bug.
+        //
+        // In this case, the "damage area" is the entire window, which means that a normal
+        // eglSwapBuffers() should be functionally identical (except for whatever SW/HWC will do
+        // differently for compositing).
+        //
+        // TODO: Remove this work-around when we no longer support affected devices (at least Pixel
+        // 4 XL, but not Arm-GPU devices).  https://issuetracker.google.com/issues/182213414
+        result = swapImpl(context, nullptr, 0, nullptr);
+    }
+    else
+    {
+        result = swapImpl(context, rects, n_rects, nullptr);
+    }
     return angle::ToEGL(result, displayVk, EGL_BAD_SURFACE);
 }
 
