@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6d4130e_cee64be6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "LGTM.   Mostly comment types of nits to try and make things easier for maintainers in the future while it\u0027s still in your head.",
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c8f9204_7704dd87",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 659,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "Will this ever change?   I thought I remember seeing a comment somewhere stating we actually want a different version that\u0027s more appropriate/specific to GLES, but I can\u0027t find it again (and maybe I\u0027m remembering wrong in the first place).\n\nI ask, since each newly generated SPIR-V shader will also need to specify this, making it more difficult to find them all if things do change in the future.\n\nOf course, spv::MemoryModelGLSL450 seems it would also be affected by a change like that, so maybe it\u0027s safe to assume we are committed to 450 based on all the pieces that would need to change together.",
+      "range": {
+        "startLine": 659,
+        "startChar": 79,
+        "endLine": 659,
+        "endChar": 82
+      },
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cb63832_f15c7982",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 668,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "DescriptorSetIndex::InternalShader",
+      "range": {
+        "startLine": 668,
+        "startChar": 91,
+        "endLine": 668,
+        "endChar": 92
+      },
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4d3b24c_078c2b2b",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 725,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "nit: Maybe it\u0027s too much, but it would be good to comment what these values mean, at least for the ones that aren\u0027t bools:\n\n    spirv::WriteTypeImage(blobOut, imageTypeId, baseId, spv::DimSubpassData,\n                          // Depth: 0 indicates not a depth image\n                          spirv::LiteralInteger(0),\n                          spirv::LiteralInteger(0),\n                          spirv::LiteralInteger(0),\n                          // Sampled: 2 indicates will be used without a sampler (a storage image)\n                          spirv::LiteralInteger(2),\n                          spv::ImageFormatUnknown, nullptr);\n\nCould certainly be done as a follow-up/cleanup CL.",
+      "range": {
+        "startLine": 723,
+        "startChar": 0,
+        "endLine": 725,
+        "endChar": 60
+      },
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c973fee_4c1cb8f5",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 822,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "nit: Presumably this corresponds to the \"Start of main().  Fixed.\" block in SPIR-V comment block above.   If so, can you update either the function name or the comment name to have them both use the same terminology (both start or both top)?\n\nSame with \"End of main().  Fixed.\" and InsertMainBottom().",
+      "range": {
+        "startLine": 822,
+        "startChar": 5,
+        "endLine": 822,
+        "endChar": 18
+      },
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c179542_0f550d0c",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 924,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "nit: This is a little contradictory to the next statement where here you\u0027re stating \"give me some amount of data\", but then later stating you know exactly how much you actually need.   I suggest removing this part, and instead adding something stating how you determined it\u0027s exactly 169 words so the next person can do the same calculation in the future if anything here changes (or a new shader type is created).",
+      "range": {
+        "startLine": 924,
+        "startChar": 7,
+        "endLine": 924,
+        "endChar": 42
+      },
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ff6f8b3_db341156",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 925,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "Can/Should there be an ASSERT() that the final code.size() equals the original size so we adjust it during development and can be confident we aren\u0027t re-allocating with official builds?   Or does the value fluctuate build-to-build, based on the platform, based on the SPIR-V compiler version, etc.?",
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6544211_72c1902b",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 940,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-05T20:14:32Z",
+      "side": 1,
+      "message": "nit: I suggest splitting this out into its own utility type of function since other SPIR-V shaders should be able to reuse it directly.",
+      "range": {
+        "startLine": 929,
+        "startChar": 0,
+        "endLine": 940,
+        "endChar": 31
+      },
+      "revId": "1528ca3d2f33f642f55cc7c902e3ea7972f8dbe9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
