@@ -111,6 +111,12 @@ ANGLE_INLINE bool SubDataSizeMeetsThreshold(size_t subDataSize, size_t bufferSiz
     // to acquire a new BufferHelper from the pool.
     return subDataSize > (bufferSize / 2);
 }
+
+ANGLE_INLINE bool IsUsageDynamic(gl::BufferUsage usage)
+{
+    return (usage == gl::BufferUsage::DynamicDraw || usage == gl::BufferUsage::DynamicCopy ||
+            usage == gl::BufferUsage::DynamicRead);
+}
 }  // namespace
 
 // ConversionBuffer implementation.
@@ -632,7 +638,14 @@ angle::Result BufferVk::directUpdate(ContextVk *contextVk,
     ASSERT(mapPointer);
 
     memcpy(mapPointer, data, size);
-    mBuffer->unmap(contextVk->getRenderer());
+
+    // If the buffer has dynamic usage then the intent is frequent client side updates to the
+    // buffer. Don't CPU unmap the buffer, we will take care of unmapping when releasing the buffer
+    // to either the renderer or mBufferFreeList.
+    if (!IsUsageDynamic(mState.getUsage()))
+    {
+        mBuffer->unmap(contextVk->getRenderer());
+    }
     ASSERT(mBuffer->isCoherent());
 
     return angle::Result::Continue;
