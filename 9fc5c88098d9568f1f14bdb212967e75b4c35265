@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6682f6ab_e53e8df9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-06T03:17:30Z",
+      "side": 1,
+      "message": "This is the approach described in the comments of the abandoned CL here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2702838",
+      "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
