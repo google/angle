@@ -161,7 +161,8 @@ bool Format::isPVRTC() const
 {
     switch (metalFormat)
     {
-#if TARGET_OS_IOS && !TARGET_OS_MACCATALYST
+#if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || \
+    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
         case MTLPixelFormatPVRTC_RGB_2BPP:
         case MTLPixelFormatPVRTC_RGB_2BPP_sRGB:
         case MTLPixelFormatPVRTC_RGB_4BPP:

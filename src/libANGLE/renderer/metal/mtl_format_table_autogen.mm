@@ -891,6 +891,8 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             }
             break;
 
+#endif
+#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 101600)) || TARGET_OS_MACCATALYST
         case angle::FormatID::EAC_R11G11_SNORM_BLOCK:
 
             this->metalFormat    = MTLPixelFormatRG16Snorm;
@@ -1017,7 +1019,8 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->swizzled = false;
             break;
 
-#elif TARGET_OS_IOS || TARGET_OS_TV  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#endif
+#if TARGET_OS_IOS || TARGET_OS_TV
         case angle::FormatID::ASTC_10x10_SRGB_BLOCK:
 
             this->metalFormat    = MTLPixelFormatASTC_10x10_sRGB;
@@ -1306,6 +1309,15 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->swizzled = false;
             break;
 
+        case angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatETC2_RGB8;
+            this->actualFormatId = angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
         case angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK:
 
             this->metalFormat    = MTLPixelFormatETC2_RGB8A1_sRGB;
@@ -1477,16 +1489,585 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->swizzled = false;
             break;
 
-        case angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK:
+#endif
+#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
+        case angle::FormatID::ASTC_10x10_SRGB_BLOCK:
 
-            this->metalFormat    = MTLPixelFormatETC2_RGB8;
-            this->actualFormatId = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
+            this->metalFormat    = MTLPixelFormatASTC_10x10_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_10x10_SRGB_BLOCK;
             this->initFunction   = nullptr;
 
             this->swizzled = false;
             break;
 
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+        case angle::FormatID::ASTC_10x10_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_10x10_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_10x10_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_10x5_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_10x5_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_10x5_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_10x5_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_10x5_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_10x5_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_10x6_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_10x6_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_10x6_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_10x6_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_10x6_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_10x6_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_10x8_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_10x8_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_10x8_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_10x8_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_10x8_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_10x8_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_12x10_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_12x10_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_12x10_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_12x10_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_12x10_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_12x10_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_12x12_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_12x12_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_12x12_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_12x12_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_12x12_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_12x12_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_4x4_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_4x4_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_4x4_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_4x4_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_4x4_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_4x4_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_5x4_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_5x4_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_5x4_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_5x4_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_5x4_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_5x4_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_5x5_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_5x5_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_5x5_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_5x5_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_5x5_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_5x5_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_6x5_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_6x5_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_6x5_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_6x5_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_6x5_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_6x5_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_6x6_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_6x6_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_6x6_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_6x6_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_6x6_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_6x6_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_8x5_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_8x5_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_8x5_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_8x5_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_8x5_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_8x5_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_8x6_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_8x6_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_8x6_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_8x6_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_8x6_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_8x6_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_8x8_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_8x8_sRGB;
+            this->actualFormatId = angle::FormatID::ASTC_8x8_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ASTC_8x8_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatASTC_8x8_LDR;
+            this->actualFormatId = angle::FormatID::ASTC_8x8_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::EAC_R11G11_SNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatEAC_RG11Snorm;
+                this->actualFormatId = angle::FormatID::EAC_R11G11_SNORM_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRG16Snorm;
+                this->actualFormatId = angle::FormatID::R16G16_SNORM;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::EAC_R11G11_UNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatEAC_RG11Unorm;
+                this->actualFormatId = angle::FormatID::EAC_R11G11_UNORM_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRG16Unorm;
+                this->actualFormatId = angle::FormatID::R16G16_UNORM;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::EAC_R11_SNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatEAC_R11Snorm;
+                this->actualFormatId = angle::FormatID::EAC_R11_SNORM_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatR16Snorm;
+                this->actualFormatId = angle::FormatID::R16_SNORM;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::EAC_R11_UNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatEAC_R11Unorm;
+                this->actualFormatId = angle::FormatID::EAC_R11_UNORM_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatR16Unorm;
+                this->actualFormatId = angle::FormatID::R16_UNORM;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatETC2_RGB8;
+                this->actualFormatId = angle::FormatID::ETC1_R8G8B8_UNORM_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
+                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatETC2_RGB8A1_sRGB;
+                this->actualFormatId = angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm_sRGB;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM_SRGB;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatETC2_RGB8A1;
+                this->actualFormatId = angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK;
+                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
+                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatEAC_RGBA8_sRGB;
+                this->actualFormatId = angle::FormatID::ETC2_R8G8B8A8_SRGB_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm_sRGB;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM_SRGB;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatEAC_RGBA8;
+                this->actualFormatId = angle::FormatID::ETC2_R8G8B8A8_UNORM_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatETC2_RGB8_sRGB;
+                this->actualFormatId = angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm_sRGB;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM_SRGB;
+                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatETC2_RGB8;
+                this->actualFormatId = angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
+                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_2BPP;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_2BPP_sRGB;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_2BPP_UNORM_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_4BPP;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGBA_4BPP_sRGB;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGBA_4BPP_UNORM_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_2BPP_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGB_2BPP;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGB_2BPP_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_2BPP_UNORM_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGB_2BPP_sRGB;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGB_2BPP_UNORM_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_4BPP_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGB_4BPP;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGB_4BPP_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::PVRTC1_RGB_4BPP_UNORM_SRGB_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatPVRTC_RGB_4BPP_sRGB;
+            this->actualFormatId = angle::FormatID::PVRTC1_RGB_4BPP_UNORM_SRGB_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::R4G4B4A4_UNORM:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatABGR4Unorm;
+                this->actualFormatId = angle::FormatID::R4G4B4A4_UNORM;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::R5G5B5A1_UNORM:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatA1BGR5Unorm;
+                this->actualFormatId = angle::FormatID::R5G5B5A1_UNORM;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
+                this->initFunction   = nullptr;
+            }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::R5G6B5_UNORM:
+
+            if (display->supportsAppleGPUFamily(1))
+            {
+                this->metalFormat    = MTLPixelFormatB5G6R5Unorm;
+                this->actualFormatId = angle::FormatID::R5G6B5_UNORM;
+                this->initFunction   = nullptr;
+            }
+            else
+            {
+                this->metalFormat    = MTLPixelFormatRGBA8Unorm;
+                this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
+                this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
+            }
+
+            this->swizzled = false;
+            break;
+
+#endif
         default:
             this->metalFormat    = MTLPixelFormatInvalid;
             this->actualFormatId = angle::FormatID::NONE;
@@ -2896,14 +3477,22 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** resolve*/ supportDepthStencilAutoResolve, /** colorRenderable*/ false,
                   /** depthRenderable*/ display->supportsMacGPUFamily(1));
 
-#elif TARGET_OS_IOS || TARGET_OS_TV  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
-    setFormatCaps(MTLPixelFormatA1BGR5Unorm, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ true, /** multisample*/ true, /** resolve*/ true,
-                  /** colorRenderable*/ true, /** depthRenderable*/ false);
+#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || TARGET_OS_TV || \
+    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))
+    setFormatCaps(MTLPixelFormatA1BGR5Unorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ display->supportsAppleGPUFamily(1),
+                  /** multisample*/ display->supportsAppleGPUFamily(1),
+                  /** resolve*/ display->supportsAppleGPUFamily(1),
+                  /** colorRenderable*/ display->supportsAppleGPUFamily(1),
+                  /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatABGR4Unorm, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ true, /** multisample*/ true, /** resolve*/ true,
-                  /** colorRenderable*/ true, /** depthRenderable*/ false);
+    setFormatCaps(MTLPixelFormatABGR4Unorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ display->supportsAppleGPUFamily(1),
+                  /** multisample*/ display->supportsAppleGPUFamily(1),
+                  /** resolve*/ display->supportsAppleGPUFamily(1),
+                  /** colorRenderable*/ display->supportsAppleGPUFamily(1),
+                  /** depthRenderable*/ false);
 
     setFormatCaps(MTLPixelFormatASTC_10x10_LDR, /** filterable*/ display->supportsAppleGPUFamily(2),
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
@@ -3020,87 +3609,100 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
                   /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatB5G6R5Unorm, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ true, /** multisample*/ true, /** resolve*/ true,
-                  /** colorRenderable*/ true, /** depthRenderable*/ false);
+    setFormatCaps(MTLPixelFormatB5G6R5Unorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ display->supportsAppleGPUFamily(1),
+                  /** multisample*/ display->supportsAppleGPUFamily(1),
+                  /** resolve*/ display->supportsAppleGPUFamily(1),
+                  /** colorRenderable*/ display->supportsAppleGPUFamily(1),
+                  /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatBGR5A1Unorm, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ true, /** multisample*/ true, /** resolve*/ true,
-                  /** colorRenderable*/ true, /** depthRenderable*/ false);
+    setFormatCaps(MTLPixelFormatBGR5A1Unorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ display->supportsAppleGPUFamily(1),
+                  /** multisample*/ display->supportsAppleGPUFamily(1),
+                  /** resolve*/ display->supportsAppleGPUFamily(1),
+                  /** colorRenderable*/ display->supportsAppleGPUFamily(1),
+                  /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatEAC_R11Snorm, /** filterable*/ true, /** writable*/ false,
+    setFormatCaps(MTLPixelFormatEAC_R11Snorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_R11Unorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RG11Snorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RG11Unorm, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RGBA8, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatEAC_RGBA8_sRGB, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatETC2_RGB8, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatETC2_RGB8A1, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatETC2_RGB8A1_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatEAC_R11Unorm, /** filterable*/ true, /** writable*/ false,
+    setFormatCaps(MTLPixelFormatETC2_RGB8_sRGB, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_2BPP,
+                  /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatEAC_RG11Snorm, /** filterable*/ true, /** writable*/ false,
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_2BPP_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatEAC_RG11Unorm, /** filterable*/ true, /** writable*/ false,
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_4BPP,
+                  /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatEAC_RGBA8, /** filterable*/ true, /** writable*/ false,
+    setFormatCaps(MTLPixelFormatPVRTC_RGBA_4BPP_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatEAC_RGBA8_sRGB, /** filterable*/ true, /** writable*/ false,
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_2BPP, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_2BPP_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatETC2_RGB8, /** filterable*/ true, /** writable*/ false,
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_4BPP, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ false, /** blendable*/ false, /** multisample*/ false,
+                  /** resolve*/ false, /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatPVRTC_RGB_4BPP_sRGB,
+                  /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
 
-    setFormatCaps(MTLPixelFormatETC2_RGB8A1, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatETC2_RGB8A1_sRGB, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatETC2_RGB8_sRGB, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGBA_2BPP, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGBA_2BPP_sRGB, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGBA_4BPP, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGBA_4BPP_sRGB, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGB_2BPP, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGB_2BPP_sRGB, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGB_4BPP, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-    setFormatCaps(MTLPixelFormatPVRTC_RGB_4BPP_sRGB, /** filterable*/ true, /** writable*/ false,
-                  /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
-                  /** colorRenderable*/ false, /** depthRenderable*/ false);
-
-#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#endif
 }
 
 }  // namespace mtl

@@ -172,7 +172,7 @@ constexpr size_t kOcclusionQueryResultSize = sizeof(uint64_t);
 constexpr gl::Version kMaxSupportedGLVersion = gl::Version(3, 0);
 
 // Work-around the enum is not available on macOS
-#if TARGET_OS_OSX || TARGET_OS_MACCATALYST
+#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 101600)) || TARGET_OS_MACCATALYST
 constexpr MTLBlitOption kBlitOptionRowLinearPVRTC = MTLBlitOptionNone;
 #else
 constexpr MTLBlitOption kBlitOptionRowLinearPVRTC          = MTLBlitOptionRowLinearPVRTC;

@@ -94,8 +94,7 @@ image_format_assign_template1 = """
 """
 
 image_format_assign_template2 = """
-            if (metalDevice.depth24Stencil8PixelFormatSupported &&
-               !display->getFeatures().forceD24S8AsUnsupported.enabled)
+            if ({fallback_condition})
             {{
                 this->metalFormat = {mtl_format};
                 this->actualFormatId = angle::FormatID::{actual_angle_format};
@@ -287,7 +286,9 @@ def gen_image_map_switch_mac_case(angle_format, actual_angle_format_info, angle_
                 actual_angle_format_fallback=actual_angle_format_fallback,
                 mtl_format_fallback=angle_to_mtl_map[actual_angle_format_fallback],
                 init_function_fallback=angle_format_utils.get_internal_format_initializer(
-                    gl_format, actual_angle_format_fallback))
+                    gl_format, actual_angle_format_fallback),
+                fallback_condition="metalDevice.depth24Stencil8PixelFormatSupported && \
+                    !display->getFeatures().forceD24S8AsUnsupported.enabled")
         else:
             # return ordinary block:
             return image_format_assign_template1.format(
@@ -300,9 +301,32 @@ def gen_image_map_switch_mac_case(angle_format, actual_angle_format_info, angle_
                                      gen_format_assign_code)
 
 
+# Generate format conversion switch case (non-desktop ES 3.0 case)
+def gen_image_map_switch_es3_case(angle_format, actual_angle_format_info, angle_to_gl,
+                                  angle_to_mtl_map, mac_fallbacks):
+    gl_format = angle_to_gl[angle_format]
+
+    def gen_format_assign_code(actual_angle_format, angle_to_mtl_map):
+        actual_angle_format_fallback = mac_fallbacks[actual_angle_format]
+        return image_format_assign_template2.format(
+            actual_angle_format=actual_angle_format,
+            mtl_format=angle_to_mtl_map[actual_angle_format],
+            init_function=angle_format_utils.get_internal_format_initializer(
+                gl_format, actual_angle_format),
+            actual_angle_format_fallback=actual_angle_format_fallback,
+            mtl_format_fallback=angle_to_mtl_map[actual_angle_format_fallback],
+            init_function_fallback=angle_format_utils.get_internal_format_initializer(
+                gl_format, actual_angle_format_fallback),
+            fallback_condition="display->supportsAppleGPUFamily(1)")
+
+    return gen_image_map_switch_case(angle_format, actual_angle_format_info, angle_to_mtl_map,
+                                     gen_format_assign_code)
+
+
 def gen_image_map_switch_string(image_table, angle_to_gl):
     angle_override = image_table["override"]
-    mac_override = image_table["override_mac"]
+    mac_override_es3 = image_table["override_mac_es3"]
+    mac_override_bc1 = image_table["override_mac_bc1"]
     ios_override = image_table["override_ios"]
     mac_fallbacks = image_table["d24s8_fallbacks_mac"]
     angle_to_mtl = image_table["map"]
@@ -319,45 +343,56 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     switch_data = ''
 
     def gen_image_map_switch_common_case(angle_format, actual_angle_format):
-        mac_case = gen_image_map_switch_mac_case(angle_format, actual_angle_format, angle_to_gl,
-                                                 mac_angle_to_mtl, mac_fallbacks)
-        non_mac_case = gen_image_map_switch_simple_case(angle_format, actual_angle_format,
-                                                        angle_to_gl, angle_to_mtl)
-        if mac_case == non_mac_case:
-            return mac_case
+        return gen_image_map_switch_simple_case(angle_format, actual_angle_format, angle_to_gl,
+                                                angle_to_mtl)
 
-        re = ''
-        re += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
-        re += mac_case
-        re += "#else  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
-        re += non_mac_case
-        re += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
-        return re
-
-    # Common case
+    # Common case: universally-supported formats + universal overrides
     for angle_format in sorted(angle_to_mtl.keys()):
         switch_data += gen_image_map_switch_common_case(angle_format, angle_format)
     for angle_format in sorted(angle_override.keys()):
         switch_data += gen_image_map_switch_common_case(angle_format, angle_override[angle_format])
 
-    # Mac specific
+    # Mac GPU case: macOS + Catalyst targets
     switch_data += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
     for angle_format in sorted(mac_specific_map.keys()):
         switch_data += gen_image_map_switch_mac_case(angle_format, angle_format, angle_to_gl,
                                                      mac_angle_to_mtl, mac_fallbacks)
-    for angle_format in sorted(mac_override.keys()):
-        switch_data += gen_image_map_switch_mac_case(angle_format, mac_override[angle_format],
+    for angle_format in sorted(mac_override_bc1.keys()):
+        switch_data += gen_image_map_switch_mac_case(angle_format, mac_override_bc1[angle_format],
                                                      angle_to_gl, mac_angle_to_mtl, mac_fallbacks)
+    switch_data += "#endif\n"
+
+    # Override missing ES 3.0 formats for older macOS SDK or Catalyst
+    switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 101600)) || \\\n"
+    switch_data += "TARGET_OS_MACCATALYST\n"
+    for angle_format in sorted(mac_override_es3.keys()):
+        switch_data += gen_image_map_switch_mac_case(angle_format, mac_override_es3[angle_format],
+                                                     angle_to_gl, mac_angle_to_mtl, mac_fallbacks)
+    switch_data += "#endif\n"
 
     # iOS specific
-    switch_data += "#elif TARGET_OS_IOS || TARGET_OS_TV // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+    switch_data += "#if TARGET_OS_IOS || TARGET_OS_TV\n"
     for angle_format in sorted(ios_specific_map.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format, angle_format, angle_to_gl,
                                                         ios_specific_map)
     for angle_format in sorted(ios_override.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format, ios_override[angle_format],
                                                         angle_to_gl, ios_angle_to_mtl)
-    switch_data += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+    switch_data += "#endif\n"
+
+    # Try to support all iOS formats on newer macOS with Apple GPU.
+    switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))\n"
+    for angle_format in sorted(ios_specific_map.keys()):
+        if (angle_format in mac_override_es3.keys()):
+            # ETC/EAC or packed 16-bit
+            switch_data += gen_image_map_switch_es3_case(angle_format, angle_format, angle_to_gl,
+                                                         ios_angle_to_mtl, mac_override_es3)
+        else:
+            # ASTC or PVRTC1
+            switch_data += gen_image_map_switch_simple_case(angle_format, angle_format,
+                                                            angle_to_gl, ios_specific_map)
+    switch_data += "#endif\n"
+
     switch_data += "        default:\n"
     switch_data += "            this->metalFormat = MTLPixelFormatInvalid;\n"
     switch_data += "            this->actualFormatId = angle::FormatID::NONE;"
@@ -454,11 +489,14 @@ def gen_mtl_format_caps_init_string(map_image):
 
     caps_init_str += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
     caps_init_str += caps_to_cpp(mac_caps)
+    caps_init_str += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
 
-    caps_init_str += "#elif TARGET_OS_IOS || TARGET_OS_TV  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+    caps_init_str += "#if (TARGET_OS_IOS && !TARGET_OS_MACCATALYST) || TARGET_OS_TV || \\\n"
+    caps_init_str += "    (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED >= 101600))\n"
+
     caps_init_str += caps_to_cpp(ios_caps)
 
-    caps_init_str += "#endif  // TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
+    caps_init_str += "#endif\n"
 
     return caps_init_str
 
@@ -471,9 +509,9 @@ def main():
         outputs = ['mtl_format_table_autogen.mm']
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
