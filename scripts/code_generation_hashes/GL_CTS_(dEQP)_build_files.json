@@ -98,7 +98,7 @@
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ray_query/CMakeLists.txt":
     "8ee23a99e5f09e73c443654ba55223d4",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/ray_tracing/CMakeLists.txt":
-    "b787ebb002194064462eb3ab67a46adc",
+    "41033012125348ad28fc3a1b0f2e81e3",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/renderpass/CMakeLists.txt":
     "154254ec9d21124a3ef46ad9e5cb1829",
   "third_party/VK-GL-CTS/src/external/vulkancts/modules/vulkan/robustness/CMakeLists.txt":
