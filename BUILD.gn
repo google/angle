@@ -43,6 +43,9 @@ declare_args() {
 
   # Adds run-time checks to filter out EVENT() messages when the debug annotator is disabled.
   angle_enable_annotator_run_time_checks = false
+
+  # Enables non-conformant extensions and features
+  angle_expose_non_conformant_extensions_and_versions = false
 }
 
 if (angle_build_all) {
@@ -359,6 +362,10 @@ angle_static_library("angle_common") {
     } else {
       libs = [ "android" ]
     }
+  }
+
+  if (angle_expose_non_conformant_extensions_and_versions) {
+    defines = [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
   }
 }
 

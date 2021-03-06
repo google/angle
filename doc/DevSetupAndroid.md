@@ -192,6 +192,15 @@ is_debug = false
 dcheck_always_on = true
 ```
 
+#### Application Compatibility
+
+Application compatibility may be increased by enabling non-conformant features and extensions with
+a GN arg:
+
+```
+angle_expose_non_conformant_extensions_and_versions = true
+```
+
 ## Command line for launching chrome on Android
 [This Makefile](https://github.com/phuang/test/blob/master/chromium/Makefile) contains many useful command lines for launching chrome.
 
