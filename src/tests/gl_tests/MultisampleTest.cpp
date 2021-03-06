@@ -174,6 +174,8 @@ TEST_P(MultisampleTest, Point)
     ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
     // http://anglebug.com/3470
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsNVIDIAShield() && IsOpenGLES());
+    // http://anglebug.com/5727
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     constexpr char kPointsVS[] = R"(precision highp float;
 attribute vec4 a_position;
@@ -232,6 +234,8 @@ TEST_P(MultisampleTest, Line)
 {
     ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
     ANGLE_SKIP_TEST_IF(IsARM64() && IsWindows() && IsD3D());
+    // http://anglebug.com/5727
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
@@ -279,6 +283,8 @@ TEST_P(MultisampleTest, Triangle)
     ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
     // http://anglebug.com/3470
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsNVIDIAShield() && IsOpenGLES());
+    // http://anglebug.com/5727
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
@@ -321,9 +327,10 @@ TEST_P(MultisampleTest, ContentPresevedAfterInterruption)
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_rgb8_rgba8"));
     // http://anglebug.com/3470
     ANGLE_SKIP_TEST_IF(IsAndroid() && IsNVIDIAShield() && IsOpenGLES());
-
     // http://anglebug.com/4609
     ANGLE_SKIP_TEST_IF(IsD3D11());
+    // http://anglebug.com/5727
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::Red());
     glUseProgram(program);
@@ -402,6 +409,8 @@ TEST_P(MultisampleTest, AlphaToSampleCoverage)
     ANGLE_SKIP_TEST_IF(!mMultisampledConfigExists);
     // http://anglebug.com/5087
     ANGLE_SKIP_TEST_IF(IsMetal());
+    // http://anglebug.com/5727
+    ANGLE_SKIP_TEST_IF(IsOzone());
 
     constexpr char kFS[] =
         "precision highp float;\n"
