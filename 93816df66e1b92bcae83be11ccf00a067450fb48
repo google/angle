@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e861673c_9d83aa4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-06T14:48:23Z",
+      "side": 1,
+      "message": "The codegen script could be further refactored to be a bit easier to understand. However, I\u0027d prefer to do that later once all build bots are upgraded to macOS 11 SDK.",
+      "revId": "93816df66e1b92bcae83be11ccf00a067450fb48",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
