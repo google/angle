@@ -3722,6 +3722,12 @@ void Context::initCaps()
         }
     }
 
+    // Hide emulated ETC1 extension from WebGL contexts.
+    if (mWebGLContext && getLimitations().emulatedEtc1)
+    {
+        mSupportedExtensions.compressedETC1RGB8TextureOES = false;
+    }
+
     // If we're capturing application calls for replay, don't expose any binary formats to prevent
     // traces from trying to use cached results
     if (getFrameCapture()->enabled())

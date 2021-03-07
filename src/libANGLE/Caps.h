@@ -778,6 +778,9 @@ struct Limitations
 
     // PVRTC1 textures must be squares.
     bool squarePvrtc1 = false;
+
+    // ETC1 texture support is emulated.
+    bool emulatedEtc1 = false;
 };
 
 struct TypePrecision

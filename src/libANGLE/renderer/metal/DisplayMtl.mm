@@ -712,10 +712,15 @@ void DisplayMtl::initializeTextureCaps() const
     // Re-verify texture extensions.
     mNativeExtensions.setTextureExtensionSupport(mNativeTextureCaps);
 
-    // Enable ANGLE-specific ETC2/EAC extension that is not set by the call above.
+    // When ETC2/EAC formats are natively supported, enable ANGLE-specific extension string to
+    // expose them to WebGL. In other case, mark potentially-available ETC1 extension as emulated.
     if (supportsAppleGPUFamily(1) && gl::DetermineCompressedTextureETCSupport(mNativeTextureCaps))
     {
         mNativeExtensions.compressedTextureETC = true;
+    }
+    else
+    {
+        mNativeLimitations.emulatedEtc1 = true;
     }
 
     // Enable ASTC sliced 3D, requires MTLGPUFamilyApple3
