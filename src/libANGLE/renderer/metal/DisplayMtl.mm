@@ -613,6 +613,9 @@ void DisplayMtl::ensureCapsInitialized() const
 
     // Metal doesn't support GL_TEXTURE_COMPARE_MODE=GL_NONE for shadow samplers
     mNativeLimitations.noShadowSamplerCompareModeNone = true;
+
+    // Apple platforms require PVRTC1 textures to be squares.
+    mNativeLimitations.squarePvrtc1 = true;
 }
 
 void DisplayMtl::initializeExtensions() const

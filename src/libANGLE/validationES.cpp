@@ -1024,6 +1024,23 @@ bool ValidCompressedImageSize(const Context *context,
         return false;
     }
 
+    // Only PVRTC1 requires dimensions to be powers of two
+    if (IsPVRTC1Format(internalFormat))
+    {
+        if (!isPow2(width) || !isPow2(height))
+        {
+            return false;
+        }
+
+        if (context->getLimitations().squarePvrtc1)
+        {
+            if (width != height)
+            {
+                return false;
+            }
+        }
+    }
+
     if (CompressedTextureFormatRequiresExactSize(internalFormat))
     {
         if (!ValidCompressedDimension(width, formatInfo.compressedBlockWidth, level) ||
