@@ -389,6 +389,8 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
         framebuffer->getReadColorAttachment()->getFormat().info->sizedInternalFormat;
     const auto &formatInfo = *textureFormat.info;
 
+    ASSERT(!formatInfo.compressed);
+
     // [OpenGL ES 2.0.24] table 3.9
     if (isSubImage)
     {
@@ -467,22 +469,6 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                     return false;
                 }
                 break;
-            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-            case GL_ETC1_RGB8_OES:
-            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_RGBA_BPTC_UNORM_EXT:
-            case GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT:
-            case GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT:
-            case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
-                context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                return false;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_STENCIL_OES:
                 context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
@@ -558,73 +544,6 @@ bool ValidateES2CopyTexImageParameters(const Context *context,
                     return false;
                 }
                 break;
-            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-                if (context->getExtensions().textureCompressionDXT1)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-                if (context->getExtensions().textureCompressionDXT3)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-                if (context->getExtensions().textureCompressionDXT5)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_ETC1_RGB8_OES:
-                if (context->getExtensions().compressedETC1RGB8TextureOES)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-                if (context->getExtensions().lossyETCDecode)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
-            case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
-            case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-            case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-                if (context->getExtensions().compressedTexturePVRTC)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:
-                if (context->getExtensions().compressedTexturePVRTCsRGB)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_COMPONENT16:
             case GL_DEPTH_COMPONENT32_OES:
@@ -1312,77 +1231,6 @@ bool ValidateES2TexImageParametersBase(const Context *context,
 
         switch (format)
         {
-            case GL_COMPRESSED_RGB_S3TC_DXT1_EXT:
-            case GL_COMPRESSED_RGBA_S3TC_DXT1_EXT:
-                if (context->getExtensions().textureCompressionDXT1)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                else
-                {
-                    context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                    return false;
-                }
-                break;
-            case GL_COMPRESSED_RGBA_S3TC_DXT3_ANGLE:
-                if (context->getExtensions().textureCompressionDXT3)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
-                if (context->getExtensions().textureCompressionDXT5)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_ETC1_RGB8_OES:
-                if (context->getExtensions().compressedETC1RGB8TextureOES)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_ETC1_RGB8_LOSSY_DECODE_ANGLE:
-            case GL_COMPRESSED_RGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_RGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-            case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_LOSSY_DECODE_ETC2_ANGLE:
-                if (context->getExtensions().lossyETCDecode)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
-            case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
-            case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
-            case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
-                if (context->getExtensions().compressedTexturePVRTC)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
-            case GL_COMPRESSED_SRGB_PVRTC_2BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_PVRTC_4BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
-            case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:
-                if (context->getExtensions().compressedTexturePVRTCsRGB)
-                {
-                    context->validationError(GL_INVALID_OPERATION, kInvalidFormat);
-                    return false;
-                }
-                context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
-                return false;
             case GL_DEPTH_COMPONENT:
             case GL_DEPTH_STENCIL_OES:
                 if (!context->getExtensions().depthTextureANGLE &&
