@@ -16,6 +16,29 @@
       "message": "This is the approach described in the comments of the abandoned CL here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2702838",
       "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "670daeb9_919aea31",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-07T05:32:14Z",
+      "side": 1,
+      "message": "Should this be defaulted to false? We can always enable it for our own builds. Sounds easier than advertising to everyone that they should disable it.",
+      "range": {
+        "startLine": 48,
+        "startChar": 56,
+        "endLine": 48,
+        "endChar": 60
+      },
+      "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
