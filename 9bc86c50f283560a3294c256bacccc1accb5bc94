@@ -70,6 +70,30 @@
       },
       "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8384f4a7_5a5ab1ee",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-08T17:15:01Z",
+      "side": 0,
+      "message": "This list lacks many more compressed format enums (e.g. ASTC) that also cannot be used with CopyTexImage.\n\nFor consistency, we should either add all of them with `UNREACHABLE()` or just remove these (likely it\u0027s a leftover).",
+      "parentUuid": "336fd498_dd17857a",
+      "range": {
+        "startLine": 562,
+        "startChar": 0,
+        "endLine": 563,
+        "endChar": 68
+      },
+      "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
