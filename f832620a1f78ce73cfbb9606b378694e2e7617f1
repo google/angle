@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "f832620a1f78ce73cfbb9606b378694e2e7617f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e359a074_b3665c1a",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5217,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T17:12:46Z",
+      "side": 1,
+      "message": "No need to shout :)",
+      "range": {
+        "startLine": 5217,
+        "startChar": 12,
+        "endLine": 5217,
+        "endChar": 23
+      },
+      "revId": "f832620a1f78ce73cfbb9606b378694e2e7617f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "35349b39_80ef52a9",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5235,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T17:12:46Z",
+      "side": 1,
+      "message": "Please add a basic drawQuad and EXPECT_PIXEL_COLOR_EQ call. That makes sure that the SPIR-V transformer is actually run and VVL validates everything up to the draw.",
+      "revId": "f832620a1f78ce73cfbb9606b378694e2e7617f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
