@@ -16,6 +16,29 @@
       "message": "With this CL, WebGL PVRTC1 CTS passes on M1.",
       "revId": "71e3c5cd6594bb223913a24533e7dbb883031581",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb6b3732_34eb41f0",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1040,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-08T16:10:26Z",
+      "side": 1,
+      "message": "So we don\u0027t like to conditionally define things based on platform when it comes to being \"spec\" or off-spec. If this doesn\u0027t link to a wording in the spec, but rather a limitation in the Apple implementation, please add this condition to gl::Limitations with a bit of documentation. You can then check the limitation here at runtime, and enable the limitation in the appropriate file in the back-end.",
+      "range": {
+        "startLine": 1034,
+        "startChar": 0,
+        "endLine": 1040,
+        "endChar": 6
+      },
+      "revId": "71e3c5cd6594bb223913a24533e7dbb883031581",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
