@@ -6612,7 +6612,7 @@ void Context::getFloatvRobust(GLenum pname, GLsizei bufSize, GLsizei *length, GL
 
 void Context::getIntegerv(GLenum pname, GLint *params)
 {
-    GLenum nativeType;
+    GLenum nativeType      = GL_NONE;
     unsigned int numParams = 0;
     getQueryParameterInfo(pname, &nativeType, &numParams);
 

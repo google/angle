@@ -141,6 +141,17 @@ TEST_P(ContextNoErrorTest31, DrawWithPPO)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Tests that an incorrect enum to GetInteger does not cause an application crash.
+TEST_P(ContextNoErrorTest, InvalidGetIntegerDoesNotCrash)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_no_error"));
+
+    GLint value = 1;
+    glGetIntegerv(GL_TEXTURE_2D, &value);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_EQ(value, 1);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(ContextNoErrorTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ContextNoErrorTest31);
