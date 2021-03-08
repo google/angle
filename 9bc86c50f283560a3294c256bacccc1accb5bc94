@@ -22,6 +22,30 @@
       },
       "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b563801b_ca0d93fe",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-08T16:14:41Z",
+      "side": 0,
+      "message": "Seems like it rejects all compressed formats here:\nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/libANGLE/validationES.cpp;drc\u003dbaf64903fb42f8e345a1052585dbed8d62641f80;l\u003d3546",
+      "parentUuid": "632b6ba4_36d3b5f3",
+      "range": {
+        "startLine": 562,
+        "startChar": 0,
+        "endLine": 563,
+        "endChar": 68
+      },
+      "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
