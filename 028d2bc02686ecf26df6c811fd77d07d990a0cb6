@@ -33,6 +33,23 @@
       "message": "lgtm\n\nLooks great Alexey! Thanks for tracking this down!\n\nIt would be ideal if you could add an angle_end2end_test covering this, using synthetic data or similar.\n",
       "revId": "028d2bc02686ecf26df6c811fd77d07d990a0cb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a2b8a95_3d27692b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-08T21:27:42Z",
+      "side": 1,
+      "message": "I\u0027ll follow up with a regression test. Landing now.",
+      "revId": "028d2bc02686ecf26df6c811fd77d07d990a0cb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
