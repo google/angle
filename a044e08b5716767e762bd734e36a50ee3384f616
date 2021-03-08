@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "a044e08b5716767e762bd734e36a50ee3384f616",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1e6714d_cd4b755b",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T16:29:02Z",
+      "side": 1,
+      "message": "Usage is not a bitmap. You need to compare with each of them individually.",
+      "range": {
+        "startLine": 639,
+        "startChar": 85,
+        "endLine": 639,
+        "endChar": 96
+      },
+      "revId": "a044e08b5716767e762bd734e36a50ee3384f616",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
