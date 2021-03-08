@@ -94,6 +94,30 @@
       },
       "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f701759_35a79a38",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-08T18:30:01Z",
+      "side": 0,
+      "message": "Agree that we should just remove the enums. Shabi\u0027s concerns can be satisfied by asserting that the format is not compressed: formatInfo.compressed (above) or GetSizedInternalFormatInfo(internalFormat).compressed (here).",
+      "parentUuid": "8384f4a7_5a5ab1ee",
+      "range": {
+        "startLine": 562,
+        "startChar": 0,
+        "endLine": 563,
+        "endChar": 68
+      },
+      "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
