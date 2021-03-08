@@ -16,6 +16,23 @@
       "message": "re-lgtm. thanks for the test.",
       "revId": "fb264b2da6a41f827f63adb8889ebf982cda351a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b75ed067_4ab99ceb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-08T16:27:35Z",
+      "side": 1,
+      "message": "shabi, any other comments here?",
+      "revId": "fb264b2da6a41f827f63adb8889ebf982cda351a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
