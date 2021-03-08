@@ -16,6 +16,23 @@
       "message": "Enabled the same limitation from the GL renderer.\n\nThe validation check is included in PVRTC WebGL extension CTS. To catch this on CQ we need an iOS bot (GLES \u0026 Metal) and a macOS 11 / M1 bot (Metal-only).",
       "revId": "028d2bc02686ecf26df6c811fd77d07d990a0cb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38ca8ba7_72d01da8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-08T19:28:33Z",
+      "side": 1,
+      "message": "lgtm\n\nLooks great Alexey! Thanks for tracking this down!\n\nIt would be ideal if you could add an angle_end2end_test covering this, using synthetic data or similar.\n",
+      "revId": "028d2bc02686ecf26df6c811fd77d07d990a0cb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
