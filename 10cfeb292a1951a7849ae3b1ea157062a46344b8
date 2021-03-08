@@ -109,6 +109,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3fe3b3f0_05745424",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-08T15:33:41Z",
+      "side": 1,
+      "message": "\u003e im curious, if we force the tiling mode to optimal all the time for AHBs (since ANGLE has no other information to deduce tiling mode) how do you handle the case where the AHB actually was allocated in a layout which vulkan understands as linear? wouldn\u0027t that be a conflict as well?\n\nThat\u0027s a good question; we also probably can\u0027t just say that the vendor should handle it, since Vulkan is supposed to let you make explicit choices about the tiling. On NVIDIA at least, you could get away with creating either a linear or optimal image provided it\u0027s used for image sampling and doesn\u0027t have attachemnt usage, so this is something that is allowed and might be exercised by some code already (this is on Android emulators).\n\nSo this suggests that there has to be a way to restrict tiling to one type or another. But, AFAIK there\u0027s also no way for the Vulkan vendor to communicate that all external AHB-compatible images need to be created with a particular tiling, right? So could this be a hole in the spec definition of Android hardware buffer?",
+      "parentUuid": "c9c6b099_a94ca359",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1695e854_822d6c7a",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 2
