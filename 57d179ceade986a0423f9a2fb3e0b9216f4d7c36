@@ -105,6 +105,24 @@
       "parentUuid": "0077dd2d_fb0537d6",
       "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e9b403a_df627621",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3711,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-08T17:54:06Z",
+      "side": 1,
+      "message": "\u003e How about we set a flag in gl::TextureCaps indicating the format is non-identity? \n\n\nThe only reason why this format is enabled is to support running mobile ANGLE traces on bots with desktop GPUs. Real applications shouldn\u0027t use it anyway. Maybe there\u0027s some build-time parameter that could be used to filter that? I don\u0027t think that such a rare use case warrants global expansion of TextureCaps.",
+      "parentUuid": "26b86dd7_8b75d1be",
+      "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
