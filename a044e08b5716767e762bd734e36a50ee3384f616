@@ -87,6 +87,30 @@
       },
       "revId": "a044e08b5716767e762bd734e36a50ee3384f616",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7e2ec4b_7381956d",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-08T17:43:40Z",
+      "side": 1,
+      "message": "looks like i need to overload the operators if i want to use without static_cast\u003c\u003e.\nok, will change to helper + explicit check",
+      "parentUuid": "5f61ed8d_784d6ac5",
+      "range": {
+        "startLine": 639,
+        "startChar": 85,
+        "endLine": 639,
+        "endChar": 96
+      },
+      "revId": "a044e08b5716767e762bd734e36a50ee3384f616",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
