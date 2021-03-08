@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "686486fa_716ac8df",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-08T21:06:41Z",
+      "side": 1,
+      "message": "shabi, i know this change has already merged and im also not quite sure what \"FrequentSmallAllocations\" policy is supposed to be (in terms of the small\u0027ness) but \u0027mBufferPool\u0027 is not used for small chunks of allocation. It is meant to provide a replacement of the whole buffer either because we meet the update threshold or because the app didn\u0027t care about previous content.\n\nThat usecase doesn\u0027t see to match with the policy of \"FrequentSmallAllocations\", at least in name",
+      "range": {
+        "startLine": 343,
+        "startChar": 34,
+        "endLine": 343,
+        "endChar": 83
+      },
+      "revId": "e366e2c3c62d029c84f89f8bce5f22a4778e7d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
