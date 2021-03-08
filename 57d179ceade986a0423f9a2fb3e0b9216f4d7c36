@@ -123,6 +123,24 @@
       "parentUuid": "26b86dd7_8b75d1be",
       "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30d6d612_d285fd28",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3711,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-08T18:24:06Z",
+      "side": 1,
+      "message": "I would add a new member to the Limitations struct called etcFormatsAreEmulated which each backend can initialize separately.\n\nAnd then here we can disable extensions based on that limitation and context type.",
+      "parentUuid": "3e9b403a_df627621",
+      "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
