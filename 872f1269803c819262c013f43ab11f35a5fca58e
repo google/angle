@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef7e431f_1ef2a365",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-08T17:58:24Z",
+      "side": 1,
+      "message": "What I was thinking is modify isCurrentlyInUse() call to instead of take a serial, you take a contextVk and you check resourceVk\u0027s serial against contextVk\u0027s mCachedLastCompletedSerial and if it succeed, you are done. If not, then you do this:  mCachedLastCompletedSerial\u003drendererVk-\u003egetLastCompletedSerial() and do compare again. In a well paced app, most objects are expected to be completed when used, so you should see most time you see it returns true when compare against mCachedLastCompletedSerial. And mCachedLastCompletedSerial even dont need to be atomic.",
+      "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da07f527_90849f59",
@@ -14,6 +31,98 @@
       "writtenOn": "2021-03-08T16:26:12Z",
       "side": 1,
       "message": "You can avoid this by using `kZeroSerial` in the constructor of AtomicSerial.",
+      "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc3680aa_437bcaf7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1157,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-08T17:58:24Z",
+      "side": 1,
+      "message": "I am not sure you can cache mCurrentQueueSerial, because this is used to tag the object\u0027s serial number and is subject to race with other thread (which means you might tag with smaller serial than it should be). I am thinking mostly mLastCompletedQueueSerial (and mLastSubmittedQueueSerial can be cached as well but with less benefit).",
+      "range": {
+        "startLine": 1157,
+        "startChar": 17,
+        "endLine": 1157,
+        "endChar": 36
+      },
+      "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09f684fe_f2b66577",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 1157,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-08T17:58:24Z",
+      "side": 1,
+      "message": "Since you cached it in contextVk, I don\u0027t think it needs to be atomic.",
+      "range": {
+        "startLine": 1157,
+        "startChar": 4,
+        "endLine": 1157,
+        "endChar": 16
+      },
+      "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77a29e15_8923b867",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2637,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-08T17:58:24Z",
+      "side": 1,
+      "message": "I am also not sure if this is correct. When there is two ctx, this will only update caller\u0027s context. How about the other ctx?",
+      "range": {
+        "startLine": 2637,
+        "startChar": 7,
+        "endLine": 2637,
+        "endChar": 95
+      },
+      "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfc0d12b_b20c5b02",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2721,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-08T17:58:24Z",
+      "side": 1,
+      "message": "I am also not sure if this is correct. When there is two ctx, this will only update caller\u0027s context. How about the other ctx?",
+      "range": {
+        "startLine": 2721,
+        "startChar": 8,
+        "endLine": 2721,
+        "endChar": 94
+      },
       "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
