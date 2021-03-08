@@ -104,6 +104,24 @@
       "parentUuid": "bee91569_0ea2a993",
       "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa15cc6e_a3b0b62b",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-08T20:52:03Z",
+      "side": 1,
+      "message": "Replied on the bug for how to install an app without the Play Store.",
+      "parentUuid": "8c5f24b4_847fcef9",
+      "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
