@@ -39,6 +39,30 @@
       },
       "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "981e1e43_aad6b724",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-08T15:29:01Z",
+      "side": 1,
+      "message": "My suggestion is we default to true when dcheck_always_on is true. That will be in debug and in release assert debugging builds. We can give ARM/IMG a heads up about the change.",
+      "parentUuid": "670daeb9_919aea31",
+      "range": {
+        "startLine": 48,
+        "startChar": 56,
+        "endLine": 48,
+        "endChar": 60
+      },
+      "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
