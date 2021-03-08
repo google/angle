@@ -110,7 +110,7 @@ class Rewriter : public TIntermRebuild
         auto *renamed =
             new TInterfaceBlock(&mSymbolTable, maybeCreateNewName(interfaceBlock),
                                 &getRenamedOrOriginal(interfaceBlock.fields()), layoutQualifier,
-                                SymbolType::AngleInternal, interfaceBlock.extension());
+                                SymbolType::AngleInternal, interfaceBlock.extensions());
 
         return renamed;
     }
@@ -161,7 +161,7 @@ class Rewriter : public TIntermRebuild
     {
         auto *renamed = new TVariable(&mSymbolTable, maybeCreateNewName(variable),
                                       &getRenamedOrOriginal(variable.getType()),
-                                      SymbolType::AngleInternal, variable.extension());
+                                      SymbolType::AngleInternal, variable.extensions());
 
         return renamed;
     }

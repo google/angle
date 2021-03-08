@@ -1299,7 +1299,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         {
             if (const TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
             {
-                needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->extension());
+                needsReservedCheck = !checkCanUseOneOfExtensions(line, builtInSymbol->extensions());
             }
         }
         else
@@ -1329,7 +1329,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         {
             if (const TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
             {
-                needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->extension());
+                needsReservedCheck = !checkCanUseOneOfExtensions(line, builtInSymbol->extensions());
             }
         }
         else
@@ -1359,7 +1359,7 @@ bool TParseContext::declareVariable(const TSourceLoc &line,
         {
             if (const TSymbol *builtInSymbol = symbolTable.findBuiltIn(identifier, mShaderVersion))
             {
-                needsReservedCheck = !checkCanUseExtension(line, builtInSymbol->extension());
+                needsReservedCheck = !checkCanUseOneOfExtensions(line, builtInSymbol->extensions());
             }
         }
         else
@@ -1446,7 +1446,11 @@ bool TParseContext::checkCanUseOneOfExtensions(const TSourceLoc &line,
             }
             continue;
         }
-        if (extIter == extBehavior.end())
+        if (extension == TExtension::UNDEFINED)
+        {
+            continue;
+        }
+        else if (extIter == extBehavior.end())
         {
             errorMsgString    = "extension is not supported";
             errorMsgExtension = extension;
@@ -2158,9 +2162,9 @@ const TVariable *TParseContext::getNamedVariable(const TSourceLoc &location,
 
     const TVariable *variable = static_cast<const TVariable *>(symbol);
 
-    if (variable->extension() != TExtension::UNDEFINED)
+    if (!variable->extensions().empty() && variable->extensions()[0] != TExtension::UNDEFINED)
     {
-        checkCanUseExtension(location, variable->extension());
+        checkCanUseOneOfExtensions(location, variable->extensions());
     }
 
     // GLSL ES 3.1 Revision 4, 7.1.3 Compute Shader Special Variables
@@ -2603,6 +2607,7 @@ void TParseContext::checkInputOutputTypeIsValidES3(const TQualifier qualifier,
          type.isStructureContainingType(EbtInt) || type.isStructureContainingType(EbtUInt));
     bool extendedShaderTypes = mShaderVersion >= 320 ||
                                isExtensionEnabled(TExtension::EXT_geometry_shader) ||
+                               isExtensionEnabled(TExtension::OES_geometry_shader) ||
                                isExtensionEnabled(TExtension::EXT_tessellation_shader);
     if (typeContainsIntegers && qualifier != EvqFlatIn && qualifier != EvqFlatOut &&
         (!extendedShaderTypes || mShaderType == GL_FRAGMENT_SHADER))
@@ -4248,7 +4253,9 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
         if (isShaderIoBlock)
         {
             if (!isExtensionEnabled(TExtension::OES_shader_io_blocks) &&
-                !isExtensionEnabled(TExtension::EXT_shader_io_blocks) && mShaderVersion < 320)
+                !isExtensionEnabled(TExtension::EXT_shader_io_blocks) &&
+                !isExtensionEnabled(TExtension::OES_geometry_shader) &&
+                !isExtensionEnabled(TExtension::EXT_geometry_shader) && mShaderVersion < 320)
             {
                 error(typeQualifier.line,
                       "invalid qualifier: shader IO blocks need shader io block extension",
@@ -5089,7 +5096,10 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
     }
     else if (mShaderType == GL_GEOMETRY_SHADER_EXT &&
              (mShaderVersion >= 320 ||
-              (checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader) &&
+              (checkCanUseOneOfExtensions(
+                   qualifierTypeLine,
+                   std::array<TExtension, 2u>{
+                       {TExtension::EXT_geometry_shader, TExtension::OES_geometry_shader}}) &&
                checkLayoutQualifierSupported(qualifierTypeLine, qualifierType, 310))))
     {
         if (qualifierType == "points")
@@ -5375,13 +5385,19 @@ TLayoutQualifier TParseContext::parseLayoutQualifier(const ImmutableString &qual
     }
     else if (qualifierType == "invocations" && mShaderType == GL_GEOMETRY_SHADER_EXT &&
              (mShaderVersion >= 320 ||
-              checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader)))
+              checkCanUseOneOfExtensions(
+                  qualifierTypeLine,
+                  std::array<TExtension, 2u>{
+                      {TExtension::EXT_geometry_shader, TExtension::OES_geometry_shader}})))
     {
         parseInvocations(intValue, intValueLine, intValueString, &qualifier.invocations);
     }
     else if (qualifierType == "max_vertices" && mShaderType == GL_GEOMETRY_SHADER_EXT &&
              (mShaderVersion >= 320 ||
-              checkCanUseExtension(qualifierTypeLine, TExtension::EXT_geometry_shader)))
+              checkCanUseOneOfExtensions(
+                  qualifierTypeLine,
+                  std::array<TExtension, 2u>{
+                      {TExtension::EXT_geometry_shader, TExtension::OES_geometry_shader}})))
     {
         parseMaxVertices(intValue, intValueLine, intValueString, &qualifier.maxVertices);
     }
@@ -6893,10 +6909,12 @@ TIntermTyped *TParseContext::addNonConstructorFunctionCall(TFunctionLookup *fnCa
             ASSERT(symbol->symbolType() == SymbolType::BuiltIn);
             const TFunction *fnCandidate = static_cast<const TFunction *>(symbol);
 
-            if (fnCandidate->extension() != TExtension::UNDEFINED)
+            if (!fnCandidate->extensions().empty() &&
+                fnCandidate->extensions()[0] != TExtension::UNDEFINED)
             {
-                checkCanUseExtension(loc, fnCandidate->extension());
+                checkCanUseOneOfExtensions(loc, fnCandidate->extensions());
             }
+
             TOperator op = fnCandidate->getBuiltInOp();
             if (op != EOpCallBuiltInFunction)
             {

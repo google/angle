@@ -605,6 +605,12 @@ def get_shader_version_for_level(spec, level):
         return get_glsl_shader_version_for_level(level)
 
 
+def get_extension_list(extensions):
+    extension_list = [ext.strip() for ext in extensions.split(',')]
+    extension_string = ', '.join(['TExtension::' + ext for ext in extension_list])
+    return 'std::array<TExtension, ' + str(len(extension_list)) + 'u>{{' + extension_string + '}}'
+
+
 class GroupedList:
     """"Class for storing a list of objects grouped by symbol table level and condition."""
 
@@ -720,13 +726,29 @@ class GroupedList:
         def add_rule(rules, spec, level, shaders, extension, symbol):
             var = ("&TableBase::%s" % symbol) if symbol.startswith("m_gl") else None
 
-            rules.append({
-                "spec": "Spec::%s" % ("ESSL" if spec == "ESSL" else "GLSL"),
-                "version": get_shader_version_for_level(spec, level),
-                "shaders": "Shader::%s" % ("ALL" if shaders == "NONE" else shaders),
-                "extension": "0" if extension == None else "EXT_INDEX(%s)" % extension,
-                "symbol_or_var": symbol.replace("Func::", "") if var is None else var
-            })
+            extension_list = []
+            specField = "Spec::%s" % ("ESSL" if spec == "ESSL" else "GLSL")
+            versionField = get_shader_version_for_level(spec, level)
+            shadersField = "Shader::%s" % ("ALL" if shaders == "NONE" else shaders)
+            symbolOrVarField = symbol.replace("Func::", "") if var is None else var
+            if extension != None:
+                extension_list = [ext.strip() for ext in extension.split(',')]
+                for ext in extension_list:
+                    rules.append({
+                        "spec": specField,
+                        "version": versionField,
+                        "shaders": shadersField,
+                        "extension": "0" if ext == None else "EXT_INDEX(%s)" % ext,
+                        "symbol_or_var": symbolOrVarField
+                    })
+            else:
+                rules.append({
+                    "spec": specField,
+                    "version": versionField,
+                    "shaders": shadersField,
+                    "extension": "0",
+                    "symbol_or_var": symbolOrVarField
+                })
 
         self.names = []
         self.offsets = []
@@ -1296,7 +1318,9 @@ def define_constexpr_type_array_sizes(template_args, type_array_sizes_declaratio
 
 
 def define_constexpr_variable(template_args, variable_declarations):
-    template_variable_declaration = 'constexpr const TVariable k{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});'
+    template_args['extension'] = get_extension_list(template_args['extension'])
+    template_variable_declaration = 'constexpr const TVariable k{name_with_suffix}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, {extension}, {type});'
+
     variable_declarations.append(template_variable_declaration.format(**template_args))
 
 
@@ -1439,6 +1463,8 @@ def process_single_function(shader_type, function_props, parameter_declarations,
                                                    essl_extension, glsl_extension,
                                                    unmangled_script_generated_hash_tests)
 
+    extension_string = get_extension_list(template_args['extension'])
+
     for function_props in function_variants:
         template_args['id'] = id_counter
 
@@ -1505,7 +1531,8 @@ def process_single_function(shader_type, function_props, parameter_declarations,
                 template_args['parameters_var_name']] = template_parameter_list_declaration.format(
                     **template_args)
 
-        template_function_declaration = 'constexpr const TFunction {unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, TExtension::{extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
+        template_args['extension'] = extension_string
+        template_function_declaration = 'constexpr const TFunction {unique_name}(BuiltInId::{human_readable_name}, BuiltInName::{name_with_suffix}, {extension}, BuiltInParameters::{parameters_var_name}, {param_count}, {return_type}, EOp{op}, {known_to_not_have_side_effects});'
         function_declarations.append(template_function_declaration.format(**template_args))
 
         id_counter += 1
@@ -1663,6 +1690,8 @@ def process_single_variable(shader_type, variable_name, props, builtin_id_declar
     is_member = True
     template_init_variable = ''
 
+    extension_string = get_extension_list(template_args['extension'])
+
     if 'type' in props:
         if props['type']['basic'] != 'Bool' and 'precision' not in props['type']:
             raise Exception('Missing precision for variable ' + variable_name)
@@ -1681,7 +1710,8 @@ def process_single_variable(shader_type, variable_name, props, builtin_id_declar
             name_declarations.add(template_name_declaration.format(**template_args))
             template_add_field = '    {fields}->push_back(new TField({field_type}, BuiltInName::{field_name}, zeroSourceLoc, SymbolType::BuiltIn));'
             init_member_variables.append(template_add_field.format(**template_args))
-        template_init_temp_variable = '    {class} *{name_with_suffix} = new {class}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, TExtension::{extension}, {fields});'
+        template_args['extension'] = extension_string
+        template_init_temp_variable = '    {class} *{name_with_suffix} = new {class}(BuiltInId::{name_with_suffix}, BuiltInName::{name}, {extension}, {fields});'
         init_member_variables.append(template_init_temp_variable.format(**template_args))
         if 'private' in props and props['private']:
             is_member = False
@@ -1697,9 +1727,10 @@ def process_single_variable(shader_type, variable_name, props, builtin_id_declar
         if 'essl_extension_becomes_core_in' in props and 'essl_extension' not in props:
             template_args['ext_or_core_suffix'] = generate_suffix_from_level(props['essl_level'])
         template_args['initDynamicType'] = props['initDynamicType'].format(**template_args)
+        template_args['extension'] = extension_string
         template_init_variable = """    {initDynamicType}
 {type_name}->realize();
-m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});"""
+m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, {extension}, {type});"""
 
     elif 'value' in props:
         # Handle variables with constant value, such as gl_MaxDrawBuffers.
@@ -1711,14 +1742,15 @@ m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName:
             resources_key = props['valueKey']
         template_args['value'] = 'resources.' + resources_key
         template_args['object_size'] = TType(props['type']).get_object_size()
-        template_init_variable = """    m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});
+        template_args['extension'] = extension_string
+        template_init_variable = """    m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, {extension}, {type});
 {{
     TConstantUnion *unionArray = new TConstantUnion[{object_size}];
     unionArray[0].setIConst({value});
     static_cast<TVariable *>(m_{name_with_suffix})->shareConstPointer(unionArray);
 }}"""
         if template_args['object_size'] > 1:
-            template_init_variable = """    m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, TExtension::{extension}, {type});
+            template_init_variable = """    m_{name_with_suffix} = new TVariable(BuiltInId::{name_with_suffix}, BuiltInName::{name}, SymbolType::BuiltIn, {extension}, {type});
 {{
     TConstantUnion *unionArray = new TConstantUnion[{object_size}];
     for (size_t index = 0u; index < {object_size}; ++index)

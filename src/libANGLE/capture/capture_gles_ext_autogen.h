@@ -2058,6 +2058,14 @@ angle::CallCapture CaptureRenderbufferStorageOES(const State &glState,
                                                  GLsizei width,
                                                  GLsizei height);
 
+// GL_OES_geometry_shader
+angle::CallCapture CaptureFramebufferTextureOES(const State &glState,
+                                                bool isCallValid,
+                                                GLenum target,
+                                                GLenum attachment,
+                                                TextureID texturePacked,
+                                                GLint level);
+
 // GL_OES_get_program_binary
 angle::CallCapture CaptureGetProgramBinaryOES(const State &glState,
                                               bool isCallValid,

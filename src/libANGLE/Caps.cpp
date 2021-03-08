@@ -1040,7 +1040,8 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_ANGLE_robust_resource_initialization"] = esOnlyExtension(&Extensions::robustResourceInitialization);
         map["GL_ANGLE_program_cache_control"] = esOnlyExtension(&Extensions::programCacheControl);
         map["GL_ANGLE_texture_rectangle"] = enableableDisablableExtension(&Extensions::textureRectangle);
-        map["GL_EXT_geometry_shader"] = enableableExtension(&Extensions::geometryShader);
+        map["GL_EXT_geometry_shader"] = enableableExtension(&Extensions::geometryShaderEXT);
+        map["GL_OES_geometry_shader"] = enableableExtension(&Extensions::geometryShaderOES);
         map["GL_ANGLE_explicit_context_gles1"] = enableableExtension(&Extensions::explicitContextGles1);
         map["GL_ANGLE_explicit_context"] = enableableExtension(&Extensions::explicitContext);
         map["GL_KHR_parallel_shader_compile"] = enableableExtension(&Extensions::parallelShaderCompile);
@@ -1350,7 +1351,7 @@ Caps GenerateMinimumCaps(const Version &clientVersion, const Extensions &extensi
         caps.maxRectangleTextureSize = 64;
     }
 
-    if (extensions.geometryShader)
+    if (extensions.geometryShaderAny())
     {
         // Table 20.40 (GL_EXT_geometry_shader)
         caps.maxFramebufferLayers = 256;

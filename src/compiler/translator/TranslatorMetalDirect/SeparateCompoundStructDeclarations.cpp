@@ -57,7 +57,7 @@ class Separator : public TIntermTraverser
             }
             instanceType->setQualifier(type.getQualifier());
             auto *instanceVar =
-                new TVariable(mSymbolTable, var.name(), instanceType, symbolType, var.extension());
+                new TVariable(mSymbolTable, var.name(), instanceType, symbolType, var.extensions());
 
             TIntermSequence replacements;
             replacements.push_back(new TIntermSymbol(structVar));

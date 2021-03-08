@@ -584,6 +584,8 @@ const ProcEntry g_procTable[] = {
     {"glFramebufferTextureMultiviewOVR", P(GL_FramebufferTextureMultiviewOVR)},
     {"glFramebufferTextureMultiviewOVRContextANGLE",
      P(GL_FramebufferTextureMultiviewOVRContextANGLE)},
+    {"glFramebufferTextureOES", P(GL_FramebufferTextureOES)},
+    {"glFramebufferTextureOESContextANGLE", P(GL_FramebufferTextureOESContextANGLE)},
     {"glFrontFace", P(GL_FrontFace)},
     {"glFrontFaceContextANGLE", P(GL_FrontFaceContextANGLE)},
     {"glFrustumf", P(GL_Frustumf)},
@@ -1761,5 +1763,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(GL_WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(GL_WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1663;
+const size_t g_numProcs = 1665;
 }  // namespace egl

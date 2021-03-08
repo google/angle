@@ -1586,21 +1586,25 @@ void GenerateCaps(const FunctionsGL *functions,
             QuerySingleGLInt(functions, GL_MAX_RECTANGLE_TEXTURE_SIZE_ANGLE), textureSizeLimit);
     }
 
-    // OpenGL 4.3 (and above) can support all features and constants defined in
+    // OpenGL 4.3 (and above) and OpenGL ES 3.2 can support all features and constants defined in
     // GL_EXT_geometry_shader.
-    if (functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 2)) ||
-        functions->hasGLESExtension("GL_OES_geometry_shader") ||
-        functions->hasGLESExtension("GL_EXT_geometry_shader") ||
-        // OpenGL 4.0 adds the support for instanced geometry shader
-        // GL_ARB_shader_atomic_counters adds atomic counters to geometry shader
-        // GL_ARB_shader_storage_buffer_object adds shader storage buffers to geometry shader
-        // GL_ARB_shader_image_load_store adds images to geometry shader
-        (functions->isAtLeastGL(gl::Version(4, 0)) &&
-         functions->hasGLExtension("GL_ARB_shader_atomic_counters") &&
-         functions->hasGLExtension("GL_ARB_shader_storage_buffer_object") &&
-         functions->hasGLExtension("GL_ARB_shader_image_load_store")))
+    bool hasCoreGSSupport =
+        functions->isAtLeastGL(gl::Version(4, 3)) || functions->isAtLeastGLES(gl::Version(3, 2));
+    // OpenGL 4.0 adds the support for instanced geometry shader
+    // GL_ARB_shader_atomic_counters adds atomic counters to geometry shader
+    // GL_ARB_shader_storage_buffer_object adds shader storage buffers to geometry shader
+    // GL_ARB_shader_image_load_store adds images to geometry shader
+    bool hasInstancedGSSupport = functions->isAtLeastGL(gl::Version(4, 0)) &&
+                                 functions->hasGLExtension("GL_ARB_shader_atomic_counters") &&
+                                 functions->hasGLExtension("GL_ARB_shader_storage_buffer_object") &&
+                                 functions->hasGLExtension("GL_ARB_shader_image_load_store");
+    if (hasCoreGSSupport || functions->hasGLESExtension("GL_OES_geometry_shader") ||
+        functions->hasGLESExtension("GL_EXT_geometry_shader") || hasInstancedGSSupport)
     {
-        extensions->geometryShader = true;
+        extensions->geometryShaderEXT = functions->hasGLESExtension("GL_EXT_geometry_shader") ||
+                                        hasCoreGSSupport || hasInstancedGSSupport;
+        extensions->geometryShaderOES = functions->hasGLESExtension("GL_OES_geometry_shader") ||
+                                        hasCoreGSSupport || hasInstancedGSSupport;
 
         caps->maxFramebufferLayers = QuerySingleGLInt(functions, GL_MAX_FRAMEBUFFER_LAYERS_EXT);
 

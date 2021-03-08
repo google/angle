@@ -30,6 +30,7 @@ enum class TExtension : uint8_t
     EXT_draw_buffers,
     EXT_frag_depth,
     EXT_geometry_shader,
+    OES_geometry_shader,
     OES_shader_io_blocks,
     EXT_shader_io_blocks,
     EXT_gpu_shader5,

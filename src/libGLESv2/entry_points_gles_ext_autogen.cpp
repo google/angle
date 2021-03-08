@@ -9218,6 +9218,38 @@ void GL_APIENTRY GL_RenderbufferStorageOES(GLenum target,
     }
 }
 
+// GL_OES_geometry_shader
+void GL_APIENTRY GL_FramebufferTextureOES(GLenum target,
+                                          GLenum attachment,
+                                          GLuint texture,
+                                          GLint level)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLFramebufferTextureOES,
+          "context = %d, target = %s, attachment = %s, texture = %u, level = %d", CID(context),
+          GLenumToString(GLenumGroup::FramebufferTarget, target),
+          GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level);
+
+    if (context)
+    {
+        TextureID texturePacked                               = PackParam<TextureID>(texture);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateFramebufferTextureOES(context, target, attachment, texturePacked, level));
+        if (isCallValid)
+        {
+            context->framebufferTexture(target, attachment, texturePacked, level);
+        }
+        ANGLE_CAPTURE(FramebufferTextureOES, isCallValid, context, target, attachment,
+                      texturePacked, level);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_OES_get_program_binary
 void GL_APIENTRY GL_GetProgramBinaryOES(GLuint program,
                                         GLsizei bufSize,
@@ -16521,6 +16553,39 @@ void GL_APIENTRY GL_FramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx,
         }
         ANGLE_CAPTURE(FramebufferTextureMultiviewOVR, isCallValid, context, target, attachment,
                       texturePacked, level, baseViewIndex, numViews);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY GL_FramebufferTextureOESContextANGLE(GLeglContext ctx,
+                                                      GLenum target,
+                                                      GLenum attachment,
+                                                      GLuint texture,
+                                                      GLint level)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLFramebufferTextureOES,
+          "context = %d, target = %s, attachment = %s, texture = %u, level = %d", CID(context),
+          GLenumToString(GLenumGroup::FramebufferTarget, target),
+          GLenumToString(GLenumGroup::FramebufferAttachment, attachment), texture, level);
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        TextureID texturePacked                               = PackParam<TextureID>(texture);
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid =
+            (context->skipValidation() ||
+             ValidateFramebufferTextureOES(context, target, attachment, texturePacked, level));
+        if (isCallValid)
+        {
+            context->framebufferTexture(target, attachment, texturePacked, level);
+        }
+        ANGLE_CAPTURE(FramebufferTextureOES, isCallValid, context, target, attachment,
+                      texturePacked, level);
     }
     else
     {

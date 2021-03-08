@@ -597,7 +597,7 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
 
         TInterfaceBlock *newInterfaceBlock =
             new TInterfaceBlock(mSymbolTable, block->name(), newFields, blockLayoutQualifier,
-                                block->symbolType(), block->extension());
+                                block->symbolType(), block->extensions());
 
         // Create a new declaration with the new type.  Declarations are separated at this point,
         // so there should be only one variable here.
@@ -623,7 +623,7 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
             variableIsTemp ? kEmptyImmutableString : variable->name();
 
         TVariable *newVariable = new TVariable(mSymbolTable, variableName, newType,
-                                               variable->symbolType(), variable->extension());
+                                               variable->symbolType(), variable->extensions());
 
         newDeclaration->appendDeclarator(new TIntermSymbol(newVariable));
 
@@ -681,7 +681,7 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
             newType->setInterfaceBlockField(iter.second->getType().getInterfaceBlock(), fieldIndex);
 
             TVariable *newVariable = new TVariable(mSymbolTable, variable->name(), newType,
-                                                   variable->symbolType(), variable->extension());
+                                                   variable->symbolType(), variable->extensions());
 
             (*mInterfaceBlockMap)[variable] = newVariable;
 

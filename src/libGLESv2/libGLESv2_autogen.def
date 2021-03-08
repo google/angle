@@ -915,6 +915,9 @@ EXPORTS
     glIsRenderbufferOES
     glRenderbufferStorageOES
 
+    ; GL_OES_geometry_shader
+    glFramebufferTextureOES
+
     ; GL_OES_get_program_binary
     glGetProgramBinaryOES
     glProgramBinaryOES
@@ -1214,6 +1217,7 @@ EXPORTS
     glFramebufferTextureEXTContextANGLE
     glFramebufferTextureLayerContextANGLE
     glFramebufferTextureMultiviewOVRContextANGLE
+    glFramebufferTextureOESContextANGLE
     glFrontFaceContextANGLE
     glFrustumfContextANGLE
     glFrustumxContextANGLE

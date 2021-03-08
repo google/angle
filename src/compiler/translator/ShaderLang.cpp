@@ -199,6 +199,7 @@ void InitBuiltInResources(ShBuiltInResources *resources)
     resources->OVR_multiview2                              = 0;
     resources->EXT_YUV_target                              = 0;
     resources->EXT_geometry_shader                         = 0;
+    resources->OES_geometry_shader                         = 0;
     resources->EXT_gpu_shader5                             = 0;
     resources->OES_shader_io_blocks                        = 0;
     resources->EXT_shader_io_blocks                        = 0;

@@ -5130,6 +5130,15 @@ void GL_APIENTRY glRenderbufferStorageOES(GLenum target,
     return GL_RenderbufferStorageOES(target, internalformat, width, height);
 }
 
+// GL_OES_geometry_shader
+void GL_APIENTRY glFramebufferTextureOES(GLenum target,
+                                         GLenum attachment,
+                                         GLuint texture,
+                                         GLint level)
+{
+    return GL_FramebufferTextureOES(target, attachment, texture, level);
+}
+
 // GL_OES_get_program_binary
 void GL_APIENTRY glGetProgramBinaryOES(GLuint program,
                                        GLsizei bufSize,
@@ -7051,6 +7060,15 @@ void GL_APIENTRY glFramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx,
 {
     return GL_FramebufferTextureMultiviewOVRContextANGLE(ctx, target, attachment, texture, level,
                                                          baseViewIndex, numViews);
+}
+
+void GL_APIENTRY glFramebufferTextureOESContextANGLE(GLeglContext ctx,
+                                                     GLenum target,
+                                                     GLenum attachment,
+                                                     GLuint texture,
+                                                     GLint level)
+{
+    return GL_FramebufferTextureOESContextANGLE(ctx, target, attachment, texture, level);
 }
 
 void GL_APIENTRY glFrontFaceContextANGLE(GLeglContext ctx, GLenum mode)

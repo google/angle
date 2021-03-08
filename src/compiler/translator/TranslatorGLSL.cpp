@@ -278,7 +278,8 @@ void TranslatorGLSL::writeExtensionBehavior(TIntermNode *root, ShCompileOptions 
                      << "\n";
             }
 
-            if (iter.first == TExtension::EXT_geometry_shader)
+            if (iter.first == TExtension::EXT_geometry_shader ||
+                iter.first == TExtension::OES_geometry_shader)
             {
                 sink << "#extension GL_ARB_geometry_shader4 : " << GetBehaviorString(iter.second)
                      << "\n";

@@ -1348,6 +1348,12 @@ ANGLE_EXPORT void GL_APIENTRY GL_RenderbufferStorageOES(GLenum target,
                                                         GLsizei width,
                                                         GLsizei height);
 
+// GL_OES_geometry_shader
+ANGLE_EXPORT void GL_APIENTRY GL_FramebufferTextureOES(GLenum target,
+                                                       GLenum attachment,
+                                                       GLuint texture,
+                                                       GLint level);
+
 // GL_OES_get_program_binary
 ANGLE_EXPORT void GL_APIENTRY GL_GetProgramBinaryOES(GLuint program,
                                                      GLsizei bufSize,
@@ -2366,6 +2372,11 @@ ANGLE_EXPORT void GL_APIENTRY GL_FramebufferTextureMultiviewOVRContextANGLE(GLeg
                                                                             GLint level,
                                                                             GLint baseViewIndex,
                                                                             GLsizei numViews);
+ANGLE_EXPORT void GL_APIENTRY GL_FramebufferTextureOESContextANGLE(GLeglContext ctx,
+                                                                   GLenum target,
+                                                                   GLenum attachment,
+                                                                   GLuint texture,
+                                                                   GLint level);
 ANGLE_EXPORT void GL_APIENTRY GL_FrontFaceContextANGLE(GLeglContext ctx, GLenum mode);
 ANGLE_EXPORT void GL_APIENTRY GL_FrustumfContextANGLE(GLeglContext ctx,
                                                       GLfloat l,

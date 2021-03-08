@@ -24,6 +24,7 @@
     OP(EXT_draw_buffers)                            \
     OP(EXT_frag_depth)                              \
     OP(EXT_geometry_shader)                         \
+    OP(OES_geometry_shader)                         \
     OP(OES_shader_io_blocks)                        \
     OP(EXT_shader_io_blocks)                        \
     OP(EXT_gpu_shader5)                             \

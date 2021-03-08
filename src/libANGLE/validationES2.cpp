@@ -3625,7 +3625,8 @@ bool ValidateCreateShader(const Context *context, ShaderType type)
             break;
 
         case ShaderType::Geometry:
-            if (!context->getExtensions().geometryShader && context->getClientVersion() < ES_3_2)
+            if (!context->getExtensions().geometryShaderAny() &&
+                context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kInvalidShaderType);
                 return false;

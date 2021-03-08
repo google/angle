@@ -147,7 +147,8 @@ void TranslatorESSL::writeExtensionBehavior(ShCompileOptions compileOptions)
                     EmitMultiviewGLSL(*this, compileOptions, iter->first, iter->second, sink);
                 }
             }
-            else if (iter->first == TExtension::EXT_geometry_shader)
+            else if (iter->first == TExtension::EXT_geometry_shader ||
+                     iter->first == TExtension::OES_geometry_shader)
             {
                 sink << "#ifdef GL_EXT_geometry_shader\n"
                      << "#extension GL_EXT_geometry_shader : " << GetBehaviorString(iter->second)

@@ -586,6 +586,7 @@ enum class EntryPoint
     GLFramebufferTextureEXT,
     GLFramebufferTextureLayer,
     GLFramebufferTextureMultiviewOVR,
+    GLFramebufferTextureOES,
     GLFrontFace,
     GLFrustum,
     GLFrustumf,

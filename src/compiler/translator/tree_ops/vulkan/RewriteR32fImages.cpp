@@ -325,7 +325,7 @@ class RewriteR32fImagesTraverser : public TIntermTraverser
 
         TVariable *newVariable =
             new TVariable(oldVariable.uniqueId(), oldVariable.name(), oldVariable.symbolType(),
-                          oldVariable.extension(), newType);
+                          oldVariable.extensions(), newType);
 
         mImageMap[&oldVariable] = newVariable;
 

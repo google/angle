@@ -1189,7 +1189,7 @@ GROUP BEGIN ESSL310TCS {"shader_type": "TESS_CONTROL_EXT"}
 GROUP END ESSL310TCS
 
 GROUP BEGIN ESSL310GS {"shader_type": "GEOMETRY_EXT"}
-  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_geometry_shader", "essl_extension_becomes_core_in": "ESSL3_2_BUILTINS", "hasSideEffects": true}
+  DEFAULT METADATA {"essl_level": "ESSL3_1_BUILTINS", "op": "auto", "essl_extension": "EXT_geometry_shader, OES_geometry_shader", "essl_extension_becomes_core_in": "ESSL3_2_BUILTINS", "hasSideEffects": true}
     void EmitVertex();
     void EndPrimitive();
 GROUP END ESSL310GS

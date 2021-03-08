@@ -85,6 +85,10 @@ void InitExtensionBehavior(const ShBuiltInResources &resources, TExtensionBehavi
     {
         extBehavior[TExtension::EXT_geometry_shader] = EBhUndefined;
     }
+    if (resources.OES_geometry_shader)
+    {
+        extBehavior[TExtension::OES_geometry_shader] = EBhUndefined;
+    }
     if (resources.OES_shader_io_blocks)
     {
         extBehavior[TExtension::OES_shader_io_blocks] = EBhUndefined;

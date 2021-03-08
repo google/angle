@@ -1665,6 +1665,13 @@ bool ValidateRenderbufferStorageOES(const Context *context,
                                     GLsizei width,
                                     GLsizei height);
 
+// GL_OES_geometry_shader
+bool ValidateFramebufferTextureOES(const Context *context,
+                                   GLenum target,
+                                   GLenum attachment,
+                                   TextureID texturePacked,
+                                   GLint level);
+
 // GL_OES_get_program_binary
 bool ValidateGetProgramBinaryOES(const Context *context,
                                  ShaderProgramID programPacked,

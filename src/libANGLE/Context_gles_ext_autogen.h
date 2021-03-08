@@ -244,6 +244,7 @@
     /* GL_OES_depth32 */                                                                           \
     /* GL_OES_draw_buffers_indexed */                                                              \
     /* GL_OES_draw_elements_base_vertex */                                                         \
+    /* GL_OES_geometry_shader */                                                                   \
     /* GL_OES_get_program_binary */                                                                \
     /* GL_OES_mapbuffer */                                                                         \
     void *mapBuffer(BufferBinding targetPacked, GLenum access);                                    \

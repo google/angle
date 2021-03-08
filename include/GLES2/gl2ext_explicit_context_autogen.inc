@@ -215,6 +215,7 @@ typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTCONTEXTANGLEPR
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTURE3DOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);
 typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREMULTIVIEWOVRCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
+typedef void (GL_APIENTRYP PFNGLFRAMEBUFFERTEXTUREOESCONTEXTANGLEPROC)(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);
 typedef void (GL_APIENTRYP PFNGLGENFENCESNVCONTEXTANGLEPROC)(GLeglContext ctx, GLsizei n, GLuint *fences);
 typedef void (GL_APIENTRYP PFNGLGENPROGRAMPIPELINESEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLsizei n, GLuint *pipelines);
 typedef void (GL_APIENTRYP PFNGLGENQUERIESEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLsizei n, GLuint *ids);
@@ -658,6 +659,7 @@ GL_APICALL void GL_APIENTRY glFramebufferTexture2DMultisampleEXTContextANGLE(GLe
 GL_APICALL void GL_APIENTRY glFramebufferTexture3DOESContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset);
 GL_APICALL void GL_APIENTRY glFramebufferTextureEXTContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);
 GL_APICALL void GL_APIENTRY glFramebufferTextureMultiviewOVRContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level, GLint baseViewIndex, GLsizei numViews);
+GL_APICALL void GL_APIENTRY glFramebufferTextureOESContextANGLE(GLeglContext ctx, GLenum target, GLenum attachment, GLuint texture, GLint level);
 GL_APICALL void GL_APIENTRY glGenFencesNVContextANGLE(GLeglContext ctx, GLsizei n, GLuint *fences);
 GL_APICALL void GL_APIENTRY glGenProgramPipelinesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *pipelines);
 GL_APICALL void GL_APIENTRY glGenQueriesEXTContextANGLE(GLeglContext ctx, GLsizei n, GLuint *ids);

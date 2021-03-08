@@ -942,10 +942,11 @@ void RendererVk::ensureCapsInitialized() const
     if (mPhysicalDeviceFeatures.geometryShader && !mFeatures.basicGLLineRasterization.enabled)
     {
         // TODO: geometry shader support is incomplete.  http://anglebug.com/3571
-        mNativeExtensions.geometryShader =
-            mFeatures.supportsTransformFeedbackExtension.enabled &&
-            mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
-        mNativeCaps.maxFramebufferLayers = LimitToInt(limitsVk.maxFramebufferLayers);
+        bool geometryShader = mFeatures.supportsTransformFeedbackExtension.enabled &&
+                              mFeatures.exposeNonConformantExtensionsAndVersions.enabled;
+        mNativeExtensions.geometryShaderEXT = geometryShader;
+        mNativeExtensions.geometryShaderOES = geometryShader;
+        mNativeCaps.maxFramebufferLayers    = LimitToInt(limitsVk.maxFramebufferLayers);
 
         // If the provoking vertex feature is enabled, angle specifies to use
         // the "last" convention in order to match GL behavior. Otherwise, use

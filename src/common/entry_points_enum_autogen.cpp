@@ -1160,6 +1160,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glFramebufferTextureLayer";
         case EntryPoint::GLFramebufferTextureMultiviewOVR:
             return "glFramebufferTextureMultiviewOVR";
+        case EntryPoint::GLFramebufferTextureOES:
+            return "glFramebufferTextureOES";
         case EntryPoint::GLFrontFace:
             return "glFrontFace";
         case EntryPoint::GLFrustum:

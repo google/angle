@@ -569,7 +569,11 @@ struct Extensions
     bool textureRectangle = false;
 
     // GL_EXT_geometry_shader
-    bool geometryShader = false;
+    bool geometryShaderEXT = false;
+    // GL_OES_geometry_shader
+    bool geometryShaderOES = false;
+    // Any version of the geometry shader extension
+    bool geometryShaderAny() const { return (geometryShaderEXT || geometryShaderOES); }
 
     // GLES1 emulation: GLES1 extensions
     // GL_OES_point_size_array

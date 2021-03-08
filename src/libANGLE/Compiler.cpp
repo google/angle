@@ -223,7 +223,8 @@ Compiler::Compiler(rx::GLImplFactory *implFactory, const State &state, egl::Disp
     }
 
     // Geometry Shader constants
-    mResources.EXT_geometry_shader          = extensions.geometryShader;
+    mResources.EXT_geometry_shader          = extensions.geometryShaderEXT;
+    mResources.OES_geometry_shader          = extensions.geometryShaderOES;
     mResources.MaxGeometryUniformComponents = caps.maxShaderUniformComponents[ShaderType::Geometry];
     mResources.MaxGeometryUniformBlocks     = caps.maxShaderUniformBlocks[ShaderType::Geometry];
     mResources.MaxGeometryInputComponents   = caps.maxGeometryInputComponents;

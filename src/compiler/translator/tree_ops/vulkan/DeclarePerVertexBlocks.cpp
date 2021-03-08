@@ -150,7 +150,7 @@ class DeclarePerVertexBlocksTraverser : public TIntermTraverser
                                         fieldIndex);
 
         TVariable *newVariable = new TVariable(mSymbolTable, variable->name(), newType,
-                                               variable->symbolType(), variable->extension());
+                                               variable->symbolType(), variable->extensions());
 
         TIntermSymbol *newSymbol = new TIntermSymbol(newVariable);
         mVariableMap[variable]   = newSymbol;

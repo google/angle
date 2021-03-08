@@ -124,6 +124,7 @@ gles_extensions = [
     "GL_OES_draw_buffers_indexed",
     "GL_OES_draw_elements_base_vertex",
     "GL_OES_EGL_image",
+    "GL_OES_geometry_shader",
     "GL_OES_get_program_binary",
     "GL_OES_mapbuffer",
     "GL_OES_sample_shading",

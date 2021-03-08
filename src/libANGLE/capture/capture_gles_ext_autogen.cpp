@@ -9371,6 +9371,24 @@ CallCapture CaptureRenderbufferStorageOES(const State &glState,
     return CallCapture(angle::EntryPoint::GLRenderbufferStorageOES, std::move(paramBuffer));
 }
 
+CallCapture CaptureFramebufferTextureOES(const State &glState,
+                                         bool isCallValid,
+                                         GLenum target,
+                                         GLenum attachment,
+                                         TextureID texturePacked,
+                                         GLint level)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addEnumParam("target", GLenumGroup::FramebufferTarget, ParamType::TGLenum, target);
+    paramBuffer.addEnumParam("attachment", GLenumGroup::FramebufferAttachment, ParamType::TGLenum,
+                             attachment);
+    paramBuffer.addValueParam("texturePacked", ParamType::TTextureID, texturePacked);
+    paramBuffer.addValueParam("level", ParamType::TGLint, level);
+
+    return CallCapture(angle::EntryPoint::GLFramebufferTextureOES, std::move(paramBuffer));
+}
+
 CallCapture CaptureGetProgramBinaryOES(const State &glState,
                                        bool isCallValid,
                                        ShaderProgramID programPacked,
