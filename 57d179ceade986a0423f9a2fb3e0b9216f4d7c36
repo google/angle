@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4a995fb_35a7d810",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-08T15:55:58Z",
+      "side": 1,
+      "message": "This CL hides ETC1 from WebGL contexts when it\u0027s not natively supported.",
+      "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
