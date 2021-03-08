@@ -33,6 +33,24 @@
       "message": "Why only Vulkan? What makes it desirable for the gl backend to emulate ETC1 and the Vulkan backend not to?",
       "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd7676f0_0ab6b817",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3711,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-08T17:17:34Z",
+      "side": 1,
+      "message": "ETC1 extension string on desktop GL was disabled here: https://chromium-review.googlesource.com/c/angle/angle/+/2687466.\n\nOn Vulkan, it\u0027s used only for running restricted traces.",
+      "parentUuid": "c220b2b6_2f877821",
+      "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
