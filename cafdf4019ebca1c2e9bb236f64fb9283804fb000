@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7215def_a2686ba4",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-08T18:57:43Z",
+      "side": 1,
+      "message": "Ah, right. LGTM.",
+      "parentUuid": "7e2db227_86c3b5d1",
+      "range": {
+        "startLine": 730,
+        "startChar": 13,
+        "endLine": 730,
+        "endChar": 56
+      },
+      "revId": "cafdf4019ebca1c2e9bb236f64fb9283804fb000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "15e53f75_f8476e10",
