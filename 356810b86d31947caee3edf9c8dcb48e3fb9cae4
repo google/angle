@@ -16,6 +16,23 @@
       "message": "Cody, Please give this a try and see if you see the \"pre-rotation bug\" anymore.",
       "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecd6bea6_dcd7ff60",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T16:00:53Z",
+      "side": 1,
+      "message": "nit: A comment!",
+      "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
