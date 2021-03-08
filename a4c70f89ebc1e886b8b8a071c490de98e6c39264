@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eebb8fd2_0eda593b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-08T16:57:35Z",
+      "side": 1,
+      "message": "The same limitation exists for Apple\u0027s OpenGL ES but I\u0027m not sure where exactly in the GL renderer it should be enabled.",
+      "revId": "a4c70f89ebc1e886b8b8a071c490de98e6c39264",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
