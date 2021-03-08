@@ -1924,7 +1924,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                 // Changing the draw framebuffer binding sometimes requires resetting srgb blending.
                 if (mFunctions->standard == STANDARD_GL_DESKTOP)
                 {
-                    iter.setLaterBit(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB);
+                    iter.setLaterBit(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
                 }
 
                 // If the framebuffer is emulating RGB on top of RGBA, the color mask has to be
@@ -2033,7 +2033,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 setCoverageModulation(state.getCoverageModulation());
                 break;
-            case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
+            case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
                 setFramebufferSRGBEnabledForFramebuffer(
                     context, state.getFramebufferSRGB(),
                     GetImplAs<FramebufferGL>(state.getDrawFramebuffer()));
@@ -2108,7 +2108,7 @@ void StateManagerGL::setFramebufferSRGBEnabled(const gl::Context *context, bool 
         {
             mFunctions->disable(GL_FRAMEBUFFER_SRGB);
         }
-        mLocalDirtyBits.set(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB);
+        mLocalDirtyBits.set(gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE);
     }
 }
 

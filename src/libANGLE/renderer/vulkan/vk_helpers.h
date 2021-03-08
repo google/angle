@@ -1421,7 +1421,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                      LevelIndex baseMipLevelVk,
                                      uint32_t levelCount,
                                      uint32_t baseArrayLayer,
-                                     uint32_t layerCount) const;
+                                     uint32_t layerCount,
+                                     gl::SrgbWriteControlMode mode) const;
     angle::Result initLayerImageViewWithFormat(Context *context,
                                                gl::TextureType textureType,
                                                const Format &format,
@@ -2179,6 +2180,7 @@ class ImageViewHelper final : public Resource
                                              const ImageHelper &image,
                                              LevelIndex levelVk,
                                              uint32_t layer,
+                                             gl::SrgbWriteControlMode mode,
                                              const ImageView **imageViewOut);
 
     // Return unique Serial for an imageView.
@@ -2273,6 +2275,9 @@ class ImageViewHelper final : public Resource
     // Draw views
     ImageViewVector mLevelDrawImageViews;
     LayerLevelImageViewVector mLayerLevelDrawImageViews;
+
+    ImageViewVector mLevelDrawImageViewsLinear;
+    LayerLevelImageViewVector mLayerLevelDrawImageViewsLinear;
 
     // Storage views
     ImageViewVector mLevelStorageImageViews;
