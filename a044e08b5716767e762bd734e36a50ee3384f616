@@ -39,6 +39,30 @@
       },
       "revId": "a044e08b5716767e762bd734e36a50ee3384f616",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "955e3025_76dd736f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 639,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-08T16:52:01Z",
+      "side": 1,
+      "message": "if it aint a bitmap can it be used this way? -\n\n if (mState.getUsage() \u003e gl::BufferUsage::DynamicRead)\n {\n     ...\n }",
+      "parentUuid": "e1e6714d_cd4b755b",
+      "range": {
+        "startLine": 639,
+        "startChar": 85,
+        "endLine": 639,
+        "endChar": 96
+      },
+      "revId": "a044e08b5716767e762bd734e36a50ee3384f616",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
