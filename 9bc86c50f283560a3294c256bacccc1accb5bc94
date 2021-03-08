@@ -46,6 +46,30 @@
       },
       "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "336fd498_dd17857a",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T17:08:32Z",
+      "side": 0,
+      "message": "Ok, could we then move all these cases to before `default`, and then add `UNREACHABLE()` with a comment?",
+      "parentUuid": "b563801b_ca0d93fe",
+      "range": {
+        "startLine": 562,
+        "startChar": 0,
+        "endLine": 563,
+        "endChar": 68
+      },
+      "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
