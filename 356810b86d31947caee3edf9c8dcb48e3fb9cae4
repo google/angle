@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b6d959b_b32b4729",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-08T17:17:22Z",
+      "side": 1,
+      "message": "Nice find, Ian.  It clears up the Black Desert thing, also appears to fix GTA:SanAndreas.",
+      "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecd6bea6_dcd7ff60",
@@ -48,6 +65,24 @@
       "writtenOn": "2021-03-08T16:35:34Z",
       "side": 1,
       "message": "Will do!  Wanted broader testing before I finish this.",
+      "parentUuid": "ecd6bea6_dcd7ff60",
+      "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bee91569_0ea2a993",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-08T17:17:22Z",
+      "side": 1,
+      "message": "Definitely needs a TODO as well so we don\u0027t lose track of why this is here.",
       "parentUuid": "ecd6bea6_dcd7ff60",
       "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
