@@ -50,6 +50,24 @@
       "message": "I\u0027ll follow up with a regression test. Landing now.",
       "revId": "028d2bc02686ecf26df6c811fd77d07d990a0cb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a3bb0f5e_c534bcab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-08T23:47:23Z",
+      "side": 1,
+      "message": "\u003e Enabled the same limitation from the GL renderer.\n\u003e \n\u003e The validation check is included in PVRTC WebGL extension CTS. To catch this on CQ we need an iOS bot (GLES \u0026 Metal) and a macOS 11 / M1 bot (Metal-only).\n\nPlease partner with ynovikov@ on Slack, who is working on setting up iOS Simulator bots. However, I\u0027m not sure they emulate PVRTC textures sufficiently well.",
+      "parentUuid": "a445082b_9fc1384c",
+      "revId": "028d2bc02686ecf26df6c811fd77d07d990a0cb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
