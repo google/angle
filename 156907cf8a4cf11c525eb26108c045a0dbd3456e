@@ -16,6 +16,52 @@
       "message": "PTAL",
       "revId": "156907cf8a4cf11c525eb26108c045a0dbd3456e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c52a646_c4fdb9a6",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5428,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T17:16:27Z",
+      "side": 1,
+      "message": "Same nit",
+      "range": {
+        "startLine": 5428,
+        "startChar": 12,
+        "endLine": 5428,
+        "endChar": 23
+      },
+      "revId": "156907cf8a4cf11c525eb26108c045a0dbd3456e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1956b3f5_8bffe938",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5466,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T17:16:27Z",
+      "side": 1,
+      "message": "I think we have a helper for this.\n\nAlso, same request: add a basic drawQuad and EXPECT_PIXEL_COLOR_EQ call to make sure it all works fine too.",
+      "range": {
+        "startLine": 5452,
+        "startChar": 0,
+        "endLine": 5466,
+        "endChar": 25
+      },
+      "revId": "156907cf8a4cf11c525eb26108c045a0dbd3456e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

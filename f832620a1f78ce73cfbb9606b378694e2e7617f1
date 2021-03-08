@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb9cdf0d_fcd4d3b9",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T17:16:27Z",
+      "side": 0,
+      "message": "Or maybe add more cases like `|| (input \u0026\u0026 !output) || (!input \u0026\u0026 output)`? Basically to say that you are making the varyings active at the separable program\u0027s boundary. Like if there are two programs with VS-TCS-TES and GS-FS, then you only need to make TES output and GS input active.",
+      "range": {
+        "startLine": 856,
+        "startChar": 35,
+        "endLine": 856,
+        "endChar": 91
+      },
+      "revId": "f832620a1f78ce73cfbb9606b378694e2e7617f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
