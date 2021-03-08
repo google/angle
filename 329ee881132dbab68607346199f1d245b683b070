@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ab8a3e50_96d4d59a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-08T16:08:24Z",
+      "side": 1,
+      "message": "can you please indicate what has changed in the re-land?",
+      "revId": "329ee881132dbab68607346199f1d245b683b070",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a8d996f_aa844ba4",
         "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
         "patchSetId": 3
@@ -14,6 +31,24 @@
       "writtenOn": "2021-03-05T07:57:15Z",
       "side": 1,
       "message": "From BUILD.gn, it looks chromeos does not contain the \u0027libangle_gpu_info_util_vulkan_sources\u0027, so here just use macro for this, any advice for better solution is appreciated!",
+      "revId": "329ee881132dbab68607346199f1d245b683b070",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "284c4116_fb23a7bd",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-08T16:08:24Z",
+      "side": 1,
+      "message": "The ChromeOS check is fine. I\u0027m a bit concerned this will fail on the Skia roll because of the \"angle_has_build\" condition. It might make sense to define a new preprocessor variable \"ANGLE_HAS_VULKAN_SYSTEM_INFO\".",
+      "parentUuid": "2a8d996f_aa844ba4",
       "revId": "329ee881132dbab68607346199f1d245b683b070",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
