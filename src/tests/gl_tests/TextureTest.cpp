@@ -1118,6 +1118,9 @@ class Texture3DTestES2 : public TexCoordDrawTest
 
     void testSetUp() override
     {
+        // http://anglebug.com/5728
+        ANGLE_SKIP_TEST_IF(IsOzone());
+
         TexCoordDrawTest::testSetUp();
 
         glGenTextures(1, &mTexture3D);

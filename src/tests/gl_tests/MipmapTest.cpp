@@ -174,6 +174,9 @@ void main()
 
     void testSetUp() override
     {
+        // http://anglebug.com/5725
+        ANGLE_SKIP_TEST_IF(IsOzone());
+
         setUp2DProgram();
 
         setUpCubeProgram();

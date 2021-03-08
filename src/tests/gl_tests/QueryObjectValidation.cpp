@@ -141,17 +141,16 @@ TEST_P(QueryObjectTestES32, QueryObjectResultAfterEndPrimitivesGenerated)
 
 static const bool noErrorFlags[] = {true, false};
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(QueryObjectTest);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(QueryObjectTest,
                                  PrintToStringParamName,
                                  testing::ValuesIn(noErrorFlags),
                                  ANGLE_ALL_TEST_PLATFORMS_ES3);
 
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(QueryObjectTestES32);
 ANGLE_INSTANTIATE_TEST_COMBINE_1(QueryObjectTestES32,
                                  PrintToStringParamName,
                                  testing::ValuesIn(noErrorFlags),
                                  ANGLE_ALL_TEST_PLATFORMS_ES32);
-
-// This test suite is not instantiated on some OSes.
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(QueryObjectTestES32);
 
 }  // namespace angle
