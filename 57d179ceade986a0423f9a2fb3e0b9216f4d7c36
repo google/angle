@@ -87,6 +87,24 @@
       "parentUuid": "226a5861_5219f790",
       "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26b86dd7_8b75d1be",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3711,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-08T17:41:55Z",
+      "side": 1,
+      "message": "Rather than using some knowledge of the Vulkan spec in the Context class, its a cleaner mental model if the back-end could tell the front-end that some format support is transformed in some way. How about we set a flag in gl::TextureCaps indicating the format is non-identity? And set that in vk::FormatTable::initialize.\n\nThis way we wouldn\u0027t need to have any Vulkan-specific logic in this file.",
+      "parentUuid": "0077dd2d_fb0537d6",
+      "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
