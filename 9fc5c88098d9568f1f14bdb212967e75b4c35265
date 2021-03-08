@@ -111,6 +111,30 @@
       },
       "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4212a7f9_f9da97c2",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-08T17:27:26Z",
+      "side": 1,
+      "message": "This extension is used by a number of apps, and we need to it be exposed in performant/optimized/release builds used by partners, not just in debug/test/assert builds. I thought Tim\u0027s approach here was already agreed upon and we would override it to force explicit conformance for test runs.",
+      "parentUuid": "e4df88f1_513d15d5",
+      "range": {
+        "startLine": 48,
+        "startChar": 56,
+        "endLine": 48,
+        "endChar": 60
+      },
+      "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
