@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da07f527_90849f59",
+        "filename": "src/libANGLE/renderer/serial_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T16:26:12Z",
+      "side": 1,
+      "message": "You can avoid this by using `kZeroSerial` in the constructor of AtomicSerial.",
+      "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
