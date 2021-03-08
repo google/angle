@@ -16,6 +16,52 @@
       "message": "Hi Geoff \u0026 Shahbaz, PTAL. Thanks",
       "revId": "cafdf4019ebca1c2e9bb236f64fb9283804fb000",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66d00be1_39d01ff5",
+        "filename": "src/libANGLE/renderer/gl/formatutilsgl.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 730,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-08T18:16:54Z",
+      "side": 1,
+      "message": "We want this to be \"is exactly ES2\", GL_HALF_FLOAT becomes core in ES3 and we don\u0027t need to do this transformation.",
+      "range": {
+        "startLine": 730,
+        "startChar": 13,
+        "endLine": 730,
+        "endChar": 56
+      },
+      "revId": "cafdf4019ebca1c2e9bb236f64fb9283804fb000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15e53f75_f8476e10",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-08T18:16:54Z",
+      "side": 1,
+      "message": "nit: Can you call this ANGLE_GL_CLEAR_ERRORS?",
+      "range": {
+        "startLine": 101,
+        "startChar": 8,
+        "endLine": 101,
+        "endChar": 20
+      },
+      "revId": "cafdf4019ebca1c2e9bb236f64fb9283804fb000",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
