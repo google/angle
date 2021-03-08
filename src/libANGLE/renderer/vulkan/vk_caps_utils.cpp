@@ -453,6 +453,12 @@ void RendererVk::ensureCapsInitialized() const
         vk::GetTextureSRGBOverrideSupport(this, mNativeExtensions);
     mNativeExtensions.textureSRGBDecode = vk::GetTextureSRGBDecodeSupport(this);
 
+    // Doesn't yet support glBlitFramebuffer
+    // http://anglebug.com/5075
+    // Will be fully enabled in a follow up change when issues with glBlitFramebuffer have been
+    // resolved
+    mNativeExtensions.sRGBWriteControl = false;
+
     // Vulkan natively supports io interface block.
     mNativeExtensions.shaderIoBlocksOES = true;
     mNativeExtensions.shaderIoBlocksEXT = true;

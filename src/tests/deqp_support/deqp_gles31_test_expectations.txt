@@ -324,3 +324,9 @@
 // When ANGLE allows non-conformant features, imageAtomicExchange with r32f fails
 5503 VULKAN ANDROID : dEQP-GLES31.functional.image_load_store.*.atomic.exchange_r32f* = FAIL
 5503 SWIFTSHADER : dEQP-GLES31.functional.image_load_store.*.atomic.exchange_r32f* = SKIP
+
+// NVIDIA failures on older drivers
+5641 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgba8i_rgba8ui.texture3d_to_texture2d = SKIP
+5641 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.r32ui_r32ui.texture3d_to_texture3d = SKIP
+5641 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_24_bits.rgb8ui_rgb8i.cubemap_to_texture2d = SKIP
+5641 NVIDIA VULKAN : dEQP-GLES31.functional.copy_image.non_compressed.viewclass_32_bits.rgb10_a2ui_rgba8.cubemap_to_texture3d = SKIP
