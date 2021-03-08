@@ -63,6 +63,30 @@
       },
       "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5b1b77b_58eacb05",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-08T17:21:40Z",
+      "side": 1,
+      "message": "Apps like Fortnite, Special Forces Group 2, and PUBG require EXT_texture_buffer, so we either need this CL or the following CL enabled for official builds, not just debug builds:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2702838\n\nThis CL was created based on feedback that we should enable it all the time and let vendors/OEMs disable it for their conformance testing.\n\nI would prefer to use the CL that was abandoned, since it\u0027s targeted just to specific formats for that extension.",
+      "parentUuid": "981e1e43_aad6b724",
+      "range": {
+        "startLine": 48,
+        "startChar": 56,
+        "endLine": 48,
+        "endChar": 60
+      },
+      "revId": "9fc5c88098d9568f1f14bdb212967e75b4c35265",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
