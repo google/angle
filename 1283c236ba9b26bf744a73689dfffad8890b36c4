@@ -63,6 +63,24 @@
       "message": "It\u0027s pretty sad that this is clearly broken, and is just enabled where it works by chance.",
       "revId": "1283c236ba9b26bf744a73689dfffad8890b36c4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fdafe1e_ec5c3c04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-08T18:13:32Z",
+      "side": 1,
+      "message": "Likely some issue with lack of synchronization objects between worker contexts and the main context.",
+      "parentUuid": "ffdce035_6623fda6",
+      "revId": "1283c236ba9b26bf744a73689dfffad8890b36c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
