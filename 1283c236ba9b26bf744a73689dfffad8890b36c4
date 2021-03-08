@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffdce035_6623fda6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-08T15:02:37Z",
+      "side": 1,
+      "message": "It\u0027s pretty sad that this is clearly broken, and is just enabled where it works by chance.",
+      "revId": "1283c236ba9b26bf744a73689dfffad8890b36c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
