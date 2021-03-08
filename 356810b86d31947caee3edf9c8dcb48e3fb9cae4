@@ -86,6 +86,24 @@
       "parentUuid": "ecd6bea6_dcd7ff60",
       "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c5f24b4_847fcef9",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1254,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-08T20:44:03Z",
+      "side": 1,
+      "message": "Done.  PTAL at the comment, including the TODO.\n\nI tried to test this with a non-Qualcomm device.  I only have a Samsung S20+ with a special version of Android on it.  The affected games (Black Desert Mobile and GTA: San Andreas) are not available on the Play Store for that device with that version of Android.",
+      "parentUuid": "bee91569_0ea2a993",
+      "revId": "356810b86d31947caee3edf9c8dcb48e3fb9cae4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
