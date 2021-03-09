@@ -16,6 +16,29 @@
       "message": "I\u0027ve made some updates based on our meeting today, including making the default value \u0027false\u0027.   If this looks good, I\u0027ll work with Ian to update the AGI GN args to set the new value to \u0027true\u0027 once it lands.",
       "revId": "2766eb971eea90a1cbc5e6ec4e3e7d7cc0f78477",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82440081_b7c1af8a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-09T14:59:22Z",
+      "side": 1,
+      "message": "nit: ()",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 12
+      },
+      "revId": "2766eb971eea90a1cbc5e6ec4e3e7d7cc0f78477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
