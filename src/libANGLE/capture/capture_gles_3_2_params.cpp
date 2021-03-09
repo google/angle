@@ -242,7 +242,7 @@ void CaptureGetPointerv_params(const State &glState,
                                void **params,
                                ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    paramCapture->readBufferSizeBytes = sizeof(void *);
 }
 
 void CaptureGetSamplerParameterIiv_params(const State &glState,
