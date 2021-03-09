@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "97d094f939508ea18d5b2c8f45e01785",
+    "b8258f89dc44e6ec67eda213285595f7",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -35,6 +35,8 @@
     "0d569cbab0adf4df1027f671c65f7bff",
   "src/tests/restricted_traces/eight_ball_pool.tar.gz.sha1":
     "5826ab8ccdef774fbec4106ddef76720",
+  "src/tests/restricted_traces/extreme_car_driving_simulator.tar.gz.sha1":
+    "935f2d28778428e1c608d785f9a3664e",
   "src/tests/restricted_traces/fallout_shelter_online.tar.gz.sha1":
     "6f2784d375489b6d6f44092de1a859e0",
   "src/tests/restricted_traces/fate_grand_order.tar.gz.sha1":
@@ -88,13 +90,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "e1d1b013f60fc9349d0f9190e7efa5b2",
+    "89efa0342ac35c3c9e9e24638ea9c28f",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "8cda6f05df47a23e663ef1ce44f6ad3b",
+    "ea1ca2bdf1eb3e381e965562fe6903fe",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "7380c5d634735e54aebf3b7d968158b0",
+    "e73d4a44957e38f49dc217f2ad9de9a3",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "d6c08b0e6e023c3132ed34bb154f3ec1",
+    "22e3ffdc20fa3cb5728b24db7935fa3b",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
