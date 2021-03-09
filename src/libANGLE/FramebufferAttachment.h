@@ -117,6 +117,10 @@ class FramebufferAttachment final
     bool isMultiview() const;
     GLint getBaseViewIndex() const;
 
+    bool isRenderToTexture() const
+    {
+        return mRenderToTextureSamples != kDefaultRenderToTextureSamples;
+    }
     GLsizei getRenderToTextureSamples() const { return mRenderToTextureSamples; }
 
     // The size of the underlying resource the attachment points to. The 'depth' value will

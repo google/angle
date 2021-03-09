@@ -2117,13 +2117,18 @@ angle::Result TextureVk::getAttachmentRenderTarget(const gl::Context *context,
                             levelCount));
     }
 
+    const bool hasRenderToTextureEXT =
+        contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
+
     // If samples > 1 here, we have a singlesampled texture that's being multisampled rendered to.
     // In this case, create a multisampled image that is otherwise identical to the single sampled
     // image.  That multisampled image is used as color or depth/stencil attachment, while the
     // original image is used as the resolve attachment.
     const gl::RenderToTextureImageIndex renderToTextureIndex =
-        static_cast<gl::RenderToTextureImageIndex>(PackSampleCount(samples));
-    if (samples > 1 && !mMultisampledImages[renderToTextureIndex].valid())
+        hasRenderToTextureEXT
+            ? gl::RenderToTextureImageIndex::Default
+            : static_cast<gl::RenderToTextureImageIndex>(PackSampleCount(samples));
+    if (samples > 1 && !mMultisampledImages[renderToTextureIndex].valid() && !hasRenderToTextureEXT)
     {
         ASSERT(mState.getBaseLevelDesc().samples <= 1);
         vk::ImageHelper *multisampledImage = &mMultisampledImages[renderToTextureIndex];

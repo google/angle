@@ -1938,11 +1938,7 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
         // Add the resolve attachment, if any.
         if (depthStencilRenderTarget->hasResolveAttachment())
         {
-            const vk::Format &format = depthStencilRenderTarget->getImageFormat();
-            bool hasDepth            = format.intendedFormat().depthBits > 0;
-            bool hasStencil          = format.intendedFormat().stencilBits > 0;
-
-            mRenderPassDesc.packDepthStencilResolveAttachment(hasDepth, hasStencil);
+            mRenderPassDesc.packDepthStencilResolveAttachment();
         }
     }
 
@@ -1960,6 +1956,31 @@ void FramebufferVk::updateRenderPassDesc(ContextVk *contextVk)
     {
         mCurrentFramebufferDesc.updateFramebufferFetchMode(programUsesFramebufferFetch);
         mRenderPassDesc.setFramebufferFetchMode(programUsesFramebufferFetch);
+    }
+
+    if (contextVk->getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
+    {
+        // Update descriptions regarding multisampled-render-to-texture use.
+        bool isRenderToTexture = false;
+        for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+        {
+            const gl::FramebufferAttachment *color = mState.getColorAttachment(colorIndexGL);
+            ASSERT(color);
+
+            if (color->isRenderToTexture())
+            {
+                isRenderToTexture = true;
+                break;
+            }
+        }
+        const gl::FramebufferAttachment *depthStencil = mState.getDepthStencilAttachment();
+        if (depthStencil && depthStencil->isRenderToTexture())
+        {
+            isRenderToTexture = true;
+        }
+
+        mCurrentFramebufferDesc.updateRenderToTexture(isRenderToTexture);
+        mRenderPassDesc.updateRenderToTexture(isRenderToTexture);
     }
 
     mCurrentFramebufferDesc.updateUnresolveMask({});
@@ -2731,23 +2752,35 @@ gl::Rectangle FramebufferVk::getRotatedScissoredRenderArea(ContextVk *contextVk)
     return rotatedScissoredArea;
 }
 
-RenderTargetVk *FramebufferVk::getFirstRenderTarget() const
-{
-    for (auto *renderTarget : mRenderTargetCache.getColors())
-    {
-        if (renderTarget)
-        {
-            return renderTarget;
-        }
-    }
-
-    return getDepthStencilRenderTarget();
-}
-
 GLint FramebufferVk::getSamples() const
 {
-    RenderTargetVk *firstRT = getFirstRenderTarget();
-    return firstRT ? firstRT->getImageForRenderPass().getSamples() : 1;
+    const gl::FramebufferAttachment *lastAttachment = nullptr;
+
+    for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
+    {
+        const gl::FramebufferAttachment *color = mState.getColorAttachment(colorIndexGL);
+        ASSERT(color);
+
+        if (color->isRenderToTexture())
+        {
+            return color->getSamples();
+        }
+
+        lastAttachment = color;
+    }
+    const gl::FramebufferAttachment *depthStencil = mState.getDepthOrStencilAttachment();
+    if (depthStencil)
+    {
+        if (depthStencil->isRenderToTexture())
+        {
+            return depthStencil->getSamples();
+        }
+        lastAttachment = depthStencil;
+    }
+
+    // If none of the attachments are multisampled-render-to-texture, take the sample count from the
+    // last attachment (any would have worked, as they would all have the same sample count).
+    return std::max(lastAttachment ? lastAttachment->getSamples() : 1, 1);
 }
 
 angle::Result FramebufferVk::flushDeferredClears(ContextVk *contextVk)

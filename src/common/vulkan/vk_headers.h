@@ -16,6 +16,36 @@
 #    include <vulkan/vulkan.h>
 #endif
 
+// For the unreleased VK_EXT_multisampled_render_to_single_sampled
+#if !defined(VK_EXT_multisampled_render_to_single_sampled)
+#    define VK_EXT_multisampled_render_to_single_sampled 1
+#    define VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_SPEC_VERSION 1
+#    define VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_EXTENSION_NAME \
+        "VK_EXT_multisampled_render_to_single_sampled"
+
+#    define VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT \
+        ((VkStructureType)(1000376000))
+#    define VK_STRUCTURE_TYPE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_INFO_EXT \
+        ((VkStructureType)(1000376001))
+
+typedef struct VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT
+{
+    VkStructureType sType;
+    const void *pNext;
+    VkBool32 multisampledRenderToSingleSampled;
+} VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT;
+
+typedef struct VkMultisampledRenderToSingleSampledInfoEXT
+{
+    VkStructureType sType;
+    const void *pNext;
+    VkBool32 multisampledRenderToSingleSampledEnable;
+    VkSampleCountFlagBits rasterizationSamples;
+    VkResolveModeFlagBits depthResolveMode;
+    VkResolveModeFlagBits stencilResolveMode;
+} VkMultisampledRenderToSingleSampledInfoEXT;
+#endif /* VK_EXT_multisampled_render_to_single_sampled */
+
 #if !defined(ANGLE_SHARED_LIBVULKAN)
 
 namespace rx

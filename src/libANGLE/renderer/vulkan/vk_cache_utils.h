@@ -157,7 +157,7 @@ class alignas(4) RenderPassDesc final
     void packColorUnresolveAttachment(size_t colorIndexGL);
     void removeColorUnresolveAttachment(size_t colorIndexGL);
     // Indicate that a depth/stencil attachment should have a corresponding resolve attachment.
-    void packDepthStencilResolveAttachment(bool resolveDepth, bool resolveStencil);
+    void packDepthStencilResolveAttachment();
     // Indicate that a depth/stencil attachment should take its data from the resolve attachment
     // initially.
     void packDepthStencilUnresolveAttachment(bool unresolveDepth, bool unresolveStencil);
@@ -187,15 +187,7 @@ class alignas(4) RenderPassDesc final
     }
     bool hasDepthStencilResolveAttachment() const
     {
-        return (mAttachmentFormats.back() & (kResolveDepthFlag | kResolveStencilFlag)) != 0;
-    }
-    bool hasDepthResolveAttachment() const
-    {
-        return (mAttachmentFormats.back() & kResolveDepthFlag) != 0;
-    }
-    bool hasStencilResolveAttachment() const
-    {
-        return (mAttachmentFormats.back() & kResolveStencilFlag) != 0;
+        return (mAttachmentFormats.back() & kResolveDepthStencilFlag) != 0;
     }
     bool hasDepthStencilUnresolveAttachment() const
     {
@@ -227,6 +219,9 @@ class alignas(4) RenderPassDesc final
     void setFramebufferFetchMode(bool hasFramebufferFetch);
     bool getFramebufferFetchMode() const { return mHasFramebufferFetch; }
 
+    void updateRenderToTexture(bool isRenderToTexture);
+    bool isRenderToTexture() const { return (mAttachmentFormats.back() & kIsRenderToTexture) != 0; }
+
     angle::FormatID operator[](size_t index) const
     {
         ASSERT(index < gl::IMPLEMENTATION_MAX_DRAW_BUFFERS + 1);
@@ -248,17 +243,14 @@ class alignas(4) RenderPassDesc final
     // Whether each color attachment has a corresponding resolve attachment.  Color resolve
     // attachments can be used to optimize resolve through glBlitFramebuffer() as well as support
     // GL_EXT_multisampled_render_to_texture and GL_EXT_multisampled_render_to_texture2.
-    //
-    // Note that depth/stencil resolve attachments require VK_KHR_depth_stencil_resolve which is
-    // currently not well supported, so ANGLE always takes a fallback path for them.  When a resolve
-    // path is implemented for depth/stencil attachments, another bit must be made free
-    // (mAttachmentFormats is one element too large, so there are 8 bits there to take).
     gl::DrawBufferMask mColorResolveAttachmentMask;
 
     // Whether each color attachment with a corresponding resolve attachment should be initialized
     // with said resolve attachment in an initial subpass.  This is an optimization to avoid
     // loadOp=LOAD on the implicit multisampled image used with multisampled-render-to-texture
     // render targets.  This operation is referred to as "unresolve".
+    //
+    // Unused when VK_EXT_multisampled_render_to_single_sampled is available.
     gl::DrawBufferMask mColorUnresolveAttachmentMask;
 
     // Color attachment formats are stored with their GL attachment indices.  The depth/stencil
@@ -293,11 +285,11 @@ class alignas(4) RenderPassDesc final
     static constexpr uint8_t kDepthStencilFormatStorageMask = 0x7;
 
     // Flags stored in the upper 5 bits of mAttachmentFormats.back().
-    static constexpr uint8_t kResolveDepthFlag     = 0x80;
-    static constexpr uint8_t kResolveStencilFlag   = 0x40;
-    static constexpr uint8_t kUnresolveDepthFlag   = 0x20;
-    static constexpr uint8_t kUnresolveStencilFlag = 0x10;
-    static constexpr uint8_t kSrgbWriteControlFlag = 0x08;
+    static constexpr uint8_t kIsRenderToTexture       = 0x80;
+    static constexpr uint8_t kResolveDepthStencilFlag = 0x40;
+    static constexpr uint8_t kUnresolveDepthFlag      = 0x20;
+    static constexpr uint8_t kUnresolveStencilFlag    = 0x10;
+    static constexpr uint8_t kSrgbWriteControlFlag    = 0x08;
 };
 
 bool operator==(const RenderPassDesc &lhs, const RenderPassDesc &rhs);
@@ -1195,6 +1187,8 @@ class FramebufferDesc
     uint32_t getLayerCount() const { return mLayerCount; }
     void updateFramebufferFetchMode(bool hasFramebufferFetch);
 
+    void updateRenderToTexture(bool isRenderToTexture);
+
   private:
     void reset();
     void update(uint32_t index, ImageOrBufferViewSubresourceSerial serial);
@@ -1213,7 +1207,11 @@ class FramebufferDesc
     // If the render pass contains an initial subpass to unresolve a number of attachments, the
     // subpass description is derived from the following mask, specifying which attachments need
     // to be unresolved.  Includes both color and depth/stencil attachments.
-    FramebufferNonResolveAttachmentMask mUnresolveAttachmentMask;
+    uint16_t mUnresolveAttachmentMask : kMaxFramebufferNonResolveAttachments;
+
+    // Whether this is a multisampled-render-to-single-sampled framebuffer.  Only used when using
+    // VK_EXT_multisampled_render_to_single_sampled.  Only one bit is used and the rest is padding.
+    uint16_t mIsRenderToTexture : 16 - kMaxFramebufferNonResolveAttachments;
 
     FramebufferAttachmentArray<ImageOrBufferViewSubresourceSerial> mSerials;
 };

@@ -218,6 +218,13 @@ struct FeaturesVk : FeatureSetBase
                                            "extension with the independentResolveNone feature",
                                            &members, "http://anglebug.com/4836"};
 
+    // Whether the VkDevice supports the VK_EXT_multisampled_render_to_single_sampled extension.
+    // http://anglebug.com/4836
+    Feature supportsMultisampledRenderToSingleSampled = {
+        "supportsMultisampledRenderToSingleSampled", FeatureCategory::VulkanFeatures,
+        "VkDevice supports the VK_EXT_multisampled_render_to_single_sampled extension", &members,
+        "http://anglebug.com/4836"};
+
     // VK_PRESENT_MODE_FIFO_KHR causes random timeouts on Linux Intel. http://anglebug.com/3153
     Feature disableFifoPresentMode = {"disableFifoPresentMode", FeatureCategory::VulkanWorkarounds,
                                       "VK_PRESENT_MODE_FIFO_KHR causes random timeouts", &members,
