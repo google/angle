@@ -871,6 +871,11 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             if (!output->isBuiltIn())
             {
                 mInactiveVaryingMappedNames[ref.backShaderStage].push_back(output->mappedName);
+                if (output->isShaderIOBlock)
+                {
+                    mInactiveVaryingMappedNames[ref.backShaderStage].push_back(
+                        output->mappedStructOrBlockName);
+                }
             }
             continue;
         }
@@ -885,11 +890,21 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
             uniqueFullNames[ref.frontShaderStage].count(input->name) == 0)
         {
             mInactiveVaryingMappedNames[ref.frontShaderStage].push_back(input->mappedName);
+            if (input->isShaderIOBlock)
+            {
+                mInactiveVaryingMappedNames[ref.frontShaderStage].push_back(
+                    input->mappedStructOrBlockName);
+            }
         }
         if (output && !output->isBuiltIn() &&
             uniqueFullNames[ref.backShaderStage].count(output->name) == 0)
         {
             mInactiveVaryingMappedNames[ref.backShaderStage].push_back(output->mappedName);
+            if (output->isShaderIOBlock)
+            {
+                mInactiveVaryingMappedNames[ref.backShaderStage].push_back(
+                    output->mappedStructOrBlockName);
+            }
         }
     }
 

@@ -5205,6 +5205,82 @@ TEST_P(GLSLTest_ES3, VaryingStructNotStaticallyUsedInFragmentShader)
     ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
+// Test that a shader IO block varying that's not declared in the fragment shader links
+// successfully.
+TEST_P(GLSLTest_ES31, VaryingIOBlockNotDeclaredInFragmentShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        in vec4 inputAttribute;
+        out Block_inout { vec4 value; } user_out;
+
+        void main()
+        {
+            gl_Position    = inputAttribute;
+            user_out.value = vec4(4.0, 5.0, 6.0, 7.0);
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        layout(location = 0) out mediump vec4 color;
+        void main()
+        {
+            color = vec4(1, 0, 0, 1);
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test that a shader IO block varying that's not declared in the vertex shader links
+// successfully.
+TEST_P(GLSLTest_ES31, VaryingIOBlockNotDeclaredInVertexShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        in vec4 inputAttribute;
+
+        void main()
+        {
+            gl_Position = inputAttribute;
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        in Block_inout { vec4 value; } user_in;
+        layout(location = 0) out mediump vec4 color;
+
+        void main()
+        {
+            color = vec4(1, 0, 0, 1);
+        })";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    drawQuad(program.get(), "inputAttribute", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 // Test that a varying struct that's not declared in the fragment shader links successfully.
 // GLSL ES 3.00.6 section 4.3.10.
 TEST_P(GLSLTest_ES3, VaryingStructNotDeclaredInFragmentShader)
