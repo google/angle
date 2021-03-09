@@ -35,11 +35,10 @@ uint32_t GetDeviceVendorIdFromName(id<MTLDevice> metalDevice)
         uint32_t vendorId;
     };
 
-    constexpr Vendor kVendors[] = {{@"AMD", angle::kVendorID_AMD},
-                                   {@"Radeon", angle::kVendorID_AMD},
-                                   {@"Intel", angle::kVendorID_Intel},
-                                   {@"Geforce", angle::kVendorID_NVIDIA},
-                                   {@"Quadro", angle::kVendorID_NVIDIA}};
+    constexpr Vendor kVendors[] = {
+        {@"AMD", angle::kVendorID_AMD},        {@"Apple", angle::kVendorID_Apple},
+        {@"Radeon", angle::kVendorID_AMD},     {@"Intel", angle::kVendorID_Intel},
+        {@"Geforce", angle::kVendorID_NVIDIA}, {@"Quadro", angle::kVendorID_NVIDIA}};
     ANGLE_MTL_OBJC_SCOPE
     {
         if (metalDevice)

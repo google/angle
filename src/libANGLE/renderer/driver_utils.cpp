@@ -154,6 +154,8 @@ const char *GetVendorString(uint32_t vendorId)
             return "AMD";
         case VENDOR_ID_ARM:
             return "ARM";
+        case VENDOR_ID_APPLE:
+            return "Apple";
         case VENDOR_ID_BROADCOM:
             return "Broadcom";
         case VENDOR_ID_GOOGLE:

@@ -19,6 +19,7 @@ enum VendorID : uint32_t
 {
     VENDOR_ID_UNKNOWN = 0x0,
     VENDOR_ID_AMD     = 0x1002,
+    VENDOR_ID_APPLE   = 0x106B,
     VENDOR_ID_ARM     = 0x13B5,
     // Broadcom devices won't use PCI, but this is their Vulkan vendor id.
     VENDOR_ID_BROADCOM = 0x14E4,
@@ -46,6 +47,11 @@ enum AndroidDeviceID : uint32_t
 inline bool IsAMD(uint32_t vendorId)
 {
     return vendorId == VENDOR_ID_AMD;
+}
+
+inline bool IsApple(uint32_t vendorId)
+{
+    return vendorId == VENDOR_ID_APPLE;
 }
 
 inline bool IsARM(uint32_t vendorId)
