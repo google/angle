@@ -125,6 +125,30 @@
       },
       "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81cc4a28_95989804",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2721,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-09T17:03:13Z",
+      "side": 1,
+      "message": "This is an unsafe upcast. vk::Context is not necessarily a ContextVk.",
+      "parentUuid": "bfc0d12b_b20c5b02",
+      "range": {
+        "startLine": 2721,
+        "startChar": 8,
+        "endLine": 2721,
+        "endChar": 94
+      },
+      "revId": "872f1269803c819262c013f43ab11f35a5fca58e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

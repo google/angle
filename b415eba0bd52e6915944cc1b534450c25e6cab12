@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6243177_94ad3dc9",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 393,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-09T17:03:13Z",
+      "side": 1,
+      "message": "please try to avoid checking this anywhere. I\u0027m trying to make it totally abstracted and don\u0027t want to add more dependencies.",
+      "range": {
+        "startLine": 393,
+        "startChar": 41,
+        "endLine": 393,
+        "endChar": 58
+      },
+      "revId": "b415eba0bd52e6915944cc1b534450c25e6cab12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
