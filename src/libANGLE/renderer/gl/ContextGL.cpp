@@ -115,12 +115,23 @@ BufferImpl *ContextGL::createBuffer(const gl::BufferState &state)
 
 VertexArrayImpl *ContextGL::createVertexArray(const gl::VertexArrayState &data)
 {
-    const FunctionsGL *functions = getFunctions();
+    const angle::FeaturesGL &features = getFeaturesGL();
 
-    GLuint vao = 0;
-    functions->genVertexArrays(1, &vao);
+    if (features.syncVertexArraysToDefault.enabled)
+    {
+        StateManagerGL *stateManager = getStateManager();
 
-    return new VertexArrayGL(data, vao);
+        return new VertexArrayGL(data, stateManager->getDefaultVAO(),
+                                 stateManager->getDefaultVAOState());
+    }
+    else
+    {
+        const FunctionsGL *functions = getFunctions();
+
+        GLuint vao = 0;
+        functions->genVertexArrays(1, &vao);
+        return new VertexArrayGL(data, vao);
+    }
 }
 
 QueryImpl *ContextGL::createQuery(gl::QueryType type)

@@ -263,6 +263,11 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("force_buffer_gpu_storage_mtl");
     }
 
+    if (params.emulatedVAOs == EGL_TRUE)
+    {
+        enabledFeatureOverrides.push_back("sync_vertex_arrays_to_default");
+    }
+
     const bool hasFeatureControlANGLE =
         strstr(extensionString, "EGL_ANGLE_feature_control") != nullptr;
 

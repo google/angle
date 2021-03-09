@@ -268,6 +268,11 @@ std::ostream &operator<<(std::ostream &stream, const PlatformParameters &pp)
         stream << "_NoVulkanViewportFlip";
     }
 
+    if (pp.eglParameters.emulatedVAOs == EGL_TRUE)
+    {
+        stream << "_EmulatedVAOs";
+    }
+
     return stream;
 }
 

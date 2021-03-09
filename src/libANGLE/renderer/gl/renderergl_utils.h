@@ -113,6 +113,8 @@ void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::Featur
 
 namespace nativegl
 {
+bool SupportsVertexArrayObjects(const FunctionsGL *functions);
+bool CanUseDefaultVertexArrayObject(const FunctionsGL *functions);
 bool SupportsCompute(const FunctionsGL *functions);
 bool SupportsFenceSync(const FunctionsGL *functions);
 bool SupportsOcclusionQueries(const FunctionsGL *functions);

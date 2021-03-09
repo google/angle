@@ -64,7 +64,7 @@ struct EGLPlatformParameters
                         shaderStencilOutputFeature, genMultipleMipsPerPassFeature, platformMethods,
                         robustness, emulatedPrerotation, asyncCommandQueueFeatureVulkan,
                         hasExplicitMemBarrierFeatureMtl, hasCheapRenderPassFeatureMtl,
-                        forceBufferGPUStorageFeatureMtl, supportsVulkanViewportFlip);
+                        forceBufferGPUStorageFeatureMtl, supportsVulkanViewportFlip, emulatedVAOs);
     }
 
     EGLint renderer                               = EGL_PLATFORM_ANGLE_TYPE_DEFAULT_ANGLE;
@@ -86,6 +86,7 @@ struct EGLPlatformParameters
     EGLint hasCheapRenderPassFeatureMtl           = EGL_DONT_CARE;
     EGLint forceBufferGPUStorageFeatureMtl        = EGL_DONT_CARE;
     EGLint supportsVulkanViewportFlip             = EGL_DONT_CARE;
+    EGLint emulatedVAOs                           = EGL_DONT_CARE;
     angle::PlatformMethods *platformMethods       = nullptr;
 };
 

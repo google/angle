@@ -1309,6 +1309,13 @@ void GenerateCaps(const FunctionsGL *functions,
         LimitVersion(maxSupportedESVersion, gl::Version(3, 1));
     }
 
+    if (!nativegl::SupportsVertexArrayObjects(functions) ||
+        features.syncVertexArraysToDefault.enabled)
+    {
+        // ES 3.1 vertex bindings are not emulated on the default vertex array
+        LimitVersion(maxSupportedESVersion, gl::Version(3, 0));
+    }
+
     // Extension support
     extensions->setTextureExtensionSupport(*textureCapsMap);
     extensions->textureCompressionASTCHDRKHR =
@@ -2080,6 +2087,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // now.
     ANGLE_FEATURE_CONDITION(features, shiftInstancedArrayDataWithExtraOffset,
                             IsApple() && IsIntel(vendor) && !IsHaswell(device));
+    ANGLE_FEATURE_CONDITION(features, syncVertexArraysToDefault,
+                            !nativegl::SupportsVertexArrayObjects(functions));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)
@@ -2112,6 +2121,20 @@ void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::Featur
 
 namespace nativegl
 {
+
+bool SupportsVertexArrayObjects(const FunctionsGL *functions)
+{
+    return functions->isAtLeastGLES(gl::Version(3, 0)) ||
+           functions->hasGLESExtension("GL_OES_vertex_array_object") ||
+           functions->isAtLeastGL(gl::Version(3, 0)) ||
+           functions->hasGLExtension("GL_ARB_vertex_array_object");
+}
+
+bool CanUseDefaultVertexArrayObject(const FunctionsGL *functions)
+{
+    return (functions->profile & GL_CONTEXT_CORE_PROFILE_BIT) == 0;
+}
+
 bool SupportsCompute(const FunctionsGL *functions)
 {
     // OpenGL 4.2 is required for GL_ARB_compute_shader, some platform drivers have the extension,

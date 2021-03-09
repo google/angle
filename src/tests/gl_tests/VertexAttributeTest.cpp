@@ -3631,6 +3631,15 @@ void main()
     }
 }
 
+// VAO emulation fails on Mac but is not used on Mac in the wild. http://anglebug.com/5577
+#if !defined(__APPLE__)
+#    define EMULATED_VAO_CONFIGS                                          \
+        WithEmulatedVAOs(ES2_OPENGL()), WithEmulatedVAOs(ES2_OPENGLES()), \
+            WithEmulatedVAOs(ES3_OPENGL()), WithEmulatedVAOs(ES3_OPENGLES()),
+#else
+#    define EMULATED_VAO_CONFIGS
+#endif
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 // D3D11 Feature Level 9_3 uses different D3D formats for vertex attribs compared to Feature Levels
@@ -3642,7 +3651,8 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
                                              /* cheapRenderPass */ true),
     WithMetalMemoryBarrierAndCheapRenderPass(ES3_METAL(),
                                              /* hasBarrier */ false,
-                                             /* cheapRenderPass */ false));
+                                             /* cheapRenderPass */ false),
+    EMULATED_VAO_CONFIGS);
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
     VertexAttributeOORTest,

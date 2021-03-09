@@ -529,6 +529,12 @@ struct FeaturesGL : FeatureSetBase
         "shift_instanced_array_data_with_offset", FeatureCategory::OpenGLWorkarounds,
         "glDrawArraysInstanced is buggy on certain new Mac Intel GPUs", &members,
         "http://crbug.com/1144207"};
+
+    // ANGLE needs to support devices that have no native VAOs. Sync everything to the default VAO.
+    Feature syncVertexArraysToDefault = {
+        "sync_vertex_arrays_to_default", FeatureCategory::OpenGLWorkarounds,
+        "Only use the default VAO because of missing support or driver bugs", &members,
+        "http://anglebug.com/5577"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;
