@@ -158,7 +158,7 @@ class BufferVk : public BufferImpl
                                size_t offset);
     angle::Result acquireAndUpdate(ContextVk *contextVk,
                                    const uint8_t *data,
-                                   size_t size,
+                                   size_t updateSize,
                                    size_t offset);
     angle::Result setDataWithMemoryType(const gl::Context *context,
                                         gl::BufferBinding target,

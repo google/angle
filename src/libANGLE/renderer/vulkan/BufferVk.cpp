@@ -679,24 +679,25 @@ angle::Result BufferVk::stagedUpdate(ContextVk *contextVk,
 
 angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
                                          const uint8_t *data,
-                                         size_t size,
+                                         size_t updateSize,
                                          size_t offset)
 {
     // Here we acquire a new BufferHelper and directUpdate() the new buffer.
     // If the subData size was less than the buffer's size we additionally enqueue
     // a GPU copy of the remaining regions from the old mBuffer to the new one.
     vk::BufferHelper *src          = mBuffer;
-    size_t offsetAfterSubdata      = (offset + size);
+    size_t bufferSize              = static_cast<size_t>(mState.getSize());
+    size_t offsetAfterSubdata      = (offset + updateSize);
     bool updateRegionBeforeSubData = (offset > 0);
-    bool updateRegionAfterSubData  = (offsetAfterSubdata < static_cast<size_t>(mState.getSize()));
+    bool updateRegionAfterSubData  = (offsetAfterSubdata < bufferSize);
 
     if (updateRegionBeforeSubData || updateRegionAfterSubData)
     {
         src->retain(&contextVk->getResourceUseList());
     }
 
-    ANGLE_TRY(acquireBufferHelper(contextVk, size, &mBuffer));
-    ANGLE_TRY(directUpdate(contextVk, data, size, offset));
+    ANGLE_TRY(acquireBufferHelper(contextVk, bufferSize, &mBuffer));
+    ANGLE_TRY(directUpdate(contextVk, data, updateSize, offset));
 
     constexpr int kMaxCopyRegions = 2;
     angle::FixedVector<VkBufferCopy, kMaxCopyRegions> copyRegions;
@@ -707,8 +708,8 @@ angle::Result BufferVk::acquireAndUpdate(ContextVk *contextVk,
     }
     if (updateRegionAfterSubData)
     {
-        copyRegions.push_back({offsetAfterSubdata, offsetAfterSubdata,
-                               (static_cast<size_t>(mState.getSize()) - offsetAfterSubdata)});
+        copyRegions.push_back(
+            {offsetAfterSubdata, offsetAfterSubdata, (bufferSize - offsetAfterSubdata)});
     }
 
     if (!copyRegions.empty())
