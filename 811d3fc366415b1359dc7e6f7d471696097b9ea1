@@ -33,6 +33,24 @@
       "message": "IIRC no dEQP test could be enabled because of other bugs, right?",
       "revId": "811d3fc366415b1359dc7e6f7d471696097b9ea1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cfe1d0a_50635f60",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-09T20:15:54Z",
+      "side": 1,
+      "message": "correct, the full chain needs to land to unblock deqp tests",
+      "parentUuid": "583f72b6_ee7c0b5b",
+      "revId": "811d3fc366415b1359dc7e6f7d471696097b9ea1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
