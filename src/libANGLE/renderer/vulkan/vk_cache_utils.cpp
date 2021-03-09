@@ -955,9 +955,10 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
 
         VkAttachmentReference colorRef;
         colorRef.attachment = attachmentCount.get();
-        colorRef.layout     = needInputAttachments ? VK_IMAGE_LAYOUT_GENERAL
-                                               : VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-
+        colorRef.layout     = needInputAttachments
+                              ? VK_IMAGE_LAYOUT_GENERAL
+                              : ConvertImageLayoutToVkImageLayout(
+                                    static_cast<ImageLayout>(ops[attachmentCount].initialLayout));
         colorAttachmentRefs.push_back(colorRef);
 
         UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], format, desc.samples(),
