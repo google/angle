@@ -33,6 +33,29 @@
       "message": "LGTM, assuming CQ is happy too.",
       "revId": "5c7c735ef707b6a7486f2ec6ab287e13f022e194",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5378c964_6db3c04c",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-09T20:00:30Z",
+      "side": 1,
+      "message": "input-\u003eactive || !output\n\nSame with the other case. If there\u0027s output, and !input-\u003eactive, you don\u0027t want to consider it active.",
+      "range": {
+        "startLine": 859,
+        "startChar": 46,
+        "endLine": 859,
+        "endChar": 53
+      },
+      "revId": "5c7c735ef707b6a7486f2ec6ab287e13f022e194",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
