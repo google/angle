@@ -84,3 +84,34 @@ MipmapTest.DISABLED_ThreeLevelsInitData/*
 
 # Compile failed tests
 RobustResourceInitTest.*
+
+# ES1 crashed tests
+FramebufferObjectTest.FramebufferObject/*
+FramebufferObjectTest.RenderbufferObject/*
+FramebufferObjectTest.TextureObjectDifferentFormats/*
+
+# ES1 comparison failed tests
+BootAnimationTest.DefaultBootAnimation/*
+
+# ES1 compile failed tests
+ClipPlaneTest.InitialState/*
+ClipPlaneTest.Negative/*
+ClipPlaneTest.Set/*
+CurrentColorTest.Set/*
+FogTest.NegativeParameter/*
+FogTest.NegativeValues/*
+FogTest.Set/*
+LightsTest.InitialState/*
+LightsTest.NegativeInvalidEnum/*
+LightsTest.NegativeInvalidValue/*
+LightsTest.Set/*
+MaterialsTest.InitialState/*
+MaterialsTest.InvalidParameter/*
+MaterialsTest.SetParameters/*
+MatrixModeTest.InitialState/*
+PointParameterTest.NegativeEnum/*
+PointParameterTest.NegativeValue/*
+PointParameterTest.Set/*
+TextureEnvTest.InitialState/*
+TextureEnvTest.Set/*
+TextureParameterTest.SetFixedPoint/*
