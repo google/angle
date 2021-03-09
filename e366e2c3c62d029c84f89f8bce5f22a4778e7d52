@@ -22,6 +22,30 @@
       },
       "revId": "e366e2c3c62d029c84f89f8bce5f22a4778e7d52",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3667315c_0876eb1f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-09T19:39:42Z",
+      "side": 1,
+      "message": "\u003e It is meant to provide a replacement of the whole buffer\n\nWhich is true until this change lands:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2738650/6/src/libANGLE/renderer/vulkan/BufferVk.cpp#372\n\nThe policy here is making the DynamicBuffer behave just as it did in the past, so there\u0027s no functional change for mBufferPool. If the name alone is the concern, I\u0027d be happy to rename it provided there\u0027s a good suggestion. The idea is that with frequent small allocations you end up with only a few large buffers that you have suballocated many times from (which is true for default uniforms, driver uniforms, default attributes etc). Agreed that it doesn\u0027t 100% fit the usage in BufferVk.",
+      "parentUuid": "686486fa_716ac8df",
+      "range": {
+        "startLine": 343,
+        "startChar": 34,
+        "endLine": 343,
+        "endChar": 83
+      },
+      "revId": "e366e2c3c62d029c84f89f8bce5f22a4778e7d52",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
