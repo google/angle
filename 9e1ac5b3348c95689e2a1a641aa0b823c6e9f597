@@ -16,6 +16,52 @@
       "message": "See b/180419767 for a screenshot of how our replays are rendering cube maps.  I dug in on RenderDoc and could see all the cube faces were the same.\n\nThere are more complicated ways we could solve this, but just indexing into more levels for cubes works and is quite simple.",
       "revId": "9e1ac5b3348c95689e2a1a641aa0b823c6e9f597",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36e19420_fc4a706c",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3576,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-09T19:25:02Z",
+      "side": 1,
+      "message": "nit: GetAdjustedTextureCacheLevel\n\n\"Actual\" is a fairly overloaded term, so I prefer to avoid it if possible.   Also, the texture level value isn\u0027t cached, it\u0027s texture cache we\u0027re trying to index into via the adjusted level value.   Up to you though.",
+      "range": {
+        "startLine": 3576,
+        "startChar": 6,
+        "endLine": 3576,
+        "endChar": 33
+      },
+      "revId": "9e1ac5b3348c95689e2a1a641aa0b823c6e9f597",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "837fc3d5_1b1d8e4f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3578,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-09T19:25:02Z",
+      "side": 1,
+      "message": "nit: adjustedLevel\n\nSimilar to above, this value isn\u0027t cached, but is being adjusted to allow us to retrieve the correct value from the cache.",
+      "range": {
+        "startLine": 3578,
+        "startChar": 10,
+        "endLine": 3578,
+        "endChar": 21
+      },
+      "revId": "9e1ac5b3348c95689e2a1a641aa0b823c6e9f597",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
