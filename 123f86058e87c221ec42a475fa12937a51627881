@@ -34,6 +34,24 @@
       "parentUuid": "1a3e1535_65d81252",
       "revId": "123f86058e87c221ec42a475fa12937a51627881",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "deecb166_f52c649b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-09T19:50:41Z",
+      "side": 1,
+      "message": "I did suggest this previously, didn\u0027t I? ;) And don\u0027t worry, there\u0027s plenty of bits left in that structure to go around. Example: https://chromium-review.googlesource.com/c/angle/angle/+/2743666/4/src/libANGLE/renderer/vulkan/vk_cache_utils.h#1202",
+      "parentUuid": "6eab0a03_32a154ae",
+      "revId": "123f86058e87c221ec42a475fa12937a51627881",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
