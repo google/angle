@@ -22,6 +22,30 @@
       },
       "revId": "f832620a1f78ce73cfbb9606b378694e2e7617f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17752eeb_19e8885a",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 856,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-09T00:40:14Z",
+      "side": 0,
+      "message": "Yeah, I think this needs to be restricted to follow the spec more closely:\n\n\u003e With separable program objects, interfaces between shader stages may involve\n\u003e the outputs from one program object and the inputs from a second program object.\n\u003e For such interfaces, it is not possible to detect mismatches at link time, because the programs are linked separately.\n\nThe key is the \"program object\" part, which could include several stages, and we need to treat just the boundaries between the separable programs as special.",
+      "parentUuid": "bb9cdf0d_fcd4d3b9",
+      "range": {
+        "startLine": 856,
+        "startChar": 35,
+        "endLine": 856,
+        "endChar": 91
+      },
+      "revId": "f832620a1f78ce73cfbb9606b378694e2e7617f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
