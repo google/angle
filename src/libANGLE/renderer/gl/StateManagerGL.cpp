@@ -135,8 +135,6 @@ StateManagerGL::StateManagerGL(const FunctionsGL *functions,
       mClearStencil(0),
       mFramebufferSRGBAvailable(extensions.sRGBWriteControl),
       mFramebufferSRGBEnabled(false),
-      mHasSeparateFramebufferBindings(mFunctions->isAtLeastGL(gl::Version(3, 0)) ||
-                                      mFunctions->isAtLeastGLES(gl::Version(3, 0))),
       mDitherEnabled(true),
       mTextureCubemapSeamlessEnabled(false),
       mMultisamplingEnabled(true),
@@ -288,25 +286,13 @@ void StateManagerGL::deleteFramebuffer(GLuint fbo)
 {
     if (fbo != 0)
     {
-        if (mHasSeparateFramebufferBindings)
+        for (size_t binding = 0; binding < mFramebuffers.size(); ++binding)
         {
-            for (size_t binding = 0; binding < mFramebuffers.size(); ++binding)
+            if (mFramebuffers[binding] == fbo)
             {
-                if (mFramebuffers[binding] == fbo)
-                {
-                    GLenum enumValue = angle::FramebufferBindingToEnum(
-                        static_cast<angle::FramebufferBinding>(binding));
-                    bindFramebuffer(enumValue, 0);
-                }
-            }
-        }
-        else
-        {
-            ASSERT(mFramebuffers[angle::FramebufferBindingRead] ==
-                   mFramebuffers[angle::FramebufferBindingDraw]);
-            if (mFramebuffers[angle::FramebufferBindingRead] == fbo)
-            {
-                bindFramebuffer(GL_FRAMEBUFFER, 0);
+                GLenum enumValue = angle::FramebufferBindingToEnum(
+                    static_cast<angle::FramebufferBinding>(binding));
+                bindFramebuffer(enumValue, 0);
             }
         }
         mFunctions->deleteFramebuffers(1, &fbo);
@@ -622,7 +608,6 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             break;
 
         case GL_READ_FRAMEBUFFER:
-            ASSERT(mHasSeparateFramebufferBindings);
             if (mFramebuffers[angle::FramebufferBindingRead] != framebuffer)
             {
                 mFramebuffers[angle::FramebufferBindingRead] = framebuffer;
@@ -633,7 +618,6 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
             break;
 
         case GL_DRAW_FRAMEBUFFER:
-            ASSERT(mHasSeparateFramebufferBindings);
             if (mFramebuffers[angle::FramebufferBindingDraw] != framebuffer)
             {
                 mFramebuffers[angle::FramebufferBindingDraw] = framebuffer;
@@ -1917,9 +1901,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                     continue;
 
                 FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
-                bindFramebuffer(
-                    mHasSeparateFramebufferBindings ? GL_READ_FRAMEBUFFER : GL_FRAMEBUFFER,
-                    framebufferGL->getFramebufferID());
+                bindFramebuffer(GL_READ_FRAMEBUFFER, framebufferGL->getFramebufferID());
                 break;
             }
             case gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING:
@@ -1931,9 +1913,7 @@ angle::Result StateManagerGL::syncState(const gl::Context *context,
                     continue;
 
                 FramebufferGL *framebufferGL = GetImplAs<FramebufferGL>(framebuffer);
-                bindFramebuffer(
-                    mHasSeparateFramebufferBindings ? GL_DRAW_FRAMEBUFFER : GL_FRAMEBUFFER,
-                    framebufferGL->getFramebufferID());
+                bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebufferGL->getFramebufferID());
 
                 const gl::Program *program = state.getProgram();
                 if (program)

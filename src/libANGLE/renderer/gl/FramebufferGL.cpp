@@ -650,9 +650,7 @@ angle::Result FramebufferGL::readPixels(const gl::Context *context,
                     GL_INVALID_OPERATION);
     }
 
-    GLenum framebufferTarget =
-        stateManager->getHasSeparateFramebufferBindings() ? GL_READ_FRAMEBUFFER : GL_FRAMEBUFFER;
-    stateManager->bindFramebuffer(framebufferTarget, mFramebufferID);
+    stateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, mFramebufferID);
 
     bool useOverlappingRowsWorkaround = features.packOverlappingRowsSeparatelyPackBuffer.enabled &&
                                         packBuffer && packState.rowLength != 0 &&

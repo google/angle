@@ -797,9 +797,7 @@ angle::Result TextureGL::copySubImage(const gl::Context *context,
                              destOffset.y + clippedArea.y - sourceArea.y, destOffset.z);
 
     stateManager->bindTexture(getType(), mTextureID);
-    GLenum framebufferTarget =
-        stateManager->getHasSeparateFramebufferBindings() ? GL_READ_FRAMEBUFFER : GL_FRAMEBUFFER;
-    stateManager->bindFramebuffer(framebufferTarget, sourceFramebufferGL->getFramebufferID());
+    stateManager->bindFramebuffer(GL_READ_FRAMEBUFFER, sourceFramebufferGL->getFramebufferID());
 
     const LevelInfoGL &levelInfo = getLevelInfo(target, level);
     if (levelInfo.lumaWorkaround.enabled)
