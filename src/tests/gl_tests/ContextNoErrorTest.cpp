@@ -117,6 +117,27 @@ TEST_P(ContextNoErrorTest, NoError)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test glDetachShader to make sure it resolves linking with a no error context and doesn't assert
+TEST_P(ContextNoErrorTest, DetachAfterLink)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_KHR_no_error"));
+
+    GLuint vs      = CompileShader(GL_VERTEX_SHADER, essl1_shaders::vs::Simple());
+    GLuint fs      = CompileShader(GL_FRAGMENT_SHADER, essl1_shaders::fs::Red());
+    GLuint program = glCreateProgram();
+    glAttachShader(program, vs);
+    glAttachShader(program, fs);
+    glLinkProgram(program);
+
+    glDetachShader(program, vs);
+    glDetachShader(program, fs);
+
+    glDeleteShader(vs);
+    glDeleteShader(fs);
+    glDeleteProgram(program);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Tests that we can draw with a program pipeline when GL_KHR_no_error is enabled.
 TEST_P(ContextNoErrorTest31, DrawWithPPO)
 {
