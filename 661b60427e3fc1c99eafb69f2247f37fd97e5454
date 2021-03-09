@@ -89,6 +89,41 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "1f91cb23_beda04ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-09T21:13:38Z",
+      "side": 1,
+      "message": "thanks guys, landing this",
+      "revId": "661b60427e3fc1c99eafb69f2247f37fd97e5454",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1a98d2e_6ee034bd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-09T21:13:38Z",
+      "side": 1,
+      "message": "\u003e this seems fragile ... Given the lack of perf test gatekeeping\n\nagreed on both counts. Going to be watching BufferVk and DynamicBuffer closely while pulling in new commits from upstream 😊",
+      "parentUuid": "3f0b9b5f_a957bf42",
+      "revId": "661b60427e3fc1c99eafb69f2247f37fd97e5454",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "23555aef_268c8e19",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 2
