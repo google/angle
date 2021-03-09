@@ -88,13 +88,15 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     const bool isRenderToTexture =
         mode == gl::MultisamplingMode::MultisampledRenderToTexture &&
         (!isDepthStencilFormat || renderer->getFeatures().supportsDepthStencilResolve.enabled);
+    const bool hasRenderToTextureEXT =
+        renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
 
     const VkImageUsageFlags usage =
         VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT |
         VK_IMAGE_USAGE_SAMPLED_BIT |
         (isDepthStencilFormat ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT
                               : VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT) |
-        (isRenderToTexture ? VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT : 0);
+        (isRenderToTexture && !hasRenderToTextureEXT ? VK_IMAGE_USAGE_INPUT_ATTACHMENT_BIT : 0);
 
     const uint32_t imageSamples = isRenderToTexture ? 1 : samples;
 
@@ -112,7 +114,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     // If multisampled render to texture, an implicit multisampled image is created which is used as
     // the color or depth/stencil attachment.  At the end of the render pass, this image is
     // automatically resolved into |mImage| and its contents are discarded.
-    if (isRenderToTexture)
+    if (isRenderToTexture && !hasRenderToTextureEXT)
     {
         mMultisampledImageViews.init(renderer);
 

@@ -141,7 +141,6 @@ class FramebufferVk : public FramebufferImpl
                                      vk::CommandBuffer **commandBufferOut,
                                      bool *renderPassDescChangedOut);
 
-    RenderTargetVk *getFirstRenderTarget() const;
     GLint getSamples() const;
 
     const vk::RenderPassDesc &getRenderPassDesc() const { return mRenderPassDesc; }

@@ -1121,6 +1121,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mDepthStencilResolveProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES;
 
+    mMultisampledRenderToSingleSampledFeatures = {};
+    mMultisampledRenderToSingleSampledFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT;
+
     mDriverProperties       = {};
     mDriverProperties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DRIVER_PROPERTIES;
 
@@ -1207,6 +1211,13 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceProperties, &mDepthStencilResolveProperties);
     }
 
+    // Query multisampled render to single-sampled properties
+    if (ExtensionFound(VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_EXTENSION_NAME,
+                       deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mMultisampledRenderToSingleSampledFeatures);
+    }
+
     // Query driver properties
     if (ExtensionFound(VK_KHR_DRIVER_PROPERTIES_EXTENSION_NAME, deviceExtensionNames))
     {
@@ -1242,19 +1253,20 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     }
 
     // Clean up pNext chains
-    mLineRasterizationFeatures.pNext        = nullptr;
-    mMemoryReportFeatures.pNext             = nullptr;
-    mProvokingVertexFeatures.pNext          = nullptr;
-    mVertexAttributeDivisorFeatures.pNext   = nullptr;
-    mVertexAttributeDivisorProperties.pNext = nullptr;
-    mTransformFeedbackFeatures.pNext        = nullptr;
-    mIndexTypeUint8Features.pNext           = nullptr;
-    mSubgroupProperties.pNext               = nullptr;
-    mExternalMemoryHostProperties.pNext     = nullptr;
-    mShaderFloat16Int8Features.pNext        = nullptr;
-    mDepthStencilResolveProperties.pNext    = nullptr;
-    mDriverProperties.pNext                 = nullptr;
-    mSamplerYcbcrConversionFeatures.pNext   = nullptr;
+    mLineRasterizationFeatures.pNext                 = nullptr;
+    mMemoryReportFeatures.pNext                      = nullptr;
+    mProvokingVertexFeatures.pNext                   = nullptr;
+    mVertexAttributeDivisorFeatures.pNext            = nullptr;
+    mVertexAttributeDivisorProperties.pNext          = nullptr;
+    mTransformFeedbackFeatures.pNext                 = nullptr;
+    mIndexTypeUint8Features.pNext                    = nullptr;
+    mSubgroupProperties.pNext                        = nullptr;
+    mExternalMemoryHostProperties.pNext              = nullptr;
+    mShaderFloat16Int8Features.pNext                 = nullptr;
+    mDepthStencilResolveProperties.pNext             = nullptr;
+    mMultisampledRenderToSingleSampledFeatures.pNext = nullptr;
+    mDriverProperties.pNext                          = nullptr;
+    mSamplerYcbcrConversionFeatures.pNext            = nullptr;
 }
 
 angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueFamilyIndex)
@@ -1597,6 +1609,13 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     if (getFeatures().supportsDepthStencilResolve.enabled)
     {
         enabledDeviceExtensions.push_back(VK_KHR_DEPTH_STENCIL_RESOLVE_EXTENSION_NAME);
+    }
+
+    if (getFeatures().supportsMultisampledRenderToSingleSampled.enabled)
+    {
+        enabledDeviceExtensions.push_back(
+            VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_EXTENSION_NAME);
+        vk::AddToPNextChain(&createInfo, &mMultisampledRenderToSingleSampledFeatures);
     }
 
     if (mMemoryReportFeatures.deviceMemoryReport &&
@@ -2156,7 +2175,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
 
     ANGLE_FEATURE_CONDITION(&mFeatures, supportsDepthStencilResolve,
                             mFeatures.supportsRenderpass2.enabled &&
-                                mDepthStencilResolveProperties.independentResolveNone == VK_TRUE);
+                                mDepthStencilResolveProperties.supportedDepthResolveModes != 0);
+
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, supportsMultisampledRenderToSingleSampled,
+        mFeatures.supportsRenderpass2.enabled && mFeatures.supportsDepthStencilResolve.enabled &&
+            mMultisampledRenderToSingleSampledFeatures.multisampledRenderToSingleSampled ==
+                VK_TRUE);
 
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
                             (!mFeatures.supportsTransformFeedbackExtension.enabled &&
@@ -2252,8 +2277,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // - Swiftshader on mac: http://anglebug.com/4937
     // - Intel on windows: http://anglebug.com/5032
     // - AMD on windows: http://crbug.com/1132366
-    ANGLE_FEATURE_CONDITION(&mFeatures, enableMultisampledRenderToTexture,
-                            !(IsApple() && isSwiftShader) && !(IsWindows() && (isIntel || isAMD)));
+    ANGLE_FEATURE_CONDITION(
+        &mFeatures, enableMultisampledRenderToTexture,
+        mFeatures.supportsMultisampledRenderToSingleSampled.enabled ||
+            !(IsApple() && isSwiftShader) && !(IsWindows() && (isIntel || isAMD)));
 
     // Feature disabled due to driver bugs:
     //
