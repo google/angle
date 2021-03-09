@@ -181,6 +181,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fd41be1d_fc03d204",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-09T21:24:36Z",
+      "side": 1,
+      "message": "that could work too, with a couple of clarifications -\n\n1. given that tiling mode is closely related to format and usage bits, this \"VkAndroidHardwareBufferFormatPropertiesANDROID\" might be more appropriate?\n\n2. this would involve API change, at least struct change. Which mean latency for approval and resistance to change could be huge.",
+      "parentUuid": "a9305896_e683a063",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1695e854_822d6c7a",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 2
