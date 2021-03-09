@@ -89,6 +89,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e5a369f_89965e34",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3576,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-09T20:01:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07ba3bba_f85347b5",
+      "range": {
+        "startLine": 3576,
+        "startChar": 6,
+        "endLine": 3576,
+        "endChar": 33
+      },
+      "revId": "9e1ac5b3348c95689e2a1a641aa0b823c6e9f597",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "837fc3d5_1b1d8e4f",
@@ -102,6 +126,30 @@
       "writtenOn": "2021-03-09T19:25:02Z",
       "side": 1,
       "message": "nit: adjustedLevel\n\nSimilar to above, this value isn\u0027t cached, but is being adjusted to allow us to retrieve the correct value from the cache.",
+      "range": {
+        "startLine": 3578,
+        "startChar": 10,
+        "endLine": 3578,
+        "endChar": 21
+      },
+      "revId": "9e1ac5b3348c95689e2a1a641aa0b823c6e9f597",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "46685b16_56c912d9",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3578,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-09T20:01:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "837fc3d5_1b1d8e4f",
       "range": {
         "startLine": 3578,
         "startChar": 10,
