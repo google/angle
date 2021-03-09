@@ -116,8 +116,6 @@ class FramebufferState final : angle::NonCopyable
 
     GLint getBaseViewIndex() const;
 
-    SrgbWriteControlMode getWriteControlMode() const { return mSrgbWriteControlMode; }
-
     FramebufferID id() const { return mId; }
 
     bool isDefault() const;
@@ -169,9 +167,6 @@ class FramebufferState final : angle::NonCopyable
 
     bool mDefaultFramebufferReadAttachmentInitialized;
     FramebufferAttachment mDefaultFramebufferReadAttachment;
-
-    // EXT_sRGB_write_control
-    SrgbWriteControlMode mSrgbWriteControlMode;
 
     gl::Offset mSurfaceTextureOffset;
 };
@@ -381,7 +376,6 @@ class Framebuffer final : public angle::ObserverInterface,
         DIRTY_BIT_DEFAULT_SAMPLES,
         DIRTY_BIT_DEFAULT_FIXED_SAMPLE_LOCATIONS,
         DIRTY_BIT_DEFAULT_LAYERS,
-        DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE,
         DIRTY_BIT_UNKNOWN,
         DIRTY_BIT_MAX = DIRTY_BIT_UNKNOWN
     };
@@ -399,8 +393,6 @@ class Framebuffer final : public angle::ObserverInterface,
     angle::Result syncState(const Context *context,
                             GLenum framebufferBinding,
                             Command command) const;
-
-    void setWriteControlMode(SrgbWriteControlMode srgbWriteControlMode);
 
     // Observer implementation
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;

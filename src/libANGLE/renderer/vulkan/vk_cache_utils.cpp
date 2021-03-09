@@ -963,23 +963,6 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         UnpackAttachmentDesc(&attachmentDescs[attachmentCount.get()], format, desc.samples(),
                              ops[attachmentCount]);
 
-        angle::FormatID attachmentFormat = format.actualImageFormatID;
-
-        // If this renderpass uses EXT_srgb_write_control, we need to override the format to its
-        // linear counterpart. Formats that cannot be reinterpreted are exempt from this
-        // requirement.
-        angle::FormatID linearFormat = rx::ConvertToLinear(attachmentFormat);
-        if (linearFormat != angle::FormatID::NONE)
-        {
-            if (desc.getSRGBWriteControlMode() == gl::SrgbWriteControlMode::Linear)
-            {
-                attachmentFormat = linearFormat;
-            }
-        }
-        attachmentDescs[attachmentCount.get()].format =
-            contextVk->getRenderer()->getFormat(attachmentFormat).actualImageVkFormat();
-        ASSERT(attachmentDescs[attachmentCount.get()].format != VK_FORMAT_UNDEFINED);
-
         isColorInvalidated.set(colorIndexGL, ops[attachmentCount].isInvalidated);
 
         ++attachmentCount;
@@ -1473,18 +1456,6 @@ RenderPassDesc &RenderPassDesc::operator=(const RenderPassDesc &other)
 {
     memcpy(this, &other, sizeof(RenderPassDesc));
     return *this;
-}
-
-void RenderPassDesc::setWriteControlMode(gl::SrgbWriteControlMode mode)
-{
-    if (mode == gl::SrgbWriteControlMode::Default)
-    {
-        mAttachmentFormats.back() &= ~kSrgbWriteControlFlag;
-    }
-    else
-    {
-        mAttachmentFormats.back() |= kSrgbWriteControlFlag;
-    }
 }
 
 size_t RenderPassDesc::hash() const
@@ -3053,7 +3024,6 @@ void FramebufferDesc::reset()
     mHasFramebufferFetch = false;
     mLayerCount          = 0;
     mUnresolveAttachmentMask.reset();
-    mSrgbWriteControlMode = 0;
     memset(&mSerials, 0, sizeof(mSerials));
 }
 
@@ -3061,8 +3031,7 @@ bool FramebufferDesc::operator==(const FramebufferDesc &other) const
 {
     if (mMaxIndex != other.mMaxIndex || mLayerCount != other.mLayerCount ||
         mUnresolveAttachmentMask != other.mUnresolveAttachmentMask ||
-        mHasFramebufferFetch != other.mHasFramebufferFetch ||
-        mSrgbWriteControlMode != other.mSrgbWriteControlMode)
+        mHasFramebufferFetch != other.mHasFramebufferFetch)
     {
         return false;
     }

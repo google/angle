@@ -654,8 +654,8 @@ class State : angle::NonCopyable
         DIRTY_BIT_ATOMIC_COUNTER_BUFFER_BINDING,
         DIRTY_BIT_MULTISAMPLING,
         DIRTY_BIT_SAMPLE_ALPHA_TO_ONE,
-        DIRTY_BIT_COVERAGE_MODULATION,                  // CHROMIUM_framebuffer_mixed_samples
-        DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE,  // GL_EXT_sRGB_write_control
+        DIRTY_BIT_COVERAGE_MODULATION,  // CHROMIUM_framebuffer_mixed_samples
+        DIRTY_BIT_FRAMEBUFFER_SRGB,     // GL_EXT_sRGB_write_control
         DIRTY_BIT_CURRENT_VALUES,
         DIRTY_BIT_PROVOKING_VERTEX,
         DIRTY_BIT_SAMPLE_SHADING,

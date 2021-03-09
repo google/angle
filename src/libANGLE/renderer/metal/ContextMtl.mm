@@ -1041,7 +1041,7 @@ angle::Result ContextMtl::syncState(const gl::Context *context,
                 break;
             case gl::State::DIRTY_BIT_COVERAGE_MODULATION:
                 break;
-            case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB_WRITE_CONTROL_MODE:
+            case gl::State::DIRTY_BIT_FRAMEBUFFER_SRGB:
                 break;
             case gl::State::DIRTY_BIT_CURRENT_VALUES:
             {

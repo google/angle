@@ -152,7 +152,6 @@ const vk::ImageHelper &RenderTargetVk::getResolveImageForRenderPass() const
 
 angle::Result RenderTargetVk::getImageViewImpl(ContextVk *contextVk,
                                                const vk::ImageHelper &image,
-                                               gl::SrgbWriteControlMode mode,
                                                vk::ImageViewHelper *imageViews,
                                                const vk::ImageView **imageViewOut) const
 {
@@ -160,11 +159,9 @@ angle::Result RenderTargetVk::getImageViewImpl(ContextVk *contextVk,
     vk::LevelIndex levelVk = mImage->toVkLevel(mLevelIndexGL);
     if (mLayerCount == 1)
     {
-        return imageViews->getLevelLayerDrawImageView(contextVk, image, levelVk, mLayerIndex, mode,
+        return imageViews->getLevelLayerDrawImageView(contextVk, image, levelVk, mLayerIndex,
                                                       imageViewOut);
     }
-
-    ASSERT(mode == gl::SrgbWriteControlMode::Default);
 
     // Layered render targets view the whole level
     return imageViews->getLevelDrawImageView(contextVk, image, levelVk, imageViewOut);
@@ -174,24 +171,14 @@ angle::Result RenderTargetVk::getImageView(ContextVk *contextVk,
                                            const vk::ImageView **imageViewOut) const
 {
     ASSERT(mImage);
-    return getImageViewImpl(contextVk, *mImage, gl::SrgbWriteControlMode::Default, mImageViews,
-                            imageViewOut);
-}
-
-angle::Result RenderTargetVk::getImageViewWithColorspace(ContextVk *contextVk,
-                                                         gl::SrgbWriteControlMode mode,
-                                                         const vk::ImageView **imageViewOut) const
-{
-    ASSERT(mImage);
-    return getImageViewImpl(contextVk, *mImage, mode, mImageViews, imageViewOut);
+    return getImageViewImpl(contextVk, *mImage, mImageViews, imageViewOut);
 }
 
 angle::Result RenderTargetVk::getResolveImageView(ContextVk *contextVk,
                                                   const vk::ImageView **imageViewOut) const
 {
     ASSERT(mResolveImage);
-    return getImageViewImpl(contextVk, *mResolveImage, gl::SrgbWriteControlMode::Default,
-                            mResolveImageViews, imageViewOut);
+    return getImageViewImpl(contextVk, *mResolveImage, mResolveImageViews, imageViewOut);
 }
 
 bool RenderTargetVk::isResolveImageOwnerOfData() const
