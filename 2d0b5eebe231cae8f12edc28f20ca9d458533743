@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "2d0b5eebe231cae8f12edc28f20ca9d458533743",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e7b715e_71ec3a75",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-09T19:57:18Z",
+      "side": 1,
+      "message": "This is not correct. In the following scenario:\n\n- VS-only program XFB-capturing A and B\n- GS-only program XFB-capturing C and D\n- FS-only program\n- PPO combination of the three programs\n\nThe PPO captures C and D. A and B are ignored. Quote from GLES3.2 spec:\n\n\u003e If separable program objects are in use, the set of attributes captured is taken from the program object active on the last vertex processing stage. The set of attributes to capture in transform feedback mode for any other program active on a previous shader stage is ignored.",
+      "revId": "2d0b5eebe231cae8f12edc28f20ca9d458533743",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
