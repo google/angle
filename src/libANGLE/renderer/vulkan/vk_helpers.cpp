@@ -848,6 +848,42 @@ void CommandBufferHelper::initialize(bool isRenderPassCommandBuffer)
     mIsRenderPassCommandBuffer = isRenderPassCommandBuffer;
 }
 
+void CommandBufferHelper::reset()
+{
+    mAllocator.pop();
+    mAllocator.push();
+    mCommandBuffer.reset();
+    mUsedBuffers.clear();
+
+    if (mIsRenderPassCommandBuffer)
+    {
+        mRenderPassStarted                 = false;
+        mValidTransformFeedbackBufferCount = 0;
+        mRebindTransformFeedbackBuffers    = false;
+        mHasShaderStorageOutput            = false;
+        mHasGLMemoryBarrierIssued          = false;
+        mDepthAccess                       = ResourceAccess::Unused;
+        mStencilAccess                     = ResourceAccess::Unused;
+        mDepthCmdSizeInvalidated           = kInfiniteCmdSize;
+        mDepthCmdSizeDisabled              = kInfiniteCmdSize;
+        mStencilCmdSizeInvalidated         = kInfiniteCmdSize;
+        mStencilCmdSizeDisabled            = kInfiniteCmdSize;
+        mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
+        mDepthInvalidateArea               = gl::Rectangle();
+        mStencilInvalidateArea             = gl::Rectangle();
+        mRenderPassUsedImages.clear();
+        mDepthStencilImage        = nullptr;
+        mDepthStencilResolveImage = nullptr;
+        mReadOnlyDepthStencilMode = false;
+    }
+    // This state should never change for non-renderPass command buffer
+    ASSERT(mRenderPassStarted == false);
+    ASSERT(mValidTransformFeedbackBufferCount == 0);
+    ASSERT(!mRebindTransformFeedbackBuffers);
+    ASSERT(!mIsTransformFeedbackActiveUnpaused);
+    ASSERT(mRenderPassUsedImages.empty());
+}
+
 bool CommandBufferHelper::usesBuffer(const BufferHelper &buffer) const
 {
     return mUsedBuffers.contains(buffer.getBufferSerial().getValue());
@@ -1562,42 +1598,6 @@ void CommandBufferHelper::addCommandDiagnostics(ContextVk *contextVk)
     }
     out << mCommandBuffer.dumpCommands("\\l");
     contextVk->addCommandBufferDiagnostics(out.str());
-}
-
-void CommandBufferHelper::reset()
-{
-    mAllocator.pop();
-    mAllocator.push();
-    mCommandBuffer.reset();
-    mUsedBuffers.clear();
-
-    if (mIsRenderPassCommandBuffer)
-    {
-        mRenderPassStarted                 = false;
-        mValidTransformFeedbackBufferCount = 0;
-        mRebindTransformFeedbackBuffers    = false;
-        mHasShaderStorageOutput            = false;
-        mHasGLMemoryBarrierIssued          = false;
-        mDepthAccess                       = ResourceAccess::Unused;
-        mStencilAccess                     = ResourceAccess::Unused;
-        mDepthCmdSizeInvalidated           = kInfiniteCmdSize;
-        mDepthCmdSizeDisabled              = kInfiniteCmdSize;
-        mStencilCmdSizeInvalidated         = kInfiniteCmdSize;
-        mStencilCmdSizeDisabled            = kInfiniteCmdSize;
-        mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
-        mDepthInvalidateArea               = gl::Rectangle();
-        mStencilInvalidateArea             = gl::Rectangle();
-        mRenderPassUsedImages.clear();
-        mDepthStencilImage        = nullptr;
-        mDepthStencilResolveImage = nullptr;
-        mReadOnlyDepthStencilMode = false;
-    }
-    // This state should never change for non-renderPass command buffer
-    ASSERT(mRenderPassStarted == false);
-    ASSERT(mValidTransformFeedbackBufferCount == 0);
-    ASSERT(!mRebindTransformFeedbackBuffers);
-    ASSERT(!mIsTransformFeedbackActiveUnpaused);
-    ASSERT(mRenderPassUsedImages.empty());
 }
 
 void CommandBufferHelper::resumeTransformFeedback()
