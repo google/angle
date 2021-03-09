@@ -136,10 +136,15 @@ class PackedAttachmentIndex final
     {
         return mAttachmentIndex != other.mAttachmentIndex;
     }
+    constexpr bool operator<(const PackedAttachmentIndex &other) const
+    {
+        return mAttachmentIndex < other.mAttachmentIndex;
+    }
 
   private:
     uint32_t mAttachmentIndex;
 };
+using PackedAttachmentCount                                    = PackedAttachmentIndex;
 static constexpr PackedAttachmentIndex kAttachmentIndexInvalid = PackedAttachmentIndex(-1);
 static constexpr PackedAttachmentIndex kAttachmentIndexZero    = PackedAttachmentIndex(0);
 

@@ -1326,6 +1326,11 @@ angle::Result WindowSurfaceVk::present(ContextVk *contextVk,
         contextVk->optimizeRenderPassForPresent(currentFramebuffer.getHandle());
     }
 
+    // Because the color attachment defers layout changes until endRenderPass time, we must call
+    // finalize the layout transition in the renderpass before we insert layout change to
+    // ImageLayout::Present bellow.
+    contextVk->onImageHelperRelease(&image.image);
+
     vk::CommandBuffer *commandBuffer;
     ANGLE_TRY(contextVk->getOutsideRenderPassCommandBuffer({}, &commandBuffer));
 

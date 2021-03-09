@@ -979,6 +979,19 @@ class PackedClearValuesArray final
     gl::AttachmentArray<VkClearValue> mValues;
 };
 
+// Stores ImageHelpers In packed attachment index
+class PackedImageAttachmentArray final
+{
+  public:
+    PackedImageAttachmentArray() : mImages{} {}
+    ~PackedImageAttachmentArray() = default;
+    ImageHelper *&operator[](PackedAttachmentIndex index) { return mImages[index.get()]; }
+    void reset() { mImages.fill(nullptr); }
+
+  private:
+    gl::AttachmentArray<ImageHelper *> mImages;
+};
+
 // The following are used to help track the state of an invalidated attachment.
 
 // This value indicates an "infinite" CmdSize that is not valid for comparing
@@ -1024,6 +1037,10 @@ class CommandBufferHelper : angle::NonCopyable
                     AliasingMode aliasingMode,
                     ImageHelper *image);
 
+    void colorImagesDraw(ResourceUseList *resourceUseList,
+                         ImageHelper *image,
+                         ImageHelper *resolveImage,
+                         PackedAttachmentIndex packedAttachmentIndex);
     void depthStencilImagesDraw(ResourceUseList *resourceUseList,
                                 gl::LevelIndex level,
                                 uint32_t layerStart,
@@ -1075,6 +1092,7 @@ class CommandBufferHelper : angle::NonCopyable
                          const gl::Rectangle &renderArea,
                          const RenderPassDesc &renderPassDesc,
                          const AttachmentOpsArray &renderPassAttachmentOps,
+                         const vk::PackedAttachmentCount colorAttachmentCount,
                          const PackedAttachmentIndex depthStencilAttachmentIndex,
                          const PackedClearValuesArray &clearValues,
                          CommandBuffer **commandBufferOut);
@@ -1114,13 +1132,6 @@ class CommandBufferHelper : angle::NonCopyable
                std::min(cmdCountDisabled, mCommandBuffer.getCommandSize()) == cmdCountInvalidated;
     }
 
-    void updateRenderPassAttachmentFinalLayout(PackedAttachmentIndex attachmentIndex,
-                                               ImageLayout finalLayout)
-    {
-        ASSERT(mIsRenderPassCommandBuffer);
-        SetBitField(mAttachmentOps[attachmentIndex].finalLayout, finalLayout);
-    }
-
     void updateRenderPassColorClear(PackedAttachmentIndex colorIndex,
                                     const VkClearValue &colorClearValue);
     void updateRenderPassDepthStencilClear(VkImageAspectFlags aspectFlags,
@@ -1158,6 +1169,7 @@ class CommandBufferHelper : angle::NonCopyable
     bool usesBuffer(const BufferHelper &buffer) const;
     bool usesBufferForWrite(const BufferHelper &buffer) const;
     bool usesImageInRenderPass(const ImageHelper &image) const;
+    bool usesImageInAttachments(const ImageHelper &image);
     size_t getUsedBuffersCount() const { return mUsedBuffers.size(); }
 
     // Dumping the command stream is disabled by default.
@@ -1166,7 +1178,8 @@ class CommandBufferHelper : angle::NonCopyable
     void onDepthAccess(ResourceAccess access);
     void onStencilAccess(ResourceAccess access);
 
-    void updateRenderPassForResolve(Framebuffer *newFramebuffer,
+    void updateRenderPassForResolve(ContextVk *contextVk,
+                                    Framebuffer *newFramebuffer,
                                     const RenderPassDesc &renderPassDesc);
 
     bool hasDepthStencilWriteOrClear() const
@@ -1197,6 +1210,7 @@ class CommandBufferHelper : angle::NonCopyable
         }
     }
     bool hasGLMemoryBarrierIssued() const { return mHasGLMemoryBarrierIssued; }
+    void setImageOptimizeForPresent(ImageHelper *image) { mImageOptimizeForPresent = image; }
 
   private:
     bool onDepthStencilAccess(ResourceAccess access,
@@ -1205,8 +1219,20 @@ class CommandBufferHelper : angle::NonCopyable
     void restoreDepthContent();
     void restoreStencilContent();
 
+    // We can't determine the image layout at the renderpass start time since their full usage
+    // aren't known until later time. We finalize the layout when either ImageHelper object is
+    // released or when renderpass ends.
+    void finalizeColorImageLayout(Context *context,
+                                  ImageHelper *image,
+                                  PackedAttachmentIndex packedAttachmentIndex,
+                                  bool isResolveImage);
     void finalizeDepthStencilImageLayout(Context *context);
     void finalizeDepthStencilResolveImageLayout(Context *context);
+
+    void updateImageLayoutAndBarrier(Context *context,
+                                     ImageHelper *image,
+                                     VkImageAspectFlags aspectFlags,
+                                     ImageLayout imageLayout);
 
     // Allocator used by this class. Using a pool allocator per CBH to avoid threading issues
     //  that occur w/ shared allocator between multiple CBHs.
@@ -1275,6 +1301,15 @@ class CommandBufferHelper : angle::NonCopyable
     gl::LevelIndex mDepthStencilLevelIndex;
     uint32_t mDepthStencilLayerIndex;
     uint32_t mDepthStencilLayerCount;
+
+    // Array size of mColorImages
+    PackedAttachmentCount mColorImagesCount;
+    // Attached render target images. Color and depth resolve images are always come last.
+    PackedImageAttachmentArray mColorImages;
+    PackedImageAttachmentArray mColorResolveImages;
+    // This is last renderpass before present and this is the image will be presented. We can use
+    // final layout of the renderpass to transit it to the presentable layout
+    ImageHelper *mImageOptimizeForPresent;
 };
 
 // Imagine an image going through a few layout transitions:
@@ -1647,7 +1682,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Stage the currently allocated image as an update to base level, making this !valid().  This
     // is used for mipmap generation.
-    void stageSelfForBaseLevel();
+    void stageSelfForBaseLevel(ContextVk *contextVk);
 
     // Flush staged updates for a single subresource. Can optionally take a parameter to defer
     // clears to a subsequent RenderPass load op.

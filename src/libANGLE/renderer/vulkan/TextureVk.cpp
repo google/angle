@@ -2410,7 +2410,7 @@ angle::Result TextureVk::syncState(const gl::Context *context,
         // the levels have already been discarded through the |removeStagedUpdates| call above.
         ANGLE_TRY(flushImageStagedUpdates(contextVk));
 
-        mImage->stageSelfForBaseLevel();
+        mImage->stageSelfForBaseLevel(contextVk);
 
         // Release views and render targets created for the old image.
         releaseImage(contextVk);

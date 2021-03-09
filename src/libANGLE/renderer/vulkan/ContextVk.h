@@ -462,6 +462,14 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                         imageLayout, vk::AliasingMode::Allowed, image);
     }
 
+    void onColorDraw(vk::ImageHelper *image,
+                     vk::ImageHelper *resolveImage,
+                     vk::PackedAttachmentIndex packedAttachmentIndex)
+    {
+        ASSERT(mRenderPassCommands->started());
+        mRenderPassCommands->colorImagesDraw(&mResourceUseList, image, resolveImage,
+                                             packedAttachmentIndex);
+    }
     void onDepthStencilDraw(gl::LevelIndex level,
                             uint32_t layerStart,
                             uint32_t layerCount,
@@ -494,6 +502,7 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                      const gl::Rectangle &renderArea,
                                      const vk::RenderPassDesc &renderPassDesc,
                                      const vk::AttachmentOpsArray &renderPassAttachmentOps,
+                                     const vk::PackedAttachmentCount colorAttachmentCount,
                                      const vk::PackedAttachmentIndex depthStencilAttachmentIndex,
                                      const vk::PackedClearValuesArray &clearValues,
                                      vk::CommandBuffer **commandBufferOut);

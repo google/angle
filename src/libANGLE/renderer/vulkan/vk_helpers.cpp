@@ -827,7 +827,9 @@ CommandBufferHelper::CommandBufferHelper()
       mDepthStencilResolveImage(nullptr),
       mDepthStencilLevelIndex(0),
       mDepthStencilLayerIndex(0),
-      mDepthStencilLayerCount(0)
+      mDepthStencilLayerCount(0),
+      mColorImagesCount(0),
+      mImageOptimizeForPresent(nullptr)
 {}
 
 CommandBufferHelper::~CommandBufferHelper()
@@ -868,6 +870,7 @@ void CommandBufferHelper::reset()
         mDepthCmdSizeDisabled              = kInfiniteCmdSize;
         mStencilCmdSizeInvalidated         = kInfiniteCmdSize;
         mStencilCmdSizeDisabled            = kInfiniteCmdSize;
+        mColorImagesCount                  = PackedAttachmentCount(0);
         mDepthStencilAttachmentIndex       = kAttachmentIndexInvalid;
         mDepthInvalidateArea               = gl::Rectangle();
         mStencilInvalidateArea             = gl::Rectangle();
@@ -875,6 +878,9 @@ void CommandBufferHelper::reset()
         mDepthStencilImage        = nullptr;
         mDepthStencilResolveImage = nullptr;
         mReadOnlyDepthStencilMode = false;
+        mColorImages.reset();
+        mColorResolveImages.reset();
+        mImageOptimizeForPresent = nullptr;
     }
     // This state should never change for non-renderPass command buffer
     ASSERT(mRenderPassStarted == false);
@@ -959,13 +965,7 @@ void CommandBufferHelper::imageRead(ContextVk *contextVk,
 
     if (image->isReadBarrierNecessary(imageLayout))
     {
-        PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
-        ASSERT(barrierIndex != PipelineStage::InvalidEnum);
-        PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
-        if (image->updateLayoutAndBarrier(contextVk, aspectFlags, imageLayout, barrier))
-        {
-            mPipelineBarrierMask.set(barrierIndex);
-        }
+        updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
     }
 
     if (mIsRenderPassCommandBuffer)
@@ -991,13 +991,7 @@ void CommandBufferHelper::imageWrite(ContextVk *contextVk,
     image->retain(&contextVk->getResourceUseList());
     image->onWrite(level, 1, layerStart, layerCount, aspectFlags);
     // Write always requires a barrier
-    PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
-    ASSERT(barrierIndex != PipelineStage::InvalidEnum);
-    PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
-    if (image->updateLayoutAndBarrier(contextVk, aspectFlags, imageLayout, barrier))
-    {
-        mPipelineBarrierMask.set(barrierIndex);
-    }
+    updateImageLayoutAndBarrier(contextVk, image, aspectFlags, imageLayout);
 
     if (mIsRenderPassCommandBuffer)
     {
@@ -1011,6 +1005,49 @@ void CommandBufferHelper::imageWrite(ContextVk *contextVk,
             mRenderPassUsedImages.insert(image->getImageSerial().getValue());
         }
     }
+}
+
+void CommandBufferHelper::colorImagesDraw(ResourceUseList *resourceUseList,
+                                          ImageHelper *image,
+                                          ImageHelper *resolveImage,
+                                          PackedAttachmentIndex packedAttachmentIndex)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    ASSERT(packedAttachmentIndex < mColorImagesCount);
+
+    image->retain(resourceUseList);
+    if (!usesImageInRenderPass(*image))
+    {
+        // This is possible due to different layers of the same texture being attached to different
+        // attachments
+        mRenderPassUsedImages.insert(image->getImageSerial().getValue());
+    }
+    ASSERT(mColorImages[packedAttachmentIndex] == nullptr);
+    mColorImages[packedAttachmentIndex] = image;
+
+    if (resolveImage)
+    {
+        resolveImage->retain(resourceUseList);
+        if (!usesImageInRenderPass(*resolveImage))
+        {
+            mRenderPassUsedImages.insert(resolveImage->getImageSerial().getValue());
+        }
+        ASSERT(mColorResolveImages[packedAttachmentIndex] == nullptr);
+        mColorResolveImages[packedAttachmentIndex] = resolveImage;
+    }
+}
+
+bool CommandBufferHelper::usesImageInAttachments(const ImageHelper &image)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
+    {
+        if (mColorImages[index] == &image || mColorResolveImages[index] == &image)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 void CommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseList,
@@ -1169,6 +1206,52 @@ void CommandBufferHelper::executeBarriers(const angle::FeaturesVk &features,
     mPipelineBarrierMask.reset();
 }
 
+void CommandBufferHelper::updateImageLayoutAndBarrier(Context *context,
+                                                      ImageHelper *image,
+                                                      VkImageAspectFlags aspectFlags,
+                                                      ImageLayout imageLayout)
+{
+    PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
+    ASSERT(barrierIndex != PipelineStage::InvalidEnum);
+    PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
+    if (image->updateLayoutAndBarrier(context, aspectFlags, imageLayout, barrier))
+    {
+        mPipelineBarrierMask.set(barrierIndex);
+    }
+}
+
+void CommandBufferHelper::finalizeColorImageLayout(Context *context,
+                                                   ImageHelper *image,
+                                                   PackedAttachmentIndex packedAttachmentIndex,
+                                                   bool isResolveImage)
+{
+    ASSERT(mIsRenderPassCommandBuffer);
+    ASSERT(packedAttachmentIndex < mColorImagesCount);
+    ASSERT(image != nullptr);
+
+    // Do layout change.
+    ImageLayout imageLayout = ImageLayout::ColorAttachment;
+    updateImageLayoutAndBarrier(context, image, VK_IMAGE_ASPECT_COLOR_BIT, imageLayout);
+
+    if (!isResolveImage)
+    {
+        mAttachmentOps.setLayouts(packedAttachmentIndex, imageLayout, imageLayout);
+    }
+
+    if (mImageOptimizeForPresent == image)
+    {
+        ASSERT(packedAttachmentIndex == kAttachmentIndexZero);
+        // Use finalLayout instead of extra barrier for layout change to present
+        mImageOptimizeForPresent->setCurrentImageLayout(vk::ImageLayout::Present);
+        // TODO(syoussefi):  We currently don't store the layout of the resolve attachments, so once
+        // multisampled backbuffers are optimized to use resolve attachments, this information needs
+        // to be stored somewhere.  http://anglebug.com/4836
+        SetBitField(mAttachmentOps[packedAttachmentIndex].finalLayout,
+                    mImageOptimizeForPresent->getCurrentImageLayout());
+        mImageOptimizeForPresent = nullptr;
+    }
+}
+
 void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
 {
     ASSERT(mIsRenderPassCommandBuffer);
@@ -1197,15 +1280,7 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
         const angle::Format &format = mDepthStencilImage->getFormat().actualImageFormat();
         ASSERT(format.hasDepthOrStencilBits());
         VkImageAspectFlags aspectFlags = GetDepthStencilAspectFlags(format);
-
-        PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
-        ASSERT(barrierIndex != PipelineStage::InvalidEnum);
-        PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
-
-        if (mDepthStencilImage->updateLayoutAndBarrier(context, aspectFlags, imageLayout, barrier))
-        {
-            mPipelineBarrierMask.set(barrierIndex);
-        }
+        updateImageLayoutAndBarrier(context, mDepthStencilImage, aspectFlags, imageLayout);
     }
 
     if (!mReadOnlyDepthStencilMode)
@@ -1242,15 +1317,7 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *contex
     ASSERT(format.hasDepthOrStencilBits());
     VkImageAspectFlags aspectFlags = GetDepthStencilAspectFlags(format);
 
-    PipelineStage barrierIndex = kImageMemoryBarrierData[imageLayout].barrierIndex;
-    ASSERT(barrierIndex != PipelineStage::InvalidEnum);
-    PipelineBarrier *barrier = &mPipelineBarriers[barrierIndex];
-
-    if (mDepthStencilResolveImage->updateLayoutAndBarrier(context, aspectFlags, imageLayout,
-                                                          barrier))
-    {
-        mPipelineBarrierMask.set(barrierIndex);
-    }
+    updateImageLayoutAndBarrier(context, mDepthStencilResolveImage, aspectFlags, imageLayout);
 
     if (!mReadOnlyDepthStencilMode)
     {
@@ -1279,6 +1346,20 @@ void CommandBufferHelper::onImageHelperRelease(Context *context, const ImageHelp
 {
     ASSERT(mIsRenderPassCommandBuffer);
 
+    for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
+    {
+        if (mColorImages[index] == image)
+        {
+            finalizeColorImageLayout(context, mColorImages[index], index, false);
+            mColorImages[index] = nullptr;
+        }
+        if (mColorResolveImages[index] == image)
+        {
+            finalizeColorImageLayout(context, mColorResolveImages[index], index, true);
+            mColorResolveImages[index] = nullptr;
+        }
+    }
+
     if (mDepthStencilImage == image)
     {
         finalizeDepthStencilImageLayout(context);
@@ -1296,6 +1377,7 @@ void CommandBufferHelper::beginRenderPass(const Framebuffer &framebuffer,
                                           const gl::Rectangle &renderArea,
                                           const RenderPassDesc &renderPassDesc,
                                           const AttachmentOpsArray &renderPassAttachmentOps,
+                                          const vk::PackedAttachmentCount colorAttachmentCount,
                                           const PackedAttachmentIndex depthStencilAttachmentIndex,
                                           const PackedClearValuesArray &clearValues,
                                           CommandBuffer **commandBufferOut)
@@ -1306,6 +1388,7 @@ void CommandBufferHelper::beginRenderPass(const Framebuffer &framebuffer,
     mRenderPassDesc              = renderPassDesc;
     mAttachmentOps               = renderPassAttachmentOps;
     mDepthStencilAttachmentIndex = depthStencilAttachmentIndex;
+    mColorImagesCount            = colorAttachmentCount;
     mFramebuffer.setHandle(framebuffer.getHandle());
     mRenderArea       = renderArea;
     mClearValues      = clearValues;
@@ -1317,6 +1400,18 @@ void CommandBufferHelper::beginRenderPass(const Framebuffer &framebuffer,
 
 void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
 {
+    for (PackedAttachmentIndex index = kAttachmentIndexZero; index < mColorImagesCount; ++index)
+    {
+        if (mColorImages[index])
+        {
+            finalizeColorImageLayout(contextVk, mColorImages[index], index, false);
+        }
+        if (mColorResolveImages[index])
+        {
+            finalizeColorImageLayout(contextVk, mColorResolveImages[index], index, true);
+        }
+    }
+
     if (mDepthStencilAttachmentIndex == kAttachmentIndexInvalid)
     {
         return;
@@ -1502,7 +1597,8 @@ angle::Result CommandBufferHelper::flushToPrimary(const angle::FeaturesVk &featu
     return angle::Result::Continue;
 }
 
-void CommandBufferHelper::updateRenderPassForResolve(Framebuffer *newFramebuffer,
+void CommandBufferHelper::updateRenderPassForResolve(ContextVk *contextVk,
+                                                     Framebuffer *newFramebuffer,
                                                      const RenderPassDesc &renderPassDesc)
 {
     ASSERT(newFramebuffer);
@@ -5612,10 +5708,14 @@ void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled)
     }
 }
 
-void ImageHelper::stageSelfForBaseLevel()
+void ImageHelper::stageSelfForBaseLevel(ContextVk *contextVk)
 {
-    std::unique_ptr<ImageHelper> prevImage = std::make_unique<ImageHelper>();
+    // Because we are cloning this object to another object, we must finalize the layout if it is
+    // being used by current renderpass as attachment. Otherwise we are copying the incorrect layout
+    // since it is determined at endRenderPass time.
+    contextVk->onImageHelperRelease(this);
 
+    std::unique_ptr<ImageHelper> prevImage = std::make_unique<ImageHelper>();
     // Move the necessary information for staged update to work, and keep the rest as part of this
     // object.
 
