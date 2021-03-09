@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "085d52f0_a490b9a6",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-03-09T13:20:15Z",
+      "side": 1,
+      "message": "nit:\nFYI, adding this entry could prevent an automatic reverse mapping generation in future. `MTLPixelFormatETC2_RGB8` will now can be mapped to either `ETC1_R8G8B8_UNORM_BLOCK` or `ETC2_R8G8B8_UNORM_BLOCK`.\nI didn\u0027t add this entry because in my fork, there is an extension to import native Metal textures to ANGLE. And when that happens, I need to look-up based on its `MTLPixelFormat` and retrieve the equivalent `angle::FormatID`. And `MTLPixelFormatETC2_RGB8` would produce ambiguous results.\n\nNevertheless, you would do it differently if you are going to re-factor the gen_mtl_format_table.py anw.",
+      "range": {
+        "startLine": 95,
+        "startChar": 12,
+        "endLine": 95,
+        "endChar": 65
+      },
+      "revId": "ffd803945e835e0beb7471a38ae768f3533590af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
