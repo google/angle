@@ -2707,7 +2707,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 // use that rather than try to read data back that may have been converted.
                 const std::vector<uint8_t> &capturedTextureLevel =
                     context->getShareGroup()->getFrameCaptureShared()->retrieveCachedTextureLevel(
-                        texture->id(), index.getLevelIndex());
+                        texture->id(), index.getTarget(), index.getLevelIndex());
 
                 // Use the shadow copy of the data to populate the call
                 CaptureTextureContents(setupCalls, &replayState, texture, index, desc,
@@ -3571,6 +3571,20 @@ bool FindShaderProgramIDInCall(const CallCapture &call, gl::ShaderProgramID *idO
     }
 
     return false;
+}
+
+GLint GetAdjustedTextureCacheLevel(gl::TextureTarget target, GLint level)
+{
+    GLint adjustedLevel = level;
+
+    // If target is a cube, we need to maintain 6 images per level
+    if (IsCubeMapFaceTarget(target))
+    {
+        adjustedLevel *= 6;
+        adjustedLevel += CubeMapTextureTargetToFaceIndex(target);
+    }
+
+    return adjustedLevel;
 }
 }  // namespace
 
@@ -4884,14 +4898,16 @@ void FrameCaptureShared::setProgramSources(gl::ShaderProgramID id, ProgramSource
 }
 
 const std::vector<uint8_t> &FrameCaptureShared::retrieveCachedTextureLevel(gl::TextureID id,
+                                                                           gl::TextureTarget target,
                                                                            GLint level)
 {
     // Look up the data for the requested texture
     const auto &foundTextureLevels = mCachedTextureLevelData.find(id);
     ASSERT(foundTextureLevels != mCachedTextureLevelData.end());
 
-    // For that texture, look up the data for the given level
-    const auto &foundTextureLevel = foundTextureLevels->second.find(level);
+    GLint adjustedLevel = GetAdjustedTextureCacheLevel(target, level);
+
+    const auto &foundTextureLevel = foundTextureLevels->second.find(adjustedLevel);
     ASSERT(foundTextureLevel != foundTextureLevels->second.end());
     const std::vector<uint8_t> &capturedTextureLevel = foundTextureLevel->second;
 
@@ -4956,7 +4972,7 @@ void FrameCaptureShared::copyCachedTextureLevel(const gl::Context *context,
 
 std::vector<uint8_t> &FrameCaptureShared::getCachedTextureLevelData(gl::Texture *texture,
                                                                     gl::TextureTarget target,
-                                                                    GLint level,
+                                                                    GLint textureLevel,
                                                                     EntryPoint entryPoint)
 {
     auto foundTextureLevels = mCachedTextureLevelData.find(texture->id());
@@ -4968,15 +4984,18 @@ std::vector<uint8_t> &FrameCaptureShared::getCachedTextureLevelData(gl::Texture 
         foundTextureLevels = emplaceResult.first;
     }
 
+    // For this texture, look up the adjusted level, which may not match 1:1 due to cubes
+    GLint adjustedLevel = GetAdjustedTextureCacheLevel(target, textureLevel);
+
     TextureLevels &foundLevels         = foundTextureLevels->second;
-    TextureLevels::iterator foundLevel = foundLevels.find(level);
+    TextureLevels::iterator foundLevel = foundLevels.find(adjustedLevel);
     if (foundLevel != foundLevels.end())
     {
         if (entryPoint == EntryPoint::GLCompressedTexImage2D ||
             entryPoint == EntryPoint::GLCompressedTexImage3D)
         {
             // Delete the cached entry in case the caller is respecifying the level.
-            foundLevels.erase(level);
+            foundLevels.erase(adjustedLevel);
         }
         else
         {
@@ -4991,10 +5010,10 @@ std::vector<uint8_t> &FrameCaptureShared::getCachedTextureLevelData(gl::Texture 
     // Otherwise, create an appropriately sized cache for this level
 
     // Get the format of the texture for use with the compressed block size math.
-    const gl::InternalFormat &format = *texture->getFormat(target, level).info;
+    const gl::InternalFormat &format = *texture->getFormat(target, textureLevel).info;
 
     // Divide dimensions according to block size.
-    const gl::Extents &levelExtents = texture->getExtents(target, level);
+    const gl::Extents &levelExtents = texture->getExtents(target, textureLevel);
 
     // Calculate the size needed to store the compressed level
     GLuint sizeInBytes;
@@ -5003,7 +5022,7 @@ std::vector<uint8_t> &FrameCaptureShared::getCachedTextureLevelData(gl::Texture 
 
     // Initialize texture rectangle data. Default init to zero for stability.
     std::vector<uint8_t> newPixelData(sizeInBytes, 0);
-    auto emplaceResult = foundLevels.emplace(level, std::move(newPixelData));
+    auto emplaceResult = foundLevels.emplace(adjustedLevel, std::move(newPixelData));
     ASSERT(emplaceResult.second);
 
     // Using the level entry we just created, return the location (a byte vector) where compressed
