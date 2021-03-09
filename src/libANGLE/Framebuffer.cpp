@@ -707,10 +707,7 @@ Framebuffer::Framebuffer(const Caps &caps,
     {
         mDirtyColorAttachmentBindings.emplace_back(this, DIRTY_BIT_COLOR_ATTACHMENT_0 + colorIndex);
     }
-    if (caps.maxDrawBuffers > 1)
-    {
-        mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
-    }
+    mDirtyBits.set(DIRTY_BIT_READ_BUFFER);
 }
 
 Framebuffer::Framebuffer(const Context *context, egl::Surface *surface, egl::Surface *readSurface)
