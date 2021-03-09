@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b33e1f0_b5c0c7d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-09T19:30:30Z",
+      "side": 1,
+      "message": "I don\u0027t have time to investigate how to change the recipe to use depot_tools latest Xcode version,\nso just updating it to hard coded 12.4.\n\nTested with led:\nmac-rel: https://luci-milo.appspot.com/raw/build/logs.chromium.org/angle/led/ynovikov_google.com/d33f384b62290e2a482ed71039de71a7a5572dcfb5a9cd962f6cec22190c42b6/+/annotations\nmac-dbg: https://ci.chromium.org/raw/build/logs.chromium.org/angle/led/ynovikov_google.com/c0eb0ef05f9a1ad7d9e7a040eb3bc841d920f2194240839283ff5ae13ace237d/+/annotations?server\u003dchromium-swarm.appspot.com",
+      "revId": "4620c22e7466598fa253415dc7f1aa9cc597d1c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
