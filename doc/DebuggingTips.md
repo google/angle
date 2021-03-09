@@ -99,8 +99,8 @@ angle_libs_suffix = "_ANGLE_DEV"
 ```
 
 All
-[NativeTest](https://chromium.googlesource.com/chromium/src/+/master/testing/android/native_test/java/src/org/chromium/native_test/NativeTest.java)
-based tests share the same activity name, `org.chromium.native_test.NativeUnitTestNativeActivity`.
+[AngleNativeTest](https://chromium.googlesource.com/chromium/src/+/master/third_party/angle/src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleNativeTest.java)
+based tests share the same activity name, `com.android.angle.test.AngleUnitTestActivity`.
 Thus, prior to capturing your test trace, the specific test APK must be installed on the device.
 When you build the test, a test launcher is generated, for example,
 `./out/Release/bin/run_angle_end2end_tests`. The best way to install the APK is to run this test
@@ -109,14 +109,14 @@ launcher once.
 In GAPID's "Capture Trace" dialog, "Package / Action:" should be:
 
 ```
-android.intent.action.MAIN:org.chromium.native_test/org.chromium.native_test.NativeUnitTestNativeActivity
+android.intent.action.MAIN:com.android.angle.test/com.android.angle.test.AngleUnitTestActivity
 ```
 
 The mandatory [extra intent
 argument](https://developer.android.com/studio/command-line/adb.html#IntentSpec) for starting the
 activity is `org.chromium.native_test.NativeTest.StdoutFile`. Without it the test APK crashes. Test
 filters can be specified via either the `org.chromium.native_test.NativeTest.CommandLineFlags` or
-the `org.chromium.native_test.NativeTest.Shard` argument.  Example "Intent Arguments:" values in
+the `org.chromium.native_test.NativeTest.GtestFilter` argument.  Example "Intent Arguments:" values in
 GAPID's "Capture Trace" dialog:
 
 ```
@@ -126,7 +126,7 @@ GAPID's "Capture Trace" dialog:
 or
 
 ```
--e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt --esal org.chromium.native_test.NativeTest.Shard RendererTest.SimpleOperation/ES2_VULKAN,SimpleOperationTest.DrawWithTexture/ES2_VULKAN
+-e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt --e org.chromium.native_test.NativeTest.GtestFilter RendererTest.SimpleOperation/ES2_VULKAN:SimpleOperationTest.DrawWithTexture/ES2_VULKAN
 ```
 
 ## Running ANGLE under RenderDoc

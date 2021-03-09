@@ -9,6 +9,7 @@
 
 #include "string_utils.h"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 using namespace angle;
@@ -90,6 +91,46 @@ TEST(StringUtilsTest, SplitString_WhitespaceAndResultType)
     EXPECT_EQ("", r[2]);
     r = SplitString(", ,", ",", TRIM_WHITESPACE, SPLIT_WANT_NONEMPTY);
     ASSERT_TRUE(r.empty());
+}
+
+// Tests for SplitStringAlongWhitespace
+TEST(StringUtilsTest, SplitStringAlongWhitespace)
+{
+    {
+        // No whitespace.
+        std::vector<std::string> r;
+        SplitStringAlongWhitespace("abcd", &r);
+        ASSERT_THAT(r, testing::ElementsAre("abcd"));
+    }
+
+    {
+        // Just whitespace.
+        std::vector<std::string> r;
+        SplitStringAlongWhitespace(" \t", &r);
+        ASSERT_THAT(r, testing::ElementsAre());
+    }
+
+    {
+        // Consecutive whitespace of same type.
+        std::vector<std::string> r;
+        SplitStringAlongWhitespace("a  b", &r);
+        ASSERT_THAT(r, testing::ElementsAre("a", "b"));
+    }
+
+    {
+        // Consecutive whitespace of different types.
+        std::vector<std::string> r;
+        SplitStringAlongWhitespace("ab \tcd", &r);
+        ASSERT_THAT(r, testing::ElementsAre("ab", "cd"));
+    }
+
+    {
+        // Non-empty output std::vector.
+        std::vector<std::string> r;
+        r.push_back("z");
+        SplitStringAlongWhitespace("abc", &r);
+        ASSERT_THAT(r, testing::ElementsAre("z", "abc"));
+    }
 }
 
 // Tests for TrimString

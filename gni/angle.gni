@@ -420,8 +420,13 @@ if (angle_standalone || build_with_chromium) {
       if (is_android) {
         public_configs += [ "$angle_root:build_id_config" ]
         if (build_with_chromium) {
-          use_native_activity = true
           configs -= [ "//build/config/android:hide_all_but_jni" ]
+          use_default_launcher = false
+          android_manifest_template = "$angle_root/src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2"
+          deps += [
+            "$angle_root/src/tests:native_test_java",
+            "$angle_root/src/tests:native_test_support_android",
+          ]
         } else {
           use_raw_android_executable = true
         }
