@@ -33,6 +33,24 @@
       "message": "This is just for testing, right Ian? Not for commit?",
       "revId": "8d605df6078708ccbbb03285d9f97a186b3379df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e85c576_d5e8f353",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-09T16:20:16Z",
+      "side": 1,
+      "message": "In it\u0027s current form, yes.\n\nThere\u0027s an Android platform/driver bug (I think in the Qualcomm HWC driver) that I\u0027m trying to deal with (see the bugs in this CL--there are times part of the screen updates and the other part doesn\u0027t).  Things point to a bug in Qualcomm\u0027s HWC driver with the VK_KHR_incremental_present extension.\n\nMy other CL (https://chromium-review.googlesource.com/c/angle/angle/+/2739999) fixes the problem with 2 games, but not others.  I want to see if this \"test CL\" fixes additional games.\n\nIf this fixes all of those games, I will do a proper fix.",
+      "parentUuid": "9cbbc793_10cd3b97",
+      "revId": "8d605df6078708ccbbb03285d9f97a186b3379df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
