@@ -101,6 +101,14 @@ struct DefaultUniformBlock final : private angle::NonCopyable
     std::vector<sh::BlockMemberInfo> uniformLayout;
 };
 
+// Performance and resource counters.
+using DescriptorSetCountList = std::array<uint32_t, DescriptorSetIndex::EnumCount>;
+
+struct ProgramExecutablePerfCounters
+{
+    DescriptorSetCountList descriptorSetsAllocated;
+};
+
 class ProgramExecutableVk
 {
   public:
@@ -175,14 +183,7 @@ class ProgramExecutableVk
         mProgramPipeline = pipeline;
     }
 
-    using DescriptorSetCountList = std::array<uint32_t, DescriptorSetIndex::EnumCount>;
-    // Performance and resource counters.
-    struct PerfCounters
-    {
-        DescriptorSetCountList descriptorSetsAllocated;
-    };
-
-    const PerfCounters getObjectPerfCounters() const { return mObjectPerfCounters; }
+    ProgramExecutablePerfCounters getAndResetObjectPerfCounters();
 
   private:
     friend class ProgramVk;
@@ -282,7 +283,7 @@ class ProgramExecutableVk
     ProgramVk *mProgram;
     ProgramPipelineVk *mProgramPipeline;
 
-    PerfCounters mObjectPerfCounters;
+    ProgramExecutablePerfCounters mObjectPerfCounters;
 };
 
 }  // namespace rx

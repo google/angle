@@ -1828,4 +1828,11 @@ void ProgramExecutableVk::outputCumulativePerfCounters()
     }
 }
 
+ProgramExecutablePerfCounters ProgramExecutableVk::getAndResetObjectPerfCounters()
+{
+    ProgramExecutablePerfCounters counters      = mObjectPerfCounters;
+    mObjectPerfCounters.descriptorSetsAllocated = {};
+    return counters;
+}
+
 }  // namespace rx

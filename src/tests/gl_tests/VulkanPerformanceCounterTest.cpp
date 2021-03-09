@@ -43,7 +43,10 @@ class VulkanPerformanceCounterTest : public ANGLETest
     {
         // Hack the angle!
         const gl::Context *context = static_cast<const gl::Context *>(getEGLWindow()->getContext());
-        return rx::GetImplAs<const rx::ContextVk>(context)->getPerfCounters();
+        rx::ContextVk *contextVk   = rx::GetImplAs<rx::ContextVk>(context);
+        // This will be implicitly called when using the extension.
+        contextVk->syncObjectPerfCounters();
+        return contextVk->getPerfCounters();
     }
 
     static constexpr GLsizei kInvalidateTestSize = 16;
@@ -2917,6 +2920,129 @@ TEST_P(VulkanPerformanceCounterTest, ScissorDoesNotBreakRenderPass)
                          kMaskedDrawY2 - kClearY2, GLColor::transparentBlack);
     EXPECT_PIXEL_RECT_EQ(kClearX2, kMaskedDrawY, kDrawX - kClearX2, kMaskedDrawHeight,
                          GLColor::transparentBlack);
+}
+
+// Tests that changing UBO bindings does not allocate new descriptor sets.
+TEST_P(VulkanPerformanceCounterTest, ChangingUBOsHitsDescriptorSetCache)
+{
+    // Set up two UBOs, one filled with "1" and the second with "2".
+    constexpr GLsizei kCount = 64;
+    std::vector<GLint> data1(kCount, 1);
+    std::vector<GLint> data2(kCount, 2);
+
+    GLBuffer ubo1;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo1);
+    glBufferData(GL_UNIFORM_BUFFER, kCount * sizeof(data1[0]), data1.data(), GL_STATIC_DRAW);
+
+    GLBuffer ubo2;
+    glBindBuffer(GL_UNIFORM_BUFFER, ubo2);
+    glBufferData(GL_UNIFORM_BUFFER, kCount * sizeof(data2[0]), data2.data(), GL_STATIC_DRAW);
+
+    // Set up a program that verifies the contents of uniform blocks.
+    constexpr char kVS[] = R"(#version 300 es
+precision mediump float;
+in vec4 position;
+void main()
+{
+    gl_Position = position;
+})";
+
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform buf {
+    int data[64/4];
+};
+uniform int checkValue;
+out vec4 outColor;
+
+void main()
+{
+    for (int i = 0; i < 64/4; ++i) {
+        if (data[i] != checkValue) {
+            outColor = vec4(1, 0, 0, 1);
+            return;
+        }
+    }
+    outColor = vec4(0, 1, 0, 1);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    GLint uniLoc = glGetUniformLocation(program, "checkValue");
+    ASSERT_NE(-1, uniLoc);
+
+    GLuint blockIndex = glGetUniformBlockIndex(program, "buf");
+    ASSERT_NE(blockIndex, GL_INVALID_INDEX);
+
+    glUniformBlockBinding(program, blockIndex, 0);
+    ASSERT_GL_NO_ERROR();
+
+    // Set up the rest of the GL state.
+    auto quadVerts = GetQuadVertices();
+    GLBuffer vertexBuffer;
+    glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+    glBufferData(GL_ARRAY_BUFFER, quadVerts.size() * sizeof(quadVerts[0]), quadVerts.data(),
+                 GL_STATIC_DRAW);
+
+    GLint posLoc = glGetAttribLocation(program, "position");
+    ASSERT_NE(-1, posLoc);
+
+    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(posLoc);
+
+    // Draw a few times with each UBO. Stream out one pixel for post-render verification.
+    constexpr int kIterations         = 5;
+    constexpr GLsizei kPackBufferSize = sizeof(GLColor) * kIterations * 2;
+
+    GLBuffer packBuffer;
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, packBuffer);
+    glBufferData(GL_PIXEL_PACK_BUFFER, kPackBufferSize, nullptr, GL_STREAM_READ);
+
+    GLsizei offset = 0;
+
+    uint32_t descriptorSetAllocationsBefore = 0;
+
+    for (int iteration = 0; iteration < kIterations; ++iteration)
+    {
+        glUniform1i(uniLoc, 1);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo1);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid *>(offset));
+        offset += sizeof(GLColor);
+        glUniform1i(uniLoc, 2);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, ubo2);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, reinterpret_cast<GLvoid *>(offset));
+        offset += sizeof(GLColor);
+
+        // Capture the allocations counter after the first run.
+        if (iteration == 0)
+        {
+            descriptorSetAllocationsBefore = hackANGLE().descriptorSetAllocations;
+        }
+    }
+
+    ASSERT_GL_NO_ERROR();
+
+    // Verify correctness first.
+    std::vector<GLColor> expectedData(kIterations * 2, GLColor::green);
+    std::vector<GLColor> actualData(kIterations * 2, GLColor::black);
+
+    void *mapPtr = glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, kPackBufferSize, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mapPtr);
+    memcpy(actualData.data(), mapPtr, kPackBufferSize);
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+
+    EXPECT_EQ(expectedData, actualData);
+
+    // Check for unnecessary descriptor set allocations.
+    uint32_t descriptorSetAllocationsAfter = hackANGLE().descriptorSetAllocations;
+
+    // TODO(jmadill): http://anglebug.com/5736 change to EXPECT_EQ.
+    EXPECT_NE(descriptorSetAllocationsBefore, descriptorSetAllocationsAfter);
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());
