@@ -22,6 +22,30 @@
       },
       "revId": "ffd803945e835e0beb7471a38ae768f3533590af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34a61a60_826e8ce6",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-09T13:30:59Z",
+      "side": 1,
+      "message": "Good to know. I\u0027ll make sure that reverse look-up is unambiguous in the updated mappings and codegen.",
+      "parentUuid": "085d52f0_a490b9a6",
+      "range": {
+        "startLine": 95,
+        "startChar": 12,
+        "endLine": 95,
+        "endChar": 65
+      },
+      "revId": "ffd803945e835e0beb7471a38ae768f3533590af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
