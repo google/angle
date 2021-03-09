@@ -50,6 +50,24 @@
       "message": "Mohan, while you\u0027re at it, could you also process this in attach?",
       "revId": "257eaac3028e9a3bda78df52cf207ae27213de13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd07427d_421db3f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-09T17:55:18Z",
+      "side": 1,
+      "message": "there are actually other places as well that might need this (glGetProgramInfoLog comes to mind). Can we land this as-is (this is a hot-fix for an internal issue) and have a follow up change that takes care of other places?",
+      "parentUuid": "61a4d458_466e1574",
+      "revId": "257eaac3028e9a3bda78df52cf207ae27213de13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
