@@ -16,6 +16,23 @@
       "message": "I\u0027m trying a different work-around.  This work-around doesn\u0027t rotate the damage rectangles.\n\nI had the thought that perhaps SF/HWC is also rotating the damage rectangles (a double-rotation by both ANGLE and SF/HWC would account for what we see).  That might help \"Extreme Car Driving Simulator\" if it\u0027s not doing a full-window damage rectangle (like the other work-around).  If so, this would be the better work-around (after cleaned up and commented).",
       "revId": "8d605df6078708ccbbb03285d9f97a186b3379df",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cbbc793_10cd3b97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-09T16:08:08Z",
+      "side": 1,
+      "message": "This is just for testing, right Ian? Not for commit?",
+      "revId": "8d605df6078708ccbbb03285d9f97a186b3379df",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
