@@ -16,6 +16,24 @@
       "message": "If this a functionality fix, can we get a regression test?",
       "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef025338_47fb5cec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-09T23:20:44Z",
+      "side": 1,
+      "message": "i did try a bit to use combinations of glBuffer* api to show the problem but no dice. Technically the only issue this will have is \"mNextAllocationOffset\" will have a bad value and since we only use acquireBufferHelper to allocate a full buffer (for now), \"mNextAllocationOffset\" will not be involved. Hence my comment about potential impact on Shabi\u0027s suballocation change",
+      "parentUuid": "e6d58e5a_040ef91a",
+      "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
