@@ -163,6 +163,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a9305896_e683a063",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1175714
+      },
+      "writtenOn": "2021-03-09T21:14:44Z",
+      "side": 1,
+      "message": "Another way we could solve it is if vkgetAndroidhardwarebufferpropertiesANDROID returned extra fields as to what tiling modes were allowed by the implementation. WDYT?",
+      "parentUuid": "4e08ca3d_4dbcb8dd",
+      "revId": "10cfeb292a1951a7849ae3b1ea157062a46344b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1695e854_822d6c7a",
         "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
         "patchSetId": 2
