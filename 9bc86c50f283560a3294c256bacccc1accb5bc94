@@ -142,6 +142,30 @@
       },
       "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f66d68a4_ad0ff206",
+        "filename": "src/libANGLE/validationES2.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 563,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-09T19:34:57Z",
+      "side": 0,
+      "message": "The assertion Geoff mentioned SGTM.",
+      "parentUuid": "63c29115_412798d1",
+      "range": {
+        "startLine": 562,
+        "startChar": 0,
+        "endLine": 563,
+        "endChar": 68
+      },
+      "revId": "9bc86c50f283560a3294c256bacccc1accb5bc94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
