@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2ff17916_458a742b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6443,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T19:44:13Z",
+      "side": 1,
+      "message": "That\u0027s an ANGLE bug, right? We shouldn\u0027t be finishing on pack buffers. Better if we don\u0027t tell the app to change their behavior when it\u0027s an ANGLE internal issue.",
+      "parentUuid": "411fb1a5_9a94b9e4",
+      "range": {
+        "startLine": 6443,
+        "startChar": 9,
+        "endLine": 6443,
+        "endChar": 25
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "be55d563_6e548ad6",
         "filename": "src/tests/gl_tests/VulkanPerformanceCounterTest.cpp",
         "patchSetId": 1
