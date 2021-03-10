@@ -553,6 +553,24 @@
       "parentUuid": "8c81b6d6_c702257b",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6b29d29_1d5334fd",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T17:50:18Z",
+      "side": 1,
+      "message": "\u003e Hm, unless the link fails and we would lose the previous (good) SPIR-V code.\n\nI hadn\u0027t even thought about that, not sure if it\u0027s an issue. What I was saying is that the code does this:\n\n    // Gather variable info and compiled SPIR-V binaries.\n    gl::ShaderMap\u003cconst angle::spirv::Blob *\u003e spirvBlobs;\n    GlslangWrapperVk::GetShaderCode(contextVk-\u003egetFeatures(), mState, resources,\n                                    \u0026mGlslangProgramInterfaceInfo, \u0026spirvBlobs,\n                                    \u0026mExecutable.mVariableInfoMap);\n\n    // Compile the shaders.\n    angle::Result status \u003d mOriginalShaderInfo.initShaders(\n        mState.getExecutable().getLinkedShaderStages(), spirvBlobs, mExecutable.mVariableInfoMap);\n\nWith this change, `GetShaderCode` gives a pointer to the front-end SPIR-V, and `initShaders` makes a copy of it. With your suggestion, `GetShaderCode` makes a copy of the front-end SPIR-V and `initShaders` does nothing. The number of copies is the same either way.",
+      "parentUuid": "e91c5486_d20104fa",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
