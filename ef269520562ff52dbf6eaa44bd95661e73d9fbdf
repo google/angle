@@ -16,6 +16,24 @@
       "message": "I\u0027m not sure there are bots I can trigger to run webgl tests on the metal backend on the M1 macs. If not, I guess we can land and see?",
       "revId": "ef269520562ff52dbf6eaa44bd95661e73d9fbdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0756a87b_8dbb33e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-10T18:18:18Z",
+      "side": 1,
+      "message": "I think you\u0027re not allowed to trigger try runs on these devices.",
+      "parentUuid": "0944b5c0_a3b78f94",
+      "revId": "ef269520562ff52dbf6eaa44bd95661e73d9fbdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
