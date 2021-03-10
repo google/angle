@@ -51,6 +51,24 @@
       "message": "LGTM but mac exploded.",
       "revId": "ef269520562ff52dbf6eaa44bd95661e73d9fbdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "64133acd_61748a20",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-03-10T19:40:54Z",
+      "side": 1,
+      "message": "It was only the M1 macs which normally don\u0027t run through try runs",
+      "parentUuid": "b77414f7_caa7ec2c",
+      "revId": "ef269520562ff52dbf6eaa44bd95661e73d9fbdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
