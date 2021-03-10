@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1f5bdeb_c2c062ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T19:47:37Z",
+      "side": 1,
+      "message": "John, in general it\u0027s better if we can separate out CLs a bit to ease review. i.e. there is a logical separation between the loader \u0026 EVENT macros. Would it be possible to redo the EVENT macro into a separate CL and the loader changes as a second CL based on that one?",
+      "revId": "4b798eb4dab016eb929308564b3b54d8029f5a69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
