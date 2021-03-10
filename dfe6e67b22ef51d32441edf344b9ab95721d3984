@@ -22,6 +22,122 @@
       },
       "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "411fb1a5_9a94b9e4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6443,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T18:02:50Z",
+      "side": 1,
+      "message": "No need for if. The finishImpl() call is unconditional.",
+      "parentUuid": "df7cf826_dc68af60",
+      "range": {
+        "startLine": 6443,
+        "startChar": 9,
+        "endLine": 6443,
+        "endChar": 25
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be55d563_6e548ad6",
+        "filename": "src/tests/gl_tests/VulkanPerformanceCounterTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2953,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T18:02:50Z",
+      "side": 1,
+      "message": "No need for /4",
+      "range": {
+        "startLine": 2953,
+        "startChar": 15,
+        "endLine": 2953,
+        "endChar": 17
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef024277_39121a3c",
+        "filename": "src/tests/gl_tests/VulkanPerformanceCounterTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3009,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T18:02:50Z",
+      "side": 1,
+      "message": "1 (it\u0027s integer)",
+      "range": {
+        "startLine": 3009,
+        "startChar": 28,
+        "endLine": 3009,
+        "endChar": 32
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c19dea04_17b23338",
+        "filename": "src/tests/gl_tests/VulkanPerformanceCounterTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3014,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T18:02:50Z",
+      "side": 1,
+      "message": "2",
+      "range": {
+        "startLine": 3014,
+        "startChar": 28,
+        "endLine": 3014,
+        "endChar": 32
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "07afaca8_f9a118c9",
+        "filename": "src/tests/gl_tests/VulkanPerformanceCounterTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3039,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T18:02:50Z",
+      "side": 1,
+      "message": "The test could be greatly simplified if you used a GL_ONE, GL_ONE blend, and make sure the color in the end is green (so no red was output in the middle). No need for pack buffers or read pixels in the loop.",
+      "range": {
+        "startLine": 3028,
+        "startChar": 0,
+        "endLine": 3039,
+        "endChar": 40
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
