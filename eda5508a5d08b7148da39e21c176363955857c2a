@@ -56,6 +56,30 @@
       },
       "revId": "eda5508a5d08b7148da39e21c176363955857c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1df214f_4eb58bcf",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2021-03-10T18:51:29Z",
+      "side": 1,
+      "message": "I confirmed that reverting this to the original code fixes the crash. I\u0027m not sure I understand enough to know why that\u0027s the case though.",
+      "parentUuid": "1e24280d_fc125b8d",
+      "range": {
+        "startLine": 306,
+        "startChar": 4,
+        "endLine": 311,
+        "endChar": 5
+      },
+      "revId": "eda5508a5d08b7148da39e21c176363955857c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
