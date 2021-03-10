@@ -51,6 +51,24 @@
       "parentUuid": "e02fc52a_b0249545",
       "revId": "9b1a1a93831ae76e1d09e13db4f764f815c84e5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9494f58e_06e59023",
+        "filename": "src/libANGLE/capture/capture_gles_3_2_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-10T02:13:35Z",
+      "side": 1,
+      "message": "Oh, I see.   basevertex is captured in CaptureDrawElementsBaseVertex().",
+      "parentUuid": "390b5f90_ed490a37",
+      "revId": "9b1a1a93831ae76e1d09e13db4f764f815c84e5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
