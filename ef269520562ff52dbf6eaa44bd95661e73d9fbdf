@@ -34,6 +34,23 @@
       "parentUuid": "0944b5c0_a3b78f94",
       "revId": "ef269520562ff52dbf6eaa44bd95661e73d9fbdf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b77414f7_caa7ec2c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T18:49:35Z",
+      "side": 1,
+      "message": "LGTM but mac exploded.",
+      "revId": "ef269520562ff52dbf6eaa44bd95661e73d9fbdf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
