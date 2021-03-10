@@ -16,6 +16,52 @@
       "message": "I found the actual cause of the problem.  The Android platform is also rotating the damage rectangles (for all HWC drivers that implement damage rectangles).  Therefore, we need to not rotate the damage rectangles, to avoid the double-rotation that\u0027s been happening.",
       "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e349c4cc_79644d5c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-10T22:32:38Z",
+      "side": 1,
+      "message": "We should tie this back to a bug so you can re-enable it when Android is fixed (if it gets fixed).",
+      "range": {
+        "startLine": 1943,
+        "startChar": 86,
+        "endLine": 1943,
+        "endChar": 95
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa1db808_1a2b6ea9",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1423,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-10T22:32:38Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem related to the other changes or your commit message. Is this is separate fix?  The code gets a bit messy with it. Maybe worth moving to a helper where you can explain all the conditions cleanly?  I\u0027m not super familiar with the pre-rotation logic, so will defer to Shabi if this is okay.",
+      "range": {
+        "startLine": 1422,
+        "startChar": 16,
+        "endLine": 1423,
+        "endChar": 72
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
