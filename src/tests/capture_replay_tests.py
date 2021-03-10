@@ -252,22 +252,22 @@ class ChildProcessesManager():
             depot_tools_path)
 
     def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
-        subprocess = SubProcess(command, env, pipe_stdout)
-        debug('Creating subprocess: %s with pid %d' % (' '.join(command), subprocess.Pid()))
-        self.subprocesses[subprocess.Pid()] = subprocess
+        proc = SubProcess(command, env, pipe_stdout)
+        debug('Creating subprocess: %s with pid %d' % (' '.join(command), proc.Pid()))
+        self.subprocesses[proc.Pid()] = proc
         try:
-            returncode, output = self.subprocesses[subprocess.Pid()].Join(timeout)
-            self.RemoveSubprocess(subprocess.Pid())
+            returncode, output = self.subprocesses[proc.Pid()].Join(timeout)
+            self.RemoveSubprocess(proc.Pid())
             if returncode != 0:
                 return -1, output
             return returncode, output
         except KeyboardInterrupt:
             raise
         except subprocess.TimeoutExpired as e:
-            self.RemoveSubprocess(subprocess.Pid())
+            self.RemoveSubprocess(proc.Pid())
             return -2, str(e)
         except Exception as e:
-            self.RemoveSubprocess(subprocess.Pid())
+            self.RemoveSubprocess(proc.Pid())
             return -1, str(e)
 
     def RemoveSubprocess(self, subprocess_id):
