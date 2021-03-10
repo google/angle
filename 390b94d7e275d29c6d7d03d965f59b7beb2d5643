@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "6889b3e8_508bb63f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-10T23:11:51Z",
+      "side": 1,
+      "message": "That\u0027s an internal/private bug, which I closed because there is no Qualcomm/Pixel4-specific bug.  I did add the ANGLE bug though (per you other comment).",
+      "parentUuid": "f4ab3681_6394b31b",
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "de88658d_cd6c74f3",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -60,6 +78,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2b1666fa_ba6ee6e6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-10T23:11:51Z",
+      "side": 1,
+      "message": "I don\u0027t think this can/will get changed in Android.  Here\u0027s my rationale.\n\n1) It would break compatibilty.  Any change would break any Vulkan application that is already using VK_KHR_incremental_present with pre-rotation.  Any change would create future compatibility problems for new apps that want to run on multiple Android releases (e.g. Android n rotates the rects, Android n+1 does not).\n\n2) The rotation is done in generic platform code (that doesn\u0027t know about Vulkan vs. GLES, but was written for GLES before we ever joined Google).  The only way I can see to \"fix\" this is to rotate the rectangles in the Vulkan loader (then there would be 3 rotations), but then we\u0027re back to the compatibility issue.\n\nThus, I\u0027m inclined to say we have to live with this.\n\nI should get the Vulkan spec clarified.",
+      "parentUuid": "e349c4cc_79644d5c",
+      "range": {
+        "startLine": 1943,
+        "startChar": 86,
+        "endLine": 1943,
+        "endChar": 95
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa1db808_1a2b6ea9",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 2
@@ -71,6 +113,30 @@
       "writtenOn": "2021-03-10T22:32:38Z",
       "side": 1,
       "message": "This doesn\u0027t seem related to the other changes or your commit message. Is this is separate fix?  The code gets a bit messy with it. Maybe worth moving to a helper where you can explain all the conditions cleanly?  I\u0027m not super familiar with the pre-rotation logic, so will defer to Shabi if this is okay.",
+      "range": {
+        "startLine": 1422,
+        "startChar": 16,
+        "endLine": 1423,
+        "endChar": 72
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07e57106_4159f9d9",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1423,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-10T23:11:51Z",
+      "side": 1,
+      "message": "I\u0027ll drop it.\n\nI was overly concerned with Shabi\u0027s emulated pre-rotation feature.  As I think about it, there\u0027s no way for his feature to come into play for this.",
+      "parentUuid": "fa1db808_1a2b6ea9",
       "range": {
         "startLine": 1422,
         "startChar": 16,
