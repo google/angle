@@ -34,6 +34,47 @@
       "parentUuid": "e6d58e5a_040ef91a",
       "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2665c39a_bb29b70d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-10T01:17:00Z",
+      "side": 1,
+      "message": "To give some context, I believe this is the change Mohan is referring to:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2725499/5..8/src/libANGLE/renderer/vulkan/BufferVk.cpp#b339\n\nWhich was later reverted before landing the CL:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2725499/7/src/libANGLE/renderer/vulkan/BufferVk.cpp#339",
+      "parentUuid": "ef025338_47fb5cec",
+      "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ea21de1_7d07a262",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-10T01:17:00Z",
+      "side": 1,
+      "message": "Can (offsetAfterSubdata \u003e bufferSize) ever be true?   Looking at how updateRegionAfterSubData is initialized above, it seems like it, though I don\u0027t know the details of this well enough to know for sure.\n\nProbably worth an ASSERT(offsetAfterSubdata \u003c\u003d bufferSize) to be safe.   It\u0027s probably also worth skipping if (bufferSize - offsetAfterSubdata) \u003d\u003d 0.",
+      "range": {
+        "startLine": 699,
+        "startChar": 54,
+        "endLine": 699,
+        "endChar": 85
+      },
+      "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
