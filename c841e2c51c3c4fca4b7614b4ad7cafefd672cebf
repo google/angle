@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12251780_9701abf0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:28:39Z",
+      "side": 1,
+      "message": "Generally looks good. What\u0027s missing from this ?",
+      "revId": "c841e2c51c3c4fca4b7614b4ad7cafefd672cebf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e58035d7_47f390ad",
+        "filename": "src/tests/test_utils/runner/android/native_test_util.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:28:39Z",
+      "side": 1,
+      "message": "Can you move these to common/string_utils, or util/test_utils? There\u0027s some code duplication here with other functions in ANGLE.",
+      "revId": "c841e2c51c3c4fca4b7614b4ad7cafefd672cebf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "692b4cd9_7f4a5cac",
+        "filename": "src/tests/test_utils/runner/android/native_test_util.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:28:39Z",
+      "side": 1,
+      "message": "nit: Copyright 2021 The ANGLE Project Authors.\n\nSame for all other files.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 43
+      },
+      "revId": "c841e2c51c3c4fca4b7614b4ad7cafefd672cebf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "993b5a27_1ed139b6",
+        "filename": "src/tests/test_utils/runner/android/native_test_util.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:28:39Z",
+      "side": 1,
+      "message": "duplicated in util/test_utils.",
+      "range": {
+        "startLine": 21,
+        "startChar": 5,
+        "endLine": 21,
+        "endChar": 21
+      },
+      "revId": "c841e2c51c3c4fca4b7614b4ad7cafefd672cebf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
