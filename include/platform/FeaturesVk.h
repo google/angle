@@ -90,6 +90,16 @@ struct FeaturesVk : FeatureSetBase
         "supportsIncrementalPresent", FeatureCategory::VulkanFeatures,
         "VkDevice supports the VK_KHR_incremental_present extension", &members};
 
+    // Whether the Vulkan presentation engine rotates the present region rectangles of the
+    // VK_KHR_incremental_present extension in pre-rotation situations.  The Android presentation
+    // engine assumes that these rectangles need to be rotated, and thus ANGLE should not also
+    // pre-rotate them.
+    Feature disablePreRotateIncrementalPresentRectangles = {
+        "disablePreRotateIncrementalPresentRectangles", FeatureCategory::VulkanFeatures,
+        "Presentation engine performs necessary rotation for present region rectangles of the "
+        "VK_KHR_incremental_present extension",
+        &members};
+
     // Whether texture copies on cube map targets should be done on GPU.  This is a workaround for
     // Intel drivers on windows that have an issue with creating single-layer views on cube map
     // textures.
