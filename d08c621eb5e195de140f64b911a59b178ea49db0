@@ -571,6 +571,24 @@
       "parentUuid": "e91c5486_d20104fa",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e45296d_1daa6151",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-10T18:23:56Z",
+      "side": 1,
+      "message": "I see.   Digging in, I think I get that the difference now is really the duplication of the SPIR-V between:\n\n    ShaderState::mCompiledBinary\nand\n    ShaderInfo::mSpirvBlobs\n\nWhat you\u0027re referring to (and I was missing) is ShaderState::mCompiledBinary -\u003e ShaderInfo::mSpirvBlobs needs to occur regardless.   Since the ShaderState can disappear at any time (since shaders can be detached/deleted), we\u0027re stuck with this copy as long as the SPIR-V data is part of the Shader (via ShaderState).\n\nI wonder if there\u0027s a better place to try and store the compiled SPIR-V now, rather than having the Shader own it.   Shader is obviously a nice place, since that\u0027s what the SPIR-V is specific to, but unfortunately Shaders are also ephemeral in relation to Programs.\n\nThis doesn\u0027t need to be fixed to land this CL, but I think it\u0027s worth a TODO so we don\u0027t lose sight of the fact that this duplication exists.",
+      "parentUuid": "e6b29d29_1d5334fd",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
