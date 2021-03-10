@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48ce96d3_fead8df5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-10T17:16:20Z",
+      "side": 1,
+      "message": "Nice, this should help clear up the bot status.",
+      "revId": "ed98cdcdeb945dc2daaa6c1a17d233306aaa5949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa9005ad_14fb6f0a",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-10T17:16:20Z",
+      "side": 1,
+      "message": "`local_subprocess` might be a better name, but I\u0027m not picky here.  Defer to Jamie\u0027s opinion.",
+      "range": {
+        "startLine": 255,
+        "startChar": 8,
+        "endLine": 255,
+        "endChar": 19
+      },
+      "revId": "ed98cdcdeb945dc2daaa6c1a17d233306aaa5949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
