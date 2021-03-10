@@ -33,6 +33,29 @@
       "message": "Nothing has changed yet.  @chrisb is helping me to figure out how to get setup to repro the issue that was seen in chromium.  I\u0027m still suspicious that it was related to this change having again looked at the patch.  To my knowledge Chromium doesn\u0027t use UWP mode in any configuration so I\u0027m at a loss to see how this would have any impact.  That said it appeared to have had some correlation, hence hoping we can make progress getting to the root of the problem and fixing it as it\u0027s pretty much the last dependency that needs to land to have the initial Flutter UWP MVP light up in Flutter Master.  I abandoned the accident dupe, sorry about that. Thx as ever for being so responsive!",
       "revId": "eda5508a5d08b7148da39e21c176363955857c2a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e24280d_fc125b8d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/converged/CompositorNativeWindow11.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1306173
+      },
+      "writtenOn": "2021-03-10T17:54:12Z",
+      "side": 1,
+      "message": "this changed from the non-UWP path - perhaps this is the reason for the crash that caused the original revert?",
+      "range": {
+        "startLine": 306,
+        "startChar": 4,
+        "endLine": 311,
+        "endChar": 5
+      },
+      "revId": "eda5508a5d08b7148da39e21c176363955857c2a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
