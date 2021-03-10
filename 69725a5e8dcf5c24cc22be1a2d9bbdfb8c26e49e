@@ -136,6 +136,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "825c6c8d_8a4a804e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:48:30Z",
+      "side": 1,
+      "message": "I\u0027ll take this on as part of http://anglebug.com/5736 .",
+      "parentUuid": "0cfab0ca_60f674f0",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4e2ce3e0_1257849a",
