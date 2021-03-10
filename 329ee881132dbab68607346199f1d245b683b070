@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e0d8a6c7_b2444269",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-03-10T06:47:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab8a3e50_96d4d59a",
+      "revId": "329ee881132dbab68607346199f1d245b683b070",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2a8d996f_aa844ba4",
         "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
         "patchSetId": 3
@@ -49,6 +67,24 @@
       "side": 1,
       "message": "The ChromeOS check is fine. I\u0027m a bit concerned this will fail on the Skia roll because of the \"angle_has_build\" condition. It might make sense to define a new preprocessor variable \"ANGLE_HAS_VULKAN_SYSTEM_INFO\".",
       "parentUuid": "2a8d996f_aa844ba4",
+      "revId": "329ee881132dbab68607346199f1d245b683b070",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6fd90efc_42797d34",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-03-10T06:47:38Z",
+      "side": 1,
+      "message": "Added ANGLE_HAS_VULKAN_SYSTEM_INFO.",
+      "parentUuid": "284c4116_fb23a7bd",
       "revId": "329ee881132dbab68607346199f1d245b683b070",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
