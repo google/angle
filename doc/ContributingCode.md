@@ -131,7 +131,7 @@
      CL with a particular review, and track dependencies between commits.
    * Download the hook from
      [https://chromium-review.googlesource.com/tools/hooks/commit-msg][commit-msg-hook] and copy
-     this file to `.git/hooks/commit-msg` within your local repository. On non-Windows, platforms,
+     this file to `.git/hooks/commit-msg` within your local repository. On non-Windows platforms,
      ensure that permissions are set to allow execution.
    * *BE AWARE:* Some patch management tools, such as StGit, currently bypass git hooks. They should
      not currently be used with changes intended for review.
@@ -146,9 +146,9 @@
    * `git add src/../FileName.cpp`
    * `git commit`
    * A text editor will open. Add a description at the top of the file.
-      * If your changes are associated with an issue in the issue tracker (e.g. a fix for a reported
-        bug), please associate the CL with that issue by adding the following line to the commit
-        message: `Bug: angleproject:<issue number>`.
+   * Associate the CL with an issue in the issue tracker (e.g. a fix for a reported bug)
+     by adding the following line to the commit message: `Bug: angleproject:<issue number>`.
+     * If necessary please file a new bug at http://anglebug.com/new
    * Save.
    * Close the text editor.
    * Use `git commit --amend` to update your CL with new changes.
