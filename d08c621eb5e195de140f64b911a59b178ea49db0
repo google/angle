@@ -589,6 +589,24 @@
       "parentUuid": "e6b29d29_1d5334fd",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "834c33b9_d0304c79",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T19:25:40Z",
+      "side": 1,
+      "message": "The front-end could potentially do the copy to Program, but I\u0027m not sure there\u0027s much we could do about the duplication. The same shader module can be used with multiple programs for example, so it\u0027s not like we could \"std::move\" the SPIR-V out of it. If you have ideas, feel free to open a new bug to track the work.",
+      "parentUuid": "2e45296d_1daa6151",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
