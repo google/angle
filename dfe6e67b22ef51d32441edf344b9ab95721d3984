@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "35c7fa16_d6af63ab",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6443,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T19:49:51Z",
+      "side": 1,
+      "message": "PBOs are implemented mostly with CPU readback! I recently added a transfer-based fast path for pack buffers (see line 6391 above).\n\nI think there\u0027s still value in this. The message could be specialized to clearly say it\u0027s taking an inefficient path.\n\n- A developer seeing this will not be surprised by the bad performance\n- More importantly, when we see this we know an application is hitting this path and we should prioritize optimizing it.",
+      "parentUuid": "2ff17916_458a742b",
+      "range": {
+        "startLine": 6443,
+        "startChar": 9,
+        "endLine": 6443,
+        "endChar": 25
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "be55d563_6e548ad6",
         "filename": "src/tests/gl_tests/VulkanPerformanceCounterTest.cpp",
         "patchSetId": 1
