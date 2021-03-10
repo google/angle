@@ -16,6 +16,23 @@
       "message": "Small fix that gets Genshin Impact working.",
       "revId": "9b1a1a93831ae76e1d09e13db4f764f815c84e5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e02fc52a_b0249545",
+        "filename": "src/libANGLE/capture/capture_gles_3_2_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-10T02:01:07Z",
+      "side": 1,
+      "message": "This is ignoring the \u0027basevertex\u0027 parameter:\n\n\u003e basevertex\n\u003e Specifies a constant that should be added to each element of indices when chosing [sic] elements from the enabled vertex arrays.\n\n\u003e glDrawElementsBaseVertex behaves identically to glDrawElements except that the ith element transferred by the corresponding draw call will be taken from element indices[i] + basevertex of each enabled array.\n\nSince this fixes \"Genshin Impact\", presumably they are using \u0027basevertex \u003d 0\u0027.   To land that trace, I\u0027m fine with a version that does:\n\n    // TODO(http://anglebug.com/XXXX): Add support for capturing\n    // glDrawElementsBaseVertex() with basevertex \u003e 0\n    ASSERT(basevertex \u003d\u003d 0);\n    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,\n                                indicesParam);",
+      "revId": "9b1a1a93831ae76e1d09e13db4f764f815c84e5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
