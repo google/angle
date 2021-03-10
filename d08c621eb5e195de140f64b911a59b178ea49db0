@@ -535,6 +535,24 @@
       "parentUuid": "214a87fd_973b13f1",
       "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e91c5486_d20104fa",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-10T16:13:02Z",
+      "side": 1,
+      "message": "\u003e @Tim, sending \u0026mOriginalShaderInfo.getSpirvBlobs() is just shifting the copy. GlslangWrapperVk::GetShaderCode doesn\u0027t do a copy currently, but it would have to if given mOriginalShaderInfo.getSpirvBlobs().\n\nMy point was that GlslangWrapperVk::GetShaderCode() would just fill in mOriginalShaderInfo.mSpirvBlobs directly so the copy here wouldn\u0027t be necessary.\n\nHm, unless the link fails and we would lose the previous (good) SPIR-V code.   Is that the copy you\u0027re referring to?",
+      "parentUuid": "8c81b6d6_c702257b",
+      "revId": "d08c621eb5e195de140f64b911a59b178ea49db0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
