@@ -6,6 +6,7 @@
 // capture_gles32_params.cpp:
 //   Pointer parameter capture functions for the OpenGL ES 3.2 entry points.
 
+#include "libANGLE/capture/capture_gles_2_0_autogen.h"
 #include "libANGLE/capture/capture_gles_3_2_autogen.h"
 
 using namespace angle;
@@ -57,7 +58,8 @@ void CaptureDrawElementsBaseVertex_indices(const State &glState,
                                            GLint basevertex,
                                            ParamCapture *indicesParam)
 {
-    UNIMPLEMENTED();
+    CaptureDrawElements_indices(glState, isCallValid, modePacked, count, typePacked, indices,
+                                indicesParam);
 }
 
 void CaptureDrawElementsInstancedBaseVertex_indices(const State &glState,
