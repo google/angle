@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b234fe89_03a15e23",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:35:24Z",
+      "side": 1,
+      "message": "Thanks John!",
+      "revId": "367df0b432ce9d8e34a4a3db42755917a9ed8eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7c0c84d_6d3653c3",
+        "filename": "doc/ContributingCode.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:35:24Z",
+      "side": 1,
+      "message": "can you add a child bullet (with link) saying:\n\n   * If necessary please file a new bug at http://anglebug.com/new",
+      "range": {
+        "startLine": 150,
+        "startChar": 8,
+        "endLine": 150,
+        "endChar": 14
+      },
+      "revId": "367df0b432ce9d8e34a4a3db42755917a9ed8eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
