@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df7cf826_dc68af60",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6443,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T17:47:17Z",
+      "side": 1,
+      "message": "probably should be a split change, forgot to take it out.",
+      "range": {
+        "startLine": 6443,
+        "startChar": 9,
+        "endLine": 6443,
+        "endChar": 25
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
