@@ -39,6 +39,30 @@
       },
       "revId": "ed98cdcdeb945dc2daaa6c1a17d233306aaa5949",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09680282_8e98d9b5",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 255,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-10T17:20:03Z",
+      "side": 1,
+      "message": "I would actually go with the mathematician\u0027s way of naming variables and pick just `sp`, but waiting on Jamie\u0027s preference.",
+      "parentUuid": "fa9005ad_14fb6f0a",
+      "range": {
+        "startLine": 255,
+        "startChar": 8,
+        "endLine": 255,
+        "endChar": 19
+      },
+      "revId": "ed98cdcdeb945dc2daaa6c1a17d233306aaa5949",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
