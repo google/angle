@@ -93,6 +93,30 @@
       },
       "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f171b775_1f6b2340",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T04:09:05Z",
+      "side": 1,
+      "message": "This is done under the condition that `updateRegionAfterSubData`, which is:\n\n    bool updateRegionAfterSubData \u003d (offsetAfterSubdata \u003c bufferSize);",
+      "parentUuid": "1ea21de1_7d07a262",
+      "range": {
+        "startLine": 699,
+        "startChar": 54,
+        "endLine": 699,
+        "endChar": 85
+      },
+      "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
