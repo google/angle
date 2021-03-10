@@ -16,6 +16,63 @@
       "message": "shabi, fyi - added myself to the cc list",
       "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d56df3c9_44fa398d",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-10T15:58:49Z",
+      "side": 1,
+      "message": "why a separate member? can\u0027t we reuse mNextAllocationOffset with some math to retrieve the current offset? feel like we shouldn\u0027t break that DynamicBuffer encapsulation",
+      "range": {
+        "startLine": 160,
+        "startChar": 43,
+        "endLine": 160,
+        "endChar": 56
+      },
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ad5e0ba_e15a5f66",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-10T15:58:49Z",
+      "side": 1,
+      "message": "all alignment logic can be in a helper",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb94cb52_452c7aac",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-10T15:58:49Z",
+      "side": 1,
+      "message": "IIUC, when the buffer has dynamic usage you alloc a vkBuffer of (16 * bufferSize). interesting, this should have triggered the mNextAllocationOffset bug i was talking about",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
