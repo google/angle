@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a0d21f8_b76af106",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-10T15:47:09Z",
+      "side": 1,
+      "message": "shabi, fyi - added myself to the cc list",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
