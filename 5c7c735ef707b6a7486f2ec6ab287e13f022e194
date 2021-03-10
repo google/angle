@@ -56,6 +56,30 @@
       },
       "revId": "5c7c735ef707b6a7486f2ec6ab287e13f022e194",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ef46e3b_f7125d1f",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 859,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-10T18:03:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5378c964_6db3c04c",
+      "range": {
+        "startLine": 859,
+        "startChar": 46,
+        "endLine": 859,
+        "endChar": 53
+      },
+      "revId": "5c7c735ef707b6a7486f2ec6ab287e13f022e194",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
