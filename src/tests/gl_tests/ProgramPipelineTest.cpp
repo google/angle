@@ -650,6 +650,48 @@ void main()
     EXPECT_GL_ERROR(GL_INVALID_OPERATION);
 }
 
+// Test that a shader IO block varying with separable program links
+// successfully.
+TEST_P(ProgramPipelineTest31, VaryingIOBlockSeparableProgram)
+{
+    // Only the Vulkan backend supports PPOs
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+
+    constexpr char kVS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        in vec4 inputAttribute;
+        out Block_inout { vec4 value; } user_out;
+
+        void main()
+        {
+            gl_Position    = inputAttribute;
+            user_out.value = vec4(4.0, 5.0, 6.0, 7.0);
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        layout(location = 0) out mediump vec4 color;
+        in Block_inout { vec4 value; } user_in;
+
+        void main()
+        {
+            color = vec4(1, 0, 0, 1);
+        })";
+
+    bindProgramPipeline(kVS, kFS);
+
+    drawQuadWithPPO("inputAttribute", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramPipelineTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ProgramPipelineTest);
 
