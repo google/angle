@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1f71f4e_48da1e97",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-10T17:33:35Z",
+      "side": 1,
+      "message": "This has a merge conflict (which I\u0027m trying to deal with by reverting the follow-on CL).  I tried to upload a revert CL from my Linux system, and it complains \"ERROR: Gerrit commit-msg hook not installed.\"  The file is there.\n\nI\u0027m guessing I can wait till the other revert lands, and then the merge conflict for this should resolve, unless there\u0027s a better idea.",
+      "revId": "3b5754b87f86aefb854cf128f18b180d05954b4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
