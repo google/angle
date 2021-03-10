@@ -1,4 +1,4 @@
-#!/usr/bin/env vpython
+#!/usr/bin/env vpython3
 #
 # [VPYTHON:BEGIN]
 # wheel: <
@@ -186,14 +186,14 @@ def main():
         font_height = 'kFontHeights[' + font_layer_symbol + ']'
 
         # Font pixels are packed in 32-bit values.
-        font_array_width = output_cols * glyph_width / 32
+        font_array_width = output_cols * glyph_width // 32
         font_array_height = output_rows * glyph_height
         font_array = [[0] * font_array_width for i in range(font_array_height)]
 
         for charIndex in range(len(chars)):
             char = chars[charIndex]
             base_x = (charIndex % output_cols) * glyph_width
-            base_y = (charIndex / output_cols) * glyph_height
+            base_y = (charIndex // output_cols) * glyph_height
 
             # Render the character.
             face.load_char(char)
@@ -227,7 +227,7 @@ def main():
                     output_bit = 1 if pixel_value >= 122 else 0
 
                     font_array_row = base_y + y
-                    font_array_col = (base_x + x) / 32
+                    font_array_col = (base_x + x) // 32
                     font_array_bit = (base_x + x) % 32
                     font_array[font_array_row][font_array_col] |= output_bit << font_array_bit
 
