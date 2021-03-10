@@ -431,7 +431,7 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
                   DIRTY_BIT_DESCRIPTOR_SETS, DIRTY_BIT_DRIVER_UNIFORMS_BINDING};
 
     mGraphicsDirtyBitHandlers[DIRTY_BIT_MEMORY_BARRIER] =
-        &ContextVk::handleDirtyGraphicsMemorybarrier;
+        &ContextVk::handleDirtyGraphicsMemoryBarrier;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_EVENT_LOG] = &ContextVk::handleDirtyGraphicsEventLog;
     mGraphicsDirtyBitHandlers[DIRTY_BIT_DEFAULT_ATTRIBS] =
         &ContextVk::handleDirtyGraphicsDefaultAttribs;
@@ -1070,15 +1070,15 @@ angle::Result ContextVk::setupDispatch(const gl::Context *context)
     return angle::Result::Continue;
 }
 
-angle::Result ContextVk::handleDirtyGraphicsMemorybarrier(DirtyBits::Iterator *dirtyBitsIterator,
+angle::Result ContextVk::handleDirtyGraphicsMemoryBarrier(DirtyBits::Iterator *dirtyBitsIterator,
                                                           DirtyBits dirtyBitMask)
 {
-    return handleDirtyMemorybarrierImpl(dirtyBitsIterator, dirtyBitMask);
+    return handleDirtyMemoryBarrierImpl(dirtyBitsIterator, dirtyBitMask);
 }
 
 angle::Result ContextVk::handleDirtyComputeMemoryBarrier()
 {
-    return handleDirtyMemorybarrierImpl(nullptr, {});
+    return handleDirtyMemoryBarrierImpl(nullptr, {});
 }
 
 bool ContextVk::renderPassUsesStorageResources() const
@@ -1173,7 +1173,7 @@ bool ContextVk::renderPassUsesStorageResources() const
     return false;
 }
 
-angle::Result ContextVk::handleDirtyMemorybarrierImpl(DirtyBits::Iterator *dirtyBitsIterator,
+angle::Result ContextVk::handleDirtyMemoryBarrierImpl(DirtyBits::Iterator *dirtyBitsIterator,
                                                       DirtyBits dirtyBitMask)
 {
     const gl::ProgramExecutable *executable = mState.getProgramExecutable();
