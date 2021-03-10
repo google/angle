@@ -326,6 +326,14 @@ CONTEXT_HEADER = """\
 
 CONTEXT_DECL_FORMAT = """    {return_type} {name_lower_no_suffix}({internal_params}){maybe_const}; \\"""
 
+TEMPLATE_CL_ENTRY_POINT_EXPORT = """\
+ANGLE_EXPORT {return_type}CL_API_ENTRY cl{name}({params}) CL_API_CALL
+{{
+    EnsureCLLoaded();
+    return cl_loader.cl{name}({internal_params});
+}}
+"""
+
 TEMPLATE_GL_ENTRY_POINT_EXPORT = """\
 {return_type}GL_APIENTRY gl{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
@@ -797,6 +805,55 @@ EGL_EXT_SOURCE_INCLUDES = """\
 #include "libGLESv2/global_state.h"
 
 using namespace egl;
+"""
+
+LIBCL_EXPORT_INCLUDES_AND_PREAMBLE = """
+//#include "anglebase/no_destructor.h"
+//#include "common/system_utils.h"
+
+#include <iostream>
+//#include <memory>
+
+#include "cl_loader.h"
+
+namespace
+{
+bool gLoaded = false;
+
+/* TODO(jplate): uncomment after entry points moved to GLESV2 lib http://anglebug.com/5759
+std::unique_ptr<angle::Library> &EntryPointsLib()
+{
+    static angle::base::NoDestructor<std::unique_ptr<angle::Library>> sEntryPointsLib;
+    return *sEntryPointsLib;
+}
+
+angle::GenericProc CL_API_ENTRY GlobalLoad(const char *symbol)
+{
+    return reinterpret_cast<angle::GenericProc>(EntryPointsLib()->getSymbol(symbol));
+}
+*/
+
+void EnsureCLLoaded()
+{
+    if (gLoaded)
+    {
+        return;
+    }
+
+    // EntryPointsLib().reset(
+    //    angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+    // angle::LoadCL(GlobalLoad);
+    angle::LoadCL(nullptr);
+    if (!cl_loader.clGetDeviceIDs)
+    {
+        std::cerr << "Error loading CL entry points." << std::endl;
+    }
+    else
+    {
+        gLoaded = true;
+    }
+}
+}  // anonymous namespace
 """
 
 LIBGLESV2_EXPORT_INCLUDES = """
@@ -1703,8 +1760,13 @@ class CLEntryPoints(ANGLEEntryPoints):
     all_param_types = set()
 
     def __init__(self, xml, commands):
-        super().__init__(apis.CL, xml, commands, CLEntryPoints.all_param_types,
-                         CLEntryPoints.get_packed_enums())
+        super().__init__(
+            apis.CL,
+            xml,
+            commands,
+            CLEntryPoints.all_param_types,
+            CLEntryPoints.get_packed_enums(),
+            export_template=TEMPLATE_CL_ENTRY_POINT_EXPORT)
 
     @classmethod
     def get_packed_enums(cls):
@@ -2345,6 +2407,7 @@ def main():
         outputs = [
             EGL_STUBS_HEADER_PATH,
             EGL_EXT_STUBS_HEADER_PATH,
+            '../src/libOpenCL/libOpenCL_autogen.cpp',
             '../src/libOpenCL/entry_points_cl_autogen.cpp',
             '../src/libOpenCL/entry_points_cl_autogen.h',
             '../src/common/entry_points_enum_autogen.cpp',
@@ -2689,6 +2752,49 @@ def main():
         # Validation files
         write_gl_validation_header("GL%s" % major_version, name, validation_protos, "gl.xml")
 
+    # OpenCL
+    clxml = registry_xml.RegistryXML('cl.xml')
+
+    cl_validation_protos = []
+    cl_decls = []
+    cl_defs = []
+    libcl_ep_defs = []
+    libcl_windows_def_exports = []
+    cl_commands = []
+
+    for major_version, minor_version in registry_xml.CL_VERSIONS:
+        version = "%d_%d" % (major_version, minor_version)
+        annotation = "CL_%s" % version
+        name_prefix = "CL_VERSION_"
+
+        comment = version.replace("_", ".")
+        feature_name = "%s%s" % (name_prefix, version)
+
+        clxml.AddCommands(feature_name, version)
+
+        cl_version_commands = clxml.commands[version]
+        cl_commands += cl_version_commands
+
+        # Spec revs may have no new commands.
+        if not cl_version_commands:
+            continue
+
+        eps = CLEntryPoints(clxml, cl_version_commands)
+
+        comment = "\n// CL %d.%d" % (major_version, minor_version)
+        win_def_comment = "\n    ; CL %d.%d" % (major_version, minor_version)
+
+        cl_decls += [comment] + eps.decls
+        cl_defs += [comment] + eps.defs
+        libcl_ep_defs += [comment] + eps.export_defs
+        cl_validation_protos += [comment] + eps.validation_protos
+        libcl_windows_def_exports += [win_def_comment] + get_exports(clxml.commands[version])
+
+    write_file("cl", "CL", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(cl_decls), "h",
+               LIBCL_HEADER_INCLUDES, "libOpenCL", "cl.xml")
+    write_file("cl", "CL", TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(cl_defs), "cpp",
+               LIBCL_SOURCE_INCLUDES, "libOpenCL", "cl.xml")
+
     # EGL
     eglxml = registry_xml.RegistryXML('egl.xml', 'egl_angle_ext.xml')
 
@@ -2853,6 +2959,8 @@ def main():
     write_export_files("\n".join([item for item in libegl_ep_defs]),
                        LIBEGL_EXPORT_INCLUDES_AND_PREAMBLE, "egl.xml and egl_angle_ext.xml",
                        "libEGL", "EGL")
+    write_export_files("\n".join([item for item in libcl_ep_defs]),
+                       LIBCL_EXPORT_INCLUDES_AND_PREAMBLE, "cl.xml", "libOpenCL", "CL")
 
     libgles_ep_exports += get_egl_exports()
 
@@ -2869,49 +2977,6 @@ def main():
     write_capture_helper_source(all_gles_param_types)
     write_capture_replay_source(apis.GLES, xml.all_commands, all_commands_no_suffix,
                                 GLEntryPoints.get_packed_enums(), [])
-
-    # OpenCL
-    clxml = registry_xml.RegistryXML('cl.xml')
-
-    cl_validation_protos = []
-    cl_decls = []
-    cl_defs = []
-    libcl_ep_defs = []
-    libcl_windows_def_exports = []
-    cl_commands = []
-
-    for major_version, minor_version in registry_xml.CL_VERSIONS:
-        version = "%d_%d" % (major_version, minor_version)
-        annotation = "CL_%s" % version
-        name_prefix = "CL_VERSION_"
-
-        comment = version.replace("_", ".")
-        feature_name = "%s%s" % (name_prefix, version)
-
-        clxml.AddCommands(feature_name, version)
-
-        cl_version_commands = clxml.commands[version]
-        cl_commands += cl_version_commands
-
-        # Spec revs may have no new commands.
-        if not cl_version_commands:
-            continue
-
-        eps = CLEntryPoints(clxml, cl_version_commands)
-
-        comment = "\n// CL %d.%d" % (major_version, minor_version)
-        win_def_comment = "\n    ; CL %d.%d" % (major_version, minor_version)
-
-        cl_decls += [comment] + eps.decls
-        cl_defs += [comment] + eps.defs
-        libcl_ep_defs += [comment] + eps.export_defs
-        cl_validation_protos += [comment] + eps.validation_protos
-        libcl_windows_def_exports += [win_def_comment] + get_exports(clxml.commands[version])
-
-    write_file("cl", "CL", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(cl_decls), "h",
-               LIBCL_HEADER_INCLUDES, "libOpenCL", "cl.xml")
-    write_file("cl", "CL", TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(cl_defs), "cpp",
-               LIBCL_SOURCE_INCLUDES, "libOpenCL", "cl.xml")
 
 
 if __name__ == '__main__':

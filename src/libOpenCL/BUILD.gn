@@ -29,19 +29,28 @@ angle_source_set("cl_includes") {
   ]
 }
 
-angle_shared_library("OpenCL") {
-  defines = [
-    "CL_TARGET_OPENCL_VERSION=100",
-    "LIBCL_IMPLEMENTATION",
-  ]
-  sources = [
-    "entry_points_cl_autogen.cpp",
-    "entry_points_cl_autogen.h",
-    "entry_points_cl_utils.h",
-  ]
-  deps = [ ":cl_includes" ]
+# TODO(jplate): Fix OpenCL headers for Windows http://anglebug.com/5761
+if (is_linux) {
+  angle_shared_library("OpenCL") {
+    defines = [
+      "CL_TARGET_OPENCL_VERSION=100",
+      "LIBCL_IMPLEMENTATION",
+    ]
+    sources = [
+      "cl_loader.h",
+      "cl_loader_autogen.cpp",
+      "entry_points_cl_autogen.cpp",
+      "entry_points_cl_autogen.h",
+      "entry_points_cl_utils.h",
+      "libOpenCL_autogen.cpp",
+    ]
+    deps = [ ":cl_includes" ]
+  }
 }
 
 group("angle_cl") {
-  data_deps = [ ":OpenCL" ]
+  # TODO(jplate): Fix OpenCL headers for Windows http://anglebug.com/5761
+  if (is_linux) {
+    data_deps = [ ":OpenCL" ]
+  }
 }
