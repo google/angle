@@ -34,6 +34,24 @@
       "parentUuid": "8b59dacd_54f8a1d4",
       "revId": "331640e5c19e63209de0307ae37dc1ec69a1f4e0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21c2e31c_99de15e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T15:59:21Z",
+      "side": 1,
+      "message": "\u003e Technically the only issue this will have is \"mNextAllocationOffset\" will have a bad value and since we only use acquireBufferHelper to allocate a full buffer (for now), \"mNextAllocationOffset\" will not be involved.\n\nI understand the limitation (which made the test impossible) is that BufferVk\u0027s mBufferPool is not really suballocating, so it\u0027s always using offset 0. Is that not right?\n\nWhen [1] lands we will use `mNextAllocationOffset`, so you should be able to come up with something. We can talk about it more when that lands.\n\n[1]:  https://chromium-review.googlesource.com/c/angle/angle/+/2738650",
+      "parentUuid": "150013a1_09ab7f37",
+      "revId": "331640e5c19e63209de0307ae37dc1ec69a1f4e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
