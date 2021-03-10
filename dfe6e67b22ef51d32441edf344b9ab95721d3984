@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1aea51f9_458aa438",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1834,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-10T23:04:38Z",
+      "side": 1,
+      "message": "Why are only the program\u0027s allocation counts reset?\n\nWhy aren\u0027t the context and utils counts reset?",
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "df7cf826_dc68af60",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 1
