@@ -120,6 +120,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0cfab0ca_60f674f0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1358,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-10T20:18:13Z",
+      "side": 1,
+      "message": "Hi Hyunchang -\n\nShabi\u0027s suggestion was good. The driver uniforms are consistent to a render pass, while the \u0027shader resources\u0027 are more consistent to a Context. When it comes to uniform buffers/ssbos/atomic counter buffers, these are all bound via BindBufferRange, and are properties of a context. For caching we can store this descriptor set key in the context. Introducing input attachments to this descriptor set means they now have to be a property of the program, and replicated for other programs that may share common buffer bindings.\n\nI\u0027d like to propose we accept Shabi\u0027s suggestion.",
+      "parentUuid": "171e4940_315c1d80",
+      "revId": "69725a5e8dcf5c24cc22be1a2d9bbdfb8c26e49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4e2ce3e0_1257849a",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 10
