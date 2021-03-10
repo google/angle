@@ -135,6 +135,30 @@
       },
       "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39c626c6_a6f50c84",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 699,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-10T15:40:09Z",
+      "side": 1,
+      "message": "\u003e Can (offsetAfterSubdata \u003e bufferSize) ever be true? \n\nnot if validation layer did its job because that would mean the (offset + size) passed in by app was \u003e buffer\u0027s size and validation layer should have caught that\n\n\u003e It\u0027s probably also worth skipping if (bufferSize - offsetAfterSubdata) \u003d\u003d 0\n\nrefer shabi\u0027s comment",
+      "parentUuid": "f171b775_1f6b2340",
+      "range": {
+        "startLine": 699,
+        "startChar": 54,
+        "endLine": 699,
+        "endChar": 85
+      },
+      "revId": "e4eba8e1e4faeed96d8f7d676b7f9963cd5d14e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
