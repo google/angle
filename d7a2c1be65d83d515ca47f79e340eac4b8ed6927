@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "d7a2c1be65d83d515ca47f79e340eac4b8ed6927",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac7519f9_0b7f4c1f",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 862,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-10T18:06:23Z",
+      "side": 1,
+      "message": "suggest: separableActiveInput, separableActiveOutput and separableActiveVarying\n\nThanks for taking these out of the `if` :)",
+      "range": {
+        "startLine": 862,
+        "startChar": 13,
+        "endLine": 862,
+        "endChar": 23
+      },
+      "revId": "d7a2c1be65d83d515ca47f79e340eac4b8ed6927",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
