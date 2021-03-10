@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f80dd2a7_b888bf04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-10T17:30:02Z",
+      "side": 1,
+      "message": "Reverting this one so that I can revert the one causing test failures",
+      "revId": "1b0c9d85f24f27432cd19d11094dc3d05f72d2a3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
