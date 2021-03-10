@@ -486,20 +486,9 @@ using BitSet = typename priv::GetBitSet<N>::Type;
 template <std::size_t N>
 class BitSetArray final
 {
-  private:
-    static constexpr std::size_t kDefaultBitSetSizeMinusOne = priv::kDefaultBitSetSize - 1;
-    static constexpr std::size_t kShiftForDivision =
-        static_cast<std::size_t>(rx::Log2(static_cast<unsigned int>(priv::kDefaultBitSetSize)));
-    static constexpr std::size_t kArraySize =
-        ((N + kDefaultBitSetSizeMinusOne) >> kShiftForDivision);
-    constexpr static std::size_t kLastElementCount = (N & kDefaultBitSetSizeMinusOne);
-    constexpr static std::size_t kLastElementMask  = priv::BaseBitSetType::Mask(
-        kLastElementCount == 0 ? priv::kDefaultBitSetSize : kLastElementCount);
-
-    using BaseBitSet = priv::BaseBitSetType;
-    std::array<BaseBitSet, kArraySize> mBaseBitSetArray;
-
   public:
+    using BaseBitSet = priv::BaseBitSetType;
+
     BitSetArray();
     BitSetArray(const BitSetArray<N> &other);
 
@@ -671,6 +660,20 @@ class BitSetArray final
     std::size_t count() const;
     bool intersects(const BitSetArray &other) const;
     BitSetArray<N> &flip();
+
+    BaseBitSet::value_type bits(size_t index) const;
+
+  private:
+    static constexpr std::size_t kDefaultBitSetSizeMinusOne = priv::kDefaultBitSetSize - 1;
+    static constexpr std::size_t kShiftForDivision =
+        static_cast<std::size_t>(rx::Log2(static_cast<unsigned int>(priv::kDefaultBitSetSize)));
+    static constexpr std::size_t kArraySize =
+        ((N + kDefaultBitSetSizeMinusOne) >> kShiftForDivision);
+    constexpr static std::size_t kLastElementCount = (N & kDefaultBitSetSizeMinusOne);
+    constexpr static std::size_t kLastElementMask  = priv::BaseBitSetType::Mask(
+        kLastElementCount == 0 ? priv::kDefaultBitSetSize : kLastElementCount);
+
+    std::array<BaseBitSet, kArraySize> mBaseBitSetArray;
 };
 
 template <std::size_t N>
@@ -981,6 +984,12 @@ BitSetArray<N> &BitSetArray<N>::flip()
     // The last element in mBaseBitSetArray may need special handling
     mBaseBitSetArray[kArraySize - 1] &= kLastElementMask;
     return *this;
+}
+
+template <std::size_t N>
+typename BitSetArray<N>::BaseBitSet::value_type BitSetArray<N>::bits(size_t index) const
+{
+    return mBaseBitSetArray[index].bits();
 }
 }  // namespace angle
 

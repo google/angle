@@ -3024,6 +3024,41 @@ bool UniformsAndXfbDescriptorDesc::operator==(const UniformsAndXfbDescriptorDesc
     return memcmp(&mBufferSerials, &other.mBufferSerials, sizeof(BufferSerial) * mBufferCount) == 0;
 }
 
+// ShaderBuffersDescriptorDesc implementation.
+ShaderBuffersDescriptorDesc::ShaderBuffersDescriptorDesc()
+{
+    reset();
+}
+
+ShaderBuffersDescriptorDesc::~ShaderBuffersDescriptorDesc() = default;
+
+ShaderBuffersDescriptorDesc::ShaderBuffersDescriptorDesc(const ShaderBuffersDescriptorDesc &other) =
+    default;
+
+ShaderBuffersDescriptorDesc &ShaderBuffersDescriptorDesc::operator=(
+    const ShaderBuffersDescriptorDesc &other) = default;
+
+size_t ShaderBuffersDescriptorDesc::hash() const
+{
+    return angle::ComputeGenericHash(mPayload.data(), sizeof(mPayload[0]) * mPayload.size());
+}
+
+void ShaderBuffersDescriptorDesc::reset()
+{
+    mPayload.clear();
+}
+
+bool ShaderBuffersDescriptorDesc::operator==(const ShaderBuffersDescriptorDesc &other) const
+{
+    return mPayload == other.mPayload;
+}
+
+void ShaderBuffersDescriptorDesc::append64BitValue(uint64_t value)
+{
+    mPayload.push_back(static_cast<uint32_t>(value & (angle::Bit<uint64_t>(32u) - 1u)));
+    mPayload.push_back(value >> 32);
+}
+
 // FramebufferDesc implementation.
 
 FramebufferDesc::FramebufferDesc()
@@ -3886,4 +3921,7 @@ template class DescriptorSetCache<vk::TextureDescriptorDesc, VulkanCacheType::Te
 
 template class DescriptorSetCache<vk::UniformsAndXfbDescriptorDesc,
                                   VulkanCacheType::UniformsAndXfbDescriptors>;
+
+template class DescriptorSetCache<vk::ShaderBuffersDescriptorDesc,
+                                  VulkanCacheType::ShaderBuffersDescriptors>;
 }  // namespace rx

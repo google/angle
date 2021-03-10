@@ -152,10 +152,13 @@ class ProgramExecutableVk
     angle::Result createPipelineLayout(const gl::Context *glContext,
                                        gl::ActiveTextureArray<vk::TextureUnit> *activeTextures);
 
-    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk);
-    angle::Result updateShaderResourcesDescriptorSet(ContextVk *contextVk,
-                                                     FramebufferVk *framebufferVk,
-                                                     vk::CommandBufferHelper *commandBufferHelper);
+    angle::Result updateTexturesDescriptorSet(ContextVk *contextVk,
+                                              const vk::TextureDescriptorDesc &texturesDesc);
+    angle::Result updateShaderResourcesDescriptorSet(
+        ContextVk *contextVk,
+        FramebufferVk *framebufferVk,
+        const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
+        vk::CommandBufferHelper *commandBufferHelper);
     angle::Result updateTransformFeedbackDescriptorSet(
         const gl::ProgramState &programState,
         gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
@@ -180,6 +183,11 @@ class ProgramExecutableVk
     {
         ASSERT(!mProgram && !mProgramPipeline);
         mProgramPipeline = pipeline;
+    }
+
+    bool usesDynamicUniformBufferDescriptors() const
+    {
+        return mUniformBufferDescriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
     }
 
     ProgramExecutablePerfCounters getAndResetObjectPerfCounters();
@@ -222,18 +230,23 @@ class ProgramExecutableVk
                                             ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(const gl::ProgramState &programState,
                                                   ContextVk *contextVk);
-    angle::Result getOrAllocateShaderResourcesDescriptorSet(ContextVk *contextVk,
-                                                            VkDescriptorSet *descriptorSetOut);
-    angle::Result updateBuffersDescriptorSet(ContextVk *contextVk,
-                                             const gl::ShaderType shaderType,
-                                             vk::CommandBufferHelper *commandBufferHelper,
-                                             const std::vector<gl::InterfaceBlock> &blocks,
-                                             VkDescriptorType descriptorType);
+    angle::Result getOrAllocateShaderResourcesDescriptorSet(
+        ContextVk *contextVk,
+        const vk::ShaderBuffersDescriptorDesc *shaderBuffersDesc,
+        VkDescriptorSet *descriptorSetOut);
+    angle::Result updateBuffersDescriptorSet(
+        ContextVk *contextVk,
+        const gl::ShaderType shaderType,
+        const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
+        const std::vector<gl::InterfaceBlock> &blocks,
+        VkDescriptorType descriptorType,
+        bool cacheHit);
     angle::Result updateAtomicCounterBuffersDescriptorSet(
+        ContextVk *contextVk,
         const gl::ProgramState &programState,
         const gl::ShaderType shaderType,
-        ContextVk *contextVk,
-        vk::CommandBufferHelper *commandBufferHelper);
+        const vk::ShaderBuffersDescriptorDesc &shaderBuffersDesc,
+        bool cacheHit);
     angle::Result updateImagesDescriptorSet(ContextVk *contextVk,
                                             const gl::ProgramExecutable &executable,
                                             const gl::ShaderType shaderType);
@@ -247,13 +260,15 @@ class ProgramExecutableVk
     // Descriptor sets for uniform blocks and textures for this program.
     vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;
     vk::DescriptorSetArray<VkDescriptorSet> mEmptyDescriptorSets;
-    size_t mNumDefaultUniformDescriptors;
+    uint32_t mNumDefaultUniformDescriptors;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
     DescriptorSetCache<vk::UniformsAndXfbDescriptorDesc, VulkanCacheType::UniformsAndXfbDescriptors>
         mUniformsAndXfbDescriptorsCache;
     DescriptorSetCache<vk::TextureDescriptorDesc, VulkanCacheType::TextureDescriptors>
         mTextureDescriptorsCache;
+    DescriptorSetCache<vk::ShaderBuffersDescriptorDesc, VulkanCacheType::ShaderBuffersDescriptors>
+        mShaderBufferDescriptorsCache;
 
     // We keep a reference to the pipeline and descriptor set layouts. This ensures they don't get
     // deleted while this program is in use.
@@ -270,7 +285,9 @@ class ProgramExecutableVk
     vk::DescriptorSetArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
 
     // A set of dynamic offsets used with vkCmdBindDescriptorSets for the default uniform buffers.
-    gl::ShaderVector<uint32_t> mDynamicDescriptorOffsets;
+    VkDescriptorType mUniformBufferDescriptorType;
+    gl::ShaderVector<uint32_t> mDynamicUniformDescriptorOffsets;
+    std::vector<uint32_t> mDynamicShaderBufferDescriptorOffsets;
 
     // TODO: http://anglebug.com/4524: Need a different hash key than a string,
     // since that's slow to calculate.

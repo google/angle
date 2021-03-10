@@ -453,6 +453,22 @@ class State : angle::NonCopyable
     const OffsetBindingPointer<Buffer> &getIndexedAtomicCounterBuffer(size_t index) const;
     const OffsetBindingPointer<Buffer> &getIndexedShaderStorageBuffer(size_t index) const;
 
+    const angle::BitSet<gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS> &getUniformBuffersMask()
+        const
+    {
+        return mBoundUniformBuffersMask;
+    }
+    const angle::BitSet<gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>
+        &getAtomicCounterBuffersMask() const
+    {
+        return mBoundAtomicCounterBuffersMask;
+    }
+    const angle::BitSet<gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS>
+        &getShaderStorageBuffersMask() const
+    {
+        return mBoundShaderStorageBuffersMask;
+    }
+
     // Detach a buffer from all bindings
     angle::Result detachBuffer(Context *context, const Buffer *buffer);
 

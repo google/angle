@@ -3040,9 +3040,7 @@ void main()
 
     // Check for unnecessary descriptor set allocations.
     uint32_t descriptorSetAllocationsAfter = hackANGLE().descriptorSetAllocations;
-
-    // TODO(jmadill): http://anglebug.com/5736 change to EXPECT_EQ.
-    EXPECT_NE(descriptorSetAllocationsBefore, descriptorSetAllocationsAfter);
+    EXPECT_EQ(descriptorSetAllocationsAfter, 0u);
 }
 
 ANGLE_INSTANTIATE_TEST(VulkanPerformanceCounterTest, ES3_VULKAN());

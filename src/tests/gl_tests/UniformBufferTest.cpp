@@ -799,6 +799,9 @@ TEST_P(UniformBufferTest31, UseAsUBOThenUpdateThenDrawIndirect)
     // http://anglebug.com/5826
     ANGLE_SKIP_TEST_IF(IsD3D11());
 
+    // http://anglebug.com/5871
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsPixel2());
+
     const std::array<uint32_t, 4> kInitialData = {100, 200, 300, 400};
     const std::array<uint32_t, 4> kUpdateData  = {4, 1, 0, 0};
 

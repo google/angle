@@ -394,8 +394,7 @@ void main()
     EXPECT_GL_NO_ERROR();
 }
 
-// Test that binds UAV with type buffer to slot 0, then binds UAV with type image to slot 0, then
-// buffer again.
+// Binds a storage buffer to slot 0, then binds a storage image to slot 0, then buffer again.
 TEST_P(ComputeShaderTest, BufferImageBuffer)
 {
     // See http://anglebug.com/3536

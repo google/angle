@@ -1128,6 +1128,34 @@ class UniformsAndXfbDescriptorDesc
     std::array<BufferSerial, kMaxBufferCount> mBufferSerials;
 };
 
+class ShaderBuffersDescriptorDesc
+{
+  public:
+    ShaderBuffersDescriptorDesc();
+    ~ShaderBuffersDescriptorDesc();
+
+    ShaderBuffersDescriptorDesc(const ShaderBuffersDescriptorDesc &other);
+    ShaderBuffersDescriptorDesc &operator=(const ShaderBuffersDescriptorDesc &other);
+
+    size_t hash() const;
+    void reset();
+
+    bool operator==(const ShaderBuffersDescriptorDesc &other) const;
+
+    ANGLE_INLINE void appendBufferSerial(BufferSerial bufferSerial)
+    {
+        mPayload.push_back(bufferSerial.getValue());
+    }
+    ANGLE_INLINE void append32BitValue(uint32_t value) { mPayload.push_back(value); }
+
+    void append64BitValue(uint64_t value);
+
+  private:
+    // After a preliminary minimum size, use heap memory.
+    static constexpr size_t kFastBufferWordLimit = 32;
+    angle::FastVector<uint32_t, kFastBufferWordLimit> mPayload;
+};
+
 // In the FramebufferDesc object:
 //  - Depth/stencil serial is at index 0
 //  - Color serials are at indices [1, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS]
@@ -1314,6 +1342,12 @@ struct hash<rx::vk::UniformsAndXfbDescriptorDesc>
 };
 
 template <>
+struct hash<rx::vk::ShaderBuffersDescriptorDesc>
+{
+    size_t operator()(const rx::vk::ShaderBuffersDescriptorDesc &key) const { return key.hash(); }
+};
+
+template <>
 struct hash<rx::vk::FramebufferDesc>
 {
     size_t operator()(const rx::vk::FramebufferDesc &key) const { return key.hash(); }
@@ -1352,6 +1386,7 @@ enum class VulkanCacheType
     DescriptorSetLayout,
     TextureDescriptors,
     UniformsAndXfbDescriptors,
+    ShaderBuffersDescriptors,
     Framebuffer,
     EnumCount
 };

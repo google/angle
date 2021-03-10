@@ -403,6 +403,7 @@ TYPED_TEST(BitSetArrayTest, BasicTest)
     EXPECT_FALSE(mBits.any());
     EXPECT_TRUE(mBits.none());
     EXPECT_EQ(mBits.count(), 0u);
+    EXPECT_EQ(mBits.bits(0), 0u);
 
     // Verify set on a single bit
     mBits.set(45);
@@ -452,8 +453,11 @@ TYPED_TEST(BitSetArrayTest, BasicTest)
     // Test intersection logic
     TypeParam testBitSet;
     testBitSet.set(1);
+    EXPECT_EQ(testBitSet.bits(0), (1ul << 1ul));
     testBitSet.set(3);
+    EXPECT_EQ(testBitSet.bits(0), (1ul << 1ul) | (1ul << 3ul));
     testBitSet.set(5);
+    EXPECT_EQ(testBitSet.bits(0), (1ul << 1ul) | (1ul << 3ul) | (1ul << 5ul));
     EXPECT_FALSE(mBits.intersects(testBitSet));
     mBits.set(3);
     EXPECT_TRUE(mBits.intersects(testBitSet));
