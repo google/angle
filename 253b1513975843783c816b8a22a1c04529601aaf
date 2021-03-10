@@ -33,6 +33,24 @@
       "message": "You can use `gl::GetLastPreFragmentStage` on `getExecutable().getLinkedShaderStages()` to directly get the transform feedback stage. No need to loop.",
       "revId": "253b1513975843783c816b8a22a1c04529601aaf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "226e3a26_75ee305f",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 672,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-10T19:02:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6da64ff9_ec53bc1d",
+      "revId": "253b1513975843783c816b8a22a1c04529601aaf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
