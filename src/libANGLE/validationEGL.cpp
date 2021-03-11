@@ -5038,6 +5038,16 @@ bool ValidateQueryContext(const ValidationContext *val,
             }
             break;
 
+        case EGL_CONTEXT_PRIORITY_LEVEL_IMG:
+            if (!display->getExtensions().contextPriority)
+            {
+                val->setError(EGL_BAD_ATTRIBUTE,
+                              "Attribute EGL_CONTEXT_PRIORITY_LEVEL_IMG requires "
+                              "extension EGL_IMG_context_priority.");
+                return false;
+            }
+            break;
+
         default:
             val->setError(EGL_BAD_ATTRIBUTE, "Invalid context attribute.");
             return false;
