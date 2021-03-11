@@ -354,6 +354,7 @@ angle::FormatID GetVertexFormatID(const VertexAttribute &attrib, VertexAttribTyp
 angle::FormatID GetCurrentValueFormatID(VertexAttribType currentValueType);
 const VertexFormat &GetVertexFormatFromID(angle::FormatID vertexFormatID);
 size_t GetVertexFormatSize(angle::FormatID vertexFormatID);
+angle::FormatID ConvertFormatSignedness(const angle::Format &format);
 
 ANGLE_INLINE bool IsS3TCFormat(const GLenum format)
 {

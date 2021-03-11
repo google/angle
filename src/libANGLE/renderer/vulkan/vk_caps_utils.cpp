@@ -1047,6 +1047,9 @@ void RendererVk::ensureCapsInitialized() const
     // GL_EXT_blend_func_extended
     mNativeExtensions.blendFuncExtended        = (mPhysicalDeviceFeatures.dualSrcBlend == VK_TRUE);
     mNativeExtensions.maxDualSourceDrawBuffers = LimitToInt(limitsVk.maxFragmentDualSrcAttachments);
+
+    // GL_ANGLE_relaxed_vertex_attribute_type
+    mNativeExtensions.relaxedVertexAttributeTypeANGLE = true;
 }
 
 namespace vk

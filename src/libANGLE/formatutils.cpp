@@ -2597,6 +2597,182 @@ size_t GetVertexFormatSize(angle::FormatID vertexFormatID)
     }
 }
 
+angle::FormatID ConvertFormatSignedness(const angle::Format &format)
+{
+    switch (format.id)
+    {
+        // 1 byte signed to unsigned
+        case angle::FormatID::R8_SINT:
+            return angle::FormatID::R8_UINT;
+        case angle::FormatID::R8_SNORM:
+            return angle::FormatID::R8_UNORM;
+        case angle::FormatID::R8_SSCALED:
+            return angle::FormatID::R8_USCALED;
+        case angle::FormatID::R8G8_SINT:
+            return angle::FormatID::R8G8_UINT;
+        case angle::FormatID::R8G8_SNORM:
+            return angle::FormatID::R8G8_UNORM;
+        case angle::FormatID::R8G8_SSCALED:
+            return angle::FormatID::R8G8_USCALED;
+        case angle::FormatID::R8G8B8_SINT:
+            return angle::FormatID::R8G8B8_UINT;
+        case angle::FormatID::R8G8B8_SNORM:
+            return angle::FormatID::R8G8B8_UNORM;
+        case angle::FormatID::R8G8B8_SSCALED:
+            return angle::FormatID::R8G8B8_USCALED;
+        case angle::FormatID::R8G8B8A8_SINT:
+            return angle::FormatID::R8G8B8A8_UINT;
+        case angle::FormatID::R8G8B8A8_SNORM:
+            return angle::FormatID::R8G8B8A8_UNORM;
+        case angle::FormatID::R8G8B8A8_SSCALED:
+            return angle::FormatID::R8G8B8A8_USCALED;
+        // 1 byte unsigned to signed
+        case angle::FormatID::R8_UINT:
+            return angle::FormatID::R8_SINT;
+        case angle::FormatID::R8_UNORM:
+            return angle::FormatID::R8_SNORM;
+        case angle::FormatID::R8_USCALED:
+            return angle::FormatID::R8_SSCALED;
+        case angle::FormatID::R8G8_UINT:
+            return angle::FormatID::R8G8_SINT;
+        case angle::FormatID::R8G8_UNORM:
+            return angle::FormatID::R8G8_SNORM;
+        case angle::FormatID::R8G8_USCALED:
+            return angle::FormatID::R8G8_SSCALED;
+        case angle::FormatID::R8G8B8_UINT:
+            return angle::FormatID::R8G8B8_SINT;
+        case angle::FormatID::R8G8B8_UNORM:
+            return angle::FormatID::R8G8B8_SNORM;
+        case angle::FormatID::R8G8B8_USCALED:
+            return angle::FormatID::R8G8B8_SSCALED;
+        case angle::FormatID::R8G8B8A8_UINT:
+            return angle::FormatID::R8G8B8A8_SINT;
+        case angle::FormatID::R8G8B8A8_UNORM:
+            return angle::FormatID::R8G8B8A8_SNORM;
+        case angle::FormatID::R8G8B8A8_USCALED:
+            return angle::FormatID::R8G8B8A8_SSCALED;
+        // 2 byte signed to unsigned
+        case angle::FormatID::R16_SINT:
+            return angle::FormatID::R16_UINT;
+        case angle::FormatID::R16_SNORM:
+            return angle::FormatID::R16_UNORM;
+        case angle::FormatID::R16_SSCALED:
+            return angle::FormatID::R16_USCALED;
+        case angle::FormatID::R16G16_SINT:
+            return angle::FormatID::R16G16_UINT;
+        case angle::FormatID::R16G16_SNORM:
+            return angle::FormatID::R16G16_UNORM;
+        case angle::FormatID::R16G16_SSCALED:
+            return angle::FormatID::R16G16_USCALED;
+        case angle::FormatID::R16G16B16_SINT:
+            return angle::FormatID::R16G16B16_UINT;
+        case angle::FormatID::R16G16B16_SNORM:
+            return angle::FormatID::R16G16B16_UNORM;
+        case angle::FormatID::R16G16B16_SSCALED:
+            return angle::FormatID::R16G16B16_USCALED;
+        case angle::FormatID::R16G16B16A16_SINT:
+            return angle::FormatID::R16G16B16A16_UINT;
+        case angle::FormatID::R16G16B16A16_SNORM:
+            return angle::FormatID::R16G16B16A16_UNORM;
+        case angle::FormatID::R16G16B16A16_SSCALED:
+            return angle::FormatID::R16G16B16A16_USCALED;
+        // 2 byte unsigned to signed
+        case angle::FormatID::R16_UINT:
+            return angle::FormatID::R16_SINT;
+        case angle::FormatID::R16_UNORM:
+            return angle::FormatID::R16_SNORM;
+        case angle::FormatID::R16_USCALED:
+            return angle::FormatID::R16_SSCALED;
+        case angle::FormatID::R16G16_UINT:
+            return angle::FormatID::R16G16_SINT;
+        case angle::FormatID::R16G16_UNORM:
+            return angle::FormatID::R16G16_SNORM;
+        case angle::FormatID::R16G16_USCALED:
+            return angle::FormatID::R16G16_SSCALED;
+        case angle::FormatID::R16G16B16_UINT:
+            return angle::FormatID::R16G16B16_SINT;
+        case angle::FormatID::R16G16B16_UNORM:
+            return angle::FormatID::R16G16B16_SNORM;
+        case angle::FormatID::R16G16B16_USCALED:
+            return angle::FormatID::R16G16B16_SSCALED;
+        case angle::FormatID::R16G16B16A16_UINT:
+            return angle::FormatID::R16G16B16A16_SINT;
+        case angle::FormatID::R16G16B16A16_UNORM:
+            return angle::FormatID::R16G16B16A16_SNORM;
+        case angle::FormatID::R16G16B16A16_USCALED:
+            return angle::FormatID::R16G16B16A16_SSCALED;
+        // 4 byte signed to unsigned
+        case angle::FormatID::R32_SINT:
+            return angle::FormatID::R32_UINT;
+        case angle::FormatID::R32_SNORM:
+            return angle::FormatID::R32_UNORM;
+        case angle::FormatID::R32_SSCALED:
+            return angle::FormatID::R32_USCALED;
+        case angle::FormatID::R32G32_SINT:
+            return angle::FormatID::R32G32_UINT;
+        case angle::FormatID::R32G32_SNORM:
+            return angle::FormatID::R32G32_UNORM;
+        case angle::FormatID::R32G32_SSCALED:
+            return angle::FormatID::R32G32_USCALED;
+        case angle::FormatID::R32G32B32_SINT:
+            return angle::FormatID::R32G32B32_UINT;
+        case angle::FormatID::R32G32B32_SNORM:
+            return angle::FormatID::R32G32B32_UNORM;
+        case angle::FormatID::R32G32B32_SSCALED:
+            return angle::FormatID::R32G32B32_USCALED;
+        case angle::FormatID::R32G32B32A32_SINT:
+            return angle::FormatID::R32G32B32A32_UINT;
+        case angle::FormatID::R32G32B32A32_SNORM:
+            return angle::FormatID::R32G32B32A32_UNORM;
+        case angle::FormatID::R32G32B32A32_SSCALED:
+            return angle::FormatID::R32G32B32A32_USCALED;
+        // 4 byte unsigned to signed
+        case angle::FormatID::R32_UINT:
+            return angle::FormatID::R32_SINT;
+        case angle::FormatID::R32_UNORM:
+            return angle::FormatID::R32_SNORM;
+        case angle::FormatID::R32_USCALED:
+            return angle::FormatID::R32_SSCALED;
+        case angle::FormatID::R32G32_UINT:
+            return angle::FormatID::R32G32_SINT;
+        case angle::FormatID::R32G32_UNORM:
+            return angle::FormatID::R32G32_SNORM;
+        case angle::FormatID::R32G32_USCALED:
+            return angle::FormatID::R32G32_SSCALED;
+        case angle::FormatID::R32G32B32_UINT:
+            return angle::FormatID::R32G32B32_SINT;
+        case angle::FormatID::R32G32B32_UNORM:
+            return angle::FormatID::R32G32B32_SNORM;
+        case angle::FormatID::R32G32B32_USCALED:
+            return angle::FormatID::R32G32B32_SSCALED;
+        case angle::FormatID::R32G32B32A32_UINT:
+            return angle::FormatID::R32G32B32A32_SINT;
+        case angle::FormatID::R32G32B32A32_UNORM:
+            return angle::FormatID::R32G32B32A32_SNORM;
+        case angle::FormatID::R32G32B32A32_USCALED:
+            return angle::FormatID::R32G32B32A32_SSCALED;
+        // 1010102 signed to unsigned
+        case angle::FormatID::R10G10B10A2_SINT:
+            return angle::FormatID::R10G10B10A2_UINT;
+        case angle::FormatID::R10G10B10A2_SSCALED:
+            return angle::FormatID::R10G10B10A2_USCALED;
+        case angle::FormatID::R10G10B10A2_SNORM:
+            return angle::FormatID::R10G10B10A2_UNORM;
+        // 1010102 unsigned to signed
+        case angle::FormatID::R10G10B10A2_UINT:
+            return angle::FormatID::R10G10B10A2_SINT;
+        case angle::FormatID::R10G10B10A2_USCALED:
+            return angle::FormatID::R10G10B10A2_SSCALED;
+        case angle::FormatID::R10G10B10A2_UNORM:
+            return angle::FormatID::R10G10B10A2_SNORM;
+        default:
+            UNREACHABLE();
+    }
+#if !UNREACHABLE_IS_NORETURN
+    return angle::FormatID::NONE;
+#endif
+}
+
 bool ValidES3InternalFormat(GLenum internalFormat)
 {
     const InternalFormatInfoMap &formatMap = GetInternalFormatMap();

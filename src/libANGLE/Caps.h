@@ -737,6 +737,9 @@ struct Extensions
 
     // GL_EXT_primitive_bounding_box
     bool primitiveBoundingBoxEXT = false;
+
+    // GL_ANGLE_relaxed_vertex_attribute_type
+    bool relaxedVertexAttributeTypeANGLE = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct
