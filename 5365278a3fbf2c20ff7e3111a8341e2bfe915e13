@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7cd86f72_d59c37e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-11T21:44:49Z",
+      "side": 1,
+      "message": "LGTM.  I\u0027m not sure I would\u0027ve come up with this as quickly as you:-)",
+      "revId": "5365278a3fbf2c20ff7e3111a8341e2bfe915e13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
