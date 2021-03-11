@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "6ad19decf6c4fcf4d5a2f7eab0bf5269aa8919f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bd6d0ea_bcabf914",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:38:27Z",
+      "side": 1,
+      "message": "Better solution -\u003e use the executable. Any if (program) else if (pipeline) patterns are meant to be using the Program Executable.\n\nAlso a regression test would be highly valuable as then any particular design would be verified.",
+      "revId": "6ad19decf6c4fcf4d5a2f7eab0bf5269aa8919f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
