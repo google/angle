@@ -41,6 +41,7 @@
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
 #include "klondike_adventures/klondike_adventures_capture_context2.h"
 #include "lego_legacy/lego_legacy_capture_context2.h"
+#include "lineage_m/lineage_m_capture_context2.h"
 #include "magic_tiles_3/magic_tiles_3_capture_context2.h"
 #include "manhattan_10/manhattan_10_capture_context1.h"
 #include "manhattan_31/manhattan_31_capture_context6.h"
@@ -217,6 +218,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       lego_legacy::kReplayFrameStart, lego_legacy::kReplayFrameEnd,
       lego_legacy::kReplayDrawSurfaceWidth, lego_legacy::kReplayDrawSurfaceHeight, "lego_legacy"}},
+    {RestrictedTraceID::lineage_m,
+     {lineage_m::kReplayContextClientMajorVersion, lineage_m::kReplayContextClientMinorVersion,
+      lineage_m::kReplayFrameStart, lineage_m::kReplayFrameEnd, lineage_m::kReplayDrawSurfaceWidth,
+      lineage_m::kReplayDrawSurfaceHeight, "lineage_m"}},
     {RestrictedTraceID::magic_tiles_3,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       magic_tiles_3::kReplayFrameStart, magic_tiles_3::kReplayFrameEnd,
@@ -459,6 +464,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::lego_legacy:
             lego_legacy::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::lineage_m:
+            lineage_m::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::magic_tiles_3:
             magic_tiles_3::ReplayContext2Frame(frameIndex);
             break;
@@ -646,6 +654,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::lineage_m:
+            lineage_m::ResetContext2Replay();
             break;
         case RestrictedTraceID::magic_tiles_3:
             magic_tiles_3::ResetContext2Replay();
@@ -835,6 +846,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetupContext2Replay();
             break;
+        case RestrictedTraceID::lineage_m:
+            lineage_m::SetupContext2Replay();
+            break;
         case RestrictedTraceID::magic_tiles_3:
             magic_tiles_3::SetupContext2Replay();
             break;
@@ -1023,6 +1037,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::lineage_m:
+            lineage_m::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::magic_tiles_3:
             magic_tiles_3::SetBinaryDataDir(dataDir);
             break;
@@ -1210,6 +1227,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::lineage_m:
+            lineage_m::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::magic_tiles_3:
             magic_tiles_3::SetBinaryDataDecompressCallback(callback);

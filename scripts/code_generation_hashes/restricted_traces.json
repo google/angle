@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "b8258f89dc44e6ec67eda213285595f7",
+    "83d16125dfbbfa783bdceacb5379c5dd",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -63,6 +63,8 @@
     "8f467e30dd52312c0a1c257d76db9589",
   "src/tests/restricted_traces/lego_legacy.tar.gz.sha1":
     "543b6beed660d7206c2839c6811aa9f4",
+  "src/tests/restricted_traces/lineage_m.tar.gz.sha1":
+    "dff18018a646039b905aa1fc18900778",
   "src/tests/restricted_traces/magic_tiles_3.tar.gz.sha1":
     "e31a9dcfc1734a407d3f54183941f965",
   "src/tests/restricted_traces/manhattan_10.tar.gz.sha1":
@@ -90,13 +92,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "89efa0342ac35c3c9e9e24638ea9c28f",
+    "7880ad4c4e91c5846229cd284cb41c77",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "ea1ca2bdf1eb3e381e965562fe6903fe",
+    "f9142bd09a7ded41d7150e318cd6a83c",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "e73d4a44957e38f49dc217f2ad9de9a3",
+    "7af9b67cac7f45a909132faae86252aa",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "22e3ffdc20fa3cb5728b24db7935fa3b",
+    "43aac5e082749b30978740020e8e7e8d",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":

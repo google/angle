@@ -84,6 +84,7 @@ enum class RestrictedTraceID
     kartrider_rush,
     klondike_adventures,
     lego_legacy,
+    lineage_m,
     magic_tiles_3,
     manhattan_10,
     manhattan_31,
