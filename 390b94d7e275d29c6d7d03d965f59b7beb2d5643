@@ -102,6 +102,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e3282f22_db8c99ec",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-11T01:38:08Z",
+      "side": 1,
+      "message": "Based on the amount of time you spent on finding and fixing this (good job by the way), I agree with Cody that we should have an Android/Khronos bug to make a formal decision on what to do here.   If this doesn\u0027t end up being fixed in Android (whether due to a spec clarification or for legacy support), it should at least be used to document this unexpected behavior somewhere.   It would be nice to not bury this landmine for the next vulkan app developer to step on.\n\nIs there precedent for not fixing bugs like this in order to preserve backwards compatibility?   What happens if a CTS/dEQP test is created to expose the bad behavior (is there one already)?\n\nDoes eglSwapBuffersWithDamageKHR() have any visibility into what VkSwapchainCreateInfoKHR.preTransform is set to?   Would it be possible for it to at least detect the bad behavior and log things to try and save other developers\u0027 time?",
+      "parentUuid": "2b1666fa_ba6ee6e6",
+      "range": {
+        "startLine": 1943,
+        "startChar": 86,
+        "endLine": 1943,
+        "endChar": 95
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa1db808_1a2b6ea9",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 2
