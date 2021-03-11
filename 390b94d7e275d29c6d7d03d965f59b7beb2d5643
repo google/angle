@@ -241,6 +241,30 @@
       },
       "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00ab7d5e_9a819f78",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1423,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-11T17:12:21Z",
+      "side": 1,
+      "message": "I went back and looked at the interaction.  You\u0027re correct that emulated pre-rotation won\u0027t try to rotate the damage rectangles.",
+      "parentUuid": "9b237177_0e34d73c",
+      "range": {
+        "startLine": 1422,
+        "startChar": 16,
+        "endLine": 1423,
+        "endChar": 72
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
