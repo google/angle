@@ -16,6 +16,29 @@
       "message": "Done the comments, please help to review, thanks in advance!",
       "revId": "c04edc1886bfb2a714d5699b227c671f11ea0570",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15733e6a_7b67e28c",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:40:10Z",
+      "side": 1,
+      "message": "nit: for consistency with other ANGLE code please use\n\n#if defined(...)\n#else\n#endif  // defined(...)",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 32
+      },
+      "revId": "c04edc1886bfb2a714d5699b227c671f11ea0570",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
