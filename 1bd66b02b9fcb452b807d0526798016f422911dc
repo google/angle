@@ -16,6 +16,23 @@
       "message": "Missing Validation check from an earlier change. Added.",
       "revId": "1bd66b02b9fcb452b807d0526798016f422911dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b244405a_ea333636",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-11T19:32:21Z",
+      "side": 1,
+      "message": "LGTM. Please add a small regression test.",
+      "revId": "1bd66b02b9fcb452b807d0526798016f422911dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
