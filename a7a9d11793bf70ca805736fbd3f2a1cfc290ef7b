@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c017474_bca3a881",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:31:03Z",
+      "side": 1,
+      "message": "LGTM, two nits. Nice first CL. Cody you want to do a quick second review?",
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a88f059_56b30092",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:31:03Z",
+      "side": 1,
+      "message": "nit: you could make this a small helper func, even something local to just_the_name, like\n\ndef just_the_name:\n    def get_name(param_string):\n       return param_string[type_name_sep_index(param_string) + 1:].strip()\n    ...",
+      "range": {
+        "startLine": 1166,
+        "startChar": 8,
+        "endLine": 1166,
+        "endChar": 61
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5075038c_322ff851",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:31:03Z",
+      "side": 1,
+      "message": "nit: we already have a file named entry_point_utils.h. maybe call these entry_points_cl_utils.h to mirror the other files?",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 21
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
