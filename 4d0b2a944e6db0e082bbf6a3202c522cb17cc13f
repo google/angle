@@ -39,6 +39,30 @@
       },
       "revId": "4d0b2a944e6db0e082bbf6a3202c522cb17cc13f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "23202b8c_2ad4829d",
+        "filename": "src/libOpenCL/entry_points_cl_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-11T18:25:53Z",
+      "side": 1,
+      "message": "Good catch, thanks!",
+      "parentUuid": "5be29a57_90a1d7cd",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 21
+      },
+      "revId": "4d0b2a944e6db0e082bbf6a3202c522cb17cc13f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
