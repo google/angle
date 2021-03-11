@@ -265,6 +265,30 @@
       },
       "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e125ba50_7ed42116",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1423,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-11T17:50:14Z",
+      "side": 1,
+      "message": "My point was that what you had here before was correct. My suggestion was to add contextVk-\u003egetFeatures().enablePreRotateSurfaces.enabled to the condition of disablePreRotateIncrementalPresentRectangles itself.",
+      "parentUuid": "00ab7d5e_9a819f78",
+      "range": {
+        "startLine": 1422,
+        "startChar": 16,
+        "endLine": 1423,
+        "endChar": 72
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
