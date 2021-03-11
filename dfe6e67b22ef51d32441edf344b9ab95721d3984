@@ -131,6 +131,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7df2de17_0620432b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6443,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T21:34:58Z",
+      "side": 1,
+      "message": "Ack, reverted. This is actually an INFO message. It\u0027s sufficiently difficult to figure out who all depends on what prints to work that I left it alone.",
+      "parentUuid": "35c7fa16_d6af63ab",
+      "range": {
+        "startLine": 6443,
+        "startChar": 9,
+        "endLine": 6443,
+        "endChar": 25
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "be55d563_6e548ad6",
