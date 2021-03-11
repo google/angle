@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "560a717a_462c7046",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-11T18:17:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4a88f059_56b30092",
+      "range": {
+        "startLine": 1166,
+        "startChar": 8,
+        "endLine": 1166,
+        "endChar": 61
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5075038c_322ff851",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-03-11T16:31:03Z",
       "side": 1,
       "message": "nit: we already have a file named entry_point_utils.h. maybe call these entry_points_cl_utils.h to mirror the other files?",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 21
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdb61318_738a1875",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-11T18:17:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5075038c_322ff851",
       "range": {
         "startLine": 6,
         "startChar": 3,
@@ -236,6 +284,54 @@
       "writtenOn": "2021-03-11T17:56:39Z",
       "side": 1,
       "message": "From Shabi\u0027s comment it doesn\u0027t seem like the macro is going to print what you think, but if you just want to land it as is, this won\u0027t block anything.",
+      "parentUuid": "b6e09a45_eaf241c3",
+      "range": {
+        "startLine": 19,
+        "startChar": 21,
+        "endLine": 19,
+        "endChar": 55
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "447292de_2dfec21a",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-11T18:17:34Z",
+      "side": 1,
+      "message": "I agree Cody, this macro is for testing only and is planned to be rewritten before we try it on Android.",
+      "parentUuid": "dd6b8205_c0ebecca",
+      "range": {
+        "startLine": 19,
+        "startChar": 13,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "593bee7a_a9931c06",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-11T18:17:34Z",
+      "side": 1,
+      "message": "Shabi was right, there was a separator missing, this is fixed. Jamie\u0027s nits are also resolved.",
       "parentUuid": "b6e09a45_eaf241c3",
       "range": {
         "startLine": 19,
