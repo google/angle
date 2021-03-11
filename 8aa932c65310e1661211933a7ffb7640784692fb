@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89a7027b_886cbbae",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTestDelegate.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:54:13Z",
+      "side": 1,
+      "message": "nit: The ANGLE Project Authors.\n\nsame for other files. We don\u0027t currently have an automated check for this.",
+      "range": {
+        "startLine": 1,
+        "startChar": 22,
+        "endLine": 1,
+        "endChar": 27
+      },
+      "revId": "8aa932c65310e1661211933a7ffb7640784692fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
