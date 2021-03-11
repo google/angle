@@ -171,6 +171,9 @@
 5662 SWIFTSHADER : dEQP-GLES31.functional.copy_image.compressed.* = FAIL
 5662 SWIFTSHADER : dEQP-GLES31.functional.copy_image.mixed.* = FAIL
 
+// Flaky timeouts on SwANGLE
+1173237 SWIFTSHADER : dEQP-GLES31.functional.shaders.builtin_functions.precision.refract.lowp_compute.vec4 = SKIP
+
 ////
 //// General Vulkan expectations
 ////

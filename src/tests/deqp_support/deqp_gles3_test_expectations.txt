@@ -634,6 +634,12 @@
 // Fails on SwANGLE bots
 4418 SWIFTSHADER : dEQP-GLES3.functional.negative_api.buffer.framebuffer_texture_layer = FAIL
 
+// Flaky timeouts on SwANGLE
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_fragment.vec4 = SKIP
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.faceforward.lowp_vertex.vec4 = SKIP
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_fragment.vec4 = SKIP
+1173237 SWIFTSHADER : dEQP-GLES3.functional.shaders.builtin_functions.precision.refract.lowp_vertex.vec4 = SKIP
+
 // AddressSanitizer:DEADLYSIGNAL on Nexus 5X
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat3_offset_1 = SKIP
 5665 NEXUS5X : dEQP-GLES3.functional.attribute_location.bind_aliasing.cond_mat4 = SKIP
