@@ -197,6 +197,54 @@
       },
       "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa722d67_1bc4fd13",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-11T17:56:39Z",
+      "side": 1,
+      "message": "Sure, this isn\u0027t critical.  Deferring Android support is recommended when there is a desktop environment available.  We just don\u0027t want to defer it forever.",
+      "parentUuid": "dd6b8205_c0ebecca",
+      "range": {
+        "startLine": 19,
+        "startChar": 13,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "640b7c1d_d773b08e",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-11T17:56:39Z",
+      "side": 1,
+      "message": "From Shabi\u0027s comment it doesn\u0027t seem like the macro is going to print what you think, but if you just want to land it as is, this won\u0027t block anything.",
+      "parentUuid": "b6e09a45_eaf241c3",
+      "range": {
+        "startLine": 19,
+        "startChar": 21,
+        "endLine": 19,
+        "endChar": 55
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
