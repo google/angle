@@ -68,6 +68,24 @@
       "parentUuid": "b244405a_ea333636",
       "revId": "1bd66b02b9fcb452b807d0526798016f422911dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a70c61b4_d9a47765",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-11T20:59:03Z",
+      "side": 1,
+      "message": "Since this is a validation bug fix, it\u0027s enough to add a test that queries EGL_CONTEXT_PRIORITY_LEVEL_IMG and makes sure EGL_BAD_ATTRIBUTE is generated without the extension.",
+      "parentUuid": "b433f5fd_f644c37b",
+      "revId": "1bd66b02b9fcb452b807d0526798016f422911dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
