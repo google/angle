@@ -5103,27 +5103,19 @@ angle::Result GlslangGetShaderSpirvCode(const GlslangErrorCallback &callback,
         {gl::ShaderType::Geometry, &geometryShader},
         {gl::ShaderType::Compute, &computeShader},
     };
-    glslang::TProgram program;
-
     for (const gl::ShaderType shaderType : linkedShaderStages)
     {
         if (shaderSources[shaderType].empty())
         {
             continue;
         }
+
+        glslang::TProgram program;
 
         ANGLE_TRY(CompileShader(callback, builtInResources, shaderType, shaderSources[shaderType],
                                 shaders[shaderType], &program));
-    }
 
-    ANGLE_TRY(LinkProgram(callback, &program));
-
-    for (const gl::ShaderType shaderType : linkedShaderStages)
-    {
-        if (shaderSources[shaderType].empty())
-        {
-            continue;
-        }
+        ANGLE_TRY(LinkProgram(callback, &program));
 
         glslang::TIntermediate *intermediate = program.getIntermediate(kShLanguageMap[shaderType]);
         glslang::GlslangToSpv(*intermediate, (*spirvBlobsOut)[shaderType]);
