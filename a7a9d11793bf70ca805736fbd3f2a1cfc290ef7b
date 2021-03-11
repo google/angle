@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9604a035_e7c17bc4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:58:08Z",
+      "side": 1,
+      "message": "Cody, PTAL. Would like to get this moving quickly.",
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4a88f059_56b30092",
@@ -129,6 +146,54 @@
         "startChar": 13,
         "endLine": 19,
         "endChar": 19
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd6b8205_c0ebecca",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:58:08Z",
+      "side": 1,
+      "message": "Please defer addressing this (and using the other EVENT macro) to a future CL. That OK Cody?",
+      "parentUuid": "19b0b412_b8cf09da",
+      "range": {
+        "startLine": 19,
+        "startChar": 13,
+        "endLine": 19,
+        "endChar": 19
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6e09a45_eaf241c3",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:58:08Z",
+      "side": 1,
+      "message": "Please defer addressing this to a future CL. We can tackle using an enum and the other event macro stuff as a follow-up.",
+      "parentUuid": "81774a25_a1d945ff",
+      "range": {
+        "startLine": 19,
+        "startChar": 21,
+        "endLine": 19,
+        "endChar": 55
       },
       "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
