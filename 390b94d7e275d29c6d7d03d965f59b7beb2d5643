@@ -193,6 +193,30 @@
       },
       "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b237177_0e34d73c",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1423,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-11T16:22:25Z",
+      "side": 1,
+      "message": "There _is_ interaction; emulated pre-rotation doesn\u0027t rotate the rectangles like Android does.\n\nWhy not make the condition of disablePreRotateIncrementalPresentRectangles itself be: `contextVk-\u003egetFeatures().enablePreRotateSurfaces.enabled \u0026\u0026 !IsAndroid()`?",
+      "parentUuid": "07e57106_4159f9d9",
+      "range": {
+        "startLine": 1422,
+        "startChar": 16,
+        "endLine": 1423,
+        "endChar": 72
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
