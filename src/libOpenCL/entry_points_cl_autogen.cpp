@@ -9,6 +9,7 @@
 //   Defines the CL entry points.
 
 #include "entry_points_cl_autogen.h"
+#include "entry_points_cl_utils.h"
 
 extern "C" {
 
@@ -17,9 +18,9 @@ cl_int CL_API_ENTRY CL_GetPlatformIDs(cl_uint num_entries,
                                       cl_platform_id *platforms,
                                       cl_uint *num_platforms)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetPlatformIDs, "num_entries = %u, platforms = 0x%016" PRIxPTR ", num_platforms =
-    // 0x%016" PRIxPTR "", num_entries, (uintptr_t)platforms, (uintptr_t)num_platforms);
+    CL_EVENT(GetPlatformIDs,
+             "num_entries = %u, platforms = 0x%016" PRIxPTR ", num_platforms = 0x%016" PRIxPTR "",
+             num_entries, (uintptr_t)platforms, (uintptr_t)num_platforms);
 
     // TODO: GetPlatformIDs
 
@@ -32,11 +33,12 @@ cl_int CL_API_ENTRY CL_GetPlatformInfo(cl_platform_id platform,
                                        void *param_value,
                                        size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetPlatformInfo, "platform = 0x%016" PRIxPTR ", param_name = %u, param_value_size =
-    // %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)platform, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetPlatformInfo,
+             "platform = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)platform, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetPlatformInfo
 
@@ -49,10 +51,12 @@ cl_int CL_API_ENTRY CL_GetDeviceIDs(cl_platform_id platform,
                                     cl_device_id *devices,
                                     cl_uint *num_devices)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetDeviceIDs, "platform = 0x%016" PRIxPTR ", device_type = %u, num_entries = %u,
-    // devices = 0x%016" PRIxPTR ", num_devices = 0x%016" PRIxPTR "", (uintptr_t)platform,
-    // device_type, num_entries, (uintptr_t)devices, (uintptr_t)num_devices);
+    CL_EVENT(GetDeviceIDs,
+             "platform = 0x%016" PRIxPTR
+             ", device_type = %lu, num_entries = %u, devices = 0x%016" PRIxPTR
+             ", num_devices = 0x%016" PRIxPTR "",
+             (uintptr_t)platform, device_type, num_entries, (uintptr_t)devices,
+             (uintptr_t)num_devices);
 
     // TODO: GetDeviceIDs
 
@@ -65,11 +69,12 @@ cl_int CL_API_ENTRY CL_GetDeviceInfo(cl_device_id device,
                                      void *param_value,
                                      size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetDeviceInfo, "device = 0x%016" PRIxPTR ", param_name = %u, param_value_size = %u,
-    // param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)device, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetDeviceInfo,
+             "device = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)device, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetDeviceInfo
 
@@ -86,11 +91,12 @@ cl_context CL_API_ENTRY CL_CreateContext(const cl_context_properties *properties
                                          void *user_data,
                                          cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateContext, "properties = 0x%016" PRIxPTR ", num_devices = %u, devices = 0x%016"
-    // PRIxPTR ", user_data) = 0x%016" PRIxPTR ", user_data = 0x%016" PRIxPTR ", errcode_ret =
-    // 0x%016" PRIxPTR "", (uintptr_t)properties, num_devices, (uintptr_t)devices,
-    // (uintptr_t)user_data), (uintptr_t)user_data, (uintptr_t)errcode_ret);
+    CL_EVENT(CreateContext,
+             "properties = 0x%016" PRIxPTR ", num_devices = %u, devices = 0x%016" PRIxPTR
+             ", pfn_notify = 0x%016" PRIxPTR ", user_data = 0x%016" PRIxPTR
+             ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)properties, num_devices, (uintptr_t)devices, (uintptr_t)pfn_notify,
+             (uintptr_t)user_data, (uintptr_t)errcode_ret);
 
     // TODO: CreateContext
 
@@ -107,11 +113,11 @@ CL_CreateContextFromType(const cl_context_properties *properties,
                          void *user_data,
                          cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateContextFromType, "properties = 0x%016" PRIxPTR ", device_type = %u, user_data)
-    // = 0x%016" PRIxPTR ", user_data = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)properties, device_type, (uintptr_t)user_data), (uintptr_t)user_data,
-    // (uintptr_t)errcode_ret);
+    CL_EVENT(CreateContextFromType,
+             "properties = 0x%016" PRIxPTR ", device_type = %lu, pfn_notify = 0x%016" PRIxPTR
+             ", user_data = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)properties, device_type, (uintptr_t)pfn_notify, (uintptr_t)user_data,
+             (uintptr_t)errcode_ret);
 
     // TODO: CreateContextFromType
 
@@ -120,8 +126,7 @@ CL_CreateContextFromType(const cl_context_properties *properties,
 
 cl_int CL_API_ENTRY CL_RetainContext(cl_context context)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(RetainContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
+    CL_EVENT(RetainContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
 
     // TODO: RetainContext
 
@@ -130,8 +135,7 @@ cl_int CL_API_ENTRY CL_RetainContext(cl_context context)
 
 cl_int CL_API_ENTRY CL_ReleaseContext(cl_context context)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(ReleaseContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
+    CL_EVENT(ReleaseContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
 
     // TODO: ReleaseContext
 
@@ -144,11 +148,12 @@ cl_int CL_API_ENTRY CL_GetContextInfo(cl_context context,
                                       void *param_value,
                                       size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetContextInfo, "context = 0x%016" PRIxPTR ", param_name = %u, param_value_size =
-    // %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)context, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetContextInfo,
+             "context = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)context, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetContextInfo
 
@@ -157,8 +162,7 @@ cl_int CL_API_ENTRY CL_GetContextInfo(cl_context context,
 
 cl_int CL_API_ENTRY CL_RetainCommandQueue(cl_command_queue command_queue)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(RetainCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
+    CL_EVENT(RetainCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     // TODO: RetainCommandQueue
 
@@ -167,8 +171,7 @@ cl_int CL_API_ENTRY CL_RetainCommandQueue(cl_command_queue command_queue)
 
 cl_int CL_API_ENTRY CL_ReleaseCommandQueue(cl_command_queue command_queue)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(ReleaseCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
+    CL_EVENT(ReleaseCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     // TODO: ReleaseCommandQueue
 
@@ -181,11 +184,12 @@ cl_int CL_API_ENTRY CL_GetCommandQueueInfo(cl_command_queue command_queue,
                                            void *param_value,
                                            size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetCommandQueueInfo, "command_queue = 0x%016" PRIxPTR ", param_name = %u,
-    // param_value_size = %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016"
-    // PRIxPTR "", (uintptr_t)command_queue, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetCommandQueueInfo,
+             "command_queue = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetCommandQueueInfo
 
@@ -198,10 +202,10 @@ cl_mem CL_API_ENTRY CL_CreateBuffer(cl_context context,
                                     void *host_ptr,
                                     cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateBuffer, "context = 0x%016" PRIxPTR ", flags = %u, size = %u, host_ptr =
-    // 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)context, flags, size,
-    // (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
+    CL_EVENT(CreateBuffer,
+             "context = 0x%016" PRIxPTR ", flags = %lu, size = %zu, host_ptr = 0x%016" PRIxPTR
+             ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)context, flags, size, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
     // TODO: CreateBuffer
 
@@ -210,8 +214,7 @@ cl_mem CL_API_ENTRY CL_CreateBuffer(cl_context context,
 
 cl_int CL_API_ENTRY CL_RetainMemObject(cl_mem memobj)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(RetainMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
+    CL_EVENT(RetainMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
 
     // TODO: RetainMemObject
 
@@ -220,8 +223,7 @@ cl_int CL_API_ENTRY CL_RetainMemObject(cl_mem memobj)
 
 cl_int CL_API_ENTRY CL_ReleaseMemObject(cl_mem memobj)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(ReleaseMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
+    CL_EVENT(ReleaseMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
 
     // TODO: ReleaseMemObject
 
@@ -235,11 +237,12 @@ cl_int CL_API_ENTRY CL_GetSupportedImageFormats(cl_context context,
                                                 cl_image_format *image_formats,
                                                 cl_uint *num_image_formats)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetSupportedImageFormats, "context = 0x%016" PRIxPTR ", flags = %u, image_type = %u,
-    // num_entries = %u, image_formats = 0x%016" PRIxPTR ", num_image_formats = 0x%016" PRIxPTR "",
-    // (uintptr_t)context, flags, image_type, num_entries, (uintptr_t)image_formats,
-    // (uintptr_t)num_image_formats);
+    CL_EVENT(GetSupportedImageFormats,
+             "context = 0x%016" PRIxPTR
+             ", flags = %lu, image_type = %u, num_entries = %u, image_formats = 0x%016" PRIxPTR
+             ", num_image_formats = 0x%016" PRIxPTR "",
+             (uintptr_t)context, flags, image_type, num_entries, (uintptr_t)image_formats,
+             (uintptr_t)num_image_formats);
 
     // TODO: GetSupportedImageFormats
 
@@ -252,11 +255,12 @@ cl_int CL_API_ENTRY CL_GetMemObjectInfo(cl_mem memobj,
                                         void *param_value,
                                         size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetMemObjectInfo, "memobj = 0x%016" PRIxPTR ", param_name = %u, param_value_size =
-    // %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)memobj, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetMemObjectInfo,
+             "memobj = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)memobj, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetMemObjectInfo
 
@@ -269,10 +273,12 @@ cl_int CL_API_ENTRY CL_GetImageInfo(cl_mem image,
                                     void *param_value,
                                     size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetImageInfo, "image = 0x%016" PRIxPTR ", param_name = %u, param_value_size = %u,
-    // param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "", (uintptr_t)image,
-    // param_name, param_value_size, (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetImageInfo,
+             "image = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)image, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetImageInfo
 
@@ -281,8 +287,7 @@ cl_int CL_API_ENTRY CL_GetImageInfo(cl_mem image,
 
 cl_int CL_API_ENTRY CL_RetainSampler(cl_sampler sampler)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(RetainSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
+    CL_EVENT(RetainSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
 
     // TODO: RetainSampler
 
@@ -291,8 +296,7 @@ cl_int CL_API_ENTRY CL_RetainSampler(cl_sampler sampler)
 
 cl_int CL_API_ENTRY CL_ReleaseSampler(cl_sampler sampler)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(ReleaseSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
+    CL_EVENT(ReleaseSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
 
     // TODO: ReleaseSampler
 
@@ -305,11 +309,12 @@ cl_int CL_API_ENTRY CL_GetSamplerInfo(cl_sampler sampler,
                                       void *param_value,
                                       size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetSamplerInfo, "sampler = 0x%016" PRIxPTR ", param_name = %u, param_value_size =
-    // %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)sampler, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetSamplerInfo,
+             "sampler = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)sampler, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetSamplerInfo
 
@@ -322,10 +327,11 @@ cl_program CL_API_ENTRY CL_CreateProgramWithSource(cl_context context,
                                                    const size_t *lengths,
                                                    cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateProgramWithSource, "context = 0x%016" PRIxPTR ", count = %u, strings = 0x%016"
-    // PRIxPTR ", lengths = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)context,
-    // count, (uintptr_t)strings, (uintptr_t)lengths, (uintptr_t)errcode_ret);
+    CL_EVENT(CreateProgramWithSource,
+             "context = 0x%016" PRIxPTR ", count = %u, strings = 0x%016" PRIxPTR
+             ", lengths = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)context, count, (uintptr_t)strings, (uintptr_t)lengths,
+             (uintptr_t)errcode_ret);
 
     // TODO: CreateProgramWithSource
 
@@ -340,12 +346,12 @@ cl_program CL_API_ENTRY CL_CreateProgramWithBinary(cl_context context,
                                                    cl_int *binary_status,
                                                    cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateProgramWithBinary, "context = 0x%016" PRIxPTR ", num_devices = %u, device_list
-    // = 0x%016" PRIxPTR ", lengths = 0x%016" PRIxPTR ", binaries = 0x%016" PRIxPTR ", binary_status
-    // = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)context, num_devices,
-    // (uintptr_t)device_list, (uintptr_t)lengths, (uintptr_t)binaries, (uintptr_t)binary_status,
-    // (uintptr_t)errcode_ret);
+    CL_EVENT(CreateProgramWithBinary,
+             "context = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016" PRIxPTR
+             ", lengths = 0x%016" PRIxPTR ", binaries = 0x%016" PRIxPTR
+             ", binary_status = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)context, num_devices, (uintptr_t)device_list, (uintptr_t)lengths,
+             (uintptr_t)binaries, (uintptr_t)binary_status, (uintptr_t)errcode_ret);
 
     // TODO: CreateProgramWithBinary
 
@@ -354,8 +360,7 @@ cl_program CL_API_ENTRY CL_CreateProgramWithBinary(cl_context context,
 
 cl_int CL_API_ENTRY CL_RetainProgram(cl_program program)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(RetainProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
+    CL_EVENT(RetainProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
 
     // TODO: RetainProgram
 
@@ -364,8 +369,7 @@ cl_int CL_API_ENTRY CL_RetainProgram(cl_program program)
 
 cl_int CL_API_ENTRY CL_ReleaseProgram(cl_program program)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(ReleaseProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
+    CL_EVENT(ReleaseProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
 
     // TODO: ReleaseProgram
 
@@ -380,11 +384,12 @@ cl_int CL_API_ENTRY CL_BuildProgram(cl_program program,
                                                                   void *user_data),
                                     void *user_data)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(BuildProgram, "program = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016"
-    // PRIxPTR ", options = 0x%016" PRIxPTR ", user_data) = 0x%016" PRIxPTR ", user_data = 0x%016"
-    // PRIxPTR "", (uintptr_t)program, num_devices, (uintptr_t)device_list, (uintptr_t)options,
-    // (uintptr_t)user_data), (uintptr_t)user_data);
+    CL_EVENT(BuildProgram,
+             "program = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016" PRIxPTR
+             ", options = 0x%016" PRIxPTR ", pfn_notify = 0x%016" PRIxPTR
+             ", user_data = 0x%016" PRIxPTR "",
+             (uintptr_t)program, num_devices, (uintptr_t)device_list, (uintptr_t)options,
+             (uintptr_t)pfn_notify, (uintptr_t)user_data);
 
     // TODO: BuildProgram
 
@@ -397,11 +402,12 @@ cl_int CL_API_ENTRY CL_GetProgramInfo(cl_program program,
                                       void *param_value,
                                       size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetProgramInfo, "program = 0x%016" PRIxPTR ", param_name = %u, param_value_size =
-    // %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)program, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetProgramInfo,
+             "program = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)program, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetProgramInfo
 
@@ -415,11 +421,12 @@ cl_int CL_API_ENTRY CL_GetProgramBuildInfo(cl_program program,
                                            void *param_value,
                                            size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetProgramBuildInfo, "program = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR ",
-    // param_name = %u, param_value_size = %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret
-    // = 0x%016" PRIxPTR "", (uintptr_t)program, (uintptr_t)device, param_name, param_value_size,
-    // (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetProgramBuildInfo,
+             "program = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)program, (uintptr_t)device, param_name, param_value_size,
+             (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
 
     // TODO: GetProgramBuildInfo
 
@@ -430,10 +437,10 @@ cl_kernel CL_API_ENTRY CL_CreateKernel(cl_program program,
                                        const char *kernel_name,
                                        cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateKernel, "program = 0x%016" PRIxPTR ", kernel_name = 0x%016" PRIxPTR ",
-    // errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)program, (uintptr_t)kernel_name,
-    // (uintptr_t)errcode_ret);
+    CL_EVENT(CreateKernel,
+             "program = 0x%016" PRIxPTR ", kernel_name = 0x%016" PRIxPTR
+             ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)program, (uintptr_t)kernel_name, (uintptr_t)errcode_ret);
 
     // TODO: CreateKernel
 
@@ -445,10 +452,10 @@ cl_int CL_API_ENTRY CL_CreateKernelsInProgram(cl_program program,
                                               cl_kernel *kernels,
                                               cl_uint *num_kernels_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateKernelsInProgram, "program = 0x%016" PRIxPTR ", num_kernels = %u, kernels =
-    // 0x%016" PRIxPTR ", num_kernels_ret = 0x%016" PRIxPTR "", (uintptr_t)program, num_kernels,
-    // (uintptr_t)kernels, (uintptr_t)num_kernels_ret);
+    CL_EVENT(CreateKernelsInProgram,
+             "program = 0x%016" PRIxPTR ", num_kernels = %u, kernels = 0x%016" PRIxPTR
+             ", num_kernels_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)program, num_kernels, (uintptr_t)kernels, (uintptr_t)num_kernels_ret);
 
     // TODO: CreateKernelsInProgram
 
@@ -457,8 +464,7 @@ cl_int CL_API_ENTRY CL_CreateKernelsInProgram(cl_program program,
 
 cl_int CL_API_ENTRY CL_RetainKernel(cl_kernel kernel)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(RetainKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
+    CL_EVENT(RetainKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
 
     // TODO: RetainKernel
 
@@ -467,8 +473,7 @@ cl_int CL_API_ENTRY CL_RetainKernel(cl_kernel kernel)
 
 cl_int CL_API_ENTRY CL_ReleaseKernel(cl_kernel kernel)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(ReleaseKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
+    CL_EVENT(ReleaseKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
 
     // TODO: ReleaseKernel
 
@@ -480,9 +485,10 @@ cl_int CL_API_ENTRY CL_SetKernelArg(cl_kernel kernel,
                                     size_t arg_size,
                                     const void *arg_value)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(SetKernelArg, "kernel = 0x%016" PRIxPTR ", arg_index = %u, arg_size = %u, arg_value
-    // = 0x%016" PRIxPTR "", (uintptr_t)kernel, arg_index, arg_size, (uintptr_t)arg_value);
+    CL_EVENT(SetKernelArg,
+             "kernel = 0x%016" PRIxPTR
+             ", arg_index = %u, arg_size = %zu, arg_value = 0x%016" PRIxPTR "",
+             (uintptr_t)kernel, arg_index, arg_size, (uintptr_t)arg_value);
 
     // TODO: SetKernelArg
 
@@ -495,11 +501,12 @@ cl_int CL_API_ENTRY CL_GetKernelInfo(cl_kernel kernel,
                                      void *param_value,
                                      size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetKernelInfo, "kernel = 0x%016" PRIxPTR ", param_name = %u, param_value_size = %u,
-    // param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)kernel, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetKernelInfo,
+             "kernel = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)kernel, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetKernelInfo
 
@@ -513,11 +520,12 @@ cl_int CL_API_ENTRY CL_GetKernelWorkGroupInfo(cl_kernel kernel,
                                               void *param_value,
                                               size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetKernelWorkGroupInfo, "kernel = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR ",
-    // param_name = %u, param_value_size = %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret
-    // = 0x%016" PRIxPTR "", (uintptr_t)kernel, (uintptr_t)device, param_name, param_value_size,
-    // (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetKernelWorkGroupInfo,
+             "kernel = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)kernel, (uintptr_t)device, param_name, param_value_size,
+             (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
 
     // TODO: GetKernelWorkGroupInfo
 
@@ -526,9 +534,8 @@ cl_int CL_API_ENTRY CL_GetKernelWorkGroupInfo(cl_kernel kernel,
 
 cl_int CL_API_ENTRY CL_WaitForEvents(cl_uint num_events, const cl_event *event_list)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(WaitForEvents, "num_events = %u, event_list = 0x%016" PRIxPTR "", num_events,
-    // (uintptr_t)event_list);
+    CL_EVENT(WaitForEvents, "num_events = %u, event_list = 0x%016" PRIxPTR "", num_events,
+             (uintptr_t)event_list);
 
     // TODO: WaitForEvents
 
@@ -541,10 +548,12 @@ cl_int CL_API_ENTRY CL_GetEventInfo(cl_event event,
                                     void *param_value,
                                     size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetEventInfo, "event = 0x%016" PRIxPTR ", param_name = %u, param_value_size = %u,
-    // param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "", (uintptr_t)event,
-    // param_name, param_value_size, (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetEventInfo,
+             "event = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)event, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetEventInfo
 
@@ -553,8 +562,7 @@ cl_int CL_API_ENTRY CL_GetEventInfo(cl_event event,
 
 cl_int CL_API_ENTRY CL_RetainEvent(cl_event event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(RetainEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
+    CL_EVENT(RetainEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
 
     // TODO: RetainEvent
 
@@ -563,8 +571,7 @@ cl_int CL_API_ENTRY CL_RetainEvent(cl_event event)
 
 cl_int CL_API_ENTRY CL_ReleaseEvent(cl_event event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(ReleaseEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
+    CL_EVENT(ReleaseEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
 
     // TODO: ReleaseEvent
 
@@ -577,11 +584,12 @@ cl_int CL_API_ENTRY CL_GetEventProfilingInfo(cl_event event,
                                              void *param_value,
                                              size_t *param_value_size_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetEventProfilingInfo, "event = 0x%016" PRIxPTR ", param_name = %u, param_value_size
-    // = %u, param_value = 0x%016" PRIxPTR ", param_value_size_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)event, param_name, param_value_size, (uintptr_t)param_value,
-    // (uintptr_t)param_value_size_ret);
+    CL_EVENT(GetEventProfilingInfo,
+             "event = 0x%016" PRIxPTR
+             ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
+             ", param_value_size_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)event, param_name, param_value_size, (uintptr_t)param_value,
+             (uintptr_t)param_value_size_ret);
 
     // TODO: GetEventProfilingInfo
 
@@ -590,8 +598,7 @@ cl_int CL_API_ENTRY CL_GetEventProfilingInfo(cl_event event,
 
 cl_int CL_API_ENTRY CL_Flush(cl_command_queue command_queue)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(Flush, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
+    CL_EVENT(Flush, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     // TODO: Flush
 
@@ -600,8 +607,7 @@ cl_int CL_API_ENTRY CL_Flush(cl_command_queue command_queue)
 
 cl_int CL_API_ENTRY CL_Finish(cl_command_queue command_queue)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(Finish, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
+    CL_EVENT(Finish, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     // TODO: Finish
 
@@ -618,12 +624,13 @@ cl_int CL_API_ENTRY CL_EnqueueReadBuffer(cl_command_queue command_queue,
                                          const cl_event *event_wait_list,
                                          cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueReadBuffer, "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR ",
-    // blocking_read = %u, offset = %u, size = %u, ptr = 0x%016" PRIxPTR ", num_events_in_wait_list
-    // = %u, event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "",
-    // (uintptr_t)command_queue, (uintptr_t)buffer, blocking_read, offset, size, (uintptr_t)ptr,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueReadBuffer,
+             "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
+             ", blocking_read = %u, offset = %zu, size = %zu, ptr = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)buffer, blocking_read, offset, size,
+             (uintptr_t)ptr, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueReadBuffer
 
@@ -640,12 +647,13 @@ cl_int CL_API_ENTRY CL_EnqueueWriteBuffer(cl_command_queue command_queue,
                                           const cl_event *event_wait_list,
                                           cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueWriteBuffer, "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR ",
-    // blocking_write = %u, offset = %u, size = %u, ptr = 0x%016" PRIxPTR ", num_events_in_wait_list
-    // = %u, event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "",
-    // (uintptr_t)command_queue, (uintptr_t)buffer, blocking_write, offset, size, (uintptr_t)ptr,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueWriteBuffer,
+             "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
+             ", blocking_write = %u, offset = %zu, size = %zu, ptr = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)buffer, blocking_write, offset, size,
+             (uintptr_t)ptr, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueWriteBuffer
 
@@ -662,12 +670,14 @@ cl_int CL_API_ENTRY CL_EnqueueCopyBuffer(cl_command_queue command_queue,
                                          const cl_event *event_wait_list,
                                          cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueCopyBuffer, "command_queue = 0x%016" PRIxPTR ", src_buffer = 0x%016" PRIxPTR
-    // ", dst_buffer = 0x%016" PRIxPTR ", src_offset = %u, dst_offset = %u, size = %u,
-    // num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR
-    // "", (uintptr_t)command_queue, (uintptr_t)src_buffer, (uintptr_t)dst_buffer, src_offset,
-    // dst_offset, size, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueCopyBuffer,
+             "command_queue = 0x%016" PRIxPTR ", src_buffer = 0x%016" PRIxPTR
+             ", dst_buffer = 0x%016" PRIxPTR
+             ", src_offset = %zu, dst_offset = %zu, size = %zu, num_events_in_wait_list = %u, "
+             "event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)src_buffer, (uintptr_t)dst_buffer, src_offset,
+             dst_offset, size, num_events_in_wait_list, (uintptr_t)event_wait_list,
+             (uintptr_t)event);
 
     // TODO: EnqueueCopyBuffer
 
@@ -686,13 +696,15 @@ cl_int CL_API_ENTRY CL_EnqueueReadImage(cl_command_queue command_queue,
                                         const cl_event *event_wait_list,
                                         cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueReadImage, "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR ",
-    // blocking_read = %u, origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR ", row_pitch = %u,
-    // slice_pitch = %u, ptr = 0x%016" PRIxPTR ", num_events_in_wait_list = %u, event_wait_list =
-    // 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)image,
-    // blocking_read, (uintptr_t)origin, (uintptr_t)region, row_pitch, slice_pitch, (uintptr_t)ptr,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueReadImage,
+             "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
+             ", blocking_read = %u, origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR
+             ", row_pitch = %zu, slice_pitch = %zu, ptr = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)image, blocking_read, (uintptr_t)origin,
+             (uintptr_t)region, row_pitch, slice_pitch, (uintptr_t)ptr, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueReadImage
 
@@ -711,14 +723,15 @@ cl_int CL_API_ENTRY CL_EnqueueWriteImage(cl_command_queue command_queue,
                                          const cl_event *event_wait_list,
                                          cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueWriteImage, "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR ",
-    // blocking_write = %u, origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR ", input_row_pitch
-    // = %u, input_slice_pitch = %u, ptr = 0x%016" PRIxPTR ", num_events_in_wait_list = %u,
-    // event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue,
-    // (uintptr_t)image, blocking_write, (uintptr_t)origin, (uintptr_t)region, input_row_pitch,
-    // input_slice_pitch, (uintptr_t)ptr, num_events_in_wait_list, (uintptr_t)event_wait_list,
-    // (uintptr_t)event);
+    CL_EVENT(EnqueueWriteImage,
+             "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
+             ", blocking_write = %u, origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR
+             ", input_row_pitch = %zu, input_slice_pitch = %zu, ptr = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)image, blocking_write, (uintptr_t)origin,
+             (uintptr_t)region, input_row_pitch, input_slice_pitch, (uintptr_t)ptr,
+             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueWriteImage
 
@@ -735,13 +748,15 @@ cl_int CL_API_ENTRY CL_EnqueueCopyImage(cl_command_queue command_queue,
                                         const cl_event *event_wait_list,
                                         cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueCopyImage, "command_queue = 0x%016" PRIxPTR ", src_image = 0x%016" PRIxPTR ",
-    // dst_image = 0x%016" PRIxPTR ", src_origin = 0x%016" PRIxPTR ", dst_origin = 0x%016" PRIxPTR
-    // ", region = 0x%016" PRIxPTR ", num_events_in_wait_list = %u, event_wait_list = 0x%016"
-    // PRIxPTR ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)src_image,
-    // (uintptr_t)dst_image, (uintptr_t)src_origin, (uintptr_t)dst_origin, (uintptr_t)region,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueCopyImage,
+             "command_queue = 0x%016" PRIxPTR ", src_image = 0x%016" PRIxPTR
+             ", dst_image = 0x%016" PRIxPTR ", src_origin = 0x%016" PRIxPTR
+             ", dst_origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)src_image, (uintptr_t)dst_image,
+             (uintptr_t)src_origin, (uintptr_t)dst_origin, (uintptr_t)region,
+             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueCopyImage
 
@@ -758,13 +773,15 @@ cl_int CL_API_ENTRY CL_EnqueueCopyImageToBuffer(cl_command_queue command_queue,
                                                 const cl_event *event_wait_list,
                                                 cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueCopyImageToBuffer, "command_queue = 0x%016" PRIxPTR ", src_image = 0x%016"
-    // PRIxPTR ", dst_buffer = 0x%016" PRIxPTR ", src_origin = 0x%016" PRIxPTR ", region = 0x%016"
-    // PRIxPTR ", dst_offset = %u, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
-    // ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)src_image,
-    // (uintptr_t)dst_buffer, (uintptr_t)src_origin, (uintptr_t)region, dst_offset,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueCopyImageToBuffer,
+             "command_queue = 0x%016" PRIxPTR ", src_image = 0x%016" PRIxPTR
+             ", dst_buffer = 0x%016" PRIxPTR ", src_origin = 0x%016" PRIxPTR
+             ", region = 0x%016" PRIxPTR
+             ", dst_offset = %zu, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)src_image, (uintptr_t)dst_buffer,
+             (uintptr_t)src_origin, (uintptr_t)region, dst_offset, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueCopyImageToBuffer
 
@@ -781,13 +798,15 @@ cl_int CL_API_ENTRY CL_EnqueueCopyBufferToImage(cl_command_queue command_queue,
                                                 const cl_event *event_wait_list,
                                                 cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueCopyBufferToImage, "command_queue = 0x%016" PRIxPTR ", src_buffer = 0x%016"
-    // PRIxPTR ", dst_image = 0x%016" PRIxPTR ", src_offset = %u, dst_origin = 0x%016" PRIxPTR ",
-    // region = 0x%016" PRIxPTR ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
-    // ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)src_buffer,
-    // (uintptr_t)dst_image, src_offset, (uintptr_t)dst_origin, (uintptr_t)region,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueCopyBufferToImage,
+             "command_queue = 0x%016" PRIxPTR ", src_buffer = 0x%016" PRIxPTR
+             ", dst_image = 0x%016" PRIxPTR ", src_offset = %zu, dst_origin = 0x%016" PRIxPTR
+             ", region = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)src_buffer, (uintptr_t)dst_image, src_offset,
+             (uintptr_t)dst_origin, (uintptr_t)region, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueCopyBufferToImage
 
@@ -805,13 +824,14 @@ void *CL_API_ENTRY CL_EnqueueMapBuffer(cl_command_queue command_queue,
                                        cl_event *event,
                                        cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueMapBuffer, "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR ",
-    // blocking_map = %u, map_flags = %u, offset = %u, size = %u, num_events_in_wait_list = %u,
-    // event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR
-    // "", (uintptr_t)command_queue, (uintptr_t)buffer, blocking_map, map_flags, offset, size,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event,
-    // (uintptr_t)errcode_ret);
+    CL_EVENT(EnqueueMapBuffer,
+             "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
+             ", blocking_map = %u, map_flags = %lu, offset = %zu, size = %zu, "
+             "num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)buffer, blocking_map, map_flags, offset, size,
+             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event,
+             (uintptr_t)errcode_ret);
 
     // TODO: EnqueueMapBuffer
 
@@ -831,15 +851,17 @@ void *CL_API_ENTRY CL_EnqueueMapImage(cl_command_queue command_queue,
                                       cl_event *event,
                                       cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueMapImage, "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR ",
-    // blocking_map = %u, map_flags = %u, origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR ",
-    // image_row_pitch = 0x%016" PRIxPTR ", image_slice_pitch = 0x%016" PRIxPTR ",
-    // num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR ",
-    // errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)image, blocking_map,
-    // map_flags, (uintptr_t)origin, (uintptr_t)region, (uintptr_t)image_row_pitch,
-    // (uintptr_t)image_slice_pitch, num_events_in_wait_list, (uintptr_t)event_wait_list,
-    // (uintptr_t)event, (uintptr_t)errcode_ret);
+    CL_EVENT(EnqueueMapImage,
+             "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
+             ", blocking_map = %u, map_flags = %lu, origin = 0x%016" PRIxPTR
+             ", region = 0x%016" PRIxPTR ", image_row_pitch = 0x%016" PRIxPTR
+             ", image_slice_pitch = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)image, blocking_map, map_flags, (uintptr_t)origin,
+             (uintptr_t)region, (uintptr_t)image_row_pitch, (uintptr_t)image_slice_pitch,
+             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event,
+             (uintptr_t)errcode_ret);
 
     // TODO: EnqueueMapImage
 
@@ -853,12 +875,13 @@ cl_int CL_API_ENTRY CL_EnqueueUnmapMemObject(cl_command_queue command_queue,
                                              const cl_event *event_wait_list,
                                              cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueUnmapMemObject, "command_queue = 0x%016" PRIxPTR ", memobj = 0x%016" PRIxPTR
-    // ", mapped_ptr = 0x%016" PRIxPTR ", num_events_in_wait_list = %u, event_wait_list = 0x%016"
-    // PRIxPTR ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)memobj,
-    // (uintptr_t)mapped_ptr, num_events_in_wait_list, (uintptr_t)event_wait_list,
-    // (uintptr_t)event);
+    CL_EVENT(EnqueueUnmapMemObject,
+             "command_queue = 0x%016" PRIxPTR ", memobj = 0x%016" PRIxPTR
+             ", mapped_ptr = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)memobj, (uintptr_t)mapped_ptr,
+             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueUnmapMemObject
 
@@ -875,14 +898,15 @@ cl_int CL_API_ENTRY CL_EnqueueNDRangeKernel(cl_command_queue command_queue,
                                             const cl_event *event_wait_list,
                                             cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueNDRangeKernel, "command_queue = 0x%016" PRIxPTR ", kernel = 0x%016" PRIxPTR
-    // ", work_dim = %u, global_work_offset = 0x%016" PRIxPTR ", global_work_size = 0x%016" PRIxPTR
-    // ", local_work_size = 0x%016" PRIxPTR ", num_events_in_wait_list = %u, event_wait_list =
-    // 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)kernel,
-    // work_dim, (uintptr_t)global_work_offset, (uintptr_t)global_work_size,
-    // (uintptr_t)local_work_size, num_events_in_wait_list, (uintptr_t)event_wait_list,
-    // (uintptr_t)event);
+    CL_EVENT(EnqueueNDRangeKernel,
+             "command_queue = 0x%016" PRIxPTR ", kernel = 0x%016" PRIxPTR
+             ", work_dim = %u, global_work_offset = 0x%016" PRIxPTR
+             ", global_work_size = 0x%016" PRIxPTR ", local_work_size = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)kernel, work_dim, (uintptr_t)global_work_offset,
+             (uintptr_t)global_work_size, (uintptr_t)local_work_size, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueNDRangeKernel
 
@@ -900,13 +924,16 @@ cl_int CL_API_ENTRY CL_EnqueueNativeKernel(cl_command_queue command_queue,
                                            const cl_event *event_wait_list,
                                            cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueNativeKernel, "command_queue = 0x%016" PRIxPTR ", ) = 0x%016" PRIxPTR ", args
-    // = 0x%016" PRIxPTR ", cb_args = %u, num_mem_objects = %u, mem_list = 0x%016" PRIxPTR ",
-    // args_mem_loc = 0x%016" PRIxPTR ", num_events_in_wait_list = %u, event_wait_list = 0x%016"
-    // PRIxPTR ", event = 0x%016" PRIxPTR "", (uintptr_t)command_queue, (uintptr_t)),
-    // (uintptr_t)args, cb_args, num_mem_objects, (uintptr_t)mem_list, (uintptr_t)args_mem_loc,
-    // num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueNativeKernel,
+             "command_queue = 0x%016" PRIxPTR ", user_func = 0x%016" PRIxPTR
+             ", args = 0x%016" PRIxPTR
+             ", cb_args = %zu, num_mem_objects = %u, mem_list = 0x%016" PRIxPTR
+             ", args_mem_loc = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)user_func, (uintptr_t)args, cb_args,
+             num_mem_objects, (uintptr_t)mem_list, (uintptr_t)args_mem_loc, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueNativeKernel
 
@@ -918,10 +945,10 @@ cl_int CL_API_ENTRY CL_SetCommandQueueProperty(cl_command_queue command_queue,
                                                cl_bool enable,
                                                cl_command_queue_properties *old_properties)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(SetCommandQueueProperty, "command_queue = 0x%016" PRIxPTR ", properties = %u, enable
-    // = %u, old_properties = 0x%016" PRIxPTR "", (uintptr_t)command_queue, properties, enable,
-    // (uintptr_t)old_properties);
+    CL_EVENT(SetCommandQueueProperty,
+             "command_queue = 0x%016" PRIxPTR
+             ", properties = %lu, enable = %u, old_properties = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, properties, enable, (uintptr_t)old_properties);
 
     // TODO: SetCommandQueueProperty
 
@@ -937,12 +964,13 @@ cl_mem CL_API_ENTRY CL_CreateImage2D(cl_context context,
                                      void *host_ptr,
                                      cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateImage2D, "context = 0x%016" PRIxPTR ", flags = %u, image_format = 0x%016"
-    // PRIxPTR ", image_width = %u, image_height = %u, image_row_pitch = %u, host_ptr = 0x%016"
-    // PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)context, flags,
-    // (uintptr_t)image_format, image_width, image_height, image_row_pitch, (uintptr_t)host_ptr,
-    // (uintptr_t)errcode_ret);
+    CL_EVENT(
+        CreateImage2D,
+        "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
+        ", image_width = %zu, image_height = %zu, image_row_pitch = %zu, host_ptr = 0x%016" PRIxPTR
+        ", errcode_ret = 0x%016" PRIxPTR "",
+        (uintptr_t)context, flags, (uintptr_t)image_format, image_width, image_height,
+        image_row_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
     // TODO: CreateImage2D
 
@@ -960,12 +988,13 @@ cl_mem CL_API_ENTRY CL_CreateImage3D(cl_context context,
                                      void *host_ptr,
                                      cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateImage3D, "context = 0x%016" PRIxPTR ", flags = %u, image_format = 0x%016"
-    // PRIxPTR ", image_width = %u, image_height = %u, image_depth = %u, image_row_pitch = %u,
-    // image_slice_pitch = %u, host_ptr = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
-    // (uintptr_t)context, flags, (uintptr_t)image_format, image_width, image_height, image_depth,
-    // image_row_pitch, image_slice_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
+    CL_EVENT(
+        CreateImage3D,
+        "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
+        ", image_width = %zu, image_height = %zu, image_depth = %zu, image_row_pitch = %zu, "
+        "image_slice_pitch = %zu, host_ptr = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
+        (uintptr_t)context, flags, (uintptr_t)image_format, image_width, image_height, image_depth,
+        image_row_pitch, image_slice_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
     // TODO: CreateImage3D
 
@@ -974,9 +1003,8 @@ cl_mem CL_API_ENTRY CL_CreateImage3D(cl_context context,
 
 cl_int CL_API_ENTRY CL_EnqueueMarker(cl_command_queue command_queue, cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueMarker, "command_queue = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "",
-    // (uintptr_t)command_queue, (uintptr_t)event);
+    CL_EVENT(EnqueueMarker, "command_queue = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)event);
 
     // TODO: EnqueueMarker
 
@@ -987,10 +1015,9 @@ cl_int CL_API_ENTRY CL_EnqueueWaitForEvents(cl_command_queue command_queue,
                                             cl_uint num_events,
                                             const cl_event *event_list)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueWaitForEvents, "command_queue = 0x%016" PRIxPTR ", num_events = %u,
-    // event_list = 0x%016" PRIxPTR "", (uintptr_t)command_queue, num_events,
-    // (uintptr_t)event_list);
+    CL_EVENT(EnqueueWaitForEvents,
+             "command_queue = 0x%016" PRIxPTR ", num_events = %u, event_list = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, num_events, (uintptr_t)event_list);
 
     // TODO: EnqueueWaitForEvents
 
@@ -999,8 +1026,7 @@ cl_int CL_API_ENTRY CL_EnqueueWaitForEvents(cl_command_queue command_queue,
 
 cl_int CL_API_ENTRY CL_EnqueueBarrier(cl_command_queue command_queue)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueBarrier, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
+    CL_EVENT(EnqueueBarrier, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     // TODO: EnqueueBarrier
 
@@ -1009,8 +1035,7 @@ cl_int CL_API_ENTRY CL_EnqueueBarrier(cl_command_queue command_queue)
 
 cl_int CL_API_ENTRY CL_UnloadCompiler()
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(UnloadCompiler, "");
+    CL_EVENT(UnloadCompiler, "");
 
     // TODO: UnloadCompiler
 
@@ -1019,8 +1044,7 @@ cl_int CL_API_ENTRY CL_UnloadCompiler()
 
 void *CL_API_ENTRY CL_GetExtensionFunctionAddress(const char *func_name)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(GetExtensionFunctionAddress, "func_name = 0x%016" PRIxPTR "", (uintptr_t)func_name);
+    CL_EVENT(GetExtensionFunctionAddress, "func_name = 0x%016" PRIxPTR "", (uintptr_t)func_name);
 
     // TODO: GetExtensionFunctionAddress
 
@@ -1032,10 +1056,10 @@ cl_command_queue CL_API_ENTRY CL_CreateCommandQueue(cl_context context,
                                                     cl_command_queue_properties properties,
                                                     cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateCommandQueue, "context = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR ",
-    // properties = %u, errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)context, (uintptr_t)device,
-    // properties, (uintptr_t)errcode_ret);
+    CL_EVENT(CreateCommandQueue,
+             "context = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
+             ", properties = %lu, errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)context, (uintptr_t)device, properties, (uintptr_t)errcode_ret);
 
     // TODO: CreateCommandQueue
 
@@ -1048,10 +1072,12 @@ cl_sampler CL_API_ENTRY CL_CreateSampler(cl_context context,
                                          cl_filter_mode filter_mode,
                                          cl_int *errcode_ret)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(CreateSampler, "context = 0x%016" PRIxPTR ", normalized_coords = %u, addressing_mode
-    // = %u, filter_mode = %u, errcode_ret = 0x%016" PRIxPTR "", (uintptr_t)context,
-    // normalized_coords, addressing_mode, filter_mode, (uintptr_t)errcode_ret);
+    CL_EVENT(CreateSampler,
+             "context = 0x%016" PRIxPTR
+             ", normalized_coords = %u, addressing_mode = %u, filter_mode = %u, errcode_ret = "
+             "0x%016" PRIxPTR "",
+             (uintptr_t)context, normalized_coords, addressing_mode, filter_mode,
+             (uintptr_t)errcode_ret);
 
     // TODO: CreateSampler
 
@@ -1064,11 +1090,12 @@ cl_int CL_API_ENTRY CL_EnqueueTask(cl_command_queue command_queue,
                                    const cl_event *event_wait_list,
                                    cl_event *event)
 {
-    // TODO: CL_EVENT
-    // CL_EVENT(EnqueueTask, "command_queue = 0x%016" PRIxPTR ", kernel = 0x%016" PRIxPTR ",
-    // num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR
-    // "", (uintptr_t)command_queue, (uintptr_t)kernel, num_events_in_wait_list,
-    // (uintptr_t)event_wait_list, (uintptr_t)event);
+    CL_EVENT(EnqueueTask,
+             "command_queue = 0x%016" PRIxPTR ", kernel = 0x%016" PRIxPTR
+             ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", event = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, (uintptr_t)kernel, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     // TODO: EnqueueTask
 

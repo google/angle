@@ -37,6 +37,7 @@ angle_shared_library("OpenCL") {
   sources = [
     "entry_points_cl_autogen.cpp",
     "entry_points_cl_autogen.h",
+    "entry_points_cl_utils.h",
   ]
   deps = [ ":cl_includes" ]
 }

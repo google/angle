@@ -248,8 +248,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 TEMPLATE_CL_ENTRY_POINT_NO_RETURN = """\
 void CL_API_ENTRY CL_{name}({params})
 {{
-    // TODO: CL_EVENT
-    // CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     // TODO: {name}
 }}
@@ -258,8 +257,7 @@ void CL_API_ENTRY CL_{name}({params})
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN = """\
 {return_type}CL_API_ENTRY CL_{name}({params})
 {{
-    // TODO: CL_EVENT
-    // CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
+    CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     // TODO: {name}
 
@@ -622,18 +620,18 @@ FORMAT_DICT = {
     "LPGLYPHMETRICSFLOAT": POINTER_FORMAT,
     "UINT": "%u",
     # CL-specific types
-    "size_t": "%u",
-    "cl_char": "%d",
-    "cl_uchar": "%u",
-    "cl_short": "%d",
-    "cl_ushort": "%u",
+    "size_t": "%zu",
+    "cl_char": "%hhd",
+    "cl_uchar": "%hhu",
+    "cl_short": "%hd",
+    "cl_ushort": "%hu",
     "cl_int": "%d",
     "cl_uint": "%u",
-    "cl_long": "%d",
-    "cl_ulong": "%u",
-    "cl_half": "%lf",
-    "cl_float": "%lf",
-    "cl_double": "%lf",
+    "cl_long": "%ld",
+    "cl_ulong": "%lu",
+    "cl_half": "%hu",
+    "cl_float": "%f",
+    "cl_double": "%f",
     "cl_platform_id": POINTER_FORMAT,
     "cl_device_id": POINTER_FORMAT,
     "cl_context": POINTER_FORMAT,
@@ -642,63 +640,61 @@ FORMAT_DICT = {
     "cl_program": POINTER_FORMAT,
     "cl_kernel": POINTER_FORMAT,
     "cl_event": POINTER_FORMAT,
-    "cl_program": POINTER_FORMAT,
     "cl_sampler": POINTER_FORMAT,
     "cl_bool": "%u",
-    "cl_bitfield": "%u",
-    "cl_properties": "%u",
-    "cl_device_type": "%u",
+    "cl_bitfield": "%lu",
+    "cl_properties": "%lu",
+    "cl_device_type": "%lu",
     "cl_platform_info": "%u",
     "cl_device_info": "%u",
-    "cl_platform_info": "%u",
-    "cl_device_fp_config": "%u",
+    "cl_device_fp_config": "%lu",
     "cl_device_mem_cache_type": "%u",
     "cl_device_local_mem_type": "%u",
-    "cl_device_exec_capabilities": "%u",
-    "cl_device_svm_capabilities": "%u",
-    "cl_command_queue_properties": "%u",
-    "cl_device_partition_property": "%u",
-    "cl_device_affinity_domain": "%u",
-    "cl_context_properties": "%u",
+    "cl_device_exec_capabilities": "%lu",
+    "cl_device_svm_capabilities": "%lu",
+    "cl_command_queue_properties": "%lu",
+    "cl_device_partition_property": "%zu",
+    "cl_device_affinity_domain": "%lu",
+    "cl_context_properties": "%zu",
     "cl_context_info": "%u",
-    "cl_queue_properties": "%u",
+    "cl_queue_properties": "%lu",
     "cl_command_queue_info": "%u",
     "cl_channel_order": "%u",
     "cl_channel_type": "%u",
-    "cl_mem_flags": "%u",
-    "cl_svm_mem_flags": "%u",
+    "cl_mem_flags": "%lu",
+    "cl_svm_mem_flags": "%lu",
     "cl_mem_object_type": "%u",
     "cl_mem_info": "%u",
-    "cl_mem_migration_flags": "%u",
+    "cl_mem_migration_flags": "%lu",
+    "cl_mem_properties": "%lu",
     "cl_image_info": "%u",
     "cl_buffer_create_type": "%u",
     "cl_addressing_mode": "%u",
     "cl_filter_mode": "%u",
     "cl_sampler_info": "%u",
-    "cl_map_flags": "%u",
-    "cl_pipe_properties": "%u",
+    "cl_map_flags": "%lu",
+    "cl_pipe_properties": "%zu",
     "cl_pipe_info": "%u",
     "cl_program_info": "%u",
     "cl_program_build_info": "%u",
     "cl_program_binary_type": "%u",
-    "cl_build_status": "%u",
+    "cl_build_status": "%d",
     "cl_kernel_info": "%u",
     "cl_kernel_arg_info": "%u",
     "cl_kernel_arg_address_qualifier": "%u",
     "cl_kernel_arg_access_qualifier": "%u",
-    "cl_kernel_arg_type_qualifier": "%u",
+    "cl_kernel_arg_type_qualifier": "%lu",
     "cl_kernel_work_group_info": "%u",
     "cl_kernel_sub_group_info": "%u",
     "cl_event_info": "%u",
     "cl_command_type": "%u",
     "cl_profiling_info": "%u",
-    "cl_sampler_properties": "%u",
+    "cl_sampler_properties": "%lu",
     "cl_kernel_exec_info": "%u",
-    "cl_device_atomic_capabilities": "%u",
-    "cl_device_device_enqueue_capabilities": "%u",
+    "cl_device_atomic_capabilities": "%lu",
     "cl_khronos_vendor_id": "%u",
-    "cl_mem_properties": "%u",
     "cl_version": "%u",
+    "cl_device_device_enqueue_capabilities": "%lu",
 }
 
 TEMPLATE_HEADER_INCLUDES = """\
@@ -889,6 +885,7 @@ LIBCL_HEADER_INCLUDES = """\
 
 LIBCL_SOURCE_INCLUDES = """\
 #include "entry_points_cl_autogen.h"
+#include "entry_points_cl_utils.h"
 """
 
 TEMPLATE_EVENT_COMMENT = """\
@@ -1164,7 +1161,16 @@ def just_the_type(param):
 
 
 def just_the_name(param):
-    return param[type_name_sep_index(param) + 1:].strip()
+
+    def get_name(param_string):
+        return param_string[type_name_sep_index(param_string) + 1:].strip()
+
+    left_paren = param.find("(")
+    if left_paren == -1:
+        return get_name(param)
+    right_paren = param.index(")")
+    paren_content = param[left_paren + 1:right_paren]
+    return get_name(paren_content)
 
 
 def make_param(param_type, param_name):
