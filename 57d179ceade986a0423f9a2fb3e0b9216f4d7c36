@@ -141,6 +141,24 @@
       "parentUuid": "3e9b403a_df627621",
       "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e044cf9_9a28bd15",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3711,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-03-11T14:51:07Z",
+      "side": 1,
+      "message": "Since ETC2/EAC formats are already covered by the dedicated extension strings including one ANGLE-specific to address potential emulation issues, the new limitation targets only ETC1.",
+      "parentUuid": "30d6d612_d285fd28",
+      "revId": "57d179ceade986a0423f9a2fb3e0b9216f4d7c36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
