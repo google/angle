@@ -126,6 +126,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "920a26e3_47712ef1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-11T04:51:11Z",
+      "side": 1,
+      "message": "Thanks for your questions/suggestions Tim.\n\n\u003e ... we should have an Android/Khronos bug\n\nAgreed!  I mentioned a spec change somewhere (this CL and/or the bug).  I want to consult with Jesse Hall about this, since he has Android history and is still doing Vulkan standards.\n\n\u003e Is there precedent ...\n\nThere are things that aren\u0027t fixed, though I\u0027m not thinking of a good example.  This case is difficult because the extension was standardized 4 years ago, and we\u0027ve shipped it for a few Android releases already.  A few years ago, the Vulkan working group decided that extensions can\u0027t be changed, only clarified.  Only new extensions can be created to fix previous sins.  Perhaps that policy can change.  Without it, such an incompatible behavior change, would prevent an app from working across Android releases.\n\nBTW, I wrote the extension spec, the dEQP test (based on what the original dEQP folks wanted, which always passes unless the test crashes or times out), and the Vulkan loader changes.  Thus, I\u0027m guilty and don\u0027t want to \"bury this landmine\".  At the time, I was new to Android and I don\u0027t recall anybody thinking about rotation with this.\n\n\u003e Does eglSwapBuffersWithDamageKHR() have any visibility ...?\n\nSorry, I don\u0027t understand the question.",
+      "parentUuid": "e3282f22_db8c99ec",
+      "range": {
+        "startLine": 1943,
+        "startChar": 86,
+        "endLine": 1943,
+        "endChar": 95
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fa1db808_1a2b6ea9",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 2
