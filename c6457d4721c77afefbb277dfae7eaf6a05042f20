@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "c6457d4721c77afefbb277dfae7eaf6a05042f20",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4ce6531_7703c90b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-11T16:44:08Z",
+      "side": 1,
+      "message": "LGTM, will let Jonah sign off.",
+      "revId": "c6457d4721c77afefbb277dfae7eaf6a05042f20",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
