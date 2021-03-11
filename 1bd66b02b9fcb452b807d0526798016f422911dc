@@ -33,6 +33,41 @@
       "message": "LGTM. Please add a small regression test.",
       "revId": "1bd66b02b9fcb452b807d0526798016f422911dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "699d502d_7981b8ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-11T20:48:06Z",
+      "side": 1,
+      "message": "Reply for Shahbaz",
+      "revId": "1bd66b02b9fcb452b807d0526798016f422911dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b433f5fd_f644c37b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-11T20:48:06Z",
+      "side": 1,
+      "message": "Sorry Shahbaz, at this time we have neither deqp-egl test or end2end.\n\nSince the extension is a hint, I don\u0027t think we can craft a test that actually verifies that one context gets priority over the other.\n\nHowever, There is the end2end: EGLCreateContextAttribsTest. And I could add a test case that 1. adds a priority to a eglCreateContext, 2. query the priority from the created context, which might be different. Simple, but if we had this test I would have caught the omission before merging the original change.\n\nSuggestions?",
+      "parentUuid": "b244405a_ea333636",
+      "revId": "1bd66b02b9fcb452b807d0526798016f422911dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
