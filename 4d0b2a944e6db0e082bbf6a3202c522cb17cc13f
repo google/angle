@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e961db8e_ac42d034",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-11T18:21:47Z",
+      "side": 1,
+      "message": "Looks good, just one last fix.",
+      "revId": "4d0b2a944e6db0e082bbf6a3202c522cb17cc13f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5be29a57_90a1d7cd",
+        "filename": "src/libOpenCL/entry_points_cl_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-11T18:21:47Z",
+      "side": 1,
+      "message": "This needs the updated filename as well.",
+      "range": {
+        "startLine": 6,
+        "startChar": 3,
+        "endLine": 6,
+        "endChar": 21
+      },
+      "revId": "4d0b2a944e6db0e082bbf6a3202c522cb17cc13f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
