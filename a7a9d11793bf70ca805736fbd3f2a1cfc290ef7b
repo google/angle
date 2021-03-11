@@ -62,6 +62,29 @@
       },
       "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38a7608d_5083646f",
+        "filename": "src/libOpenCL/entry_points_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-11T16:31:33Z",
+      "side": 1,
+      "message": "Why not let autogen generate this directly instead of having the macro do this?\n\nLike instead of this:\n\n    CL_EVENT(GetPlatformIDs,\n             \"num_entries \u003d %u, platforms \u003d 0x%016\" PRIxPTR \", num_platforms \u003d 0x%016\" PRIxPTR \"\",\n             num_entries, (uintptr_t)platforms, (uintptr_t)num_platforms);\n\nthe autogen script could generate this:\n\n    CL_EVENT(\"CL GetPlatformIDs: num_entries \u003d %u, platforms \u003d 0x%016\" PRIxPTR \", num_platforms \u003d 0x%016\" PRIxPTR \"\",\n             num_entries, (uintptr_t)platforms, (uintptr_t)num_platforms);\n\nThis macro currently generates something like \"OpenCL entry point \u003d EntryPointparam \u003d ...\"\n\n---\n\nAlso, my personal preference is towards brevity: `CL EntryPoint` instead of `OpenCL entry point \u003d EntryPoint` just to reduce the size of the logs.",
+      "range": {
+        "startLine": 19,
+        "startChar": 21,
+        "endLine": 19,
+        "endChar": 55
+      },
+      "revId": "a7a9d11793bf70ca805736fbd3f2a1cfc290ef7b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
