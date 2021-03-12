@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "15816ca0_5192f8be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-12T01:36:52Z",
+      "side": 1,
+      "message": "I see tests like GeometryShaderTest.MaxVaryings still be executed, so I believe things are still working correctly:\n\n        \"GeometryShaderTest.MaxVaryings/ES3_1_Vulkan\": {\n            \"actual\": \"PASS\",\n            \"expected\": \"PASS\",\n            \"times\": [\n                0.08440119000078994\n            ]\n        },\n        \"GeometryShaderTest.MaxVaryings/ES3_1_Vulkan_PreRotate270\": {\n            \"actual\": \"PASS\",\n            \"expected\": \"PASS\",\n            \"times\": [\n                0.31281958100043996\n            ]\n        },\n        \"GeometryShaderTest.MaxVaryings/ES3_1_Vulkan_PreRotate90\": {\n            \"actual\": \"PASS\",\n            \"expected\": \"PASS\",\n            \"times\": [\n                0.2965086000003794\n            ]\n        },\n\nIs there something else I should look at also?",
+      "parentUuid": "2a6231f2_3729c83d",
+      "revId": "2766eb971eea90a1cbc5e6ec4e3e7d7cc0f78477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "82440081_b7c1af8a",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 2
@@ -48,6 +66,30 @@
       "writtenOn": "2021-03-09T14:59:22Z",
       "side": 1,
       "message": "nit: ()",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 12
+      },
+      "revId": "2766eb971eea90a1cbc5e6ec4e3e7d7cc0f78477",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19769d6e_267ab2a9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-12T01:36:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82440081_b7c1af8a",
       "range": {
         "startLine": 44,
         "startChar": 4,
