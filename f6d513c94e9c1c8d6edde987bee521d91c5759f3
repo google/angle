@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d999bdc0_19752e45",
+        "filename": "src/tests/deqp_support/deqp_egl_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-12T18:21:15Z",
+      "side": 1,
+      "message": "Can you add NVIDIA here?\nOtherwise this will also affect SwANGLE.",
+      "range": {
+        "startLine": 121,
+        "startChar": 5,
+        "endLine": 121,
+        "endChar": 17
+      },
+      "revId": "f6d513c94e9c1c8d6edde987bee521d91c5759f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
