@@ -94,6 +94,7 @@ enum class RestrictedTraceID
     mobile_legends,
     nba2k20_800,
     one_punch_man,
+    plants_vs_zombies_2,
     pubg_mobile_lite,
     raid_shadow_legends,
     real_commando_secret_mission,

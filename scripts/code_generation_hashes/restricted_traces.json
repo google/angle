@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "83d16125dfbbfa783bdceacb5379c5dd",
+    "109f280e7cbf8147446642d5c39a9987",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -83,6 +83,8 @@
     "9a97bffd4c6c156a14308bb1c6f50a7e",
   "src/tests/restricted_traces/one_punch_man.tar.gz.sha1":
     "d7af01fd688a3cbbb9b7d58ed31620fb",
+  "src/tests/restricted_traces/plants_vs_zombies_2.tar.gz.sha1":
+    "fe1d7c220de5c5942195c0bc56267149",
   "src/tests/restricted_traces/pubg_mobile_lite.tar.gz.sha1":
     "6a77372489ee4b43639b684a39ab8d71",
   "src/tests/restricted_traces/raid_shadow_legends.tar.gz.sha1":
@@ -92,13 +94,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "7880ad4c4e91c5846229cd284cb41c77",
+    "53c08acf0dbb2e5558f2ddc253cc9437",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "f9142bd09a7ded41d7150e318cd6a83c",
+    "ee4443af895aceb575c1ace1bb202c6a",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "7af9b67cac7f45a909132faae86252aa",
+    "3f1dc277b29c6883497b6960ccba9e5e",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "43aac5e082749b30978740020e8e7e8d",
+    "efa301ef19ee3fe951b3a5ca945a0066",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":

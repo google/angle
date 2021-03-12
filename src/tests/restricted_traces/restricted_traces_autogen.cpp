@@ -51,6 +51,7 @@
 #include "mobile_legends/mobile_legends_capture_context1.h"
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
 #include "one_punch_man/one_punch_man_capture_context3.h"
+#include "plants_vs_zombies_2/plants_vs_zombies_2_capture_context1.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
 #include "raid_shadow_legends/raid_shadow_legends_capture_context2.h"
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
@@ -265,6 +266,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       one_punch_man::kReplayContextClientMinorVersion, one_punch_man::kReplayFrameStart,
       one_punch_man::kReplayFrameEnd, one_punch_man::kReplayDrawSurfaceWidth,
       one_punch_man::kReplayDrawSurfaceHeight, "one_punch_man"}},
+    {RestrictedTraceID::plants_vs_zombies_2,
+     {plants_vs_zombies_2::kReplayContextClientMajorVersion,
+      plants_vs_zombies_2::kReplayContextClientMinorVersion, plants_vs_zombies_2::kReplayFrameStart,
+      plants_vs_zombies_2::kReplayFrameEnd, plants_vs_zombies_2::kReplayDrawSurfaceWidth,
+      plants_vs_zombies_2::kReplayDrawSurfaceHeight, "plants_vs_zombies_2"}},
     {RestrictedTraceID::pubg_mobile_lite,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       pubg_mobile_lite::kReplayFrameStart, pubg_mobile_lite::kReplayFrameEnd,
@@ -494,6 +500,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::one_punch_man:
             one_punch_man::ReplayContext3Frame(frameIndex);
             break;
+        case RestrictedTraceID::plants_vs_zombies_2:
+            plants_vs_zombies_2::ReplayContext1Frame(frameIndex);
+            break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ReplayContext1Frame(frameIndex);
             break;
@@ -684,6 +693,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::one_punch_man:
             one_punch_man::ResetContext3Replay();
+            break;
+        case RestrictedTraceID::plants_vs_zombies_2:
+            plants_vs_zombies_2::ResetContext1Replay();
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ResetContext1Replay();
@@ -876,6 +888,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::one_punch_man:
             one_punch_man::SetupContext3Replay();
             break;
+        case RestrictedTraceID::plants_vs_zombies_2:
+            plants_vs_zombies_2::SetupContext1Replay();
+            break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetupContext1Replay();
             break;
@@ -1067,6 +1082,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::one_punch_man:
             one_punch_man::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::plants_vs_zombies_2:
+            plants_vs_zombies_2::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDir(dataDir);
             break;
@@ -1257,6 +1275,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::one_punch_man:
             one_punch_man::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::plants_vs_zombies_2:
+            plants_vs_zombies_2::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDecompressCallback(callback);
