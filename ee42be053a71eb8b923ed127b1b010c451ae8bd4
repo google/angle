@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d85dca3_0c7bed5f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-12T22:54:09Z",
+      "side": 1,
+      "message": "I added a SwANGLE section too, per Yuly\u0027s feedback",
+      "revId": "ee42be053a71eb8b923ed127b1b010c451ae8bd4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
