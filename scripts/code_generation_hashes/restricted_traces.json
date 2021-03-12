@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "109f280e7cbf8147446642d5c39a9987",
+    "2c6ec5159385fd1df677f5e9129ca34b",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -57,6 +57,8 @@
     "73fa97c4ab9be39017725c219666e908",
   "src/tests/restricted_traces/hill_climb_racing.tar.gz.sha1":
     "3026eeb93388fe35fa3e5e4eed95ef96",
+  "src/tests/restricted_traces/junes_journey.tar.gz.sha1":
+    "a7bd336ada3bf24c79b3e9529906fd60",
   "src/tests/restricted_traces/kartrider_rush.tar.gz.sha1":
     "c11aab56dcaba570a1993c1f8ebe4668",
   "src/tests/restricted_traces/klondike_adventures.tar.gz.sha1":
@@ -94,13 +96,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "53c08acf0dbb2e5558f2ddc253cc9437",
+    "5414f1121cad66b7b19f8584ff2005de",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "ee4443af895aceb575c1ace1bb202c6a",
+    "d6eb220a5f6767da5aa61f418b2d1a64",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "3f1dc277b29c6883497b6960ccba9e5e",
+    "850c1dca3c4b466b224816549f2926dc",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "efa301ef19ee3fe951b3a5ca945a0066",
+    "d8477afa7b21354f8aa9e3815dfe0a18",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":

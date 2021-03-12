@@ -38,6 +38,7 @@
 #include "hay_day/hay_day_capture_context2.h"
 #include "hearthstone/hearthstone_capture_context2.h"
 #include "hill_climb_racing/hill_climb_racing_capture_context2.h"
+#include "junes_journey/junes_journey_capture_context2.h"
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
 #include "klondike_adventures/klondike_adventures_capture_context2.h"
 #include "lego_legacy/lego_legacy_capture_context2.h"
@@ -205,6 +206,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       hill_climb_racing::kReplayContextClientMinorVersion, hill_climb_racing::kReplayFrameStart,
       hill_climb_racing::kReplayFrameEnd, hill_climb_racing::kReplayDrawSurfaceWidth,
       hill_climb_racing::kReplayDrawSurfaceHeight, "hill_climb_racing"}},
+    {RestrictedTraceID::junes_journey,
+     {junes_journey::kReplayContextClientMajorVersion,
+      junes_journey::kReplayContextClientMinorVersion, junes_journey::kReplayFrameStart,
+      junes_journey::kReplayFrameEnd, junes_journey::kReplayDrawSurfaceWidth,
+      junes_journey::kReplayDrawSurfaceHeight, "junes_journey"}},
     {RestrictedTraceID::kartrider_rush,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       kartrider_rush::kReplayFrameStart, kartrider_rush::kReplayFrameEnd,
@@ -461,6 +467,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::hill_climb_racing:
             hill_climb_racing::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::junes_journey:
+            junes_journey::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::ReplayContext1Frame(frameIndex);
             break;
@@ -654,6 +663,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::hill_climb_racing:
             hill_climb_racing::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::junes_journey:
+            junes_journey::ResetContext2Replay();
             break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::ResetContext1Replay();
@@ -849,6 +861,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::hill_climb_racing:
             hill_climb_racing::SetupContext2Replay();
             break;
+        case RestrictedTraceID::junes_journey:
+            junes_journey::SetupContext2Replay();
+            break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::SetupContext1Replay();
             break;
@@ -1043,6 +1058,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::hill_climb_racing:
             hill_climb_racing::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::junes_journey:
+            junes_journey::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::SetBinaryDataDir(dataDir);
             break;
@@ -1236,6 +1254,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::hill_climb_racing:
             hill_climb_racing::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::junes_journey:
+            junes_journey::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::kartrider_rush:
             kartrider_rush::SetBinaryDataDecompressCallback(callback);
