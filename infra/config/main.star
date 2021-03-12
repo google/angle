@@ -370,9 +370,6 @@ luci.cq_group(
             builder = 'chromium:try/mac-angle-chromium-try',
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/mac-angle-rel',
-        ),
-        luci.cq_tryjob_verifier(
             builder = 'chromium:try/mac-angle-try',
         ),
         luci.cq_tryjob_verifier(
