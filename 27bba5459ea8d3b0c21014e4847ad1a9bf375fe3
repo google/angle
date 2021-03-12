@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f881d8f_456b7fd7",
+        "filename": "src/libANGLE/capture/capture_gles_3_2_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-12T18:34:53Z",
+      "side": 1,
+      "message": "Interesting, I can\u0027t image tracking the pointer is going to be useful during replay, but... at least it will be captured.",
+      "range": {
+        "startLine": 245,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 55
+      },
+      "revId": "27bba5459ea8d3b0c21014e4847ad1a9bf375fe3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
