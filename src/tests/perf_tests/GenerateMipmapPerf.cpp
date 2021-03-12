@@ -146,7 +146,7 @@ void GenerateMipmapBenchmarkBase::initializeBenchmark()
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glViewport(0, 0, getWindow()->getWidth(), getWindow()->getHeight());
 
-    if (params.webgl)
+    if (mIsTimestampQueryAvailable && params.webgl)
     {
         glRequestExtensionANGLE("GL_EXT_disjoint_timer_query");
     }
