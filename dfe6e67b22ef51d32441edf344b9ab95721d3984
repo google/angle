@@ -202,6 +202,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06c12a2a_33db8639",
+        "filename": "src/tests/gl_tests/VulkanPerformanceCounterTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2953,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-12T15:14:02Z",
+      "side": 1,
+      "message": "I see what\u0027s going on. You need to use std430, otherwise each int is taking 16 bytes. With that, since the buffers are 64 ints, then the shader should also have 64 ints.\n\nAs is, you are using 1 out of every 4 integer in the buffers you are creating.",
+      "parentUuid": "1c3ed573_32f03807",
+      "range": {
+        "startLine": 2953,
+        "startChar": 15,
+        "endLine": 2953,
+        "endChar": 17
+      },
+      "revId": "dfe6e67b22ef51d32441edf344b9ab95721d3984",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef024277_39121a3c",
