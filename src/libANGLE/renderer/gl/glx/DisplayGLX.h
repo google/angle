@@ -75,11 +75,13 @@ class DisplayGLX : public DisplayGL
 
     gl::Version getMaxSupportedESVersion() const override;
 
-    // Synchronizes with the X server, if the display has been opened by ANGLE.
+    // Synchronizes with the X server.
     // Calling this is required at the end of every functions that does buffered
     // X calls (not for glX calls) otherwise there might be race conditions
     // between the application's display and ANGLE's one.
-    void syncXCommands() const;
+    // Calling this only syncs if ANGLE opened the display, or if alwaysSync
+    // is true.
+    void syncXCommands(bool alwaysSync) const;
 
     // Depending on the supported GLX extension, swap interval can be set
     // globally or per drawable. This function will make sure the drawable's

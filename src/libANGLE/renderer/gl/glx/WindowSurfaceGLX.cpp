@@ -59,7 +59,7 @@ WindowSurfaceGLX::~WindowSurfaceGLX()
         XSetErrorHandler(oldErrorHandler);
     }
 
-    mGLXDisplay->syncXCommands();
+    mGLXDisplay->syncXCommands(true);
 }
 
 egl::Error WindowSurfaceGLX::initialize(const egl::Display *display)
@@ -141,7 +141,7 @@ egl::Error WindowSurfaceGLX::initialize(const egl::Display *display)
         XFreeColormap(mDisplay, colormap);
     }
 
-    mGLXDisplay->syncXCommands();
+    mGLXDisplay->syncXCommands(true);
 
     return egl::NoError();
 }
