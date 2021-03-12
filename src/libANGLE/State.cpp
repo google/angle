@@ -347,7 +347,6 @@ State::State(const State *shareContextState,
       mProvokingVertex(gl::ProvokingVertexConvention::LastVertexConvention),
       mVertexArray(nullptr),
       mActiveSampler(0),
-      mValidAtomicCounterBufferCount(0),
       mPrimitiveRestart(false),
       mDebug(debug),
       mMultiSampling(false),
@@ -571,17 +570,19 @@ void State::reset(const Context *context)
     {
         UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::Uniform, 0, 0);
     }
+    mBoundUniformBuffersMask.reset();
 
     for (OffsetBindingPointer<Buffer> &buf : mAtomicCounterBuffers)
     {
         UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, 0, 0);
     }
-    mValidAtomicCounterBufferCount = 0;
+    mBoundAtomicCounterBuffersMask.reset();
 
     for (OffsetBindingPointer<Buffer> &buf : mShaderStorageBuffers)
     {
         UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, 0, 0);
     }
+    mBoundShaderStorageBuffersMask.reset();
 
     mClipDistancesEnabled.reset();
 
@@ -2045,27 +2046,17 @@ angle::Result State::setIndexedBufferBinding(const Context *context,
             setBufferBinding(context, target, buffer);
             break;
         case BufferBinding::Uniform:
+            mBoundUniformBuffersMask.set(index, buffer != nullptr);
             UpdateIndexedBufferBinding(context, &mUniformBuffers[index], buffer, target, offset,
                                        size);
             break;
         case BufferBinding::AtomicCounter:
-            if (!mAtomicCounterBuffers[index].get() && buffer)
-            {
-                // going from an invalid binding to a valid one, increment the count
-                mValidAtomicCounterBufferCount++;
-                ASSERT(mValidAtomicCounterBufferCount <=
-                       static_cast<uint32_t>(getCaps().maxAtomicCounterBufferBindings));
-            }
-            else if (mAtomicCounterBuffers[index].get() && !buffer)
-            {
-                // going from a valid binding to an invalid one, decrement the count
-                mValidAtomicCounterBufferCount--;
-                ASSERT(mValidAtomicCounterBufferCount >= 0);
-            }
+            mBoundAtomicCounterBuffersMask.set(index, buffer != nullptr);
             UpdateIndexedBufferBinding(context, &mAtomicCounterBuffers[index], buffer, target,
                                        offset, size);
             break;
         case BufferBinding::ShaderStorage:
+            mBoundShaderStorageBuffersMask.set(index, buffer != nullptr);
             UpdateIndexedBufferBinding(context, &mShaderStorageBuffers[index], buffer, target,
                                        offset, size);
             break;
@@ -2122,29 +2113,38 @@ angle::Result State::detachBuffer(Context *context, const Buffer *buffer)
         context->getStateCache().onVertexArrayStateChange(context);
     }
 
-    for (auto &buf : mUniformBuffers)
+    for (size_t uniformBufferIndex : mBoundUniformBuffersMask)
     {
-        if (buf.id() == bufferID)
+        OffsetBindingPointer<Buffer> &binding = mUniformBuffers[uniformBufferIndex];
+
+        if (binding.id() == bufferID)
         {
-            UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::Uniform, 0, 0);
+            UpdateIndexedBufferBinding(context, &binding, nullptr, BufferBinding::Uniform, 0, 0);
+            mBoundUniformBuffersMask.reset(uniformBufferIndex);
         }
     }
 
-    for (auto &buf : mAtomicCounterBuffers)
+    for (size_t atomicCounterBufferIndex : mBoundAtomicCounterBuffersMask)
     {
-        if (buf.id() == bufferID)
+        OffsetBindingPointer<Buffer> &binding = mAtomicCounterBuffers[atomicCounterBufferIndex];
+
+        if (binding.id() == bufferID)
         {
-            UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::AtomicCounter, 0, 0);
-            mValidAtomicCounterBufferCount--;
-            ASSERT(mValidAtomicCounterBufferCount >= 0);
+            UpdateIndexedBufferBinding(context, &binding, nullptr, BufferBinding::AtomicCounter, 0,
+                                       0);
+            mBoundAtomicCounterBuffersMask.reset(atomicCounterBufferIndex);
         }
     }
 
-    for (auto &buf : mShaderStorageBuffers)
+    for (size_t shaderStorageBufferIndex : mBoundShaderStorageBuffersMask)
     {
-        if (buf.id() == bufferID)
+        OffsetBindingPointer<Buffer> &binding = mShaderStorageBuffers[shaderStorageBufferIndex];
+
+        if (binding.id() == bufferID)
         {
-            UpdateIndexedBufferBinding(context, &buf, nullptr, BufferBinding::ShaderStorage, 0, 0);
+            UpdateIndexedBufferBinding(context, &binding, nullptr, BufferBinding::ShaderStorage, 0,
+                                       0);
+            mBoundShaderStorageBuffersMask.reset(shaderStorageBufferIndex);
         }
     }
 

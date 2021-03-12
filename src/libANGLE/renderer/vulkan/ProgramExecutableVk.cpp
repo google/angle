@@ -526,7 +526,7 @@ void ProgramExecutableVk::addAtomicCounterBufferDescriptorSetDesc(
 
     // A single storage buffer array is used for all stages for simplicity.
     descOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-                    gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS,
+                    gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS,
                     gl_vk::kShaderStageMap[shaderType], nullptr);
 }
 

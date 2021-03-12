@@ -1774,7 +1774,8 @@ gl::Version RendererVk::getMaxSupportedESVersion() const
     // either none or IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS atomic counter buffers.  So if
     // Vulkan doesn't support at least that many storage buffers in compute, we don't support 3.1.
     const uint32_t kMinimumStorageBuffersForES31 =
-        gl::limits::kMinimumComputeStorageBuffers + gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS;
+        gl::limits::kMinimumComputeStorageBuffers +
+        gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS;
     if (mPhysicalDeviceProperties.limits.maxPerStageDescriptorStorageBuffers <
         kMinimumStorageBuffersForES31)
     {

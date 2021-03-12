@@ -37,14 +37,13 @@ enum
     IMPLEMENTATION_MAX_GEOMETRY_SHADER_UNIFORM_BUFFERS = 16,
     IMPLEMENTATION_MAX_FRAGMENT_SHADER_UNIFORM_BUFFERS = 16,
     IMPLEMENTATION_MAX_COMPUTE_SHADER_UNIFORM_BUFFERS  = 16,
+
     // GL_EXT_geometry_shader increases the minimum value of GL_MAX_COMBINED_UNIFORM_BLOCKS to 36.
-    // GL_EXT_tessellation_shader increases the minimum value of GL_MAX_COMBINED_UNIFORM_BLOCKS
-    // to 60.
+    // GL_EXT_tessellation_shader increases the minimum value to 60.
     IMPLEMENTATION_MAX_COMBINED_SHADER_UNIFORM_BUFFERS = 60,
 
     // GL_EXT_geometry_shader increases the minimum value of GL_MAX_UNIFORM_BUFFER_BINDINGS to 48.
-    // Vulkan's minimum value for maxDescriptorSetUniformBuffers is 72 so allow exposing up to that
-    // many.
+    // GL_EXT_tessellation_shader increases the minimum value to 72.
     IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS = 72,
 
     // Transform feedback limits set to the minimum required by the spec.
@@ -77,7 +76,7 @@ enum
     IMPLEMENTATION_MAX_IMAGE_UNITS     = IMPLEMENTATION_MAX_ACTIVE_TEXTURES,
 
     // Maximum number of slots allocated for atomic counter buffers.
-    IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS = 8,
+    IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS = 8,
 
     // Implementation upper limits, real maximums depend on the hardware.
     IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS = 64,

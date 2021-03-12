@@ -3689,10 +3689,12 @@ void Context::initCaps()
     for (ShaderType shaderType : AllShaderTypes())
     {
         ANGLE_LIMIT_CAP(mState.mCaps.maxShaderAtomicCounterBuffers[shaderType],
-                        IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
+                        IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
     }
+    ANGLE_LIMIT_CAP(mState.mCaps.maxAtomicCounterBufferBindings,
+                    IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
     ANGLE_LIMIT_CAP(mState.mCaps.maxCombinedAtomicCounterBuffers,
-                    IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS);
+                    IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS);
 
     for (ShaderType shaderType : AllShaderTypes())
     {

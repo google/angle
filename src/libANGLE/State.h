@@ -446,7 +446,7 @@ class State : angle::NonCopyable
 
     ANGLE_INLINE bool hasValidAtomicCounterBuffer() const
     {
-        return mValidAtomicCounterBufferCount > 0;
+        return mBoundAtomicCounterBuffersMask.any();
     }
 
     const OffsetBindingPointer<Buffer> &getIndexedUniformBuffer(size_t index) const;
@@ -1068,8 +1068,13 @@ class State : angle::NonCopyable
 
     BufferVector mUniformBuffers;
     BufferVector mAtomicCounterBuffers;
-    uint32_t mValidAtomicCounterBufferCount;
     BufferVector mShaderStorageBuffers;
+
+    angle::BitSet<gl::IMPLEMENTATION_MAX_UNIFORM_BUFFER_BINDINGS> mBoundUniformBuffersMask;
+    angle::BitSet<gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>
+        mBoundAtomicCounterBuffersMask;
+    angle::BitSet<gl::IMPLEMENTATION_MAX_SHADER_STORAGE_BUFFER_BINDINGS>
+        mBoundShaderStorageBuffersMask;
 
     BindingPointer<TransformFeedback> mTransformFeedback;
 

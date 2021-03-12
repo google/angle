@@ -584,7 +584,7 @@ class ProgramD3D : public ProgramImpl
     std::map<std::string, int> mAtomicBindingMap;
     std::vector<D3DUniformBlock> mD3DUniformBlocks;
     std::vector<D3DInterfaceBlock> mD3DShaderStorageBlocks;
-    std::array<unsigned int, gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS>
+    std::array<unsigned int, gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS>
         mComputeAtomicCounterBufferRegisterIndices;
 
     std::vector<sh::ShaderVariable> mImage2DUniforms;

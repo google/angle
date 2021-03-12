@@ -1065,7 +1065,7 @@ std::unique_ptr<rx::LinkEvent> ProgramD3D::load(const gl::Context *context,
         mImage2DUniforms.push_back(image2Duniform);
     }
 
-    for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS; ++ii)
+    for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS; ++ii)
     {
         unsigned int index                             = stream->readInt<unsigned int>();
         mComputeAtomicCounterBufferRegisterIndices[ii] = index;
@@ -1381,7 +1381,7 @@ void ProgramD3D::save(const gl::Context *context, gl::BinaryOutputStream *stream
         gl::WriteShaderVar(stream, image2DUniform);
     }
 
-    for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFERS; ++ii)
+    for (unsigned int ii = 0; ii < gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS; ++ii)
     {
         stream->writeInt(mComputeAtomicCounterBufferRegisterIndices[ii]);
     }
