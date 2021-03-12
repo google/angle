@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afcf4798_0c3a006f",
+        "filename": "src/tests/deqp_support/deqp_khr_gles31_test_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-12T22:10:44Z",
+      "side": 1,
+      "message": "I don\u0027t think FAIL works for timeouts, you should SKIP.\n\nAlso, looks like we need SwANGLE section in this file.",
+      "range": {
+        "startLine": 87,
+        "startChar": 0,
+        "endLine": 87,
+        "endChar": 89
+      },
+      "revId": "191bee56da7a302508974428ca7930148fdb938d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
