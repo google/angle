@@ -46,6 +46,30 @@
       },
       "revId": "f6d513c94e9c1c8d6edde987bee521d91c5759f3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2a82183_170ab44c",
+        "filename": "src/tests/deqp_support/deqp_egl_test_expectations.txt",
+        "patchSetId": 1
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-12T19:11:56Z",
+      "side": 1,
+      "message": "Thanks for doing that Yuly!",
+      "parentUuid": "afcad965_ba1d025a",
+      "range": {
+        "startLine": 121,
+        "startChar": 5,
+        "endLine": 121,
+        "endChar": 17
+      },
+      "revId": "f6d513c94e9c1c8d6edde987bee521d91c5759f3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
