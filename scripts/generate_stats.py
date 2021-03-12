@@ -128,12 +128,12 @@ LOGGER = logging.getLogger('generate_stats')
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
 
 BOT_NAMES = [
+    'mac-angle-amd',
+    'mac-angle-intel',
     'win10-angle-x64-nvidia',
     'win10-angle-x64-intel',
     'Win7 FYI dEQP Release (AMD)',
     'win7-angle-x64-nvidia',
-    'Mac FYI dEQP Release Intel',
-    'Mac FYI dEQP Release AMD',
     'Linux FYI dEQP Release (Intel HD 630)',
     'Linux FYI dEQP Release (NVIDIA)',
     'Android FYI dEQP Release (Nexus 5X)',
