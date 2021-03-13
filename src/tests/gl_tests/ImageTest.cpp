@@ -1003,6 +1003,18 @@ TEST_P(ImageTest, ANGLEExtensionAvailability)
             EXPECT_FALSE(hasExternalESSL3Ext());
         }
     }
+    else if (IsMetal())
+    {
+        // NOTE(hqle): Metal currently doesn't implement any image extensions besides
+        // EGL_ANGLE_metal_texture_client_buffer
+        EXPECT_TRUE(hasOESExt());
+        EXPECT_TRUE(hasBaseExt());
+        EXPECT_FALSE(hasExternalExt());
+        EXPECT_FALSE(hasExternalESSL3Ext());
+        EXPECT_FALSE(has2DTextureExt());
+        EXPECT_FALSE(has3DTextureExt());
+        EXPECT_FALSE(hasRenderbufferExt());
+    }
     else
     {
         EXPECT_FALSE(hasOESExt());
