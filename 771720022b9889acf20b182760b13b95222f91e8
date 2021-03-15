@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30293746_af8b8eee",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 833,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-15T18:47:12Z",
+      "side": 1,
+      "message": "nit: I think this would be better after CommandBufferHelper::initialize().   If nothing else, at least move it to after the dtor so we don\u0027t split the ctor and dtor implementations.",
+      "revId": "771720022b9889acf20b182760b13b95222f91e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
