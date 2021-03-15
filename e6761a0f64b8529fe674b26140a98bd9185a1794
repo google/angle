@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42f4216c_2dd85534",
+        "filename": "scripts/generate_loader.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-15T18:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fa101779_42f98b3e",
+      "range": {
+        "startLine": 119,
+        "startChar": 10,
+        "endLine": 119,
+        "endChar": 14
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4de237b7_f8cdd0d6",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-03-15T18:17:04Z",
       "side": 1,
       "message": "please include a TODO with bug link here.",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 12
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9c89eba_e210ffbd",
+        "filename": "src/libOpenCL/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-15T18:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4de237b7_f8cdd0d6",
       "range": {
         "startLine": 32,
         "startChar": 4,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b28b7a10_037df627",
+        "filename": "src/libOpenCL/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-15T18:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "971caba6_79400497",
+      "range": {
+        "startLine": 51,
+        "startChar": 6,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3675befd_26e0fb0d",
@@ -110,6 +182,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "910d6f87_626a6576",
+        "filename": "src/libOpenCL/cl_loader_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-15T18:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3675befd_26e0fb0d",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 7
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08b4c32b_402883f0",
@@ -123,6 +219,30 @@
       "writtenOn": "2021-03-15T18:17:04Z",
       "side": 1,
       "message": "nit: for TODOs please include a bug link (e.g. TODO(http://anglebug.com/####): blah )",
+      "range": {
+        "startLine": 22,
+        "startChar": 3,
+        "endLine": 22,
+        "endChar": 7
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd18bc1d_8c7a983a",
+        "filename": "src/libOpenCL/libOpenCL_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-15T18:50:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "08b4c32b_402883f0",
       "range": {
         "startLine": 22,
         "startChar": 3,

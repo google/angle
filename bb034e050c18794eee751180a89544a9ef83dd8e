@@ -22,6 +22,30 @@
       },
       "revId": "bb034e050c18794eee751180a89544a9ef83dd8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "066b3909_14c814b6",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-15T18:50:24Z",
+      "side": 0,
+      "message": "I moved it to be consistent with the rest of the script, which has all \u0027write_export_files\u0027 commands together, which accesses \u0027libcl_ep_defs\u0027, so the CL section had to come before.",
+      "parentUuid": "985f9641_ecacdcf6",
+      "range": {
+        "startLine": 2873,
+        "startChar": 6,
+        "endLine": 2873,
+        "endChar": 12
+      },
+      "revId": "bb034e050c18794eee751180a89544a9ef83dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
