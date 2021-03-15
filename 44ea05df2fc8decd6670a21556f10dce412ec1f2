@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "069b95ef_ebf54cab",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-15T23:21:19Z",
+      "side": 1,
+      "message": "nit: Add the new test here also:\n\n    Test: FramebufferTest_ES3.SampleFromAttachedTextureWithDifferentLOD",
+      "revId": "44ea05df2fc8decd6670a21556f10dce412ec1f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43fad3b3_8ebed379",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2471,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-15T23:21:19Z",
+      "side": 1,
+      "message": "nit: texture",
+      "range": {
+        "startLine": 2471,
+        "startChar": 37,
+        "endLine": 2471,
+        "endChar": 45
+      },
+      "revId": "44ea05df2fc8decd6670a21556f10dce412ec1f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5d22ef9b_c8d585a5",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2476,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-15T23:21:19Z",
+      "side": 1,
+      "message": "nit: exactly",
+      "range": {
+        "startLine": 2476,
+        "startChar": 56,
+        "endLine": 2476,
+        "endChar": 61
+      },
+      "revId": "44ea05df2fc8decd6670a21556f10dce412ec1f2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
