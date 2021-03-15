@@ -10,16 +10,19 @@
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/capture/frame_capture_utils.h"
+#include "libANGLE/serializer/JsonSerializer.h"
 #include "util/EGLPlatformParameters.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 
 #include <stdint.h>
 #include <string.h>
+#include <fstream>
 #include <functional>
 #include <iostream>
 #include <list>
 #include <memory>
+#include <ostream>
 #include <string>
 #include <utility>
 
@@ -128,13 +131,13 @@ class CaptureReplayTests
         {
             ReplayContextFrame(testIndex, frame);
             gl::Context *context = static_cast<gl::Context *>(mEGLWindow->getContext());
-            gl::BinaryOutputStream bos;
-            if (angle::SerializeContext(&bos, context) != angle::Result::Continue)
+            angle::JsonSerializer json;
+            if (angle::SerializeContext(&json, context) != angle::Result::Continue)
             {
                 cleanupTest();
                 return -1;
             }
-            bool isEqual = compareSerializedContexts(testIndex, frame, bos.getData());
+            bool isEqual = compareSerializedContexts(testIndex, frame, json.data());
             // Swap always to allow RenderDoc/other tools to capture frames.
             swap();
             if (!isEqual)
@@ -160,12 +163,10 @@ class CaptureReplayTests
   private:
     bool compareSerializedContexts(uint32_t testIndex,
                                    uint32_t frame,
-                                   const std::vector<uint8_t> &replaySerializedContextState)
+                                   const char *replaySerializedContextState)
     {
 
-        return memcmp(replaySerializedContextState.data(),
-                      GetSerializedContextState(testIndex, frame),
-                      replaySerializedContextState.size()) == 0;
+        return !strcmp(replaySerializedContextState, GetSerializedContextState(testIndex, frame));
     }
 
     OSWindow *mOSWindow   = nullptr;

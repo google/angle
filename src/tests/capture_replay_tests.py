@@ -116,7 +116,7 @@ using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
 void SetupContextReplay(uint32_t test);
 void ReplayContextFrame(uint32_t test, uint32_t frameIndex);
 void ResetContextReplay(uint32_t test);
-const uint8_t *GetSerializedContextState(uint32_t test, uint32_t frameIndex);
+const char *GetSerializedContextState(uint32_t test, uint32_t frameIndex);
 void SetBinaryDataDecompressCallback(uint32_t test, DecompressCallback callback);
 void SetBinaryDataDir(uint32_t test, const char *dataDir);
 
@@ -164,7 +164,7 @@ void ResetContextReplay(uint32_t test)
     {reset_context1_replay_switch_statement}
 }}
 
-const uint8_t *GetSerializedContextState(uint32_t test, uint32_t frameIndex)
+const char *GetSerializedContextState(uint32_t test, uint32_t frameIndex)
 {{
     {get_serialized_context1_state_data_switch_statement}
 }}
