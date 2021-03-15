@@ -1,0 +1,354 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19c7e93a_56bf0cd3",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "instead of doing this, depend on rapidjson in the libANGLE_with_capture target. that\u0027s the target that includes the frame capture utils.",
+      "range": {
+        "startLine": 298,
+        "startChar": 5,
+        "endLine": 298,
+        "endChar": 40
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5de80bb_79fea745",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "missing header.",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0383acd6_f127c89e",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: use \u003c\u003e , let\u0027s figure out the solution if this is working around a problem.",
+      "range": {
+        "startLine": 6,
+        "startChar": 29,
+        "endLine": 6,
+        "endChar": 31
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "689cb0c7_0272647a",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: suggest we use the angle namespace",
+      "range": {
+        "startLine": 10,
+        "startChar": 10,
+        "endLine": 10,
+        "endChar": 12
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12abcb0b_a4b4d8bf",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: suggest we use angle::ComputeGenericHash as the main hash provider. it\u0027ll produce a number that we can simply convert to hex string. the chance of collision should still be minimal.",
+      "range": {
+        "startLine": 50,
+        "startChar": 17,
+        "endLine": 50,
+        "endChar": 30
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40e43313_0f4a8253",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "We should encapsulate this a bit. It\u0027s pretty useful, I imagine I could make use of it in both the angle test harness and the frame capture class. So libANGLE is not the best place to share that. Maybe we can put it in common, in a place where it isn\u0027t included by default in angle_common, or in third_party, or even in tools/. What do you suggest?",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f77d852b_b93e319c",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: 2021",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52d66472_f2695bb0",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: please include a file-level comment.",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17321cef_028b675f",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: suggest we use the angle namespace",
+      "range": {
+        "startLine": 17,
+        "startChar": 10,
+        "endLine": 17,
+        "endChar": 12
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cdebb15_001336d1",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: can be final.",
+      "range": {
+        "startLine": 20,
+        "startChar": 6,
+        "endLine": 20,
+        "endChar": 21
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "721cad97_471d1d92",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: isn\u0027t this just \"T\"? Would rather you use that for clarity.",
+      "range": {
+        "startLine": 43,
+        "startChar": 13,
+        "endLine": 43,
+        "endChar": 18
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77b12f8d_d4d8ba60",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: why the rvalue reference here? could we use a const \u0026 or mutable \u0026?",
+      "range": {
+        "startLine": 43,
+        "startChar": 18,
+        "endLine": 43,
+        "endChar": 20
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e1100f6_93ca96e5",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "do you need to use shared pointers? who is sharing ownership in this class?",
+      "range": {
+        "startLine": 67,
+        "startChar": 30,
+        "endLine": 67,
+        "endChar": 40
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d9466a2_ad2bc6b3",
+        "filename": "src/libANGLE/JsonSerializer_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: 21",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f551144_434a8d3e",
+        "filename": "src/libANGLE/JsonSerializer_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "nit: file-level comment.",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d1eedf4_26d57ae2",
+        "filename": "src/libANGLE/JsonSerializer_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T17:37:03Z",
+      "side": 1,
+      "message": "thanks for adding all the tests! please include a one-line comment before each one.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 6
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
