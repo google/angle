@@ -22,6 +22,53 @@
       },
       "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16610c6b_85d0b009",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-15T17:01:28Z",
+      "side": 1,
+      "message": "This certainly needs more context.  From the spec:\n\n\u003e For this section, define a shader interface to be one of these\n\u003e • All the uniform variables and uniform blocks declared in a program. This spans all compilation units linked together within one program.\n\u003e • All the buffer blocks declared in a program.\n\u003e • The boundary between adjacent programmable pipeline stages: This spans all the outputs declared in all compilation units of the first stage and all the inputs declared in all compilation units of the second stage.\n\n\u003e The block name (block-name) is used to match within shader interfaces: an output block of one pipeline stage will be matched to an input block with the same name in the subsequent pipeline stage. For uniform blocks, the application uses the block name to identify the block. Block names have no other use within a shader beyond interface matching; it is a compile-time error to use a block name at global scope for anything other than as a block name (e.g., use of a block name for a global variable name or function name is currently reserved). It is a compile-time error to use the same block name for more than one block declaration in the same shader interface (as defined above) within one shader, even if the block contents are identical.\n\u003e \n\u003e Matched block names within a shader interface (as defined above) must match in terms of having the same number of declarations with the same sequence of types and the same sequence of member names, as well as having the same member-wise layout qualification (see next section). Matched uniform block names (but not input or output block names) must also either all be lacking an instance name or all having an instance name, putting their members at the same scoping level. When instance names are present on matched block names, it is allowed for the instance names to differ; they need not match for the blocks to match. Furthermore, if a matching block is declared as an array, then the array sizes must also match (or follow array matching rules for the shader interface between a vertex and a geometry shader). Any mismatch will generate a link-time error. *A block name is allowed to have different definitions in different shader interfaces within the same shader, allowing, for example, an input block and output block to have the same name.*\n\nThe very last line is what this is referring to.\n\nPlease add a test that shows the bad behavior - presumably doing what it describes with an input and output block sharing a block name should be good enough.",
+      "parentUuid": "8fc0d1f5_ac531b3c",
+      "range": {
+        "startLine": 10,
+        "startChar": 41,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c404fd7_9f8671db",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-15T17:01:28Z",
+      "side": 1,
+      "message": "Does this work, or do we lose the original variable\u0027s location/component data when we replace it with the new one?\n\nThe declaration mentions something similar to what this CL is doing, with the difference being it mentions a name being shared across shader stages, not within the same one:\n\n    // Used for vertex attributes, fragment shader outputs and varyings.  There could be different\n    // variables that share the same name, such as a vertex attribute and a fragment output.  They\n    // will share this object since they have the same name, but will find possibly different\n    // locations in their respective slots.\n    uint32_t location  \u003d kInvalid;\n\nLooking at how it\u0027s used in SpirvTransformer::transformDecorate(), we\u0027ll give the same location to different blocks:\n\n    TransformationState SpirvTransformer::transformDecorate(const uint32_t *instruction)\n    {\n        switch (decoration)\n        {\n            case spv::DecorationLocation:\n                newDecorationValue \u003d info-\u003elocation;\n                break;\n\nI don\u0027t know the details well enough, but we may need to do something more here to separate the in/out blocks that share a name to ensure they get different locations.",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 31
+      },
+      "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
