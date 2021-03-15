@@ -46,6 +46,30 @@
       },
       "revId": "bb034e050c18794eee751180a89544a9ef83dd8e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd701462_17372a4c",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T19:04:16Z",
+      "side": 0,
+      "message": "Ack",
+      "parentUuid": "066b3909_14c814b6",
+      "range": {
+        "startLine": 2873,
+        "startChar": 6,
+        "endLine": 2873,
+        "endChar": 12
+      },
+      "revId": "bb034e050c18794eee751180a89544a9ef83dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
