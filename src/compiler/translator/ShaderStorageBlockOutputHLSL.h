@@ -10,6 +10,7 @@
 #ifndef COMPILER_TRANSLATOR_SHADERSTORAGEBLOCKOUTPUTHLSL_H_
 #define COMPILER_TRANSLATOR_SHADERSTORAGEBLOCKOUTPUTHLSL_H_
 
+#include <stack>
 #include "compiler/translator/ShaderStorageBlockFunctionHLSL.h"
 #include "compiler/translator/blocklayout.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -75,10 +76,11 @@ class ShaderStorageBlockOutputHLSL : public TIntermTraverser
     void writeEOpIndexDirectOrIndirectOutput(TInfoSinkBase &out, Visit visit, TIntermBinary *node);
     // Common part in dot operations.
     void writeDotOperatorOutput(TInfoSinkBase &out, const TField *field);
+    void collectShaderStorageBlocks(TIntermTyped *node);
 
     int mMatrixStride;
     bool mRowMajor;
-    bool mLocationAsTheLastArgument;
+    std::stack<SSBOMethod> mMethodTypeStack;
     OutputHLSL *mOutputHLSL;
     ShaderStorageBlockFunctionHLSL *mSSBOFunctionHLSL;
     ResourcesHLSL *mResourcesHLSL;

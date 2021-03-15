@@ -2640,6 +2640,37 @@ void main()
     EXPECT_EQ(100u, outputValue);
 }
 
+// Test that the length of a struct buffer variable is supported.
+TEST_P(ComputeShaderTest, ShaderStorageBlocksStructLength)
+{
+    const char kCSSource[] = R"(#version 310 es
+layout(local_size_x = 1, local_size_y = 1, local_size_z = 1) in;
+
+struct Particle
+{
+    int len;
+};
+
+layout(binding = 0, std430) readonly buffer Buf1
+{
+    Particle particlesRead[];
+};
+
+layout(binding = 1, std430) buffer Buf2
+{
+    Particle particlesWrite[];
+};
+
+void main()
+{
+    int index = int(gl_GlobalInvocationID.x);
+    particlesWrite[index].len = particlesRead.length();
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCSSource);
+    EXPECT_GL_NO_ERROR();
+}
+
 // Test that scalar buffer variables are supported.
 TEST_P(ComputeShaderTest, ShaderStorageBlocksScalar)
 {

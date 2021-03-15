@@ -311,7 +311,6 @@ ShaderStorageBlockOutputHLSL::ShaderStorageBlockOutputHLSL(
     : TIntermTraverser(true, true, true, symbolTable),
       mMatrixStride(0),
       mRowMajor(false),
-      mLocationAsTheLastArgument(false),
       mOutputHLSL(outputHLSL),
       mResourcesHLSL(resourcesHLSL),
       mShaderStorageBlocks(shaderStorageBlocks)
@@ -326,51 +325,57 @@ ShaderStorageBlockOutputHLSL::~ShaderStorageBlockOutputHLSL()
 
 void ShaderStorageBlockOutputHLSL::outputStoreFunctionCallPrefix(TIntermTyped *node)
 {
-    mLocationAsTheLastArgument = false;
+    mMethodTypeStack.push(SSBOMethod::STORE);
     traverseSSBOAccess(node, SSBOMethod::STORE);
 }
 
 void ShaderStorageBlockOutputHLSL::outputLoadFunctionCall(TIntermTyped *node)
 {
-    mLocationAsTheLastArgument = true;
+    mMethodTypeStack.push(SSBOMethod::LOAD);
     traverseSSBOAccess(node, SSBOMethod::LOAD);
 }
 
 void ShaderStorageBlockOutputHLSL::outputLengthFunctionCall(TIntermTyped *node)
 {
-    mLocationAsTheLastArgument = true;
+    mMethodTypeStack.push(SSBOMethod::LENGTH);
     traverseSSBOAccess(node, SSBOMethod::LENGTH);
 }
 
 void ShaderStorageBlockOutputHLSL::outputAtomicMemoryFunctionCallPrefix(TIntermTyped *node,
                                                                         TOperator op)
 {
-    mLocationAsTheLastArgument = false;
-
     switch (op)
     {
         case EOpAtomicAdd:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_ADD);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_ADD);
             break;
         case EOpAtomicMin:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_MIN);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_MIN);
             break;
         case EOpAtomicMax:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_MAX);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_MAX);
             break;
         case EOpAtomicAnd:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_AND);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_AND);
             break;
         case EOpAtomicOr:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_OR);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_OR);
             break;
         case EOpAtomicXor:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_XOR);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_XOR);
             break;
         case EOpAtomicExchange:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_EXCHANGE);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_EXCHANGE);
             break;
         case EOpAtomicCompSwap:
+            mMethodTypeStack.push(SSBOMethod::ATOMIC_COMPSWAP);
             traverseSSBOAccess(node, SSBOMethod::ATOMIC_COMPSWAP);
             break;
         default:
@@ -411,8 +416,55 @@ void ShaderStorageBlockOutputHLSL::setMatrixStride(TIntermTyped *node,
     }
 }
 
+void ShaderStorageBlockOutputHLSL::collectShaderStorageBlocks(TIntermTyped *node)
+{
+    TIntermSwizzle *swizzleNode = node->getAsSwizzleNode();
+    if (swizzleNode)
+    {
+        return collectShaderStorageBlocks(swizzleNode->getOperand());
+    }
+
+    TIntermBinary *binaryNode = node->getAsBinaryNode();
+    if (binaryNode)
+    {
+        switch (binaryNode->getOp())
+        {
+            case EOpIndexDirectInterfaceBlock:
+            case EOpIndexIndirect:
+            case EOpIndexDirect:
+            case EOpIndexDirectStruct:
+                return collectShaderStorageBlocks(binaryNode->getLeft());
+            default:
+                UNREACHABLE();
+                return;
+        }
+    }
+
+    const TIntermSymbol *symbolNode = node->getAsSymbolNode();
+    const TType &type               = symbolNode->getType();
+    ASSERT(type.getQualifier() == EvqBuffer);
+    const TVariable &variable = symbolNode->variable();
+
+    const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+    ASSERT(interfaceBlock);
+    if (mReferencedShaderStorageBlocks.count(interfaceBlock->uniqueId().get()) == 0)
+    {
+        const TVariable *instanceVariable = nullptr;
+        if (type.isInterfaceBlock())
+        {
+            instanceVariable = &variable;
+        }
+        mReferencedShaderStorageBlocks[interfaceBlock->uniqueId().get()] =
+            new TReferencedBlock(interfaceBlock, instanceVariable);
+        GetShaderStorageBlockMembersInfo(interfaceBlock, mShaderStorageBlocks,
+                                         &mBlockMemberInfoMap);
+    }
+}
+
 void ShaderStorageBlockOutputHLSL::traverseSSBOAccess(TIntermTyped *node, SSBOMethod method)
 {
+    // TODO: Merge collectShaderStorageBlocks and GetBlockLayoutInfo to simplify the code.
+    collectShaderStorageBlocks(node);
     mMatrixStride = 0;
     mRowMajor     = false;
 
@@ -425,8 +477,31 @@ void ShaderStorageBlockOutputHLSL::traverseSSBOAccess(TIntermTyped *node, SSBOMe
     int unsizedArrayStride = 0;
     if (node->getType().isUnsizedArray())
     {
-        unsizedArrayStride =
-            GetBlockMemberInfoByType(node->getType(), storage, rowMajor).arrayStride;
+        // The unsized array member must be the last member of a shader storage block.
+        TIntermBinary *binaryNode = node->getAsBinaryNode();
+        if (binaryNode)
+        {
+            const TInterfaceBlock *interfaceBlock =
+                binaryNode->getLeft()->getType().getInterfaceBlock();
+            ASSERT(interfaceBlock);
+            const TIntermConstantUnion *index = binaryNode->getRight()->getAsConstantUnion();
+            const TField *field               = interfaceBlock->fields()[index->getIConst(0)];
+            auto fieldInfoIter                = mBlockMemberInfoMap.find(field);
+            ASSERT(fieldInfoIter != mBlockMemberInfoMap.end());
+            unsizedArrayStride = fieldInfoIter->second.arrayStride;
+        }
+        else
+        {
+            const TIntermSymbol *symbolNode       = node->getAsSymbolNode();
+            const TVariable &variable             = symbolNode->variable();
+            const TInterfaceBlock *interfaceBlock = symbolNode->getType().getInterfaceBlock();
+            ASSERT(interfaceBlock);
+            const TField *field =
+                GetFieldMemberInShaderStorageBlock(interfaceBlock, variable.name());
+            auto fieldInfoIter = mBlockMemberInfoMap.find(field);
+            ASSERT(fieldInfoIter != mBlockMemberInfoMap.end());
+            unsizedArrayStride = fieldInfoIter->second.arrayStride;
+        }
     }
     setMatrixStride(node, storage, rowMajor);
 
@@ -488,18 +563,6 @@ void ShaderStorageBlockOutputHLSL::visitSymbol(TIntermSymbol *node)
         const TType &variableType             = variable.getType();
         const TInterfaceBlock *interfaceBlock = variableType.getInterfaceBlock();
         ASSERT(interfaceBlock);
-        if (mReferencedShaderStorageBlocks.count(interfaceBlock->uniqueId().get()) == 0)
-        {
-            const TVariable *instanceVariable = nullptr;
-            if (variableType.isInterfaceBlock())
-            {
-                instanceVariable = &variable;
-            }
-            mReferencedShaderStorageBlocks[interfaceBlock->uniqueId().get()] =
-                new TReferencedBlock(interfaceBlock, instanceVariable);
-            GetShaderStorageBlockMembersInfo(interfaceBlock, mShaderStorageBlocks,
-                                             &mBlockMemberInfoMap);
-        }
         if (variableType.isInterfaceBlock())
         {
             out << DecorateVariableIfNeeded(variable);
@@ -552,9 +615,15 @@ bool ShaderStorageBlockOutputHLSL::visitSwizzle(Visit visit, TIntermSwizzle *nod
         TInfoSinkBase &out = mOutputHLSL->getInfoSink();
         // TODO(jiajia.qin@intel.com): add swizzle process if the swizzle node is not the last node
         // of ssbo access chain. Such as, data.xy[0]
-        if (mLocationAsTheLastArgument && isEndOfSSBOAccessChain())
+        if (isEndOfSSBOAccessChain())
         {
-            out << ")";
+            ASSERT(!mMethodTypeStack.empty());
+            SSBOMethod curMethod = mMethodTypeStack.top();
+            if (curMethod == SSBOMethod::LENGTH || curMethod == SSBOMethod::LOAD)
+            {
+                out << ")";
+            }
+            mMethodTypeStack.pop();
         }
     }
     return true;
@@ -579,16 +648,7 @@ bool ShaderStorageBlockOutputHLSL::visitBinary(Visit visit, TIntermBinary *node)
                 if (visit == PreVisit)
                 {
                     ASSERT(leftType.getQualifier() == EvqBuffer);
-                    TIntermSymbol *instanceArraySymbol    = node->getLeft()->getAsSymbolNode();
-                    const TInterfaceBlock *interfaceBlock = leftType.getInterfaceBlock();
-
-                    if (mReferencedShaderStorageBlocks.count(interfaceBlock->uniqueId().get()) == 0)
-                    {
-                        mReferencedShaderStorageBlocks[interfaceBlock->uniqueId().get()] =
-                            new TReferencedBlock(interfaceBlock, &instanceArraySymbol->variable());
-                        GetShaderStorageBlockMembersInfo(interfaceBlock, mShaderStorageBlocks,
-                                                         &mBlockMemberInfoMap);
-                    }
+                    TIntermSymbol *instanceArraySymbol = node->getLeft()->getAsSymbolNode();
 
                     const int arrayIndex = node->getRight()->getAsConstantUnion()->getIConst(0);
                     out << mResourcesHLSL->InterfaceBlockInstanceString(
@@ -727,9 +787,15 @@ void ShaderStorageBlockOutputHLSL::writeEOpIndexDirectOrIndirectOutput(TInfoSink
         {
             out << ")";
         }
-        if (mLocationAsTheLastArgument && isEndOfSSBOAccessChain())
+        if (isEndOfSSBOAccessChain())
         {
-            out << ")";
+            ASSERT(!mMethodTypeStack.empty());
+            SSBOMethod curMethod = mMethodTypeStack.top();
+            if (curMethod == SSBOMethod::LENGTH || curMethod == SSBOMethod::LOAD)
+            {
+                out << ")";
+            }
+            mMethodTypeStack.pop();
         }
     }
 }
@@ -753,9 +819,15 @@ void ShaderStorageBlockOutputHLSL::writeDotOperatorOutput(TInfoSinkBase &out, co
             out << " * (";
         }
     }
-    if (mLocationAsTheLastArgument && isEndOfSSBOAccessChain())
+    if (isEndOfSSBOAccessChain())
     {
-        out << ")";
+        ASSERT(!mMethodTypeStack.empty());
+        SSBOMethod curMethod = mMethodTypeStack.top();
+        if (curMethod == SSBOMethod::LENGTH || curMethod == SSBOMethod::LOAD)
+        {
+            out << ")";
+        }
+        mMethodTypeStack.pop();
     }
 }
 
