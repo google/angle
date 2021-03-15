@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e153f64_44b4ebac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-15T21:55:21Z",
+      "side": 1,
+      "message": "I added a new validation error list that \"ignored but print out warning message\". So it will not prevent app to crash or test to fail, but if you will see the warning message if you build with warning message enabled.",
+      "revId": "1a51850241dfeb257830ac256802bd8bdf5b72a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
