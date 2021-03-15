@@ -39,6 +39,30 @@
       },
       "revId": "c04edc1886bfb2a714d5699b227c671f11ea0570",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9761f79_629580ec",
+        "filename": "src/gpu_info_util/SystemInfo_linux.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-03-15T07:14:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15733e6a_7b67e28c",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 32
+      },
+      "revId": "c04edc1886bfb2a714d5699b227c671f11ea0570",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
