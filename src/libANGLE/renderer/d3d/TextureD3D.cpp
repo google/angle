@@ -782,6 +782,13 @@ angle::Result TextureD3D::initializeContents(const gl::Context *context,
         RenderTargetD3D *renderTarget = nullptr;
         ANGLE_TRY(mTexStorage->getRenderTarget(context, index, 0, &renderTarget));
         ANGLE_TRY(mRenderer->initRenderTarget(context, renderTarget));
+
+        // Force image clean again, the texture storage may have been re-created and the image used.
+        if (image)
+        {
+            image->markClean();
+        }
+
         return angle::Result::Continue;
     }
 

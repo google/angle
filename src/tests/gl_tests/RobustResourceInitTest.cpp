@@ -425,6 +425,68 @@ TEST_P(RobustResourceInitTest, BufferDataZeroSize)
     glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 }
 
+// Regression test for images being recovered from storage not re-syncing to storage after being
+// initialized
+TEST_P(RobustResourceInitTestES3, D3D11RecoverFromStorageBug)
+{
+    ANGLE_SKIP_TEST_IF(!hasGLExtension());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_texture_compression_dxt1"));
+
+    // http://anglebug.com/5770
+    // Vulkan uses incorrect copy sizes when redefining/zero initializing NPOT compressed textures.
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    // http://anglebug.com/4929
+    // Metal doesn't support robust resource init with compressed textures yet.
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
+    static constexpr uint8_t img_8x8_rgb_dxt1[] = {
+        0xe0, 0x07, 0x00, 0xf8, 0x11, 0x10, 0x15, 0x00, 0x1f, 0x00, 0xe0,
+        0xff, 0x11, 0x10, 0x15, 0x00, 0xe0, 0x07, 0x1f, 0xf8, 0x44, 0x45,
+        0x40, 0x55, 0x1f, 0x00, 0xff, 0x07, 0x44, 0x45, 0x40, 0x55,
+    };
+
+    static constexpr uint8_t img_4x4_rgb_dxt1[] = {
+        0xe0, 0x07, 0x00, 0xf8, 0x11, 0x10, 0x15, 0x00,
+    };
+
+    static constexpr uint8_t img_4x4_rgb_dxt1_zeroes[] = {
+        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    };
+
+    for (size_t i = 0; i < 8; i++)
+    {
+        {
+            GLTexture texture;
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexStorage2D(GL_TEXTURE_2D, 4, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 8, 8);
+            glCompressedTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 8, 8, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                                      ArraySize(img_8x8_rgb_dxt1), img_8x8_rgb_dxt1);
+            glCompressedTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, 4, 4, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                                      ArraySize(img_4x4_rgb_dxt1), img_4x4_rgb_dxt1);
+            glCompressedTexSubImage2D(GL_TEXTURE_2D, 2, 0, 0, 2, 2, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                                      ArraySize(img_4x4_rgb_dxt1), img_4x4_rgb_dxt1);
+            glCompressedTexSubImage2D(GL_TEXTURE_2D, 3, 0, 0, 1, 1, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                                      ArraySize(img_4x4_rgb_dxt1), img_4x4_rgb_dxt1);
+        }
+        {
+            GLTexture texture;
+            glBindTexture(GL_TEXTURE_2D, texture);
+            glTexStorage2D(GL_TEXTURE_2D, 4, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, 12, 12);
+            glCompressedTexSubImage2D(GL_TEXTURE_2D, 3, 0, 0, 1, 1, GL_COMPRESSED_RGB_S3TC_DXT1_EXT,
+                                      ArraySize(img_4x4_rgb_dxt1_zeroes), img_4x4_rgb_dxt1_zeroes);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 3);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            glViewport(0, 0, 1, 1);
+            glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            draw2DTexturedQuad(0.5f, 1.0f, true);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::black);
+        }
+    }
+}
+
 // The following test code translated from WebGL 1 test:
 // https://www.khronos.org/registry/webgl/sdk/tests/conformance/misc/uninitialized-test.html
 void RobustResourceInitTest::setupTexture(GLTexture *tex)
