@@ -91,5 +91,4 @@ LineLoopTest.DISABLED_DrawArraysWithLargeCount/*
 MipmapTest.DISABLED_ThreeLevelsInitData/*
 
 # Compile failed tests
-GetImageTest.*
 RobustResourceInitTest.*
