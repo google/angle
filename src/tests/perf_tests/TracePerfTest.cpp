@@ -422,6 +422,15 @@ TracePerfTest::TracePerfTest()
         }
     }
 
+    if (param.testID == RestrictedTraceID::plants_vs_zombies_2)
+    {
+        // TODO: http://crbug.com/1187752 Corrupted image
+        if (IsWindows() && IsAMD() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 
