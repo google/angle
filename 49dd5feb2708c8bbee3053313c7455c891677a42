@@ -16,6 +16,24 @@
       "message": "LGTM but I think some of our perftests depend on this extension and that\u0027s why you see the failures. \n Was this intended to target Pixel2? We could either force this workaround off for our perftests or handle the missing extension. We probably want to do the former otherwise our perftests won\u0027t be as accurate.",
       "revId": "49dd5feb2708c8bbee3053313c7455c891677a42",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f01a6e1_9f07bd87",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-03-15T15:56:33Z",
+      "side": 1,
+      "message": "https://source.chromium.org/chromium/chromium/src/+/master:gpu/config/gpu_driver_bug_list.json;drc\u003d95598e2322a84743e4b96c116f4a62636d238004;l\u003d2189\n\nFound chrome only disable the query extension for adreno on android \u003c 8.1. So copy this rule as well.",
+      "parentUuid": "a8d38f2c_9542befc",
+      "revId": "49dd5feb2708c8bbee3053313c7455c891677a42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
