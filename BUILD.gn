@@ -914,8 +914,22 @@ group("angle_compression") {
       [ "$angle_zlib_compression_utils_dir:compression_utils_portable" ]
 }
 
+angle_source_set("libjson_serializer") {
+  public_deps = [
+    ":libANGLE_base",
+    "$angle_root/third_party/rapidjson",
+  ]
+  sources = [
+    "src/libANGLE/serializer/JsonSerializer.cpp",
+    "src/libANGLE/serializer/JsonSerializer.h",
+  ]
+}
+
 angle_source_set("libANGLE_with_capture") {
-  public_deps = [ ":libANGLE_base" ]
+  public_deps = [
+    ":libANGLE_base",
+    ":libjson_serializer",
+  ]
   deps = [ ":angle_compression" ]
   public_configs = [ ":angle_frame_capture_enabled" ]
   sources = libangle_capture_sources

@@ -48,6 +48,7 @@ angle_unittests_sources = [
   "../libANGLE/renderer/TextureImpl_mock.h",
   "../libANGLE/renderer/TransformFeedbackImpl_mock.h",
   "../libANGLE/renderer/serial_utils_unittest.cpp",
+  "../libANGLE/serializer/JsonSerializer_unittest.cpp",
   "angle_unittests_utils.h",
   "preprocessor_tests/MockDiagnostics.h",
   "preprocessor_tests/MockDirectiveHandler.h",

@@ -39,6 +39,7 @@
 #include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
+#include "libANGLE/serializer/JsonSerializer.h"
 
 #define USE_SYSTEM_ZLIB
 #include "compression_utils_portable.h"

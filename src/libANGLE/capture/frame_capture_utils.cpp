@@ -29,6 +29,7 @@
 #include "libANGLE/angletypes.h"
 #include "libANGLE/renderer/FramebufferImpl.h"
 #include "libANGLE/renderer/RenderbufferImpl.h"
+#include "libANGLE/serializer/JsonSerializer.h"
 
 // Note: when diagnosing serialization comparison failures, you can disable the unused function
 // compiler warning to allow bisecting the comparison function. One first check is to disable
