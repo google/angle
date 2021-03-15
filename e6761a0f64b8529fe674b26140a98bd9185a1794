@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e4b8ff5_9324d9f1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T18:17:04Z",
+      "side": 1,
+      "message": "John: I didn\u0027t get any attention from this patch after you re-uploaded. Please ensure you draw my attention with \"PTAL\" (Please take a look) when necessary. Also adding Code for a second review as per policy.",
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fa101779_42f98b3e",
+        "filename": "scripts/generate_loader.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T18:17:04Z",
+      "side": 1,
+      "message": "see other comments.",
+      "range": {
+        "startLine": 119,
+        "startChar": 10,
+        "endLine": 119,
+        "endChar": 14
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4de237b7_f8cdd0d6",
+        "filename": "src/libOpenCL/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T18:17:04Z",
+      "side": 1,
+      "message": "please include a TODO with bug link here.",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 12
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "971caba6_79400497",
+        "filename": "src/libOpenCL/BUILD.gn",
+        "patchSetId": 5
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T18:17:04Z",
+      "side": 1,
+      "message": "and here.",
+      "range": {
+        "startLine": 51,
+        "startChar": 6,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3675befd_26e0fb0d",
+        "filename": "src/libOpenCL/cl_loader_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T18:17:04Z",
+      "side": 1,
+      "message": "same as the other.",
+      "range": {
+        "startLine": 13,
+        "startChar": 3,
+        "endLine": 13,
+        "endChar": 7
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08b4c32b_402883f0",
+        "filename": "src/libOpenCL/libOpenCL_autogen.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T18:17:04Z",
+      "side": 1,
+      "message": "nit: for TODOs please include a bug link (e.g. TODO(http://anglebug.com/####): blah )",
+      "range": {
+        "startLine": 22,
+        "startChar": 3,
+        "endLine": 22,
+        "endChar": 7
+      },
+      "revId": "e6761a0f64b8529fe674b26140a98bd9185a1794",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

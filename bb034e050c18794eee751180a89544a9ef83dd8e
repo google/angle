@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "985f9641_ecacdcf6",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-15T18:17:04Z",
+      "side": 0,
+      "message": "why move it? better to keep it in the same place to minimize diff. Was there some variable you needed access to?",
+      "range": {
+        "startLine": 2873,
+        "startChar": 6,
+        "endLine": 2873,
+        "endChar": 12
+      },
+      "revId": "bb034e050c18794eee751180a89544a9ef83dd8e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
