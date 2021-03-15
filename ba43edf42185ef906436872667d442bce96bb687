@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87090909_2358a1f2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-15T16:53:30Z",
+      "side": 1,
+      "message": "With this series of CL, I believe we can get rid of this bit from renderPassDesc and handle it in finalizeColorImageLayout. Will do it in follow up CL.",
+      "range": {
+        "startLine": 958,
+        "startChar": 30,
+        "endLine": 958,
+        "endChar": 50
+      },
+      "revId": "ba43edf42185ef906436872667d442bce96bb687",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eb7b8a1_967c769e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-15T16:53:30Z",
+      "side": 1,
+      "message": "We could fine grain the pipeline stages here if this turns out to be more real usages other than aztec ruins and fillament.",
+      "range": {
+        "startLine": 152,
+        "startChar": 60,
+        "endLine": 152,
+        "endChar": 89
+      },
+      "revId": "ba43edf42185ef906436872667d442bce96bb687",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95f52e11_bfa3fd04",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-15T16:53:30Z",
+      "side": 1,
+      "message": "Eventually I want to move this to ImageHelper with mRenderPassUsage bitmask and able to quickly tell what is this ImageHelper object been used rather than loop all attached color images.",
+      "range": {
+        "startLine": 1308,
+        "startChar": 24,
+        "endLine": 1308,
+        "endChar": 39
+      },
+      "revId": "ba43edf42185ef906436872667d442bce96bb687",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
