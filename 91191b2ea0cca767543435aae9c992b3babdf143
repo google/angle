@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "53d28aa4_2b0a286a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-03-15T08:22:05Z",
+      "side": 1,
+      "message": "merging this feature to upstream since people are already using it for importing AR textures and native metal textures.",
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cde101e3_b377f508",
