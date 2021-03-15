@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8d38f2c_9542befc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-15T14:16:46Z",
+      "side": 1,
+      "message": "LGTM but I think some of our perftests depend on this extension and that\u0027s why you see the failures. \n Was this intended to target Pixel2? We could either force this workaround off for our perftests or handle the missing extension. We probably want to do the former otherwise our perftests won\u0027t be as accurate.",
+      "revId": "49dd5feb2708c8bbee3053313c7455c891677a42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
