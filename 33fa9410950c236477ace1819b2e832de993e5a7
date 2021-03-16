@@ -22,6 +22,30 @@
       },
       "revId": "33fa9410950c236477ace1819b2e832de993e5a7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27a907cd_0b8c1a64",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T01:26:59Z",
+      "side": 0,
+      "message": "It is still called, just deferred. See CommandBufferHelper::finalizeColorImageLayout that added in this CL. Basically the work done in onImageRenderPassWrite() are stripped out, anything related to layout and barrier are moved to finalizeColorImageLayout. The work remained here is to add it to the mResourceUseList and mRenderPassUsedImages so that we can detect resource  dependency and break renderpass if needed.",
+      "parentUuid": "a9d0ab26_19323333",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 46
+      },
+      "revId": "33fa9410950c236477ace1819b2e832de993e5a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

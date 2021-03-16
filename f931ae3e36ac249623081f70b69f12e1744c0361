@@ -60,6 +60,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0da0bcb3_299c955b",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1361,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T01:26:59Z",
+      "side": 1,
+      "message": "I will put comment here in next update. The line below is calling recordReadBarrier which will set layout to present but will not call endRenderpass. We have to end renderpass before trying to further modify the layout. Otherwise the \"Oresent\" layout transition will be lost (i.e, overwritten by finalizeCOlorImageLayout).\n\nWe will call this anyway (when we call flushImpl at line 1388), this basically moved it slightly early.",
+      "parentUuid": "6a44f13a_9ef3e534",
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e12d5ff5_2c564b1a",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 11
@@ -83,6 +101,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "28652293_5b75f91d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2375,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T01:26:59Z",
+      "side": 1,
+      "message": "The short answer is they are for different levels. The discarding staged update are for levels that will be \"generated\". The flushing commands is mainly for the base level. That is the expected usage pattern for this kind of usage (Manhattan uses it this way). It basically render to base_level and then call glGenerateMipmap to generate the remaining levels.\n\nThe reason I need to make this change is because generateMipmap is doing some special things at line 2411: The call to stageSelfForBaseLevel will essentially clone the current ImageHelper object and use it as a source of CopyImage for the base level. It also reads out the current layout and use it as the source layout. This wont work because the layout it reads is not really current layout, since we have deferred the layout determination at finalizeColorImageLayout time.\n\nI will put comment here in next update.",
+      "parentUuid": "e12d5ff5_2c564b1a",
+      "range": {
+        "startLine": 2374,
+        "startChar": 0,
+        "endLine": 2375,
+        "endChar": 44
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d8e68185_9e0f0487",
         "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
         "patchSetId": 11
@@ -94,6 +136,30 @@
       "writtenOn": "2021-03-16T00:51:59Z",
       "side": 1,
       "message": "This is what I\u0027m referring to in my comment about \u0027mColorImagesCount\u0027, where calling it an \"index\" is a bit misleading, especially here where it looks like you\u0027re intentionally skipping index 0.",
+      "range": {
+        "startLine": 1943,
+        "startChar": 8,
+        "endLine": 1943,
+        "endChar": 36
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2817bf81_27843f5e",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T01:26:59Z",
+      "side": 1,
+      "message": "Right. Maybe I can add \n    using PackedAttachmentCount PackedAttachmentIndex.\nand then use PackedAttachmentCount here. The main reason I am using PackedAttachmentIndex is to ensure the index it passed to colorImagesDraw() is a PackedAttachmentIndex, instead of GL index.",
+      "parentUuid": "d8e68185_9e0f0487",
       "range": {
         "startLine": 1943,
         "startChar": 8,
@@ -140,6 +206,24 @@
       "writtenOn": "2021-03-16T00:51:59Z",
       "side": 1,
       "message": "I think this should just be an int/uin32_t/size_t, rather than a PackedAttachmentIndex, since it\u0027s not really an index.   I realize it makes comparisons easier, but I think the rest of code suffers, like the call to contextVk-\u003ebeginNewRenderPass() or the loops which use it.",
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19d5c807_ac57af7c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T01:26:59Z",
+      "side": 1,
+      "message": "I think adding PackedAttachmentCount should fix this.",
+      "parentUuid": "030efd97_ff08c0f7",
       "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
