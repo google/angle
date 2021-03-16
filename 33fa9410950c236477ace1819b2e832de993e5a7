@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9d0ab26_19323333",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 0,
+      "message": "Not calling onImageRenderPassWrite() means we are losing the memory barrier that used to be performed, even if the layouts matched:\n\n\n    bool ImageHelper::updateLayoutAndBarrier(Context *context,\n                                             VkImageAspectFlags aspectMask,\n                                             ImageLayout newLayout,\n                                             PipelineBarrier *barrier)\n    {\n        if (newLayout \u003d\u003d mCurrentLayout)\n        {\n            const ImageMemoryBarrierData \u0026layoutData \u003d kImageMemoryBarrierData[mCurrentLayout];\n            // RAR is not a hazard and doesn\u0027t require a barrier, especially as the image layout hasn\u0027t\n            // changed.  The following asserts that such a barrier is not attempted.\n            ASSERT(layoutData.type \u003d\u003d ResourceAccess::Write);\n            // No layout change, only memory barrier is required\n            barrier-\u003emergeMemoryBarrier(GetImageLayoutSrcStageMask(context, layoutData),\n                                        GetImageLayoutDstStageMask(context, layoutData),\n                                        layoutData.srcAccessMask, layoutData.dstAccessMask);\n            barrierModified \u003d true;\n        }\n\nI\u0027m not seeing that being done in the new calls, but it\u0027s likely still necessary.",
+      "range": {
+        "startLine": 103,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 46
+      },
+      "revId": "33fa9410950c236477ace1819b2e832de993e5a7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

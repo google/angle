@@ -1,0 +1,147 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dae9babd_91fc4047",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 1,
+      "message": "nit: being used as a sampler",
+      "range": {
+        "startLine": 11,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "071a32f1_338623aa",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2595,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 1,
+      "message": "Comment needs to be updated.",
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a44f13a_9ef3e534",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1361,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 1,
+      "message": "Why is this necessary here?",
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e12d5ff5_2c564b1a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2375,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 1,
+      "message": "This looks a little awkward since we\u0027re flushing commands if the image is used as an attachment, and then discarding staged updates to the image since the image will be redefined anyway, so those updates aren\u0027t necessary anymore.\n\nWhy are the image\u0027s contents good for the current render pass if it\u0027s an attachment, but can be discarded otherwise?",
+      "range": {
+        "startLine": 2374,
+        "startChar": 0,
+        "endLine": 2375,
+        "endChar": 44
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8e68185_9e0f0487",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 1,
+      "message": "This is what I\u0027m referring to in my comment about \u0027mColorImagesCount\u0027, where calling it an \"index\" is a bit misleading, especially here where it looks like you\u0027re intentionally skipping index 0.",
+      "range": {
+        "startLine": 1943,
+        "startChar": 8,
+        "endLine": 1943,
+        "endChar": 36
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1d02f90_a123a505",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 1,
+      "message": "nit: being",
+      "range": {
+        "startLine": 1033,
+        "startChar": 72,
+        "endLine": 1033,
+        "endChar": 75
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "030efd97_ff08c0f7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 1303,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-16T00:51:59Z",
+      "side": 1,
+      "message": "I think this should just be an int/uin32_t/size_t, rather than a PackedAttachmentIndex, since it\u0027s not really an index.   I realize it makes comparisons easier, but I think the rest of code suffers, like the call to contextVk-\u003ebeginNewRenderPass() or the loops which use it.",
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
