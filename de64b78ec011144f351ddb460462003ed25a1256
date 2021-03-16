@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6665b427_4061899d",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 812,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-16T18:12:18Z",
+      "side": 1,
+      "message": "Yes, they are both required and will be used in the next days.",
+      "parentUuid": "67f97f98_1d42f55a",
+      "range": {
+        "startLine": 811,
+        "startChar": 0,
+        "endLine": 812,
+        "endChar": 34
+      },
+      "revId": "de64b78ec011144f351ddb460462003ed25a1256",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99053699_2dfd8667",
@@ -81,6 +105,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5356680f_6f83aa49",
+        "filename": "scripts/generate_loader.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-16T18:12:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "99053699_2dfd8667",
+      "range": {
+        "startLine": 119,
+        "startChar": 8,
+        "endLine": 119,
+        "endChar": 105
+      },
+      "revId": "de64b78ec011144f351ddb460462003ed25a1256",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "93c61ab9_eae2633a",
@@ -94,6 +142,30 @@
       "writtenOn": "2021-03-16T17:29:57Z",
       "side": 1,
       "message": "What drove selection of this entry point to check?  My eyes were naturally drawn to the first entry point below, clGetPlatformIDs.",
+      "range": {
+        "startLine": 46,
+        "startChar": 19,
+        "endLine": 46,
+        "endChar": 33
+      },
+      "revId": "de64b78ec011144f351ddb460462003ed25a1256",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4717b60_bc7fa0a1",
+        "filename": "src/libOpenCL/libOpenCL_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-03-16T18:12:18Z",
+      "side": 1,
+      "message": "I chose the entry point which is often used first to initialize CL. There is no reason to choose the first entry point as the order depends on the xml and could change in the future.\nThe entry point EGL_GetPlatformDisplay in src/libEGL/libEGL_autogen.cpp is also not the first, so I also didn\u0027t see a consistent pattern to stick to.",
+      "parentUuid": "93c61ab9_eae2633a",
       "range": {
         "startLine": 46,
         "startChar": 19,
