@@ -125,6 +125,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a24880b1_a67dfa84",
+        "filename": "extensions/EGL_ANGLE_mtl_texture_client_buffer.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-03-16T18:09:24Z",
+      "side": 1,
+      "message": "You can add angle-team@google.com underneath",
+      "parentUuid": "9b34ac95_3e1ce169",
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cb311183_7d154fb0",
         "filename": "src/libANGLE/renderer/metal/ImageMtl.mm",
         "patchSetId": 4
