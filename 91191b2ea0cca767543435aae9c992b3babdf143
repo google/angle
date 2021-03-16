@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6b6feb4_95747d80",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-16T00:41:31Z",
+      "side": 1,
+      "message": "Since this bug\u0027s been closed would you consider filing a new one and blocking this bug on it? In particular anything that describes the (important) use case this CL solves. Thanks.",
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "53d28aa4_2b0a286a",
