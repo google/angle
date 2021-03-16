@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e209de0_2c4170bc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T03:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dae9babd_91fc4047",
+      "range": {
+        "startLine": 11,
+        "startChar": 24,
+        "endLine": 11,
+        "endChar": 45
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "071a32f1_338623aa",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-03-16T00:51:59Z",
       "side": 1,
       "message": "Comment needs to be updated.",
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8dcb334_5b3cae77",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2595,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T03:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "071a32f1_338623aa",
       "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -72,6 +114,24 @@
       "side": 1,
       "message": "I will put comment here in next update. The line below is calling recordReadBarrier which will set layout to present but will not call endRenderpass. We have to end renderpass before trying to further modify the layout. Otherwise the \"Oresent\" layout transition will be lost (i.e, overwritten by finalizeCOlorImageLayout).\n\nWe will call this anyway (when we call flushImpl at line 1388), this basically moved it slightly early.",
       "parentUuid": "6a44f13a_9ef3e534",
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89f60824_957dcd09",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1361,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T03:34:58Z",
+      "side": 1,
+      "message": "Added comment.",
+      "parentUuid": "0da0bcb3_299c955b",
       "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -147,6 +207,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "78d8c4db_65a7203f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2375,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T03:34:58Z",
+      "side": 1,
+      "message": "Done. Moved to stageSelfForBaseLevel. And this gets cleaner in the next CL.",
+      "parentUuid": "0dd2ad7f_ec16a369",
+      "range": {
+        "startLine": 2374,
+        "startChar": 0,
+        "endLine": 2375,
+        "endChar": 44
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8e68185_9e0f0487",
@@ -194,6 +278,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6608dc87_92fa7f80",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T03:34:58Z",
+      "side": 1,
+      "message": "Changed to PackedAttachmentCount",
+      "parentUuid": "2817bf81_27843f5e",
+      "range": {
+        "startLine": 1943,
+        "startChar": 8,
+        "endLine": 1943,
+        "endChar": 36
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b1d02f90_a123a505",
@@ -207,6 +315,30 @@
       "writtenOn": "2021-03-16T00:51:59Z",
       "side": 1,
       "message": "nit: being",
+      "range": {
+        "startLine": 1033,
+        "startChar": 72,
+        "endLine": 1033,
+        "endChar": 75
+      },
+      "revId": "f931ae3e36ac249623081f70b69f12e1744c0361",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d69fa92_d72f7cdb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 1033,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-16T03:34:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b1d02f90_a123a505",
       "range": {
         "startLine": 1033,
         "startChar": 72,
