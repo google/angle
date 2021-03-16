@@ -39,7 +39,7 @@ def run_command(command):
             sys.stdout.write(out)
             sys.stdout.flush()
         if proc.returncode:
-            raise subprocess.CalledProcessError(proc.returncode, cmd)
+            raise subprocess.CalledProcessError(proc.returncode, command)
 
 
 def main():
