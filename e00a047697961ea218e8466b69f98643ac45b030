@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "636a2c59_41d62615",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-16T15:06:31Z",
+      "side": 1,
+      "message": "This prevents \"Ragnarok M: Eternal Love\" from crashing!",
+      "revId": "e00a047697961ea218e8466b69f98643ac45b030",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
