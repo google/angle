@@ -5304,6 +5304,10 @@ angle::Result ContextVk::flushOutsideRenderPassCommands()
 
     ANGLE_TRY(mRenderer->flushOutsideRPCommands(this, &mOutsideRenderPassCommands));
 
+    // Make sure appropriate dirty bits are set, in case another thread makes a submission before
+    // the next dispatch call.
+    mComputeDirtyBits |= mNewComputeCommandBufferDirtyBits;
+
     mPerfCounters.flushedOutsideRenderPassCommandBuffers++;
     return angle::Result::Continue;
 }
