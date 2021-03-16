@@ -144,6 +144,30 @@
       },
       "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0368ff1_59724690",
+        "filename": "src/libANGLE/renderer/metal/ImageMtl.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-03-16T16:09:35Z",
+      "side": 1,
+      "message": "Actually this was because there was a talk between Jamie and me in the past. At that time, Jamie recommended not adding any additional TODO to ANGLE. So we decided to use NOTE for my own \"TODO\" list.",
+      "parentUuid": "cb311183_7d154fb0",
+      "range": {
+        "startLine": 117,
+        "startChar": 7,
+        "endLine": 117,
+        "endChar": 11
+      },
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
