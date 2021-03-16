@@ -36,6 +36,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5845700_4447b0c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-16T00:40:34Z",
+      "side": 1,
+      "message": "Looks very nice Quyen! I wonder whether I\u0027m the best reviewer and am cc\u0027ing Jonah in case he has opinions, but it looks good to me overall.\n\nAlso cc\u0027ing Dean from Apple who will be interested in this. Kyle from Apple doesn\u0027t seem to have an account yet here but would like to CC him too.\n",
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cde101e3_b377f508",
@@ -49,6 +66,47 @@
       "writtenOn": "2021-03-15T08:12:36Z",
       "side": 1,
       "message": "same question as previous CL. Should this be changed to ANGLE owners?",
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b34ac95_3e1ce169",
+        "filename": "extensions/EGL_ANGLE_mtl_texture_client_buffer.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-16T00:40:34Z",
+      "side": 1,
+      "message": "Haven\u0027t seen the previous CL - but suggest adding a second contact just for some redundancy.",
+      "parentUuid": "cde101e3_b377f508",
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb311183_7d154fb0",
+        "filename": "src/libANGLE/renderer/metal/ImageMtl.mm",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-16T00:40:34Z",
+      "side": 1,
+      "message": "Please consider using TODO(hqle) or better TODO(anglebug.com/xyz) and filing a follow-on bug tracking the addition of this support.",
+      "range": {
+        "startLine": 117,
+        "startChar": 7,
+        "endLine": 117,
+        "endChar": 11
+      },
       "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
