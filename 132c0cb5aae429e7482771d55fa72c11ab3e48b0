@@ -16,6 +16,75 @@
       "message": "PTAL",
       "revId": "132c0cb5aae429e7482771d55fa72c11ab3e48b0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eef21329_64a01a58",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1793,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-17T00:36:07Z",
+      "side": 1,
+      "message": "typo: type.",
+      "range": {
+        "startLine": 1793,
+        "startChar": 34,
+        "endLine": 1793,
+        "endChar": 38
+      },
+      "revId": "132c0cb5aae429e7482771d55fa72c11ab3e48b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82b1f3ce_5cd30eed",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1794,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-17T00:36:07Z",
+      "side": 1,
+      "message": "typo: 0.",
+      "range": {
+        "startLine": 1794,
+        "startChar": 94,
+        "endLine": 1794,
+        "endChar": 95
+      },
+      "revId": "132c0cb5aae429e7482771d55fa72c11ab3e48b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "777d844f_0b3d89c7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1797,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-17T00:36:07Z",
+      "side": 1,
+      "message": "This crashes if there isn\u0027t a program bound (i.e., a PPO is being used).\n\nIf possible, try to find a way to move getActiveAttribute() into ProgramExecutable, which should be mostly straightforward.   The only issue is the \u0027mLinked\u0027 check, but that may not actually be necessary, since ProgramExecutable::mProgramInputs should only be updated when a program is linked.   So, if the attribute is in mProgramInputs, then that should imply the program was linked.",
+      "range": {
+        "startLine": 1797,
+        "startChar": 33,
+        "endLine": 1797,
+        "endChar": 46
+      },
+      "revId": "132c0cb5aae429e7482771d55fa72c11ab3e48b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
