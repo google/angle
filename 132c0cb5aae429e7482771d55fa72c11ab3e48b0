@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "6e5b6d81_092b562b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-17T16:18:05Z",
+      "side": 1,
+      "message": "which application relies on this UB? We maybe should codify it in a GLES extension spec.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 0
+      },
+      "revId": "132c0cb5aae429e7482771d55fa72c11ab3e48b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e5aef821_06ffbe58",
@@ -101,6 +124,30 @@
       "writtenOn": "2021-03-17T00:36:07Z",
       "side": 1,
       "message": "This crashes if there isn\u0027t a program bound (i.e., a PPO is being used).\n\nIf possible, try to find a way to move getActiveAttribute() into ProgramExecutable, which should be mostly straightforward.   The only issue is the \u0027mLinked\u0027 check, but that may not actually be necessary, since ProgramExecutable::mProgramInputs should only be updated when a program is linked.   So, if the attribute is in mProgramInputs, then that should imply the program was linked.",
+      "range": {
+        "startLine": 1797,
+        "startChar": 33,
+        "endLine": 1797,
+        "endChar": 46
+      },
+      "revId": "132c0cb5aae429e7482771d55fa72c11ab3e48b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d051ff40_74d607d4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1797,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-17T16:18:05Z",
+      "side": 1,
+      "message": "This is unsafe code for sure. You should only use the bits in the pipeline desc to determine the pipeline. Some constants like extension settings are ok to reference.",
+      "parentUuid": "777d844f_0b3d89c7",
       "range": {
         "startLine": 1797,
         "startChar": 33,
