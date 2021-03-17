@@ -3991,6 +3991,72 @@ void main() {
     drawBuffersFeedbackLoop(program.get(), {{GL_COLOR_ATTACHMENT0, GL_NONE}}, GL_INVALID_OPERATION);
 }
 
+// This tests that texture base level for immutable textures is clamped to the valid range, unlike
+// for non-immutable textures, for purposes of validation. Related to WebGL test
+// conformance2/textures/misc/immutable-tex-render-feedback.html
+TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithImmutableTextureWithOutOfRangeBaseLevel)
+{
+    constexpr char kVS[] =
+        R"(#version 300 es
+in vec4 aPosition;
+out vec2 texCoord;
+void main() {
+    gl_Position = aPosition;
+    texCoord = (aPosition.xy * 0.5) + 0.5;
+})";
+
+    constexpr char kFS[] =
+        R"(#version 300 es
+precision mediump float;
+uniform sampler2D tex;
+in vec2 texCoord;
+out vec4 oColor;
+void main() {
+    oColor = texture(tex, texCoord);
+})";
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 4, 4);
+    std::vector<GLColor> texData(4 * 4, GLColor::green);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, 4, 4, GL_RGBA, GL_UNSIGNED_BYTE, texData.data());
+    // Set a base level greater than the max level. It should be clamped to the actual max level.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    ASSERT_GL_NO_ERROR();
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.get(), 0);
+
+    ASSERT_GLENUM_EQ(GL_FRAMEBUFFER_COMPLETE, glCheckFramebufferStatus(GL_FRAMEBUFFER));
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+
+    GLint uniformLoc = glGetUniformLocation(program.get(), "tex");
+    ASSERT_NE(-1, uniformLoc);
+
+    glUseProgram(program.get());
+    glUniform1i(uniformLoc, 0);
+    glDisable(GL_BLEND);
+    glDisable(GL_DEPTH_TEST);
+    ASSERT_GL_NO_ERROR();
+
+    // Ensure that the texture can be used for rendering.
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Ensure that the texture can't be used to create a feedback loop.
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer.get());
+    glBindTexture(GL_TEXTURE_2D, texture.get());
+    drawQuad(program.get(), "aPosition", 0.5f, 1.0f, true);
+    EXPECT_GL_ERROR(GL_INVALID_OPERATION);
+}
+
 // This test covers detection of rendering feedback loops between the FBO and a depth Texture.
 // Based on WebGL test conformance2/rendering/depth-stencil-feedback-loop.html
 TEST_P(WebGL2CompatibilityTest, RenderingFeedbackLoopWithDepthStencil)

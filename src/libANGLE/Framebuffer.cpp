@@ -272,17 +272,17 @@ bool AttachmentOverlapsWithTexture(const FramebufferAttachment &attachment,
         return false;
     }
 
-    const gl::ImageIndex &index = attachment.getTextureImageIndex();
-    GLuint attachmentLevel      = static_cast<GLuint>(index.getLevelIndex());
-    GLuint textureBaseLevel     = texture->getBaseLevel();
-    GLuint textureMaxLevel      = textureBaseLevel;
+    const gl::ImageIndex &index      = attachment.getTextureImageIndex();
+    GLuint attachmentLevel           = static_cast<GLuint>(index.getLevelIndex());
+    GLuint textureEffectiveBaseLevel = texture->getTextureState().getEffectiveBaseLevel();
+    GLuint textureMaxLevel           = textureEffectiveBaseLevel;
     if ((sampler && IsMipmapFiltered(sampler->getSamplerState().getMinFilter())) ||
         IsMipmapFiltered(texture->getSamplerState().getMinFilter()))
     {
         textureMaxLevel = texture->getMipmapMaxLevel();
     }
 
-    return attachmentLevel >= textureBaseLevel && attachmentLevel <= textureMaxLevel;
+    return attachmentLevel >= textureEffectiveBaseLevel && attachmentLevel <= textureMaxLevel;
 }
 }  // anonymous namespace
 

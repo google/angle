@@ -319,7 +319,7 @@ bool TextureState::computeSamplerCompleteness(const SamplerState &samplerState,
         return true;
     }
 
-    if (mBaseLevel > mMaxLevel)
+    if (!mImmutableFormat && mBaseLevel > mMaxLevel)
     {
         return false;
     }
