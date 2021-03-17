@@ -50,6 +50,24 @@
       "message": "Can you check with Sunny (ARM) to see which traces he was referring to and if those still work with only 64, since this was increased for the bug he opened: anglebug.com/5212?   Otherwise, rather than using a BitSet, we can use the new BitSetArray, and maybe even increase it even further to whatever the underlying driver supports.",
       "revId": "e336c4f0e9a2a19535fc7ef9e2c450b72414c243",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fce50e6c_161d8576",
+        "filename": "src/libANGLE/Constants.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-17T16:54:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7dc4cd96_43c687fe",
+      "revId": "e336c4f0e9a2a19535fc7ef9e2c450b72414c243",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
