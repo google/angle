@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27ede941_234f93d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-17T17:17:42Z",
+      "side": 1,
+      "message": "Interesting, good find Gert.",
+      "revId": "653ae923e345a28432b903a254f0a2385707ecc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d01fd577_b8cc2b69",
+        "filename": "scripts/export_targets.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-17T17:17:42Z",
+      "side": 1,
+      "message": "typo: script",
+      "range": {
+        "startLine": 235,
+        "startChar": 22,
+        "endLine": 235,
+        "endChar": 28
+      },
+      "revId": "653ae923e345a28432b903a254f0a2385707ecc7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
