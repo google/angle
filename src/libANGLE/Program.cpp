@@ -935,49 +935,66 @@ void WriteShaderVar(BinaryOutputStream *stream, const sh::ShaderVariable &var)
     stream->writeIntVector(var.arraySizes);
     stream->writeBool(var.staticUse);
     stream->writeBool(var.active);
-    stream->writeInt(var.binding);
+    stream->writeInt<size_t>(var.fields.size());
+    for (const sh::ShaderVariable &shaderVariable : var.fields)
+    {
+        WriteShaderVar(stream, shaderVariable);
+    }
     stream->writeString(var.structOrBlockName);
     stream->writeString(var.mappedStructOrBlockName);
-    stream->writeInt(var.hasParentArrayIndex() ? var.parentArrayIndex() : -1);
-
+    stream->writeBool(var.isRowMajorLayout);
+    stream->writeInt(var.location);
+    stream->writeBool(var.hasImplicitLocation);
+    stream->writeInt(var.binding);
     stream->writeInt(var.imageUnitFormat);
     stream->writeInt(var.offset);
     stream->writeBool(var.readonly);
     stream->writeBool(var.writeonly);
     stream->writeBool(var.isFragmentInOut);
-    if (var.isFragmentInOut)
-    {
-        stream->writeInt(var.location);
-    }
+    stream->writeInt(var.index);
+    stream->writeBool(var.yuv);
+    stream->writeEnum(var.interpolation);
+    stream->writeBool(var.isInvariant);
+    stream->writeBool(var.isShaderIOBlock);
+    stream->writeBool(var.isPatch);
     stream->writeBool(var.texelFetchStaticUse);
-
-    ASSERT(var.fields.empty());
+    stream->writeInt(var.getFlattenedOffsetInParentArrays());
 }
 
-void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var)
+void LoadShaderVar(gl::BinaryInputStream *stream, sh::ShaderVariable *var)
 {
-    var->type       = stream->readInt<GLenum>();
-    var->precision  = stream->readInt<GLenum>();
-    var->name       = stream->readString();
-    var->mappedName = stream->readString();
+    var->type      = stream->readInt<GLenum>();
+    var->precision = stream->readInt<GLenum>();
+    stream->readString(&var->name);
+    stream->readString(&var->mappedName);
     stream->readIntVector<unsigned int>(&var->arraySizes);
-    var->staticUse               = stream->readBool();
-    var->active                  = stream->readBool();
-    var->binding                 = stream->readInt<int>();
-    var->structOrBlockName       = stream->readString();
-    var->mappedStructOrBlockName = stream->readString();
-    var->setParentArrayIndex(stream->readInt<int>());
-
-    var->imageUnitFormat = stream->readInt<GLenum>();
-    var->offset          = stream->readInt<int>();
-    var->readonly        = stream->readBool();
-    var->writeonly       = stream->readBool();
-    var->isFragmentInOut = stream->readBool();
-    if (var->isFragmentInOut)
+    var->staticUse      = stream->readBool();
+    var->active         = stream->readBool();
+    size_t elementCount = stream->readInt<size_t>();
+    var->fields.resize(elementCount);
+    for (sh::ShaderVariable &variable : var->fields)
     {
-        var->location = stream->readInt<int>();
+        LoadShaderVar(stream, &variable);
     }
+    stream->readString(&var->structOrBlockName);
+    stream->readString(&var->mappedStructOrBlockName);
+    var->isRowMajorLayout    = stream->readBool();
+    var->location            = stream->readInt<int>();
+    var->hasImplicitLocation = stream->readBool();
+    var->binding             = stream->readInt<int>();
+    var->imageUnitFormat     = stream->readInt<GLenum>();
+    var->offset              = stream->readInt<int>();
+    var->readonly            = stream->readBool();
+    var->writeonly           = stream->readBool();
+    var->isFragmentInOut     = stream->readBool();
+    var->index               = stream->readInt<int>();
+    var->yuv                 = stream->readBool();
+    var->interpolation       = stream->readEnum<sh::InterpolationType>();
+    var->isInvariant         = stream->readBool();
+    var->isShaderIOBlock     = stream->readBool();
+    var->isPatch             = stream->readBool();
     var->texelFetchStaticUse = stream->readBool();
+    var->setParentArrayIndex(stream->readInt<int>());
 }
 
 // VariableLocation implementation.
@@ -4673,6 +4690,8 @@ angle::Result Program::serialize(const Context *context, angle::MemoryBuffer *bi
     stream.writeInt(mState.getAtomicCounterUniformRange().low());
     stream.writeInt(mState.getAtomicCounterUniformRange().high());
 
+    stream.writeBool(mState.mSeparable);
+
     mProgram->save(context, &stream);
 
     ASSERT(binaryOut);
@@ -4757,6 +4776,8 @@ angle::Result Program::deserialize(const Context *context,
     unsigned int atomicCounterRangeLow  = stream.readInt<unsigned int>();
     unsigned int atomicCounterRangeHigh = stream.readInt<unsigned int>();
     mState.mAtomicCounterUniformRange   = RangeUI(atomicCounterRangeLow, atomicCounterRangeHigh);
+
+    mState.mSeparable = stream.readBool();
 
     static_assert(static_cast<unsigned long>(ShaderType::EnumCount) <= sizeof(unsigned long) * 8,
                   "Too many shader types");

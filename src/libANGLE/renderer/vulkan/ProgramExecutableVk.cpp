@@ -282,6 +282,7 @@ std::unique_ptr<rx::LinkEvent> ProgramExecutableVk::load(gl::BinaryInputStream *
             info.binding       = stream->readInt<uint32_t>();
             info.location      = stream->readInt<uint32_t>();
             info.component     = stream->readInt<uint32_t>();
+            info.index         = stream->readInt<uint32_t>();
             // PackedEnumBitSet uses uint8_t
             info.activeStages = gl::ShaderBitSet(stream->readInt<uint8_t>());
             LoadShaderInterfaceVariableXfbInfo(stream, &info.xfb);
@@ -316,6 +317,7 @@ void ProgramExecutableVk::save(gl::BinaryOutputStream *stream)
             stream->writeInt(info.binding);
             stream->writeInt(info.location);
             stream->writeInt(info.component);
+            stream->writeInt(info.index);
             // PackedEnumBitSet uses uint8_t
             stream->writeInt(info.activeStages.bits());
             SaveShaderInterfaceVariableXfbInfo(info.xfb, stream);
