@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8440320_60a62cac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-17T17:21:17Z",
+      "side": 1,
+      "message": "It looks like the end2end failures are due to:\n\nbool ValidateConfigAttribute(const ValidationContext *val,\n                             const Display *display,\n                             EGLAttrib attribute)\n{\n...\n        case EGL_COLOR_COMPONENT_TYPE_EXT:\n            if (!display-\u003egetExtensions().pixelFormatFloat)\n            {\n                val-\u003esetError(EGL_BAD_ATTRIBUTE, \"EGL_EXT_pixel_format_float is not enabled.\");\n                return false;\n            }\n            break;\n\nCaused by this part of the test:\n\n// Print the EGL configs with attributes\nTEST_P(EGLPrintEGLinfoTest, PrintConfigInfo)\n{\n...\n        // Color\n        const char *componentType \u003d (GetAttrib(mDisplay, config, EGL_COLOR_COMPONENT_TYPE_EXT) \u003d\u003d\n                                     EGL_COLOR_COMPONENT_TYPE_FLOAT_EXT)\n                                        ? \"Float \"\n                                        : \"Fixed \";\n\nAssuming we want to do that check when it\u0027s possible, you may be able to surround it with:\n\nIsEGLDisplayExtensionEnabled(display, \"EGL_EXT_pixel_format_float\")",
+      "revId": "204bf5a11b11a5958c5f34877bfda24ea791bd91",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
