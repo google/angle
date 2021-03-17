@@ -16,6 +16,40 @@
       "message": "Please take a look, thanks.",
       "revId": "191e348471eb2d16d35037c7b3c78bba5b64fa3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac52ad86_772bd3ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-17T14:08:02Z",
+      "side": 1,
+      "message": "Thanks for the quick fix! I\u0027m not an ANGLE reviewer, but I\u0027m fine with this change.",
+      "revId": "191e348471eb2d16d35037c7b3c78bba5b64fa3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1fe5f254_ef652f43",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-17T14:08:02Z",
+      "side": 1,
+      "message": "Not new to this patch, but I feel that this method of balancing parens is fragile and error-prone. It would be nice to find a way to allow the caller to insert both the open and close parens, as is done for regular HLSL in writeTriplet(), for example.\n\n(I think I understand the constraints which make this difficult, though.)",
+      "revId": "191e348471eb2d16d35037c7b3c78bba5b64fa3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
