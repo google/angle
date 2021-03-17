@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "ab7dafa9ba4ba982fa0d6d00a64ba1ac91283866",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ab86799_11a971db",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-17T22:37:12Z",
+      "side": 1,
+      "message": "shabi - To get this test to pass, transform feedback with separable problem should be supported. There are several bugs related to it that needs to be fixed but it is too big to handle in this CL. Skipping for now. Will take care of it after closing up tessellation work.",
+      "range": {
+        "startLine": 775,
+        "startChar": 7,
+        "endLine": 775,
+        "endChar": 31
+      },
+      "revId": "ab7dafa9ba4ba982fa0d6d00a64ba1ac91283866",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
