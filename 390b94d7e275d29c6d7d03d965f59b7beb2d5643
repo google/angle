@@ -196,6 +196,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e4ea2af6_593f4781",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-17T00:11:51Z",
+      "side": 1,
+      "message": "Surfaced to Khronos.  See: https://gitlab.khronos.org/vulkan/vulkan/-/issues/2571",
+      "parentUuid": "6711533c_910abaa4",
+      "range": {
+        "startLine": 1943,
+        "startChar": 86,
+        "endLine": 1943,
+        "endChar": 95
+      },
+      "revId": "390b94d7e275d29c6d7d03d965f59b7beb2d5643",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fa1db808_1a2b6ea9",
