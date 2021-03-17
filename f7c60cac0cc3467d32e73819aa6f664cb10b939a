@@ -43,6 +43,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3cb329d5_e4e62ef6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-17T21:35:29Z",
+      "side": 1,
+      "message": "Suggest we just include this in the skip list. If we support this behaviour we support it.",
+      "range": {
+        "startLine": 178,
+        "startChar": 3,
+        "endLine": 183,
+        "endChar": 2
+      },
+      "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b3a505f4_d43bb73b",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 15
