@@ -115,8 +115,8 @@ class ProgramExecutable final : public angle::Subject
 
     void reset();
 
-    void save(gl::BinaryOutputStream *stream) const;
-    void load(gl::BinaryInputStream *stream);
+    void save(bool isSeparable, gl::BinaryOutputStream *stream) const;
+    void load(bool isSeparable, gl::BinaryInputStream *stream);
 
     int getInfoLogLength() const;
     InfoLog &getInfoLog() { return mInfoLog; }

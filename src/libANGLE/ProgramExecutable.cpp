@@ -10,7 +10,6 @@
 
 #include "libANGLE/Context.h"
 #include "libANGLE/Program.h"
-#include "libANGLE/ProgramPipeline.h"
 #include "libANGLE/Shader.h"
 
 namespace gl
@@ -211,7 +210,7 @@ void ProgramExecutable::reset()
     mTessGenPointMode          = GL_NONE;
 }
 
-void ProgramExecutable::load(gl::BinaryInputStream *stream)
+void ProgramExecutable::load(bool isSeparable, gl::BinaryInputStream *stream)
 {
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "Too many vertex attribs for mask: All bits of mAttributesTypeMask types and "
@@ -414,9 +413,43 @@ void ProgramExecutable::load(gl::BinaryInputStream *stream)
             mGraphicsImageBindings.emplace_back(imageBinding);
         }
     }
+
+    // These values are currently only used by PPOs, so only load them when the program is marked
+    // separable to save memory.
+    if (isSeparable)
+    {
+        for (ShaderType shaderType : mLinkedGraphicsShaderStages)
+        {
+            mLinkedOutputVaryings[shaderType].resize(stream->readInt<size_t>());
+            for (sh::ShaderVariable &variable : mLinkedOutputVaryings[shaderType])
+            {
+                LoadShaderVar(stream, &variable);
+            }
+            mLinkedInputVaryings[shaderType].resize(stream->readInt<size_t>());
+            for (sh::ShaderVariable &variable : mLinkedInputVaryings[shaderType])
+            {
+                LoadShaderVar(stream, &variable);
+            }
+            mLinkedShaderVersions[shaderType] = stream->readInt<int>();
+        }
+        for (ShaderType shaderType : mLinkedComputeShaderStages)
+        {
+            mLinkedOutputVaryings[shaderType].resize(stream->readInt<size_t>());
+            for (sh::ShaderVariable &variable : mLinkedOutputVaryings[shaderType])
+            {
+                LoadShaderVar(stream, &variable);
+            }
+            mLinkedInputVaryings[shaderType].resize(stream->readInt<size_t>());
+            for (sh::ShaderVariable &variable : mLinkedInputVaryings[shaderType])
+            {
+                LoadShaderVar(stream, &variable);
+            }
+            mLinkedShaderVersions[shaderType] = stream->readInt<int>();
+        }
+    }
 }
 
-void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
+void ProgramExecutable::save(bool isSeparable, gl::BinaryOutputStream *stream) const
 {
     static_assert(MAX_VERTEX_ATTRIBS * 2 <= sizeof(uint32_t) * 8,
                   "All bits of mAttributesTypeMask types and mask fit into 32 bits each");
@@ -466,8 +499,6 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
     for (const LinkedUniform &uniform : getUniforms())
     {
         WriteShaderVar(stream, uniform);
-
-        // FIXME: referenced
 
         stream->writeInt(uniform.bufferIndex);
         WriteBlockMemberInfo(stream, uniform.blockInfo);
@@ -561,6 +592,40 @@ void ProgramExecutable::save(gl::BinaryOutputStream *stream) const
         for (size_t i = 0; i < imageBinding.boundImageUnits.size(); ++i)
         {
             stream->writeInt(imageBinding.boundImageUnits[i]);
+        }
+    }
+
+    // These values are currently only used by PPOs, so only save them when the program is marked
+    // separable to save memory.
+    if (isSeparable)
+    {
+        for (ShaderType shaderType : mLinkedGraphicsShaderStages)
+        {
+            stream->writeInt(mLinkedOutputVaryings[shaderType].size());
+            for (const sh::ShaderVariable &shaderVariable : mLinkedOutputVaryings[shaderType])
+            {
+                WriteShaderVar(stream, shaderVariable);
+            }
+            stream->writeInt(mLinkedInputVaryings[shaderType].size());
+            for (const sh::ShaderVariable &shaderVariable : mLinkedInputVaryings[shaderType])
+            {
+                WriteShaderVar(stream, shaderVariable);
+            }
+            stream->writeInt(mLinkedShaderVersions[shaderType]);
+        }
+        for (ShaderType shaderType : mLinkedComputeShaderStages)
+        {
+            stream->writeInt(mLinkedOutputVaryings[shaderType].size());
+            for (const sh::ShaderVariable &shaderVariable : mLinkedOutputVaryings[shaderType])
+            {
+                WriteShaderVar(stream, shaderVariable);
+            }
+            stream->writeInt(mLinkedInputVaryings[shaderType].size());
+            for (const sh::ShaderVariable &shaderVariable : mLinkedInputVaryings[shaderType])
+            {
+                WriteShaderVar(stream, shaderVariable);
+            }
+            stream->writeInt(mLinkedShaderVersions[shaderType]);
         }
     }
 }
