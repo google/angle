@@ -33,6 +33,23 @@
       "message": "Jamie, PTAL. Fixes an app, Ian will follow up with a test.",
       "revId": "e00a047697961ea218e8466b69f98643ac45b030",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b1cec61_6108ed7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-17T15:05:07Z",
+      "side": 1,
+      "message": "Regression test request.",
+      "revId": "e00a047697961ea218e8466b69f98643ac45b030",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
