@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2abac276_0c35ace1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-17T22:30:32Z",
+      "side": 1,
+      "message": "PTAL\n\nGeneral comment -\n\nA shader interface is defined to be one of these:\n• All the uniform variables and uniform blocks declared in a program. This spans all compilation\nunits linked together within one program.\n• All shader storage blocks.\n• The boundary between adjacent programmable pipeline stages: This spans all the outputs\ndeclared in the first stage and all the inputs declared in the second stage. Note that for the\npurposes of this definition, the fragment shader and the preceding shader are considered to have\na shared boundary even though in practice, all values passed to the fragment shader first pass\nthrough the rasterizer and interpolator.\n\nThe shader interface targeted by this CL is the third one.",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6780e1ab_8a17eed0",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5314,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-17T22:30:32Z",
+      "side": 1,
+      "message": "shabi, tim - example here -\n\nBlock name \u0027Vertex\u0027 in this shader is declared twice(as in and out). It should be allowed because shader interface for each varying is different. (One is in and it interfaces with VS and the other is out, it interfaces with TES)",
+      "range": {
+        "startLine": 5314,
+        "startChar": 8,
+        "endLine": 5314,
+        "endChar": 14
+      },
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
