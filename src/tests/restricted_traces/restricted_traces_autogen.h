@@ -97,6 +97,7 @@ enum class RestrictedTraceID
     one_punch_man,
     plants_vs_zombies_2,
     pubg_mobile_lite,
+    ragnarok_m_eternal_love,
     raid_shadow_legends,
     real_commando_secret_mission,
     real_gangster_crime,

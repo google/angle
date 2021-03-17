@@ -54,6 +54,7 @@
 #include "one_punch_man/one_punch_man_capture_context3.h"
 #include "plants_vs_zombies_2/plants_vs_zombies_2_capture_context1.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
+#include "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context3.h"
 #include "raid_shadow_legends/raid_shadow_legends_capture_context2.h"
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
 #include "real_gangster_crime/real_gangster_crime_capture_context3.h"
@@ -282,6 +283,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       pubg_mobile_lite::kReplayFrameStart, pubg_mobile_lite::kReplayFrameEnd,
       pubg_mobile_lite::kReplayDrawSurfaceWidth, pubg_mobile_lite::kReplayDrawSurfaceHeight,
       "pubg_mobile_lite"}},
+    {RestrictedTraceID::ragnarok_m_eternal_love,
+     {ragnarok_m_eternal_love::kReplayContextClientMajorVersion,
+      ragnarok_m_eternal_love::kReplayContextClientMinorVersion,
+      ragnarok_m_eternal_love::kReplayFrameStart, ragnarok_m_eternal_love::kReplayFrameEnd,
+      ragnarok_m_eternal_love::kReplayDrawSurfaceWidth,
+      ragnarok_m_eternal_love::kReplayDrawSurfaceHeight, "ragnarok_m_eternal_love"}},
     {RestrictedTraceID::raid_shadow_legends,
      {raid_shadow_legends::kReplayContextClientMajorVersion,
       raid_shadow_legends::kReplayContextClientMinorVersion, raid_shadow_legends::kReplayFrameStart,
@@ -515,6 +522,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::ragnarok_m_eternal_love:
+            ragnarok_m_eternal_love::ReplayContext3Frame(frameIndex);
+            break;
         case RestrictedTraceID::raid_shadow_legends:
             raid_shadow_legends::ReplayContext2Frame(frameIndex);
             break;
@@ -711,6 +721,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::ragnarok_m_eternal_love:
+            ragnarok_m_eternal_love::ResetContext3Replay();
             break;
         case RestrictedTraceID::raid_shadow_legends:
             raid_shadow_legends::ResetContext2Replay();
@@ -909,6 +922,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetupContext1Replay();
             break;
+        case RestrictedTraceID::ragnarok_m_eternal_love:
+            ragnarok_m_eternal_love::SetupContext3Replay();
+            break;
         case RestrictedTraceID::raid_shadow_legends:
             raid_shadow_legends::SetupContext2Replay();
             break;
@@ -1106,6 +1122,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::ragnarok_m_eternal_love:
+            ragnarok_m_eternal_love::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::raid_shadow_legends:
             raid_shadow_legends::SetBinaryDataDir(dataDir);
             break;
@@ -1302,6 +1321,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::pubg_mobile_lite:
             pubg_mobile_lite::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::ragnarok_m_eternal_love:
+            ragnarok_m_eternal_love::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::raid_shadow_legends:
             raid_shadow_legends::SetBinaryDataDecompressCallback(callback);
