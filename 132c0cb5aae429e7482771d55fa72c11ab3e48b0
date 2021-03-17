@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5b96f314_094602ce",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1793,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-17T10:26:23Z",
+      "side": 1,
+      "message": "Also the comment seems incorrect; It\u0027s not setting stride to 0 if the types differ.\n\nPlease clarify that, saying that we choose to only set stride to 0 when the size differs because there are real-world applications that provide data where the type differs.",
+      "parentUuid": "eef21329_64a01a58",
+      "range": {
+        "startLine": 1793,
+        "startChar": 34,
+        "endLine": 1793,
+        "endChar": 38
+      },
+      "revId": "132c0cb5aae429e7482771d55fa72c11ab3e48b0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "82b1f3ce_5cd30eed",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 1
