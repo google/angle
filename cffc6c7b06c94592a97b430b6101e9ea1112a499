@@ -16,6 +16,23 @@
       "message": "Thanks James for the fix. Can you please specify this as an angle_end2end_test in WebGLCompatibilityTest.cpp? Having a C++ test would be a great help to any future implementers.",
       "revId": "cffc6c7b06c94592a97b430b6101e9ea1112a499",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04bd4073_202c9f69",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-03-17T21:28:36Z",
+      "side": 1,
+      "message": "Great fix James! Please add the test Jamie requested before cq\u0027ing this.\n\nlgtm\n",
+      "revId": "cffc6c7b06c94592a97b430b6101e9ea1112a499",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
