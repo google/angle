@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f70141e_a3020b4b",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1367,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-17T18:24:33Z",
+      "side": 1,
+      "message": "Is the case where the layout is already Present common enough that it\u0027s worth combining the checking to prevent the flush (well, deferring it a little later anyway)?",
+      "range": {
+        "startLine": 1363,
+        "startChar": 0,
+        "endLine": 1367,
+        "endChar": 49
+      },
+      "revId": "ee7e7e1c1443efea237e6974c1cf0de317755c62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0d957a5_3bf481d4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5738,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-17T18:24:33Z",
+      "side": 1,
+      "message": "nit: being",
+      "range": {
+        "startLine": 5738,
+        "startChar": 92,
+        "endLine": 5738,
+        "endChar": 96
+      },
+      "revId": "ee7e7e1c1443efea237e6974c1cf0de317755c62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
