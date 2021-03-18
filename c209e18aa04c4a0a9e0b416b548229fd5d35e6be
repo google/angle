@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1803dac_36d33b32",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T14:35:28Z",
+      "side": 1,
+      "message": "This is the front-end, the reader cannot know what transformer this is, or what Private means.\n\nYou can quote GL itself instead, which has wording to the same effect:\n\n\u003e Output variable assignments performed by any invocation executed prior\nto calling barrier will be visible to any other invocation after the call to barrier returns.\n\nThat said, isn\u0027t the problem bigger than just synchronization here? If the varying is made inactive (Private in SPIR-V), it\u0027s no longer shared between invocations, isn\u0027t that right?\n\nPerhaps the real reason for doing this is that TCS invocations can read each other\u0027s outputs, so you should consider outputs from TCS always active.\n\nAlso, handling this is best done above where merged varyings are processed. TCS output can be unconditionally placed in mergedVaryings and collected above, instead of hackishly done so based on uniqueFullNames.",
+      "range": {
+        "startLine": 903,
+        "startChar": 80,
+        "endLine": 903,
+        "endChar": 91
+      },
+      "revId": "c209e18aa04c4a0a9e0b416b548229fd5d35e6be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
