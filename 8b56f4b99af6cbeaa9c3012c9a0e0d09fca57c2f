@@ -117,6 +117,30 @@
       },
       "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f189835a_8e63df68",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T17:12:58Z",
+      "side": 1,
+      "message": "None of this would have been an issue had I had the time to generate SPIR-V directly from the translator!\n\nCurrently the info map is by stage, then by name. Should we make the map something like by stage, then by kind (input, output, other), then by name? Once SPIR-V generation is done, it would be reverted and changed to \"by stage, then by SPIR-V id\".",
+      "parentUuid": "50b95962_ad355749",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 31
+      },
+      "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
