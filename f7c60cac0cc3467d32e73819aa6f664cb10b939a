@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "027256e4_97ce3e1d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:28:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "461012d1_71eeb1c6",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 29
+      },
+      "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "d76e41bd_e5ff5edb",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 15
@@ -54,6 +78,30 @@
       "writtenOn": "2021-03-17T21:35:29Z",
       "side": 1,
       "message": "Suggest we just include this in the skip list. If we support this behaviour we support it.",
+      "range": {
+        "startLine": 178,
+        "startChar": 3,
+        "endLine": 183,
+        "endChar": 2
+      },
+      "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c29013ba_7a23dcfc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:28:52Z",
+      "side": 1,
+      "message": "Done. Also moving to a separate CL per Tim\u0027s suggestion.",
+      "parentUuid": "3cb329d5_e4e62ef6",
       "range": {
         "startLine": 178,
         "startChar": 3,
@@ -110,6 +158,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cd2fffd_5b28b4ba",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:28:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3a505f4_d43bb73b",
+      "range": {
+        "startLine": 1373,
+        "startChar": 11,
+        "endLine": 1373,
+        "endChar": 21
+      },
+      "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67b68164_646324ec",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 1373,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:28:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30030ea4_48e54659",
+      "range": {
+        "startLine": 1373,
+        "startChar": 32,
+        "endLine": 1373,
+        "endChar": 36
+      },
+      "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0a60aaf0_c1f12155",
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a7f86cd_77ce553b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 2044,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:28:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a60aaf0_c1f12155",
+      "range": {
+        "startLine": 2044,
+        "startChar": 23,
+        "endLine": 2044,
+        "endChar": 27
+      },
+      "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "60c7debd_6340e961",
@@ -146,6 +266,24 @@
       "writtenOn": "2021-03-17T19:09:07Z",
       "side": 1,
       "message": "nit: https://anglebug.com/5760",
+      "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbeb7e45_59728b68",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 2479,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:28:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "60c7debd_6340e961",
       "revId": "f7c60cac0cc3467d32e73819aa6f664cb10b939a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
