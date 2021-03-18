@@ -1543,7 +1543,7 @@ angle::Result WindowSurfaceVk::doDeferredAcquireNextImage(const gl::Context *con
     }
 
     RendererVk *renderer = contextVk->getRenderer();
-    ANGLE_TRY(renderer->syncPipelineCacheVk(displayVk));
+    ANGLE_TRY(renderer->syncPipelineCacheVk(displayVk, contextVk));
 
     return angle::Result::Continue;
 }
