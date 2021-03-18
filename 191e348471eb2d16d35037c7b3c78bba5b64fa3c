@@ -50,6 +50,24 @@
       "message": "Not new to this patch, but I feel that this method of balancing parens is fragile and error-prone. It would be nice to find a way to allow the caller to insert both the open and close parens, as is done for regular HLSL in writeTriplet(), for example.\n\n(I think I understand the constraints which make this difficult, though.)",
       "revId": "191e348471eb2d16d35037c7b3c78bba5b64fa3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "390c95ce_40b8b0b7",
+        "filename": "src/compiler/translator/ShaderStorageBlockOutputHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 796,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2021-03-18T01:44:43Z",
+      "side": 1,
+      "message": "It\u0027s related with how we implemented shader storage block. Currently the translation of SSBO is very different with others. For example,\nssbo.data \u003d value\n// becomes\n_Store_DataType_LayoutType(ssbo, offset, value);\n\nThe open and close parens are not decided by one operator(.). So it\u0027s hard for SSBO to implement like others.",
+      "parentUuid": "1fe5f254_ef652f43",
+      "revId": "191e348471eb2d16d35037c7b3c78bba5b64fa3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
