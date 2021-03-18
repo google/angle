@@ -64,6 +64,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5d610cb_fa43e3de",
+        "filename": "src/libANGLE/renderer/vulkan/UtilsVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1943,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3fd27554_27c3c61a",
+      "range": {
+        "startLine": 1943,
+        "startChar": 28,
+        "endLine": 1943,
+        "endChar": 33
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c656b46d_0b5a5ddc",
@@ -77,6 +101,30 @@
       "writtenOn": "2021-03-18T16:21:36Z",
       "side": 1,
       "message": "Deduplicate please (with the resolve version below and also imageWrite())",
+      "range": {
+        "startLine": 1228,
+        "startChar": 0,
+        "endLine": 1238,
+        "endChar": 5
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "362a020c_aa06da35",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1238,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c656b46d_0b5a5ddc",
       "range": {
         "startLine": 1228,
         "startChar": 0,
@@ -106,6 +154,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "df8c5181_a553cccb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1427,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:18:39Z",
+      "side": 1,
+      "message": "This could happen if one of the image is released early at onImageHelperRelease() call.",
+      "parentUuid": "e4b428c4_397b0eba",
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d3560d84_2d8d3745",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 15
@@ -117,6 +183,24 @@
       "writtenOn": "2021-03-18T16:21:36Z",
       "side": 1,
       "message": "nit: the comment changes could be reverted",
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cffb30a8_7215fb11",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3560d84_2d8d3745",
       "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -144,6 +228,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b4217df_b4b9001c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1646,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:18:39Z",
+      "side": 1,
+      "message": "Sorry, adding.",
+      "parentUuid": "66a2da82_560b35a8",
+      "range": {
+        "startLine": 1645,
+        "startChar": 75,
+        "endLine": 1646,
+        "endChar": 37
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1f8c5199_15e214ee",
@@ -157,6 +265,24 @@
       "writtenOn": "2021-03-18T16:21:36Z",
       "side": 1,
       "message": "See other comment. CommandBufferHelper::onImageHelperRelease here should do the trick I think.",
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da1b1824_7a4cbca5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 5741,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:18:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1f8c5199_15e214ee",
       "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
