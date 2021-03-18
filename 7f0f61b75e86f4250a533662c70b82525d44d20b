@@ -16,6 +16,24 @@
       "message": "Hi reviewers, this patch is related to the solution discussed in https://eu-gerrit-1.euhpc.arm.com/c/GPU-SW/angle/+/296556\nI have two details to confirm.\n1) Is 10M a proper limitation value?\n2) Which method should I take to implement worker thread? The logic in patch will still create new thread. Should I use the method like \"std::thread mTaskThread\" in CommandProcessor.cpp?",
       "revId": "7f0f61b75e86f4250a533662c70b82525d44d20b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2722eb2f_f635ebce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T17:30:57Z",
+      "side": 1,
+      "message": "Sorry https://eu-gerrit-1.euhpc.arm.com/c/GPU-SW/angle/+/296556 is not accessible.\n\nHow about we reland the original change (non-threaded) with a small limit (like 64KB, just for getting it tested but not really functional). Then the change that makes it threaded and raises the limit would be much simpler to review.\n\nRegarding thread creation, take a look at ContextVk::getWorkerThreadPool(). You can follow the code around (for example to WorkerThread.h and ShaderImpl.cpp)  to see how it\u0027s used.",
+      "parentUuid": "473feca0_0cb1ef48",
+      "revId": "7f0f61b75e86f4250a533662c70b82525d44d20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
