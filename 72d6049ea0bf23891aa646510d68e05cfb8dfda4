@@ -33,6 +33,24 @@
       "message": "Yeesh",
       "revId": "72d6049ea0bf23891aa646510d68e05cfb8dfda4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f11c5828_03417ac9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-18T18:15:03Z",
+      "side": 1,
+      "message": "I added ProgramPipelineTest31.ProgramBinary with the last CL in this chain (since it needs all of these fixes to pass), which should handle these members specifically:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2770685/2/src/tests/gl_tests/ProgramPipelineTest.cpp#698\n\nI can take another look at ProgramBinaryTest.cpp to see if there\u0027s a good way to target some of these more generically.",
+      "parentUuid": "326e0112_abb7ce68",
+      "revId": "72d6049ea0bf23891aa646510d68e05cfb8dfda4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
