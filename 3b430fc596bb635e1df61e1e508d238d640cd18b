@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd56f716_5ec04b4a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-18T16:38:59Z",
+      "side": 1,
+      "message": "The test failure is blocked by https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5766",
+      "revId": "3b430fc596bb635e1df61e1e508d238d640cd18b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
