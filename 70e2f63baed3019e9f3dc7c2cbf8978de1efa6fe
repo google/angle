@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a79e20b0_bc5bc055",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-18T19:21:28Z",
+      "side": 0,
+      "message": "Curious why is this dropped in Write?  I think it is worth noting why things aren\u0027t 1:1.",
+      "range": {
+        "startLine": 941,
+        "startChar": 53,
+        "endLine": 941,
+        "endChar": 69
+      },
+      "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
