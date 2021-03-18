@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0fd8488_3ab2f541",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-18T18:12:47Z",
+      "side": 1,
+      "message": "Yeah.   The hard part still is finding a good way to draw the line between ProgramState and ProgramExecutable and making sure everything is in the right place.   Having a real app use PPOs is certainly helping to find holes in our current implementation, and may end up getting use mostly there in terms of requirements so we can go back and take another cleanup pass later.",
+      "parentUuid": "a86d1b5c_5e28e0c1",
+      "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "376fbcf6_b8461fdf",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-18T18:00:36Z",
       "side": 1,
       "message": "Is this still needed?",
+      "range": {
+        "startLine": 896,
+        "startChar": 12,
+        "endLine": 896,
+        "endChar": 62
+      },
+      "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e83ea4e_12968301",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-18T18:12:47Z",
+      "side": 1,
+      "message": "Yes, since Programs only have the shaders attached - they\u0027re in the process of being linked at this point in execution.",
+      "parentUuid": "376fbcf6_b8461fdf",
       "range": {
         "startLine": 896,
         "startChar": 12,
