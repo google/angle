@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4fa08982_b57d40b9",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5314,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-18T20:03:51Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6780e1ab_8a17eed0",
+      "range": {
+        "startLine": 5314,
+        "startChar": 8,
+        "endLine": 5314,
+        "endChar": 14
+      },
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ac3040f7_95a80898",
@@ -58,6 +82,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "08fe9224_66539ca1",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5356,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-18T20:03:51Z",
+      "side": 1,
+      "message": "This test just validates the shader which has varyings with duplicated block name inside shader can be compiled and link successfully. Without this CL the test crashes during link time.",
+      "parentUuid": "ac3040f7_95a80898",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "640b8ecc_289f4038",
@@ -71,6 +113,24 @@
       "writtenOn": "2021-03-18T02:46:34Z",
       "side": 1,
       "message": "I\u0027m not sure what a \"patch\" is, but is there a way to verify the correct color was drawn?",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6face014_506f10b3",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5360,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-18T20:03:51Z",
+      "side": 1,
+      "message": "\u0027patch\u0027 is a term in tessellation. If tessellation is used, mode in glDrawArrays should be \u0027GL_PATCHES \u0027.\n\nTechnically, the result of drawPatches can be verified if the correct color was drawn (but did not do that in current test). This is not a tessellation test, it is a shader compilation test",
+      "parentUuid": "640b8ecc_289f4038",
       "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
