@@ -222,6 +222,8 @@ class ProgramExecutableVk
                                             ContextVk *contextVk);
     void updateTransformFeedbackDescriptorSetImpl(const gl::ProgramState &programState,
                                                   ContextVk *contextVk);
+    angle::Result getOrAllocateShaderResourcesDescriptorSet(ContextVk *contextVk,
+                                                            VkDescriptorSet *descriptorSetOut);
     angle::Result updateBuffersDescriptorSet(ContextVk *contextVk,
                                              const gl::ShaderType shaderType,
                                              vk::CommandBufferHelper *commandBufferHelper,
