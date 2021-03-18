@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea8876e1_4d572671",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:31:34Z",
+      "side": 1,
+      "message": "Split it out from previous CL crrev.com/2749479",
+      "revId": "4700b22c50cffc783461b7f5b2d8ffa3c3b70407",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
