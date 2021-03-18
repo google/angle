@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cbd28800_f7ee2606",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-18T21:45:16Z",
+      "side": 1,
+      "message": "http://anglebug.com/3570 , http://anglebug.com/4871 , http://anglebug.com/5506\n\nMove the necessary information piece-by-piece into ProgramExecutable until we can get rid of ProgramExecutableVk::fillProgramStateMap and any similar constructs.\n\nNow\u0027s a good time. The immediate urgency is off and we have some ability to pay down tech debt, and we ran into an application that hits an edge case exposed by our limited implementation of pipelines.",
+      "parentUuid": "cacb4cc5_116aa94b",
+      "revId": "15f2440b365f1aeb1a752eddf2847d9776f6e409",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8d1a1cd1_2a3b5491",
         "filename": "src/libANGLE/Program.h",
         "patchSetId": 1
