@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "20ed6039_7bd9aaff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-18T00:26:31Z",
+      "side": 1,
+      "message": "Shabi, here\u0027s my first attempt.  It\u0027s a quick hack of the EGLContextSharingTest.DeleteReaderOfSharedTexture test.\n\nIt did NOT fail on Windows when I removed your fix.\n\nIt DID fail on Android/Pixel 4 XL when I removed your fix (on a 1+-week old version of ANGLE that had my instrumentation and your fix).\n\nIt did NOT fail on the same device when I removed my instrumentation and your fix.  Without my instrumentation, I\u0027m not sure why it didn\u0027t fail.",
+      "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
