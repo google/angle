@@ -16,6 +16,29 @@
       "message": "LGTM. It would be nice if we could put in the time to fix this completely and store the necessary linking info in the executables.",
       "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "376fbcf6_b8461fdf",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T18:00:36Z",
+      "side": 1,
+      "message": "Is this still needed?",
+      "range": {
+        "startLine": 896,
+        "startChar": 12,
+        "endLine": 896,
+        "endChar": 62
+      },
+      "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
