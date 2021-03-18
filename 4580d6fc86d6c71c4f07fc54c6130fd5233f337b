@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d6b259d_1c157a90",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:42:45Z",
+      "side": 1,
+      "message": "That is what I did previously. Jamie prefer just ignore it. I am ok with either way, maybe lean more toward a warning.",
+      "parentUuid": "123f2ce4_a3636f82",
+      "range": {
+        "startLine": 10,
+        "startChar": 50,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "4580d6fc86d6c71c4f07fc54c6130fd5233f337b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "425a7bf2_cc0433c4",
