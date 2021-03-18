@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38f80732_7bc8a158",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-18T17:02:53Z",
+      "side": 1,
+      "message": "We could switch to autogen code, i.e. protobuf.",
+      "parentUuid": "ed2529fa_89259db2",
+      "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dcd634f5_e9016533",
