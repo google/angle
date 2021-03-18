@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "473feca0_0cb1ef48",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-18T12:49:55Z",
+      "side": 1,
+      "message": "Hi reviewers, this patch is related to the solution discussed in https://eu-gerrit-1.euhpc.arm.com/c/GPU-SW/angle/+/296556\nI have two details to confirm.\n1) Is 10M a proper limitation value?\n2) Which method should I take to implement worker thread? The logic in patch will still create new thread. Should I use the method like \"std::thread mTaskThread\" in CommandProcessor.cpp?",
+      "revId": "7f0f61b75e86f4250a533662c70b82525d44d20b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
