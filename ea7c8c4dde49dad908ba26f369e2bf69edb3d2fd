@@ -16,6 +16,24 @@
       "message": "This is probably going to be very fragile. We use mBaseLevel all over the place, and we need to very carefully understand when we should use mFirstLevel.\n\nI don\u0027t currently have a good idea that involves not storing this. So I\u0027d at least suggest renaming these three variables to:\n\n    gl::LevelIndex mAllocationBaseLevel;\n    gl::LevelIndex mViewBaseLevel;\n    gl::LevelIndex mViewMaxLevel;\n\nThat would also force you to go through all usages of mBaseLevel and think about what makes sense. Similarly, getBaseLevel() should be renamed to getViewBaseLevel() etc.",
       "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7eabad3_ea689be4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T16:54:07Z",
+      "side": 1,
+      "message": "If I do this for mutable texture as well, then yes, I would be worried. But for immutable texture I don\u0027t think so. Because I am initImage at the glTexSTorage time, I think the risk is much contained. But anyway, will send out for review once I am done with it.",
+      "parentUuid": "3aac288e_12aacc9d",
+      "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
