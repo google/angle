@@ -17,12 +17,10 @@
 
 namespace rx
 {
-
-enum DescriptorSetIndex : uint32_t;
+enum class DescriptorSetIndex : uint32_t;
 
 namespace vk
 {
-
 namespace priv
 {
 

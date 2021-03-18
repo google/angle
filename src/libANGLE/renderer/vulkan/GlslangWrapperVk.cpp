@@ -51,7 +51,7 @@ void GlslangWrapperVk::ResetGlslangProgramInterfaceInfo(
         ToUnderlying(DescriptorSetIndex::ShaderResource);
     glslangProgramInterfaceInfo->currentShaderResourceBindingIndex = 0;
     glslangProgramInterfaceInfo->driverUniformsDescriptorSetIndex =
-        ToUnderlying(DescriptorSetIndex::DriverUniforms);
+        ToUnderlying(DescriptorSetIndex::Internal);
 
     glslangProgramInterfaceInfo->locationsUsedForXfbExtension = 0;
 }

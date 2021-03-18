@@ -124,12 +124,6 @@ class ProgramVk : public ProgramImpl
     }
     void onProgramBind();
 
-    // Used in testing only.
-    vk::DynamicDescriptorPool *getDynamicDescriptorPool(uint32_t poolIndex)
-    {
-        return &mExecutable.mDynamicDescriptorPools[poolIndex];
-    }
-
     const ProgramExecutableVk &getExecutable() const { return mExecutable; }
     ProgramExecutableVk &getExecutable() { return mExecutable; }
 

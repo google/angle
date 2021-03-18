@@ -102,7 +102,7 @@ struct DefaultUniformBlock final : private angle::NonCopyable
 };
 
 // Performance and resource counters.
-using DescriptorSetCountList = std::array<uint32_t, DescriptorSetIndex::EnumCount>;
+using DescriptorSetCountList = angle::PackedEnumMap<DescriptorSetIndex, uint32_t>;
 
 struct ProgramExecutablePerfCounters
 {
