@@ -93,6 +93,30 @@
       },
       "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50b95962_ad355749",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-18T02:46:34Z",
+      "side": 1,
+      "message": "Some version of the ASSERTs should be reverted to catch real bugs that are unrelated to using the same struct as both input and output.   Unfortunately, we use the block (struct) name here, so your test causes a collision (which is why the ASSERTs were removed).\n\nWe may need to add the instance name to VaryingInShaderRef to prevent collisions.   The hard part may be indexing back into it later with the correct name, but it\u0027s been a while since I\u0027ve played around in this area to know exactly what\u0027s involved.\n\nShabi - Any ideas here?",
+      "parentUuid": "bed628bd_1bd0c297",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 31
+      },
+      "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

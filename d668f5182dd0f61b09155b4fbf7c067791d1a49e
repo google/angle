@@ -39,6 +39,40 @@
       },
       "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac3040f7_95a80898",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5356,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-18T02:46:34Z",
+      "side": 1,
+      "message": "None of the values that were passed along through the varying in/out blocks are used here.\n\nI don\u0027t really know anything about how tessellation shaders work, but is there a way to validate that the correct data is being passed along through the whole chain, since you\u0027re trying to fix a bug in that area?",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "640b8ecc_289f4038",
+        "filename": "src/tests/gl_tests/GLSLTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5360,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-18T02:46:34Z",
+      "side": 1,
+      "message": "I\u0027m not sure what a \"patch\" is, but is there a way to verify the correct color was drawn?",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
