@@ -20,6 +20,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f3bcc319_c122a48c",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T12:00:56Z",
+      "side": 1,
+      "message": "I think this could be an ASSERT",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 5
+      },
+      "revId": "ab7dafa9ba4ba982fa0d6d00a64ba1ac91283866",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3174f1f2_8606e536",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T12:00:56Z",
+      "side": 1,
+      "message": "Probably should reset these at the top of the function. Can a stage be removed from a PPO?",
+      "range": {
+        "startLine": 259,
+        "startChar": 0,
+        "endLine": 262,
+        "endChar": 67
+      },
+      "revId": "ab7dafa9ba4ba982fa0d6d00a64ba1ac91283866",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4ab86799_11a971db",
         "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
         "patchSetId": 5
@@ -31,6 +77,30 @@
       "writtenOn": "2021-03-17T22:37:12Z",
       "side": 1,
       "message": "shabi - To get this test to pass, transform feedback with separable problem should be supported. There are several bugs related to it that needs to be fixed but it is too big to handle in this CL. Skipping for now. Will take care of it after closing up tessellation work.",
+      "range": {
+        "startLine": 775,
+        "startChar": 7,
+        "endLine": 775,
+        "endChar": 31
+      },
+      "revId": "ab7dafa9ba4ba982fa0d6d00a64ba1ac91283866",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22f9128c_7a30f5f7",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 775,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T12:00:56Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4ab86799_11a971db",
       "range": {
         "startLine": 775,
         "startChar": 7,
