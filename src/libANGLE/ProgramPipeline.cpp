@@ -534,7 +534,7 @@ angle::Result ProgramPipeline::link(const Context *context)
             return angle::Result::Stop;
         }
 
-        mergedVaryings = GetMergedVaryingsFromShaders(*this);
+        mergedVaryings = GetMergedVaryingsFromShaders(*this, getExecutable());
         // If separable program objects are in use, the set of attributes captured is taken
         // from the program object active on the last vertex processing stage.
         Program *tfProgram = mState.mPrograms[ShaderType::Geometry];

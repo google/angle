@@ -899,17 +899,22 @@ bool ProgramExecutable::linkMergedVaryings(
     }
 
     // Build active shader stage map.
-    ShaderBitSet attachedShadersMask;
+    ShaderBitSet activeShadersMask;
     for (ShaderType shaderType : kAllGraphicsShaderTypes)
     {
-        if (programOrPipeline.getAttachedShader(shaderType))
+        // - Check for attached shaders to handle the case of a Program linking the currently
+        // attached shaders.
+        // - Check for linked shaders to handle the case of a PPO linking separable programs before
+        // drawing.
+        if (programOrPipeline.getAttachedShader(shaderType) ||
+            getLinkedShaderStages().test(shaderType))
         {
-            attachedShadersMask[shaderType] = true;
+            activeShadersMask[shaderType] = true;
         }
     }
 
     if (!varyingPacking->collectAndPackUserVaryings(mInfoLog, context->getCaps(), packMode,
-                                                    attachedShadersMask, mergedVaryings,
+                                                    activeShadersMask, mergedVaryings,
                                                     transformFeedbackVaryingNames, isSeparable))
     {
         return false;

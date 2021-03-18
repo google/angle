@@ -24,6 +24,7 @@ namespace gl
 {
 class HasAttachedShaders;
 class InfoLog;
+class ProgramExecutable;
 struct Caps;
 struct ProgramVaryingRef;
 
@@ -308,7 +309,7 @@ class ProgramVaryingPacking final : angle::NonCopyable
     ANGLE_NO_DISCARD bool collectAndPackUserVaryings(InfoLog &infoLog,
                                                      const Caps &caps,
                                                      PackMode packMode,
-                                                     const ShaderBitSet &attachedShadersMask,
+                                                     const ShaderBitSet &activeShadersMask,
                                                      const ProgramMergedVaryings &mergedVaryings,
                                                      const std::vector<std::string> &tfVaryings,
                                                      bool isSeparableProgram);
@@ -322,7 +323,8 @@ class ProgramVaryingPacking final : angle::NonCopyable
 };
 
 // Takes an abstract handle to a program or pipeline.
-ProgramMergedVaryings GetMergedVaryingsFromShaders(const HasAttachedShaders &programOrPipeline);
+ProgramMergedVaryings GetMergedVaryingsFromShaders(const HasAttachedShaders &programOrPipeline,
+                                                   const ProgramExecutable &programExecutable);
 }  // namespace gl
 
 #endif  // LIBANGLE_VARYINGPACKING_H_

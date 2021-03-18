@@ -1630,7 +1630,7 @@ angle::Result Program::linkImpl(const Context *context)
         InitUniformBlockLinker(mState, &resources.uniformBlockLinker);
         InitShaderStorageBlockLinker(mState, &resources.shaderStorageBlockLinker);
 
-        mergedVaryings = GetMergedVaryingsFromShaders(*this);
+        mergedVaryings = GetMergedVaryingsFromShaders(*this, getExecutable());
         if (!mState.mExecutable->linkMergedVaryings(context, *this, mergedVaryings,
                                                     mState.mTransformFeedbackVaryingNames,
                                                     isSeparable(), &resources.varyingPacking))
