@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a86d1b5c_5e28e0c1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-18T17:00:27Z",
+      "side": 1,
+      "message": "LGTM. It would be nice if we could put in the time to fix this completely and store the necessary linking info in the executables.",
+      "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
