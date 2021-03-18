@@ -81,6 +81,30 @@
       },
       "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b10edc1_28d47cde",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T18:30:08Z",
+      "side": 1,
+      "message": "Ok this is quite hard to follow now, getLinkedShaderStages() is only valid if we get here from PPO, is that right?\n\nMaybe not in this change, but perhaps we can properly extend this \"active\" shaders mask so it can be used for both programs and PPOs everywhere. For programs it would be the attached shaders, for PPOs it would be the \"used\" stages (as in glUseProgramStages).\n\nThen before link (program or PPO), we use active stage mask, and after link, linked stage mask (which, I guess would be the same unless link fails).",
+      "parentUuid": "4e83ea4e_12968301",
+      "range": {
+        "startLine": 896,
+        "startChar": 12,
+        "endLine": 896,
+        "endChar": 62
+      },
+      "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
