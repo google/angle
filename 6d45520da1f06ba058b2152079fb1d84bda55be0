@@ -179,6 +179,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ea977679_c8d7b16c",
+        "filename": "src/tests/egl_tests/EGLMultiContextComputeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-18T20:00:24Z",
+      "side": 1,
+      "message": "I\u0027m not sure I follow.  I see EnumCount and InvalidEnum being used (e.g. in \"PackedGLEnums_autogen.h\", but I\u0027m not sure how to have:\n\n- A header with a generic enum being used by lamba functions and the AbortOnFailure class\n- Have both \"EGLMultiContextTest.cpp\" and \"EGLContextShared.cpp\" have different specific enum\u0027s that are used with the functs/class from the header.\n\nCan you point at an example to follow?\n\nOr, is the idea to simply have generic \"Step\" names and change both .cpp files to use those Step\u0027s instead of the specific/different Step\u0027s they have now?",
+      "parentUuid": "f7bf874f_7c1e61bf",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 6
+      },
+      "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0eceaa58_bfdb8a1e",
         "filename": "src/tests/egl_tests/EGLMultiContextComputeTest.cpp",
         "patchSetId": 2
