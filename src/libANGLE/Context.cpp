@@ -8815,6 +8815,7 @@ angle::Result Context::onProgramLink(Program *programObject)
         if (programObject->isLinked())
         {
             ANGLE_TRY(mState.onProgramExecutableChange(this, programObject));
+            programObject->onStateChange(angle::SubjectMessage::ProgramRelinked);
         }
         mStateCache.onProgramExecutableChange(this);
     }

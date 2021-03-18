@@ -312,15 +312,19 @@ class ProgramExecutable final : public angle::Subject
     GLuint getUniformIndexFromImageIndex(GLuint imageIndex) const;
 
     void saveLinkedStateInfo(const ProgramState &state);
-    std::vector<sh::ShaderVariable> getLinkedOutputVaryings(ShaderType shaderType)
+    const std::vector<sh::ShaderVariable> &getLinkedOutputVaryings(ShaderType shaderType) const
     {
         return mLinkedOutputVaryings[shaderType];
     }
-    std::vector<sh::ShaderVariable> getLinkedInputVaryings(ShaderType shaderType)
+    const std::vector<sh::ShaderVariable> &getLinkedInputVaryings(ShaderType shaderType) const
     {
         return mLinkedInputVaryings[shaderType];
     }
-    int getLinkedShaderVersion(ShaderType shaderType) { return mLinkedShaderVersions[shaderType]; }
+
+    int getLinkedShaderVersion(ShaderType shaderType) const
+    {
+        return mLinkedShaderVersions[shaderType];
+    }
 
     bool isYUVOutput() const;
 

@@ -54,6 +54,9 @@ enum class SubjectMessage
 
     // Indicates an external change to the default framebuffer.
     SurfaceChanged,
+
+    // Indicates a separable program was successfully re-linked.
+    ProgramRelinked,
 };
 
 // The observing class inherits from this interface class.

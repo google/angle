@@ -692,6 +692,65 @@ TEST_P(ProgramPipelineTest31, VaryingIOBlockSeparableProgram)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test modifying a shader and re-linking it updates the PPO too
+TEST_P(ProgramPipelineTest31, ModifyAndRelinkShader)
+{
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    const GLchar *vertString      = essl31_shaders::vs::Simple();
+    const GLchar *fragStringGreen = essl31_shaders::fs::Green();
+    const GLchar *fragStringRed   = essl31_shaders::fs::Red();
+
+    GLShader vertShader(GL_VERTEX_SHADER);
+    GLShader fragShader(GL_FRAGMENT_SHADER);
+    mVertProg = glCreateProgram();
+    mFragProg = glCreateProgram();
+
+    // Compile and link a separable vertex shader
+    glShaderSource(vertShader, 1, &vertString, nullptr);
+    glCompileShader(vertShader);
+    glProgramParameteri(mVertProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(mVertProg, vertShader);
+    glLinkProgram(mVertProg);
+    EXPECT_GL_NO_ERROR();
+
+    // Compile and link a separable fragment shader
+    glShaderSource(fragShader, 1, &fragStringGreen, nullptr);
+    glCompileShader(fragShader);
+    glProgramParameteri(mFragProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(mFragProg, fragShader);
+    glLinkProgram(mFragProg);
+    EXPECT_GL_NO_ERROR();
+
+    // Generate a program pipeline and attach the programs
+    glGenProgramPipelines(1, &mPipeline);
+    glUseProgramStages(mPipeline, GL_VERTEX_SHADER_BIT, mVertProg);
+    glUseProgramStages(mPipeline, GL_FRAGMENT_SHADER_BIT, mFragProg);
+    glBindProgramPipeline(mPipeline);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw once to ensure this worked fine
+    drawQuadWithPPO("a_position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    // Detach the fragment shader and modify it such that it no longer fits with this pipeline
+    glDetachShader(mFragProg, fragShader);
+
+    // Modify the FS and re-link it
+    glShaderSource(fragShader, 1, &fragStringRed, nullptr);
+    glCompileShader(fragShader);
+    glProgramParameteri(mFragProg, GL_PROGRAM_SEPARABLE, GL_TRUE);
+    glAttachShader(mFragProg, fragShader);
+    glLinkProgram(mFragProg);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw with the PPO again and verify it's now red
+    drawQuadWithPPO("a_position", 0.5f, 1.0f);
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramPipelineTest);
 ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ProgramPipelineTest);
 

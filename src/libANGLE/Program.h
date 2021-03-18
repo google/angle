@@ -484,6 +484,7 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
     void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 
+    // HasAttachedShaders implementation
     Shader *getAttachedShader(ShaderType shaderType) const override;
 
     void bindAttributeLocation(GLuint index, const char *name);

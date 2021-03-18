@@ -143,6 +143,7 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     // ObserverInterface implementation.
     void onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message) override;
 
+    // HasAttachedShaders implementation
     Shader *getAttachedShader(ShaderType shaderType) const override;
 
   private:
@@ -154,6 +155,7 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     void updateExecutableGeometryProperties();
     void updateExecutableTessellationProperties();
     void updateFragmentInoutRange();
+    void updateLinkedVaryings();
     void updateHasBooleans();
     void updateExecutable();
 
