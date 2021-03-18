@@ -34,6 +34,80 @@
       "parentUuid": "20ed6039_7bd9aaff",
       "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb400e69_5fd40aea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T15:38:36Z",
+      "side": 1,
+      "message": "The test is generally the way I expected it. You could add some logs in the internals of Vulkan to make sure everything does happen the way we want it (i.e. a submission between the dispatch calls).",
+      "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f8aec2c_b76a0562",
+        "filename": "src/tests/egl_tests/EGLMultiContextComputeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T15:38:36Z",
+      "side": 1,
+      "message": "I\u0027d just call the file EGLMultiContextTest.cpp and remove Compute from the names everywhere. Future tests could be put here too, and don\u0027t have to be about compute.",
+      "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b8fd0e8_218d1221",
+        "filename": "src/tests/egl_tests/EGLMultiContextComputeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T15:38:36Z",
+      "side": 1,
+      "message": "Should find a way to deduplicate this code",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 6
+      },
+      "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0eceaa58_bfdb8a1e",
+        "filename": "src/tests/egl_tests/EGLMultiContextComputeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T15:38:36Z",
+      "side": 1,
+      "message": "The test probably didn\u0027t fail because we defer this everywhere except the Android bots. Could you try something else, like glFinish()?",
+      "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
