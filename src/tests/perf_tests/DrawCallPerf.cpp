@@ -26,6 +26,7 @@ enum class StateChange
     VertexBufferCycle,
     Scissor,
     InvalidEnum,
+    EnumCount = InvalidEnum,
 };
 
 constexpr size_t kCycleVBOPoolSize = 200;

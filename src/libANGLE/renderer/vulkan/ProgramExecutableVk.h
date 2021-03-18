@@ -285,7 +285,8 @@ class ProgramExecutableVk
     ProgramVk *mProgram;
     ProgramPipelineVk *mProgramPipeline;
 
-    ProgramExecutablePerfCounters mObjectPerfCounters;
+    ProgramExecutablePerfCounters mPerfCounters;
+    ProgramExecutablePerfCounters mCumulativePerfCounters;
 };
 
 }  // namespace rx

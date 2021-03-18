@@ -34,6 +34,12 @@
 
 namespace rx
 {
+struct InternalShaderPerfCounters
+{
+    // Total descriptor set allocations for all UtilsVk::Functions
+    uint32_t descriptorSetsAllocated;
+};
+
 class UtilsVk : angle::NonCopyable
 {
   public:
@@ -178,12 +184,6 @@ class UtilsVk : angle::NonCopyable
         bool unresolveStencil;
     };
 
-    struct PerfCounters
-    {
-        // Total descriptor set allocations for all UtilsVk::Functions
-        uint32_t descriptorSetsAllocated;
-    };
-
     // Based on the maximum number of levels in GenerateMipmap.comp.
     static constexpr uint32_t kGenerateMipmapMaxLevels = 6;
     static uint32_t GetGenerateMipmapMaxLevels(ContextVk *contextVk);
@@ -285,7 +285,7 @@ class UtilsVk : angle::NonCopyable
                               const vk::ImageView *destView,
                               const OverlayDrawParameters &params);
 
-    const PerfCounters getObjectPerfCounters() const { return mObjectPerfCounters; }
+    InternalShaderPerfCounters getAndResetObjectPerfCounters();
 
   private:
     ANGLE_ENABLE_STRUCT_PADDING_WARNINGS
@@ -569,7 +569,8 @@ class UtilsVk : angle::NonCopyable
     vk::Sampler mPointSampler;
     vk::Sampler mLinearSampler;
 
-    PerfCounters mObjectPerfCounters;
+    InternalShaderPerfCounters mPerfCounters;
+    InternalShaderPerfCounters mCumulativePerfCounters;
 };
 
 }  // namespace rx

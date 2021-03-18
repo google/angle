@@ -58,11 +58,11 @@ class EnumIterator final
     UnderlyingType mValue;
 };
 
-template <typename E>
+template <typename E, size_t MaxSize = EnumSize<E>()>
 struct AllEnums
 {
     EnumIterator<E> begin() const { return {static_cast<E>(0)}; }
-    EnumIterator<E> end() const { return {E::InvalidEnum}; }
+    EnumIterator<E> end() const { return {static_cast<E>(MaxSize)}; }
 };
 
 // PackedEnumMap<E, T> is like an std::array<T, E::EnumCount> but is indexed with enum values. It
@@ -155,6 +155,16 @@ class PackedEnumMap
 
     bool operator==(const PackedEnumMap &rhs) const { return mPrivateData == rhs.mPrivateData; }
     bool operator!=(const PackedEnumMap &rhs) const { return mPrivateData != rhs.mPrivateData; }
+
+    template <typename SubT = T>
+    typename std::enable_if<std::is_integral<SubT>::value>::type operator+=(
+        const PackedEnumMap<E, SubT, MaxSize> &rhs)
+    {
+        for (E e : AllEnums<E, MaxSize>())
+        {
+            at(e) += rhs[e];
+        }
+    }
 
   private:
     Storage mPrivateData;

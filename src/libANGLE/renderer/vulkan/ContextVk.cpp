@@ -397,7 +397,8 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
       mGpuClockSync{std::numeric_limits<double>::max(), std::numeric_limits<double>::max()},
       mGpuEventTimestampOrigin(0),
       mPerfCounters{},
-      mObjectPerfCounters{},
+      mContextPerfCounters{},
+      mCumulativeContextPerfCounters{},
       mContextPriority(renderer->getDriverPriority(GetContextPriority(state))),
       mShareGroupVk(vk::GetImpl(state.getShareGroup()))
 {
@@ -521,8 +522,6 @@ ContextVk::ContextVk(const gl::State &state, gl::ErrorSet *errorSet, RendererVk 
     mDescriptorBufferInfos.reserve(kDescriptorBufferInfosInitialSize);
     mDescriptorImageInfos.reserve(kDescriptorImageInfosInitialSize);
     mWriteDescriptorSets.reserve(kDescriptorWriteInfosInitialSize);
-
-    mObjectPerfCounters.descriptorSetsAllocated.fill(0);
 }
 
 ContextVk::~ContextVk() = default;
@@ -1790,12 +1789,13 @@ void ContextVk::syncObjectPerfCounters()
     uint32_t descriptorSetAllocations = 0;
 
     // ContextVk's descriptor set allocations
-    for (const uint32_t count : mObjectPerfCounters.descriptorSetsAllocated)
+    ContextVkPerfCounters contextCounters = getAndResetObjectPerfCounters();
+    for (uint32_t count : contextCounters.descriptorSetsAllocated)
     {
         descriptorSetAllocations += count;
     }
     // UtilsVk's descriptor set allocations
-    descriptorSetAllocations += mUtils.getObjectPerfCounters().descriptorSetsAllocated;
+    descriptorSetAllocations += mUtils.getAndResetObjectPerfCounters().descriptorSetsAllocated;
     // ProgramExecutableVk's descriptor set allocations
     const gl::State &state                             = getState();
     const gl::ShaderProgramManager &shadersAndPrograms = state.getShaderProgramManagerForCapture();
@@ -4429,7 +4429,7 @@ angle::Result ContextVk::updateDriverUniformsDescriptorSet(
     ANGLE_TRY(mDriverUniformsDescriptorPools[pipelineType].allocateSetsAndGetInfo(
         this, driverUniforms->descriptorSetLayout.get().ptr(), 1,
         &driverUniforms->descriptorPoolBinding, &driverUniforms->descriptorSet, &newPoolAllocated));
-    mObjectPerfCounters.descriptorSetsAllocated[ToUnderlying(pipelineType)]++;
+    mContextPerfCounters.descriptorSetsAllocated[pipelineType]++;
 
     // Clear descriptor set cache. It may no longer be valid.
     if (newPoolAllocated)
@@ -5710,18 +5710,25 @@ void ContextVk::outputCumulativePerfCounters()
         return;
     }
 
-    {
-        INFO() << "Context Descriptor Set Allocations: ";
+    INFO() << "Context Descriptor Set Allocations: ";
 
-        for (size_t pipelineType = 0;
-             pipelineType < mObjectPerfCounters.descriptorSetsAllocated.size(); ++pipelineType)
+    for (PipelineType pipelineType : angle::AllEnums<PipelineType>())
+    {
+        uint32_t count = mCumulativeContextPerfCounters.descriptorSetsAllocated[pipelineType];
+        if (count > 0)
         {
-            uint32_t count = mObjectPerfCounters.descriptorSetsAllocated[pipelineType];
-            if (count > 0)
-            {
-                INFO() << "    PipelineType " << pipelineType << ": " << count;
-            }
+            INFO() << "    PipelineType " << ToUnderlying(pipelineType) << ": " << count;
         }
     }
+}
+
+ContextVkPerfCounters ContextVk::getAndResetObjectPerfCounters()
+{
+    mCumulativeContextPerfCounters.descriptorSetsAllocated +=
+        mContextPerfCounters.descriptorSetsAllocated;
+
+    ContextVkPerfCounters counters               = mContextPerfCounters;
+    mContextPerfCounters.descriptorSetsAllocated = {};
+    return counters;
 }
 }  // namespace rx

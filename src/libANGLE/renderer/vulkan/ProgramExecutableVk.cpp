@@ -218,7 +218,8 @@ ProgramExecutableVk::ProgramExecutableVk()
       mDynamicBufferOffsets{},
       mProgram(nullptr),
       mProgramPipeline(nullptr),
-      mObjectPerfCounters{}
+      mPerfCounters{},
+      mCumulativePerfCounters{}
 {}
 
 ProgramExecutableVk::~ProgramExecutableVk()
@@ -474,7 +475,7 @@ angle::Result ProgramExecutableVk::allocateDescriptorSetAndGetInfo(
         &mDescriptorSets[descriptorSetIndex], newPoolAllocatedOut));
     mEmptyDescriptorSets[descriptorSetIndex] = VK_NULL_HANDLE;
 
-    ++mObjectPerfCounters.descriptorSetsAllocated[descriptorSetIndex];
+    ++mPerfCounters.descriptorSetsAllocated[descriptorSetIndex];
 
     return angle::Result::Continue;
 }
@@ -1744,7 +1745,7 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
                     &mDescriptorPoolBindings[descriptorSetIndex],
                     &mEmptyDescriptorSets[descriptorSetIndex]));
 
-                ++mObjectPerfCounters.descriptorSetsAllocated[descriptorSetIndex];
+                ++mPerfCounters.descriptorSetsAllocated[descriptorSetIndex];
             }
             descSet = mEmptyDescriptorSets[descriptorSetIndex];
         }
@@ -1778,7 +1779,7 @@ void ProgramExecutableVk::outputCumulativePerfCounters()
 
     for (DescriptorSetIndex descriptorSetIndex : angle::AllEnums<DescriptorSetIndex>())
     {
-        uint32_t count = mObjectPerfCounters.descriptorSetsAllocated[descriptorSetIndex];
+        uint32_t count = mCumulativePerfCounters.descriptorSetsAllocated[descriptorSetIndex];
         if (count > 0)
         {
             text << "    DescriptorSetIndex " << ToUnderlying(descriptorSetIndex) << ": " << count
@@ -1805,8 +1806,10 @@ void ProgramExecutableVk::outputCumulativePerfCounters()
 
 ProgramExecutablePerfCounters ProgramExecutableVk::getAndResetObjectPerfCounters()
 {
-    ProgramExecutablePerfCounters counters      = mObjectPerfCounters;
-    mObjectPerfCounters.descriptorSetsAllocated = {};
+    mCumulativePerfCounters.descriptorSetsAllocated += mPerfCounters.descriptorSetsAllocated;
+
+    ProgramExecutablePerfCounters counters = mPerfCounters;
+    mPerfCounters.descriptorSetsAllocated  = {};
     return counters;
 }
 

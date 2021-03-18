@@ -37,6 +37,22 @@ class ShareGroupVk;
 static constexpr uint32_t kMaxGpuEventNameLen = 32;
 using EventName                               = std::array<char, kMaxGpuEventNameLen>;
 
+enum class PipelineType
+{
+    Graphics = 0,
+    Compute  = 1,
+
+    InvalidEnum = 2,
+    EnumCount   = 2,
+};
+
+using ContextVkDescriptorSetList = angle::PackedEnumMap<PipelineType, uint32_t>;
+
+struct ContextVkPerfCounters
+{
+    ContextVkDescriptorSetList descriptorSetsAllocated;
+};
+
 class ContextVk : public ContextImpl, public vk::Context, public MultisampleTextureInitializer
 {
   public:
@@ -658,15 +674,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
         void destroy(RendererVk *rendererVk);
     };
 
-    enum class PipelineType
-    {
-        Graphics = 0,
-        Compute  = 1,
-
-        InvalidEnum = 2,
-        EnumCount   = 2,
-    };
-
     // The GpuEventQuery struct holds together a timestamp query and enough data to create a
     // trace event based on that. Use traceGpuEvent to insert such queries.  They will be readback
     // when the results are available, without inserting a GPU bubble.
@@ -698,14 +705,6 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     {
         double gpuTimestampS;
         double cpuTimestampS;
-    };
-
-    // Performance Counters specific to this object type
-    using DescriptorSetList =
-        std::array<uint32_t, ToUnderlying(ContextVk::PipelineType::EnumCount)>;
-    struct PerfCounters
-    {
-        DescriptorSetList descriptorSetsAllocated;
     };
 
     class ScopedDescriptorSetUpdates;
@@ -932,6 +931,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     SpecConstUsageBits getCurrentProgramSpecConstUsageBits() const;
     void updateGraphicsPipelineDescWithSpecConstUsageBits(SpecConstUsageBits usageBits);
 
+    ContextVkPerfCounters getAndResetObjectPerfCounters();
+
     std::array<GraphicsDirtyBitHandler, DIRTY_BIT_MAX> mGraphicsDirtyBitHandlers;
     std::array<ComputeDirtyBitHandler, DIRTY_BIT_MAX> mComputeDirtyBitHandlers;
 
@@ -1087,7 +1088,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
 
     // A mix of per-frame and per-run counters.
     vk::PerfCounters mPerfCounters;
-    PerfCounters mObjectPerfCounters;
+    ContextVkPerfCounters mContextPerfCounters;
+    ContextVkPerfCounters mCumulativeContextPerfCounters;
 
     gl::State::DirtyBits mPipelineDirtyBitsMask;
 
