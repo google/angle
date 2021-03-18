@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebe11cbb_2866fd2d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:19:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e37995b2_8dc987fd",
+      "range": {
+        "startLine": 157,
+        "startChar": 51,
+        "endLine": 157,
+        "endChar": 76
+      },
+      "revId": "89bd1152911b14217b2ee66c1ba17290c8510f30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "daae2e47_a20b39dd",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1a58ebe_21fbdecf",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 5795,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:19:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "daae2e47_a20b39dd",
+      "range": {
+        "startLine": 5792,
+        "startChar": 0,
+        "endLine": 5795,
+        "endChar": 5
+      },
+      "revId": "89bd1152911b14217b2ee66c1ba17290c8510f30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2f508b1d_6066488d",
@@ -60,6 +108,24 @@
       "writtenOn": "2021-03-18T16:39:18Z",
       "side": 1,
       "message": "Any issues with multiple contexts? I realize that applies to mCurrentLayout, I don\u0027t know if ever thought about it.",
+      "revId": "89bd1152911b14217b2ee66c1ba17290c8510f30",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31b05b0f_295041b1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 16
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T19:19:11Z",
+      "side": 1,
+      "message": "I think the way it works is that we always call flushImpl from ContextVk::onUnMakeCurrent.",
+      "parentUuid": "2f508b1d_6066488d",
       "revId": "89bd1152911b14217b2ee66c1ba17290c8510f30",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
