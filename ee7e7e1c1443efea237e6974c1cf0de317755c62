@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "648591e9_9d01a300",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1367,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T16:21:36Z",
+      "side": 1,
+      "message": "Bug here is that commandBuffer is not valid anymore if the above line actually does anything.",
+      "parentUuid": "c8334080_24a8baa4",
+      "range": {
+        "startLine": 1363,
+        "startChar": 0,
+        "endLine": 1367,
+        "endChar": 49
+      },
+      "revId": "ee7e7e1c1443efea237e6974c1cf0de317755c62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e0d957a5_3bf481d4",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 14
