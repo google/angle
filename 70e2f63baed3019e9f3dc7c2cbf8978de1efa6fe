@@ -16,6 +16,46 @@
       "message": "LGTM, wish there was a way to automatically enforce the addition of new members to serialization.  I know the size of the class has been tried before, but falls over when run on multiple architectures.",
       "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa67f182_8ca89537",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-18T17:01:13Z",
+      "side": 1,
+      "message": "LGTM. You can also update the header version.",
+      "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcd634f5_e9016533",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-18T17:01:13Z",
+      "side": 1,
+      "message": "suggest you put this at the top",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 242,
+        "endChar": 76
+      },
+      "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
