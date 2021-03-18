@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bcf04ff2_ec7de3fa",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-18T17:55:20Z",
+      "side": 1,
+      "message": "I\u0027d like to see this removed TBH. Not sure what business the front-end has to get involved with this.",
+      "parentUuid": "086849a3_34add21a",
+      "range": {
+        "startLine": 112,
+        "startChar": 11,
+        "endLine": 112,
+        "endChar": 24
+      },
+      "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3aac288e_12aacc9d",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 11
