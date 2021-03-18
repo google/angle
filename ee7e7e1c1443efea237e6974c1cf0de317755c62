@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c8334080_24a8baa4",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 1367,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:07:24Z",
+      "side": 1,
+      "message": "Should be common, I think. But there isn\u0027t really benefit to defer the call of flushCommandsAndEndRenderPass() as well (this call basically ends a RP, not really submit to GPU).",
+      "parentUuid": "5f70141e_a3020b4b",
+      "range": {
+        "startLine": 1363,
+        "startChar": 0,
+        "endLine": 1367,
+        "endChar": 49
+      },
+      "revId": "ee7e7e1c1443efea237e6974c1cf0de317755c62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e0d957a5_3bf481d4",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 14
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-17T18:24:33Z",
       "side": 1,
       "message": "nit: being",
+      "range": {
+        "startLine": 5738,
+        "startChar": 92,
+        "endLine": 5738,
+        "endChar": 96
+      },
+      "revId": "ee7e7e1c1443efea237e6974c1cf0de317755c62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "743c0c55_76c8c5d1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 5738,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:07:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0d957a5_3bf481d4",
       "range": {
         "startLine": 5738,
         "startChar": 92,
@@ -60,6 +108,30 @@
       "writtenOn": "2021-03-17T21:33:32Z",
       "side": 1,
       "message": "naming suggestion: PackedImageAttachmentArray",
+      "range": {
+        "startLine": 983,
+        "startChar": 6,
+        "endLine": 983,
+        "endChar": 31
+      },
+      "revId": "ee7e7e1c1443efea237e6974c1cf0de317755c62",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "22ef3df2_cd6bf4c7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 983,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-18T01:07:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36ccfde0_07949bc1",
       "range": {
         "startLine": 983,
         "startChar": 6,
