@@ -457,6 +457,7 @@ TEST_P(EGLSurfaceTest, ResizeWindow)
     ANGLE_SKIP_TEST_IF(IsLinux() && isSwiftshader());
     // http://anglebug.com/5485
     ANGLE_SKIP_TEST_IF(IsIOS());
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsARM());
 
     // Necessary for a window resizing test if there is no per-frame window size query
     setWindowVisible(mOSWindow, true);
