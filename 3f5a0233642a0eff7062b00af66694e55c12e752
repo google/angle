@@ -326,6 +326,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "59417b8f_414dc5b9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1646,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-19T04:39:22Z",
+      "side": 1,
+      "message": "Because the caller function FramebufferVk::resolveColorWithSubpass() is modifying the drawRenderTarget and calling drawRenderTarget-\u003eonColorDraw() again, which will mess up the state in CommandBufferHelper. There is a test failure on one of the patchset which endup with this change.",
+      "parentUuid": "fa5fc878_eb5ab8f0",
+      "range": {
+        "startLine": 1645,
+        "startChar": 75,
+        "endLine": 1646,
+        "endChar": 37
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1f8c5199_15e214ee",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 15
