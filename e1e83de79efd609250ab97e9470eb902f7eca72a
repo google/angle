@@ -86,6 +86,24 @@
       "parentUuid": "3ae7d692_8653f06c",
       "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf65628b_f4f13e9c",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2021-03-19T16:27:26Z",
+      "side": 1,
+      "message": "As discussed, I turned it into a \"feature\".\n\nFor what it\u0027s worth, I still don\u0027t think this should be exposed to Chrome and tests and be modifiable. As a reference implementation that we have control over, SwiftShader shouldn\u0027t require any workarounds. Only the urgency of landing SwANGLE for Cuttlefish justifies this hack.\n\nAnyway, since it\u0027s all intended to be reverted once the root cause has been fixed, it doesn\u0027t matter much what form this takes.",
+      "parentUuid": "e7523fb2_f40b4297",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
