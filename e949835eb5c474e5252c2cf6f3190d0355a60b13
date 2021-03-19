@@ -33,6 +33,24 @@
       "message": "I know this is temporary, but it\u0027s worth adding a comment saying that it is, how it\u0027s going to be addressed, and most importantly we don\u0027t attempt to store it uncompressed because the Android blob cache will reject it anyway.\n\nTechnically you could also consider storing it uncompressed, but I don\u0027t think we have a user currently that would be affected.",
       "revId": "e949835eb5c474e5252c2cf6f3190d0355a60b13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7db95bc_ba78a097",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-19T06:21:50Z",
+      "side": 1,
+      "message": "Thanks Shahbaz, a comment has been added. For the pipeline cache less than 64kb, I think the added compression operation will not affect the function of blob cache.",
+      "parentUuid": "945d5db0_ab43dbc1",
+      "revId": "e949835eb5c474e5252c2cf6f3190d0355a60b13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
