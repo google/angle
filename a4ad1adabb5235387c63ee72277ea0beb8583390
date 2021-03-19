@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98b8a460_ff121769",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1332,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T04:11:11Z",
+      "side": 1,
+      "message": "This sounds a bit strange (we aren\u0027t releasing anything), so maybe we can remove this detail from here and let `optimizeRenderPassForPresent` handle it.\n\noptimizeRenderPassForPresent could take a bool like `isLastOperationBeforePresent` that takes the value of the if condition, then inside that function you can decide to change the layout or not, and then either way finalize it.",
+      "revId": "a4ad1adabb5235387c63ee72277ea0beb8583390",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

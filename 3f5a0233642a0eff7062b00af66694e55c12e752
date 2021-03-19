@@ -302,6 +302,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fa5fc878_eb5ab8f0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1646,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T04:11:11Z",
+      "side": 1,
+      "message": "I still don\u0027t understand why we need to finalize the color image layout when adding a resolve attachment. :-?",
+      "parentUuid": "5b4217df_b4b9001c",
+      "range": {
+        "startLine": 1645,
+        "startChar": 75,
+        "endLine": 1646,
+        "endChar": 37
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1f8c5199_15e214ee",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 15
