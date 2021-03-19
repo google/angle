@@ -497,11 +497,11 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
                                                     layerCount, image, resolveImage);
     }
 
-    void onImageHelperRelease(const vk::ImageHelper *image)
+    void finalizeImageLayout(const vk::ImageHelper *image)
     {
         if (mRenderPassCommands->started())
         {
-            mRenderPassCommands->onImageHelperRelease(this, image);
+            mRenderPassCommands->finalizeImageLayout(this, image);
         }
     }
 

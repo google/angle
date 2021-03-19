@@ -1358,7 +1358,7 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *contex
     }
 }
 
-void CommandBufferHelper::onImageHelperRelease(Context *context, const ImageHelper *image)
+void CommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelper *image)
 {
     ASSERT(mIsRenderPassCommandBuffer);
 
@@ -3909,7 +3909,7 @@ void ImageHelper::releaseImageFromShareContexts(RendererVk *renderer, ContextVk 
         ShareContextSet &shareContextSet = *contextVk->getShareGroupVk()->getShareContextSet();
         for (ContextVk *ctx : shareContextSet)
         {
-            ctx->onImageHelperRelease(this);
+            ctx->finalizeImageLayout(this);
         }
     }
 
@@ -5754,7 +5754,7 @@ void ImageHelper::stageSelfForBaseLevel(ContextVk *contextVk)
     // Because we are cloning this object to another object, we must finalize the layout if it is
     // being used by current renderpass as attachment. Otherwise we are copying the incorrect layout
     // since it is determined at endRenderPass time.
-    contextVk->onImageHelperRelease(this);
+    contextVk->finalizeImageLayout(this);
 
     std::unique_ptr<ImageHelper> prevImage = std::make_unique<ImageHelper>();
     // Move the necessary information for staged update to work, and keep the rest as part of this

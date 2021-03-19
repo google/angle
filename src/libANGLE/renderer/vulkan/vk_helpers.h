@@ -1086,7 +1086,8 @@ class CommandBufferHelper : angle::NonCopyable
         return mRenderPassStarted;
     }
 
-    void onImageHelperRelease(Context *context, const ImageHelper *image);
+    // Finalize the layout if image has any deferred layout transition.
+    void finalizeImageLayout(Context *context, const ImageHelper *image);
 
     void beginRenderPass(const Framebuffer &framebuffer,
                          const gl::Rectangle &renderArea,
