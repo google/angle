@@ -16,6 +16,23 @@
       "message": "Presubmit will not pass on windows until https://crbug.com/1187476 is resolved.",
       "revId": "1a3a44ab6f23dc50efdf055cf713d689f3ffc678",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f613c5e_02a134cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-19T21:21:31Z",
+      "side": 1,
+      "message": "LGTM when upstream issue is resolved.",
+      "revId": "1a3a44ab6f23dc50efdf055cf713d689f3ffc678",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
