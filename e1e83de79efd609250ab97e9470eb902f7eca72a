@@ -18,6 +18,41 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0065a969_d89e2340",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-19T16:08:04Z",
+      "side": 1,
+      "message": "Implementation detail -",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d36990f_3245a259",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-19T16:08:04Z",
+      "side": 1,
+      "message": "Because AcquireNextImage doesn\u0027t happen until some draw (late acquire), but BufferAge needs buffer frame number and current frame count, SurfaceVk.cpp -WindowSurfaceVk::getBufferAge can call doDeferredAcquireNextImage() which can take time getting the next buffer.\n\nIf you have 2 buffers, I can see that you may have waits, and you can\u0027t look ahead into the mSwapchainImages[mCurrentSwapchainImageIndex] without ANI.",
+      "parentUuid": "9dd96e2f_6d097dc6",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3ae7d692_8653f06c",
