@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa2accf5_7a99f20f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-19T16:29:33Z",
+      "side": 1,
+      "message": "As Jamie suggested the crash this check is fixing might occur due to me incorrectly using `context-\u003egetState().gles1().getActiveAttributesMask()`. The crash only happens in Summoners War, and does not occur for other ES1 apps like Dr. Driving.",
+      "revId": "4caa4fe20decd7da5cea70457be2dd921f472aab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
