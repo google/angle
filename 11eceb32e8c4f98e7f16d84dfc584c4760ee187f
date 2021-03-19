@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f40ac07e_afe0df58",
+        "filename": "BUILD.gn",
+        "patchSetId": 1
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "I\u0027ve moved it to common like you suggested below.",
+      "parentUuid": "19c7e93a_56bf0cd3",
+      "range": {
+        "startLine": 298,
+        "startChar": 5,
+        "endLine": 298,
+        "endChar": 40
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5de80bb_79fea745",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-03-15T17:37:03Z",
       "side": 1,
       "message": "missing header.",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9e98276_a8803be0",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "f5de80bb_79fea745",
       "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -64,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b3f828c_a421f956",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "0383acd6_f127c89e",
+      "range": {
+        "startLine": 6,
+        "startChar": 29,
+        "endLine": 6,
+        "endChar": 31
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "689cb0c7_0272647a",
@@ -77,6 +143,30 @@
       "writtenOn": "2021-03-15T17:37:03Z",
       "side": 1,
       "message": "nit: suggest we use the angle namespace",
+      "range": {
+        "startLine": 10,
+        "startChar": 10,
+        "endLine": 10,
+        "endChar": 12
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87ee0839_f50b60d6",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Changed.",
+      "parentUuid": "689cb0c7_0272647a",
       "range": {
         "startLine": 10,
         "startChar": 10,
@@ -112,6 +202,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6dd8cfca_39f79ff7",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Well, but this function expects the length of the input to be a multiple of four, so i can either copy the data and pad it, or do some post-iteration. I\u0027ve kept SHA1 for now.",
+      "parentUuid": "12abcb0b_a4b4d8bf",
+      "range": {
+        "startLine": 50,
+        "startChar": 17,
+        "endLine": 50,
+        "endChar": 30
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "40e43313_0f4a8253",
         "filename": "src/libANGLE/JsonSerializer.h",
         "patchSetId": 1
@@ -129,6 +243,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2617d5ad_9f40e945",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "For now I put it in common, I\u0027m not sure what parts are not included in angle_common, so I keep this open for now.",
+      "parentUuid": "40e43313_0f4a8253",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f77d852b_b93e319c",
         "filename": "src/libANGLE/JsonSerializer.h",
         "patchSetId": 1
@@ -140,6 +272,30 @@
       "writtenOn": "2021-03-15T17:37:03Z",
       "side": 1,
       "message": "nit: 2021",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af9ebfaf_79ec9f91",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "f77d852b_b93e319c",
       "range": {
         "startLine": 2,
         "startChar": 13,
@@ -173,6 +329,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "89edc4da_83925ee1",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "52d66472_f2695bb0",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 2
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17321cef_028b675f",
@@ -196,6 +376,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7eaa800_0a3ded7c",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17321cef_028b675f",
+      "range": {
+        "startLine": 17,
+        "startChar": 10,
+        "endLine": 17,
+        "endChar": 12
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0cdebb15_001336d1",
@@ -209,6 +413,30 @@
       "writtenOn": "2021-03-15T17:37:03Z",
       "side": 1,
       "message": "nit: can be final.",
+      "range": {
+        "startLine": 20,
+        "startChar": 6,
+        "endLine": 20,
+        "endChar": 21
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ee9fa4d_87ecb47e",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0cdebb15_001336d1",
       "range": {
         "startLine": 20,
         "startChar": 6,
@@ -265,6 +493,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be04831f_ebe8d40d",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Changed accordingly",
+      "parentUuid": "77b12f8d_d4d8ba60",
+      "range": {
+        "startLine": 43,
+        "startChar": 18,
+        "endLine": 43,
+        "endChar": 20
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "107bbb4f_9abb776f",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Changed accordingly.",
+      "parentUuid": "721cad97_471d1d92",
+      "range": {
+        "startLine": 43,
+        "startChar": 13,
+        "endLine": 43,
+        "endChar": 18
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e1100f6_93ca96e5",
@@ -278,6 +554,30 @@
       "writtenOn": "2021-03-15T17:37:03Z",
       "side": 1,
       "message": "do you need to use shared pointers? who is sharing ownership in this class?",
+      "range": {
+        "startLine": 67,
+        "startChar": 30,
+        "endLine": 67,
+        "endChar": 40
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55ccb4bf_88d6593f",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "\u003e do you need to use shared pointers? who is sharing ownership in this class?\n\nFirst I had some problems with std::unique_ptr. I went back to it, added a bunch of std::move and separated the name and the value, because I got compile errors from std::pair usage. With that it works now.",
+      "parentUuid": "0e1100f6_93ca96e5",
       "range": {
         "startLine": 67,
         "startChar": 30,
@@ -311,6 +611,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a691be9c_07b0c189",
+        "filename": "src/libANGLE/JsonSerializer_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Fixed.",
+      "parentUuid": "2d9466a2_ad2bc6b3",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f551144_434a8d3e",
@@ -328,6 +652,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca124d63_7842a6c7",
+        "filename": "src/libANGLE/JsonSerializer_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "7f551144_434a8d3e",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4d1eedf4_26d57ae2",
@@ -341,6 +683,30 @@
       "writtenOn": "2021-03-15T17:37:03Z",
       "side": 1,
       "message": "thanks for adding all the tests! please include a one-line comment before each one.",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 6
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8b619b4_9265dd33",
+        "filename": "src/libANGLE/JsonSerializer_unittest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:59:25Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "4d1eedf4_26d57ae2",
       "range": {
         "startLine": 20,
         "startChar": 0,
