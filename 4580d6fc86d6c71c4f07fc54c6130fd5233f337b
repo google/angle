@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "fefec930_fa7b0bb6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T03:00:09Z",
+      "side": 1,
+      "message": "So what\u0027s the error exactly? I want to know how generic or specific the error is.",
+      "parentUuid": "9d6b259d_1c157a90",
+      "range": {
+        "startLine": 10,
+        "startChar": 50,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "4580d6fc86d6c71c4f07fc54c6130fd5233f337b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "425a7bf2_cc0433c4",
