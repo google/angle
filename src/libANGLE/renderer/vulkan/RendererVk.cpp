@@ -2165,6 +2165,13 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, exposeNonConformantExtensionsAndVersions,
                             kExposeNonConformantExtensionsAndVersions);
 
+    // The EGL_EXT_buffer_age implementation causes
+    // android.graphics.cts.BitmapTest#testDrawingHardwareBitmapNotLeaking to fail on Cuttlefish
+    // with SwANGLE. Needs investigation whether this is a race condition which could affect other
+    // Vulkan drivers, or if it's a SwiftShader bug.
+    // http://anglebug.com/3529
+    ANGLE_FEATURE_CONDITION(&mFeatures, enableBufferAge, !isSwiftShader);
+
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
 

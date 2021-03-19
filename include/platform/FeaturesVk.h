@@ -481,6 +481,14 @@ struct FeaturesVk : FeatureSetBase
     Feature supportsNegativeViewport = {
         "supportsNegativeViewport", FeatureCategory::VulkanFeatures,
         "The driver supports inverting the viewport with a negative height.", &members};
+
+    // The EGL_EXT_buffer_age implementation causes
+    // android.graphics.cts.BitmapTest#testDrawingHardwareBitmapNotLeaking to fail on Cuttlefish
+    // with SwANGLE. Needs investigation whether this is a race condition which could affect other
+    // Vulkan drivers, or if it's a SwiftShader bug.
+    // http://anglebug.com/3529
+    Feature enableBufferAge = {"enableBufferAge", FeatureCategory::VulkanWorkarounds,
+                               "Expose EGL_EXT_buffer_age", &members, "http://anglebug.com/3529"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
