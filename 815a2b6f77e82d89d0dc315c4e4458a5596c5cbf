@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1ad6b9c_f60e333a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-19T16:27:18Z",
+      "side": 1,
+      "message": "@Jamie: As you suggested I tried iterating over `GLES1State::getVertexArraysAttributeMask` here instead, but this gave me the same incorrect result as `context-\u003egetStateCache().getActiveClientAttribsMask()`. So I\u0027m leaving this in the known working state for now and will investigate further why this is not the mask I need and the resulting nullptr in some cases.",
+      "revId": "815a2b6f77e82d89d0dc315c4e4458a5596c5cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
