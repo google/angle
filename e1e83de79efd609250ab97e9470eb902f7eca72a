@@ -16,6 +16,24 @@
       "message": "See how other extensions are handled above. We create a feature for such workarounds and then the extension is exposed based on that feature. This has a number of benefits:\n\n- The workaround shows up in chrome://gpu\n- We can modify the workaround in tests\n- The workaround can be modified through env vars.",
       "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7523fb2_f40b4297",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2021-03-19T05:46:13Z",
+      "side": 1,
+      "message": "Thanks for the suggestion, but this isn\u0027t a workaround similar to those applied to other drivers. This is a short-term hack to get SwANGLE launched for Cuttlefish. I don\u0027t see a need for the benefits you listed. See https://chromium-review.googlesource.com/c/angle/angle/+/2727874 for another non-feature workaround/hack.",
+      "parentUuid": "3ae7d692_8653f06c",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
