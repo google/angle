@@ -22,6 +22,30 @@
       },
       "revId": "d21a310908ffc1fa93a88b21cbe3c3fc97875923",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "498ec9de_c76ef09e",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-19T20:07:15Z",
+      "side": 1,
+      "message": "Except that you have to pass in all these layerindex/framebuffercount etc jst so it can call onWrite. That was the only reason I moved onWrite call to here.",
+      "parentUuid": "2f038553_7198211a",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 47
+      },
+      "revId": "d21a310908ffc1fa93a88b21cbe3c3fc97875923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
