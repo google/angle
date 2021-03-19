@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "dbcded53_7dc9803c",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T20:40:27Z",
+      "side": 1,
+      "message": "Does it work when scripts/roll_aosp.sh is called, since it would essentially be cd\u0027ing twice?",
+      "parentUuid": "ec4ba7f8_3d6a41bd",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 15
+      },
+      "revId": "0e23e6252584dc94d892ded40e95bef9a505de84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "aaa3a1ab_54955664",
         "filename": "scripts/generate_android_bp.sh",
         "patchSetId": 1
@@ -54,6 +78,30 @@
       "writtenOn": "2021-03-18T22:42:09Z",
       "side": 1,
       "message": "maybe roll_aosp.sh needs this as well? not sure",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 42
+      },
+      "revId": "0e23e6252584dc94d892ded40e95bef9a505de84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dc34d67_cd20c2ee",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T20:40:27Z",
+      "side": 1,
+      "message": "Have you tried removing it from there?",
+      "parentUuid": "aaa3a1ab_54955664",
       "range": {
         "startLine": 30,
         "startChar": 0,

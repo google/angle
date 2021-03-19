@@ -1,0 +1,84 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "011d7709_f8b4ef12",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T20:40:27Z",
+      "side": 1,
+      "message": "By passing in the path, this script is assuming the caller already checked out depot_tools, which makes this script less \"standalone\" than it was before. Additionally, as noted below, the \u0027rm -rf\u0027 is a lot more scary now too.\n\nInstead, one option is to just hardcode the same path in both and checkout depot_tools if it\u0027s not there already.\n\nThe better option is to make a shared script that\u0027s sourced by both, to try and remove some of the duplication (like paths and checking out depot_tools).",
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eaf624f9_1b0da9f8",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T20:40:27Z",
+      "side": 1,
+      "message": "Use spaces, rather than tabs.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05eaf594_0a7eb53b",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T20:40:27Z",
+      "side": 1,
+      "message": "This is significantly less safe now that the user is passing in potentially any path.",
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f62c4286_6411b855",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T20:40:27Z",
+      "side": 1,
+      "message": "Why isn\u0027t this in scripts/generate_android_bp.sh also?",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 29
+      },
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
