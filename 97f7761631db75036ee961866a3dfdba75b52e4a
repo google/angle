@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c45a265_7832b714",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-19T23:15:18Z",
+      "side": 1,
+      "message": "In ES3.2 spec(7.4.1),\n Tessellation control shader per-vertex output variables and blocks\n and tessellation control, tessellation evaluation, and geometry\n shader per-vertex input variables and blocks are required to be\n declared as arrays, with each element representing input or output\n values for a single vertex of a multi-vertex primitive. For the\n purposes of interface matching, such variables and blocks are\n treated as though they were not declared as arrays.\n\n For program objects containing multiple shaders, LinkProgram\n will check for mismatches on interfaces between shader stages in\n the program being linked and generate a link error if a mismatch\n is detected.\n\nThe spec says it should be link time. But the dEQP test appears to allow compile time error as well, went with what the spec wanted.",
+      "parentUuid": "b7b2cbf7_6e744b5e",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "97f7761631db75036ee961866a3dfdba75b52e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e5de0d76_50b3892b",
