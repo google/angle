@@ -39,6 +39,30 @@
       },
       "revId": "8b7052b651d5fe9350b53e438c5a033d7d1e867c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef288971_75fa3e76",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1780,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-19T21:24:49Z",
+      "side": 1,
+      "message": "It works until ContextVk which has both \"object\" perf counters and non-. I maybe should have left the \"object\" naming alone. Will go with this for now if that\u0027s OK.",
+      "parentUuid": "e291c984_59ac58d0",
+      "range": {
+        "startLine": 1780,
+        "startChar": 20,
+        "endLine": 1780,
+        "endChar": 26
+      },
+      "revId": "8b7052b651d5fe9350b53e438c5a033d7d1e867c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
