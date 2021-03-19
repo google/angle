@@ -159,6 +159,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9352546a_da1f193a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1238,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-19T00:19:26Z",
+      "side": 1,
+      "message": "I end up getting rid of the resolve version.",
+      "parentUuid": "362a020c_aa06da35",
+      "range": {
+        "startLine": 1228,
+        "startChar": 0,
+        "endLine": 1238,
+        "endChar": 5
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e4b428c4_397b0eba",
