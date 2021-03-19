@@ -54,6 +54,10 @@ foreach(_test_info, angle_restricted_traces) {
     public_deps = [ ":angle_restricted_trace_loader" ]
     deps = [ "$angle_root:includes" ]
 
+    if (is_android) {
+      libs = [ "log" ]
+    }
+
     # Disable optimization in the trace perf tests to avoid optimizing huge files.
     if (!is_debug) {
       suppressed_configs += [
