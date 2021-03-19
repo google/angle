@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "784339b4_db95211a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3740,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:57:37Z",
+      "side": 1,
+      "message": "\u003e Can we make this an ANGLE front-end feature? That way we already have an override mechanism for it.\n\nCould you be a bit more specific? I have no idea what that means.",
+      "parentUuid": "42b14a1c_221c0c50",
+      "range": {
+        "startLine": 3740,
+        "startChar": 49,
+        "endLine": 3740,
+        "endChar": 77
+      },
+      "revId": "ef3d263474fb86db22a19b2aa11ad0f90e622989",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5b1c0237_8269bb10",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 2
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-15T18:24:03Z",
       "side": 1,
       "message": "nit: please use ANGLE style for var names:\n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/CodingStandard.md#variable-names",
+      "range": {
+        "startLine": 3742,
+        "startChar": 20,
+        "endLine": 3742,
+        "endChar": 36
+      },
+      "revId": "ef3d263474fb86db22a19b2aa11ad0f90e622989",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71ae8ef9_f3e63ba0",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3742,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:57:37Z",
+      "side": 1,
+      "message": "The variable was removed.",
+      "parentUuid": "5b1c0237_8269bb10",
       "range": {
         "startLine": 3742,
         "startChar": 20,
@@ -60,6 +108,30 @@
       "writtenOn": "2021-03-15T18:24:03Z",
       "side": 1,
       "message": "nit: rather than repeating the reason, It would be better to print that once, then just print what is changed.",
+      "range": {
+        "startLine": 3745,
+        "startChar": 75,
+        "endLine": 3745,
+        "endChar": 90
+      },
+      "revId": "ef3d263474fb86db22a19b2aa11ad0f90e622989",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49655c86_3e3c940c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3745,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-19T17:57:37Z",
+      "side": 1,
+      "message": "Changed accordingly,",
+      "parentUuid": "a3a6f733_9d22626f",
       "range": {
         "startLine": 3745,
         "startChar": 75,
