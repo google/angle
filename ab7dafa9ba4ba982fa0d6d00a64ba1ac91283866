@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "69490151_e6ab0e8e",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-19T23:11:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3bcc319_c122a48c",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 256,
+        "endChar": 5
+      },
+      "revId": "ab7dafa9ba4ba982fa0d6d00a64ba1ac91283866",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3174f1f2_8606e536",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-03-18T12:00:56Z",
       "side": 1,
       "message": "Probably should reset these at the top of the function. Can a stage be removed from a PPO?",
+      "range": {
+        "startLine": 259,
+        "startChar": 0,
+        "endLine": 262,
+        "endChar": 67
+      },
+      "revId": "ab7dafa9ba4ba982fa0d6d00a64ba1ac91283866",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3d4a82c_d242935d",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-19T23:11:03Z",
+      "side": 1,
+      "message": "mState.mExecutable-\u003ereset() is called in updateExecutable() before updateTransformFeedbackMembers() is called.",
+      "parentUuid": "3174f1f2_8606e536",
       "range": {
         "startLine": 259,
         "startChar": 0,

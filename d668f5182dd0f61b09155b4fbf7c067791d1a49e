@@ -16,6 +16,24 @@
       "message": "Without this, you don\u0027t really know if this is drawing with PPO. Why is it removed?",
       "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6dd763b4_043f9285",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 876,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-19T23:11:03Z",
+      "side": 0,
+      "message": "the intent was to call glBeginTransformFeedback before calling this function. glUseProgram generates an error if XFB is active. If program pipeline is used the bound program becomes null. glUseProgram(0) will have the same effect.",
+      "parentUuid": "ca0bafcd_6cbfc561",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
