@@ -51,6 +51,24 @@
       "parentUuid": "945d5db0_ab43dbc1",
       "revId": "e949835eb5c474e5252c2cf6f3190d0355a60b13",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "166ba1e1_0842f6b3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T17:36:26Z",
+      "side": 1,
+      "message": "Just to build on this, please mark it with a TODO and anglebug.com/4722 (I assume all of this work is being done with that issue, but update otherwise) so we know where it\u0027s being tracked.",
+      "parentUuid": "f7db95bc_ba78a097",
+      "revId": "e949835eb5c474e5252c2cf6f3190d0355a60b13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

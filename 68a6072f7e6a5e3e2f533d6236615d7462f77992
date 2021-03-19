@@ -1,0 +1,95 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dbdc4f9a_c37e4191",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T17:36:26Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 498,
+        "startChar": 18,
+        "endLine": 498,
+        "endChar": 27
+      },
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ba9d52f_966605fe",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T17:36:26Z",
+      "side": 1,
+      "message": "Do we need this and \u0027kMaxTotalSize\u0027 above?",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2848b970_9f2e9854",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T17:36:26Z",
+      "side": 1,
+      "message": "I think it would be good to add some logging for these error cases, since it\u0027ll be tough for us to find out something is going wrong (via profiling, or some other method) or to even recreate the error.\n\nFeel free to tweak the messages how you\u0027d like.\n\n    WARN() \u003c\u003c \"Failed to get first pipeline cache hunk data from blob cache.\";",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ee334cf_49136250",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T17:36:26Z",
+      "side": 1,
+      "message": "WARN() \u003c\u003c \"Failed to get pipeline cache chunk \" \u003c\u003c chunkIndex \u003c\u003c \" of \" \u003c\u003c numChunks;",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3b29270_58915d24",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-19T17:36:26Z",
+      "side": 1,
+      "message": "WARN() \u003c\u003c \"Pipeline cache chunk header corrupted: checkNumber \u003d \" \u003c\u003c checkNumber \u003c\u003c \", numChunks \u003d \" \u003c\u003c numChunks \u003c\u003c \", compressedData.size() \u003d \" \u003c\u003c compressedData.size() \u003c\u003c \", (compressedSize + chunkSize) \u003d \" \u003c\u003c (compressedSize + chunkSize);",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
