@@ -22,6 +22,53 @@
       },
       "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f2eff7c_2da3442a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-19T20:19:57Z",
+      "side": 1,
+      "message": "the idea behind the extension is that a single memory chunk is being shared among multiple processes/CPU/GPU/DSP and so on -\u003e https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_external_buffer.txt\n\n This extension allows the data store for an immutable buffer to\n be sourced from an external EGLClientBuffer, allowing sharing\n of EGL client buffers across APIs, across processes, and across\n different processing cores such as the GPU, CPU, and DSP.\n\nif we reallocate then we would have effectively orphaned the external memory.\n\nHaving said all of that, i am not sure why the assert at [ref] is not being triggered for test case -\n ExternalBufferTestES31.BufferSubData",
+      "parentUuid": "b92caf6c_2d75526f",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7878ef5a_da6acdde",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-19T20:19:57Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 813,
+        "startChar": 4,
+        "endLine": 813,
+        "endChar": 71
+      },
+      "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
