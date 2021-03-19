@@ -186,7 +186,6 @@
 5452 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL
 
 // Tessellation shader support:
-5557 VULKAN : dEQP-GLES31.functional.tessellation.shader_input_output.barrier = FAIL
 5557 VULKAN : dEQP-GLES31.functional.tessellation.shader_input_output.gl_position_tcs_to_tes = FAIL
 
 ////

@@ -191,6 +191,7 @@ class TParseContext : angle::NonCopyable
                                         const TPublicType &type,
                                         const TSourceLoc &qualifierLocation);
     void checkLocalVariableConstStorageQualifier(const TQualifierWrapperBase &qualifier);
+    void checkTCSOutVarIndexIsValid(TIntermBinary *binaryExpression, const TSourceLoc &location);
     const TPragma &pragma() const { return mDirectiveHandler.pragma(); }
     const TExtensionBehavior &extensionBehavior() const
     {
