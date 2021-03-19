@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f038553_7198211a",
+        "filename": "src/libANGLE/renderer/vulkan/RenderTargetVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T19:57:37Z",
+      "side": 1,
+      "message": "Clean up nit: Ideally we should let CommandBufferHelper::colorImagesDraw call onWrite, similar to the way CommandBufferHelper::imageWrite does.\n\nThat ways ContextVk::onColorDraw would be symmetrical to ContextVk::onImageRenderPassWrite.",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 47
+      },
+      "revId": "d21a310908ffc1fa93a88b21cbe3c3fc97875923",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
