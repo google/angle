@@ -8,15 +8,11 @@
 
 #include <gtest/gtest.h>
 
+#include "EGLMultiThreadSteps.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/angle_test_configs.h"
 #include "test_utils/gl_raii.h"
 #include "util/EGLWindow.h"
-
-#include <atomic>
-#include <condition_variable>
-#include <mutex>
-#include <thread>
 
 using namespace angle;
 
@@ -440,65 +436,13 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
     };
     Step currentStep = Step::Start;
 
-    // Helper functions to synchronize the threads so that the operations are executed in the
-    // specific order the test is written for.
-    auto waitForStep = [&](Step waitStep) -> bool {
-        std::unique_lock<std::mutex> lock(mutex);
-        while (currentStep != waitStep)
-        {
-            // If necessary, abort execution as the other thread has encountered a GL error.
-            if (currentStep == Step::Abort)
-            {
-                return false;
-            }
-            condVar.wait(lock);
-        }
-
-        return true;
-    };
-    auto nextStep = [&](Step newStep) {
-        {
-            std::unique_lock<std::mutex> lock(mutex);
-            currentStep = newStep;
-        }
-        condVar.notify_one();
-    };
-
-    class AbortOnFailure
-    {
-      public:
-        AbortOnFailure(Step *currentStep, std::mutex *mutex, std::condition_variable *condVar)
-            : mCurrentStep(currentStep), mMutex(mutex), mCondVar(condVar)
-        {}
-
-        ~AbortOnFailure()
-        {
-            bool isAborting = false;
-            {
-                std::unique_lock<std::mutex> lock(*mMutex);
-                isAborting = *mCurrentStep != Step::Finish;
-
-                if (isAborting)
-                {
-                    *mCurrentStep = Step::Abort;
-                }
-            }
-            mCondVar->notify_all();
-        }
-
-      private:
-        Step *mCurrentStep;
-        std::mutex *mMutex;
-        std::condition_variable *mCondVar;
-    };
-
     std::thread deletingThread = std::thread([&]() {
-        AbortOnFailure abortOnFailure(&currentStep, &mutex, &condVar);
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
 
         EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface[0], surface[0], ctx[0]));
         EXPECT_EGL_SUCCESS();
 
-        ASSERT_TRUE(waitForStep(Step::Start));
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Start));
 
         // Draw using the shared texture.
         drawQuad(program[0].get(), essl1_shaders::PositionAttrib(), 0.5f);
@@ -509,8 +453,8 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
         glFlush();
 
         // Wait for the other thread to also draw using the shared texture.
-        nextStep(Step::Thread0Draw);
-        ASSERT_TRUE(waitForStep(Step::Thread1Draw));
+        threadSynchronization.nextStep(Step::Thread0Draw);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread1Draw));
 
         ASSERT_TRUE(continuingThreadSyncObj != nullptr);
         glWaitSync(continuingThreadSyncObj, 0, GL_TIMEOUT_IGNORED);
@@ -524,8 +468,8 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
 
         // Wait for the other thread to use the shared texture again before unbinding the
         // context (so no implicit flush happens).
-        nextStep(Step::Thread0Delete);
-        ASSERT_TRUE(waitForStep(Step::Finish));
+        threadSynchronization.nextStep(Step::Thread0Delete);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Finish));
 
         EXPECT_GL_NO_ERROR();
         EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
@@ -533,13 +477,13 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
     });
 
     std::thread continuingThread = std::thread([&]() {
-        AbortOnFailure abortOnFailure(&currentStep, &mutex, &condVar);
+        ThreadSynchronization<Step> threadSynchronization(&currentStep, &mutex, &condVar);
 
         EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface[1], surface[1], ctx[1]));
         EXPECT_EGL_SUCCESS();
 
         // Wait for first thread to draw using the shared texture.
-        ASSERT_TRUE(waitForStep(Step::Thread0Draw));
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread0Draw));
 
         ASSERT_TRUE(deletingThreadSyncObj != nullptr);
         glWaitSync(deletingThreadSyncObj, 0, GL_TIMEOUT_IGNORED);
@@ -557,8 +501,8 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
         glFlush();
 
         // Wait for the other thread to delete its framebuffer.
-        nextStep(Step::Thread1Draw);
-        ASSERT_TRUE(waitForStep(Step::Thread0Delete));
+        threadSynchronization.nextStep(Step::Thread1Draw);
+        ASSERT_TRUE(threadSynchronization.waitForStep(Step::Thread0Delete));
 
         // Write to the shared texture differently, so a dependency is created from the previous
         // readers of the shared texture (the two framebuffers of the two threads) to the new
@@ -572,7 +516,7 @@ TEST_P(EGLContextSharingTest, DeleteReaderOfSharedTexture)
                      &kTexData2);
         drawQuad(program[0].get(), essl1_shaders::PositionAttrib(), 0.5f);
 
-        nextStep(Step::Finish);
+        threadSynchronization.nextStep(Step::Finish);
 
         EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT));
         EXPECT_EGL_SUCCESS();
