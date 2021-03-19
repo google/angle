@@ -203,6 +203,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fd9a9bf0_c0b690cc",
+        "filename": "src/tests/egl_tests/EGLMultiContextComputeTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T03:05:05Z",
+      "side": 1,
+      "message": "The idea is to take `Step` as a template type, assuming it has Finish and Abort. Examples where we do this with EnumCount and InvalidEnum:\n\ntemplate \u003ctypename E\u003e\nconstexpr size_t EnumSize()\n{\n    using UnderlyingType \u003d typename std::underlying_type\u003cE\u003e::type;\n    return static_cast\u003cUnderlyingType\u003e(E::EnumCount);\n}\n\ntemplate \u003ctypename E\u003e\nstruct AllEnums\n{\n    EnumIterator\u003cE\u003e begin() const { return {static_cast\u003cE\u003e(0)}; }\n    EnumIterator\u003cE\u003e end() const { return {E::InvalidEnum}; }\n};\n\nYou could do a refactoring here by making a class to handle all three jobs (abort on failure, wait for step and next step). It would take the enum as a template type, as well as the value for the initial step as constructor argument.",
+      "parentUuid": "ea977679_c8d7b16c",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 197,
+        "endChar": 6
+      },
+      "revId": "6d45520da1f06ba058b2152079fb1d84bda55be0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0eceaa58_bfdb8a1e",
         "filename": "src/tests/egl_tests/EGLMultiContextComputeTest.cpp",
         "patchSetId": 2
