@@ -16,6 +16,24 @@
       "message": "Are there any perf differences with this change?",
       "revId": "31f48abc185c9de2828f6a6dcb7c59791f5f6553",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea6f310f_0e4b76f5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-19T17:21:02Z",
+      "side": 1,
+      "message": "There will be more copies to sync the textures in this edge case but no change in general.",
+      "parentUuid": "6b0b0ec8_054c12aa",
+      "revId": "31f48abc185c9de2828f6a6dcb7c59791f5f6553",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
