@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ae7d692_8653f06c",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T05:29:59Z",
+      "side": 1,
+      "message": "See how other extensions are handled above. We create a feature for such workarounds and then the extension is exposed based on that feature. This has a number of benefits:\n\n- The workaround shows up in chrome://gpu\n- We can modify the workaround in tests\n- The workaround can be modified through env vars.",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
