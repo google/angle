@@ -122,6 +122,24 @@
       "parentUuid": "e7523fb2_f40b4297",
       "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32b7e80d_9f4e4106",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T21:32:15Z",
+      "side": 1,
+      "message": "FYI, two current examples:\n\n    // Feature disabled due to driver bugs:\n    //\n    // - Swiftshader on mac: http://anglebug.com/4937\n    // - Intel on windows: http://anglebug.com/5032\n    // - AMD on windows: http://crbug.com/1132366\n    ANGLE_FEATURE_CONDITION(\u0026mFeatures, enableMultisampledRenderToTexture,\n                            !(IsApple() \u0026\u0026 isSwiftShader) \u0026\u0026 !(IsWindows() \u0026\u0026 (isIntel || isAMD)));\n\n    // Feature disabled due to driver bugs:\n    //\n    // - Swiftshader: http://anglebug.com/5142\n    // - Qualcomm: http://anglebug.com/5143\n    ANGLE_FEATURE_CONDITION(\n        \u0026mFeatures, supportsImageCubeArray,\n        mPhysicalDeviceFeatures.imageCubeArray \u003d\u003d VK_TRUE \u0026\u0026 !isSwiftShader \u0026\u0026 !isQualcomm);\n\nDon\u0027t take it personally, \"features\" are how we manage to contain these hacks to one place. If anything, it will allow us to easily track where these hacks are applied.",
+      "parentUuid": "bf65628b_f4f13e9c",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
