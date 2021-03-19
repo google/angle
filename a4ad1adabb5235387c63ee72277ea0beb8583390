@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f1028ffb_99b4254d",
+        "filename": "src/libANGLE/renderer/vulkan/FramebufferVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1395,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T05:23:08Z",
+      "side": 1,
+      "message": "Ref",
+      "revId": "a4ad1adabb5235387c63ee72277ea0beb8583390",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "98b8a460_ff121769",
         "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
         "patchSetId": 19
@@ -32,6 +49,24 @@
       "side": 1,
       "message": "Maybe my early comment get missed somehow. My plan is to rename onImageHelperRelease to finalizeImageLayoutIfNeeded in the follow up CL. That is what really this function does. But since this call is used by depth stencil code, so I prefer do it in a separate CL, if you do not mind.",
       "parentUuid": "98b8a460_ff121769",
+      "revId": "a4ad1adabb5235387c63ee72277ea0beb8583390",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "560477a2_eb43fbe0",
+        "filename": "src/libANGLE/renderer/vulkan/SurfaceVk.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1332,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T05:23:08Z",
+      "side": 1,
+      "message": "Ack. Could still be cleaner if optimizeRenderPassForPresent took care of it, so this function doesn\u0027t need to worry about it.",
+      "parentUuid": "4079e475_d18ef0fe",
       "revId": "a4ad1adabb5235387c63ee72277ea0beb8583390",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

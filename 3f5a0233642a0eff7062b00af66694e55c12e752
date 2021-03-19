@@ -350,6 +350,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4f4e5735_f16f9503",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1646,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-19T05:23:08Z",
+      "side": 1,
+      "message": "Ok I see. The bug is in fact that drawRenderTarget-\u003eonColorDraw() has no business modifying the layout of the attachments, because it\u0027s not an attachment in this render pass. See Ref which implies drawRenderTarget is attachment 0 of this render pass\u0027 framebuffer, which is incorrect.\n\nMy suggestion is to instead not mess the state up and fix it later. How about we add an onColorResolve method to RenderTargetVk to be called at Ref, which would continue to deal with the image the same way it did before (onImageRenderPassWrite). It can also ASSERT for example that mResolveImage \u003d\u003d nullptr.",
+      "parentUuid": "59417b8f_414dc5b9",
+      "range": {
+        "startLine": 1645,
+        "startChar": 75,
+        "endLine": 1646,
+        "endChar": 37
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1f8c5199_15e214ee",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 15
