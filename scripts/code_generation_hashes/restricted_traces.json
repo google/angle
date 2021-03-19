@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "c29171b000c2d404c49cced86e674361",
+    "24d49f46fdfd0758737db4ffef33e80e",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -97,16 +97,18 @@
     "18b0f7f021bd65340f25a70b79dd4789",
   "src/tests/restricted_traces/real_commando_secret_mission.tar.gz.sha1":
     "4b484dd9c53a79100ec13b6f1c86040d",
+  "src/tests/restricted_traces/real_cricket_20.tar.gz.sha1":
+    "c03e3ca87a7a992e39d664f7b16a22ca",
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "7db9f776c0d0b4097b6b57f5e73e719c",
+    "c0c306f167628f727a9516f016fd08a4",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "1d2f1267d9c6f9d4d7fd82798a75a4e2",
+    "de7ab1e146944a3db14d0d84fa0d7822",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "c2fdaa88969fb4c588900fdb4e05228e",
+    "e9c67294eb60275115ad90152f824acd",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "b6d05e2c2bf19135af3c1dee6900a4cf",
+    "3c853089df2a7fb2f616b5d69ef65b50",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":

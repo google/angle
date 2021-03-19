@@ -448,6 +448,15 @@ TracePerfTest::TracePerfTest()
         }
     }
 
+    if (param.testID == RestrictedTraceID::real_cricket_20)
+    {
+        // TODO: http://anglebug.com/5777 ARM doesn't have enough VS storage blocks
+        if (IsAndroid() && IsARM())
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

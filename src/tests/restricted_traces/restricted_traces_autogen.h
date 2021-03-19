@@ -101,6 +101,7 @@ enum class RestrictedTraceID
     ragnarok_m_eternal_love,
     raid_shadow_legends,
     real_commando_secret_mission,
+    real_cricket_20,
     real_gangster_crime,
     rise_of_kingdoms,
     romancing_saga,

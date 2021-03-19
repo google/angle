@@ -58,6 +58,7 @@
 #include "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context3.h"
 #include "raid_shadow_legends/raid_shadow_legends_capture_context2.h"
 #include "real_commando_secret_mission/real_commando_secret_mission_capture_context1.h"
+#include "real_cricket_20/real_cricket_20_capture_context2.h"
 #include "real_gangster_crime/real_gangster_crime_capture_context3.h"
 #include "rise_of_kingdoms/rise_of_kingdoms_capture_context4.h"
 #include "romancing_saga/romancing_saga_capture_context3.h"
@@ -305,6 +306,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       real_commando_secret_mission::kReplayFrameEnd,
       real_commando_secret_mission::kReplayDrawSurfaceWidth,
       real_commando_secret_mission::kReplayDrawSurfaceHeight, "real_commando_secret_mission"}},
+    {RestrictedTraceID::real_cricket_20,
+     {real_cricket_20::kReplayContextClientMajorVersion,
+      real_cricket_20::kReplayContextClientMinorVersion, real_cricket_20::kReplayFrameStart,
+      real_cricket_20::kReplayFrameEnd, real_cricket_20::kReplayDrawSurfaceWidth,
+      real_cricket_20::kReplayDrawSurfaceHeight, "real_cricket_20"}},
     {RestrictedTraceID::real_gangster_crime,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       real_gangster_crime::kReplayFrameStart, real_gangster_crime::kReplayFrameEnd,
@@ -539,6 +545,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::ReplayContext1Frame(frameIndex);
             break;
+        case RestrictedTraceID::real_cricket_20:
+            real_cricket_20::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::ReplayContext3Frame(frameIndex);
             break;
@@ -741,6 +750,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::ResetContext1Replay();
+            break;
+        case RestrictedTraceID::real_cricket_20:
+            real_cricket_20::ResetContext2Replay();
             break;
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::ResetContext3Replay();
@@ -945,6 +957,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::SetupContext1Replay();
             break;
+        case RestrictedTraceID::real_cricket_20:
+            real_cricket_20::SetupContext2Replay();
+            break;
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::SetupContext3Replay();
             break;
@@ -1148,6 +1163,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::real_cricket_20:
+            real_cricket_20::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::SetBinaryDataDir(dataDir);
             break;
@@ -1350,6 +1368,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::real_commando_secret_mission:
             real_commando_secret_mission::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::real_cricket_20:
+            real_cricket_20::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::real_gangster_crime:
             real_gangster_crime::SetBinaryDataDecompressCallback(callback);
