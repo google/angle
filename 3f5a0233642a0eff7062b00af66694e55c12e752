@@ -372,6 +372,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4db07260_488bc904",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1646,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-19T17:13:31Z",
+      "side": 1,
+      "message": "Done. Good point. I like this idea better. This code path was a bit unclear to me why it called onColorDraw, but I have better understanding now, thanks for the explanation.",
+      "parentUuid": "4f4e5735_f16f9503",
+      "range": {
+        "startLine": 1645,
+        "startChar": 75,
+        "endLine": 1646,
+        "endChar": 37
+      },
+      "revId": "3f5a0233642a0eff7062b00af66694e55c12e752",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1f8c5199_15e214ee",
