@@ -790,8 +790,8 @@ void VaryingPacking::collectTFVarying(const std::string &tfVarying,
                 collectUserVaryingFieldTF(ref, *field, fieldIndex, GL_INVALID_INDEX);
             }
             (*uniqueFullNames)[ref.frontShaderStage].insert(tfVarying);
+            (*uniqueFullNames)[ref.frontShaderStage].insert(input->name);
         }
-        (*uniqueFullNames)[ref.frontShaderStage].insert(input->name);
     }
     // Array as a whole and array element conflict has already been checked in
     // linkValidateTransformFeedback.
