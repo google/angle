@@ -22,6 +22,30 @@
       },
       "revId": "c209e18aa04c4a0a9e0b416b548229fd5d35e6be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "37d640a7_d7f80cdc",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-19T23:34:21Z",
+      "side": 1,
+      "message": "Right, the real cause is other invocations are unable to read the synchronized data of the output variable after barrier",
+      "parentUuid": "f1803dac_36d33b32",
+      "range": {
+        "startLine": 903,
+        "startChar": 80,
+        "endLine": 903,
+        "endChar": 91
+      },
+      "revId": "c209e18aa04c4a0a9e0b416b548229fd5d35e6be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
