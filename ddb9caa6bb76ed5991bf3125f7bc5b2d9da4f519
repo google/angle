@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "ddb9caa6bb76ed5991bf3125f7bc5b2d9da4f519",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a53c952e_2ece3214",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-19T17:12:28Z",
+      "side": 1,
+      "message": "can you file a specific bug for this workaround so we can track it even if 3529 is closed?",
+      "range": {
+        "startLine": 489,
+        "startChar": 7,
+        "endLine": 489,
+        "endChar": 31
+      },
+      "revId": "ddb9caa6bb76ed5991bf3125f7bc5b2d9da4f519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
