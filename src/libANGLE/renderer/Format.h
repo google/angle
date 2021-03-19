@@ -44,6 +44,7 @@ struct Format final : private angle::NonCopyable
                             bool isFixed,
                             bool isScaled,
                             bool isSRGB,
+                            bool isYUV,
                             gl::VertexAttribType vertexAttribType);
 
     static const Format &Get(FormatID id) { return gFormatInfoTable[static_cast<int>(id)]; }
@@ -107,6 +108,7 @@ struct Format final : private angle::NonCopyable
     bool isFixed;
     bool isScaled;
     bool isSRGB;
+    bool isYUV;
 
     // For vertex formats only. Returns the "type" value for glVertexAttribPointer etc.
     gl::VertexAttribType vertexAttribType;
@@ -146,6 +148,7 @@ constexpr Format::Format(FormatID id,
                          bool isFixed,
                          bool isScaled,
                          bool isSRGB,
+                         bool isYUV,
                          gl::VertexAttribType vertexAttribType)
     : id(id),
       glInternalFormat(glFormat),
@@ -175,6 +178,7 @@ constexpr Format::Format(FormatID id,
       isFixed(isFixed),
       isScaled(isScaled),
       isSRGB(isSRGB),
+      isYUV(isYUV),
       vertexAttribType(vertexAttribType)
 {}
 
