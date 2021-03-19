@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5994832_8d6c659a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-19T04:40:49Z",
+      "side": 1,
+      "message": "RendererVk.cpp:348 (DebugUtilsMessenger): [ VUID-vkCmdDraw-None-04584 ] Validation Error: [ VUID-vkCmdDraw-None-04584 ] Object 0: handle \u003d 0x5e000000005e, type \u003d VK_OBJECT_TYPE_DESCRIPTOR_SET; Object 1: handle \u003d 0x270000000027, type \u003d VK_OBJECT_TYPE_IMAGE_VIEW; Object 2: handle \u003d 0x2b000000002b, type \u003d VK_OBJECT_TYPE_FRAMEBUFFER; Object 3: handle \u003d 0x2a000000002a, type \u003d VK_OBJECT_TYPE_IMAGE_VIEW; | MessageID \u003d 0x37815f41 | VkDescriptorSet 0x5e000000005e[] encountered the following validation error at vkCmdDraw() time: Image subresources of VkImageView 0x270000000027[] in Descriptor in binding #0 index 0 and VkImageView 0x2a000000002a[] in VkFramebuffer 0x2b000000002b[] attachment # 0 overlap. The Vulkan spec states: Image subresources used as attachments in the current render pass must not be accessed in any way other than as an attachment by this command, except for cases involving read-only access to depth/stencil attachments as described in the Render Pass chapter (https://www.khronos.org/registry/vulkan/specs/1.2-extensions/html/vkspec.html#VUID-vkCmdDraw-None-04584)",
+      "parentUuid": "fefec930_fa7b0bb6",
+      "range": {
+        "startLine": 10,
+        "startChar": 50,
+        "endLine": 11,
+        "endChar": 16
+      },
+      "revId": "4580d6fc86d6c71c4f07fc54c6130fd5233f337b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "425a7bf2_cc0433c4",
