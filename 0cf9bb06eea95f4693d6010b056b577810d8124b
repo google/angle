@@ -16,6 +16,23 @@
       "message": "Slight usability improvement.  One less thing to remember when trying to debug a trace on Android.",
       "revId": "0cf9bb06eea95f4693d6010b056b577810d8124b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "957d001e_ac6ad80d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-20T02:14:56Z",
+      "side": 1,
+      "message": "Is this necessary?   I thought the normal ERR/WARN/INFO/etc. calls work already.   If not, can we get that working instead so we can get tracing working everywhere?",
+      "revId": "0cf9bb06eea95f4693d6010b056b577810d8124b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
