@@ -105,6 +105,30 @@
       },
       "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c1f60c4_2d930931",
+        "filename": "src/libANGLE/ProgramExecutable.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 896,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-20T01:48:55Z",
+      "side": 1,
+      "message": "\u003e Ok this is quite hard to follow now, getLinkedShaderStages() is only valid if we get here from PPO, is that right?\n\nIn this particular case, yes, getLinkedShaderStages() is only relevant for PPOs since we only need to link varyings for already successfully linked programs when we are drawing with a PPO.\n\n\u003e perhaps we can properly extend this \"active\" shaders mask so it can be used for both programs and PPOs everywhere. For programs it would be the attached shaders, for PPOs it would be the \"used\" stages (as in glUseProgramStages).\n\nIt\u0027s going to be a lot harder to successfully return the correct value from a single function without any context as to what the caller actually wants.   Most of the time, we want the linked shader program for both Programs and PPOs (most GL calls use successfully linked programs).   However, when linking Programs, we want the attached shader, since we are still the process of linking that shader so it isn\u0027t linked yet - or there is still a successfully linked shader that we can\u0027t overwrite until we know the new one links successfully:\n\n\u003e While a program object is in use, applications are free to modify attached shader objects, compile attached shader objects, attach additional shader objects, and detach shader objects. These operations do not affect the link status or executable code of the program object.\n\nI agree it can be a little confusing trying to keep attached vs linked straight while looking at this stuff, especially when trying to keep track of that in the context of programs vs PPOs.   I\u0027ve added a comment here to try and clarify things.   I\u0027m not sure on a good fix for this in the general case yet though.",
+      "parentUuid": "8b10edc1_28d47cde",
+      "range": {
+        "startLine": 896,
+        "startChar": 12,
+        "endLine": 896,
+        "endChar": 62
+      },
+      "revId": "74188e11dc8cf1eeeff6bd6d2f64e292c5c46136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
