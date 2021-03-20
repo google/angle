@@ -16,6 +16,23 @@
       "message": "Note the ARM skip.",
       "revId": "c849fb52d7bea44add21af64466280eba697fe00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00219d37_056e18e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-20T02:25:27Z",
+      "side": 1,
+      "message": "LGTM.   I\u0027ll let Jamie +2 to let him weigh in on skipping for ARM vs device capabilities.\n\nIf nothing else, it may be worth opening a bug to add a feature to handle this.   Maybe we could build up some type of capabilities requirements list like \u0027mExtensionPrerequisites\u0027 (with a corresponding areExtensionPrerequisitesFulfilled()) to be as fine-grained as possible on where the tests are skipped.   Then it\u0027s not really a \"bug\" that the test is skipped (and no TODO either), but just the requirements of the trace.",
+      "revId": "c849fb52d7bea44add21af64466280eba697fe00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
