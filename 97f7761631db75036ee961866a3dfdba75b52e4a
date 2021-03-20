@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a60a6a3d_77993bc9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T11:09:36Z",
+      "side": 1,
+      "message": "There are two things in that quote:\n\n1. Tess/geom input must be array\n2. Interface mismatch must generate error at link time (and also arrayness is dropped for the sake of this)\n\nThe first one is not an interface mismatch, it\u0027s a compile error. A separable program with only GS where input is not array should fail compile too, but doesn\u0027t with this change.",
+      "parentUuid": "0c45a265_7832b714",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "97f7761631db75036ee961866a3dfdba75b52e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e5de0d76_50b3892b",
