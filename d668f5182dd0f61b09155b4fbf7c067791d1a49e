@@ -52,6 +52,24 @@
       "parentUuid": "6dd763b4_043f9285",
       "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39f26a62_963d3e53",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 876,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T08:59:03Z",
+      "side": 0,
+      "message": "+1. Either this function should very carefully restore the state when it returns (see how ANGLETestBase::drawIndexedQuad changes the program, then restores it at the end), or just leave the responsibility to the test (which is what it has been doing so far).",
+      "parentUuid": "597f9d87_a9cffc59",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
