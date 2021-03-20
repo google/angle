@@ -213,6 +213,30 @@
       },
       "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0ac5105_ce4c6027",
+        "filename": "src/libANGLE/renderer/glslang_wrapper_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T11:28:48Z",
+      "side": 1,
+      "message": "This is wrong as-is, so I\u0027m afraid not.\n\n@Jamie, not sure how resource binding index could let you match SPIR-V ids to to entries in this array.",
+      "parentUuid": "a665e809_063d2506",
+      "range": {
+        "startLine": 231,
+        "startChar": 0,
+        "endLine": 233,
+        "endChar": 31
+      },
+      "revId": "8b56f4b99af6cbeaa9c3012c9a0e0d09fca57c2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
