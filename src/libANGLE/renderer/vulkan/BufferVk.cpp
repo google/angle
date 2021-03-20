@@ -475,7 +475,8 @@ angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,
         ASSERT(mBuffer && mBuffer->valid());
 
         if ((access & GL_MAP_INVALIDATE_BUFFER_BIT) != 0 &&
-            mBuffer->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
+            mBuffer->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()) &&
+            !mBuffer->isExternalBuffer())
         {
             // We try to map buffer, but buffer is busy. Caller has told us it doesn't care about
             // previous content. Instead of wait for GPU to finish, we just allocate a new buffer.
@@ -730,12 +731,14 @@ angle::Result BufferVk::setDataImpl(ContextVk *contextVk,
     updateShadowBuffer(data, size, offset);
 
     // if the buffer is currently in use
-    //     if sub data size meets threshold, acquire a new BufferHelper from the pool
-    //     else stage an update
+    //     if it isn't an external buffer and sub data size meets threshold
+    //          acquire a new BufferHelper from the pool
+    //     else stage the update
     // else update the buffer directly
     if (mBuffer->isCurrentlyInUse(contextVk->getLastCompletedQueueSerial()))
     {
-        if (SubDataSizeMeetsThreshold(size, static_cast<size_t>(mState.getSize())))
+        if (!mBuffer->isExternalBuffer() &&
+            SubDataSizeMeetsThreshold(size, static_cast<size_t>(mState.getSize())))
         {
             ANGLE_TRY(acquireAndUpdate(contextVk, data, size, offset));
         }

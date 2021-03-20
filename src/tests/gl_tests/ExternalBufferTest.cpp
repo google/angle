@@ -129,7 +129,62 @@ TEST_P(ExternalBufferTestES31, BufferSubData)
     }
 
     unlockAndroidHardwareBuffer(aHardwareBuffer);
-    // Delete the source AHB when in use
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    // Delete the source AHB
+    destroyAndroidHardwareBuffer(aHardwareBuffer);
+}
+
+// Verify that subdata updates to an external buffer backed by an AHB doesn't orphan the AHB
+TEST_P(ExternalBufferTestES31, SubDataDoesNotCauseOrphaning)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_external_buffer") ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage"));
+    constexpr uint8_t kBufferSize = 16;
+    std::vector<GLubyte> initData(kBufferSize, 0xA);
+
+    // Create the AHB
+    AHardwareBuffer *aHardwareBuffer;
+    constexpr GLbitfield kFlags = GL_DYNAMIC_STORAGE_BIT_EXT;
+    aHardwareBuffer             = createAndroidHardwareBuffer(kBufferSize, initData.data());
+
+    // Create externalBuffer
+    GLBuffer externalBuffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, externalBuffer);
+    glBufferStorageExternalEXT(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize,
+                               eglGetNativeClientBufferANDROID(aHardwareBuffer), kFlags);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a copy read buffer
+    std::vector<GLubyte> copyReadBufferData(kBufferSize, 0xB);
+    GLBuffer copyReadBuffer;
+    glBindBuffer(GL_COPY_READ_BUFFER, copyReadBuffer);
+    glBufferData(GL_COPY_READ_BUFFER, kBufferSize, copyReadBufferData.data(), GL_STATIC_READ);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy from copyReadBuffer to externalBuffer
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_SHADER_STORAGE_BUFFER, 0, 0, kBufferSize);
+    ASSERT_GL_NO_ERROR();
+
+    // Update externalBuffer
+    std::vector<GLubyte> expectedData(kBufferSize, 0xFF);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, expectedData.data());
+    glFinish();
+    ASSERT_GL_NO_ERROR();
+
+    // Inspect the data written into the AHB, through externalBuffer, using CPU access.
+    uint8_t *data = static_cast<uint8_t *>(lockAndroidHardwareBuffer(aHardwareBuffer));
+
+    for (uint32_t i = 0; i < kBufferSize; ++i)
+    {
+        EXPECT_EQ(data[i], 0xFF);
+    }
+
+    unlockAndroidHardwareBuffer(aHardwareBuffer);
+
+    glBindBuffer(GL_COPY_READ_BUFFER, 0);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
 
@@ -184,7 +239,9 @@ TEST_P(ExternalBufferTestES31, DispatchCompute)
     }
 
     unlockAndroidHardwareBuffer(aHardwareBuffer);
-    // Delete the source AHB when in use
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
 
@@ -197,7 +254,7 @@ TEST_P(ExternalBufferTestES31, MapBuffer)
     constexpr uint8_t kBufferSize = 16;
     std::vector<GLubyte> initData(kBufferSize, 0xFF);
 
-    // Create the Image
+    // Create the AHB
     AHardwareBuffer *aHardwareBuffer;
     constexpr GLbitfield kFlags = (GL_MAP_READ_BIT_EXT | GL_MAP_WRITE_BIT_EXT);
     aHardwareBuffer             = createAndroidHardwareBuffer(kBufferSize, initData.data());
@@ -220,7 +277,71 @@ TEST_P(ExternalBufferTestES31, MapBuffer)
     }
 
     glUnmapBufferOES(GL_SHADER_STORAGE_BUFFER);
-    // Delete the source AHB when in use
+
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    // Delete the source AHB
+    destroyAndroidHardwareBuffer(aHardwareBuffer);
+}
+
+// Verify that mapping an external buffer backed by an AHB doesn't orphan the AHB
+TEST_P(ExternalBufferTestES31, MapBufferDoesNotCauseOrphaning)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_external_buffer") ||
+                       !IsGLExtensionEnabled("GL_EXT_buffer_storage") ||
+                       !IsGLExtensionEnabled("GL_EXT_map_buffer_range"));
+    constexpr uint8_t kBufferSize = 16;
+    std::vector<GLubyte> initData(kBufferSize, 0xA);
+
+    // Create the AHB
+    AHardwareBuffer *aHardwareBuffer;
+    constexpr GLbitfield kFlags =
+        (GL_MAP_READ_BIT_EXT | GL_MAP_WRITE_BIT_EXT | GL_DYNAMIC_STORAGE_BIT_EXT);
+    aHardwareBuffer = createAndroidHardwareBuffer(kBufferSize, initData.data());
+
+    GLBuffer buffer;
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, buffer);
+    glBufferStorageExternalEXT(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize,
+                               eglGetNativeClientBufferANDROID(aHardwareBuffer), kFlags);
+    ASSERT_GL_NO_ERROR();
+
+    // Create a copy read buffer
+    std::vector<GLubyte> copyReadBufferData(kBufferSize, 0xB);
+    GLBuffer copyReadBuffer;
+    glBindBuffer(GL_COPY_READ_BUFFER, copyReadBuffer);
+    glBufferData(GL_COPY_READ_BUFFER, kBufferSize, copyReadBufferData.data(), GL_STATIC_READ);
+    ASSERT_GL_NO_ERROR();
+
+    // Copy from copyReadBuffer to externalBuffer
+    glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_SHADER_STORAGE_BUFFER, 0, 0, kBufferSize);
+    ASSERT_GL_NO_ERROR();
+
+    // Inspect the data written into the buffer using map buffer API.
+    constexpr GLbitfield kMapFlags = (GL_MAP_WRITE_BIT_EXT | GL_MAP_INVALIDATE_BUFFER_BIT);
+    uint8_t *mapData               = static_cast<uint8_t *>(
+        glMapBufferRangeEXT(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, kMapFlags));
+    ASSERT_GL_NO_ERROR();
+    EXPECT_NE(mapData, nullptr);
+    glUnmapBufferOES(GL_SHADER_STORAGE_BUFFER);
+
+    // Update externalBuffer
+    std::vector<GLubyte> expectedData(kBufferSize, 0xFF);
+    glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, kBufferSize, expectedData.data());
+    glFinish();
+    ASSERT_GL_NO_ERROR();
+
+    // Inspect the data written into the AHB, through externalBuffer, using CPU access.
+    uint8_t *data = static_cast<uint8_t *>(lockAndroidHardwareBuffer(aHardwareBuffer));
+
+    for (uint32_t i = 0; i < kBufferSize; ++i)
+    {
+        EXPECT_EQ(data[i], 0xFF);
+    }
+
+    unlockAndroidHardwareBuffer(aHardwareBuffer);
+
+    glBindBuffer(GL_COPY_READ_BUFFER, 0);
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+    // Delete the source AHB
     destroyAndroidHardwareBuffer(aHardwareBuffer);
 }
 
