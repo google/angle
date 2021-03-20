@@ -33,6 +33,24 @@
       "message": "Is this necessary?   I thought the normal ERR/WARN/INFO/etc. calls work already.   If not, can we get that working instead so we can get tracing working everywhere?",
       "revId": "0cf9bb06eea95f4693d6010b056b577810d8124b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5f82e1a_acdf44ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-20T23:43:50Z",
+      "side": 1,
+      "message": "Yes, you need this if you want to log directly from the trace itself.  They are isolated shared objects and don\u0027t include any ANGLE headers.  You also have to add \u003candroid/log.h\u003e to the trace source, but that\u0027s easy to remember.",
+      "parentUuid": "957d001e_ac6ad80d",
+      "revId": "0cf9bb06eea95f4693d6010b056b577810d8124b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
