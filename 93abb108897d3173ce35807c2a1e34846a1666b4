@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8a345fa_34e3dfd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T10:41:01Z",
+      "side": 1,
+      "message": "nit: The copyright dates on the new files are wrong",
+      "revId": "93abb108897d3173ce35807c2a1e34846a1666b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

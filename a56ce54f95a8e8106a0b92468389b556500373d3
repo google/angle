@@ -16,6 +16,24 @@
       "message": "Does this look good Shabi?",
       "revId": "a56ce54f95a8e8106a0b92468389b556500373d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11386834_e358b401",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T10:41:01Z",
+      "side": 1,
+      "message": "Yes, good job!",
+      "parentUuid": "e091e0ba_fa28eec5",
+      "revId": "a56ce54f95a8e8106a0b92468389b556500373d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
