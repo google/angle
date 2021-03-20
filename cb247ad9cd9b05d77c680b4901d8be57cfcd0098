@@ -122,6 +122,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d5130abb_4d371d49",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-20T16:03:51Z",
+      "side": 1,
+      "message": "it could be that \"glBufferStorageExternalEXT\" is not enough to trigger the \"isCurrentlyInUse\" path in this test case. If so, it should be easy to add a subdata that would force it down that path",
+      "parentUuid": "8d575bf3_4411d56f",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7878ef5a_da6acdde",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 1
