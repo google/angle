@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "0241c7ee515e14ad75184b02e279c29cf4a4df27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d564dd8e_1e1a619c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T11:10:32Z",
+      "side": 1,
+      "message": "Might want to rebase this on master and submit it earlier. I\u0027m assuming the deqp-khr3.2 test failures are from an earlier change in the chain.",
+      "revId": "0241c7ee515e14ad75184b02e279c29cf4a4df27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
