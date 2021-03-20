@@ -337,20 +337,11 @@ class ProgramState final : angle::NonCopyable
     bool hasEarlyFragmentTestsOptimization() const { return mEarlyFramentTestsOptimization; }
     rx::SpecConstUsageBits getSpecConstUsageBits() const { return mSpecConstUsageBits; }
 
-    bool isShaderMarkedForDetach(gl::ShaderType shaderType) const
-    {
-        return mAttachedShadersMarkedForDetach[shaderType];
-    }
-
     // A Program can only either be graphics or compute, but never both, so it
     // can answer isCompute() based on which shaders it has.
     bool isCompute() const { return mExecutable->hasLinkedShaderStage(ShaderType::Compute); }
 
     const std::string &getLabel() const { return mLabel; }
-    const ShaderMap<bool> &getAttachedShadersMarkedForDetach() const
-    {
-        return mAttachedShadersMarkedForDetach;
-    }
 
     uint32_t getLocationsUsedForXfbExtension() const { return mLocationsUsedForXfbExtension; }
 
@@ -388,7 +379,6 @@ class ProgramState final : angle::NonCopyable
     sh::WorkGroupSize mComputeShaderLocalSize;
 
     ShaderMap<Shader *> mAttachedShaders;
-    ShaderMap<bool> mAttachedShadersMarkedForDetach;
 
     uint32_t mLocationsUsedForXfbExtension;
     std::vector<std::string> mTransformFeedbackVaryingNames;
@@ -480,7 +470,7 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
         return mProgram;
     }
 
-    void attachShader(const Context *context, Shader *shader);
+    void attachShader(Shader *shader);
     void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 

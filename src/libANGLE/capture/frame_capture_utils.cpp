@@ -1035,14 +1035,6 @@ void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &program
             json->addScalar("Handle", 0);
         }
     }
-    const gl::ShaderMap<bool> &sm = programState.getAttachedShadersMarkedForDetach();
-    for (gl::ShaderType shaderType : gl::AllShaderTypes())
-    {
-        if (sm[shaderType])
-        {
-            json->addCString(gl::ShaderTypeToString(shaderType), "Attached");
-        }
-    }
     json->addScalar("LocationsUsedForXfbExtension", programState.getLocationsUsedForXfbExtension());
     for (const std::string &transformFeedbackVaryingName :
          programState.getTransformFeedbackVaryingNames())

@@ -395,10 +395,6 @@ TEST_P(ProgramPipelineTest31, DetachAndModifyShader)
 {
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
-    // TODO (timvp): Fix this test for Vulkan with PPO
-    // http://anglebug.com/3570
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const GLchar *vertString = essl31_shaders::vs::Simple();
     const GLchar *fragString = essl31_shaders::fs::Green();
 

@@ -3709,8 +3709,7 @@ bool ValidateAttachShader(const Context *context, ShaderProgramID program, Shade
         return false;
     }
 
-    if (programObject->getAttachedShader(shaderObject->getType()) &&
-        !programObject->getState().isShaderMarkedForDetach(shaderObject->getType()))
+    if (programObject->getAttachedShader(shaderObject->getType()))
     {
         context->validationError(GL_INVALID_OPERATION, kShaderAttachmentHasShader);
         return false;

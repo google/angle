@@ -1166,7 +1166,6 @@ ImageBinding::~ImageBinding() = default;
 ProgramState::ProgramState()
     : mLabel(),
       mAttachedShaders{},
-      mAttachedShadersMarkedForDetach{},
       mLocationsUsedForXfbExtension(0),
       mAtomicCounterUniformRange(0, 0),
       mYUVOutput(false),
@@ -1342,8 +1341,7 @@ void Program::onDestroy(const Context *context)
         if (mState.mAttachedShaders[shaderType])
         {
             mState.mAttachedShaders[shaderType]->release(context);
-            mState.mAttachedShaders[shaderType]                = nullptr;
-            mState.mAttachedShadersMarkedForDetach[shaderType] = false;
+            mState.mAttachedShaders[shaderType] = nullptr;
         }
     }
 
@@ -1372,20 +1370,10 @@ const std::string &Program::getLabel() const
     return mState.mLabel;
 }
 
-void Program::attachShader(const Context *context, Shader *shader)
+void Program::attachShader(Shader *shader)
 {
-    resolveLink(context);
     ShaderType shaderType = shader->getType();
     ASSERT(shaderType != ShaderType::InvalidEnum);
-
-    // Since detachShader doesn't actually detach anymore, we need to do that work when attaching a
-    // new shader to make sure we don't lose track of it and free the resources.
-    if (mState.mAttachedShaders[shaderType])
-    {
-        mState.mAttachedShaders[shaderType]->release(context);
-        mState.mAttachedShaders[shaderType]                = nullptr;
-        mState.mAttachedShadersMarkedForDetach[shaderType] = false;
-    }
 
     mState.mAttachedShaders[shaderType] = shader;
     mState.mAttachedShaders[shaderType]->addRef();
@@ -1398,19 +1386,8 @@ void Program::detachShader(const Context *context, Shader *shader)
     ASSERT(shaderType != ShaderType::InvalidEnum);
 
     ASSERT(mState.mAttachedShaders[shaderType] == shader);
-
-    if (isSeparable())
-    {
-        // Don't actually detach the shader since we still need it in case this
-        // Program is part of a Program Pipeline Object. Instead, leave a mark
-        // that indicates we intended to.
-        mState.mAttachedShadersMarkedForDetach[shaderType] = true;
-        return;
-    }
-
     shader->release(context);
-    mState.mAttachedShaders[shaderType]                = nullptr;
-    mState.mAttachedShadersMarkedForDetach[shaderType] = false;
+    mState.mAttachedShaders[shaderType] = nullptr;
 }
 
 int Program::getAttachedShadersCount() const

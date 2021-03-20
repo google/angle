@@ -559,8 +559,8 @@ angle::Result GLES1Renderer::linkProgram(Context *context,
 
     *programOut = program;
 
-    programObject->attachShader(context, getShader(vertexShader));
-    programObject->attachShader(context, getShader(fragmentShader));
+    programObject->attachShader(getShader(vertexShader));
+    programObject->attachShader(getShader(fragmentShader));
 
     for (auto it : attribLocs)
     {
