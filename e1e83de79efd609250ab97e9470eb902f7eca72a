@@ -194,6 +194,24 @@
       "parentUuid": "32b7e80d_9f4e4106",
       "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2816dcf1_cfda24dd",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T11:40:33Z",
+      "side": 1,
+      "message": "\u003e All I\u0027m saying is that for SwiftShader and Cuttlefish as a reference implementation we can and should aim higher.\n\nNo arguments here!\n\nI missed the most important reason in the first comment, and that may have caused some misunderstanding. We use \"features\" to be able to track and contain whatever driver or platform specific thing we do. The fact that we can override or expose them is a(n important) bonus. \"features is how we do this\" means \"features is how we can make sure the workaround is not left there unnoticed for years\".\n\n\u003e As long as we understand that there\u0027s a difference between a GPU driver bug and a bug affecting SwiftShader, we\u0027re golden.\n\nBy the way, we use \"features\" for many things, including knowing which Vulkan features the driver exposes. So as far as ANGLE features are concerned, there\u0027s no difference between driver bugs, platform bugs, swiftshader bugs, hardware features, for-test flags etc. It\u0027s great to strive for an entirely bugfree swiftshader, sure, but when there is a bug (no matter how temporary), it doesn\u0027t make a difference for ANGLE if it was a hw or sws bug, it\u0027s dealt with the same way.",
+      "parentUuid": "1b22ef42_5a46de60",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
