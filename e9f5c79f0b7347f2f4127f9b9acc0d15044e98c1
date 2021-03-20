@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a9843b33_6cc1d3e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-20T20:35:01Z",
+      "side": 1,
+      "message": "yup, the new test fails as expected -\n\n [ RUN      ] ExternalBufferTestES31.SubDataCausesNoOrphaning/ES3_1_Vulkan_AsyncQueue\nI  645.981s run_tests_on_device(HT7BF1A04521)  ../../third_party/angle/src/tests/test_utils/ANGLETest.cpp:63: Failure\nI  645.981s run_tests_on_device(HT7BF1A04521)\nBufferVk.cpp:811 (acquireBufferHelper): \t! Assert failed in acquireBufferHelper (../../third_party/angle/src/libANGLE/renderer/vulkan/BufferVk.cpp:811): mBuffer \u003d\u003d nullptr || mBuffer-\u003eisExternalBuffer() \u003d\u003d false\nI  645.981s run_tests_on_device(HT7BF1A04521)  Stack trace:\nI  645.981s run_tests_on_device(HT7BF1A04521)  #00 pc 0x00000000003b3fa3 /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #01 pc 0x00000000006a4547 /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #02 pc 0x0000000000513dff /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #03 pc 0x0000000000516447 /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #04 pc 0x000000000051403b /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #05 pc 0x000000000051418f /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #06 pc 0x00000000003586cf /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #07 pc 0x000000000037a99b /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #08 pc 0x00000000002c8417 /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libGLESv2_angle.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  #09 pc 0x00000000005892b3 /data/app/org.chromium.native_test-iqt83ZW3UpErG8OmO-NflQ\u003d\u003d/lib/arm64/libangle_end2end_tests__library.so\nI  645.981s run_tests_on_device(HT7BF1A04521)  \n\n\nExcerpt \u003d\n BufferVk.cpp:811 (acquireBufferHelper): \t! Assert failed in acquireBufferHelper \n (../../third_party/angle/src/libANGLE/renderer/vulkan/BufferVk.cpp:811): mBuffer \u003d\u003d nullptr || \n mBuffer-\u003eisExternalBuffer() \u003d\u003d false",
+      "revId": "e9f5c79f0b7347f2f4127f9b9acc0d15044e98c1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
