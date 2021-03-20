@@ -165,6 +165,30 @@
       },
       "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2aee4ac8_8d09d92e",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 813,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-20T20:36:59Z",
+      "side": 1,
+      "message": "see new test here -\u003e https://chromium-review.googlesource.com/c/angle/angle/+/2776737/\n\nfails without this change",
+      "parentUuid": "7878ef5a_da6acdde",
+      "range": {
+        "startLine": 813,
+        "startChar": 4,
+        "endLine": 813,
+        "endChar": 71
+      },
+      "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
