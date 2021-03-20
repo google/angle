@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8d575bf3_4411d56f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-20T15:29:06Z",
+      "side": 1,
+      "message": "this test -\u003e https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/tests/gl_tests/ExternalBufferTest.cpp#97\nshould have triggered the assert. I\u0027m not sure why it didn\u0027t\n\nDoesn\u0027t that test look sufficient to trigger the assert in [ref]?",
+      "parentUuid": "c78de3ce_ebeb1f34",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7878ef5a_da6acdde",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 1
