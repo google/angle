@@ -89,6 +89,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5270b445_1c930069",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2021-03-20T04:43:24Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem like a discussion to be had in the review of a change. Has a bug been opened for investigating and reporting findings about the root cause yet?",
+      "parentUuid": "d908fcfa_be75fd1f",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3ae7d692_8653f06c",
@@ -156,6 +174,24 @@
       "side": 1,
       "message": "FYI, two current examples:\n\n    // Feature disabled due to driver bugs:\n    //\n    // - Swiftshader on mac: http://anglebug.com/4937\n    // - Intel on windows: http://anglebug.com/5032\n    // - AMD on windows: http://crbug.com/1132366\n    ANGLE_FEATURE_CONDITION(\u0026mFeatures, enableMultisampledRenderToTexture,\n                            !(IsApple() \u0026\u0026 isSwiftShader) \u0026\u0026 !(IsWindows() \u0026\u0026 (isIntel || isAMD)));\n\n    // Feature disabled due to driver bugs:\n    //\n    // - Swiftshader: http://anglebug.com/5142\n    // - Qualcomm: http://anglebug.com/5143\n    ANGLE_FEATURE_CONDITION(\n        \u0026mFeatures, supportsImageCubeArray,\n        mPhysicalDeviceFeatures.imageCubeArray \u003d\u003d VK_TRUE \u0026\u0026 !isSwiftShader \u0026\u0026 !isQualcomm);\n\nDon\u0027t take it personally, \"features\" are how we manage to contain these hacks to one place. If anything, it will allow us to easily track where these hacks are applied.",
       "parentUuid": "bf65628b_f4f13e9c",
+      "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b22ef42_5a46de60",
+        "filename": "src/libANGLE/renderer/vulkan/DisplayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2021-03-20T04:43:24Z",
+      "side": 1,
+      "message": "I understand why this feature (no pun intended) exists for GPU driver bug workarounds. Getting a fix from an IHV can take years, and even then it\u0027s often not rolled out everywhere. So workarounds like that are a fact of life for ANGLE, and it\u0027s an important quality of the project that the impact of these bugs on applications is eliminated or minimized in such a well-controlled fashion.\n\nAll I\u0027m saying is that for SwiftShader and Cuttlefish as a reference implementation we can and should aim higher. It\u0027s important to realize that we control everything about the Cuttlefish device. EVERYTHING. AquireNextImage times out? We can fix that. Need a new function which can handle this robustly? We can add that.\n\nSorry to hammer on this, but I\u0027d really like to get this message across. Even just today I found out Skia is applying a workaround for an (alleged) SwiftShader bug, which harms performance and which may be the cause of flakiness. We were never informed about the issue they were trying to \"solve\".\n\n\u003e Don\u0027t take it personally, \"features\" are how we manage to contain these hacks to one place. If anything, it will allow us to easily track where these hacks are applied.\n\nOf course it\u0027s nothing personal. I\u0027m just trying to get a point across (which you\u0027re free to agree or disagree with, but just stating \"features is how we do this\" isn\u0027t much of a nuanced argument). You\u0027re right that these ANGLE \"features\" are at least tracked well. As long as we understand that there\u0027s a difference between a GPU driver bug and a bug affecting SwiftShader, we\u0027re golden.\n\nThe benefit of a reference implementation which doesn\u0027t require workarounds is that it serves as an example for other vendors so that we can build a better ecosystem around this technology.",
+      "parentUuid": "32b7e80d_9f4e4106",
       "revId": "e1e83de79efd609250ab97e9470eb902f7eca72a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
