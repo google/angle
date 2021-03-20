@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c78de3ce_ebeb1f34",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-20T09:50:44Z",
+      "side": 1,
+      "message": "You should be able to write a test that triggers the ASSERT without this change, don\u0027t you think? Use an external buffer, render with it (so it\u0027s in use), then update it such that the update size meets threshold.",
+      "parentUuid": "ecc64f8f_36bd2630",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 22
+      },
+      "revId": "cb247ad9cd9b05d77c680b4901d8be57cfcd0098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7878ef5a_da6acdde",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 1
