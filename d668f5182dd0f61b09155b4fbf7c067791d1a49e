@@ -34,6 +34,24 @@
       "parentUuid": "ca0bafcd_6cbfc561",
       "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "597f9d87_a9cffc59",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 876,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-20T02:46:19Z",
+      "side": 0,
+      "message": "This should be reverted, since it affects a lot more than just XFB tests, and this helps guarantee that the PPO tests are actually testing the right thing.\n\n\u003e glUseProgram generates an error if XFB is active.\n\nLooking at the spec, I see:\n\n\u003e When BeginTransformFeedback is called with an active program containing a vertex, tessellation or geometry shader, the set of output variables captured during transform feedback is taken from the active program object and may not be changed while transform feedback is active. The program object must be active until EndTransformFeedback is called, except while the transform feedback object is paused.\n\n\u003e An INVALID_OPERATION error is generated :\n\u003e • by UseProgram if the current transform feedback object is active and not paused;\n\nI don\u0027t see a glUseProgram(0) call before glBeginTransformFeedback() in your test, so it\u0027s entirely possible there\u0027s another program still bound which is what\u0027s generating the error.   I suggest adding glUseProgram(0) to the start of VaryingIOBlockSeparableProgramWithXFB to see if that helps.   Then, glUseProgram(0) shouldn\u0027t be changing the active program object and there shouldn\u0027t be any errors generated (assuming I\u0027m understanding the spec correctly).\n\n\u003e If program pipeline is used the bound program becomes null. glUseProgram(0) will have the same effect.\n\nI\u0027m not sure what you mean here.   Does the test hit a segfault when this call is made?",
+      "parentUuid": "6dd763b4_043f9285",
+      "revId": "d668f5182dd0f61b09155b4fbf7c067791d1a49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
