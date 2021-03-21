@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f2ba023_f8c208e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-21T19:54:04Z",
+      "side": 1,
+      "message": "Added 2 tests -\n1. SubDataDoesNotCauseOrphaning - log link -\u003e https://chromium-swarm.appspot.com/task?id\u003d526e3412e03e6d10\u0026w\u003dtrue. Log excerpt -\n [ RUN      ] ExternalBufferTestES31.SubDataDoesNotCauseOrphaning/ES3_1_Vulkan\nI  149.649s run_tests_on_device(HT7C11A06650)  ../../third_party/angle/src/tests/test_utils/ANGLETest.cpp:63: Failure\nI  149.649s run_tests_on_device(HT7C11A06650)  BufferVk.cpp:811 (acquireBufferHelper): \t! Assert failed in acquireBufferHelper (../../third_party/angle/src/libANGLE/renderer/vulkan/BufferVk.cpp:811): mBuffer \u003d\u003d nullptr || mBuffer-\u003eisExternalBuffer() \u003d\u003d false\n\n\n2. MapBufferDoesNotCauseOrphaning - log link -\u003e https://chromium-swarm.appspot.com/task?id\u003d526e341411bf5a10\u0026w\u003dtrue. Log excerpt -\n [ RUN      ] ExternalBufferTestES31.MapBufferDoesNotCauseOrphaning/ES3_1_Vulkan\nI  281.663s run_tests_on_device(HT7BG1A03925)  ../../third_party/angle/src/tests/test_utils/ANGLETest.cpp:63: Failure\nI  281.663s run_tests_on_device(HT7BG1A03925)  BufferVk.cpp:811 (acquireBufferHelper): \t! Assert failed in acquireBufferHelper (../../third_party/angle/src/libANGLE/renderer/vulkan/BufferVk.cpp:811): mBuffer \u003d\u003d nullptr || mBuffer-\u003eisExternalBuffer() \u003d\u003d false",
+      "revId": "02be16e518d33c727567c6d0d34315e47b40ef6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
