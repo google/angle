@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efeb3a73_e37f86c6",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-21T05:12:23Z",
+      "side": 1,
+      "message": "Is this line supposed to be removed? (As in, it\u0027s supposed to be automatic, right?)",
+      "range": {
+        "startLine": 746,
+        "startChar": 4,
+        "endLine": 746,
+        "endChar": 22
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3c937f5_0e558e2a",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-21T05:12:23Z",
+      "side": 1,
+      "message": "Not sure if this really tests (all of) the change in this CL. Shouldn\u0027t the relinked program be having a different incompatible set of varyings? Otherwise how can you be sure the varyings were properly updated?",
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
