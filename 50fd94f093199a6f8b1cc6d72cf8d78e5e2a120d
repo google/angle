@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "890f9ba8_a4b01bae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-22T16:31:41Z",
+      "side": 1,
+      "message": "you have any test in mind that can expose such a corner case?",
+      "parentUuid": "cb14e524_0451137b",
+      "revId": "50fd94f093199a6f8b1cc6d72cf8d78e5e2a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4f309489_292c2b23",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
@@ -48,6 +66,30 @@
       "writtenOn": "2021-03-22T16:03:59Z",
       "side": 1,
       "message": "nit: wrong assert macro",
+      "range": {
+        "startLine": 1992,
+        "startChar": 4,
+        "endLine": 1992,
+        "endChar": 10
+      },
+      "revId": "50fd94f093199a6f8b1cc6d72cf8d78e5e2a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00d19de5_8b5b880a",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1992,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-22T16:31:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f309489_292c2b23",
       "range": {
         "startLine": 1992,
         "startChar": 4,
