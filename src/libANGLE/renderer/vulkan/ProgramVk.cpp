@@ -773,8 +773,8 @@ angle::Result ProgramVk::updateUniforms(ContextVk *contextVk)
     {
         // We need to reinitialize the descriptor sets if we newly allocated buffers since we can't
         // modify the descriptor sets once initialized.
-        vk::UniformsAndXfbDesc defaultUniformsDesc;
-        vk::UniformsAndXfbDesc *uniformsAndXfbBufferDesc;
+        vk::UniformsAndXfbDescriptorDesc defaultUniformsDesc;
+        vk::UniformsAndXfbDescriptorDesc *uniformsAndXfbBufferDesc;
 
         if (glExecutable.hasTransformFeedbackOutput())
         {

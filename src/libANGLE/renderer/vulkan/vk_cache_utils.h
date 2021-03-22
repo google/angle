@@ -1101,14 +1101,14 @@ class TextureDescriptorDesc
     ANGLE_DISABLE_STRUCT_PADDING_WARNINGS
 };
 
-class UniformsAndXfbDesc
+class UniformsAndXfbDescriptorDesc
 {
   public:
-    UniformsAndXfbDesc();
-    ~UniformsAndXfbDesc();
+    UniformsAndXfbDescriptorDesc();
+    ~UniformsAndXfbDescriptorDesc();
 
-    UniformsAndXfbDesc(const UniformsAndXfbDesc &other);
-    UniformsAndXfbDesc &operator=(const UniformsAndXfbDesc &other);
+    UniformsAndXfbDescriptorDesc(const UniformsAndXfbDescriptorDesc &other);
+    UniformsAndXfbDescriptorDesc &operator=(const UniformsAndXfbDescriptorDesc &other);
 
     BufferSerial getDefaultUniformBufferSerial() const
     {
@@ -1128,7 +1128,7 @@ class UniformsAndXfbDesc
     size_t hash() const;
     void reset();
 
-    bool operator==(const UniformsAndXfbDesc &other) const;
+    bool operator==(const UniformsAndXfbDescriptorDesc &other) const;
 
   private:
     uint32_t mBufferCount;
@@ -1312,9 +1312,9 @@ struct hash<rx::vk::TextureDescriptorDesc>
 };
 
 template <>
-struct hash<rx::vk::UniformsAndXfbDesc>
+struct hash<rx::vk::UniformsAndXfbDescriptorDesc>
 {
-    size_t operator()(const rx::vk::UniformsAndXfbDesc &key) const { return key.hash(); }
+    size_t operator()(const rx::vk::UniformsAndXfbDescriptorDesc &key) const { return key.hash(); }
 };
 
 template <>
@@ -1355,7 +1355,7 @@ enum class VulkanCacheType
     DescriptorSet,
     DescriptorSetLayout,
     TextureDescriptors,
-    UniformsAndXfbDescriptorSet,
+    UniformsAndXfbDescriptors,
     Framebuffer,
     EnumCount
 };

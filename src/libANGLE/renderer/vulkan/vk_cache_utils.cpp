@@ -2962,28 +2962,30 @@ bool TextureDescriptorDesc::operator==(const TextureDescriptorDesc &other) const
     return memcmp(mSerials.data(), other.mSerials.data(), sizeof(TexUnitSerials) * mMaxIndex) == 0;
 }
 
-// UniformsAndXfbDesc implementation.
-UniformsAndXfbDesc::UniformsAndXfbDesc()
+// UniformsAndXfbDescriptorDesc implementation.
+UniformsAndXfbDescriptorDesc::UniformsAndXfbDescriptorDesc()
 {
     reset();
 }
 
-UniformsAndXfbDesc::~UniformsAndXfbDesc()                               = default;
-UniformsAndXfbDesc::UniformsAndXfbDesc(const UniformsAndXfbDesc &other) = default;
-UniformsAndXfbDesc &UniformsAndXfbDesc::operator=(const UniformsAndXfbDesc &other) = default;
+UniformsAndXfbDescriptorDesc::~UniformsAndXfbDescriptorDesc() = default;
+UniformsAndXfbDescriptorDesc::UniformsAndXfbDescriptorDesc(
+    const UniformsAndXfbDescriptorDesc &other)                      = default;
+UniformsAndXfbDescriptorDesc &UniformsAndXfbDescriptorDesc::operator=(
+    const UniformsAndXfbDescriptorDesc &other) = default;
 
-size_t UniformsAndXfbDesc::hash() const
+size_t UniformsAndXfbDescriptorDesc::hash() const
 {
     return angle::ComputeGenericHash(&mBufferSerials, sizeof(BufferSerial) * mBufferCount);
 }
 
-void UniformsAndXfbDesc::reset()
+void UniformsAndXfbDescriptorDesc::reset()
 {
     mBufferCount = 0;
     memset(&mBufferSerials, 0, sizeof(BufferSerial) * kMaxBufferCount);
 }
 
-bool UniformsAndXfbDesc::operator==(const UniformsAndXfbDesc &other) const
+bool UniformsAndXfbDescriptorDesc::operator==(const UniformsAndXfbDescriptorDesc &other) const
 {
     if (mBufferCount != other.mBufferCount)
     {
@@ -3826,6 +3828,6 @@ void DescriptorSetCache<key, cacheType>::destroy(RendererVk *rendererVk)
 // Below declarations are needed to avoid linker errors.
 template class DescriptorSetCache<vk::TextureDescriptorDesc, VulkanCacheType::TextureDescriptors>;
 
-template class DescriptorSetCache<vk::UniformsAndXfbDesc,
-                                  VulkanCacheType::UniformsAndXfbDescriptorSet>;
+template class DescriptorSetCache<vk::UniformsAndXfbDescriptorDesc,
+                                  VulkanCacheType::UniformsAndXfbDescriptors>;
 }  // namespace rx

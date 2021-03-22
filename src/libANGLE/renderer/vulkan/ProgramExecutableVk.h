@@ -162,7 +162,7 @@ class ProgramExecutableVk
         gl::ShaderMap<DefaultUniformBlock> &defaultUniformBlocks,
         vk::BufferHelper *defaultUniformBuffer,
         ContextVk *contextVk,
-        const vk::UniformsAndXfbDesc &xfbBufferDesc);
+        const vk::UniformsAndXfbDescriptorDesc &xfbBufferDesc);
     angle::Result updateInputAttachmentDescriptorSet(const gl::ProgramExecutable &executable,
                                                      const gl::ShaderType shaderType,
                                                      ContextVk *contextVk,
@@ -189,9 +189,10 @@ class ProgramExecutableVk
     friend class ProgramVk;
     friend class ProgramPipelineVk;
 
-    angle::Result allocUniformAndXfbDescriptorSet(ContextVk *contextVk,
-                                                  const vk::UniformsAndXfbDesc &xfbBufferDesc,
-                                                  bool *newDescriptorSetAllocated);
+    angle::Result allocUniformAndXfbDescriptorSet(
+        ContextVk *contextVk,
+        const vk::UniformsAndXfbDescriptorDesc &xfbBufferDesc,
+        bool *newDescriptorSetAllocated);
 
     angle::Result allocateDescriptorSet(ContextVk *contextVk,
                                         DescriptorSetIndex descriptorSetIndex);
@@ -250,8 +251,8 @@ class ProgramExecutableVk
     size_t mNumDefaultUniformDescriptors;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
-    DescriptorSetCache<vk::UniformsAndXfbDesc, VulkanCacheType::UniformsAndXfbDescriptorSet>
-        mUniformsAndXfbDescriptorSetCache;
+    DescriptorSetCache<vk::UniformsAndXfbDescriptorDesc, VulkanCacheType::UniformsAndXfbDescriptors>
+        mUniformsAndXfbDescriptorsCache;
     DescriptorSetCache<vk::TextureDescriptorDesc, VulkanCacheType::TextureDescriptors>
         mTextureDescriptorsCache;
 

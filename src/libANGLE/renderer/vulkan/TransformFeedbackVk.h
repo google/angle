@@ -97,7 +97,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl
         return mCounterBufferHandles;
     }
 
-    vk::UniformsAndXfbDesc &getTransformFeedbackDesc() { return mXFBBuffersDesc; }
+    vk::UniformsAndXfbDescriptorDesc &getTransformFeedbackDesc() { return mXFBBuffersDesc; }
 
   private:
     void writeDescriptorSet(ContextVk *contextVk,
@@ -129,7 +129,7 @@ class TransformFeedbackVk : public TransformFeedbackImpl
     gl::TransformFeedbackBuffersArray<VkBuffer> mCounterBufferHandles;
 
     // Keys to look up in the descriptor set cache
-    vk::UniformsAndXfbDesc mXFBBuffersDesc;
+    vk::UniformsAndXfbDescriptorDesc mXFBBuffersDesc;
 };
 
 }  // namespace rx
