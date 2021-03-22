@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9eaa5a27_903687d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:22:43Z",
+      "side": 1,
+      "message": "I can\u0027t see why this would be complete. We shouldn\u0027t ever check for nullptr in ANGLE. In general we don\u0027t validate pointers and we can\u0027t validate pointers. See comments in an earlier patch. Maybe this is an issue with buffer attributes?",
+      "revId": "4caa4fe20decd7da5cea70457be2dd921f472aab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cf6322d3_92e4125d",
