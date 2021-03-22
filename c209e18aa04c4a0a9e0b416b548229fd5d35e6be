@@ -46,6 +46,30 @@
       },
       "revId": "c209e18aa04c4a0a9e0b416b548229fd5d35e6be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03851a79_7925086d",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T17:11:23Z",
+      "side": 1,
+      "message": "Separable programs make things always active I think. Is this an issue with separable or all programs?",
+      "parentUuid": "37d640a7_d7f80cdc",
+      "range": {
+        "startLine": 903,
+        "startChar": 80,
+        "endLine": 903,
+        "endChar": 91
+      },
+      "revId": "c209e18aa04c4a0a9e0b416b548229fd5d35e6be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
