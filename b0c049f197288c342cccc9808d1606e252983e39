@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "508a2369_1847161b",
+        "filename": "infra/ANGLEWrangling.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-22T21:31:53Z",
+      "side": 1,
+      "message": "Another nit is that you can move the link out of the text for better readability. See how \"[Flaker]\" above is used.",
+      "range": {
+        "startLine": 33,
+        "startChar": 31,
+        "endLine": 33,
+        "endChar": 112
+      },
+      "revId": "b0c049f197288c342cccc9808d1606e252983e39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
