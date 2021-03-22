@@ -16,6 +16,46 @@
       "message": "PTAL, anything else here?",
       "revId": "50fd94f093199a6f8b1cc6d72cf8d78e5e2a120d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cb14e524_0451137b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:03:59Z",
+      "side": 1,
+      "message": "I suspect this is fragile and has edge cases because it\u0027s not done in a traverser. LGTM because we pass the tests.",
+      "revId": "50fd94f093199a6f8b1cc6d72cf8d78e5e2a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f309489_292c2b23",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1992,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:03:59Z",
+      "side": 1,
+      "message": "nit: wrong assert macro",
+      "range": {
+        "startLine": 1992,
+        "startChar": 4,
+        "endLine": 1992,
+        "endChar": 10
+      },
+      "revId": "50fd94f093199a6f8b1cc6d72cf8d78e5e2a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
