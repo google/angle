@@ -16,6 +16,24 @@
       "message": "Could also go with finalizeImageLayout",
       "revId": "769d623d11ea5520f476672ca280e8d0f4818e27",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bf15c11_3d4bf37b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-22T17:19:20Z",
+      "side": 1,
+      "message": "Changed to finalizeImageLayout",
+      "parentUuid": "ca1176cc_6ec66659",
+      "revId": "769d623d11ea5520f476672ca280e8d0f4818e27",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
