@@ -33,6 +33,24 @@
       "message": "No tests turned on by this \u003d ?",
       "revId": "c78985fccf32638b0743cca909c69990617b472d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00296c57_51e01f92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-22T16:34:03Z",
+      "side": 1,
+      "message": "commit message has this test tagged -\n KHR-GLES32.core.tessellation_shader.tessellation_shader_tc_barriers.barrier_guarded_*_calls\n\nverifying if that is an oversight?",
+      "parentUuid": "91eb62a9_bdeaec83",
+      "revId": "c78985fccf32638b0743cca909c69990617b472d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
