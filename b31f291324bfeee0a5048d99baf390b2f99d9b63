@@ -60,6 +60,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "21ef63f3_68a6eeb6",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-22T15:58:30Z",
+      "side": 1,
+      "message": "I think GN_OUTPUT_DIRECTORY can be contained entirely within this script. This script both generates and deletes that directory when done.",
+      "parentUuid": "05eaf594_0a7eb53b",
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f62c4286_6411b855",
         "filename": "scripts/roll_aosp.sh",
         "patchSetId": 3
