@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "180662e4_9bfcdd73",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-03-22T16:00:39Z",
+      "side": 1,
+      "message": "Note: With this early ANI, we are doing an ANI without a QueuePresent first. This means we can be waiting for an unavailable image - on any platform. So timeout will happen.",
+      "revId": "135385a1ae86bf857be37475f927dcf78c9476b4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
