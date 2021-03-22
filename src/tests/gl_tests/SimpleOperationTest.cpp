@@ -52,6 +52,9 @@ class SimpleOperationTest : public ANGLETest
                                                        int windowHeight);
 };
 
+class SimpleOperationTest31 : public SimpleOperationTest
+{};
+
 void SimpleOperationTest::verifyBuffer(const std::vector<uint8_t> &data, GLenum binding)
 {
     if (!IsGLExtensionEnabled("GL_EXT_map_buffer_range"))
@@ -1205,6 +1208,21 @@ TEST_P(SimpleOperationTest, PrimitiveModeNegativeTest)
     EXPECT_GL_ERROR(GL_INVALID_ENUM);
 }
 
+// Verify we don't crash when attempting to draw using GL_TRIANGLES without a program bound.
+TEST_P(SimpleOperationTest31, DrawTrianglesWithoutProgramBound)
+{
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+// Verify we don't crash when attempting to draw using GL_LINE_STRIP_ADJACENCY without a program
+// bound.
+TEST_P(SimpleOperationTest31, DrawLineStripAdjacencyWithoutProgramBound)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_geometry_shader"));
+
+    glDrawArrays(GL_LINE_STRIP_ADJACENCY, 0, 10);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
@@ -1222,5 +1240,7 @@ ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND(
                                              /* hasBarrier */ false,
                                              /* cheapRenderPass */ false),
     WithNoVulkanViewportFlip(ES2_VULKAN()));
+
+ANGLE_INSTANTIATE_TEST_ES2_AND_ES3_AND_ES31(SimpleOperationTest31);
 
 }  // namespace
