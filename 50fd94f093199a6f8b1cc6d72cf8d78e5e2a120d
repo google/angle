@@ -107,6 +107,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "467b7d34_b6c6765d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-22T16:48:39Z",
+      "side": 1,
+      "message": "\u003e Can you add / substract to gl_InvocationID when indexing? Multiply it? etc.\n\n1. what shabi said - spec explicitly requires it to be \"gl_InvocationID\"\n2. \"gl_InvocationID\" builtin is read-only",
+      "parentUuid": "1efdf3b8_7c445af2",
+      "revId": "50fd94f093199a6f8b1cc6d72cf8d78e5e2a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4f309489_292c2b23",
