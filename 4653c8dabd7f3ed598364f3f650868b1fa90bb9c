@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ec8a550_5afab69f",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:41:05Z",
+      "side": 1,
+      "message": "what\u0027s with all this using stuff? can we delete it?",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 28
+      },
+      "revId": "4653c8dabd7f3ed598364f3f650868b1fa90bb9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "591faee6_a8c111e6",
+        "filename": "src/libANGLE/capture/frame_capture_utils.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:41:05Z",
+      "side": 1,
+      "message": "nit: closing namespace comment.",
+      "revId": "4653c8dabd7f3ed598364f3f650868b1fa90bb9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a05dd24c_79acff27",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTests.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:41:05Z",
+      "side": 1,
+      "message": "this makes me a bit worried that json formatting could make this inconsistent. any safeguards we could use to make sure it\u0027s formatted consistently?",
+      "range": {
+        "startLine": 171,
+        "startChar": 15,
+        "endLine": 171,
+        "endChar": 21
+      },
+      "revId": "4653c8dabd7f3ed598364f3f650868b1fa90bb9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
