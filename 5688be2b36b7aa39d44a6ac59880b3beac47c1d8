@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f1944cb_7d73e2bd",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-22T19:55:12Z",
+      "side": 1,
+      "message": "I\u0027ve updated the callers of the non-const versions to call the const versions and removed these non-const functions.",
+      "parentUuid": "f9e9916f_5e3ab660",
+      "range": {
+        "startLine": 315,
+        "startChar": 37,
+        "endLine": 315,
+        "endChar": 60
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a6925f10_00553df2",
@@ -159,6 +183,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6ebaad4_e5bd823e",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-22T19:55:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "016750e2_4385b213",
+      "range": {
+        "startLine": 356,
+        "startChar": 17,
+        "endLine": 356,
+        "endChar": 32
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "efeb3a73_e37f86c6",
@@ -182,6 +230,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fb34833_6b03c3a4",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 746,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-22T19:55:12Z",
+      "side": 1,
+      "message": "Removed.",
+      "parentUuid": "efeb3a73_e37f86c6",
+      "range": {
+        "startLine": 746,
+        "startChar": 4,
+        "endLine": 746,
+        "endChar": 22
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e3c937f5_0e558e2a",
@@ -195,6 +267,24 @@
       "writtenOn": "2021-03-21T05:12:23Z",
       "side": 1,
       "message": "Not sure if this really tests (all of) the change in this CL. Shouldn\u0027t the relinked program be having a different incompatible set of varyings? Otherwise how can you be sure the varyings were properly updated?",
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "781b285f_759c3efb",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 749,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-22T19:55:12Z",
+      "side": 1,
+      "message": "I\u0027m just trying to make sure that the PPO uses the new program when it\u0027s re-linked.\n\nThe varying stuff is tested with DetachAndModifyShader() in this file, which is fixed with this relation chain and re-enabled with the final CL:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2776267",
+      "parentUuid": "e3c937f5_0e558e2a",
       "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
