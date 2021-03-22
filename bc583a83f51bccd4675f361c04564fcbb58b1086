@@ -51,6 +51,23 @@
       "message": "copy pasting comment -\n\nThe main fail i see is -\n\nangle_deqp_khr_gles32_vulkan_tests on NVIDIA GPU on Windows failed because of:\n\ndEQP.KHR_GLES32/core_internalformat_copy_tex_image_rgba8\n\ndEQP.KHR_GLES32/core_internalformat_texture2d_rgba_unsigned_short_5_5_5_1_rgba\n\ndEQP.KHR_GLES32/core_internalformat_texture2d_red_integer_unsigned_short_r16ui\n\ndEQP.KHR_GLES32/core_internalformat_texture2d_rgba_integer_unsigned_int_2_10_10_10_rev_rgb10_a2ui\n\nnvidia has had trouble with this test, rerunning it multiple times makes it pass\n\n\nOTOH, this fail might need a second look -\n\nangle_deqp_gles31_d3d11_tests on NVIDIA GPU on Windows failed because of:\n\ndEQP.GLES31/functional_ssbo_layout_random_all_shared_buffer_36",
       "revId": "bc583a83f51bccd4675f361c04564fcbb58b1086",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38d26385_d4eb58b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T17:09:41Z",
+      "side": 1,
+      "message": "LGTM - please enable or add a regression test for this fix.",
+      "revId": "bc583a83f51bccd4675f361c04564fcbb58b1086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
