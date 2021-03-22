@@ -70,6 +70,30 @@
       },
       "revId": "c209e18aa04c4a0a9e0b416b548229fd5d35e6be",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2e4d0e1_9a321e77",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-22T17:16:31Z",
+      "side": 1,
+      "message": "Shouldn\u0027t matter if it\u0027s separable or not. If TCS has an out varying that doesn\u0027t have a corresponding in varying in TES, it should still be considered active because TCS invocations themselves can read each others\u0027 outputs.\n\nMohan the comment still needs updating.",
+      "parentUuid": "03851a79_7925086d",
+      "range": {
+        "startLine": 903,
+        "startChar": 80,
+        "endLine": 903,
+        "endChar": 91
+      },
+      "revId": "c209e18aa04c4a0a9e0b416b548229fd5d35e6be",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
