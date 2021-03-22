@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f9e9916f_5e3ab660",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:00:56Z",
+      "side": 1,
+      "message": "avoid exposing mutable getters. you sholdn\u0027t need it. see below.",
+      "range": {
+        "startLine": 315,
+        "startChar": 37,
+        "endLine": 315,
+        "endChar": 60
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a6925f10_00553df2",
         "filename": "src/libANGLE/ProgramExecutable.h",
         "patchSetId": 3
@@ -84,6 +107,53 @@
         "startChar": 0,
         "endLine": 330,
         "endChar": 5
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "037fcd0c_76ff0591",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:00:56Z",
+      "side": 1,
+      "message": "See above.",
+      "parentUuid": "e87c45ad_870a27b6",
+      "range": {
+        "startLine": 315,
+        "startChar": 0,
+        "endLine": 330,
+        "endChar": 5
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "016750e2_4385b213",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 356,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:00:56Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 356,
+        "startChar": 17,
+        "endLine": 356,
+        "endChar": 32
       },
       "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
