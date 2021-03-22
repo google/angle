@@ -2129,10 +2129,12 @@ void MakeValidSize(bool isImage,
                    int *levelOffset)
 {
     const DXGIFormatSize &dxgiFormatInfo = d3d11::GetDXGIFormatSizeInfo(format);
+    bool validFormat                     = format != DXGI_FORMAT_UNKNOWN;
+    bool validImage                      = isImage && validFormat;
 
     int upsampleCount = 0;
     // Don't expand the size of full textures that are at least (blockWidth x blockHeight) already.
-    if (isImage || *requestWidth < static_cast<GLsizei>(dxgiFormatInfo.blockWidth) ||
+    if (validImage || *requestWidth < static_cast<GLsizei>(dxgiFormatInfo.blockWidth) ||
         *requestHeight < static_cast<GLsizei>(dxgiFormatInfo.blockHeight))
     {
         while (*requestWidth % dxgiFormatInfo.blockWidth != 0 ||
@@ -2143,7 +2145,7 @@ void MakeValidSize(bool isImage,
             upsampleCount++;
         }
     }
-    else
+    else if (validFormat)
     {
         if (*requestWidth % dxgiFormatInfo.blockWidth != 0)
         {
