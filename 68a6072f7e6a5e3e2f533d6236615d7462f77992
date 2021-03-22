@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0975f03c_d1d86ea5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 498,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-22T03:40:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbdc4f9a_c37e4191",
+      "range": {
+        "startLine": 498,
+        "startChar": 18,
+        "endLine": 498,
+        "endChar": 27
+      },
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ba9d52f_966605fe",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-03-19T17:36:26Z",
       "side": 1,
       "message": "Do we need this and \u0027kMaxTotalSize\u0027 above?",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a29f76d_2bcb625c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 516,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-22T03:40:01Z",
+      "side": 1,
+      "message": "Thanks Tim, kMaxTotalSize will be changed later in handling big pipeline cache, but kMaxBlobCacheSize will not be changed if there is compression logic. I would like to keep the two values in code if possible, they have different meanings.",
+      "parentUuid": "4ba9d52f_966605fe",
       "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -58,6 +100,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2845472f_1dfd655f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 571,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-22T03:40:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2848b970_9f2e9854",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ee334cf_49136250",
@@ -75,6 +135,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b2889f3_f7b89b37",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 595,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-22T03:40:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ee334cf_49136250",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b3b29270_58915d24",
@@ -88,6 +166,24 @@
       "writtenOn": "2021-03-19T17:36:26Z",
       "side": 1,
       "message": "WARN() \u003c\u003c \"Pipeline cache chunk header corrupted: checkNumber \u003d \" \u003c\u003c checkNumber \u003c\u003c \", numChunks \u003d \" \u003c\u003c numChunks \u003c\u003c \", compressedData.size() \u003d \" \u003c\u003c compressedData.size() \u003c\u003c \", (compressedSize + chunkSize) \u003d \" \u003c\u003c (compressedSize + chunkSize);",
+      "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79818691_eda5a62a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-22T03:40:01Z",
+      "side": 1,
+      "message": "Thanks! Tim",
+      "parentUuid": "b3b29270_58915d24",
       "revId": "68a6072f7e6a5e3e2f533d6236615d7462f77992",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
