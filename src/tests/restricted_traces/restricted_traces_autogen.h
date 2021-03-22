@@ -59,6 +59,7 @@ enum class RestrictedTraceID
     angry_birds_2_1500,
     arena_of_valor,
     asphalt_8,
+    avakin_life,
     brawl_stars,
     bus_simulator_indonesia,
     candy_crush_500,

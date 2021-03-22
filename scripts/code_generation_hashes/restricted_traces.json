@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "f5f9499ae2af272b495047184e990e8a",
+    "c29171b000c2d404c49cced86e674361",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -11,6 +11,8 @@
     "b775f6c42b1a09065c9c19660fb82113",
   "src/tests/restricted_traces/asphalt_8.tar.gz.sha1":
     "83e8aa4663fa6130db0bff09fb915f36",
+  "src/tests/restricted_traces/avakin_life.tar.gz.sha1":
+    "371845cdb84fddc484fed2c857d3b9db",
   "src/tests/restricted_traces/brawl_stars.tar.gz.sha1":
     "8b1cf8ebd8a1099b4d298bb3b446e8bd",
   "src/tests/restricted_traces/bus_simulator_indonesia.tar.gz.sha1":
@@ -98,13 +100,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "3ab4afd98fb76838fcf0a105be9921d0",
+    "7db9f776c0d0b4097b6b57f5e73e719c",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "8d1cb4e5cbf99156eb8e98292f48ebe4",
+    "1d2f1267d9c6f9d4d7fd82798a75a4e2",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "cb771409fc0f33ee841316567f81f443",
+    "c2fdaa88969fb4c588900fdb4e05228e",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "4936c5880b688e115fbafa03348ee9fa",
+    "b6d05e2c2bf19135af3c1dee6900a4cf",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":

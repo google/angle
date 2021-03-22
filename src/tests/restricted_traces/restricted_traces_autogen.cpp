@@ -16,6 +16,7 @@
 #include "angry_birds_2_1500/angry_birds_2_1500_capture_context1.h"
 #include "arena_of_valor/arena_of_valor_capture_context1.h"
 #include "asphalt_8/asphalt_8_capture_context2.h"
+#include "avakin_life/avakin_life_capture_context2.h"
 #include "brawl_stars/brawl_stars_capture_context1.h"
 #include "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1.h"
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
@@ -102,6 +103,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       asphalt_8::kReplayFrameStart, asphalt_8::kReplayFrameEnd, asphalt_8::kReplayDrawSurfaceWidth,
       asphalt_8::kReplayDrawSurfaceHeight, "asphalt_8"}},
+    {RestrictedTraceID::avakin_life,
+     {avakin_life::kReplayContextClientMajorVersion, avakin_life::kReplayContextClientMinorVersion,
+      avakin_life::kReplayFrameStart, avakin_life::kReplayFrameEnd,
+      avakin_life::kReplayDrawSurfaceWidth, avakin_life::kReplayDrawSurfaceHeight, "avakin_life"}},
     {RestrictedTraceID::brawl_stars,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       brawl_stars::kReplayFrameStart, brawl_stars::kReplayFrameEnd,
@@ -408,6 +413,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::asphalt_8:
             asphalt_8::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::avakin_life:
+            avakin_life::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::brawl_stars:
             brawl_stars::ReplayContext1Frame(frameIndex);
             break;
@@ -607,6 +615,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::asphalt_8:
             asphalt_8::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::avakin_life:
+            avakin_life::ResetContext2Replay();
             break;
         case RestrictedTraceID::brawl_stars:
             brawl_stars::ResetContext1Replay();
@@ -808,6 +819,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::asphalt_8:
             asphalt_8::SetupContext2Replay();
             break;
+        case RestrictedTraceID::avakin_life:
+            avakin_life::SetupContext2Replay();
+            break;
         case RestrictedTraceID::brawl_stars:
             brawl_stars::SetupContext1Replay();
             break;
@@ -1008,6 +1022,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::asphalt_8:
             asphalt_8::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::avakin_life:
+            avakin_life::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::brawl_stars:
             brawl_stars::SetBinaryDataDir(dataDir);
             break;
@@ -1207,6 +1224,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::asphalt_8:
             asphalt_8::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::avakin_life:
+            avakin_life::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::brawl_stars:
             brawl_stars::SetBinaryDataDecompressCallback(callback);
