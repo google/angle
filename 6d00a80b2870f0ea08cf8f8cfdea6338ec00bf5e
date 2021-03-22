@@ -39,6 +39,29 @@
       },
       "revId": "6d00a80b2870f0ea08cf8f8cfdea6338ec00bf5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8c4ea20_d4fd98e1",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:08:58Z",
+      "side": 1,
+      "message": "nit: k prefix for constants. Also you should clarify these are for capture. Right now they\u0027re just in the angle:: namespace.",
+      "range": {
+        "startLine": 29,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 33
+      },
+      "revId": "6d00a80b2870f0ea08cf8f8cfdea6338ec00bf5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
