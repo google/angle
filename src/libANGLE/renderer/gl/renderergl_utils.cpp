@@ -98,6 +98,20 @@ int getMaliTNumber(const FunctionsGL *functions)
     return number;
 }
 
+int getMaliGNumber(const FunctionsGL *functions)
+{
+    static int number = -1;
+    if (number == -1)
+    {
+        const char *nativeGLRenderer = GetString(functions, GL_RENDERER);
+        if (std::sscanf(nativeGLRenderer, "Mali-G%d", &number) < 1)
+        {
+            number = 0;
+        }
+    }
+    return number;
+}
+
 bool IsAdreno42xOr3xx(const FunctionsGL *functions)
 {
     int number = getAdrenoNumber(functions);
@@ -114,6 +128,12 @@ bool IsMaliT8xxOrOlder(const FunctionsGL *functions)
 {
     int number = getMaliTNumber(functions);
     return number != 0 && number < 900;
+}
+
+bool IsMaliG31OrOlder(const FunctionsGL *functions)
+{
+    int number = getMaliGNumber(functions);
+    return number != 0 && number <= 31;
 }
 
 int GetAndroidSdkLevel()
@@ -1979,7 +1999,8 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
         features, disableTimestampQueries,
         (IsLinux() && isVMWare) || (IsAndroid() && isNvidia) ||
             (IsAndroid() && GetAndroidSdkLevel() < 27 && IsAdreno5xxOrOlder(functions)) ||
-            (IsAndroid() && IsMaliT8xxOrOlder(functions)));
+            (IsAndroid() && IsMaliT8xxOrOlder(functions)) ||
+            (IsAndroid() && IsMaliG31OrOlder(functions)));
 
     ANGLE_FEATURE_CONDITION(features, encodeAndDecodeSRGBForGenerateMipmap, IsApple());
 
