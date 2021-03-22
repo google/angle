@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5a52c38d_b4c46442",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T16:34:50Z",
+      "side": 1,
+      "message": "I didn\u0027t quite fully understand the code. Can you add / substract to gl_InvocationID when indexing? Multiply it? etc.",
+      "parentUuid": "890f9ba8_a4b01bae",
+      "revId": "50fd94f093199a6f8b1cc6d72cf8d78e5e2a120d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4f309489_292c2b23",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
