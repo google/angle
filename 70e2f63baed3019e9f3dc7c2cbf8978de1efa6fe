@@ -76,6 +76,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5850d50_23e03699",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:58:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f045ac65_d6b61c18",
+      "range": {
+        "startLine": 172,
+        "startChar": 0,
+        "endLine": 174,
+        "endChar": 76
+      },
+      "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dcd634f5_e9016533",
@@ -113,6 +137,30 @@
       "side": 1,
       "message": "It\u0027s already up there (see ref above).",
       "parentUuid": "dcd634f5_e9016533",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 242,
+        "endChar": 76
+      },
+      "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd7df73d_d3962db7",
+        "filename": "include/GLSLANG/ShaderVars.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 242,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:58:25Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dba6e8b3_520ec509",
       "range": {
         "startLine": 239,
         "startChar": 0,
