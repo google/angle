@@ -62,6 +62,30 @@
       },
       "revId": "815a2b6f77e82d89d0dc315c4e4458a5596c5cbf",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0100808_8905694f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4499,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T19:47:19Z",
+      "side": 1,
+      "message": "Looks like we do not support buffer attributes.\n\nCheck out these variables in GLES1State.h:\n\n    bool mVertexArrayEnabled;\n    bool mNormalArrayEnabled;\n    bool mColorArrayEnabled;\n    bool mPointSizeArrayEnabled;\n    std::vector\u003cbool\u003e mTexCoordArrayEnabled;\n\nThese should have the correct values. Can we mirror those in the capture tool instead of using the attributes masks?",
+      "parentUuid": "187195ec_f215e1fa",
+      "range": {
+        "startLine": 4499,
+        "startChar": 53,
+        "endLine": 4499,
+        "endChar": 76
+      },
+      "revId": "815a2b6f77e82d89d0dc315c4e4458a5596c5cbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
