@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8131622f_270567f3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-22T19:31:58Z",
+      "side": 1,
+      "message": "CQ should have rejected this, I\u0027ll check what went wrong\nhttps://ci.chromium.org/ui/p/chromium/builders/try/android_angle_vk64_rel_ng/20211/overview",
+      "revId": "ba0bd78574b21a297e22ee2f8ac1efdeff0a9026",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
