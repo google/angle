@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "183aab56_a6bb0c81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-22T02:19:34Z",
+      "side": 1,
+      "message": "LGTM, although I\u0027m not as familiar with the code as Jamie and Shabi.",
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6925f10_00553df2",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-22T02:19:34Z",
+      "side": 1,
+      "message": "Its confusing to have two ways to call the same function.  Might be worth giving them unique names so it is clear which should be used, like getLinkedOutputVaryingsForThisReason.  I had to stare at them for a bit to verify they only differed by const.",
+      "range": {
+        "startLine": 315,
+        "startChar": 0,
+        "endLine": 330,
+        "endChar": 5
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "efeb3a73_e37f86c6",
