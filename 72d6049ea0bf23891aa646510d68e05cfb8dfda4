@@ -91,6 +91,30 @@
       },
       "revId": "72d6049ea0bf23891aa646510d68e05cfb8dfda4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6789d494_80d58dc3",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 964,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-22T19:30:55Z",
+      "side": 1,
+      "message": "Ah, looks like a copy/paste thing.   Reverted back to \u0027var\u0027.\n\nI had initially written these as functions in ShaderVariable, before I knew these functions even existed.   Unfortunately, ShaderVars.h can\u0027t include BinaryStream.h, and then I came across these functions and just copy/pasted my other implementations that I had been testing with.",
+      "parentUuid": "66fcb363_92f6aa7c",
+      "range": {
+        "startLine": 964,
+        "startChar": 70,
+        "endLine": 964,
+        "endChar": 84
+      },
+      "revId": "72d6049ea0bf23891aa646510d68e05cfb8dfda4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

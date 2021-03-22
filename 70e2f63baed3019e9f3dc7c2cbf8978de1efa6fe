@@ -22,6 +22,30 @@
       },
       "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dad2b63_7fcebbda",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 941,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-22T19:30:55Z",
+      "side": 0,
+      "message": "It\u0027s not being dropped (see ref1/ref2 below).\n\nThis was a weird hack to try and mimic how ShaderVariable uses the value, rather than just recording the member value directly.\n\n    int parentArrayIndex() const\n    {\n        return hasParentArrayIndex() ? flattenedOffsetInParentArrays : 0;\n    }\n    bool hasParentArrayIndex() const { return flattenedOffsetInParentArrays !\u003d -1; }\n\n    int getFlattenedOffsetInParentArrays() const { return flattenedOffsetInParentArrays; }\n    void setParentArrayIndex(int indexIn) { flattenedOffsetInParentArrays \u003d indexIn; }\n\nI\u0027m updating the Write/Load functions here to just access the member directly, so they don\u0027t need to be updated (or even care) how they are actually used.   Additionally, they are being reordered to match how members are declared in the class.",
+      "parentUuid": "a79e20b0_bc5bc055",
+      "range": {
+        "startLine": 941,
+        "startChar": 53,
+        "endLine": 941,
+        "endChar": 69
+      },
+      "revId": "70e2f63baed3019e9f3dc7c2cbf8978de1efa6fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
