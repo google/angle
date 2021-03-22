@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38822b90_6bc8226c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-22T20:43:44Z",
+      "side": 1,
+      "message": "Confirmed working on Fuchsia. Unfortunately we don\u0027t have any device in CQ, so it\u0027s prone to breakage. 😞\n\nAlso, I\u0027d really like to rip out the emulation code because it\u0027s just adding so much complexity we could live without. Potential users for the emulation path would be:\n\n- Android apps: but we haven\u0027t encountered any\n- Chromium on Vulkan on Android: do we need to worry about this?",
+      "revId": "fb1c55fd10db8056891a6f29f7d2f7c09a9baea8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
