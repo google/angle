@@ -28,6 +28,12 @@ Your first job is to keep the
 failures are expected on this waterfall. Developers might be testing expectedly buggy code. But
 persistent flakiness and failures should be reported and reverted.
 
+For ANGLE issues that require CLs, please file a bug in Monorail and mark the bug as
+`Hotlist-Wrangler`.
+[Click here to see those bugs.][WranglerBugs]
+
+[WranglerBugs]:https://bugs.chromium.org/p/angleproject/issues/list?q=Hotlist%3DWrangler&can=2
+
 When encoutering an unexpected failure in your CLs please
 [file an ANGLE bug](http://anglebug.com/new) and cc the current ANGLE wrangler. If the failure is
 unrelated to ANGLE [file a Chromium bug](http://crbug.com/new) and mark the bug as
