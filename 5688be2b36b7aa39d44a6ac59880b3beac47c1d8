@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "39962711_1808598c",
+        "filename": "src/libANGLE/ProgramExecutable.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-22T02:43:04Z",
+      "side": 1,
+      "message": "This is actually pretty standard Cody. The usual pattern is:\n\n    X \u0026getX() { return x; }\n    const X \u0026getX() const { return x; }\n\nSo if the object is const, we return x as const reference. If the object is not const, we return it as non-const.",
+      "parentUuid": "a6925f10_00553df2",
+      "range": {
+        "startLine": 315,
+        "startChar": 0,
+        "endLine": 330,
+        "endChar": 5
+      },
+      "revId": "5688be2b36b7aa39d44a6ac59880b3beac47c1d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "efeb3a73_e37f86c6",
         "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
         "patchSetId": 3
