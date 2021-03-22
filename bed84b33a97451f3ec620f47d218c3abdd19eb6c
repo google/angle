@@ -1,0 +1,331 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "215c95a5_fdae8cf8",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: you can omit this.",
+      "range": {
+        "startLine": 911,
+        "startChar": 38,
+        "endLine": 911,
+        "endChar": 48
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0f7a0d4_b49d7a24",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: file-level comment in all new files",
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "262c48da_a9c670f9",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: can you be consistent with the brackets and use \u003c\u003e or \"\" (header had \"\")",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 0
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3fe3f49_8007899c",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "use angle::ComputeGenericHash for consistency",
+      "range": {
+        "startLine": 58,
+        "startChar": 17,
+        "endLine": 58,
+        "endChar": 30
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a21c2c30_165d7819",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: angle uses // , prefer consistency\n\nhttps://google.github.io/styleguide/cppguide.html#Comment_Style",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 21
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9401a46c_560b7663",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 89,
+        "startChar": 4,
+        "endLine": 89,
+        "endChar": 5
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b707e45_1b68b0ff",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: use explicit type to name this readable, same for below",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 9
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b001a979_e317ac47",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "angle uses ASSERT",
+      "range": {
+        "startLine": 93,
+        "startChar": 4,
+        "endLine": 93,
+        "endChar": 10
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82b3d0b2_12872312",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "ditto for these",
+      "range": {
+        "startLine": 99,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 10
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "790f3a0a_ef42ce45",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: file-level comment in all new files.",
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ed37a45_17af50ac",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: naming convention: \n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/CodingStandard.md#variable-names",
+      "range": {
+        "startLine": 67,
+        "startChar": 24,
+        "endLine": 67,
+        "endChar": 27
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "235fa4da_e67335b1",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: ordering:\n\nhttps://google.github.io/styleguide/cppguide.html#Declaration_Order",
+      "range": {
+        "startLine": 69,
+        "startChar": 4,
+        "endLine": 69,
+        "endChar": 59
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "639c31b8_c2636709",
+        "filename": "src/libANGLE/serializer/JsonSerializer_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: file-level comment",
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e97f3d3b_53dd2085",
+        "filename": "src/libANGLE/serializer/JsonSerializer_unittest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "Can you process these somehow to make them robust to the kind of errors we\u0027re seeing on the bots?",
+      "range": {
+        "startLine": 25,
+        "startChar": 22,
+        "endLine": 25,
+        "endChar": 29
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f2c9d96_0af8f521",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 4
+      },
+      "lineNbr": 473,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-22T15:35:25Z",
+      "side": 1,
+      "message": "nit: please place these in the BUILD.gn file, this file is a relic of a prior design.",
+      "range": {
+        "startLine": 470,
+        "startChar": 0,
+        "endLine": 473,
+        "endChar": 1
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
