@@ -201,6 +201,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "59492c9b_174f77b9",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T17:10:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "77cdb4bd_09be94e7",
+      "range": {
+        "startLine": 54,
+        "startChar": 61,
+        "endLine": 54,
+        "endChar": 74
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3fe3f49_8007899c",
