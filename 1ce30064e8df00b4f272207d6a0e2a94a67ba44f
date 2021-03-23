@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dc61134_d3c1fd04",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-23T16:44:00Z",
+      "side": 1,
+      "message": "does this CL fix the test? if so, please add the test tag",
+      "revId": "1ce30064e8df00b4f272207d6a0e2a94a67ba44f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0da23e3_f02722c3",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-23T16:44:00Z",
+      "side": 1,
+      "message": "A comment/note here describing \u0027NegFlipXY\u0027 and \u0027FlipXY\u0027 for \u0027PointCoord\u0027 and \u0027SamplePosition\u0027 would be usefule",
+      "revId": "1ce30064e8df00b4f272207d6a0e2a94a67ba44f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
