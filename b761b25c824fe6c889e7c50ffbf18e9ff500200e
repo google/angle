@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41c3ba5a_e04d95c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-23T15:31:09Z",
+      "side": 1,
+      "message": "The fix looks safe but I\u0027d like to know how we got here in the first place. I think this function assumes the format is valid.",
+      "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
