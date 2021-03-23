@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f134b692_4de4d62a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-03-23T17:00:17Z",
+      "side": 1,
+      "message": "Jamie, what is the right way I am supposed to tag Chromium bug numbers in commit messages?",
+      "parentUuid": "5ac6cc66_8fa6bde2",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 3
+      },
+      "revId": "1f5fc9d8cb66d0fd0ea7778aae55893a56da6f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "12fbbb14_fd729582",
@@ -71,6 +95,24 @@
       "writtenOn": "2021-03-23T15:38:37Z",
       "side": 1,
       "message": "Rafael can you confirm this isn\u0027t going to negatively affect performance? LGTM if so.",
+      "revId": "1f5fc9d8cb66d0fd0ea7778aae55893a56da6f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e7e1120_d285bdcb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-03-23T17:00:17Z",
+      "side": 1,
+      "message": "I think the storage cost is worth it to have this memory be tagged.\n\nANGLE allocates GPU resources infrequently enough that it should not affect rendering performance. If we becomes a problem, we can revisit and tag fewer resources. I care the most about textures and buffers; textures more than buffers.",
+      "parentUuid": "e938d4f3_6f989755",
       "revId": "1f5fc9d8cb66d0fd0ea7778aae55893a56da6f37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
