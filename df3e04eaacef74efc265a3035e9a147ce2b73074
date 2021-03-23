@@ -34,6 +34,24 @@
       "parentUuid": "a311f998_4954c745",
       "revId": "df3e04eaacef74efc265a3035e9a147ce2b73074",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1330255c_dd3862e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T18:58:26Z",
+      "side": 1,
+      "message": "In the \"Files\" tab, between \"Base -\u003e Patchset 4\" and \"NO PATCHSET DESCRIPTION\", you can see the commit hash of the change. It\u0027s a link you can click, which will get you here:\n\nhttps://chromium.googlesource.com/angle/angle/+/20992dc7b6efcea4e78d6247cb1317c0cc24bc8f\n\nYou can click on the file (*not* the diff) to see the contents of the file in your change. If the file is markdown (such as in this change), it will render as markdown.",
+      "parentUuid": "057d3d3b_13f57bbc",
+      "revId": "df3e04eaacef74efc265a3035e9a147ce2b73074",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
