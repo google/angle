@@ -105,6 +105,24 @@
       "parentUuid": "92a1bf64_69047ea1",
       "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6bcdf37b_5e6e14d3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-03-23T17:18:29Z",
+      "side": 1,
+      "message": "It seems like there are many compressed internal formats that have a DXGI_FORMAT_UNKNOWN as .texFormat. Perhaps it is one of those? (looking at d3d11::Format::Get)",
+      "parentUuid": "a8623786_2fe9d3d7",
+      "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
