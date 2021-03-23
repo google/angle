@@ -51,6 +51,42 @@
       "message": ":GT\u003c ",
       "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92a1bf64_69047ea1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-03-23T16:27:32Z",
+      "side": 1,
+      "message": "What\u0027s this?",
+      "parentUuid": "33a25b88_e74138fb",
+      "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8623786_2fe9d3d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-03-23T16:27:32Z",
+      "side": 1,
+      "message": "Unfortunately we don\u0027t have good data/logs/repro to point to how we\u0027re getting an invalid format here, but it seems like we are, occasionally. Perhaps we can add some logging here but our crash reports don\u0027t provide us any logs right now. Until we can reliably repro I\u0027m not sure what else we can do except ensure that we don\u0027t crash -- I feel like this should not crash even with an invalid format.\n\nI can add a test for this -- let me find a good place.",
+      "parentUuid": "eac6b982_f73d16ac",
+      "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
