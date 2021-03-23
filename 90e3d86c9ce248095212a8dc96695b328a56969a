@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82aacd6e_61243aa7",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1638,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T20:50:02Z",
+      "side": 0,
+      "message": "How was this not a problem before? Should the restore function instead not attempt to restore this information when !separable?",
+      "revId": "90e3d86c9ce248095212a8dc96695b328a56969a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
