@@ -87,6 +87,24 @@
       "parentUuid": "eac6b982_f73d16ac",
       "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4910218c_f556dc87",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:34:42Z",
+      "side": 1,
+      "message": "Sorry, must have left in some weird characters accidentally. Ignore.",
+      "parentUuid": "92a1bf64_69047ea1",
+      "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
