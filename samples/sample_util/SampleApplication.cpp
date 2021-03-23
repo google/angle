@@ -219,7 +219,7 @@ int SampleApplication::run()
 #if defined(ANGLE_ENABLE_ASSERTS)
     if (IsGLExtensionEnabled("GL_KHR_debug"))
     {
-        EnableDebugCallback(this);
+        EnableDebugCallback(nullptr, nullptr);
     }
 #endif
 

@@ -195,6 +195,25 @@ void DumpTraceEventsToJSONFile(const std::vector<TraceEvent> &traceEvents,
         printf("Error writing trace file to %s\n", outputFileName);
     }
 }
+
+ANGLE_MAYBE_UNUSED void KHRONOS_APIENTRY PerfTestDebugCallback(GLenum source,
+                                                               GLenum type,
+                                                               GLuint id,
+                                                               GLenum severity,
+                                                               GLsizei length,
+                                                               const GLchar *message,
+                                                               const void *userParam)
+{
+    // Early exit on non-errors.
+    if (type != GL_DEBUG_TYPE_ERROR || !userParam)
+    {
+        return;
+    }
+
+    ANGLERenderTest *renderTest =
+        const_cast<ANGLERenderTest *>(reinterpret_cast<const ANGLERenderTest *>(userParam));
+    renderTest->onErrorMessage(message);
+}
 }  // anonymous namespace
 
 TraceEvent::TraceEvent(char phaseIn,
@@ -708,7 +727,7 @@ void ANGLERenderTest::SetUp()
 #if defined(ANGLE_ENABLE_ASSERTS)
     if (IsGLExtensionEnabled("GL_KHR_debug"))
     {
-        EnableDebugCallback(this);
+        EnableDebugCallback(&PerfTestDebugCallback, this);
     }
 #endif
 
@@ -955,7 +974,7 @@ std::vector<TraceEvent> &ANGLERenderTest::getTraceEventBuffer()
 void ANGLERenderTest::onErrorMessage(const char *errorMessage)
 {
     abortTest();
-    FAIL() << "Failing test because of unexpected internal ANGLE error:\n" << errorMessage << "\n";
+    FAIL() << "Failing test because of unexpected error:\n" << errorMessage << "\n";
 }
 
 uint32_t ANGLERenderTest::getCurrentThreadSerial()

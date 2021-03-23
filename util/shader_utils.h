@@ -49,7 +49,7 @@ ANGLE_UTIL_EXPORT GLuint LoadBinaryProgramOES(const std::vector<uint8_t> &binary
 ANGLE_UTIL_EXPORT GLuint LoadBinaryProgramES3(const std::vector<uint8_t> &binary,
                                               GLenum binaryFormat);
 
-ANGLE_UTIL_EXPORT void EnableDebugCallback(const void *userParam);
+ANGLE_UTIL_EXPORT void EnableDebugCallback(GLDEBUGPROC callbackChain, const void *userParam);
 
 namespace angle
 {

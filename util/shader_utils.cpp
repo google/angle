@@ -114,6 +114,8 @@ GLuint CompileProgramInternal(const char *vsSource,
     return CheckLinkStatusAndReturnProgram(program, true);
 }
 
+const void *gCallbackChainUserParam;
+
 void KHRONOS_APIENTRY DebugMessageCallback(GLenum source,
                                            GLenum type,
                                            GLuint id,
@@ -126,6 +128,12 @@ void KHRONOS_APIENTRY DebugMessageCallback(GLenum source,
     std::string typeText     = gl::GetDebugMessageTypeString(type);
     std::string severityText = gl::GetDebugMessageSeverityString(severity);
     std::cerr << sourceText << ", " << typeText << ", " << severityText << ": " << message << "\n";
+
+    GLDEBUGPROC callbackChain = reinterpret_cast<GLDEBUGPROC>(const_cast<void *>(userParam));
+    if (callbackChain)
+    {
+        callbackChain(source, type, id, severity, length, message, gCallbackChainUserParam);
+    }
 }
 }  // namespace
 
@@ -342,8 +350,10 @@ bool LinkAttachedProgram(GLuint program)
     return (CheckLinkStatusAndReturnProgram(program, true) != 0);
 }
 
-void EnableDebugCallback(const void *userParam)
+void EnableDebugCallback(GLDEBUGPROC callbackChain, const void *userParam)
 {
+    gCallbackChainUserParam = userParam;
+
     glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
     // Enable medium and high priority messages.
@@ -359,7 +369,7 @@ void EnableDebugCallback(const void *userParam)
     // Disable performance messages to reduce spam.
     glDebugMessageControlKHR(GL_DONT_CARE, GL_DEBUG_TYPE_PERFORMANCE, GL_DONT_CARE, 0, nullptr,
                              GL_FALSE);
-    glDebugMessageCallbackKHR(DebugMessageCallback, userParam);
+    glDebugMessageCallbackKHR(DebugMessageCallback, reinterpret_cast<const void *>(callbackChain));
 }
 
 namespace angle
