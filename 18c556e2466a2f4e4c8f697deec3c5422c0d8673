@@ -228,6 +228,30 @@
       },
       "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62140e54_62ff0970",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T20:45:49Z",
+      "side": 1,
+      "message": "Also overloads are the bane of grep and other context-less search tools, so +1 for avoiding them.",
+      "parentUuid": "c9b43add_e44eed3b",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
