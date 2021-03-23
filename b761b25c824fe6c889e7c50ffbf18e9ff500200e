@@ -140,6 +140,24 @@
       "message": "Can we add a warning log in TextureStorage11::TextureStorage11() when the mFormatInfo::formatID is                                          angle::FormatID::NONE?",
       "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b762e52e_fb00a2bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-03-23T18:14:14Z",
+      "side": 1,
+      "message": "Is that actually an invalid situation, something that deserves a warning, though?",
+      "parentUuid": "3395bce8_dfae9f82",
+      "revId": "b761b25c824fe6c889e7c50ffbf18e9ff500200e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
