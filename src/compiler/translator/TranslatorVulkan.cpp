@@ -1007,10 +1007,11 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
     {
         case gl::ShaderType::Fragment:
         {
-            bool usesPointCoord   = false;
-            bool usesFragCoord    = false;
-            bool usesSampleMaskIn = false;
-            bool usesLastFragData = false;
+            bool usesPointCoord    = false;
+            bool usesFragCoord     = false;
+            bool usesSampleMaskIn  = false;
+            bool usesLastFragData  = false;
+            bool useSamplePosition = false;
 
             // Search for the gl_PointCoord usage, if its used, we need to flip the y coordinate.
             for (const ShaderVariable &inputVarying : mInputVaryings)
@@ -1023,6 +1024,12 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 if (inputVarying.name == "gl_SampleMaskIn")
                 {
                     usesSampleMaskIn = true;
+                    continue;
+                }
+
+                if (inputVarying.name == "gl_SamplePosition")
+                {
+                    useSamplePosition = true;
                     continue;
                 }
 
@@ -1137,6 +1144,32 @@ bool TranslatorVulkan::translateImpl(TIntermBlock *root,
                 if (!RotateAndFlipBuiltinVariable(this, root, GetMainSequence(root), flipNegXY,
                                                   &getSymbolTable(),
                                                   BuiltInVariable::gl_PointCoord(),
+                                                  kFlippedPointCoordName, pivot, fragRotation))
+                {
+                    return false;
+                }
+            }
+
+            if (useSamplePosition)
+            {
+                TIntermTyped *flipXY = specConst->getFlipXY();
+                if (!flipXY)
+                {
+                    flipXY = driverUniforms->getFlipXYRef();
+                }
+                TIntermConstantUnion *pivot = CreateFloatNode(0.5f);
+                TIntermTyped *fragRotation  = nullptr;
+                if (usePreRotation)
+                {
+                    fragRotation = specConst->getFragRotationMatrix();
+                    if (!fragRotation)
+                    {
+                        fragRotation = driverUniforms->getFragRotationMatrixRef();
+                    }
+                }
+                if (!RotateAndFlipBuiltinVariable(this, root, GetMainSequence(root), flipXY,
+                                                  &getSymbolTable(),
+                                                  BuiltInVariable::gl_SamplePosition(),
                                                   kFlippedPointCoordName, pivot, fragRotation))
                 {
                     return false;
