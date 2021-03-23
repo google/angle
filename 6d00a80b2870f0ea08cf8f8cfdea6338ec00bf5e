@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1098be25_cc048e05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-23T10:52:47Z",
+      "side": 1,
+      "message": "To elaborate more correclty on the capture/replay test situation regarding to this patch:\n\nFor ES1 tests that do have a draw call, namely BasicDrawTest and PointSpriteTest, this patch improves the status from \"crashing\" to \"passing\".\n\nAlthough for ES1 tests that do not have a draw call and use glVertexPointer functions, which are DrawTextureTest and VertexPointerTest, this patch currently breaks compilation. The reason is that currently gClientArrays is not defined when there is no draw call. Working on a fix for that.",
+      "parentUuid": "16bdec7c_7b5aafe0",
+      "revId": "6d00a80b2870f0ea08cf8f8cfdea6338ec00bf5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "09502e55_d3c26ff8",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
