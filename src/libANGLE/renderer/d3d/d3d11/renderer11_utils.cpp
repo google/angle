@@ -2273,7 +2273,6 @@ bool operator!=(const RasterizerStateKey &a, const RasterizerStateKey &b)
 
 HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
 {
-#if defined(_DEBUG)
     UINT existingDataSize = 0;
     resource->GetPrivateData(WKPDID_D3DDebugObjectName, &existingDataSize, nullptr);
     // Don't check the HRESULT- if it failed then that probably just means that no private data
@@ -2285,28 +2284,22 @@ HRESULT SetDebugName(ID3D11DeviceChild *resource, const char *name)
         // a D3D SDK Layers warning. This can occur if, for example, you 'create' two objects
         // (e.g.Rasterizer States) with identical DESCs on the same device. D3D11 will optimize
         // these calls and return the same object both times.
-        static const char *multipleNamesUsed = "Multiple names set by ANGLE";
+        static const char *multipleNamesUsed = "MultipleNamesSetByANGLE";
 
         // Remove the existing name
-        HRESULT hr = resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
+        const HRESULT hr = resource->SetPrivateData(WKPDID_D3DDebugObjectName, 0, nullptr);
         if (FAILED(hr))
         {
             return hr;
         }
 
-        // Apply the new name
-        return resource->SetPrivateData(WKPDID_D3DDebugObjectName,
-                                        static_cast<unsigned int>(strlen(multipleNamesUsed)),
-                                        multipleNamesUsed);
+        name = multipleNamesUsed;
     }
-    else
-    {
-        return resource->SetPrivateData(WKPDID_D3DDebugObjectName,
-                                        static_cast<unsigned int>(strlen(name)), name);
-    }
-#else
-    return S_OK;
-#endif
+
+    // Prepend ANGLE_ to separate names from other components in the same process.
+    const std::string d3dName = std::string("ANGLE_") + name;
+    return resource->SetPrivateData(WKPDID_D3DDebugObjectName, static_cast<UINT>(d3dName.size()),
+                                    d3dName.c_str());
 }
 
 // Keep this in cpp file where it has visibility of Renderer11.h, otherwise calling
