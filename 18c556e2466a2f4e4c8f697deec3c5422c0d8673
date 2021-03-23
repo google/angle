@@ -204,6 +204,30 @@
       },
       "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9b43add_e44eed3b",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T17:31:52Z",
+      "side": 1,
+      "message": "Mostly for consistency. If ANGLE used a lot of overloading it wouldn\u0027t be a problem. Generally we pick a preference and stick with it. If we want to revisit a rule it would mean undoing that policy in other points of the code.",
+      "parentUuid": "27f710ea_4aa2d03c",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
