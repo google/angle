@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "89a43570_273d1fe0",
+        "filename": "src/libANGLE/Texture.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-23T21:50:53Z",
+      "side": 1,
+      "message": "To limit front end exposure, I have removed \"firstLevel\" from front end files. But instead added getLevelZeroDesc(), which is literally means image descriptor for level 0. The other front end change is basically move the setStorage call after  setImageDescChain() call and limited to immutable texture only.",
+      "parentUuid": "bcf04ff2_ec7de3fa",
+      "range": {
+        "startLine": 112,
+        "startChar": 11,
+        "endLine": 112,
+        "endChar": 24
+      },
+      "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3aac288e_12aacc9d",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 11
@@ -115,6 +139,24 @@
       "side": 1,
       "message": "+1 to removing this if possible.",
       "parentUuid": "c961e801_aa45d137",
+      "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b852026c_9d27629a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-23T21:50:53Z",
+      "side": 1,
+      "message": "I have been toggle between not having \"firstLevel\" versus have \"firstLevel\" in a few patchsets, and I think having firstLevel concept is important. Without it, you have to hard code in places where firstLevel is been used, which really does not make it better. And I don\u0027t want to use mBaseLevel to track the first allocated level, that creates lots of confusion since when people see mBaseLevel they are thinking about base level. Use firstLevel variable makes it more expandable in future optimization. For example, Ian was seeing one app is keep changing base level and we are keep reallocating VkImages (and probably also keep copying data in and out as well to preserve the content). We might have to come back here to do optimization for mutable texture as well. At that time you will have to have a variable to track which level is VkImage allocated with anyway, which is what this \"mFirstAllocateLevel\" does.\n\nI understand people\u0027s worry of risk, I have the exact same worry. I think having good documentation and a better name and enough code review should be good. I have went through all usages of mBaseLevel and getBaseLevel() calls and ensure it is using the right one. I will do one more round of check again later as well. I also added comment here. I have named it mFirstAllocateLevel to indicate this is the first level that is been allocated, and have kept mBaseLevel the exact same meaning as before, which is the base level specified by API. We could potentially get rid of mBaseLevel completely from ImageHelper object and use TextureState\u0027s mBaseLevel, but I think that is too much unnecessary changes. If we have to do that, better deal with in separate CL anyway.",
+      "parentUuid": "2c15cee6_8ed35847",
       "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
