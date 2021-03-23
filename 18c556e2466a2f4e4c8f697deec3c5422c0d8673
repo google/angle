@@ -180,6 +180,30 @@
       },
       "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27f710ea_4aa2d03c",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T17:23:32Z",
+      "side": 1,
+      "message": "I can do that, but do you really want this? \n\nIMHO the type information doesn\u0027t add to the readability in the serialization, and by adding the type name explicitely to the function name one has to find out the correct type for each value that is passed in, and, if for some reason, one wants to change the type, one has to update the function call used for serialization. In addition and one has to add a needless amount of code where one template can cover many cases because rapidjson also uses overloading and templates,",
+      "parentUuid": "8104ef9c_126b6316",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
