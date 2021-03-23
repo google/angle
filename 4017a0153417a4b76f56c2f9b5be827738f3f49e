@@ -34,6 +34,24 @@
       "parentUuid": "45d3c23f_2a05d6d3",
       "revId": "4017a0153417a4b76f56c2f9b5be827738f3f49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5086c01_51b71224",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T11:33:49Z",
+      "side": 1,
+      "message": "I\u0027ve moved the compare part to the previous CL (using null terminated strings only passing the pointer around). In the CL I\u0027m only writing out the serializations when the comparison fails, so one can inspect the diff manually (or let the script handle it).",
+      "parentUuid": "c9138291_4cadb1a2",
+      "revId": "4017a0153417a4b76f56c2f9b5be827738f3f49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
