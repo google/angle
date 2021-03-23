@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "26b2d473_ff9cc442",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T16:00:26Z",
+      "side": 1,
+      "message": "\u003e Not yet, but our goal is to support it someday as part of being the default OpenGL ES driver in Android.   Of course, no idea if/when that will occur.\n\nAlso, we don\u0027t need to be the default driver for chromium to use the Vulkan backend of ANGLE.",
+      "parentUuid": "03c8d8fe_06ab101d",
+      "revId": "fb1c55fd10db8056891a6f29f7d2f7c09a9baea8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8b0da718_4b4d5ba0",
         "filename": "src/libANGLE/FramebufferAttachment.h",
         "patchSetId": 6
