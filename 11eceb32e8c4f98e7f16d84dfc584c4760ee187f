@@ -242,6 +242,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3d9886b_909b4b5c",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "6dd8cfca_39f79ff7",
+      "range": {
+        "startLine": 50,
+        "startChar": 17,
+        "endLine": 50,
+        "endChar": 30
+      },
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "40e43313_0f4a8253",

@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "570e7a50_0090e800",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "LGTM, Adding Cody for second review. Nice work, just a few more style cleanups.",
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55f7b6ed_4ffb4521",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "nit: can you de-auto these if they\u0027re small types?",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 9
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2feb96f6_1f637194",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "nit: static constexpr char kASCII[] \u003d ...",
+      "range": {
+        "startLine": 75,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 43
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3448eecc_b2600738",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "nit: size_t to match kSHA1Length",
+      "range": {
+        "startLine": 76,
+        "startChar": 9,
+        "endLine": 76,
+        "endChar": 17
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8104ef9c_126b6316",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "nit: general ANGLE style is to avoid overloading because it makes the code harder to read. can you use addString/addBytes/addCString/addBool/etc?",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

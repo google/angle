@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "883c84c1_fe228ea5",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 911,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f23937ba_9b937870",
+      "range": {
+        "startLine": 911,
+        "startChar": 38,
+        "endLine": 911,
+        "endChar": 48
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e0f7a0d4_b49d7a24",
@@ -130,6 +154,53 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9719410a_c5187ad1",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "We prefer to use \"\" for files that are in the angle/ source tree (including third_party) because there are some additional presubmit checks that only work with \"\" and not \u003c\u003e. Anyway it\u0027s not a big deal either way, better to be consistent.",
+      "parentUuid": "6b986614_d8fb8348",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 13,
+        "endChar": 0
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "77cdb4bd_09be94e7",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "nit: prefer uint8_t over unsigned char\n\nhttps://google.github.io/styleguide/cppguide.html#Integer_Types\n\nalso ANGLE general style.",
+      "range": {
+        "startLine": 54,
+        "startChar": 61,
+        "endLine": 54,
+        "endChar": 74
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3fe3f49_8007899c",
@@ -167,6 +238,30 @@
       "side": 1,
       "message": "I already pointes out earlier angle::ComputeGenericHash requires an input length that is a multiple of four. Do we really want to copy the whole data here to do the padding?",
       "parentUuid": "f3fe3f49_8007899c",
+      "range": {
+        "startLine": 58,
+        "startChar": 17,
+        "endLine": 58,
+        "endChar": 30
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3e7d15a_59a6e5ed",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "Sorry didn\u0027t see earlier response. We can use SHA1.",
+      "parentUuid": "8a28319b_bb63d3b0",
       "range": {
         "startLine": 58,
         "startChar": 17,
@@ -238,6 +333,30 @@
       "side": 1,
       "message": "Done",
       "parentUuid": "a21c2c30_165d7819",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 21
+      },
+      "revId": "bed84b33a97451f3ec620f47d218c3abdd19eb6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "157140ef_e9e97f71",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:00:18Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a159b2d0_572a907e",
       "range": {
         "startLine": 61,
         "startChar": 0,
