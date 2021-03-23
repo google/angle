@@ -22,6 +22,30 @@
       },
       "revId": "bce19db87242a413a7f49bfe3e6b486189e70d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5daf0d57_2389216b",
+        "filename": "include/platform/FrontendFeatures.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T07:58:27Z",
+      "side": 1,
+      "message": "Fixed",
+      "parentUuid": "656363f9_685b4206",
+      "range": {
+        "startLine": 72,
+        "startChar": 8,
+        "endLine": 72,
+        "endChar": 71
+      },
+      "revId": "bce19db87242a413a7f49bfe3e6b486189e70d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
