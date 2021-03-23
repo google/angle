@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7d18777_cd4dce3d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-23T02:31:49Z",
+      "side": 1,
+      "message": "It seems that this patch need another reviewer to confirm and give Code-Review +2 ?",
+      "revId": "7f361cdaee1af748741ae9c526603d98e24ca414",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
