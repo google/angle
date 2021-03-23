@@ -175,6 +175,11 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdBindDescriptorSets-pDescriptorSets-01979",
     // https://issuetracker.google.com/175584609
     "VUID-vkCmdDraw-None-04584",
+    "VUID-vkCmdDrawIndexed-None-04584",
+    "VUID-vkCmdDrawIndirect-None-04584",
+    "VUID-vkCmdDrawIndirectCount-None-04584",
+    "VUID-vkCmdDrawIndexedIndirect-None-04584",
+    "VUID-vkCmdDrawIndexedIndirectCount-None-04584",
 };
 
 // Suppress validation errors that are known
