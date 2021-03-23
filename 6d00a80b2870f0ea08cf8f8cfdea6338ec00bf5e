@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "16bdec7c_7b5aafe0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-23T08:19:26Z",
+      "side": 1,
+      "message": "With the patch series I am able to trace Summoner\u0027s War correctly and Dr. Driving with one remaining vertex related issue.\nGLES1 tests using glVertexPointer now compile with this patch, for example BasicDrawTest.DrawColor/ES1_Vulkan_SwiftShader. Other ES1 tests where this patch fixes compilation are in DrawTextureTest, PointSpriteTest and PointSpriteTest.",
+      "parentUuid": "bf7d8b2e_e4b6084f",
+      "revId": "6d00a80b2870f0ea08cf8f8cfdea6338ec00bf5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "09502e55_d3c26ff8",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 1
