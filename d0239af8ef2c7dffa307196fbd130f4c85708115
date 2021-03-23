@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0118e347_d26f4a7a",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T21:03:56Z",
+      "side": 1,
+      "message": "You could avoid the global variable if you invert the chain. Let the application query the pointer to the default handler and call it from its own handler first.",
+      "revId": "d0239af8ef2c7dffa307196fbd130f4c85708115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
