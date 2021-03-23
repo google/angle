@@ -34,6 +34,24 @@
       "parentUuid": "8131622f_270567f3",
       "revId": "ba0bd78574b21a297e22ee2f8ac1efdeff0a9026",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e2f4931_72c68a4a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2021-03-23T00:49:43Z",
+      "side": 1,
+      "message": "Hi Yuly, I don\u0027t think those failures are caused by this patch. This patch should only affect windows(hlsl shader). However, those failures are not d3d11 backend.",
+      "parentUuid": "295b30dc_c9c05ca6",
+      "revId": "ba0bd78574b21a297e22ee2f8ac1efdeff0a9026",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
