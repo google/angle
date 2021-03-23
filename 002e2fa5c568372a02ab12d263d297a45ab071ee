@@ -16,6 +16,80 @@
       "message": "PTAL Tim/Shabi. Mohan/Frank FYI.",
       "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1f2aaae_5c212f17",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-23T02:31:02Z",
+      "side": 1,
+      "message": "Nice fix. Coming up with a good hash key was definitely the trickiest part when it came up last time.",
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e30b6d3_9b26f37f",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-23T02:31:02Z",
+      "side": 1,
+      "message": "Why isn\u0027t special handling for 32b vs 64b necessary here?",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 50
+      },
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05cada54_31c7e7ae",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3863,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-23T02:31:02Z",
+      "side": 1,
+      "message": "Why is this done here during invalidate rather than during updateShaderResourcesDescriptorSet()?   I would expect all of the necessary mState values to have the most up-to-date values during updateShaderResourcesDescriptorSet() when we are handling dirty bits and about to draw.",
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a7b9e44_1f8538a9",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-23T02:31:02Z",
+      "side": 1,
+      "message": "Are we not caching these descriptor sets because mShaderBuffersDescriptorDesc doesn\u0027t have anything that\u0027s affected by input attachment values (whatever that may be)?   Is it worth opening a bug to enabling caching for these also or is EXT_shader_framebuffer_fetch_non_coherent not very common anyway?",
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
