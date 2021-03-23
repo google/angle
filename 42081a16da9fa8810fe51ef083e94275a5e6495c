@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "454bbc39_c9f2abe5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 21
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-23T22:01:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "150a2c28_81f26bba",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 3
+      },
+      "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "661fe4fb_be5959b4",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 21
@@ -54,6 +78,42 @@
       "writtenOn": "2021-03-23T16:15:59Z",
       "side": 1,
       "message": "Not sure why we couldn\u0027t do this using the visitor pattern. We have a bunch of tools to edit nodes during a visit. Marked as WIP so will wait for a non-WIP version to approve.",
+      "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "21a8a808_93665f70",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-23T22:01:20Z",
+      "side": 1,
+      "message": "Three reasons:\n\n1) Much as I love the visitor pattern, return values from the traversal during recursion is problematic. AFAIK they must be stored in the nodes and retrieved by the caller, or in external data. Either way is awkward. Returning it in the traversal is just much clearer and easier.\n\n2) One of the return values of this traversal is the new node. Because it\u0027s of a different type than the existing node (int vs struct, e.g.), attempting to replace the existing node via queueReplacement in TIntermVisitor fails due to type errors (I tried).\n\n3) It\u0027s actually less code this way (see original).",
+      "parentUuid": "d73c5e14_49761ec9",
+      "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "034c0074_d311e103",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-03-23T22:01:20Z",
+      "side": 1,
+      "message": "This started as a fix for the linked bug. Jiajia landed a fix in the interm, but I felt this was worth pursuing as a cleanup/refactor.",
+      "parentUuid": "661fe4fb_be5959b4",
       "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
