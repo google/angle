@@ -51,6 +51,24 @@
       "parentUuid": "00219d37_056e18e3",
       "revId": "c849fb52d7bea44add21af64466280eba697fe00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c02b6ba3_bb291954",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-23T03:35:05Z",
+      "side": 1,
+      "message": "I filed http://anglebug.com/5784 as a feature request to hook up more ways to limit traces.",
+      "parentUuid": "fefd44fe_93554134",
+      "revId": "c849fb52d7bea44add21af64466280eba697fe00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
