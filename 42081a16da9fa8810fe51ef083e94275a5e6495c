@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "150a2c28_81f26bba",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 21
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T14:48:09Z",
+      "side": 1,
+      "message": "nit: Bug: (instead of BUG:) so gerrit would parse it right!",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 3
+      },
+      "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "661fe4fb_be5959b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T14:48:09Z",
+      "side": 1,
+      "message": "Loving the -200 lines diff, but switching to Jiajia as reviewer who should be more familiar with this code than me.\n\nAlso, please add a test based on what prompted the change.",
+      "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
