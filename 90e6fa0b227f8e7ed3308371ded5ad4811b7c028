@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8347719c_b34f351d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1076,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T16:09:28Z",
+      "side": 1,
+      "message": "we usually put this in src/common/vk_headers.h, can you relocate it?",
+      "range": {
+        "startLine": 1046,
+        "startChar": 0,
+        "endLine": 1076,
+        "endChar": 0
+      },
+      "revId": "90e6fa0b227f8e7ed3308371ded5ad4811b7c028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
