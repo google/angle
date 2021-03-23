@@ -83,6 +83,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a1ccc3a_d6561128",
+        "filename": "src/libANGLE/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T10:01:20Z",
+      "side": 1,
+      "message": "Added",
+      "parentUuid": "b9e98276_a8803be0",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0383acd6_f127c89e",
@@ -255,6 +273,24 @@
       "side": 1,
       "message": "For now I put it in common, I\u0027m not sure what parts are not included in angle_common, so I keep this open for now.",
       "parentUuid": "40e43313_0f4a8253",
+      "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a52b971_df4ff126",
+        "filename": "src/libANGLE/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T10:01:20Z",
+      "side": 1,
+      "message": "I\u0027ve put it in its own library libjson_serializer",
+      "parentUuid": "2617d5ad_9f40e945",
       "revId": "11eceb32e8c4f98e7f16d84dfc584c4760ee187f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
