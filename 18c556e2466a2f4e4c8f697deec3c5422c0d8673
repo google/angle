@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c84a358_bc9597ce",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T17:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55f7b6ed_4ffb4521",
+      "range": {
+        "startLine": 44,
+        "startChar": 4,
+        "endLine": 44,
+        "endChar": 9
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2feb96f6_1f637194",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8e858f6_5acddc97",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T17:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2feb96f6_1f637194",
+      "range": {
+        "startLine": 75,
+        "startChar": 3,
+        "endLine": 75,
+        "endChar": 43
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3448eecc_b2600738",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-03-23T16:00:18Z",
       "side": 1,
       "message": "nit: size_t to match kSHA1Length",
+      "range": {
+        "startLine": 76,
+        "startChar": 9,
+        "endLine": 76,
+        "endChar": 17
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2eb7fd81_bad2e6e7",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T17:03:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3448eecc_b2600738",
       "range": {
         "startLine": 76,
         "startChar": 9,
