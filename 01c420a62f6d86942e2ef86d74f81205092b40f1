@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa05f99a_02c5f955",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000539
+      },
+      "writtenOn": "2021-03-23T19:40:19Z",
+      "side": 1,
+      "message": "I confirmed that this works as expected on fuchsia",
+      "revId": "01c420a62f6d86942e2ef86d74f81205092b40f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
