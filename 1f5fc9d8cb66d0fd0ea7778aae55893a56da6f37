@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ac6cc66_8fa6bde2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T15:38:37Z",
+      "side": 1,
+      "message": "bug tag inconsistency, guess it wasn\u0027t picked up by presubmit",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 3
+      },
+      "revId": "1f5fc9d8cb66d0fd0ea7778aae55893a56da6f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "12fbbb14_fd729582",
@@ -31,6 +54,23 @@
       "writtenOn": "2021-03-23T15:25:07Z",
       "side": 1,
       "message": "LGTM",
+      "revId": "1f5fc9d8cb66d0fd0ea7778aae55893a56da6f37",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e938d4f3_6f989755",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-23T15:38:37Z",
+      "side": 1,
+      "message": "Rafael can you confirm this isn\u0027t going to negatively affect performance? LGTM if so.",
       "revId": "1f5fc9d8cb66d0fd0ea7778aae55893a56da6f37",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
