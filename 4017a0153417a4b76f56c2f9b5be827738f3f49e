@@ -16,6 +16,24 @@
       "message": "A couple problems with this approach. It\u0027s going to allocate memory cross-module. Also we\u0027ll need to re-trace. Maybe there\u0027s another way we can tackle this. ",
       "revId": "4017a0153417a4b76f56c2f9b5be827738f3f49e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9138291_4cadb1a2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-23T10:02:50Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you mean by \"need to retrace\"? \n\nTBH I put it there because I wanted some way to figure out why the tests are failing without having to \"bisect\" the binary serialization  (and this was my formost reason to come up with the whole thing), but I\u0027m certainly not satisfied with the solution, IMHO the test diff should be printed out right away when the tests are run, and not require that one goes to the output directory to run diff manually (although that should still be an option if the diff context is not large enough to really see the problem). \n\nFor a start I got rid of the std::string and use now null-terminated strings.",
+      "parentUuid": "45d3c23f_2a05d6d3",
+      "revId": "4017a0153417a4b76f56c2f9b5be827738f3f49e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
