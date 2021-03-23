@@ -16,6 +16,24 @@
       "message": "How was this not a problem before? Should the restore function instead not attempt to restore this information when !separable?",
       "revId": "90e3d86c9ce248095212a8dc96695b328a56969a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "19cf6057_c28c05d0",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1638,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-23T23:41:06Z",
+      "side": 0,
+      "message": "\u003e How was this not a problem before?\n\nOnly PPOs use these values.\n\n\u003e Should the restore function instead not attempt to restore this information when !separable?\n\nI went with this approach to avoid any order of operations issues since mState.mSeparable is saved/restored in Program::serialize()/deserialize() vs. being used in ProgramExecutable::save()/load().   The current version of this CL loads mState.mSeparable after the call to mState.mExecutable-\u003eload(), since it was added to the end of the function.   I could rearrange things and move it to the top, but ordering requirements like that are fragile in the long term.\n\nAdditionally, this guarantees that the values are always valid in case we do end up needing to use them for monolithic programs in the future.",
+      "parentUuid": "82aacd6e_61243aa7",
+      "revId": "90e3d86c9ce248095212a8dc96695b328a56969a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
