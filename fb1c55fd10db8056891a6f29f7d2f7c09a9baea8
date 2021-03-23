@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "03c8d8fe_06ab101d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T15:51:28Z",
+      "side": 1,
+      "message": "\u003e I can\u0027t find anything on VK_EXT_multisampled_render_to_single_sampled\n\nhttps://gitlab.khronos.org/vulkan/vulkan/-/merge_requests/4273\n\n\u003e is it going to be part of the mobile vulkan profile so we can push other GPU vendors to implement it also?\n\nThat\u0027s the plan!\n\n\u003e \u003e Chromium on Vulkan on Android: do we need to worry about this?\n\n\u003e Not yet, but our goal is to support it someday as part of being the default OpenGL ES driver in Android.   Of course, no idea if/when that will occur.\n\nQualcomm is interested in the extension, so the question really is whether we need this on older Android phones that won\u0027t get a driver update.\n\nI guess the emulation path would need to live for some time until we can decide that.",
+      "parentUuid": "a6a636ce_db467691",
+      "revId": "fb1c55fd10db8056891a6f29f7d2f7c09a9baea8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8b0da718_4b4d5ba0",
         "filename": "src/libANGLE/FramebufferAttachment.h",
         "patchSetId": 6
@@ -66,6 +84,30 @@
       "writtenOn": "2021-03-23T01:12:35Z",
       "side": 1,
       "message": "Rendering to a texture doesn\u0027t require that it\u0027s multisampled.   To increase clarity, should all of the functions/variables with this name be updated to include \"multisampled\"?",
+      "range": {
+        "startLine": 120,
+        "startChar": 9,
+        "endLine": 120,
+        "endChar": 26
+      },
+      "revId": "fb1c55fd10db8056891a6f29f7d2f7c09a9baea8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8aa1c35b_dcc786fb",
+        "filename": "src/libANGLE/FramebufferAttachment.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T15:51:28Z",
+      "side": 1,
+      "message": "I initially did that, but later discovered that the front-end refers to it as such so I kept it that way.\n\nLet\u0027s keep this change simpler.",
+      "parentUuid": "8b0da718_4b4d5ba0",
       "range": {
         "startLine": 120,
         "startChar": 9,
