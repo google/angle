@@ -33,6 +33,52 @@
       "message": "A comment/note here describing \u0027NegFlipXY\u0027 and \u0027FlipXY\u0027 for \u0027PointCoord\u0027 and \u0027SamplePosition\u0027 would be usefule",
       "revId": "1ce30064e8df00b4f272207d6a0e2a94a67ba44f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "572c65eb_b7c1544d",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1130,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T20:36:40Z",
+      "side": 1,
+      "message": "Why are they different in flipping? +Charlie who\u0027s more familiar with this.",
+      "range": {
+        "startLine": 1130,
+        "startChar": 37,
+        "endLine": 1130,
+        "endChar": 87
+      },
+      "revId": "1ce30064e8df00b4f272207d6a0e2a94a67ba44f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb44af20_26212bbe",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1149,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-23T20:36:40Z",
+      "side": 1,
+      "message": "The code is implemented as if gl_PointCoord and gl_SamplePosition are exclusive.\n\nInstead, you should duplicate this block so you have one `if` for point coord, and one for sample position.",
+      "range": {
+        "startLine": 1148,
+        "startChar": 0,
+        "endLine": 1149,
+        "endChar": 78
+      },
+      "revId": "1ce30064e8df00b4f272207d6a0e2a94a67ba44f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
