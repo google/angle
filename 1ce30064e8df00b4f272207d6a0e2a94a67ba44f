@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "43224a61_263c3ea4",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1128,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-03-24T05:24:47Z",
+      "side": 1,
+      "message": "Separated code into \"if (useSamplePosition)\" for better maintain. :)",
+      "parentUuid": "c0da23e3_f02722c3",
+      "revId": "1ce30064e8df00b4f272207d6a0e2a94a67ba44f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "572c65eb_b7c1544d",
         "filename": "src/compiler/translator/TranslatorVulkan.cpp",
         "patchSetId": 1
