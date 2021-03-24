@@ -16,6 +16,29 @@
       "message": "This LGTM, thanks for the test. Unfortunate that we don\u0027t know how to fully repro this but the fix is safe.",
       "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b8d58c5_e3bd4e31",
+        "filename": "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T18:56:25Z",
+      "side": 1,
+      "message": "is it possible to do this in an angle_end2end_test ? I\u0027m curious to know what GL calls can lead us here.",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 0
+      },
+      "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
