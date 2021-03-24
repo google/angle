@@ -80,6 +80,24 @@
       "parentUuid": "0118e347_d26f4a7a",
       "revId": "d0239af8ef2c7dffa307196fbd130f4c85708115",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65c0c706_2968340c",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-24T03:37:20Z",
+      "side": 1,
+      "message": "application \u003d test code (whoever is registering this). Default handler \u003d `DebugMessageCallback`\n\nI\u0027d avoid the global, but I\u0027m not pushing on this.",
+      "parentUuid": "eb03b1da_699cafdb",
+      "revId": "d0239af8ef2c7dffa307196fbd130f4c85708115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
