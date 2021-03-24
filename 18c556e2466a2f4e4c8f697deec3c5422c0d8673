@@ -252,6 +252,30 @@
       },
       "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54c3de46_7fea19dc",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-24T08:24:49Z",
+      "side": 1,
+      "message": "OOH I don\u0027t think allowing overloads would mean one has to dis-allow the other thing in other places, it\u0027s always about using the best tool for the job. OTOH there is a danger with this type of explicite function names to introduce bugs because of the way certain type conversions are allowed. A little example: \n\n#include \u003ciostream\u003e\n\nusing std::cout;\nusing std::endl;\n\ntemplate \u003ctypename T\u003e\nvoid print(T x)\n{\n  cout \u003c\u003c \"value\u003d\u0027\" \u003c\u003c x \u003c\u003c \"\u0027  \"; \n}\n\nvoid printBool(bool x)\n{\n  cout \u003c\u003c __func__ \u003c\u003c \" \u0027\" \u003c\u003c x \u003c\u003c \"\u0027\" \u003c\u003c endl; \n}\n\nvoid printFloat(float x)\n{\n  cout \u003c\u003c __func__ \u003c\u003c \" \u0027\" \u003c\u003c x \u003c\u003c \"\u0027\" \u003c\u003c endl; \n}\n\n\nint main(int argc, char **args)\n{\n  (void)argc;\n  (void)args; \n  \n  const char *str \u003d \"lala\";\n  int v \u003d 20;\n  int huge \u003d 0x7fffffff; \n  long int very_huge \u003d 0x7fffffffffffffffll; \n\n  print(str);       printBool(str);\n  print(v);         printBool(v);\n  print(huge);      printFloat(huge);\n  print(very_huge); printFloat(very_huge);\n\n  return 0; \n  \n}\n\nusing \"g++/clang++  -Wall -Wextra -Wnarrowing -o overload overload.cpp\" \nthis actually compiles without warning. \n\n(I am actually a bit surpised that I don\u0027t get a warning about then narrowing conversion in the printFloat case.)\n\nOutput: \n./overload\nvalue\u003d\u0027lala\u0027  printBool \u00271\u0027\nvalue\u003d\u002720\u0027  printBool \u00271\u0027\nvalue\u003d\u00272147483647\u0027  printFloat \u00272.14748e+09\u0027\nvalue\u003d\u00279223372036854775807\u0027  printFloat \u00279.22337e+18\u0027\n\nSo by using the (templated) overload, I always get the right value because the compiler knows what to do, if, OTOH I pass a value to the wrong functions with explicite type info, it might get siletly converted and I end up with a bug. \n\nThe situation in JsonSerializer is quite similar because rapidjson also uses overloads just like the \u003c\u003c stream operator. The fact that I can\u0027t get away with using just one template for addEntry, and need to add some specialization is because AddMember in rapidjson doesn\u0027t provide all the overloads, but the functionality is always the same and when writing the code IMHO one should not have to worry about what the type of the input is.  \n\nThe function for byte streams is another story, because it needs an extra size parameter, and for that it would agree that it should have a different name. \n\nThat said, as it seems I\u0027ll not be long enough working I\u0027ll change the code if you really think it\u0027s better for the project.",
+      "parentUuid": "62140e54_62ff0970",
+      "range": {
+        "startLine": 98,
+        "startChar": 9,
+        "endLine": 98,
+        "endChar": 17
+      },
+      "revId": "18c556e2466a2f4e4c8f697deec3c5422c0d8673",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
