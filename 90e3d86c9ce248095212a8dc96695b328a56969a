@@ -52,6 +52,24 @@
       "parentUuid": "19cf6057_c28c05d0",
       "revId": "90e3d86c9ce248095212a8dc96695b328a56969a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa93cad2_d27e301c",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1638,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-24T22:27:55Z",
+      "side": 0,
+      "message": "\u003e How much data is being written here?\n\nThat depends on how many varyings there are.\n\nI opened a bug to reduce the copies and added a TODO:\nanglebug.com/5793: Cleanup and unify ShaderState and ProgramExecutable varyings lists",
+      "parentUuid": "0e0047bd_40fd9c55",
+      "revId": "90e3d86c9ce248095212a8dc96695b328a56969a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
