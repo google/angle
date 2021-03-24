@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "546d0406_89c68add",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-24T15:38:59Z",
+      "side": 1,
+      "message": "Can you clarify? If ANGLE is correctly offsetting all the locations by 1 (for xfb position), shader interface matching should not be hurt. So maybe the bug is that locationsUsedForXfbExtension is not applied somewhere.\n\nI don\u0027t recall exactly why I put gl_Position first. I\u0027d say putting it as the last max possible value is not a great idea, maybe you could put it at the max of what every stage uses.\n\nMy worry is if some driver looks at the \"range\" of locations and allocate hardware resources based on that range. Introducing a gap would hurt performance in that case.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "b5831d7c463fd5de4b04357357eb746c5ae82f79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
