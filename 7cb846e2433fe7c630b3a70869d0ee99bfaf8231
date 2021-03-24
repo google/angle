@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "278b10ea_1b073c44",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2021-03-24T05:19:42Z",
+      "side": 1,
+      "message": "The refactor looks great. Thanks for doing this.",
+      "revId": "7cb846e2433fe7c630b3a70869d0ee99bfaf8231",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
