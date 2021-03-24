@@ -34,6 +34,24 @@
       "parentUuid": "82aacd6e_61243aa7",
       "revId": "90e3d86c9ce248095212a8dc96695b328a56969a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e0047bd_40fd9c55",
+        "filename": "src/libANGLE/Program.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1638,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-24T03:33:26Z",
+      "side": 0,
+      "message": "My only concern is that we are storing unnecessary info for most programs and increasing the cache size unnecessarily. How much data is being written here?\n\nOut of the scope of this change, but eventually we could address the fragility by declaring the state in json and autogenerate the save/restore code. That would also let us make the pipeline cache keyed on the version of said json file instead of ANGLE commit hash so we don\u0027t discard the cache unnecessarily on ANGLE upgrades.",
+      "parentUuid": "19cf6057_c28c05d0",
+      "revId": "90e3d86c9ce248095212a8dc96695b328a56969a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
