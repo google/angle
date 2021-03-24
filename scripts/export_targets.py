@@ -235,6 +235,9 @@ IGNORED_INCLUDES = {
 # comments. Since the script doesn't skip comments they are
 # erroneously marked as valid includes
     b'rapidjson/...',
+    # Validation layers support building with robin hood hashing, but we are not enabling that
+    # See http://anglebug.com/5791
+    b'robin_hood.h',
 }
 
 IGNORED_INCLUDE_PREFIXES = {
