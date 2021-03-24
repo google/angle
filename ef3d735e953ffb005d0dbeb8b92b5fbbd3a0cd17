@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "ef3d735e953ffb005d0dbeb8b92b5fbbd3a0cd17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afa3d5ae_c32265a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-24T18:47:07Z",
+      "side": 1,
+      "message": "Is dEQP not checking the extension correctly or something? If it\u0027s not a simple fix, might as well leave this as-is and skip the new test on GL.",
+      "revId": "ef3d735e953ffb005d0dbeb8b92b5fbbd3a0cd17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
