@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23626c79_5bf6c308",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:23:19Z",
+      "side": 1,
+      "message": "nit: use Tbr instead of TBR\n\nWe don\u0027t enforce this presently.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 3
+      },
+      "revId": "2ebb8b4fc10dd1bde0fab8dfe2ee372d8e5aa9ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
