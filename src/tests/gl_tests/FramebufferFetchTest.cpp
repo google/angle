@@ -1186,7 +1186,8 @@ void main (void)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-TEST_P(FramebufferFetchNonCoherentES31, UniformUsageCombinations)
+// TODO: http://anglebug.com/5792
+TEST_P(FramebufferFetchNonCoherentES31, DISABLED_UniformUsageCombinations)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
