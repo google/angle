@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da99462d_9428e06c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-24T18:37:58Z",
+      "side": 1,
+      "message": "This LGTM, thanks for the test. Unfortunate that we don\u0027t know how to fully repro this but the fix is safe.",
+      "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
