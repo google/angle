@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "41e82ecf_578d27ef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-24T19:50:19Z",
+      "side": 1,
+      "message": "Sorry Mohan I didn\u0027t notice your comments before. I have been busy with something else, but I\u0027ll go through the failures soon and then see about addressing your comments.",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d56df3c9_44fa398d",
@@ -71,6 +88,24 @@
       "writtenOn": "2021-03-10T15:58:49Z",
       "side": 1,
       "message": "IIUC, when the buffer has dynamic usage you alloc a vkBuffer of (16 * bufferSize). interesting, this should have triggered the mNextAllocationOffset bug i was talking about",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e89cf9a_654867fd",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-24T19:50:19Z",
+      "side": 1,
+      "message": "Yes Mohan, that\u0027s why I CCed you here! Once this lands you should be able to write your regression test.",
+      "parentUuid": "eb94cb52_452c7aac",
       "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
