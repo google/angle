@@ -16,6 +16,24 @@
       "message": "Expect this to fail on \"real_gangster_crime\". If it\u0027s good with you guys we can disable that trace and land this CL before re-landing.",
       "revId": "7458a63006d36854f296b2a9b9932fe1ed22b400",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b6997e8_80518804",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-24T02:02:12Z",
+      "side": 1,
+      "message": "Yeah, disabling is fine.\n\nIt looks like there are other test failures too, unfortunately:\n\nangle_perftests on Intel GPU on Windows failed because of:\n- angle_perftests_shard_0\nangle_restricted_trace_gold_tests on Intel GPU on Windows failed because of:\n- angle_restricted_trace_gold_tests.real_gangster_crime\nangle_restricted_trace_gold_tests on NVIDIA GPU on Windows failed because of:\n- angle_restricted_trace_gold_tests.messenger_lite",
+      "parentUuid": "71fadc1c_bb047634",
+      "revId": "7458a63006d36854f296b2a9b9932fe1ed22b400",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

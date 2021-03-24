@@ -3,6 +3,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "92333f93_dae3f59e",
+        "filename": "src/tests/perf_tests/ANGLEPerfTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-24T02:02:12Z",
+      "side": 1,
+      "message": "This may be a little cleaner as:\n\n    if (userParam)\n    {\n        ANGLERenderTest *renderTest \u003d\n            const_cast\u003cANGLERenderTest *\u003e(reinterpret_cast\u003cconst ANGLERenderTest *\u003e(userParam));\n        renderTest-\u003eonErrorMessage(message);\n    }\n\nSo we only do all the work if we have a valid pointer to begin with.",
+      "range": {
+        "startLine": 213,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 5
+      },
+      "revId": "d0239af8ef2c7dffa307196fbd130f4c85708115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e38e63c6_6c97879e",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-24T02:02:12Z",
+      "side": 1,
+      "message": "What\u0027s going on here?",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 380,
+        "endChar": 11
+      },
+      "revId": "d0239af8ef2c7dffa307196fbd130f4c85708115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0118e347_d26f4a7a",
         "filename": "util/shader_utils.cpp",
         "patchSetId": 2
