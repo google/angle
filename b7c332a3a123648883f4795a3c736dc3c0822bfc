@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27d8ef73_fbe9f9c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-24T05:52:01Z",
+      "side": 1,
+      "message": "Sorry, call for +2 again, \"CQ DRY RUN\" was not stable.",
+      "revId": "b7c332a3a123648883f4795a3c736dc3c0822bfc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
