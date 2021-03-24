@@ -261,7 +261,7 @@ angle::Result SemaphoreVk::importZirconEvent(ContextVk *contextVk, GLuint handle
     importSemaphoreZirconHandleInfo.flags     = 0;
     importSemaphoreZirconHandleInfo.handleType =
         VK_EXTERNAL_SEMAPHORE_HANDLE_TYPE_TEMP_ZIRCON_EVENT_BIT_FUCHSIA;
-    importSemaphoreZirconHandleInfo.handle = handle;
+    importSemaphoreZirconHandleInfo.zirconHandle = handle;
 
     // TODO(spang): Add vkImportSemaphoreZirconHandleFUCHSIA to volk.
     static PFN_vkImportSemaphoreZirconHandleFUCHSIA vkImportSemaphoreZirconHandleFUCHSIA =
