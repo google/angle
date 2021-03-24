@@ -33,6 +33,162 @@
       "message": "LGTM. My personal feeling is that we could do without the ANGLE/GL extension. No application is going to consciously mismatch the types and then rely on the presence of the extension to get the behavior they want. Unless mandatory-ly-enabled extensions are the GL way of defining undefined behavior, I don\u0027t see much benefit in it.",
       "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1dd311c7_46b4f49a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:21:03Z",
+      "side": 1,
+      "message": "Hey Shabi, since I\u0027m asking for this, please ping me offline and we can hash it out. I don\u0027t want the code review to become a back-and-forth request to Brandon. One nice thing of using the extension is that it\u0027s possible to test via the spec instead of detecting the back-end.",
+      "parentUuid": "f2f55316_c55f6f53",
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6231fcc7_874cd38a",
+        "filename": "extensions/ANGLE_relaxed_vertex_attribute_type.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:21:03Z",
+      "side": 1,
+      "message": "nit: can update",
+      "range": {
+        "startLine": 19,
+        "startChar": 13,
+        "endLine": 19,
+        "endChar": 22
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50101c1b_6404f92a",
+        "filename": "extensions/ANGLE_relaxed_vertex_attribute_type.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:21:03Z",
+      "side": 1,
+      "message": "You should write this against the 3.0 extension specification since this isn\u0027t possible to become an issue in GLES 2.0.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 52
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33caddfe_97931484",
+        "filename": "extensions/ANGLE_relaxed_vertex_attribute_type.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:21:03Z",
+      "side": 1,
+      "message": "Instead of using the type size as the guideline, I recommend we allow uint/int to be effectively reinterpret cast to each other.\n\nHow I would express this is also in 2.9 \"Vertex Arrays\", and I\u0027d update the wording here:\n\nThe values loaded into a shader attribute\nvariable bound to generic attribute index are undefined if the array for index was\nnot specified by:\n• VertexAttribPointer, for floating-point base type attributes;\n• VertexAttribIPointer with type BYTE, SHORT, or INT for signed integer\nbase type attributes; or\n• VertexAttribIPointer with type UNSIGNED_BYTE, UNSIGNED_SHORT, or\nUNSIGNED_INT for unsigned integer base type attributes.\n\nI\u0027d change it to something like \n\nThe values loaded into a shader attribute\nvariable bound to generic attribute index are undefined if the array for index was\nnot specified by:\n• VertexAttribPointer, for floating-point base type attributes;\n• VertexAttribIPointer with type BYTE, SHORT, INT, UNSIGNED_BYTE, UNSIGNED_SHORT, or\nUNSIGNED_INT for integer\nbase type attributes; \n\nIf the generic attribute is specified by VertexAttribIPointer with an unsigned type for base signed integer type attributes, or by a signed type for base unsigned integer type attributes, the values loaded into the shader attribute as reinterpreted as the corresponding signed/unsigned type.",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 47
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "391fb2fd_2d78d206",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:21:03Z",
+      "side": 1,
+      "message": "instead of using this implementation, I suggest we allow a mismatch between unsigned int and signed int. You can use the gl::ComponentType to determine this. In these cases I suggest you use a custom function to flip the angleFormat into the corresponding signed or unsigned type.\n\nDoes this sound OK?\n\nI want to avoid calling contextVk-\u003egetState(), we don\u0027t do that in this function and I\u0027d like to keep it accessible potentially via a vk::Context in case we need that.",
+      "range": {
+        "startLine": 1825,
+        "startChar": 0,
+        "endLine": 1836,
+        "endChar": 13
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67c4b550_5b333fb6",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1759,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:21:03Z",
+      "side": 1,
+      "message": "I\u0027d explicitly call out that this test relies on the new extension and mismatched integer signs.",
+      "range": {
+        "startLine": 1759,
+        "startChar": 31,
+        "endLine": 1759,
+        "endChar": 53
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7751cc2e_ec83a2c4",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1764,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:21:03Z",
+      "side": 1,
+      "message": "instead of this, ensure the extension is enabled. Please expose the new extension via the usual Caps method in the Vulkan back-end so that we can check it.",
+      "range": {
+        "startLine": 1762,
+        "startChar": 11,
+        "endLine": 1764,
+        "endChar": 0
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
