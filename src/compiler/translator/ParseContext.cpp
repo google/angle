@@ -2769,6 +2769,7 @@ void TParseContext::checkTessellationShaderUnsizedArraysAndSetSize(const TSource
             case EvqFlatIn:
             case EvqCentroidIn:
             case EvqSmoothIn:
+            case EvqSampleIn:
                 // Declaring an array size is optional. If no size is specified, it will be taken
                 // from the implementation-dependent maximum patch size (gl_MaxPatchVertices).
                 ASSERT(mMaxPatchVertices > 0);
@@ -2778,6 +2779,7 @@ void TParseContext::checkTessellationShaderUnsizedArraysAndSetSize(const TSource
             case EvqFlatOut:
             case EvqCentroidOut:
             case EvqSmoothOut:
+            case EvqSampleOut:
                 // Declaring an array size is optional. If no size is specified, it will be taken
                 // from output patch size declared in the shader.
                 type->sizeOutermostUnsizedArray(mTessControlShaderOutputVertices);

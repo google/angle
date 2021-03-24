@@ -5281,6 +5281,79 @@ TEST_P(GLSLTest_ES31, VaryingIOBlockNotDeclaredInVertexShader)
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
 }
 
+// Test that a shader with sample in / sample out can be linked successfully.
+TEST_P(GLSLTest_ES31, VaryingTessellationSampleInAndOut)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_tessellation_shader"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_OES_shader_multisample_interpolation"));
+
+    constexpr char kVS[] =
+        R"(#version 310 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        precision highp float;
+        in vec4 inputAttribute;
+
+        sample out mediump float tc_in;
+        void main()
+        {
+            tc_in = inputAttribute[0];
+            gl_Position = inputAttribute;
+        })";
+
+    constexpr char kTCS[] =
+        R"(#version 310 es
+        #extension GL_EXT_tessellation_shader : require
+        #extension GL_OES_shader_multisample_interpolation : require
+        layout (vertices=3) out;
+
+        sample in mediump float tc_in[];
+        sample out mediump float tc_out[];
+        void main()
+        {
+            tc_out[gl_InvocationID] = tc_in[gl_InvocationID];
+            gl_out[gl_InvocationID].gl_Position = gl_in[gl_InvocationID].gl_Position;
+            gl_TessLevelInner[0] = 2.0;
+            gl_TessLevelInner[1] = 2.0;
+            gl_TessLevelOuter[0] = 2.0;
+            gl_TessLevelOuter[1] = 2.0;
+            gl_TessLevelOuter[2] = 2.0;
+            gl_TessLevelOuter[3] = 2.0;
+        })";
+
+    constexpr char kTES[] =
+        R"(#version 310 es
+        #extension GL_EXT_tessellation_shader : require
+        #extension GL_OES_shader_multisample_interpolation : require
+        layout (triangles) in;
+
+        sample in mediump float tc_out[];
+        sample out mediump float te_out;
+        void main()
+        {
+            te_out = tc_out[2];
+            gl_Position = gl_TessCoord[0] * gl_in[0].gl_Position;
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 310 es
+        #extension GL_OES_shader_multisample_interpolation : require
+
+        precision highp float;
+        sample in mediump float te_out;
+        layout(location = 0) out mediump vec4 color;
+
+        void main()
+        {
+            float out0 = te_out;
+            color = vec4(1, 0, 0, 1);
+        })";
+
+    ANGLE_GL_PROGRAM_WITH_TESS(program, kVS, kTCS, kTES, kFS);
+    drawPatches(program.get(), "inputAttribute", 0.5f, 1.0f, GL_FALSE);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Test that a varying struct that's not declared in the fragment shader links successfully.
 // GLSL ES 3.00.6 section 4.3.10.
 TEST_P(GLSLTest_ES3, VaryingStructNotDeclaredInFragmentShader)

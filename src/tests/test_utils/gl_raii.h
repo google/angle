@@ -184,6 +184,15 @@ class GLProgram
         mHandle = CompileProgramWithGS(vertexShader, geometryShader, fragmentShader);
     }
 
+    void makeRaster(const char *vertexShader,
+                    const char *tessControlShader,
+                    const char *tessEvaluateShader,
+                    const char *fragmentShader)
+    {
+        mHandle = CompileProgramWithTESS(vertexShader, tessControlShader, tessEvaluateShader,
+                                         fragmentShader);
+    }
+
     void makeRasterWithTransformFeedback(const char *vertexShader,
                                          const char *fragmentShader,
                                          const std::vector<std::string> &tfVaryings,
@@ -242,6 +251,11 @@ class GLProgram
 #define ANGLE_GL_PROGRAM_WITH_GS(name, vertex, geometry, fragment) \
     GLProgram name;                                                \
     name.makeRaster(vertex, geometry, fragment);                   \
+    ASSERT_TRUE(name.valid())
+
+#define ANGLE_GL_PROGRAM_WITH_TESS(name, vertex, tcs, tes, fragment) \
+    GLProgram name;                                                  \
+    name.makeRaster(vertex, tcs, tes, fragment);                     \
     ASSERT_TRUE(name.valid())
 
 #define ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(name, vertex, fragment, tfVaryings, bufferMode) \

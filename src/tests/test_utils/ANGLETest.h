@@ -394,6 +394,11 @@ class ANGLETestBase
                            GLfloat positionAttribXYScale,
                            bool useVertexBuffer,
                            GLuint numInstances);
+    void drawPatches(GLuint program,
+                     const std::string &positionAttribName,
+                     GLfloat positionAttribZ,
+                     GLfloat positionAttribXYScale,
+                     bool useVertexBuffer);
 
     void drawQuadPPO(GLuint vertProgram,
                      const std::string &positionAttribName,
@@ -538,6 +543,7 @@ class ANGLETestBase
                   GLfloat positionAttribXYScale,
                   bool useVertexBuffer,
                   bool useInstancedDrawCalls,
+                  bool useTessellationPatches,
                   GLuint numInstances);
 
     void initOSWindow();

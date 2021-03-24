@@ -775,7 +775,7 @@ void ANGLETestBase::drawQuad(GLuint program,
                              bool useVertexBuffer)
 {
     drawQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, useVertexBuffer,
-             false, 0u);
+             false, false, 0u);
 }
 
 void ANGLETestBase::drawQuadInstanced(GLuint program,
@@ -786,7 +786,17 @@ void ANGLETestBase::drawQuadInstanced(GLuint program,
                                       GLuint numInstances)
 {
     drawQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, useVertexBuffer,
-             true, numInstances);
+             true, false, numInstances);
+}
+
+void ANGLETestBase::drawPatches(GLuint program,
+                                const std::string &positionAttribName,
+                                GLfloat positionAttribZ,
+                                GLfloat positionAttribXYScale,
+                                bool useVertexBuffer)
+{
+    drawQuad(program, positionAttribName, positionAttribZ, positionAttribXYScale, useVertexBuffer,
+             false, true, 0u);
 }
 
 void ANGLETestBase::drawQuad(GLuint program,
@@ -795,6 +805,7 @@ void ANGLETestBase::drawQuad(GLuint program,
                              GLfloat positionAttribXYScale,
                              bool useVertexBuffer,
                              bool useInstancedDrawCalls,
+                             bool useTessellationPatches,
                              GLuint numInstances)
 {
     GLint previousProgram = 0;
@@ -837,14 +848,15 @@ void ANGLETestBase::drawQuad(GLuint program,
         }
     }
     glEnableVertexAttribArray(positionLocation);
+    GLenum drawMode = (useTessellationPatches) ? GL_PATCHES : GL_TRIANGLES;
 
     if (useInstancedDrawCalls)
     {
-        glDrawArraysInstanced(GL_TRIANGLES, 0, 6, numInstances);
+        glDrawArraysInstanced(drawMode, 0, 6, numInstances);
     }
     else
     {
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(drawMode, 0, 6);
     }
 
     glDisableVertexAttribArray(positionLocation);
