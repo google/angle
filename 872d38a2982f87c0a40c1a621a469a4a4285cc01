@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "06e7706d_aa289068",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-24T16:21:43Z",
+      "side": 1,
+      "message": "This is based on the stack trace and verifying it fixes the fuzzer by recreating locally.   I didn\u0027t dig into what GL calls the fuzzer is actually making.\n\nWe don\u0027t crash without the fix when doing:\n\n    glUseProgram(0);\n    glDrawArrays(GL_TRIANGLES, 0, 6);\n\nIt\u0027s doing some other combination of commands.   I can dig into it further later, but pointer checking is simple enough that I think we can rely on the fuzzer, unless you think there\u0027s some other validation that should have caught this sooner.",
+      "parentUuid": "28992b21_0454d8c6",
+      "revId": "872d38a2982f87c0a40c1a621a469a4a4285cc01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "14f845a8_7c195851",
         "filename": "src/libANGLE/validationES.cpp",
         "patchSetId": 1
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-24T02:42:12Z",
       "side": 1,
       "message": "Can remove the ASSERT now.",
+      "range": {
+        "startLine": 3993,
+        "startChar": 0,
+        "endLine": 3993,
+        "endChar": 27
+      },
+      "revId": "872d38a2982f87c0a40c1a621a469a4a4285cc01",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d098d6b6_a7cf0991",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3993,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-24T16:21:43Z",
+      "side": 1,
+      "message": "Oops. Done.",
+      "parentUuid": "14f845a8_7c195851",
       "range": {
         "startLine": 3993,
         "startChar": 0,
