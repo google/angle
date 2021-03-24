@@ -16,6 +16,23 @@
       "message": "PTAL - jamie, a spec was added",
       "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2f55316_c55f6f53",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-24T03:28:10Z",
+      "side": 1,
+      "message": "LGTM. My personal feeling is that we could do without the ANGLE/GL extension. No application is going to consciously mismatch the types and then rely on the presence of the extension to get the behavior they want. Unless mandatory-ly-enabled extensions are the GL way of defining undefined behavior, I don\u0027t see much benefit in it.",
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
