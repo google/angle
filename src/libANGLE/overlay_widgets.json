@@ -134,6 +134,22 @@
             }
         },
         {
+            "name": "VulkanShaderBufferDSHitRate",
+            "comment": "Shader Buffer Descriptor Set Cache Hit Rate.",
+            "type": "RunningGraph(60)",
+            "color": [255, 0, 75, 200],
+            "coords": [-50, 360],
+            "bar_width": 6,
+            "height": 100,
+            "description": {
+                "color": [255, 0, 75, 255],
+                "coords": ["VulkanShaderBufferDSHitRate.left.align",
+                           "VulkanShaderBufferDSHitRate.top.adjacent"],
+                "font": "small",
+                "length": 40
+            }
+        },
+        {
             "name": "VulkanDynamicBufferAllocations",
             "comment": "Buffer Allocations Made By vk::DynamicBuffer.",
             "type": "RunningGraph(120)",

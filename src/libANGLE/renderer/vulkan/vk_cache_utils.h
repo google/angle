@@ -1382,8 +1382,8 @@ enum class VulkanCacheType
     PipelineLayout,
     Sampler,
     SamplerYcbcrConversion,
-    DescriptorSet,
     DescriptorSetLayout,
+    DriverUniformsDescriptors,
     TextureDescriptors,
     UniformsAndXfbDescriptors,
     ShaderBuffersDescriptors,
@@ -1395,7 +1395,7 @@ enum class VulkanCacheType
 class CacheStats final : angle::NonCopyable
 {
   public:
-    CacheStats() : mHitCount(0), mMissCount(0) {}
+    CacheStats() { reset(); }
     ~CacheStats() {}
 
     ANGLE_INLINE void hit() { mHitCount++; }
@@ -1405,6 +1405,9 @@ class CacheStats final : angle::NonCopyable
         mHitCount += stats.mHitCount;
         mMissCount += stats.mMissCount;
     }
+
+    uint64_t getHitCount() const { return mHitCount; }
+    uint64_t getMissCount() const { return mMissCount; }
 
     ANGLE_INLINE double getHitRatio() const
     {
@@ -1418,9 +1421,33 @@ class CacheStats final : angle::NonCopyable
         }
     }
 
+    void reset()
+    {
+        mHitCount  = 0;
+        mMissCount = 0;
+    }
+
   private:
     uint64_t mHitCount;
     uint64_t mMissCount;
+};
+
+template <VulkanCacheType CacheType>
+class HasCacheStats : angle::NonCopyable
+{
+  public:
+    template <typename Accumulator>
+    void accumulateCacheStats(Accumulator *accum)
+    {
+        accum->accumulateCacheStats(CacheType, mCacheStats);
+        mCacheStats.reset();
+    }
+
+  protected:
+    HasCacheStats()          = default;
+    virtual ~HasCacheStats() = default;
+
+    CacheStats mCacheStats;
 };
 
 // TODO(jmadill): Add cache trimming/eviction.
@@ -1479,11 +1506,11 @@ class RenderPassCache final : angle::NonCopyable
 };
 
 // TODO(jmadill): Add cache trimming/eviction.
-class GraphicsPipelineCache final : angle::NonCopyable
+class GraphicsPipelineCache final : public HasCacheStats<VulkanCacheType::GraphicsPipeline>
 {
   public:
     GraphicsPipelineCache();
-    ~GraphicsPipelineCache();
+    ~GraphicsPipelineCache() override;
 
     void destroy(RendererVk *rendererVk);
     void release(ContextVk *context);
@@ -1540,7 +1567,6 @@ class GraphicsPipelineCache final : angle::NonCopyable
                                  vk::PipelineHelper **pipelineOut);
 
     std::unordered_map<vk::GraphicsPipelineDesc, vk::PipelineHelper> mPayload;
-    CacheStats mCacheStats;
 };
 
 class DescriptorSetLayoutCache final : angle::NonCopyable
@@ -1561,11 +1587,11 @@ class DescriptorSetLayoutCache final : angle::NonCopyable
     CacheStats mCacheStats;
 };
 
-class PipelineLayoutCache final : angle::NonCopyable
+class PipelineLayoutCache final : public HasCacheStats<VulkanCacheType::PipelineLayout>
 {
   public:
     PipelineLayoutCache();
-    ~PipelineLayoutCache();
+    ~PipelineLayoutCache() override;
 
     void destroy(RendererVk *rendererVk);
 
@@ -1576,14 +1602,13 @@ class PipelineLayoutCache final : angle::NonCopyable
 
   private:
     std::unordered_map<vk::PipelineLayoutDesc, vk::RefCountedPipelineLayout> mPayload;
-    CacheStats mCacheStats;
 };
 
-class SamplerCache final : angle::NonCopyable
+class SamplerCache final : public HasCacheStats<VulkanCacheType::Sampler>
 {
   public:
     SamplerCache();
-    ~SamplerCache();
+    ~SamplerCache() override;
 
     void destroy(RendererVk *rendererVk);
 
@@ -1593,15 +1618,15 @@ class SamplerCache final : angle::NonCopyable
 
   private:
     std::unordered_map<vk::SamplerDesc, vk::RefCountedSampler> mPayload;
-    CacheStats mCacheStats;
 };
 
 // YuvConversion Cache
-class SamplerYcbcrConversionCache final : angle::NonCopyable
+class SamplerYcbcrConversionCache final
+    : public HasCacheStats<VulkanCacheType::SamplerYcbcrConversion>
 {
   public:
     SamplerYcbcrConversionCache();
-    ~SamplerYcbcrConversionCache();
+    ~SamplerYcbcrConversionCache() override;
 
     void destroy(RendererVk *rendererVk);
 
@@ -1614,15 +1639,15 @@ class SamplerYcbcrConversionCache final : angle::NonCopyable
 
   private:
     std::unordered_map<uint64_t, vk::RefCountedSamplerYcbcrConversion> mPayload;
-    CacheStats mCacheStats;
 };
 
 // DescriptorSet Cache
-class DriverUniformsDescriptorSetCache final : angle::NonCopyable
+class DriverUniformsDescriptorSetCache final
+    : public HasCacheStats<VulkanCacheType::DriverUniformsDescriptors>
 {
   public:
     DriverUniformsDescriptorSetCache() = default;
-    ~DriverUniformsDescriptorSetCache() { ASSERT(mPayload.empty()); }
+    ~DriverUniformsDescriptorSetCache() override { ASSERT(mPayload.empty()); }
 
     void destroy(RendererVk *rendererVk);
 
@@ -1646,40 +1671,38 @@ class DriverUniformsDescriptorSetCache final : angle::NonCopyable
 
   private:
     angle::FastIntegerMap<VkDescriptorSet> mPayload;
-    CacheStats mCacheStats;
 };
 
 // Templated Descriptors Cache
-template <typename key, VulkanCacheType cacheType>
-class DescriptorSetCache final : angle::NonCopyable
+template <typename Key, VulkanCacheType CacheType>
+class DescriptorSetCache final : public HasCacheStats<CacheType>
 {
   public:
     DescriptorSetCache() = default;
-    ~DescriptorSetCache() { ASSERT(mPayload.empty()); }
+    ~DescriptorSetCache() override { ASSERT(mPayload.empty()); }
 
     void destroy(RendererVk *rendererVk);
 
-    ANGLE_INLINE bool get(const key &desc, VkDescriptorSet *descriptorSet)
+    ANGLE_INLINE bool get(const Key &desc, VkDescriptorSet *descriptorSet)
     {
         auto iter = mPayload.find(desc);
         if (iter != mPayload.end())
         {
             *descriptorSet = iter->second;
-            mCacheStats.hit();
+            this->mCacheStats.hit();
             return true;
         }
-        mCacheStats.miss();
+        this->mCacheStats.miss();
         return false;
     }
 
-    ANGLE_INLINE void insert(const key &desc, VkDescriptorSet descriptorSet)
+    ANGLE_INLINE void insert(const Key &desc, VkDescriptorSet descriptorSet)
     {
         mPayload.emplace(desc, descriptorSet);
     }
 
   private:
-    angle::HashMap<key, VkDescriptorSet> mPayload;
-    CacheStats mCacheStats;
+    angle::HashMap<Key, VkDescriptorSet> mPayload;
 };
 
 // Only 1 driver uniform binding is used.

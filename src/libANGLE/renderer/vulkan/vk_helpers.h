@@ -332,7 +332,7 @@ class DynamicDescriptorPool final : angle::NonCopyable
   private:
     angle::Result allocateNewPool(ContextVk *contextVk);
 
-    static constexpr uint32_t KMaxSetsPerPoolMax = 512;
+    static constexpr uint32_t kMaxSetsPerPoolMax = 512;
     static uint32_t mMaxSetsPerPool;
     static uint32_t mMaxSetsPerPoolMultiplier;
     size_t mCurrentPoolIndex;

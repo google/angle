@@ -876,6 +876,8 @@ struct PerfCounters
     uint32_t stencilAttachmentResolves;
     uint32_t readOnlyDepthStencilRenderPasses;
     uint32_t descriptorSetAllocations;
+    uint32_t shaderBuffersDescriptorSetCacheHits;
+    uint32_t shaderBuffersDescriptorSetCacheMisses;
 };
 
 // A Vulkan image level index.

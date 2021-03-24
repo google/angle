@@ -2504,7 +2504,7 @@ angle::Result DynamicDescriptorPool::allocateNewPool(ContextVk *contextVk)
 
     // This pool is getting hot, so grow its max size to try and prevent allocating another pool in
     // the future.
-    if (mMaxSetsPerPool < KMaxSetsPerPoolMax)
+    if (mMaxSetsPerPool < kMaxSetsPerPoolMax)
     {
         mMaxSetsPerPool *= mMaxSetsPerPoolMultiplier;
     }

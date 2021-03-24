@@ -28,6 +28,8 @@ enum class WidgetId
     VulkanWriteDescriptorSetCount,
     // Descriptor Set Allocations.
     VulkanDescriptorSetAllocations,
+    // Shader Buffer Descriptor Set Cache Hit Rate.
+    VulkanShaderBufferDSHitRate,
     // Buffer Allocations Made By vk::DynamicBuffer.
     VulkanDynamicBufferAllocations,
 
@@ -45,6 +47,7 @@ enum class WidgetId
     PROC(VulkanSecondaryCommandBufferPoolWaste) \
     PROC(VulkanWriteDescriptorSetCount)         \
     PROC(VulkanDescriptorSetAllocations)        \
+    PROC(VulkanShaderBufferDSHitRate)           \
     PROC(VulkanDynamicBufferAllocations)
 
 }  // namespace gl

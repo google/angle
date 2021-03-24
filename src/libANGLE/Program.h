@@ -491,6 +491,7 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
 
     // Peek whether there is any running linking tasks.
     bool isLinking() const;
+    bool hasLinkingState() const { return mLinkingState != nullptr; }
 
     bool isLinked() const
     {
