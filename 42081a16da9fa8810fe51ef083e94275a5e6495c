@@ -116,6 +116,24 @@
       "parentUuid": "661fe4fb_be5959b4",
       "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abec6bfa_a29b2873",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 21
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-24T15:00:34Z",
+      "side": 1,
+      "message": "I\u0027m unconvinced the visitor pattern is unusable. That said it is an improvement over the current code, so LGTM.",
+      "parentUuid": "21a8a808_93665f70",
+      "revId": "42081a16da9fa8810fe51ef083e94275a5e6495c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
