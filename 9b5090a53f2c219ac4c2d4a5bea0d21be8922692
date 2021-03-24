@@ -16,6 +16,24 @@
       "message": "Please include a regression test - want to check out the call pattern.",
       "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bea2ab2_dff456ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-24T22:32:51Z",
+      "side": 1,
+      "message": "As I stated to Shabi:\n\nI don\u0027t have a way to get what the commands are.   Enabling `angle_enable_trace\u003dtrue` with `export ANGLE_ENABLE_DEBUG_MARKERS\u003d1` doesn\u0027t output anything, and the testcase file itself seems to just be a binary.\n\nDo you know how to get the call pattern for a fuzzer test?\n\nReproducer Testcase: https://clusterfuzz.com/download?testcase_id\u003d5123136027426816",
+      "parentUuid": "c47f4f4d_21bc8e5b",
+      "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
