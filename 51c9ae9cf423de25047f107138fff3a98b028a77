@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61647f82_ce53e8ee",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-24T01:42:18Z",
+      "side": 1,
+      "message": "yes. you can take a look at angle_unittests, specifically this test -\n TransformFeedbackTest.SideEffectsOfStartAndStop",
+      "parentUuid": "8f75e44f_44366786",
+      "range": {
+        "startLine": 144,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 73
+      },
+      "revId": "51c9ae9cf423de25047f107138fff3a98b028a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5cb4897_40b7f739",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-03-23T02:38:09Z",
       "side": 1,
       "message": "These casts shouldn\u0027t be necessary.",
+      "range": {
+        "startLine": 866,
+        "startChar": 8,
+        "endLine": 866,
+        "endChar": 27
+      },
+      "revId": "51c9ae9cf423de25047f107138fff3a98b028a77",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b01e24e_f83938ca",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-24T01:42:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5cb4897_40b7f739",
       "range": {
         "startLine": 866,
         "startChar": 8,
