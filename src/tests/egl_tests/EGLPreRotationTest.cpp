@@ -575,7 +575,8 @@ TEST_P(EGLPreRotationSurfaceTest, ChangeRotationWithDraw)
 
     // Change the rotation back and forth between landscape and portrait, and make sure that the
     // drawing and reading happen consistently with the desired rotation.
-    for (int i = 0; i < 3; i++)
+    // Last rotation needs to be portrait, since other tests expect it to be the default.
+    for (int i = 0; i < 4; i++)
     {
         bool landscape;
         EGLint actualWidth   = 0;
