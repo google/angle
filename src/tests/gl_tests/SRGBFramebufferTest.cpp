@@ -46,6 +46,9 @@ class SRGBFramebufferTest : public ANGLETest
     GLint mColorLocation = -1;
 };
 
+class SRGBFramebufferTestES3 : public SRGBFramebufferTest
+{};
+
 // Test basic validation of GL_EXT_sRGB_write_control
 TEST_P(SRGBFramebufferTest, Validation)
 {
@@ -237,8 +240,70 @@ TEST_P(SRGBFramebufferTest, NegativeLifetimeTracking)
     EXPECT_GL_ERROR(GL_INVALID_FRAMEBUFFER_OPERATION);
 }
 
+// Test that glBlitFramebuffer correctly converts colorspaces
+TEST_P(SRGBFramebufferTestES3, BlitFramebuffer)
+{
+    // http://anglebug.com/5790
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+
+    if (!IsGLExtensionEnabled("GL_EXT_sRGB_write_control") ||
+        (!IsGLExtensionEnabled("GL_EXT_sRGB") && getClientMajorVersion() < 3))
+    {
+        std::cout
+            << "Test skipped because GL_EXT_sRGB_write_control and GL_EXT_sRGB are not available."
+            << std::endl;
+        return;
+    }
+
+    GLTexture dstTexture;
+    glBindTexture(GL_TEXTURE_2D, dstTexture.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA_EXT, 1, 1, 0, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE,
+                 nullptr);
+    GLFramebuffer dstFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, dstTexture.get(),
+                           0);
+
+    GLTexture srcTexture;
+    glBindTexture(GL_TEXTURE_2D, srcTexture.get());
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_SRGB_ALPHA_EXT, 1, 1, 0, GL_SRGB_ALPHA_EXT, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    GLFramebuffer srcFramebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, srcFramebuffer.get());
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, srcTexture.get(),
+                           0);
+
+    glUseProgram(mProgram);
+    glUniform4fv(mColorLocation, 1, srgbColor.toNormalizedVector().data());
+
+    // Draw onto the framebuffer normally
+    glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+    drawQuad(mProgram, essl1_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, linearColor, 1.0);
+
+    // Blit the framebuffer normally
+    glEnable(GL_FRAMEBUFFER_SRGB_EXT);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFramebuffer);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, linearColor, 1.0);
+
+    // Blit the framebuffer with forced linear colorspace
+    glDisable(GL_FRAMEBUFFER_SRGB_EXT);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, dstFramebuffer);
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, srcFramebuffer);
+    glBlitFramebuffer(0, 0, 1, 1, 0, 0, 1, 1, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, dstFramebuffer);
+    EXPECT_PIXEL_COLOR_NEAR(0, 0, srgbColor, 1.0);
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(SRGBFramebufferTest);
+ANGLE_INSTANTIATE_TEST_ES3(SRGBFramebufferTestES3);
 
 }  // namespace angle

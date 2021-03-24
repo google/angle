@@ -1125,6 +1125,9 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
                                   (noFlip || !disableFlippingBlitWithCommand) &&
                                   HasSrcBlitFeature(renderer, readRenderTarget) &&
                                   (rotation == SurfaceRotation::Identity);
+        // If we need to reinterpret the colorspace then the blit must be done through a shader
+        bool reinterpretsColorspace =
+            mCurrentFramebufferDesc.getWriteControlMode() != gl::SrgbWriteControlMode::Default;
         bool areChannelsBlitCompatible = true;
         bool areFormatsIdentical       = true;
         for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
@@ -1145,7 +1148,7 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         }
         AdjustBlitResolveParametersForPreRotation(rotation, srcFramebufferRotation, &params);
 
-        if (canBlitWithCommand && areChannelsBlitCompatible)
+        if (canBlitWithCommand && areChannelsBlitCompatible && !reinterpretsColorspace)
         {
             for (size_t colorIndexGL : mState.getEnabledDrawBuffers())
             {
@@ -1157,7 +1160,8 @@ angle::Result FramebufferVk::blit(const gl::Context *context,
         }
         // If we're not flipping or rotating, use Vulkan's builtin resolve.
         else if (isColorResolve && !flipX && !flipY && areChannelsBlitCompatible &&
-                 areFormatsIdentical && rotation == SurfaceRotation::Identity)
+                 areFormatsIdentical && rotation == SurfaceRotation::Identity &&
+                 !reinterpretsColorspace)
         {
             // Resolving with a subpass resolve attachment has a few restrictions:
             // 1.) glBlitFramebuffer() needs to copy the read color attachment to all enabled
