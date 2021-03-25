@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bdf8776_1925af71",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-25T23:31:35Z",
+      "side": 1,
+      "message": "This approach LGTM.",
+      "revId": "03b9cb49a26bb7790a0d958db82ac4bce3c939ea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
