@@ -52,6 +52,24 @@
       "parentUuid": "3bea2ab2_dff456ce",
       "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "973d09dd_c1707e54",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-25T14:22:38Z",
+      "side": 1,
+      "message": "+1 to sandbox being a potential issue. Not sure if this is a webgl test, but if it is, you could also disable GPU compositing so chrome itself doesn\u0027t use ANGLE. If it\u0027s not a webgl test, you wouldn\u0027t want to do that though.\n\n    --disable-gpu-watchdog\n    --disable-gpu-sandbox\n    --disable-gpu-compositing # only if crashing in webgl",
+      "parentUuid": "1705a606_b8b1d08c",
+      "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
