@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50aaf8ec_8642d9c2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-25T22:23:57Z",
+      "side": 1,
+      "message": "Add tests for immutable texture and change base level and generate mipmap.",
+      "revId": "12e0782e3051ba335634263a7013a941e8bb1184",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
