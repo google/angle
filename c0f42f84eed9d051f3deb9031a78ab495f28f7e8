@@ -1,0 +1,222 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be2221f4_295f5cf1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "nit: \"causes a\"",
+      "range": {
+        "startLine": 11,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da82e1b4_e14c392c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "nit: \"makes a\"",
+      "range": {
+        "startLine": 12,
+        "startChar": 57,
+        "endLine": 12,
+        "endChar": 61
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75d38f63_24651108",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "nit: \"that are specified by a\"",
+      "range": {
+        "startLine": 13,
+        "startChar": 45,
+        "endLine": 13,
+        "endChar": 62
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d236d3c3_257fc7a0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "nit: Changing",
+      "range": {
+        "startLine": 14,
+        "startChar": 19,
+        "endLine": 14,
+        "endChar": 25
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1554afcc_ec9bf9f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "I did my first review of this CL.  I like it!\n\nI commented on what appears to be an open \"naming issue\", and hope my insights help.\n\nSorry for all of the nits!  I think they are all in comments and the commit message.  I figured now would be a good time to address them.",
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4113d17_c14e7043",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2063,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "Can this path be reached for an immutable texture?",
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da88a5c7_0f7a0d42",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2730,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "nit: underlying",
+      "range": {
+        "startLine": 2730,
+        "startChar": 49,
+        "endLine": 2730,
+        "endChar": 58
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "38d7a208_f836d15b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2744,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "Will this always be 0 for an immutable texture?  I think so.",
+      "range": {
+        "startLine": 2744,
+        "startChar": 23,
+        "endLine": 2744,
+        "endChar": 53
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59db8809_c8740903",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3826,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "Should we do?:\n    ASSERT(!immutable || baseLevel\u003d\u003d0)",
+      "range": {
+        "startLine": 3826,
+        "startChar": 0,
+        "endLine": 3826,
+        "endChar": 36
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d477d497_4484ff60",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 2064,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T00:40:10Z",
+      "side": 1,
+      "message": "nit: \"level that has been\"",
+      "range": {
+        "startLine": 2064,
+        "startChar": 17,
+        "endLine": 2064,
+        "endChar": 27
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
