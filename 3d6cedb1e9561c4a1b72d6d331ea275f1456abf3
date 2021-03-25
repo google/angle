@@ -22,6 +22,30 @@
       },
       "revId": "3d6cedb1e9561c4a1b72d6d331ea275f1456abf3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "776759f4_440fa0f2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-25T15:18:21Z",
+      "side": 1,
+      "message": "\u003e We could always address the slowness by not changing orientation if it\u0027s asked to be changed to the orientation the device is already in.\n\nGood idea.  We should check with Cody, who wrote the underlying setOrientation call, to see if we can query the current orientation.\n\nFYI: As part of my review, I checked and this is the only test in that file that changes between portrait and landscape.  The other tests that set the orientation, all set it to portrait (the native orientation of a Pixel device).  I think those tests were written by Arm.  Perhaps they wrote it to avoid what this test was doing?  We could certainly save time by removing their setOrientation/sleep calls.",
+      "parentUuid": "6ba4846e_b5494695",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 14,
+        "endChar": 46
+      },
+      "revId": "3d6cedb1e9561c4a1b72d6d331ea275f1456abf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
