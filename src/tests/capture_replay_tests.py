@@ -223,7 +223,7 @@ class SubProcess():
 class ChildProcessesManager():
 
     @classmethod
-    def _GetGnAndAutoninjaAbsolutePaths(self, depot_tools_path):
+    def _GetGnAndNinjaAbsolutePaths(self, depot_tools_path):
 
         def find_depot_tools_from_env():
             depot_tools_name = "depot_tools"
@@ -234,13 +234,13 @@ class ChildProcessesManager():
             for path in paths:
                 if path.endswith(depot_tools_name):
                     return path
-            logging.exception("No gn or autoninja found on system")
+            logging.exception("No gn or ninja found on system")
 
-        def bat(name):
-            return name + '.bat' if platform == "win32" else name
+        def winext(name, ext):
+            return ("%s.%s" % (name, ext)) if platform == "win32" else name
 
         path = depot_tools_path if depot_tools_path else find_depot_tools_from_env()
-        return os.path.join(path, bat('gn')), os.path.join(path, bat('autoninja'))
+        return os.path.join(path, winext('gn', 'bat')), os.path.join(path, winext('ninja', 'exe'))
 
     def __init__(self, depot_tools_path):
         # a dictionary of Subprocess, with pid as key
@@ -248,12 +248,11 @@ class ChildProcessesManager():
         # list of Python multiprocess.Process handles
         self.workers = []
 
-        self._gn_path, self._autoninja_path = self._GetGnAndAutoninjaAbsolutePaths(
-            depot_tools_path)
+        self._gn_path, self._ninja_path = self._GetGnAndNinjaAbsolutePaths(depot_tools_path)
 
     def RunSubprocess(self, command, env=None, pipe_stdout=True, timeout=None):
         proc = SubProcess(command, env, pipe_stdout)
-        debug('Creating subprocess: %s with pid %d' % (' '.join(command), proc.Pid()))
+        debug('Created subprocess: %s with pid %d' % (' '.join(command), proc.Pid()))
         self.subprocesses[proc.Pid()] = proc
         try:
             returncode, output = self.subprocesses[proc.Pid()].Join(timeout)
@@ -310,8 +309,27 @@ class ChildProcessesManager():
         cmd = [self._gn_path, 'gen', '--args=%s' % args_str, build_dir]
         return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
-    def RunAutoninjaProcess(self, build_dir, target, pipe_stdout):
-        cmd = [self._autoninja_path, '-C', build_dir, target]
+    def RunNinjaProcess(self, args, build_dir, target, pipe_stdout):
+        cmd = [self._ninja_path]
+
+        # This code is taken from depot_tools/autoninja.py
+        if args.use_goma:
+            num_cores = multiprocessing.cpu_count()
+            cmd.append('-j')
+            core_multiplier = 40
+            j_value = num_cores * core_multiplier
+
+            if sys.platform.startswith('win'):
+                # On windows, j value higher than 1000 does not improve build performance.
+                j_value = min(j_value, 1000)
+            elif sys.platform == 'darwin':
+                # On Mac, j value higher than 500 causes 'Too many open files' error
+                # (crbug.com/936864).
+                j_value = min(j_value, 500)
+
+            cmd.append('%d' % j_value)
+
+        cmd += ['-C', build_dir, target]
         return self.RunSubprocess(cmd, pipe_stdout=pipe_stdout)
 
 
@@ -597,7 +615,8 @@ class TestBatch():
                     skipped_tests))
         return continued_tests
 
-    def BuildReplay(self, replay_build_dir, composite_file_id, tests, child_processes_manager):
+    def BuildReplay(self, args, replay_build_dir, composite_file_id, tests,
+                    child_processes_manager):
         # write gni file that holds all the traces files in a list
         self.CreateGNIFile(composite_file_id, tests)
         # write header and cpp composite files, which glue the trace files with
@@ -618,12 +637,12 @@ class TestBatch():
                 GroupedResult(GroupedResult.CompileFailed, "Build replay failed at gn generation",
                               output, tests))
             return False
-        returncode, output = child_processes_manager.RunAutoninjaProcess(
-            replay_build_dir, REPLAY_BINARY, True)
+        returncode, output = child_processes_manager.RunNinjaProcess(args, replay_build_dir,
+                                                                     REPLAY_BINARY, True)
         if returncode != 0:
             self.results.append(
-                GroupedResult(GroupedResult.CompileFailed, "Build replay failed at autoninja",
-                              output, tests))
+                GroupedResult(GroupedResult.CompileFailed, "Build replay failed at ninja", output,
+                              tests))
             return False
         return True
 
@@ -799,8 +818,8 @@ def RunTests(args, worker_id, job_queue, result_list, message_queue):
                 result_list.append(test_batch.GetResults())
                 message_queue.put(str(test_batch.GetResults()))
                 continue
-            success = test_batch.BuildReplay(replay_build_dir, composite_file_id, continued_tests,
-                                             child_processes_manager)
+            success = test_batch.BuildReplay(args, replay_build_dir, composite_file_id,
+                                             continued_tests, child_processes_manager)
             if test_batch.keep_temp_files:
                 composite_file_id += 1
             if not success:
@@ -881,9 +900,9 @@ def main(args):
             logging.error(output)
             child_processes_manager.KillAll()
             return EXIT_FAILURE
-        # run autoninja to build all tests
-        returncode, output = child_processes_manager.RunAutoninjaProcess(
-            capture_build_dir, args.test_suite, False)
+        # run ninja to build all tests
+        returncode, output = child_processes_manager.RunNinjaProcess(args, capture_build_dir,
+                                                                     args.test_suite, False)
         if returncode != 0:
             logging.error(output)
             child_processes_manager.KillAll()
