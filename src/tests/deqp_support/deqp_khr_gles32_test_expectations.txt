@@ -33,10 +33,6 @@
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.layered_rendering.layered_rendering = FAIL
 // Crashes on ASSERT due to mismatch between shader resources and pipeline layout
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.max_image_uniforms = SKIP
-// The spec says if PPO misses VS or GS, it's not an error, but the test expects
-// GL_INVALID_OPERATION.  Our validation is incorrect regardless.
-5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.fs_gs_draw_call = FAIL
-5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.pipeline_program_without_active_vs = SKIP
 // Failures on windows nvidia
 5579 VULKAN WIN NVIDIA : KHR-GLES32.core.geometry_shader.limits.max_invocations = FAIL
 5579 VULKAN WIN NVIDIA : KHR-GLES32.core.tessellation_shader.single.primitive_coverage = FAIL
