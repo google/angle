@@ -312,8 +312,14 @@ EGLint SwapChain11::resetOffscreenColorBuffer(DisplayD3D *displayD3D,
 
     angle::Result result = mRenderer->allocateResource(displayD3D, offscreenRTVDesc,
                                                        mOffscreenTexture.get(), &mOffscreenRTView);
-    ASSERT(result != angle::Result::Stop);
-    mOffscreenRTView.setDebugName("Offscreen back buffer render target");
+    if (result == angle::Result::Stop)
+    {
+        ERR() << "Could not create offscreen back buffer render target, "
+              << displayD3D->getStoredErrorString();
+        release();
+        return EGL_BAD_ALLOC;
+    }
+    mOffscreenRTView.setDebugName("OffscreenBackBufferRenderTarget");
 
     D3D11_SHADER_RESOURCE_VIEW_DESC offscreenSRVDesc;
     offscreenSRVDesc.Format = backbufferFormatInfo.srvFormat;
@@ -326,8 +332,14 @@ EGLint SwapChain11::resetOffscreenColorBuffer(DisplayD3D *displayD3D,
     {
         result = mRenderer->allocateResource(displayD3D, offscreenSRVDesc, mOffscreenTexture.get(),
                                              &mOffscreenSRView);
-        ASSERT(result != angle::Result::Stop);
-        mOffscreenSRView.setDebugName("Offscreen back buffer shader resource");
+        if (result == angle::Result::Stop)
+        {
+            ERR() << "Could not create offscreen back buffer shader resource, "
+                  << displayD3D->getStoredErrorString();
+            release();
+            return EGL_BAD_ALLOC;
+        }
+        mOffscreenSRView.setDebugName("OffscreenBackBufferShaderResource");
     }
     else
     {
