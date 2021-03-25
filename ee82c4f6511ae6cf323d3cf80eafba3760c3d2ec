@@ -76,6 +76,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e262b24_910fd9f9",
+        "filename": "extensions/ANGLE_relaxed_vertex_attribute_type.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:05:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6231fcc7_874cd38a",
+      "range": {
+        "startLine": 19,
+        "startChar": 13,
+        "endLine": 19,
+        "endChar": 22
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50101c1b_6404f92a",
@@ -89,6 +113,30 @@
       "writtenOn": "2021-03-24T15:21:03Z",
       "side": 1,
       "message": "You should write this against the 3.0 extension specification since this isn\u0027t possible to become an issue in GLES 2.0.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 52
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6793fb7_13155067",
+        "filename": "extensions/ANGLE_relaxed_vertex_attribute_type.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:05:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "50101c1b_6404f92a",
       "range": {
         "startLine": 36,
         "startChar": 0,
@@ -122,6 +170,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d67a3807_d9744c5c",
+        "filename": "extensions/ANGLE_relaxed_vertex_attribute_type.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:05:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "33caddfe_97931484",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 47
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "391fb2fd_2d78d206",
@@ -135,6 +207,30 @@
       "writtenOn": "2021-03-24T15:21:03Z",
       "side": 1,
       "message": "instead of using this implementation, I suggest we allow a mismatch between unsigned int and signed int. You can use the gl::ComponentType to determine this. In these cases I suggest you use a custom function to flip the angleFormat into the corresponding signed or unsigned type.\n\nDoes this sound OK?\n\nI want to avoid calling contextVk-\u003egetState(), we don\u0027t do that in this function and I\u0027d like to keep it accessible potentially via a vk::Context in case we need that.",
+      "range": {
+        "startLine": 1825,
+        "startChar": 0,
+        "endLine": 1836,
+        "endChar": 13
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3345bd9_932cbfe7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1836,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:05:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "391fb2fd_2d78d206",
       "range": {
         "startLine": 1825,
         "startChar": 0,
@@ -168,6 +264,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ade1ff60_9b2aac50",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1759,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:05:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67c4b550_5b333fb6",
+      "range": {
+        "startLine": 1759,
+        "startChar": 31,
+        "endLine": 1759,
+        "endChar": 53
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7751cc2e_ec83a2c4",
@@ -181,6 +301,30 @@
       "writtenOn": "2021-03-24T15:21:03Z",
       "side": 1,
       "message": "instead of this, ensure the extension is enabled. Please expose the new extension via the usual Caps method in the Vulkan back-end so that we can check it.",
+      "range": {
+        "startLine": 1762,
+        "startChar": 11,
+        "endLine": 1764,
+        "endChar": 0
+      },
+      "revId": "ee82c4f6511ae6cf323d3cf80eafba3760c3d2ec",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "759bbc47_5a7f5b12",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1764,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:05:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7751cc2e_ec83a2c4",
       "range": {
         "startLine": 1762,
         "startChar": 11,
