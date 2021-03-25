@@ -379,12 +379,6 @@ luci.cq_group(
             builder = 'chromium:try/win-angle-chromium-x86-try',
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/win-angle-deqp-rel-32',
-        ),
-        luci.cq_tryjob_verifier(
-            builder = 'chromium:try/win-angle-rel-32',
-        ),
-        luci.cq_tryjob_verifier(
             builder = 'chromium:try/win-angle-x64-try',
         ),
         luci.cq_tryjob_verifier(
