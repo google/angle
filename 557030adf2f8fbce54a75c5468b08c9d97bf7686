@@ -37,6 +37,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e8097d65_3b02da51",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T21:51:19Z",
+      "side": 1,
+      "message": "this should have taken care of your concerns where we override attribute\u0027s format with the programAttrib\u0027s type, no jamie?",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
