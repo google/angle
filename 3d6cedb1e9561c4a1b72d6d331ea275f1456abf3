@@ -46,6 +46,30 @@
       },
       "revId": "3d6cedb1e9561c4a1b72d6d331ea275f1456abf3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "60881d7f_0191e3f1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-25T15:45:48Z",
+      "side": 1,
+      "message": "\u003e see if we can query the current orientation.\n\nOr just cache the orientation?",
+      "parentUuid": "776759f4_440fa0f2",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 14,
+        "endChar": 46
+      },
+      "revId": "3d6cedb1e9561c4a1b72d6d331ea275f1456abf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
