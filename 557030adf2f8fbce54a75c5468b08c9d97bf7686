@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4183ef52_56dba160",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-25T21:19:33Z",
+      "side": 1,
+      "message": "Excellent work, LGTM.",
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b62df61_b9c2d850",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-25T21:19:33Z",
+      "side": 1,
+      "message": "I think we\u0027re still using the wrong attribute type here - however we can defer action until the VVL produces an error on a mismatch. Maybe leave a small note that this could trigger a VVL error?",
+      "range": {
+        "startLine": 1852,
+        "startChar": 13,
+        "endLine": 1854,
+        "endChar": 55
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
