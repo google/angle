@@ -1375,7 +1375,7 @@ void GenerateCaps(const FunctionsGL *functions,
                                     functions->hasGLESExtension("GL_NV_framebuffer_blit");
     extensions->framebufferBlitANGLE =
         extensions->framebufferBlitNV || functions->hasGLESExtension("GL_ANGLE_framebuffer_blit");
-    extensions->framebufferMultisample = caps->maxSamples > 0;
+    extensions->framebufferMultisample = extensions->framebufferBlitANGLE && caps->maxSamples > 0;
     extensions->standardDerivativesOES = functions->isAtLeastGL(gl::Version(2, 0)) ||
                                          functions->hasGLExtension("GL_ARB_fragment_shader") ||
                                          functions->hasGLESExtension("GL_OES_standard_derivatives");
