@@ -34,6 +34,24 @@
       "parentUuid": "c47f4f4d_21bc8e5b",
       "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1705a606_b8b1d08c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-25T13:57:17Z",
+      "side": 1,
+      "message": "I was able to get them out of Chrome before. Maybe the sandbox is enabled preventing the file being written? I don\u0027t see any references to ANGLE_ENABLE_DEBUG_MARKERS. Try using some prints or log to see if the debug logging code gets hit.",
+      "parentUuid": "3bea2ab2_dff456ce",
+      "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
