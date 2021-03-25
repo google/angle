@@ -16,6 +16,29 @@
       "message": "Add tests for immutable texture and change base level and generate mipmap.",
       "revId": "12e0782e3051ba335634263a7013a941e8bb1184",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "273c8e0e_1e32cf68",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3657,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-25T22:28:13Z",
+      "side": 1,
+      "message": "Is my expectation correct here, that after glGenerateMipmap call, the other levels that beyond [base, max] should still have the previous data? The OpenGLES3.0 spec 3.8.10.5 says \"Mipmap generation replaces texel array levels levelbase + 1 through q with\narrays derived from the levelbase array, regardless of their previous contents. All\nother mipmap arrays, including the levelbase array, are left unchanged by this computation\", so my understanding is they should still have defined data. But it fails on nvidia",
+      "range": {
+        "startLine": 3650,
+        "startChar": 4,
+        "endLine": 3657,
+        "endChar": 0
+      },
+      "revId": "12e0782e3051ba335634263a7013a941e8bb1184",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
