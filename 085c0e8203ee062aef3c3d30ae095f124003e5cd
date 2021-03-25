@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40ae246b_dbaaa40e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-25T17:55:40Z",
+      "side": 1,
+      "message": "Looks like this is fixing the initial issue, but the other mentioned in the bug is still present:\n\n 0\u003e Extracting 16 entries from src/tests/restricted_traces\\aliexpress.tar.gz to src/tests/restricted_traces\\aliexpress\n Exception in thread Thread-3:\n Traceback (most recent call last):\n   File \"C:\\b\\s\\w\\ir\\cipd_bin_packages\\cpython\\bin\\Lib\\threading.py\", line 801, in __bootstrap_inner\n     self.run()\n   File \"C:\\b\\s\\w\\ir\\cipd_bin_packages\\cpython\\bin\\Lib\\threading.py\", line 754, in run\n     self.__target(*self.__args, **self.__kwargs)\n   File \"C:\\b\\s\\w\\ir\\kitchen-checkout\\depot_tools\\\\download_from_google_storage.py\", line 356, in _downloader_worker_thread\n     os.remove(extract_dir + \u0027.tmp\u0027)\n WindowsError: [Error 32] The process cannot access the file because it is being used by another process: \u0027src/tests/restricted_traces\\\\aliexpress.tmp\u0027",
+      "revId": "085c0e8203ee062aef3c3d30ae095f124003e5cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c92a267c_da43123b",
