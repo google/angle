@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9a531f0_2b3642d6",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:59:48Z",
+      "side": 1,
+      "message": "needed to add it here as well",
+      "range": {
+        "startLine": 116,
+        "startChar": 8,
+        "endLine": 116,
+        "endChar": 46
+      },
+      "revId": "6fa2e03d18ca4d472f849f3f7e4c0f4568444734",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0224fc91_86f8c5bd",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 234,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-25T20:59:48Z",
+      "side": 1,
+      "message": "needed to add it here as well",
+      "range": {
+        "startLine": 234,
+        "startChar": 8,
+        "endLine": 234,
+        "endChar": 46
+      },
+      "revId": "6fa2e03d18ca4d472f849f3f7e4c0f4568444734",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
