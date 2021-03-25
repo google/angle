@@ -98,8 +98,8 @@ egl::Error DisplayVkAndroid::validateImageClientBuffer(const gl::Context *contex
     switch (target)
     {
         case EGL_NATIVE_BUFFER_ANDROID:
-            return HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(mRenderer,
-                                                                               clientBuffer);
+            return HardwareBufferImageSiblingVkAndroid::ValidateHardwareBuffer(
+                mRenderer, clientBuffer, attribs);
 
         default:
             return DisplayVk::validateImageClientBuffer(context, target, clientBuffer, attribs);

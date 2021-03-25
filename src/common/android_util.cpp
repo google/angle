@@ -335,13 +335,15 @@ void GetANativeWindowBufferProperties(const ANativeWindowBuffer *buffer,
                                       int *width,
                                       int *height,
                                       int *depth,
-                                      int *pixelFormat)
+                                      int *pixelFormat,
+                                      uint64_t *usage)
 {
     *width       = buffer->width;
     *height      = buffer->height;
     *depth       = static_cast<int>(buffer->layerCount);
     *height      = buffer->height;
     *pixelFormat = buffer->format;
+    *usage       = buffer->usage;
 }
 
 GLenum NativePixelFormatToGLInternalFormat(int pixelFormat)

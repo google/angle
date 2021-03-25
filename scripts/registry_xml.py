@@ -90,6 +90,7 @@ gles_extensions = [
     "GL_EXT_multisampled_render_to_texture2",
     "GL_EXT_occlusion_query_boolean",
     "GL_EXT_primitive_bounding_box",
+    "GL_EXT_protected_textures",
     "GL_EXT_read_format_bgra",
     "GL_EXT_robustness",
     "GL_EXT_semaphore",

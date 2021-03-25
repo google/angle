@@ -3240,6 +3240,16 @@ bool ValidateCreateImage(const ValidationContext *val,
                 return false;
             }
 
+            bool protectedContentAttrib =
+                (attributes.getAsInt(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) != EGL_FALSE);
+            if (protectedContentAttrib != texture->hasProtectedContent())
+            {
+                val->setError(EGL_BAD_PARAMETER,
+                              "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
+                              "of target.");
+                return false;
+            }
+
             ANGLE_VALIDATION_TRY(ValidateCreateImageMipLevelCommon(val, context, texture, level));
         }
         break;
@@ -3301,6 +3311,16 @@ bool ValidateCreateImage(const ValidationContext *val,
                               "zero.");
                 return false;
             }
+
+            bool protectedContentAttrib =
+                (attributes.getAsInt(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) != EGL_FALSE);
+            if (protectedContentAttrib != texture->hasProtectedContent())
+            {
+                val->setError(EGL_BAD_PARAMETER,
+                              "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
+                              "of target.");
+                return false;
+            }
         }
         break;
 
@@ -3355,6 +3375,16 @@ bool ValidateCreateImage(const ValidationContext *val,
                 return false;
             }
 
+            bool protectedContentAttrib =
+                (attributes.getAsInt(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) != EGL_FALSE);
+            if (protectedContentAttrib != texture->hasProtectedContent())
+            {
+                val->setError(EGL_BAD_PARAMETER,
+                              "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
+                              "of target.");
+                return false;
+            }
+
             ANGLE_VALIDATION_TRY(ValidateCreateImageMipLevelCommon(val, context, texture, level));
         }
         break;
@@ -3394,6 +3424,16 @@ bool ValidateCreateImage(const ValidationContext *val,
             if (renderbuffer->getSamples() > 0)
             {
                 val->setError(EGL_BAD_PARAMETER, "target renderbuffer cannot be multisampled.");
+                return false;
+            }
+
+            bool protectedContentAttrib =
+                (attributes.getAsInt(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) != EGL_FALSE);
+            if (protectedContentAttrib != renderbuffer->hasProtectedContent())
+            {
+                val->setError(EGL_BAD_ACCESS,
+                              "EGL_PROTECTED_CONTENT_EXT attribute does not match protected state "
+                              "of target.");
                 return false;
             }
         }

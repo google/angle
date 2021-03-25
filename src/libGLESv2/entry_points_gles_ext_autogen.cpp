@@ -5483,6 +5483,8 @@ void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
     }
 }
 
+// GL_EXT_protected_textures
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness

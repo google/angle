@@ -24,6 +24,7 @@ class MemoryObjectVk : public MemoryObjectImpl
     void onDestroy(const gl::Context *context) override;
 
     angle::Result setDedicatedMemory(const gl::Context *context, bool dedicatedMemory) override;
+    angle::Result setProtectedMemory(const gl::Context *context, bool protectedMemory) override;
 
     angle::Result importFd(gl::Context *context,
                            GLuint64 size,
@@ -52,6 +53,7 @@ class MemoryObjectVk : public MemoryObjectImpl
 
     // Imported memory object was a dedicated allocation.
     bool mDedicatedMemory = false;
+    bool mProtectedMemory = false;
 
     GLuint64 mSize             = 0;
     gl::HandleType mHandleType = gl::HandleType::InvalidEnum;

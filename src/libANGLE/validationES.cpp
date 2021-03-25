@@ -4620,6 +4620,13 @@ bool ValidateEGLImageTargetTexture2DOES(const Context *context,
         return false;
     }
 
+    if (imageObject->hasProtectedContent() != context->getState().hasProtectedContent())
+    {
+        context->validationError(GL_INVALID_OPERATION,
+                                 "Mismatch between Image and Context Protected Content state");
+        return false;
+    }
+
     return true;
 }
 
@@ -4655,6 +4662,13 @@ bool ValidateEGLImageTargetRenderbufferStorageOES(const Context *context,
     if (!imageObject->isRenderable(context))
     {
         context->validationError(GL_INVALID_OPERATION, kEGLImageRenderbufferFormatNotSupported);
+        return false;
+    }
+
+    if (imageObject->hasProtectedContent() != context->getState().hasProtectedContent())
+    {
+        context->validationError(GL_INVALID_OPERATION,
+                                 "Mismatch between Image and Context Protected Content state");
         return false;
     }
 
@@ -6586,6 +6600,14 @@ bool ValidateGetTexParameterBase(const Context *context,
             }
             break;
 
+        case GL_TEXTURE_PROTECTED_EXT:
+            if (!context->getExtensions().protectedTexturesEXT)
+            {
+                context->validationError(GL_INVALID_ENUM, kProtectedTexturesExtensionRequired);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kEnumNotSupported);
             return false;
@@ -7288,7 +7310,20 @@ bool ValidateTexParameterBase(const Context *context,
                                          kRobustResourceInitializationExtensionRequired);
                 return false;
             }
+            break;
 
+        case GL_TEXTURE_PROTECTED_EXT:
+            if (!context->getExtensions().protectedTexturesEXT)
+            {
+                context->validationError(GL_INVALID_ENUM, kProtectedTexturesExtensionRequired);
+                return false;
+            }
+            if (ConvertToBool(params[0]) != context->getState().hasProtectedContent())
+            {
+                context->validationError(GL_INVALID_OPERATION,
+                                         "Protected Texture must match Protected Context");
+                return false;
+            }
             break;
 
         default:

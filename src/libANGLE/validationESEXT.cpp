@@ -72,6 +72,14 @@ bool IsValidMemoryObjectParamater(const Context *context, GLenum pname)
         case GL_DEDICATED_MEMORY_OBJECT_EXT:
             return true;
 
+        case GL_PROTECTED_MEMORY_OBJECT_EXT:
+            if (!context->getExtensions().protectedTexturesEXT)
+            {
+                context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+                return false;
+            }
+            return true;
+
         default:
             return false;
     }

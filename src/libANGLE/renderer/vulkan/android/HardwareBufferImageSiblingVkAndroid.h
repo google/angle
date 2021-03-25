@@ -21,7 +21,9 @@ class HardwareBufferImageSiblingVkAndroid : public ExternalImageSiblingVk
     HardwareBufferImageSiblingVkAndroid(EGLClientBuffer buffer);
     ~HardwareBufferImageSiblingVkAndroid() override;
 
-    static egl::Error ValidateHardwareBuffer(RendererVk *renderer, EGLClientBuffer buffer);
+    static egl::Error ValidateHardwareBuffer(RendererVk *renderer,
+                                             EGLClientBuffer buffer,
+                                             const egl::AttributeMap &attribs);
 
     egl::Error initialize(const egl::Display *display) override;
     void onDestroy(const egl::Display *display) override;
@@ -31,6 +33,7 @@ class HardwareBufferImageSiblingVkAndroid : public ExternalImageSiblingVk
     bool isRenderable(const gl::Context *context) const override;
     bool isTexturable(const gl::Context *context) const override;
     bool isYUV() const override;
+    bool hasProtectedContent() const override;
     gl::Extents getSize() const override;
     size_t getSamples() const override;
 
@@ -49,6 +52,7 @@ class HardwareBufferImageSiblingVkAndroid : public ExternalImageSiblingVk
     bool mRenderable;
     bool mTextureable;
     bool mYUV;
+    uint64_t mUsage;
     size_t mSamples;
 
     vk::ImageHelper *mImage;

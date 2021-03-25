@@ -118,6 +118,11 @@ bool TextureImageSiblingMtl::isYUV() const
     return false;
 }
 
+bool TextureImageSiblingMtl::hasProtectedContent() const
+{
+    return false;
+}
+
 // ImageMtl implementation
 ImageMtl::ImageMtl(const egl::ImageState &state, const gl::Context *context) : ImageImpl(state) {}
 

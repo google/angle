@@ -21,11 +21,13 @@ NativeBufferImageSiblingAndroid::~NativeBufferImageSiblingAndroid() {}
 egl::Error NativeBufferImageSiblingAndroid::initialize(const egl::Display *display)
 {
     int pixelFormat = 0;
+    uint64_t usage  = 0;
     angle::android::GetANativeWindowBufferProperties(
         angle::android::ClientBufferToANativeWindowBuffer(mBuffer), &mSize.width, &mSize.height,
-        &mSize.depth, &pixelFormat);
+        &mSize.depth, &pixelFormat, &usage);
     mFormat = gl::Format(angle::android::NativePixelFormatToGLInternalFormat(pixelFormat));
     mYUV    = angle::android::NativePixelFormatIsYUV(pixelFormat);
+    mHasProtectedContent = false;
 
     return egl::NoError();
 }
@@ -48,6 +50,11 @@ bool NativeBufferImageSiblingAndroid::isTexturable(const gl::Context *context) c
 bool NativeBufferImageSiblingAndroid::isYUV() const
 {
     return mYUV;
+}
+
+bool NativeBufferImageSiblingAndroid::hasProtectedContent() const
+{
+    return mHasProtectedContent;
 }
 
 gl::Extents NativeBufferImageSiblingAndroid::getSize() const

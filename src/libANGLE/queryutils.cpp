@@ -369,6 +369,9 @@ void QueryTexParameterBase(const Context *context,
             *params = CastFromGLintStateValue<ParamType>(
                 pname, texture->getRequiredTextureImageUnits(context));
             break;
+        case GL_TEXTURE_PROTECTED_EXT:
+            *params = CastFromGLintStateValue<ParamType>(pname, texture->hasProtectedContent());
+            break;
         default:
             UNREACHABLE();
             break;
@@ -478,6 +481,9 @@ void SetTexParameterBase(Context *context, Texture *texture, GLenum pname, const
         case GL_RESOURCE_INITIALIZED_ANGLE:
             texture->setInitState(ConvertToBool(params[0]) ? InitState::Initialized
                                                            : InitState::MayNeedInit);
+            break;
+        case GL_TEXTURE_PROTECTED_EXT:
+            texture->setProtectedContent(context, (params[0] == GL_TRUE));
             break;
         default:
             UNREACHABLE();
@@ -2193,6 +2199,10 @@ angle::Result SetMemoryObjectParameteriv(const Context *context,
             ANGLE_TRY(memoryObject->setDedicatedMemory(context, ConvertToBool(params[0])));
             break;
 
+        case GL_PROTECTED_MEMORY_OBJECT_EXT:
+            ANGLE_TRY(memoryObject->setProtectedMemory(context, ConvertToBool(params[0])));
+            break;
+
         default:
             UNREACHABLE();
     }
@@ -2206,6 +2216,10 @@ void QueryMemoryObjectParameteriv(const MemoryObject *memoryObject, GLenum pname
     {
         case GL_DEDICATED_MEMORY_OBJECT_EXT:
             *params = memoryObject->isDedicatedMemory();
+            break;
+
+        case GL_PROTECTED_MEMORY_OBJECT_EXT:
+            *params = memoryObject->isProtectedMemory();
             break;
 
         default:
