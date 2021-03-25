@@ -1175,5 +1175,10 @@
     "NONE": {
       "GL_UNSIGNED_BYTE": "UnimplementedLoadFunction"
     }
+  },
+  "GL_G8_B8R8_2PLANE_420_UNORM_ANGLEX": {
+    "NONE": {
+      "GL_UNSIGNED_BYTE": "UnimplementedLoadFunction"
+    }
   }
 }

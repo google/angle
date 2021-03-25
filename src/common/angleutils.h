@@ -292,6 +292,7 @@ inline bool IsLittleEndian()
 
 // YUV formats
 #define GL_G8_B8_R8_3PLANE_420_UNORM_ANGLEX 0x6B00
+#define GL_G8_B8R8_2PLANE_420_UNORM_ANGLEX 0x6B01
 
 #define ANGLE_CHECK_GL_ALLOC(context, result) \
     ANGLE_CHECK(context, result, "Failed to allocate host memory", GL_OUT_OF_MEMORY)

@@ -287,5 +287,8 @@
   },
   "G8_B8_R8_3PLANE_420_UNORM": {
     "channelStruct": "R8G8B8"
+  },
+  "G8_B8R8_2PLANE_420_UNORM": {
+    "channelStruct": "R8G8B8"
   }
 }

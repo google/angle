@@ -2,11 +2,11 @@
   "src/libANGLE/renderer/angle_format.py":
     "32ba71942c0fd00e6807104f1bb80a3c",
   "src/libANGLE/renderer/angle_format_map.json":
-    "ae32dfce450f7b7ffc62d746d6fddf83",
+    "46b589fc0fc306b2f7c97ee7bb08baee",
   "src/libANGLE/renderer/vulkan/gen_vk_format_table.py":
     "0bc8a6deefd856387da0bccf3817dde7",
   "src/libANGLE/renderer/vulkan/vk_format_map.json":
-    "d7bb44b9fa6f6e4038c2a415fe1711a1",
+    "5aa1df6574944082788c0dadccf4f136",
   "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp":
-    "1f1587af2b31877abe281a1a1b84e15e"
+    "57594ef67cdb88f9940b786ba1bb04ac"
 }
