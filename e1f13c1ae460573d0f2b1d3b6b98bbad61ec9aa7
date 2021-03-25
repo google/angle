@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a8f2f0c_3bc6f5be",
+        "filename": "BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 908,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-25T11:40:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b39d3e4a_64dc6c0e",
+      "range": {
+        "startLine": 908,
+        "startChar": 0,
+        "endLine": 908,
+        "endChar": 26
+      },
+      "revId": "e1f13c1ae460573d0f2b1d3b6b98bbad61ec9aa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3101a5cf_be336bfe",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "19486d49_70aebbbd",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-25T11:40:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3101a5cf_be336bfe",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 3
+      },
+      "revId": "e1f13c1ae460573d0f2b1d3b6b98bbad61ec9aa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d6bb665_9560e7eb",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-03-24T14:48:25Z",
       "side": 1,
       "message": "nit: Caps for static methods (See guide)",
+      "range": {
+        "startLine": 30,
+        "startChar": 16,
+        "endLine": 30,
+        "endChar": 21
+      },
+      "revId": "e1f13c1ae460573d0f2b1d3b6b98bbad61ec9aa7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6226321_634281b0",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-25T11:40:54Z",
+      "side": 1,
+      "message": "The code snipped was dropped.",
+      "parentUuid": "0d6bb665_9560e7eb",
       "range": {
         "startLine": 30,
         "startChar": 16,
