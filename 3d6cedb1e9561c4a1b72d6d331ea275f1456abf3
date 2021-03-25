@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ba4846e_b5494695",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-25T13:47:29Z",
+      "side": 1,
+      "message": "We could always address the slowness by not changing orientation if it\u0027s asked to be changed to the orientation the device is already in.\n\nIt doesn\u0027t look like this is the only test that leaves the orientation in a bad state. Most tests in EGLPreRotation.cpp just call setOrientation once. If you don\u0027t want to call setOrientation before every test, we should at least do it in testTearDown() in that file.",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 14,
+        "endChar": 46
+      },
+      "revId": "3d6cedb1e9561c4a1b72d6d331ea275f1456abf3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
