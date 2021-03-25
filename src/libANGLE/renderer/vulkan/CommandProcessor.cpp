@@ -110,14 +110,18 @@ void CommandProcessorTask::initTask()
     mPresentInfo.pNext           = nullptr;
     mPresentInfo.pWaitSemaphores = nullptr;
     mOneOffCommandBufferVk       = VK_NULL_HANDLE;
+    mPriority                    = egl::ContextPriority::Medium;
+    mHasProtectedContent         = false;
 }
 
-void CommandProcessorTask::initProcessCommands(CommandBufferHelper *commandBuffer,
+void CommandProcessorTask::initProcessCommands(bool hasProtectedContent,
+                                               CommandBufferHelper *commandBuffer,
                                                const RenderPass *renderPass)
 {
-    mTask          = CustomTask::ProcessCommands;
-    mCommandBuffer = commandBuffer;
-    mRenderPass    = renderPass;
+    mTask                = CustomTask::ProcessCommands;
+    mCommandBuffer       = commandBuffer;
+    mRenderPass          = renderPass;
+    mHasProtectedContent = hasProtectedContent;
 }
 
 void CommandProcessorTask::copyPresentInfo(const VkPresentInfoKHR &other)
@@ -204,6 +208,7 @@ void CommandProcessorTask::initFlushAndQueueSubmit(
     const std::vector<VkSemaphore> &waitSemaphores,
     const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
     const Semaphore *semaphore,
+    bool hasProtectedContent,
     egl::ContextPriority priority,
     GarbageList &&currentGarbage,
     Serial submitQueueSerial)
@@ -214,10 +219,12 @@ void CommandProcessorTask::initFlushAndQueueSubmit(
     mSemaphore               = semaphore;
     mGarbage                 = std::move(currentGarbage);
     mPriority                = priority;
+    mHasProtectedContent     = hasProtectedContent;
     mSerial                  = submitQueueSerial;
 }
 
 void CommandProcessorTask::initOneOffQueueSubmit(VkCommandBuffer commandBufferHandle,
+                                                 bool hasProtectedContent,
                                                  egl::ContextPriority priority,
                                                  const Fence *fence,
                                                  Serial submitQueueSerial)
@@ -226,6 +233,7 @@ void CommandProcessorTask::initOneOffQueueSubmit(VkCommandBuffer commandBufferHa
     mOneOffCommandBufferVk = commandBufferHandle;
     mOneOffFence           = fence;
     mPriority              = priority;
+    mHasProtectedContent   = hasProtectedContent;
     mSerial                = submitQueueSerial;
 }
 
@@ -246,6 +254,7 @@ CommandProcessorTask &CommandProcessorTask::operator=(CommandProcessorTask &&rhs
     std::swap(mGarbage, rhs.mGarbage);
     std::swap(mSerial, rhs.mSerial);
     std::swap(mPriority, rhs.mPriority);
+    std::swap(mHasProtectedContent, rhs.mHasProtectedContent);
     std::swap(mOneOffCommandBufferVk, rhs.mOneOffCommandBufferVk);
 
     copyPresentInfo(rhs.mPresentInfo);
@@ -272,6 +281,7 @@ CommandBatch &CommandBatch::operator=(CommandBatch &&other)
     std::swap(commandPool, other.commandPool);
     std::swap(fence, other.fence);
     std::swap(serial, other.serial);
+    std::swap(hasProtectedContent, other.hasProtectedContent);
     return *this;
 }
 
@@ -280,6 +290,7 @@ void CommandBatch::destroy(VkDevice device)
     primaryCommands.destroy(device);
     commandPool.destroy(device);
     fence.reset(device);
+    hasProtectedContent = false;
 }
 
 // CommandProcessor implementation.
@@ -344,7 +355,7 @@ void CommandProcessor::queueCommand(CommandProcessorTask &&task)
     mWorkAvailableCondition.notify_one();
 }
 
-void CommandProcessor::processTasks(const DeviceQueueMap &queueMap)
+void CommandProcessor::processTasks()
 {
     while (true)
     {
@@ -419,7 +430,7 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
 
             // Call submitFrame()
             ANGLE_TRY(mCommandQueue.submitFrame(
-                this, task->getPriority(), task->getWaitSemaphores(),
+                this, task->hasProtectedContent(), task->getPriority(), task->getWaitSemaphores(),
                 task->getWaitSemaphoreStageMasks(), task->getSemaphore(),
                 std::move(task->getGarbage()), &mCommandPool, task->getQueueSerial()));
 
@@ -431,7 +442,8 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             ANGLE_TRACE_EVENT0("gpu.angle", "processTask::OneOffQueueSubmit");
 
             ANGLE_TRY(mCommandQueue.queueSubmitOneOff(
-                this, task->getPriority(), task->getOneOffCommandBufferVk(), task->getOneOffFence(),
+                this, task->hasProtectedContent(), task->getPriority(),
+                task->getOneOffCommandBufferVk(), task->getOneOffFence(),
                 SubmitPolicy::EnsureSubmitted, task->getQueueSerial()));
             ANGLE_TRY(mCommandQueue.checkCompletedCommands(this));
             break;
@@ -466,12 +478,13 @@ angle::Result CommandProcessor::processTask(CommandProcessorTask *task)
             CommandBufferHelper *commandBuffer = task->getCommandBuffer();
             if (task->getRenderPass())
             {
-                ANGLE_TRY(mCommandQueue.flushRenderPassCommands(this, *task->getRenderPass(),
-                                                                &commandBuffer));
+                ANGLE_TRY(mCommandQueue.flushRenderPassCommands(
+                    this, task->hasProtectedContent(), *task->getRenderPass(), &commandBuffer));
             }
             else
             {
-                ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(this, &commandBuffer));
+                ANGLE_TRY(mCommandQueue.flushOutsideRPCommands(this, task->hasProtectedContent(),
+                                                               &commandBuffer));
             }
             ASSERT(task->getCommandBuffer()->empty());
             mRenderer->recycleCommandBufferHelper(task->getCommandBuffer());
@@ -521,7 +534,7 @@ angle::Result CommandProcessor::init(Context *context, const DeviceQueueMap &que
 {
     ANGLE_TRY(mCommandQueue.init(context, queueMap));
 
-    mTaskThread = std::thread(&CommandProcessor::processTasks, this, queueMap);
+    mTaskThread = std::thread(&CommandProcessor::processTasks, this);
 
     return angle::Result::Continue;
 }
@@ -629,6 +642,7 @@ VkResult CommandProcessor::present(egl::ContextPriority priority,
 
 angle::Result CommandProcessor::submitFrame(
     Context *context,
+    bool hasProtectedContent,
     egl::ContextPriority priority,
     const std::vector<VkSemaphore> &waitSemaphores,
     const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
@@ -640,8 +654,9 @@ angle::Result CommandProcessor::submitFrame(
     ANGLE_TRY(checkAndPopPendingError(context));
 
     CommandProcessorTask task;
-    task.initFlushAndQueueSubmit(waitSemaphores, waitSemaphoreStageMasks, signalSemaphore, priority,
-                                 std::move(currentGarbage), submitQueueSerial);
+    task.initFlushAndQueueSubmit(waitSemaphores, waitSemaphoreStageMasks, signalSemaphore,
+                                 hasProtectedContent, priority, std::move(currentGarbage),
+                                 submitQueueSerial);
 
     queueCommand(std::move(task));
 
@@ -649,6 +664,7 @@ angle::Result CommandProcessor::submitFrame(
 }
 
 angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
+                                                  bool hasProtectedContent,
                                                   egl::ContextPriority contextPriority,
                                                   VkCommandBuffer commandBufferHandle,
                                                   const Fence *fence,
@@ -658,7 +674,8 @@ angle::Result CommandProcessor::queueSubmitOneOff(Context *context,
     ANGLE_TRY(checkAndPopPendingError(context));
 
     CommandProcessorTask task;
-    task.initOneOffQueueSubmit(commandBufferHandle, contextPriority, fence, submitQueueSerial);
+    task.initOneOffQueueSubmit(commandBufferHandle, hasProtectedContent, contextPriority, fence,
+                               submitQueueSerial);
     queueCommand(std::move(task));
     if (submitPolicy == SubmitPolicy::EnsureSubmitted)
     {
@@ -696,13 +713,14 @@ angle::Result CommandProcessor::waitForSerialWithUserTimeout(vk::Context *contex
 }
 
 angle::Result CommandProcessor::flushOutsideRPCommands(Context *context,
+                                                       bool hasProtectedContent,
                                                        CommandBufferHelper **outsideRPCommands)
 {
     ANGLE_TRY(checkAndPopPendingError(context));
 
     (*outsideRPCommands)->markClosed();
     CommandProcessorTask task;
-    task.initProcessCommands(*outsideRPCommands, nullptr);
+    task.initProcessCommands(hasProtectedContent, *outsideRPCommands, nullptr);
     queueCommand(std::move(task));
     *outsideRPCommands = mRenderer->getCommandBufferHelper(false);
 
@@ -710,6 +728,7 @@ angle::Result CommandProcessor::flushOutsideRPCommands(Context *context,
 }
 
 angle::Result CommandProcessor::flushRenderPassCommands(Context *context,
+                                                        bool hasProtectedContent,
                                                         const RenderPass &renderPass,
                                                         CommandBufferHelper **renderPassCommands)
 {
@@ -717,7 +736,7 @@ angle::Result CommandProcessor::flushRenderPassCommands(Context *context,
 
     (*renderPassCommands)->markClosed();
     CommandProcessorTask task;
-    task.initProcessCommands(*renderPassCommands, &renderPass);
+    task.initProcessCommands(hasProtectedContent, *renderPassCommands, &renderPass);
     queueCommand(std::move(task));
     *renderPassCommands = mRenderer->getCommandBufferHelper(true);
 
@@ -732,7 +751,7 @@ CommandQueue::~CommandQueue() = default;
 void CommandQueue::destroy(Context *context)
 {
     // Force all commands to finish by flushing all queues.
-    for (VkQueue queue : mQueues)
+    for (VkQueue queue : mQueueMap)
     {
         if (queue != VK_NULL_HANDLE)
         {
@@ -747,20 +766,28 @@ void CommandQueue::destroy(Context *context)
 
     mPrimaryCommands.destroy(renderer->getDevice());
     mPrimaryCommandPool.destroy(renderer->getDevice());
+
+    if (mProtectedCommandPool.valid())
+    {
+        mProtectedCommands.destroy(renderer->getDevice());
+        mProtectedCommandPool.destroy(renderer->getDevice());
+    }
+
     mFenceRecycler.destroy(context);
 
     ASSERT(mInFlightCommands.empty() && mGarbageQueue.empty());
 }
 
-angle::Result CommandQueue::init(Context *context, const DeviceQueueMap &queueMap)
+angle::Result CommandQueue::init(Context *context, const vk::DeviceQueueMap &queueMap)
 {
-    RendererVk *renderer = context->getRenderer();
-
     // Initialize the command pool now that we know the queue family index.
-    uint32_t queueFamilyIndex = renderer->getQueueFamilyIndex();
-    ANGLE_TRY(mPrimaryCommandPool.init(context, queueFamilyIndex));
+    ANGLE_TRY(mPrimaryCommandPool.init(context, false, queueMap.getIndex()));
+    mQueueMap = queueMap;
 
-    mQueues = queueMap;
+    if (queueMap.isProtected())
+    {
+        ANGLE_TRY(mProtectedCommandPool.init(context, true, queueMap.getIndex()));
+    }
 
     return angle::Result::Continue;
 }
@@ -807,7 +834,8 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
         mFenceRecycler.resetSharedFence(&batch.fence);
         ANGLE_TRACE_EVENT0("gpu.angle", "command buffer recycling");
         batch.commandPool.destroy(device);
-        ANGLE_TRY(mPrimaryCommandPool.collect(context, std::move(batch.primaryCommands)));
+        PersistentCommandPool &commandPool = getCommandPool(batch.hasProtectedContent);
+        ANGLE_TRY(commandPool.collect(context, std::move(batch.primaryCommands)));
     }
 
     if (finishedCount > 0)
@@ -843,6 +871,7 @@ angle::Result CommandQueue::retireFinishedCommands(Context *context, size_t fini
 }
 
 angle::Result CommandQueue::releaseToCommandBatch(Context *context,
+                                                  bool hasProtectedContent,
                                                   PrimaryCommandBuffer &&commandBuffer,
                                                   CommandPool *commandPool,
                                                   CommandBatch *batch)
@@ -861,8 +890,12 @@ angle::Result CommandQueue::releaseToCommandBatch(Context *context,
         VkCommandPoolCreateInfo poolInfo = {};
         poolInfo.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
         poolInfo.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT;
-        poolInfo.queueFamilyIndex        = renderer->getQueueFamilyIndex();
-
+        poolInfo.queueFamilyIndex        = mQueueMap.getIndex();
+        if (hasProtectedContent)
+        {
+            poolInfo.flags |= VK_COMMAND_POOL_CREATE_PROTECTED_BIT;
+        }
+        batch->hasProtectedContent = hasProtectedContent;
         ANGLE_VK_TRY(context, commandPool->init(device, poolInfo));
     }
 
@@ -904,7 +937,7 @@ void CommandQueue::handleDeviceLost(RendererVk *renderer)
     mInFlightCommands.clear();
 }
 
-bool CommandQueue::allInFlightCommandsAreAfterSerial(Serial serial) const
+bool CommandQueue::allInFlightCommandsAreAfterSerial(Serial serial)
 {
     return mInFlightCommands.empty() || mInFlightCommands[0].serial > serial;
 }
@@ -957,6 +990,7 @@ Serial CommandQueue::reserveSubmitSerial()
 
 angle::Result CommandQueue::submitFrame(
     Context *context,
+    bool hasProtectedContent,
     egl::ContextPriority priority,
     const std::vector<VkSemaphore> &waitSemaphores,
     const std::vector<VkPipelineStageFlags> &waitSemaphoreStageMasks,
@@ -966,12 +1000,22 @@ angle::Result CommandQueue::submitFrame(
     Serial submitQueueSerial)
 {
     // Start an empty primary buffer if we have an empty submit.
-    ANGLE_TRY(ensurePrimaryCommandBufferValid(context));
-    ANGLE_VK_TRY(context, mPrimaryCommands.end());
+    PrimaryCommandBuffer &commandBuffer = getCommandBuffer(hasProtectedContent);
+    ANGLE_TRY(ensurePrimaryCommandBufferValid(context, hasProtectedContent));
+    ANGLE_VK_TRY(context, commandBuffer.end());
 
     VkSubmitInfo submitInfo = {};
-    InitializeSubmitInfo(&submitInfo, mPrimaryCommands, waitSemaphores, waitSemaphoreStageMasks,
+    InitializeSubmitInfo(&submitInfo, commandBuffer, waitSemaphores, waitSemaphoreStageMasks,
                          signalSemaphore);
+
+    VkProtectedSubmitInfo protectedSubmitInfo = {};
+    if (hasProtectedContent)
+    {
+        protectedSubmitInfo.sType           = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO;
+        protectedSubmitInfo.pNext           = nullptr;
+        protectedSubmitInfo.protectedSubmit = true;
+        submitInfo.pNext                    = &protectedSubmitInfo;
+    }
 
     ANGLE_TRACE_EVENT0("gpu.angle", "CommandQueue::submitFrame");
 
@@ -982,7 +1026,8 @@ angle::Result CommandQueue::submitFrame(
     CommandBatch &batch = scopedBatch.get();
 
     ANGLE_TRY(mFenceRecycler.newSharedFence(context, &batch.fence));
-    batch.serial = submitQueueSerial;
+    batch.serial              = submitQueueSerial;
+    batch.hasProtectedContent = hasProtectedContent;
 
     ANGLE_TRY(queueSubmit(context, priority, submitInfo, &batch.fence.get(), batch.serial));
 
@@ -993,8 +1038,16 @@ angle::Result CommandQueue::submitFrame(
 
     // Store the primary CommandBuffer and command pool used for secondary CommandBuffers
     // in the in-flight list.
-    ANGLE_TRY(releaseToCommandBatch(context, std::move(mPrimaryCommands), commandPool, &batch));
-
+    if (hasProtectedContent)
+    {
+        ANGLE_TRY(releaseToCommandBatch(context, hasProtectedContent, std::move(mProtectedCommands),
+                                        commandPool, &batch));
+    }
+    else
+    {
+        ANGLE_TRY(releaseToCommandBatch(context, hasProtectedContent, std::move(mPrimaryCommands),
+                                        commandPool, &batch));
+    }
     mInFlightCommands.emplace_back(scopedBatch.release());
 
     ANGLE_TRY(checkCompletedCommands(context));
@@ -1059,42 +1112,50 @@ angle::Result CommandQueue::waitForSerialWithUserTimeout(vk::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result CommandQueue::ensurePrimaryCommandBufferValid(Context *context)
+angle::Result CommandQueue::ensurePrimaryCommandBufferValid(Context *context,
+                                                            bool hasProtectedContent)
 {
-    if (mPrimaryCommands.valid())
+    PersistentCommandPool &commandPool  = getCommandPool(hasProtectedContent);
+    PrimaryCommandBuffer &commandBuffer = getCommandBuffer(hasProtectedContent);
+
+    if (commandBuffer.valid())
     {
         return angle::Result::Continue;
     }
 
-    ANGLE_TRY(mPrimaryCommandPool.allocate(context, &mPrimaryCommands));
-
+    ANGLE_TRY(commandPool.allocate(context, &commandBuffer));
     VkCommandBufferBeginInfo beginInfo = {};
     beginInfo.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
     beginInfo.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
     beginInfo.pInheritanceInfo         = nullptr;
-    ANGLE_VK_TRY(context, mPrimaryCommands.begin(beginInfo));
+    ANGLE_VK_TRY(context, commandBuffer.begin(beginInfo));
 
     return angle::Result::Continue;
 }
 
 angle::Result CommandQueue::flushOutsideRPCommands(Context *context,
+                                                   bool hasProtectedContent,
                                                    CommandBufferHelper **outsideRPCommands)
 {
-    ANGLE_TRY(ensurePrimaryCommandBufferValid(context));
+    ANGLE_TRY(ensurePrimaryCommandBufferValid(context, hasProtectedContent));
+    PrimaryCommandBuffer &commandBuffer = getCommandBuffer(hasProtectedContent);
     return (*outsideRPCommands)
-        ->flushToPrimary(context->getRenderer()->getFeatures(), &mPrimaryCommands, nullptr);
+        ->flushToPrimary(context->getRenderer()->getFeatures(), &commandBuffer, nullptr);
 }
 
 angle::Result CommandQueue::flushRenderPassCommands(Context *context,
+                                                    bool hasProtectedContent,
                                                     const RenderPass &renderPass,
                                                     CommandBufferHelper **renderPassCommands)
 {
-    ANGLE_TRY(ensurePrimaryCommandBufferValid(context));
+    ANGLE_TRY(ensurePrimaryCommandBufferValid(context, hasProtectedContent));
+    PrimaryCommandBuffer &commandBuffer = getCommandBuffer(hasProtectedContent);
     return (*renderPassCommands)
-        ->flushToPrimary(context->getRenderer()->getFeatures(), &mPrimaryCommands, &renderPass);
+        ->flushToPrimary(context->getRenderer()->getFeatures(), &commandBuffer, &renderPass);
 }
 
 angle::Result CommandQueue::queueSubmitOneOff(Context *context,
+                                              bool hasProtectedContent,
                                               egl::ContextPriority contextPriority,
                                               VkCommandBuffer commandBufferHandle,
                                               const Fence *fence,
@@ -1103,6 +1164,15 @@ angle::Result CommandQueue::queueSubmitOneOff(Context *context,
 {
     VkSubmitInfo submitInfo = {};
     submitInfo.sType        = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+
+    VkProtectedSubmitInfo protectedSubmitInfo = {};
+    if (hasProtectedContent)
+    {
+        protectedSubmitInfo.sType           = VK_STRUCTURE_TYPE_PROTECTED_SUBMIT_INFO;
+        protectedSubmitInfo.pNext           = nullptr;
+        protectedSubmitInfo.protectedSubmit = true;
+        submitInfo.pNext                    = &protectedSubmitInfo;
+    }
 
     if (commandBufferHandle != VK_NULL_HANDLE)
     {
@@ -1129,7 +1199,8 @@ angle::Result CommandQueue::queueSubmit(Context *context,
     }
 
     VkFence fenceHandle = fence ? fence->getHandle() : VK_NULL_HANDLE;
-    ANGLE_VK_TRY(context, vkQueueSubmit(mQueues[contextPriority], 1, &submitInfo, fenceHandle));
+    VkQueue queue       = getQueue(contextPriority);
+    ANGLE_VK_TRY(context, vkQueueSubmit(queue, 1, &submitInfo, fenceHandle));
     mLastSubmittedQueueSerial = submitQueueSerial;
 
     // Now that we've submitted work, clean up RendererVk garbage
@@ -1139,7 +1210,8 @@ angle::Result CommandQueue::queueSubmit(Context *context,
 VkResult CommandQueue::queuePresent(egl::ContextPriority contextPriority,
                                     const VkPresentInfoKHR &presentInfo)
 {
-    return vkQueuePresentKHR(mQueues[contextPriority], &presentInfo);
+    VkQueue queue = getQueue(contextPriority);
+    return vkQueuePresentKHR(queue, &presentInfo);
 }
 
 Serial CommandQueue::getLastSubmittedQueueSerial() const
@@ -1156,5 +1228,137 @@ Serial CommandQueue::getCurrentQueueSerial() const
 {
     return mCurrentQueueSerial;
 }
+
+// QueuePriorities:
+constexpr float kVulkanQueuePriorityLow    = 0.0;
+constexpr float kVulkanQueuePriorityMedium = 0.4;
+constexpr float kVulkanQueuePriorityHigh   = 1.0;
+
+const float QueueFamily::kQueuePriorities[static_cast<uint32_t>(egl::ContextPriority::EnumCount)] =
+    {kVulkanQueuePriorityMedium, kVulkanQueuePriorityHigh, kVulkanQueuePriorityLow};
+
+egl::ContextPriority DeviceQueueMap::getDevicePriority(egl::ContextPriority priority) const
+{
+    return mPriorities[priority];
+}
+
+DeviceQueueMap::~DeviceQueueMap() {}
+
+DeviceQueueMap &DeviceQueueMap::operator=(const DeviceQueueMap &other)
+{
+    ASSERT(this != &other);
+    if ((this != &other) && other.valid())
+    {
+        mIndex                                    = other.mIndex;
+        mIsProtected                              = other.mIsProtected;
+        mPriorities[egl::ContextPriority::Low]    = other.mPriorities[egl::ContextPriority::Low];
+        mPriorities[egl::ContextPriority::Medium] = other.mPriorities[egl::ContextPriority::Medium];
+        mPriorities[egl::ContextPriority::High]   = other.mPriorities[egl::ContextPriority::High];
+        *static_cast<angle::PackedEnumMap<egl::ContextPriority, VkQueue> *>(this) = other;
+    }
+    return *this;
+}
+
+void QueueFamily::getDeviceQueue(VkDevice device,
+                                 bool makeProtected,
+                                 uint32_t queueIndex,
+                                 VkQueue *queue)
+{
+    if (makeProtected)
+    {
+        VkDeviceQueueInfo2 queueInfo2 = {};
+        queueInfo2.sType              = VK_STRUCTURE_TYPE_DEVICE_QUEUE_INFO_2;
+        queueInfo2.flags              = VK_DEVICE_QUEUE_CREATE_PROTECTED_BIT;
+        queueInfo2.queueFamilyIndex   = mIndex;
+        queueInfo2.queueIndex         = queueIndex;
+
+        vkGetDeviceQueue2(device, &queueInfo2, queue);
+    }
+    else
+    {
+        vkGetDeviceQueue(device, mIndex, queueIndex, queue);
+    }
+}
+
+DeviceQueueMap QueueFamily::initializeQueueMap(VkDevice device,
+                                               bool makeProtected,
+                                               uint32_t queueIndex,
+                                               uint32_t queueCount)
+{
+    // QueueIndexing:
+    constexpr uint32_t kQueueIndexMedium = 0;
+    constexpr uint32_t kQueueIndexHigh   = 1;
+    constexpr uint32_t kQueueIndexLow    = 2;
+
+    ASSERT(queueCount);
+    ASSERT((queueIndex + queueCount) <= mProperties.queueCount);
+    DeviceQueueMap queueMap(mIndex, makeProtected);
+
+    getDeviceQueue(device, makeProtected, queueIndex + kQueueIndexMedium,
+                   &queueMap[egl::ContextPriority::Medium]);
+    queueMap.mPriorities[egl::ContextPriority::Medium] = egl::ContextPriority::Medium;
+
+    // If at least 2 queues, High has its own queue
+    if (queueCount > 1)
+    {
+        getDeviceQueue(device, makeProtected, queueIndex + kQueueIndexHigh,
+                       &queueMap[egl::ContextPriority::High]);
+        queueMap.mPriorities[egl::ContextPriority::High] = egl::ContextPriority::High;
+    }
+    else
+    {
+        queueMap[egl::ContextPriority::High]             = queueMap[egl::ContextPriority::Medium];
+        queueMap.mPriorities[egl::ContextPriority::High] = egl::ContextPriority::Medium;
+    }
+    // If at least 3 queues, Low has its own queue. Adjust Low priority.
+    if (queueCount > 2)
+    {
+        getDeviceQueue(device, makeProtected, queueIndex + kQueueIndexLow,
+                       &queueMap[egl::ContextPriority::Low]);
+        queueMap.mPriorities[egl::ContextPriority::Low] = egl::ContextPriority::Low;
+    }
+    else
+    {
+        queueMap[egl::ContextPriority::Low]             = queueMap[egl::ContextPriority::Medium];
+        queueMap.mPriorities[egl::ContextPriority::Low] = egl::ContextPriority::Medium;
+    }
+    return queueMap;
+}
+
+void QueueFamily::initialize(const VkQueueFamilyProperties &queueFamilyProperties, uint32_t index)
+{
+    mProperties = queueFamilyProperties;
+    mIndex      = index;
+}
+
+uint32_t QueueFamily::FindIndex(const std::vector<VkQueueFamilyProperties> &queueFamilyProperties,
+                                VkQueueFlags flags,
+                                int32_t matchNumber,
+                                uint32_t *matchCount)
+{
+    uint32_t index = QueueFamily::kInvalidIndex;
+    uint32_t count = 0;
+
+    for (uint32_t familyIndex = 0; familyIndex < queueFamilyProperties.size(); ++familyIndex)
+    {
+        const auto &queueInfo = queueFamilyProperties[familyIndex];
+        if ((queueInfo.queueFlags & flags) == flags)
+        {
+            ASSERT(queueInfo.queueCount > 0);
+            count++;
+            if ((index == QueueFamily::kInvalidIndex) && (matchNumber-- == 0))
+            {
+                index = familyIndex;
+            }
+        }
+    }
+    if (matchCount)
+    {
+        *matchCount = count;
+    }
+
+    return index;
+}
+
 }  // namespace vk
 }  // namespace rx

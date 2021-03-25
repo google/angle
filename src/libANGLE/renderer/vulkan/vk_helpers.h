@@ -1436,7 +1436,8 @@ class ImageHelper final : public Resource, public angle::Subject
                        gl::LevelIndex firstLevel,
                        uint32_t mipLevels,
                        uint32_t layerCount,
-                       bool isRobustResourceInitEnabled);
+                       bool isRobustResourceInitEnabled,
+                       bool hasProtectedContent);
     angle::Result initMSAASwapchain(Context *context,
                                     gl::TextureType textureType,
                                     const VkExtent3D &extents,
@@ -1447,7 +1448,8 @@ class ImageHelper final : public Resource, public angle::Subject
                                     gl::LevelIndex firstLevel,
                                     uint32_t mipLevels,
                                     uint32_t layerCount,
-                                    bool isRobustResourceInitEnabled);
+                                    bool isRobustResourceInitEnabled,
+                                    bool hasProtectedContent);
     angle::Result initExternal(Context *context,
                                gl::TextureType textureType,
                                const VkExtent3D &extents,
@@ -1461,8 +1463,10 @@ class ImageHelper final : public Resource, public angle::Subject
                                uint32_t mipLevels,
                                uint32_t layerCount,
                                bool isRobustResourceInitEnabled,
-                               bool *imageFormatListEnabledOut);
+                               bool *imageFormatListEnabledOut,
+                               bool hasProtectedContent);
     angle::Result initMemory(Context *context,
+                             bool hasProtectedContent,
                              const MemoryProperties &memoryProperties,
                              VkMemoryPropertyFlags flags);
     angle::Result initExternalMemory(
@@ -1517,6 +1521,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // - FramebufferVk::readPixelsImpl
     //
     angle::Result init2DStaging(Context *context,
+                                bool hasProtectedContent,
                                 const MemoryProperties &memoryProperties,
                                 const gl::Extents &glExtents,
                                 const Format &format,
@@ -1527,6 +1532,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // - TextureVk::copyAndStageImageData
     //
     angle::Result initStaging(Context *context,
+                              bool hasProtectedContent,
                               const MemoryProperties &memoryProperties,
                               VkImageType imageType,
                               const VkExtent3D &extents,
@@ -1538,6 +1544,7 @@ class ImageHelper final : public Resource, public angle::Subject
     // Create a multisampled image for use as the implicit image in multisampled render to texture
     // rendering.  If LAZILY_ALLOCATED memory is available, it will prefer that.
     angle::Result initImplicitMultisampledRenderToTexture(Context *context,
+                                                          bool hasProtectedContent,
                                                           const MemoryProperties &memoryProperties,
                                                           gl::TextureType textureType,
                                                           GLint samples,
@@ -2002,7 +2009,9 @@ class ImageHelper final : public Resource, public angle::Subject
                            uint32_t layerCount,
                            CommandBuffer *commandBuffer);
 
-    angle::Result initializeNonZeroMemory(Context *context, VkDeviceSize size);
+    angle::Result initializeNonZeroMemory(Context *context,
+                                          bool hasProtectedContent,
+                                          VkDeviceSize size);
 
     std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level);
     const std::vector<SubresourceUpdate> *getLevelUpdates(gl::LevelIndex level) const;

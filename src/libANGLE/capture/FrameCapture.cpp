@@ -2323,8 +2323,8 @@ void CaptureSharedContextMidExecutionSetup(const gl::Context *context,
     FrameCaptureShared *frameCaptureShared = context->getShareGroup()->getFrameCaptureShared();
     const gl::State &apiState              = context->getState();
     gl::State replayState(nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
-                          context->getState().getClientVersion(), false, true, true, true, false,
-                          EGL_CONTEXT_PRIORITY_MEDIUM_IMG);
+                          apiState.getClientVersion(), false, true, true, true, false,
+                          EGL_CONTEXT_PRIORITY_MEDIUM_IMG, apiState.hasProtectedContent());
 
     // Small helper function to make the code more readable.
     auto cap = [frameCaptureShared, setupCalls](CallCapture &&call) {
@@ -2893,7 +2893,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     const gl::State &apiState = context->getState();
     gl::State replayState(nullptr, nullptr, nullptr, nullptr, nullptr, EGL_OPENGL_ES_API,
                           context->getState().getClientVersion(), false, true, true, true, false,
-                          EGL_CONTEXT_PRIORITY_MEDIUM_IMG);
+                          EGL_CONTEXT_PRIORITY_MEDIUM_IMG, apiState.hasProtectedContent());
 
     // Small helper function to make the code more readable.
     auto cap = [setupCalls](CallCapture &&call) { setupCalls->emplace_back(std::move(call)); };

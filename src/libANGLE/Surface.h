@@ -49,6 +49,7 @@ struct SurfaceState final : private angle::NonCopyable
     ~SurfaceState();
 
     bool isRobustResourceInitEnabled() const;
+    bool hasProtectedContent() const;
 
     EGLLabelKHR label;
     const egl::Config *config;
@@ -132,6 +133,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLint getHorizontalResolution() const;
     EGLint getVerticalResolution() const;
     EGLenum getMultisampleResolve() const;
+    bool hasProtectedContent() const;
 
     gl::Texture *getBoundTexture() const { return mTexture; }
 

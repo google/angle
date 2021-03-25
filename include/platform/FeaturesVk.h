@@ -558,6 +558,27 @@ struct FeaturesVk : FeatureSetBase
         "useMultipleDescriptorsForExternalFormats", FeatureCategory::VulkanWorkarounds,
         "Return a default descriptor count for external formats.", &members,
         "http://anglebug.com/6141"};
+
+    // Whether the VkDevice can support Protected Memory.
+    Feature supportsProtectedMemory = {"supports_protected_memory", FeatureCategory::VulkanFeatures,
+                                       "VkDevice supports protected memory", &members,
+                                       "http://anglebug.com/3965"};
+
+    // Whether the VkInstance supports the VK_KHR_get_surface_capabilities2 extension.
+    Feature supportsSurfaceCapabilities2Extension = {
+        "supportsSurfaceCapabilities2Extension", FeatureCategory::VulkanFeatures,
+        "VkInstance supports the VK_KHR_get_surface_capabilities2 extension", &members};
+
+    // Whether the VkInstance supports the VK_KHR_surface_protected_capabilities extension.
+    Feature supportsSurfaceProtectedCapabilitiesExtension = {
+        "supportsSurfaceProtectedCapabilitiesExtension", FeatureCategory::VulkanFeatures,
+        "VkInstance supports the VK_KHR_surface_protected_capabilities extension", &members};
+
+    // Whether the VkSurface supports protected swapchains from
+    // supportsSurfaceProtectedCapabilitiesExtension.
+    Feature supportsSurfaceProtectedSwapchains = {
+        "supportsSurfaceProtectedSwapchains", FeatureCategory::VulkanFeatures,
+        "VkSurface supportsProtected for protected swapchains", &members};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;

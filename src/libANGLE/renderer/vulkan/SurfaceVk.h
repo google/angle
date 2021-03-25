@@ -88,7 +88,8 @@ class OffscreenSurfaceVk : public SurfaceVk
                                  EGLint height,
                                  const vk::Format &vkFormat,
                                  GLint samples,
-                                 bool isRobustResourceInitEnabled);
+                                 bool isRobustResourceInitEnabled,
+                                 bool hasProtectedContent);
 
         angle::Result initializeWithExternalMemory(DisplayVk *displayVk,
                                                    EGLint width,
@@ -96,7 +97,8 @@ class OffscreenSurfaceVk : public SurfaceVk
                                                    const vk::Format &vkFormat,
                                                    GLint samples,
                                                    void *buffer,
-                                                   bool isRobustResourceInitEnabled);
+                                                   bool isRobustResourceInitEnabled,
+                                                   bool hasProtectedContent);
 
         void destroy(const egl::Display *display);
 
@@ -255,6 +257,7 @@ class WindowSurfaceVk : public SurfaceVk
     EGLNativeWindowType mNativeWindowType;
     VkSurfaceKHR mSurface;
     VkSurfaceCapabilitiesKHR mSurfaceCaps;
+    VkBool32 mSupportsProtectedSwapchain;
 
   private:
     virtual angle::Result createSurfaceVk(vk::Context *context, gl::Extents *extentsOut)      = 0;

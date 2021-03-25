@@ -100,7 +100,8 @@ class State : angle::NonCopyable
           bool clientArraysEnabled,
           bool robustResourceInit,
           bool programBinaryCacheEnabled,
-          EGLenum contextPriority);
+          EGLenum contextPriority,
+          bool hasProtectedContent);
     ~State();
 
     void initialize(Context *context);
@@ -110,6 +111,7 @@ class State : angle::NonCopyable
     ContextID getContextID() const { return mID; }
     EGLenum getClientType() const { return mClientType; }
     EGLenum getContextPriority() const { return mContextPriority; }
+    bool hasProtectedContent() const { return mHasProtectedContent; }
     GLint getClientMajorVersion() const { return mClientVersion.major; }
     GLint getClientMinorVersion() const { return mClientVersion.minor; }
     const Version &getClientVersion() const { return mClientVersion; }
@@ -981,6 +983,7 @@ class State : angle::NonCopyable
 
     EGLenum mClientType;
     EGLenum mContextPriority;
+    bool mHasProtectedContent;
     Version mClientVersion;
 
     // Caps to use for validation

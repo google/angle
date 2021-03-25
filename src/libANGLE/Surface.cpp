@@ -48,6 +48,11 @@ bool SurfaceState::isRobustResourceInitEnabled() const
     return attributes.get(EGL_ROBUST_RESOURCE_INITIALIZATION_ANGLE, EGL_FALSE) == EGL_TRUE;
 }
 
+bool SurfaceState::hasProtectedContent() const
+{
+    return attributes.get(EGL_PROTECTED_CONTENT_EXT, EGL_FALSE) == EGL_TRUE;
+}
+
 Surface::Surface(EGLint surfaceType,
                  const egl::Config *config,
                  const AttributeMap &attributes,
@@ -627,6 +632,11 @@ void Surface::setTimestampsEnabled(bool enabled)
 bool Surface::isTimestampsEnabled() const
 {
     return mState.timestampsEnabled;
+}
+
+bool Surface::hasProtectedContent() const
+{
+    return mState.hasProtectedContent();
 }
 
 const SupportedCompositorTiming &Surface::getSupportedCompositorTimings() const

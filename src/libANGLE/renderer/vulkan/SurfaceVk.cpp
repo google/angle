@@ -121,6 +121,7 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
                               const vk::Format &vkFormat,
                               GLint samples,
                               bool isRobustResourceInitEnabled,
+                              bool hasProtectedContent,
                               vk::ImageHelper *imageHelper)
 {
     const angle::Format &textureFormat = vkFormat.actualImageFormat();
@@ -131,10 +132,12 @@ angle::Result InitImageHelper(DisplayVk *displayVk,
     VkExtent3D extents = {std::max(static_cast<uint32_t>(width), 1u),
                           std::max(static_cast<uint32_t>(height), 1u), 1u};
 
+    VkImageCreateFlags imageCreateFlags =
+        hasProtectedContent ? VK_IMAGE_CREATE_PROTECTED_BIT : vk::kVkImageCreateFlagsNone;
     ANGLE_TRY(imageHelper->initExternal(displayVk, gl::TextureType::_2D, extents, vkFormat, samples,
-                                        usage, vk::kVkImageCreateFlagsNone,
-                                        vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(0), 1,
-                                        1, isRobustResourceInitEnabled, nullptr));
+                                        usage, imageCreateFlags, vk::ImageLayout::Undefined,
+                                        nullptr, gl::LevelIndex(0), 1, 1,
+                                        isRobustResourceInitEnabled, nullptr, hasProtectedContent));
 
     return angle::Result::Continue;
 }
@@ -190,14 +193,20 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initialize(DisplayVk *display
                                                               EGLint height,
                                                               const vk::Format &vkFormat,
                                                               GLint samples,
-                                                              bool isRobustResourceInitEnabled)
+                                                              bool isRobustResourceInitEnabled,
+                                                              bool hasProtectedContent)
 {
     ANGLE_TRY(InitImageHelper(displayVk, width, height, vkFormat, samples,
-                              isRobustResourceInitEnabled, &image));
+                              isRobustResourceInitEnabled, hasProtectedContent, &image));
 
     RendererVk *renderer        = displayVk->getRenderer();
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
-    ANGLE_TRY(image.initMemory(displayVk, renderer->getMemoryProperties(), flags));
+    if (hasProtectedContent)
+    {
+        flags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
+    }
+    ANGLE_TRY(
+        image.initMemory(displayVk, hasProtectedContent, renderer->getMemoryProperties(), flags));
 
     imageViews.init(renderer);
 
@@ -211,13 +220,14 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
     const vk::Format &vkFormat,
     GLint samples,
     void *buffer,
-    bool isRobustResourceInitEnabled)
+    bool isRobustResourceInitEnabled,
+    bool hasProtectedContent)
 {
     RendererVk *renderer = displayVk->getRenderer();
     ASSERT(renderer->getFeatures().supportsExternalMemoryHost.enabled);
 
     ANGLE_TRY(InitImageHelper(displayVk, width, height, vkFormat, samples,
-                              isRobustResourceInitEnabled, &image));
+                              isRobustResourceInitEnabled, hasProtectedContent, &image));
 
     VkImportMemoryHostPointerInfoEXT importMemoryHostPointerInfo = {};
     importMemoryHostPointerInfo.sType = VK_STRUCTURE_TYPE_IMPORT_MEMORY_HOST_POINTER_INFO_EXT;
@@ -230,6 +240,10 @@ angle::Result OffscreenSurfaceVk::AttachmentImage::initializeWithExternalMemory(
     image.getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);
 
     VkMemoryPropertyFlags flags = 0;
+    if (hasProtectedContent)
+    {
+        flags |= VK_MEMORY_PROPERTY_PROTECTED_BIT;
+    }
     ANGLE_TRY(image.initExternalMemory(
         displayVk, renderer->getMemoryProperties(), externalMemoryRequirements, nullptr,
         &importMemoryHostPointerInfo, VK_QUEUE_FAMILY_EXTERNAL, flags));
@@ -288,7 +302,7 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
     {
         ANGLE_TRY(mColorAttachment.initialize(displayVk, mWidth, mHeight,
                                               renderer->getFormat(config->renderTargetFormat),
-                                              samples, robustInit));
+                                              samples, robustInit, mState.hasProtectedContent()));
         mColorRenderTarget.init(&mColorAttachment.image, &mColorAttachment.imageViews, nullptr,
                                 nullptr, gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
     }
@@ -297,7 +311,7 @@ angle::Result OffscreenSurfaceVk::initializeImpl(DisplayVk *displayVk)
     {
         ANGLE_TRY(mDepthStencilAttachment.initialize(
             displayVk, mWidth, mHeight, renderer->getFormat(config->depthStencilFormat), samples,
-            robustInit));
+            robustInit, mState.hasProtectedContent()));
         mDepthStencilRenderTarget.init(&mDepthStencilAttachment.image,
                                        &mDepthStencilAttachment.imageViews, nullptr, nullptr,
                                        gl::LevelIndex(0), 0, 1, RenderTargetTransience::Default);
@@ -472,6 +486,7 @@ WindowSurfaceVk::WindowSurfaceVk(const egl::SurfaceState &surfaceState, EGLNativ
     : SurfaceVk(surfaceState),
       mNativeWindowType(window),
       mSurface(VK_NULL_HANDLE),
+      mSupportsProtectedSwapchain(false),
       mSwapchain(VK_NULL_HANDLE),
       mSwapchainPresentMode(VK_PRESENT_MODE_FIFO_KHR),
       mDesiredSwapchainPresentMode(VK_PRESENT_MODE_FIFO_KHR),
@@ -510,7 +525,7 @@ void WindowSurfaceVk::destroy(const egl::Display *display)
     VkInstance instance  = renderer->getInstance();
 
     // flush the pipe.
-    (void)renderer->finish(displayVk);
+    (void)renderer->finish(displayVk, mState.hasProtectedContent());
 
     destroySwapChainImages(displayVk);
 
@@ -568,8 +583,45 @@ angle::Result WindowSurfaceVk::initializeImpl(DisplayVk *displayVk)
 
     const VkPhysicalDevice &physicalDevice = renderer->getPhysicalDevice();
 
-    ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
-                                                                      &mSurfaceCaps));
+    if (renderer->getFeatures().supportsSurfaceCapabilities2Extension.enabled)
+    {
+        VkPhysicalDeviceSurfaceInfo2KHR surfaceInfo2 = {};
+        surfaceInfo2.sType   = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_SURFACE_INFO_2_KHR;
+        surfaceInfo2.pNext   = nullptr;
+        surfaceInfo2.surface = mSurface;
+
+        VkSurfaceCapabilities2KHR surfaceCaps2 = {};
+        surfaceCaps2.sType                     = VK_STRUCTURE_TYPE_SURFACE_CAPABILITIES_2_KHR;
+        surfaceCaps2.pNext                     = nullptr;
+
+        VkSurfaceProtectedCapabilitiesKHR surfaceProtectedCaps = {};
+        if (renderer->getFeatures().supportsSurfaceProtectedCapabilitiesExtension.enabled)
+        {
+            surfaceProtectedCaps.sType = VK_STRUCTURE_TYPE_SURFACE_PROTECTED_CAPABILITIES_KHR;
+            surfaceProtectedCaps.pNext = nullptr;
+
+            surfaceCaps2.pNext = &surfaceProtectedCaps;
+        }
+
+        ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceCapabilities2KHR(
+                                    physicalDevice, &surfaceInfo2, &surfaceCaps2));
+
+        mSurfaceCaps                = surfaceCaps2.surfaceCapabilities;
+        mSupportsProtectedSwapchain = surfaceProtectedCaps.supportsProtected;
+    }
+    else
+    {
+        ANGLE_VK_TRY(displayVk, vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, mSurface,
+                                                                          &mSurfaceCaps));
+    }
+
+    if (IsAndroid())
+    {
+        mSupportsProtectedSwapchain = true;
+    }
+
+    ANGLE_VK_CHECK(displayVk, (mState.hasProtectedContent() ? mSupportsProtectedSwapchain : true),
+                   VK_ERROR_FEATURE_NOT_PRESENT);
 
     // Adjust width and height to the swapchain if necessary.
     uint32_t width  = mSurfaceCaps.currentExtent.width;
@@ -825,7 +877,8 @@ angle::Result WindowSurfaceVk::recreateSwapchain(ContextVk *contextVk, const gl:
         static constexpr size_t kMaxOldSwapchains = 5;
         if (mOldSwapchains.size() > kMaxOldSwapchains)
         {
-            ANGLE_TRY(contextVk->getRenderer()->finish(contextVk));
+            ANGLE_TRY(
+                contextVk->getRenderer()->finish(contextVk, contextVk->hasProtectedContent()));
             for (SwapchainCleanupData &oldSwapchain : mOldSwapchains)
             {
                 oldSwapchain.destroy(contextVk->getDevice(), &mPresentSemaphoreRecycler);
@@ -982,11 +1035,11 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
 
     VkSwapchainCreateInfoKHR swapchainInfo = {};
     swapchainInfo.sType                    = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    swapchainInfo.flags                    = 0;
-    swapchainInfo.surface                  = mSurface;
-    swapchainInfo.minImageCount            = mMinImageCount;
-    swapchainInfo.imageFormat              = nativeFormat;
-    swapchainInfo.imageColorSpace          = MapEglColorSpaceToVkColorSpace(
+    swapchainInfo.flags = mState.hasProtectedContent() ? VK_SWAPCHAIN_CREATE_PROTECTED_BIT_KHR : 0;
+    swapchainInfo.surface         = mSurface;
+    swapchainInfo.minImageCount   = mMinImageCount;
+    swapchainInfo.imageFormat     = nativeFormat;
+    swapchainInfo.imageColorSpace = MapEglColorSpaceToVkColorSpace(
         static_cast<EGLenum>(mState.attributes.get(EGL_GL_COLORSPACE, EGL_NONE)));
     // Note: Vulkan doesn't allow 0-width/height swapchains.
     swapchainInfo.imageExtent.width     = std::max(rotatedExtents.width, 1);
@@ -1006,7 +1059,7 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
     // that case as a workaround.
     if (lastSwapchain && renderer->getFeatures().waitIdleBeforeSwapchainRecreation.enabled)
     {
-        ANGLE_TRY(renderer->finish(context));
+        ANGLE_TRY(renderer->finish(context, mState.hasProtectedContent()));
     }
 
     // TODO(syoussefi): Once EGL_SWAP_BEHAVIOR_PRESERVED_BIT is supported, the contents of the old
@@ -1045,8 +1098,9 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         // values and then rotates the final rectangle).
         ANGLE_TRY(mColorImageMS.initMSAASwapchain(
             context, gl::TextureType::_2D, vkExtents, Is90DegreeRotation(getPreTransform()), format,
-            samples, usage, gl::LevelIndex(0), 1, 1, robustInit));
-        ANGLE_TRY(mColorImageMS.initMemory(context, renderer->getMemoryProperties(),
+            samples, usage, gl::LevelIndex(0), 1, 1, robustInit, mState.hasProtectedContent()));
+        ANGLE_TRY(mColorImageMS.initMemory(context, mState.hasProtectedContent(),
+                                           renderer->getMemoryProperties(),
                                            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
         // Initialize the color render target with the multisampled targets.  If not multisampled,
@@ -1075,8 +1129,10 @@ angle::Result WindowSurfaceVk::createSwapChain(vk::Context *context,
         const VkImageUsageFlags dsUsage = kSurfaceVkDepthStencilImageUsageFlags;
 
         ANGLE_TRY(mDepthStencilImage.init(context, gl::TextureType::_2D, vkExtents, dsFormat,
-                                          samples, dsUsage, gl::LevelIndex(0), 1, 1, robustInit));
-        ANGLE_TRY(mDepthStencilImage.initMemory(context, renderer->getMemoryProperties(),
+                                          samples, dsUsage, gl::LevelIndex(0), 1, 1, robustInit,
+                                          mState.hasProtectedContent()));
+        ANGLE_TRY(mDepthStencilImage.initMemory(context, mState.hasProtectedContent(),
+                                                renderer->getMemoryProperties(),
                                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT));
 
         mDepthStencilRenderTarget.init(&mDepthStencilImage, &mDepthStencilImageViews, nullptr,

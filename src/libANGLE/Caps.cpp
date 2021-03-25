@@ -1518,6 +1518,7 @@ std::vector<std::string> DisplayExtensions::getStrings() const
     InsertExtensionString("EGL_ANGLE_external_context_and_surface",              externalContextAndSurface,          &extensionStrings);
     InsertExtensionString("EGL_EXT_buffer_age",                                  bufferAgeEXT,                       &extensionStrings);
     InsertExtensionString("EGL_KHR_mutable_render_buffer",                       mutableRenderBufferKHR,             &extensionStrings);
+    InsertExtensionString("EGL_EXT_protected_content",                           protectedContentEXT,                &extensionStrings);
     // clang-format on
 
     return extensionStrings;

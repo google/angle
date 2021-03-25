@@ -208,7 +208,7 @@ angle::Result MemoryObjectVk::createImage(ContextVk *contextVk,
                                   createFlags, vk::ImageLayout::Undefined,
                                   &externalMemoryImageCreateInfo, gl::LevelIndex(0),
                                   static_cast<uint32_t>(levels), layerCount,
-                                  contextVk->isRobustResourceInitEnabled(), nullptr));
+                                  contextVk->isRobustResourceInitEnabled(), nullptr, false));
 
     VkMemoryRequirements externalMemoryRequirements;
     image->getImage().getMemoryRequirements(renderer->getDevice(), &externalMemoryRequirements);

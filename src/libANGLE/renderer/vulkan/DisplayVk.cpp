@@ -245,6 +245,10 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
 #endif  // defined(ANGLE_PLATFORM_GGP)
 
     outExtensions->bufferAgeEXT = true;
+
+    outExtensions->protectedContentEXT =
+        (getRenderer()->getFeatures().supportsProtectedMemory.enabled &&
+         getRenderer()->getFeatures().supportsSurfaceProtectedSwapchains.enabled);
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const

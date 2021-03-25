@@ -19,6 +19,7 @@ angle_end2end_tests_sources = [
   "egl_tests/EGLPreRotationTest.cpp",
   "egl_tests/EGLPrintEGLinfoTest.cpp",
   "egl_tests/EGLProgramCacheControlTest.cpp",
+  "egl_tests/EGLProtectedContentTest.cpp",
   "egl_tests/EGLQueryContextTest.cpp",
   "egl_tests/EGLReadinessCheckTest.cpp",
   "egl_tests/EGLRecordableTest.cpp",
