@@ -480,7 +480,7 @@ class Texture2DBaseMaxTestES3 : public ANGLETest
         }
     }
 
-    void initTest()
+    void initTest(bool immutable)
     {
         // Set up program to sample from specific lod level.
         mProgram.makeRaster(essl3_shaders::vs::Texture2DLod(), essl3_shaders::fs::Texture2DLod());
@@ -501,11 +501,24 @@ class Texture2DBaseMaxTestES3 : public ANGLETest
         std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
         fillMipData(mipData.data(), kMip0Size, kMipColors);
 
-        for (size_t mip = 0; mip < kMipCount; ++mip)
+        if (immutable)
         {
-            glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA8, kMip0Size >> mip, kMip0Size >> mip, 0,
-                         GL_RGBA, GL_UNSIGNED_BYTE,
-                         mipData.data() + getMipDataOffset(kMip0Size, mip));
+            glTexStorage2D(GL_TEXTURE_2D, kMipCount, GL_RGBA8, kMip0Size, kMip0Size);
+            for (size_t mip = 0; mip < kMipCount; ++mip)
+            {
+                glTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, kMip0Size >> mip, kMip0Size >> mip,
+                                GL_RGBA, GL_UNSIGNED_BYTE,
+                                mipData.data() + getMipDataOffset(kMip0Size, mip));
+            }
+        }
+        else
+        {
+            for (size_t mip = 0; mip < kMipCount; ++mip)
+            {
+                glTexImage2D(GL_TEXTURE_2D, mip, GL_RGBA8, kMip0Size >> mip, kMip0Size >> mip, 0,
+                             GL_RGBA, GL_UNSIGNED_BYTE,
+                             mipData.data() + getMipDataOffset(kMip0Size, mip));
+            }
         }
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
@@ -515,6 +528,9 @@ class Texture2DBaseMaxTestES3 : public ANGLETest
     }
 
     void setLodUniform(uint32_t lod) { glUniform1f(mLodLocation, lod); }
+
+    void testPingPongBaseLevel(bool immutable);
+    void testGenerateMipmapAfterRebase(bool immutable);
 
     GLProgram mProgram;
     GLTexture mTexture;
@@ -3398,6 +3414,14 @@ TEST_P(Texture2DBaseMaxTestES3, ExtendMipChainAfterRedefine)
 // Test that changing the base level of a texture multiple times preserves the data.
 TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevel)
 {
+    testPingPongBaseLevel(false);
+}
+TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevelImmutable)
+{
+    testPingPongBaseLevel(true);
+}
+void Texture2DBaseMaxTestES3::testPingPongBaseLevel(bool immutable)
+{
     // http://anglebug.com/4710
     ANGLE_SKIP_TEST_IF(IsD3D());
 
@@ -3407,7 +3431,7 @@ TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevel)
     // http://anglebug.com/4701
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
 
-    initTest();
+    initTest(immutable);
 
     // Ping pong a few times.
     for (uint32_t tries = 0; tries < 2; ++tries)
@@ -3442,7 +3466,7 @@ TEST_P(Texture2DBaseMaxTestES3, PingPongBaseLevel)
 // after the redefine data.
 TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
 {
-    initTest();
+    initTest(false);
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
     // created already).
@@ -3503,7 +3527,7 @@ TEST_P(Texture2DBaseMaxTestES3, SubImageAfterRedefine)
 // Test that incompatibly redefining a level then redefining it back to its original size works.
 TEST_P(Texture2DBaseMaxTestES3, IncompatiblyRedefineLevelThenRevert)
 {
-    initTest();
+    initTest(false);
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
     // created already).
@@ -3543,7 +3567,7 @@ TEST_P(Texture2DBaseMaxTestES3, IncompatiblyRedefineLevelThenRevert)
 // bits per component, to ensure alignment requirements for the new format are taken into account.
 TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
 {
-    initTest();
+    initTest(false);
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
     // created already).
@@ -3587,10 +3611,85 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
     }
 }
 
+// Test that generating mipmaps after change base level.
+TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRebase)
+{
+    testGenerateMipmapAfterRebase(false);
+}
+TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRebaseImmutable)
+{
+    // http://anglebug.com/4710
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    // http://anglebug.com/5798
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA());
+
+    testGenerateMipmapAfterRebase(true);
+}
+void Texture2DBaseMaxTestES3::testGenerateMipmapAfterRebase(bool immutable)
+{
+    initTest(immutable);
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    // Update level 1 (any level would do other than 0) with new data
+    const GLColor kNewMipColor = GLColor::yellow;
+    std::array<GLColor, getMipDataSize(kMip0Size >> 1, 0)> newMipData;
+    std::fill(newMipData.begin(), newMipData.end(), kNewMipColor);
+
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, kMip0Size >> 1, kMip0Size >> 1, GL_RGBA,
+                    GL_UNSIGNED_BYTE, newMipData.data());
+
+    // Change base level and max level and then generate mipmaps. This should redefine level 1 and 2
+    // with kNewMipColor and leave levels 0 and 3 unchanged.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipCount - 2);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, kMipCount - 1);
+
+    // Test that the texture looks as expected.
+    const int w = getWindowWidth() - 1;
+    const int h = getWindowHeight() - 1;
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        if (lod == 0)
+        {
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[lod]);
+        }
+        else if (lod == kMipCount - 1)
+        {
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[lod]);
+        }
+        else
+        {
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColor);
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipColor);
+            EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipColor);
+            EXPECT_PIXEL_COLOR_EQ(w, h, kNewMipColor);
+        }
+    }
+}
+
 // Test that generating mipmaps after incompatibly redefining a level works.
 TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefine)
 {
-    initTest();
+    initTest(false);
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
     // created already).
@@ -3639,7 +3738,7 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefineAndRebase)
     // TODO(anglebug.com/5360): Failing on ARM-based Apple DTKs.
     ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
 
-    initTest();
+    initTest(false);
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
     // created already).
@@ -3700,7 +3799,7 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefineAndRebase)
 // Test that generating mipmaps after incompatibly redefining the base level of the texture works.
 TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningBase)
 {
-    initTest();
+    initTest(false);
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
     // created already).
@@ -3740,7 +3839,7 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningBase)
 // changing MAX_LEVEL works.
 TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefiningBaseAndChangingMax)
 {
-    initTest();
+    initTest(false);
 
     // Test that all mips have the expected data initially (this makes sure the texture image is
     // created already).
@@ -3784,7 +3883,7 @@ TEST_P(Texture2DBaseMaxTestES3, StageInvalidLevels)
     constexpr uint32_t kMaxLevel           = 2;
     const GLColor kMipColor[kMaxLevel + 1] = {GLColor::red, GLColor::green, GLColor::blue};
 
-    initTest();
+    initTest(false);
 
     GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
