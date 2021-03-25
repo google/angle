@@ -16,6 +16,24 @@
       "message": "For some reason now the CI fails because it doesn\u0027t find C:\\b\\s\\w\\ir\\cache\\builder\\angle\\out\\CaptureReplayTest\\Capture\\angle_end2end_tests.exe in the win-trace-rel run. I\u0027ve seen it pass in all other runs, and since there are no build failures I don\u0027t have any idea what might go wrong. ",
       "revId": "e48668434d057f6f5b5ca53b887a969ab9d4d8f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2bfb63b_bfea1d5d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-25T17:57:09Z",
+      "side": 1,
+      "message": "This is a known issue: anglebug.com/5766: win-trace-rel broken\n\nJamie is working on a fix here: https://chromium-review.googlesource.com/c/angle/angle/+/2787186",
+      "parentUuid": "38904481_c35362ed",
+      "revId": "e48668434d057f6f5b5ca53b887a969ab9d4d8f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
