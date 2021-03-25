@@ -535,6 +535,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_CONTEXT_FLAG_DEBUG_BIT";
                 case 0x4:
                     return "GL_CONTEXT_FLAG_ROBUST_ACCESS_BIT";
+                case 0x10:
+                    return "GL_CONTEXT_FLAG_PROTECTED_CONTENT_BIT_EXT";
                 default:
                     return UnknownGLenumToString(value);
             }
@@ -1173,6 +1175,8 @@ const char *GLenumToString(GLenumGroup enumGroup, unsigned int value)
                     return "GL_POINT_SIZE_ARRAY_BUFFER_BINDING_OES";
                 case 0x8BE7:
                     return "GL_SAMPLER_EXTERNAL_2D_Y2Y_EXT";
+                case 0x8BFA:
+                    return "GL_TEXTURE_PROTECTED_EXT";
                 case 0x8C10:
                     return "GL_TEXTURE_RED_TYPE";
                 case 0x8C11:

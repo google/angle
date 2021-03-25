@@ -133,7 +133,7 @@ class Surface : public LabeledObject, public gl::FramebufferAttachmentObject
     EGLint getHorizontalResolution() const;
     EGLint getVerticalResolution() const;
     EGLenum getMultisampleResolve() const;
-    bool hasProtectedContent() const;
+    bool hasProtectedContent() const override;
 
     gl::Texture *getBoundTexture() const { return mTexture; }
 

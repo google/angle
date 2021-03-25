@@ -212,6 +212,7 @@ class FramebufferAttachmentObject : public angle::Subject, public angle::Observe
                               GLenum binding,
                               const ImageIndex &imageIndex) const                          = 0;
     virtual bool isYUV() const                                                             = 0;
+    virtual bool hasProtectedContent() const                                               = 0;
 
     virtual void onAttach(const Context *context, rx::Serial framebufferSerial) = 0;
     virtual void onDetach(const Context *context, rx::Serial framebufferSerial) = 0;

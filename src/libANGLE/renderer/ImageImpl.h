@@ -40,6 +40,7 @@ class ExternalImageSiblingImpl : public FramebufferAttachmentObjectImpl
     virtual bool isRenderable(const gl::Context *context) const = 0;
     virtual bool isTexturable(const gl::Context *context) const = 0;
     virtual bool isYUV() const                                  = 0;
+    virtual bool hasProtectedContent() const                    = 0;
     virtual gl::Extents getSize() const                         = 0;
     virtual size_t getSamples() const                           = 0;
 };
