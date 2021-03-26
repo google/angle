@@ -16,6 +16,46 @@
       "message": "There was still some debug output code that was removed only in the next patch and that I moved here. ",
       "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd2d4b92_b18f4670",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-26T16:03:48Z",
+      "side": 1,
+      "message": "Gert: code mostly looks good, one suggestion about moving the serialization func.\n\nIf we change the trace signatures (e.g. changing the signature of the serialization getter) we will need to re-trace the existing traces to resolve the difference with the old traces. I\u0027ve made a change to SwiftShader that rolled in today that we can use the re-trace everything on Linux or Windows with SwiftShader. I\u0027ll take a crack at that on Monday - we can proceed with landing this.",
+      "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "663f60dd_588b8e17",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1086,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-26T16:03:48Z",
+      "side": 1,
+      "message": "this is cool that you embedded the data in the trace - can you also move this block to the start replay frame? I\u0027m looking to move all the \"fixture\" code (resource maps, etc) into a common file so this unique string would be better embedded in a frame. We could consider adding a frame number to the function as well, but that\u0027s just a minor detail.",
+      "range": {
+        "startLine": 1086,
+        "startChar": 31,
+        "endLine": 1086,
+        "endChar": 81
+      },
+      "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2693f153_8b887e12",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-26T16:03:48Z",
+      "side": 1,
+      "message": "Just a minor code pattern difference from the rest of ANGLE. If you don\u0027t mind coding it with the redundant namespaces it would have the effect of looking more like the rest of the code. Very minor issue.",
+      "parentUuid": "69d4c0d1_7ca1ef15",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 28
+      },
+      "revId": "4653c8dabd7f3ed598364f3f650868b1fa90bb9c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "591faee6_a8c111e6",
         "filename": "src/libANGLE/capture/frame_capture_utils.h",
         "patchSetId": 7
