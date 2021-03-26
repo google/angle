@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '7a30f2f0e6303b12dd8d2a340ad842d6a8108749',
+  'chromium_revision': 'e0abc3035c46525522d9ce677e1e0b5cf0d414a8',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -76,7 +76,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@7b935ebade6973c3be66149e54ab41969ede01ad',
+    'url': '{chromium_git}/chromium/src/build.git@5b847b7f2c0d456f249c92b441751f59f484b900',
     'condition': 'not build_with_chromium',
   },
 
@@ -118,7 +118,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@f50df92a297982cc7468fb614b284bb31aa08e60',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@9bb07683fbffe86edb42c5c519b7a4bc4e893deb',
     'condition': 'not build_with_chromium',
   },
 
@@ -134,7 +134,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@3977fbe3b4d0211846a86509bf41a14f47d808d7',
+    'url': '{chromium_git}/chromium/src/testing@e50b540620033d1bd3d20866f2f26d06a3586e64',
     'condition': 'not build_with_chromium',
   },
 
@@ -269,7 +269,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@a2d934b248d2ef0d9af4e5466ee6d1af9c3ba278',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@fc39a8498479316b8cdc243eb258c4e065d1e2f3',
     'condition': 'not build_with_chromium',
   },
 
@@ -304,7 +304,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@f5499b6afa48c2987ba61f306d89e41c93260fa3',
+    'url': '{chromium_git}/chromium/src/tools/mb@fc72712d339d9bc101279126eda12790700e3f3d',
     'condition': 'not build_with_chromium',
   },
 
