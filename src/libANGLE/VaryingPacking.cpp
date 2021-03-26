@@ -845,6 +845,11 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         if (isActiveBuiltInInput)
         {
             mActiveOutputBuiltIns[ref.frontShaderStage].push_back(input->name);
+            // Keep track of members of builtins, such as gl_out[].gl_Position, too.
+            for (sh::ShaderVariable field : input->fields)
+            {
+                mActiveOutputBuiltIns[ref.frontShaderStage].push_back(field.name);
+            }
         }
 
         // Only pack statically used varyings that have a matched input or output, plus special
