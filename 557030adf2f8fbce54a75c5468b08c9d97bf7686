@@ -37,6 +37,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "870efb91_ef45321d",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T02:42:06Z",
+      "side": 1,
+      "message": "nit: relaxedVertexAttributeTypeANGLE",
+      "range": {
+        "startLine": 723,
+        "startChar": 34,
+        "endLine": 723,
+        "endChar": 35
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e8097d65_3b02da51",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
@@ -119,6 +142,30 @@
       "writtenOn": "2021-03-25T21:19:33Z",
       "side": 1,
       "message": "I think we\u0027re still using the wrong attribute type here - however we can defer action until the VVL produces an error on a mismatch. Maybe leave a small note that this could trigger a VVL error?",
+      "range": {
+        "startLine": 1852,
+        "startChar": 13,
+        "endLine": 1854,
+        "endChar": 55
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2b97a9d_34f41d09",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T02:42:06Z",
+      "side": 1,
+      "message": "Shouldn\u0027t the previous `attribSize !\u003d shaderVarSize` check also be included here?",
+      "parentUuid": "4b62df61_b9c2d850",
       "range": {
         "startLine": 1852,
         "startChar": 13,
