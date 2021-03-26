@@ -22,6 +22,30 @@
       },
       "revId": "62caddb3e60097c7f076706093f34f29faff2ecb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffaddbfa_e1955d57",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-26T17:27:16Z",
+      "side": 1,
+      "message": "The behavior is exactly the same, as I was replicating what GLES1Renderer did. But using it directly is the proper way to go. Calling VertexArrayIndex is the right solution here.",
+      "parentUuid": "05ac1ba0_e3684ed5",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 0
+      },
+      "revId": "62caddb3e60097c7f076706093f34f29faff2ecb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
