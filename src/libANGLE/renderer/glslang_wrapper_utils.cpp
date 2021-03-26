@@ -240,50 +240,6 @@ void AssignTransformFeedbackEmulationBindings(gl::ShaderType shaderType,
     }
 }
 
-void AssignTransformFeedbackExtensionLocations(gl::ShaderType shaderType,
-                                               const gl::ProgramState &programState,
-                                               bool isTransformFeedbackStage,
-                                               GlslangProgramInterfaceInfo *programInterfaceInfo,
-                                               ShaderInterfaceVariableInfoMap *variableInfoMapOut)
-{
-    // The only varying that requires additional resources is gl_Position, as it's indirectly
-    // captured through ANGLEXfbPosition.
-
-    const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
-        programState.getLinkedTransformFeedbackVaryings();
-
-    bool capturesPosition = false;
-
-    if (isTransformFeedbackStage)
-    {
-        for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
-        {
-            const gl::TransformFeedbackVarying &tfVarying = tfVaryings[varyingIndex];
-            const std::string &tfVaryingName              = tfVarying.mappedName;
-
-            if (tfVaryingName == "gl_Position")
-            {
-                ASSERT(tfVarying.isBuiltIn());
-                capturesPosition = true;
-                break;
-            }
-        }
-    }
-
-    if (capturesPosition)
-    {
-        AddLocationInfo(variableInfoMapOut, shaderType, sh::vk::kXfbExtensionPositionOutName,
-                        programInterfaceInfo->locationsUsedForXfbExtension, 0, 0, 0);
-        ++programInterfaceInfo->locationsUsedForXfbExtension;
-    }
-    else
-    {
-        // Make sure this varying is removed from the other stages, or if position is not captured
-        // at all.
-        variableInfoMapOut->add(shaderType, sh::vk::kXfbExtensionPositionOutName);
-    }
-}
-
 bool IsFirstRegisterOfVarying(const gl::PackedVaryingRegister &varyingReg, bool allowFields)
 {
     const gl::PackedVarying &varying = *varyingReg.packedVarying;
@@ -4798,15 +4754,6 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
         const gl::VaryingPacking &inputPacking  = varyingPacking.getInputPacking(shaderType);
         const gl::VaryingPacking &outputPacking = varyingPacking.getOutputPacking(shaderType);
 
-        // Assign location to varyings generated for transform feedback capture
-        if (options.supportsTransformFeedbackExtension &&
-            gl::ShaderTypeSupportsTransformFeedback(shaderType))
-        {
-            AssignTransformFeedbackExtensionLocations(shaderType, programState,
-                                                      isTransformFeedbackStage,
-                                                      programInterfaceInfo, variableInfoMapOut);
-        }
-
         // Assign varying locations.
         if (shaderType != gl::ShaderType::Vertex)
         {
@@ -4849,6 +4796,50 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
     }
 }
 
+void GlslangAssignTransformFeedbackLocations(gl::ShaderType shaderType,
+                                             const gl::ProgramState &programState,
+                                             bool isTransformFeedbackStage,
+                                             GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                             ShaderInterfaceVariableInfoMap *variableInfoMapOut)
+{
+    // The only varying that requires additional resources is gl_Position, as it's indirectly
+    // captured through ANGLEXfbPosition.
+
+    const std::vector<gl::TransformFeedbackVarying> &tfVaryings =
+        programState.getLinkedTransformFeedbackVaryings();
+
+    bool capturesPosition = false;
+
+    if (isTransformFeedbackStage)
+    {
+        for (uint32_t varyingIndex = 0; varyingIndex < tfVaryings.size(); ++varyingIndex)
+        {
+            const gl::TransformFeedbackVarying &tfVarying = tfVaryings[varyingIndex];
+            const std::string &tfVaryingName              = tfVarying.mappedName;
+
+            if (tfVaryingName == "gl_Position")
+            {
+                ASSERT(tfVarying.isBuiltIn());
+                capturesPosition = true;
+                break;
+            }
+        }
+    }
+
+    if (capturesPosition)
+    {
+        AddLocationInfo(variableInfoMapOut, shaderType, sh::vk::kXfbExtensionPositionOutName,
+                        programInterfaceInfo->locationsUsedForXfbExtension, 0, 0, 0);
+        ++programInterfaceInfo->locationsUsedForXfbExtension;
+    }
+    else
+    {
+        // Make sure this varying is removed from the other stages, or if position is not captured
+        // at all.
+        variableInfoMapOut->add(shaderType, sh::vk::kXfbExtensionPositionOutName);
+    }
+}
+
 void GlslangGetShaderSpirvCode(const GlslangSourceOptions &options,
                                const gl::ProgramState &programState,
                                const gl::ProgramLinkedResources &resources,
@@ -4864,6 +4855,21 @@ void GlslangGetShaderSpirvCode(const GlslangSourceOptions &options,
 
     gl::ShaderType xfbStage        = programState.getAttachedTransformFeedbackStage();
     gl::ShaderType frontShaderType = gl::ShaderType::InvalidEnum;
+
+    // This should be done before assigning varying location. Otherwise, We can encounter shader
+    // interface mismatching problem in case the transformFeedback stage is not Vertex stage.
+    for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
+    {
+        // Assign location to varyings generated for transform feedback capture
+        const bool isXfbStage =
+            shaderType == xfbStage && !programState.getLinkedTransformFeedbackVaryings().empty();
+        if (options.supportsTransformFeedbackExtension &&
+            gl::ShaderTypeSupportsTransformFeedback(shaderType))
+        {
+            GlslangAssignTransformFeedbackLocations(shaderType, programState, isXfbStage,
+                                                    programInterfaceInfo, variableInfoMapOut);
+        }
+    }
 
     for (const gl::ShaderType shaderType : programState.getExecutable().getLinkedShaderStages())
     {

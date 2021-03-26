@@ -177,6 +177,12 @@ void GlslangAssignLocations(const GlslangSourceOptions &options,
                             GlslangProgramInterfaceInfo *programInterfaceInfo,
                             ShaderInterfaceVariableInfoMap *variableInfoMapOut);
 
+void GlslangAssignTransformFeedbackLocations(gl::ShaderType shaderType,
+                                             const gl::ProgramState &programState,
+                                             bool isTransformFeedbackStage,
+                                             GlslangProgramInterfaceInfo *programInterfaceInfo,
+                                             ShaderInterfaceVariableInfoMap *variableInfoMapOut);
+
 // Retrieves the compiled SPIR-V code for each shader stage, and calls |GlslangAssignLocations|.
 void GlslangGetShaderSpirvCode(const GlslangSourceOptions &options,
                                const gl::ProgramState &programState,
