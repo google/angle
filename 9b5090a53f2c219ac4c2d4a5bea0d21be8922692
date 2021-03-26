@@ -70,6 +70,24 @@
       "parentUuid": "1705a606_b8b1d08c",
       "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b7050d3_45648f13",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-26T00:54:50Z",
+      "side": 1,
+      "message": "I was able to get it to output the GL calls.   Apparently I completely glossed over the `is_debug \u003d false` it was using, so enabling that and `angle_enable_trace \u003d true` gives:\n\nhttps://paste.googleplex.com/4834863518580736\n\nUnfortunately, that\u0027s 450 lines of gibberish without any indication as to what reduced combination of calls gets us to the crash.   As suspected, there is no glUseProgram() call in that whole mess.   Unfortunately, just issuing the final glDrawArrays() command on its own doesn\u0027t cause a crash with an end2end test:\n\n    TEST_P(SimpleOperationTest, DrawWithoutProgramBound)\n    {\n        glDrawArrays(GL_LINE_STRIP_ADJACENCY, 646578481, 110);\n    }\n\nGives the same output for every backend:\n\n    [ RUN      ] SimpleOperationTest.DrawWithoutProgramBound/ES3_Vulkan\n    INFO: GL error: HIGH: GL_EXT_geometry_shader extension not enabled.\n    [       OK ] SimpleOperationTest.DrawWithoutProgramBound/ES3_Vulkan (339 ms)\n\nI\u0027m open to suggestions on other regression tests to add, but converting those fuzzer commands into an end2end is infeasible.",
+      "parentUuid": "973d09dd_c1707e54",
+      "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
