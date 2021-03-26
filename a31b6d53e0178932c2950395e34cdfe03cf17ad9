@@ -16,6 +16,75 @@
       "message": "PTAL",
       "revId": "a31b6d53e0178932c2950395e34cdfe03cf17ad9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e95996e_26d6c38c",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T03:16:45Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem right. I think glslangProgramInterfaceInfo.locationsUsedForXfbExtension should be initialized to 0 before this loop (done in reset already) and then just let GlslangAssignTransformFeedbackLocations accumulate it as necessary.",
+      "range": {
+        "startLine": 89,
+        "startChar": 16,
+        "endLine": 89,
+        "endChar": 72
+      },
+      "revId": "a31b6d53e0178932c2950395e34cdfe03cf17ad9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30867447_3d36ecbd",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T03:16:45Z",
+      "side": 1,
+      "message": "This seems wrong too. We already calculated glslangProgramInterfaceInfo.locationsUsedForXfbExtension above, so there\u0027s no need to set it to the value from the program! How does this not screw up the VS TES-with-XFB FS test? It seems that programProgramInterfaceInfo.locationsUsedForXfbExtension should be 0 for VS and FS in that case.",
+      "range": {
+        "startLine": 117,
+        "startChar": 16,
+        "endLine": 117,
+        "endChar": 72
+      },
+      "revId": "a31b6d53e0178932c2950395e34cdfe03cf17ad9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee2bf3e1_0a3ceb41",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramPipelineVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T03:16:45Z",
+      "side": 1,
+      "message": "These two loops should look like this IMO (removing the locationsUsedForXfbExtension assignment from both loops):\n\n    // This should be done before assigning varying location. Otherwise, We can encounter shader\n    // interface mismatching problem in case the transformFeedback stage is not Vertex stage.\n    for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())\n    {\n        gl::Program *glProgram \u003d\n            const_cast\u003cgl::Program *\u003e(glPipeline-\u003egetShaderProgram(shaderType));\n        if (glProgram)\n        {\n            const bool isTransformFeedbackStage \u003d\n                shaderType \u003d\u003d linkedTransformFeedbackStage \u0026\u0026\n                !glProgram-\u003egetState().getLinkedTransformFeedbackVaryings().empty();\n            if (options.supportsTransformFeedbackExtension \u0026\u0026\n                gl::ShaderTypeSupportsTransformFeedback(shaderType))\n            {\n                GlslangAssignTransformFeedbackLocations(\n                    shaderType, glProgram-\u003egetState(), isTransformFeedbackStage,\n                    \u0026glslangProgramInterfaceInfo, \u0026mExecutable.mVariableInfoMap);\n            }\n        }\n    }\n\n    gl::ShaderType frontShaderType \u003d gl::ShaderType::InvalidEnum;\n    for (const gl::ShaderType shaderType : glExecutable.getLinkedShaderStages())\n    {\n        gl::Program *glProgram \u003d\n            const_cast\u003cgl::Program *\u003e(glPipeline-\u003egetShaderProgram(shaderType));\n        if (glProgram)\n        {\n            const bool isTransformFeedbackStage \u003d\n                shaderType \u003d\u003d linkedTransformFeedbackStage \u0026\u0026\n                !glProgram-\u003egetState().getLinkedTransformFeedbackVaryings().empty();\n\n            GlslangAssignLocations(options, glProgram-\u003egetState(), varyingPacking, shaderType,\n                                   frontShaderType, isTransformFeedbackStage,\n                                   \u0026glslangProgramInterfaceInfo, \u0026mExecutable.mVariableInfoMap);\n            frontShaderType \u003d shaderType;\n        }\n    }",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 129,
+        "endChar": 0
+      },
+      "revId": "a31b6d53e0178932c2950395e34cdfe03cf17ad9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
