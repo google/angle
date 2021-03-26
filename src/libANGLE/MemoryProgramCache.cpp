@@ -210,7 +210,8 @@ angle::Result MemoryProgramCache::putProgram(const egl::BlobCache::Key &programH
     ANGLE_TRY(program->serialize(context, &serializedProgram));
 
     angle::MemoryBuffer compressedData;
-    if (!egl::CompressBlobCacheData(&serializedProgram, &compressedData))
+    if (!egl::CompressBlobCacheData(serializedProgram.size(), serializedProgram.data(),
+                                    &compressedData))
     {
         ERR() << "Error compressing binary data.";
         return angle::Result::Incomplete;

@@ -34,9 +34,11 @@ enum CacheResult
 
 // In oder to store more cache in blob cache, compress cacheData to compressedData
 // before being stored.
-bool CompressBlobCacheData(angle::MemoryBuffer *cacheData, angle::MemoryBuffer *compressedData)
+bool CompressBlobCacheData(const size_t cacheSize,
+                           const uint8_t *cacheData,
+                           angle::MemoryBuffer *compressedData)
 {
-    uLong uncompressedSize       = static_cast<uLong>(cacheData->size());
+    uLong uncompressedSize       = static_cast<uLong>(cacheSize);
     uLong expectedCompressedSize = zlib_internal::GzipExpectedCompressedSize(uncompressedSize);
 
     // Allocate memory.
@@ -46,9 +48,8 @@ bool CompressBlobCacheData(angle::MemoryBuffer *cacheData, angle::MemoryBuffer *
         return false;
     }
 
-    int zResult =
-        zlib_internal::GzipCompressHelper(compressedData->data(), &expectedCompressedSize,
-                                          cacheData->data(), uncompressedSize, nullptr, nullptr);
+    int zResult = zlib_internal::GzipCompressHelper(compressedData->data(), &expectedCompressedSize,
+                                                    cacheData, uncompressedSize, nullptr, nullptr);
 
     if (zResult != Z_OK)
     {
@@ -120,6 +121,7 @@ void BlobCache::put(const BlobCache::Key &key, angle::MemoryBuffer &&value)
 
 void BlobCache::putApplication(const BlobCache::Key &key, const angle::MemoryBuffer &value)
 {
+    std::lock_guard<std::mutex> lock(mBlobCacheMutex);
     if (areBlobCacheFuncsSet())
     {
         mSetBlobFunc(key.data(), key.size(), value.data(), value.size());

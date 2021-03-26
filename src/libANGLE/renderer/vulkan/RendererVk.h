@@ -26,6 +26,7 @@
 #include "common/vulkan/vulkan_icd.h"
 #include "libANGLE/BlobCache.h"
 #include "libANGLE/Caps.h"
+#include "libANGLE/WorkerThread.h"
 #include "libANGLE/renderer/vulkan/CommandProcessor.h"
 #include "libANGLE/renderer/vulkan/DebugAnnotatorVk.h"
 #include "libANGLE/renderer/vulkan/QueryVk.h"
@@ -96,6 +97,25 @@ void CollectGarbage(std::vector<vk::GarbageObject> *garbageOut, ArgT object, Arg
     CollectGarbage(garbageOut, objectsIn...);
 }
 
+class WaitableCompressEvent
+{
+  public:
+    WaitableCompressEvent(std::shared_ptr<angle::WaitableEvent> waitableEvent)
+        : mWaitableEvent(waitableEvent)
+    {}
+
+    virtual ~WaitableCompressEvent() {}
+
+    void wait() { return mWaitableEvent->wait(); }
+
+    bool isReady() { return mWaitableEvent->isReady(); }
+
+    virtual bool getResult() = 0;
+
+  private:
+    std::shared_ptr<angle::WaitableEvent> mWaitableEvent;
+};
+
 class RendererVk : angle::NonCopyable
 {
   public:
@@ -165,7 +185,7 @@ class RendererVk : angle::NonCopyable
     const vk::Format &getFormat(angle::FormatID formatID) const { return mFormatTable[formatID]; }
 
     angle::Result getPipelineCacheSize(DisplayVk *displayVk, size_t *pipelineCacheSizeOut);
-    angle::Result syncPipelineCacheVk(DisplayVk *displayVk, ContextVk *contextVk);
+    angle::Result syncPipelineCacheVk(DisplayVk *displayVk, const gl::Context *context);
 
     // Issues a new serial for linked shader modules. Used in the pipeline cache.
     Serial issueShaderSerial();
@@ -509,6 +529,9 @@ class RendererVk : angle::NonCopyable
     // Note that this mask can have bits set that don't correspond to valid stages, so it's strictly
     // only useful for masking out unsupported stages in an otherwise valid set of stages.
     VkPipelineStageFlags mSupportedVulkanPipelineStageMask;
+
+    // Use thread pool to compress cache data.
+    std::shared_ptr<rx::WaitableCompressEvent> mCompressEvent;
 };
 
 }  // namespace rx

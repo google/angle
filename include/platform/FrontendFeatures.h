@@ -70,6 +70,12 @@ struct FrontendFeatures : angle::FeatureSetBase
                                     angle::FeatureCategory::FrontendFeatures,
                                     "Set the context limits like frame capturing was enabled",
                                     &members, "http://anglebug.com/5750"};
+
+    // Whether we should compress pipeline cache in thread pool before it's stored in blob cache.
+    // http://anglebug.com/4722
+    angle::Feature enableCompressingPipelineCacheInThreadPool = {
+        "enableCompressingPipelineCacheInThreadPool", angle::FeatureCategory::FrontendWorkarounds,
+        "Enable compressing pipeline cache in thread pool.", &members, "http://anglebug.com/4722"};
 };
 
 inline FrontendFeatures::FrontendFeatures()  = default;
