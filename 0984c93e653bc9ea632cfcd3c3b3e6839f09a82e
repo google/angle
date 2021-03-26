@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "52117eec_456209cc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T02:55:29Z",
+      "side": 1,
+      "message": "You could take a step further and convert all the tests that currently only call initTest(false). If you want to be fancy, you could move them to a test suite that\u0027s parametric, and add a bool parameter (See MaskedScissoredClearTest in ClearTest.cpp for example)",
+      "revId": "0984c93e653bc9ea632cfcd3c3b3e6839f09a82e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10461e7f_6ebb8420",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3651,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T02:55:29Z",
+      "side": 1,
+      "message": "typo: levels",
+      "range": {
+        "startLine": 3651,
+        "startChar": 35,
+        "endLine": 3651,
+        "endChar": 40
+      },
+      "revId": "0984c93e653bc9ea632cfcd3c3b3e6839f09a82e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
