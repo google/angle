@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "646ca283_8319dd35",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-26T01:53:19Z",
+      "side": 1,
+      "message": "I added some more analysis for Shabi\u0027s question about how much data is being added (sorry for Gerrit\u0027s formatting).   Let me know if it\u0027s worth restricting saving the data to just PPOs.",
+      "revId": "47aa8063ee5f664e89b2e6c54eceb3c97bedfbd0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
