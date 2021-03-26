@@ -88,6 +88,24 @@
       "parentUuid": "973d09dd_c1707e54",
       "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8554953_c1f6a4fa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-26T02:49:28Z",
+      "side": 1,
+      "message": "The trace doesn\u0027t look so bad actually, the first half is just egl stuff and queries that could be cut. There\u0027s a lot of texture setup that could be deleted, there is framebuffer creation and deletion that\u0027s just unnecessary. I agree that there\u0027s nothing significant other than the no-program draw.\n\nThat said, your test simply needs to enable the GS extension! It should also be in some suite like SimpleOperationTestES31.",
+      "parentUuid": "7b7050d3_45648f13",
+      "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
