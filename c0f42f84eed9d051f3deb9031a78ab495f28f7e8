@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "620c4a4f_c86c4381",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "be2221f4_295f5cf1",
+      "range": {
+        "startLine": 11,
+        "startChar": 5,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da82e1b4_e14c392c",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-25T00:40:10Z",
       "side": 1,
       "message": "nit: \"makes a\"",
+      "range": {
+        "startLine": 12,
+        "startChar": 57,
+        "endLine": 12,
+        "endChar": 61
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f17903a_ac5c26b6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da82e1b4_e14c392c",
       "range": {
         "startLine": 12,
         "startChar": 57,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "975aa955_2892675a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75d38f63_24651108",
+      "range": {
+        "startLine": 13,
+        "startChar": 45,
+        "endLine": 13,
+        "endChar": 62
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d236d3c3_257fc7a0",
@@ -83,6 +155,30 @@
       "writtenOn": "2021-03-25T00:40:10Z",
       "side": 1,
       "message": "nit: Changing",
+      "range": {
+        "startLine": 14,
+        "startChar": 19,
+        "endLine": 14,
+        "endChar": 25
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a972bb55_1416d706",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 17
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d236d3c3_257fc7a0",
       "range": {
         "startLine": 14,
         "startChar": 19,
@@ -129,6 +225,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "05a0a7e2_8c94bc70",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2063,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "I think it did when the texture is bind to compute shader which changes usage flag. Most of the change here is due to test failure on bot.",
+      "parentUuid": "d4113d17_c14e7043",
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "da88a5c7_0f7a0d42",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 17
@@ -140,6 +254,30 @@
       "writtenOn": "2021-03-25T00:40:10Z",
       "side": 1,
       "message": "nit: underlying",
+      "range": {
+        "startLine": 2730,
+        "startChar": 49,
+        "endLine": 2730,
+        "endChar": 58
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "559d656e_569fd321",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2730,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da88a5c7_0f7a0d42",
       "range": {
         "startLine": 2730,
         "startChar": 49,
@@ -175,6 +313,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3cf74294_1b3e915b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2744,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "this is \"return std::min(mBaseLevel, mImmutableLevels - 1);\", so should be mBaseLevel",
+      "parentUuid": "38d7a208_f836d15b",
+      "range": {
+        "startLine": 2744,
+        "startChar": 23,
+        "endLine": 2744,
+        "endChar": 53
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "59db8809_c8740903",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 17
@@ -198,6 +360,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65c917b0_26499147",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3826,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "I think for immutable baseLevel could be non-zero, when you change base level and then bind it to compute, which changes usage flag, which will reallocate ImageHelper.",
+      "parentUuid": "59db8809_c8740903",
+      "range": {
+        "startLine": 3826,
+        "startChar": 0,
+        "endLine": 3826,
+        "endChar": 36
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d477d497_4484ff60",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 17
@@ -209,6 +395,30 @@
       "writtenOn": "2021-03-25T00:40:10Z",
       "side": 1,
       "message": "nit: \"level that has been\"",
+      "range": {
+        "startLine": 2064,
+        "startChar": 17,
+        "endLine": 2064,
+        "endChar": 27
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a26e068e_44989036",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 17
+      },
+      "lineNbr": 2064,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T01:14:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d477d497_4484ff60",
       "range": {
         "startLine": 2064,
         "startChar": 17,
