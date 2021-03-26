@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fd892dc_50eab16e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-26T14:26:32Z",
+      "side": 1,
+      "message": "This patch fixes compilation for ES1 and ES2 vertex pointer functions for which no draw call has been made.\nIn particular the behavior can be seen in VertexPointerTest.AssignRetrieve/ES1_Vulkan_SwiftShader.\n\nAfter this change and with a work around for anglebug:5799, I am able to run 32 of the ES1 tests successfully.\n",
+      "revId": "6f47c3d855772fd4351c385f6d3c82527c5882ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
