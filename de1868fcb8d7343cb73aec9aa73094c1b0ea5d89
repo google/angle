@@ -16,6 +16,23 @@
       "message": "Sneak peek at the fix for the crash, which leads to the next one:\n\n03-25 21:08:51.219 17753 17848 F ANGLE   : FATAL: ContextVk.cpp:4513 (updateActiveTextures): \t! Assert failed in updateActiveTextures (../../third_party/angle/src/libANGLE/renderer/vulkan/ContextVk.cpp:4513): textureType !\u003d gl::TextureType::InvalidEnum",
       "revId": "de1868fcb8d7343cb73aec9aa73094c1b0ea5d89",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acc04479_4d14c479",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 842,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-26T03:41:29Z",
+      "side": 1,
+      "message": "This doesn\u0027t actually recreate the error.   I\u0027ll need to study the app\u0027s GL commands a bit closer to try and get into the same bad state.",
+      "revId": "de1868fcb8d7343cb73aec9aa73094c1b0ea5d89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
