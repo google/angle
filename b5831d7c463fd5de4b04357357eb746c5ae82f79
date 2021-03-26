@@ -22,6 +22,30 @@
       },
       "revId": "b5831d7c463fd5de4b04357357eb746c5ae82f79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87bad083_1cc44ab5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-26T02:02:47Z",
+      "side": 1,
+      "message": "\u003e So maybe the bug is that locationsUsedForXfbExtension is not applied somewhere.\n\nYes, there was a bug. I will explain in detail as much as I possible. Previous implementation iterates linked shader stage and assign transform feedback location then assign input varying and output varying location in each shader stage. This could be problems when transform feedback stage is not vertex.\nAssume that transform feedback stage is TES. In TCS stage iteration, output varying location is assigned from 0. but in TES stage, if there is gl_position xfb varying, input varying will be assigned from 1. It introduced shader interface mismatch between TCS out and TES in.\n\n\u003e I\u0027d say putting it as the last max possible value is not a great idea\n\nUnderstood, changed design not to use max location.",
+      "parentUuid": "546d0406_89c68add",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 30
+      },
+      "revId": "b5831d7c463fd5de4b04357357eb746c5ae82f79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
