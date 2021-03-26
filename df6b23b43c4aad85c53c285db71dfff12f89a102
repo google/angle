@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c945060_ca221099",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-26T19:34:49Z",
+      "side": 1,
+      "message": "this needed to be rectified as well",
+      "range": {
+        "startLine": 224,
+        "startChar": 4,
+        "endLine": 226,
+        "endChar": 75
+      },
+      "revId": "df6b23b43c4aad85c53c285db71dfff12f89a102",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2f130b3_11bb4d71",
+        "filename": "src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 239,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-26T19:34:49Z",
+      "side": 1,
+      "message": "reverted this back to how it was before because of change in line 224 and also -\n\n VUID-VkImageCreateInfo-pNext-01974\n If the pNext chain includes a VkExternalFormatANDROID structure, and its \n externalFormat member is non-zero the format must be VK_FORMAT_UNDEFINED",
+      "range": {
+        "startLine": 239,
+        "startChar": 4,
+        "endLine": 239,
+        "endChar": 61
+      },
+      "revId": "df6b23b43c4aad85c53c285db71dfff12f89a102",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
