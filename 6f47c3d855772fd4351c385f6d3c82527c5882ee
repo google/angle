@@ -16,6 +16,29 @@
       "message": "This patch fixes compilation for ES1 and ES2 vertex pointer functions for which no draw call has been made.\nIn particular the behavior can be seen in VertexPointerTest.AssignRetrieve/ES1_Vulkan_SwiftShader.\n\nAfter this change and with a work around for anglebug:5799, I am able to run 32 of the ES1 tests successfully.\n",
       "revId": "6f47c3d855772fd4351c385f6d3c82527c5882ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f54a9ba_0727e0a4",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4183,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-26T15:11:05Z",
+      "side": 1,
+      "message": "nit: wrap 100",
+      "range": {
+        "startLine": 4180,
+        "startChar": 0,
+        "endLine": 4183,
+        "endChar": 41
+      },
+      "revId": "6f47c3d855772fd4351c385f6d3c82527c5882ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
