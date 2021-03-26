@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ed1b4a0_34e9f8dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T03:26:51Z",
+      "side": 1,
+      "message": "That was also my initial thought as well, but then I realized that most of the tests are redefining a level with different size or format etc which is disallowed with immutable. These new tests and the ones that I added in the other CL has good coverage on immutable textures.",
+      "parentUuid": "52117eec_456209cc",
+      "revId": "0984c93e653bc9ea632cfcd3c3b3e6839f09a82e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "10461e7f_6ebb8420",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-26T02:55:29Z",
       "side": 1,
       "message": "typo: levels",
+      "range": {
+        "startLine": 3651,
+        "startChar": 35,
+        "endLine": 3651,
+        "endChar": 40
+      },
+      "revId": "0984c93e653bc9ea632cfcd3c3b3e6839f09a82e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8dfb7d5_46cda176",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 3651,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-26T03:26:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "10461e7f_6ebb8420",
       "range": {
         "startLine": 3651,
         "startChar": 35,
