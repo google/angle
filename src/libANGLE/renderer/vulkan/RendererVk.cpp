@@ -579,7 +579,7 @@ angle::Result GetAndDecompressPipelineCacheVk(VkPhysicalDeviceProperties physica
                                         &keySize) ||
         keyData.size() < kBlobHeaderSize)
     {
-        WARN() << "Failed to get first pipeline cache chunk data from blob cache.";
+        // Nothing in the cache.
         return angle::Result::Continue;
     }
 
