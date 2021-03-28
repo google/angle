@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "322ec658_2011562d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-28T17:41:20Z",
+      "side": 1,
+      "message": "Cody/Gert, sorry to bypass normal review. This fix is needed to get the win-trace-rel green again after a problematic SwiftShader roll.",
+      "revId": "4809b1a6de0d73d8014021229031d79c332508a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
