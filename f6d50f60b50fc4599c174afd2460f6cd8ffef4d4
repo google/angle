@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3275f63a_fe207260",
+        "filename": "extensions/EGL_ANGLE_device_mtl.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-03-28T02:32:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2dc8efa_bf5c7446",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 20
+      },
+      "revId": "f6d50f60b50fc4599c174afd2460f6cd8ffef4d4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dbae5d80_e2ae6b40",
