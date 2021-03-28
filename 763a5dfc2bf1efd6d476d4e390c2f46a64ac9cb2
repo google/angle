@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "816d413a_898061e4",
+        "filename": "include/EGL/eglext_angle.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-03-28T02:33:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1549fba9_df69e507",
+      "range": {
+        "startLine": 233,
+        "startChar": 8,
+        "endLine": 233,
+        "endChar": 30
+      },
+      "revId": "763a5dfc2bf1efd6d476d4e390c2f46a64ac9cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "14f40ecf_dfd46815",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-17T15:08:06Z",
       "side": 1,
       "message": "nit: 2021",
+      "range": {
+        "startLine": 2,
+        "startChar": 13,
+        "endLine": 2,
+        "endChar": 18
+      },
+      "revId": "763a5dfc2bf1efd6d476d4e390c2f46a64ac9cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "437f2e21_734cb4b6",
+        "filename": "src/tests/gl_tests/ImageTestMetal.mm",
+        "patchSetId": 5
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-03-28T02:33:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "14f40ecf_dfd46815",
       "range": {
         "startLine": 2,
         "startChar": 13,
