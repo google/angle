@@ -16,6 +16,69 @@
       "message": "Please review. This patch uses thread pool to complete compression.\nI set thread count to 1 in patch now. Do you have any suggestion about that?\nHow does ANGLE choose running thread count？(for example, in shader compiling)",
       "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77ff5e8c_cc2e2160",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T16:06:51Z",
+      "side": 1,
+      "message": "+Etienne regarding worker threads",
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b014b85d_e2d8f7ab",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2516,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T16:06:51Z",
+      "side": 1,
+      "message": "You can pass in the gl::Context here instead, and then we should be able to use gl::Context::getWorkerThreadPool(). No need for a pool specifically for this.",
+      "range": {
+        "startLine": 2516,
+        "startChar": 79,
+        "endLine": 2516,
+        "endChar": 88
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7aa09878_c4204413",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2583,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T16:06:51Z",
+      "side": 1,
+      "message": "There\u0027s a threading bug here. This MemoryBuffer came from a pool (ScratchBuffer) and handing it off to a thread is not safe. I\u0027m not quite familiar with the scratch buffer, so maybe Jamie would have a better idea, but it looks to me like if a thread is to be used, the memory should be allocated separately and handed off to the thread (which would free it when done).",
+      "range": {
+        "startLine": 2583,
+        "startChar": 66,
+        "endLine": 2583,
+        "endChar": 83
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
