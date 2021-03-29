@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae94b79a_e2efcdd4",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1166470
+      },
+      "writtenOn": "2021-03-29T21:48:28Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "98fa9a13_809b73af",
+      "range": {
+        "startLine": 830,
+        "startChar": 8,
+        "endLine": 830,
+        "endChar": 38
+      },
+      "revId": "da97d6d48a97d59b3d2c6f20fdf830ee677fca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6e6ccf74_10c747ea",
