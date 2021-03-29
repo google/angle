@@ -90,6 +90,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a174e56c_12a947ed",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T17:35:44Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "a568b3ea_84928b3f",
+      "revId": "9416bea5d0575a971e7468ba201f7a370c357e0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "562e0fea_dbaaf385",
@@ -103,6 +121,30 @@
       "writtenOn": "2021-03-28T17:19:50Z",
       "side": 1,
       "message": "nit: sWarned is how we name static vars sometimes",
+      "range": {
+        "startLine": 577,
+        "startChar": 20,
+        "endLine": 577,
+        "endChar": 26
+      },
+      "revId": "9416bea5d0575a971e7468ba201f7a370c357e0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54e79f59_82a95ff5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 577,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T17:35:44Z",
+      "side": 1,
+      "message": "N/A",
+      "parentUuid": "562e0fea_dbaaf385",
       "range": {
         "startLine": 577,
         "startChar": 20,
