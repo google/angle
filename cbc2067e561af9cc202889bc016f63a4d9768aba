@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e6dbebf_a6b58fde",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1041,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T16:00:48Z",
+      "side": 1,
+      "message": "nit: please replace this pattern with \n\nfor (gl::ShaderType shaderType : gl::AllShaderTypes)\n{\n   ...\n}",
+      "range": {
+        "startLine": 1039,
+        "startChar": 4,
+        "endLine": 1041,
+        "endChar": 67
+      },
+      "revId": "cbc2067e561af9cc202889bc016f63a4d9768aba",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
