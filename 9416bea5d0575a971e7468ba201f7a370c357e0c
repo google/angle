@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b25c8e36_ced446cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T15:39:02Z",
+      "side": 1,
+      "message": "We always discard the cache with new ANGLE git hashes, so for tests it mostly ends up being not found. The output is not suppressed though, just warned once.\n\nI thought about adding an ANGLE_ONCE macro for this sort of thing, but not sure how useful it may be in the end.\n\n---\n\nOnly use I can think of for this warning is if we notice a slow startup in some app that\u0027s not expected, and this could be a clue. Should I remove it altogether?",
+      "parentUuid": "b5d8bff2_aac5fe70",
+      "revId": "9416bea5d0575a971e7468ba201f7a370c357e0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "562e0fea_dbaaf385",
