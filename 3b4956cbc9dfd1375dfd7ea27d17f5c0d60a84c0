@@ -39,6 +39,30 @@
       },
       "revId": "3b4956cbc9dfd1375dfd7ea27d17f5c0d60a84c0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63e4604c_874b697e",
+        "filename": "src/common/angleutils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:18:11Z",
+      "side": 1,
+      "message": "Think so yes.",
+      "parentUuid": "9972c2e3_d91218ac",
+      "range": {
+        "startLine": 295,
+        "startChar": 8,
+        "endLine": 295,
+        "endChar": 42
+      },
+      "revId": "3b4956cbc9dfd1375dfd7ea27d17f5c0d60a84c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
