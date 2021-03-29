@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1d81c21_f2df46bf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 10
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T15:38:42Z",
+      "side": 1,
+      "message": "please include a bug tag to a bug in angle or chromium.",
+      "range": {
+        "startLine": 9,
+        "startChar": 5,
+        "endLine": 9,
+        "endChar": 9
+      },
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "9bfa366b_1f3f3c56",
@@ -14,6 +37,41 @@
       "writtenOn": "2021-03-29T15:08:34Z",
       "side": 1,
       "message": "Jamie can you please take another look?\n\nYes, this CL needs to land after the Chromium CL lands (and thus we need to wait till tomorrow to test on the CQ). I am not adding this to the CL description because in my opinion CL dependencies should be recorded in \"git log\".",
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df718c0f_0a32cddf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T15:38:42Z",
+      "side": 1,
+      "message": "Would it be alright if you linked the other CL in the description? Especially as this is a cross-repo dependency, git revisions aren\u0027t as useful. You can say something like\n\n\"Must be landed after http://crrev.com/c/######\"\n\nThis link is permanent so there shouldn\u0027t be a risk of this becoming stale.",
+      "parentUuid": "9bfa366b_1f3f3c56",
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e80b16cf_19d63b45",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T15:38:42Z",
+      "side": 1,
+      "message": "LGTM! Geoff can you pre-approve this? Will be used for standalone Android builds.",
       "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
