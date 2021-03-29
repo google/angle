@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4488cb90_c997a002",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T15:35:44Z",
+      "side": 1,
+      "message": "Agree with this thought. We shouldn\u0027t be logging error on an expected case.",
+      "parentUuid": "b5d8bff2_aac5fe70",
+      "revId": "9416bea5d0575a971e7468ba201f7a370c357e0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "562e0fea_dbaaf385",
