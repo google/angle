@@ -22,6 +22,30 @@
       },
       "revId": "c0f8495218cce0c698b9f49ff55f295494827796",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "961598aa_b74bb1d8",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 9300,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-29T20:58:54Z",
+      "side": 1,
+      "message": "That is cleaner.   Done.",
+      "parentUuid": "0bc318cc_fb110a31",
+      "range": {
+        "startLine": 9297,
+        "startChar": 0,
+        "endLine": 9300,
+        "endChar": 74
+      },
+      "revId": "c0f8495218cce0c698b9f49ff55f295494827796",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
