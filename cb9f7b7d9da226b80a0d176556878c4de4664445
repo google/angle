@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdb62d9b_ce9f6dfd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-29T03:54:33Z",
+      "side": 1,
+      "message": "Jamie can you please take a look? I think that this CL is now ready for review. The tests no longer have a //base dependency. I will remove the build_with_chromium if() condition in the GN file in a separate CL.\n\nNew things since you last looked at the CL:\n- Updated DebuggingTips.md\n- NativeTest.java is now duplicated in Angle repository as AngleNativeTest.java\n- TestStatusReporter.java is now duplicated in Angle repository",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
