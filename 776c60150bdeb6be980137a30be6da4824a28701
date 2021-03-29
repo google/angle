@@ -70,6 +70,24 @@
       "parentUuid": "69c7b37e_b3e73317",
       "revId": "776c60150bdeb6be980137a30be6da4824a28701",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5599e35_1bcd4172",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T16:14:22Z",
+      "side": 1,
+      "message": "Ok I see the bug. This stuff wasn\u0027t supposed to be built without vulkan and metal (and use_fuzzing_engine) but is. I\u0027ll upload a fix right away.",
+      "parentUuid": "18e7d311_ede00468",
+      "revId": "776c60150bdeb6be980137a30be6da4824a28701",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
