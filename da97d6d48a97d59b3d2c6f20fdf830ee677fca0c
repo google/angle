@@ -22,6 +22,30 @@
       },
       "revId": "da97d6d48a97d59b3d2c6f20fdf830ee677fca0c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98fa9a13_809b73af",
+        "filename": "src/libANGLE/renderer/gl/glx/DisplayGLX.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 830,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-03-29T19:54:52Z",
+      "side": 1,
+      "message": "It\u0027s not really worth the effort, it involves exposing some flag and having chrome set it when creating the display since we keep ANGLE user-agnostic.",
+      "parentUuid": "09935b64_1bff7c8a",
+      "range": {
+        "startLine": 830,
+        "startChar": 8,
+        "endLine": 830,
+        "endChar": 38
+      },
+      "revId": "da97d6d48a97d59b3d2c6f20fdf830ee677fca0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
