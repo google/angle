@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9566369_ab8b7e19",
+        "filename": "src/tests/gl_tests/SimpleOperationTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1211,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T20:49:20Z",
+      "side": 1,
+      "message": "copy paste error",
+      "range": {
+        "startLine": 1211,
+        "startChar": 55,
+        "endLine": 1211,
+        "endChar": 78
+      },
+      "revId": "e89094d8a8e79e3f70ea476c8034e1a8c7deb694",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
