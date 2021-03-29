@@ -3003,6 +3003,134 @@ TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberTypeIsFloat)
     checkResults(GLColor::red, GLColor::black, GLColor::red, GLColor::red);
 }
 
+// Test uniform block whose member is structure type, which contains a float member and a mat4
+// member.
+TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberTypeIsMixStructFloatAndMat4)
+{
+    std::ostringstream stream;
+    generateArraySizeAndDivisorsDeclaration(stream, false, true, false);
+    const std::string &kFS =
+        "#version 300 es\n"
+        "precision highp float;\n" +
+        stream.str() +
+        "out vec4 my_FragColor;\n"
+        "struct S { float factor; mat4 color; };\n"
+        "layout(std140) uniform buffer { S s[arraySize]; };\n"
+        "void main()\n"
+        "{\n"
+        "    uvec2 coord = uvec2(floor(gl_FragCoord.xy));\n"
+        "    uint index = coord.x +  coord.y * 128u;\n"
+        "    uint index_x = index / divisor1;\n"
+        "    uint index_y = (index % divisor1) / divisor2;\n"
+        "    my_FragColor = s[index_x].factor * s[index_x].color[index_y];\n"
+        "}\n";
+
+    GLint blockSize;
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS.c_str());
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "buffer");
+    glGetActiveUniformBlockiv(program, uniformBufferIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, blockSize, nullptr, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+
+    // The member s is an array of S structures, each element of s should be rounded up
+    // to the base alignment of a vec4 according to std140 storage layout rules.
+    const GLuint arraySize  = getArraySize();
+    const GLuint floatCount = arraySize * (kVectorPerMat * kFloatPerVector + kFloatPerVector);
+    std::vector<GLfloat> floatData(floatCount, 0.0f);
+    const size_t strideofFloatCount = kVectorPerMat * kFloatPerVector + kFloatPerVector;
+
+    setArrayValues(floatData, 0, arraySize, strideofFloatCount, 0, 1, 1, 2.0f, 0.0f, 0.0f, 0.0f, 4,
+                   4, 4, 0.0f, 0.0f, 0.5f, 0.5f);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0,
+                    std::min(static_cast<size_t>(blockSize), floatCount * sizeof(GLfloat)),
+                    floatData.data());
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    checkResults(GLColor::blue, GLColor::blue, GLColor::blue, GLColor::blue);
+
+    setArrayValues(floatData, 0, arraySize, strideofFloatCount, 0, 1, 1, 2.0f, 0.0f, 0.0f, 0.0f, 4,
+                   4, 4, 0.0f, 0.5f, 0.0f, 0.5f);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0,
+                    std::min(static_cast<size_t>(blockSize), floatCount * sizeof(GLfloat)),
+                    floatData.data());
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    checkResults(GLColor::green, GLColor::green, GLColor::green, GLColor::green);
+
+    setArrayValues(floatData, arraySize / 4, arraySize / 2, strideofFloatCount, 0, 1, 1, 2.0f, 0.0f,
+                   0.0f, 0.0f, 4, 4, 4, 0.5f, 0.0f, 0.0f, 0.5f);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0,
+                    std::min(static_cast<size_t>(blockSize), floatCount * sizeof(GLfloat)),
+                    floatData.data());
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    checkResults(GLColor::green, GLColor::red, GLColor::green, GLColor::green);
+}
+
+// Test uniform block whose member is structure type, which contains a float member and a vec4
+// member.
+TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberTypeIsMixStructFloatAndVec4)
+{
+    ANGLE_SKIP_TEST_IF(IsOSX());
+
+    std::ostringstream stream;
+    generateArraySizeAndDivisorsDeclaration(stream, false, false, false);
+    const std::string &kFS =
+        "#version 300 es\n"
+        "precision highp float;\n" +
+        stream.str() +
+        "out vec4 my_FragColor;\n"
+        "struct S { float color1; vec4 color2; };\n"
+        "layout(std140) uniform buffer { S s[arraySize]; };\n"
+        "void main()\n"
+        "{\n"
+        "    uvec2 coord = uvec2(floor(gl_FragCoord.xy));\n"
+        "    uint index = (coord.x +  coord.y * 128u) / divisor;\n"
+        "    my_FragColor = vec4(s[index].color1, s[index].color2.xyz);\n"
+        "}\n";
+
+    GLint blockSize;
+    ANGLE_GL_PROGRAM(program, essl3_shaders::vs::Simple(), kFS.c_str());
+    GLint uniformBufferIndex = glGetUniformBlockIndex(program, "buffer");
+    glGetActiveUniformBlockiv(program, uniformBufferIndex, GL_UNIFORM_BLOCK_DATA_SIZE, &blockSize);
+
+    glBindBuffer(GL_UNIFORM_BUFFER, mUniformBuffer);
+    glBufferData(GL_UNIFORM_BUFFER, blockSize, nullptr, GL_STATIC_DRAW);
+
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, mUniformBuffer);
+    glUniformBlockBinding(program, uniformBufferIndex, 0);
+
+    const GLuint arraySize  = getArraySize();
+    const GLuint floatCount = arraySize * 2 * kFloatPerVector;
+    std::vector<GLfloat> floatData(floatCount, 0.0f);
+    const size_t strideofFloatCount = 2 * kFloatPerVector;
+
+    setArrayValues(floatData, 0, arraySize, strideofFloatCount, 0, 1, 1, 1.0f, 0.0f, 0.0f, 0.0f, 4,
+                   1, 4, 1.0f, 1.0f, 1.0f, 0.0f);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0,
+                    std::min(static_cast<size_t>(blockSize), floatCount * sizeof(GLfloat)),
+                    floatData.data());
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    checkResults(GLColor::white, GLColor::white, GLColor::white, GLColor::white);
+
+    setArrayValues(floatData, 0, arraySize, strideofFloatCount, 0, 1, 1, 1.0f, 0.0f, 0.0f, 0.0f, 4,
+                   1, 4, 0.0f, 0.0f, 1.0f, 0.0f);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0,
+                    std::min(static_cast<size_t>(blockSize), floatCount * sizeof(GLfloat)),
+                    floatData.data());
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    checkResults(GLColor::red, GLColor::red, GLColor::red, GLColor::red);
+
+    setArrayValues(floatData, arraySize / 4, arraySize / 2, strideofFloatCount, 0, 1, 1, 0.0f, 0.0f,
+                   0.0f, 0.0f, 4, 1, 4, 0.0f, 1.0f, 1.0f, 0.0f);
+    glBufferSubData(GL_UNIFORM_BUFFER, 0,
+                    std::min(static_cast<size_t>(blockSize), floatCount * sizeof(GLfloat)),
+                    floatData.data());
+    drawQuad(program.get(), essl3_shaders::PositionAttrib(), 0.5f);
+    checkResults(GLColor::red, GLColor::blue, GLColor::red, GLColor::red);
+}
+
 // Test to transfer a uniform block large array member as an actual parameter to a function.
 TEST_P(UniformBlockWithOneLargeArrayMemberTest, MemberAsActualParameter)
 {

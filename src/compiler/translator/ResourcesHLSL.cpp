@@ -915,7 +915,8 @@ TString ResourcesHLSL::uniformBlockMembersString(const TInterfaceBlock &interfac
 
     Std140PaddingHelper padHelper = mStructureHLSL->getPaddingHelper();
 
-    for (unsigned int typeIndex = 0; typeIndex < interfaceBlock.fields().size(); typeIndex++)
+    const unsigned int fieldCount = static_cast<unsigned int>(interfaceBlock.fields().size());
+    for (unsigned int typeIndex = 0; typeIndex < fieldCount; typeIndex++)
     {
         const TField &field    = *interfaceBlock.fields()[typeIndex];
         const TType &fieldType = *field.type();
@@ -935,7 +936,8 @@ TString ResourcesHLSL::uniformBlockMembersString(const TInterfaceBlock &interfac
         {
             const bool useHLSLRowMajorPacking =
                 (fieldType.getLayoutQualifier().matrixPacking == EmpColumnMajor);
-            hlsl += padHelper.postPaddingString(fieldType, useHLSLRowMajorPacking, false);
+            hlsl += padHelper.postPaddingString(fieldType, useHLSLRowMajorPacking,
+                                                typeIndex == fieldCount - 1, false);
         }
     }
 
