@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9673b6ae_3651524d",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T16:39:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b60123d_14e9a77c",
+      "range": {
+        "startLine": 1038,
+        "startChar": 14,
+        "endLine": 1038,
+        "endChar": 23
+      },
+      "revId": "685921f9398ca42795426cd2eb4ca4eefc36a9b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1c7df68c_5b3450cf",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-29T16:25:33Z",
       "side": 1,
       "message": "does this compile? I see AllShaderTypes as a struct.",
+      "range": {
+        "startLine": 1039,
+        "startChar": 41,
+        "endLine": 1039,
+        "endChar": 55
+      },
+      "revId": "685921f9398ca42795426cd2eb4ca4eefc36a9b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2cc27239_1709466f",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T16:39:29Z",
+      "side": 1,
+      "message": "that\u0027s why you have to use the \"()\" to get an instance.",
+      "parentUuid": "1c7df68c_5b3450cf",
       "range": {
         "startLine": 1039,
         "startChar": 41,
