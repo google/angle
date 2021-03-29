@@ -2716,6 +2716,24 @@ bool ValidateFramebufferTextureCommon(const Context *context,
             context->validationError(GL_INVALID_VALUE, kInvalidMipLevel);
             return false;
         }
+
+        // GLES spec 3.1, Section 9.2.8 "Attaching Texture Images to a Framebuffer"
+        // If textarget is TEXTURE_2D_MULTISAMPLE, then level must be zero.
+        if (tex->getType() == TextureType::_2DMultisample && level != 0)
+        {
+            context->validationError(GL_INVALID_VALUE, kLevelNotZero);
+            return false;
+        }
+
+        // [OES_texture_storage_multisample_2d_array] Section 9.2.2 "Attaching Images to Framebuffer
+        // Objects"
+        // If texture is a two-dimensional multisample array texture, then level must be zero.
+        if (context->getExtensions().textureStorageMultisample2DArrayOES &&
+            tex->getType() == TextureType::_2DMultisampleArray && level != 0)
+        {
+            context->validationError(GL_INVALID_VALUE, kLevelNotZero);
+            return false;
+        }
     }
 
     if (!ValidateFramebufferTextureBase(context, target, attachment, texture, level))

@@ -21,9 +21,6 @@
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.rendering.rendering.triangles_input_line_strip_output_triangle_*_drawcall = FAIL
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.rendering.rendering.triangles_input_triangle_strip_output_triangle_*_drawcall = FAIL
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.rendering.rendering.triangles_with_adjacency_input_*_strip_output_triangle_strip_adjacency_drawcall = FAIL
-// Layered rendering (only fail when run in sequence, reproduced with --bot-mode)
-5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.layered_fbo.fb_texture_invalid_level_number = FAIL
-5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.layered_fbo.fb_texture_argument_refers_to_buffer_texture = FAIL
 // Crashes on ASSERT due to mismatch between shader resources and pipeline layout
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.max_image_uniforms = SKIP
 // Failures on windows nvidia
