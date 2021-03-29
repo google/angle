@@ -72,6 +72,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a568b3ea_84928b3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-29T16:58:58Z",
+      "side": 1,
+      "message": "I agree.   Looking closer at BlobCache::get(), it seems it logs errors when reading the cache, so this log message shouldn\u0027t be necessary.\n\nThanks for cleaning this up - it\u0027s my fault for suggesting it in the original CL without digging deeper.",
+      "parentUuid": "74c86eca_1458d16f",
+      "revId": "9416bea5d0575a971e7468ba201f7a370c357e0c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "562e0fea_dbaaf385",
