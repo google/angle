@@ -115,6 +115,30 @@
       },
       "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ebb3d25_cab29460",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1086,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T09:16:43Z",
+      "side": 1,
+      "message": "I was actually thinking that we should write (and read) the context serialization as an extra JSON file, so that there is no need to write this captured serialization (again) when the  comparison fails and one wants to do a diff against the replay context serialization. \nBetter would be the test would directly write out the diff, but it might be that there is not enough context in a normal diff to really locate the error - unless the diff would not only write the difference between the normal json textual representation, but print out the full path for each node that is different. For that one would have to write some comparison code that walks the json document tree.",
+      "parentUuid": "ea6cb233_fdedc6ce",
+      "range": {
+        "startLine": 1086,
+        "startChar": 31,
+        "endLine": 1086,
+        "endChar": 81
+      },
+      "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
