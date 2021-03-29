@@ -139,6 +139,30 @@
       },
       "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da38ddbc_fe050067",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 18
+      },
+      "lineNbr": 1086,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:15:08Z",
+      "side": 1,
+      "message": "Yeah it would be nice to have the diff and the separate JSON file. This is already a big improvement and I\u0027d like to get it landed. We can always make the separate file/diff changes improvements after this lands.",
+      "parentUuid": "1ebb3d25_cab29460",
+      "range": {
+        "startLine": 1086,
+        "startChar": 31,
+        "endLine": 1086,
+        "endChar": 81
+      },
+      "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
