@@ -52,6 +52,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d03aa215_7a65a34c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T00:49:55Z",
+      "side": 1,
+      "message": "Look like we won\u0027t need to re-trace as all the serialization functions are conditionally added.",
+      "parentUuid": "bd2d4b92_b18f4670",
+      "revId": "a2e7540e3df3840c8d9dae0f256c114a46c84d96",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "663f60dd_588b8e17",
