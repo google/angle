@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a81f33c6_85f05ead",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T08:10:21Z",
+      "side": 1,
+      "message": "It can be used so I changed it accordingly-",
+      "parentUuid": "1561785e_d5758818",
+      "revId": "05a991701a7b948bccbe7c92c49727a5a00ce966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecf0896f_613fe147",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-02-25T16:00:06Z",
       "side": 1,
       "message": "Actually, does depth matter here?  Maybe assert that depth is 1 for now.",
+      "range": {
+        "startLine": 3435,
+        "startChar": 0,
+        "endLine": 3435,
+        "endChar": 76
+      },
+      "revId": "05a991701a7b948bccbe7c92c49727a5a00ce966",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53fa5755_3e98f639",
+        "filename": "src/libANGLE/capture/capture_gles_ext_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3435,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T08:10:21Z",
+      "side": 1,
+      "message": "I\u0027ve added the depth",
+      "parentUuid": "ecf0896f_613fe147",
       "range": {
         "startLine": 3435,
         "startChar": 0,
