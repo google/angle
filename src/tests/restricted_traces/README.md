@@ -7,10 +7,9 @@ to share publicly.
 ## Accessing the traces
 
 In order to compile and run with these, you must be granted access by Google,
-then authenticate with the cloud with your @google account:
+then authenticate with [CIPD](CIPD). Googlers, use your @google account.
 ```
-download_from_google_storage --config
-<enter 0 for the project ID>
+cipd auth-login
 ```
 Add the following to ANGLE's .gclient file:
 ```
@@ -18,9 +17,9 @@ Add the following to ANGLE's .gclient file:
       "checkout_angle_internal":"True"
     },
 ```
-Then use gclient to pull down binary files from a cloud storage bucket.
+Then use gclient to pull down binary files from CIPD.
 ```
-gclient runhooks
+gclient sync -D
 ```
 This should result in a number of directories created in `src/tests/restricted_traces` that contain
 the trace files listed in [restricted_traces.json](restricted_traces.json):
@@ -38,6 +37,8 @@ src/tests/restricted_traces/clash_royale/
 src/tests/restricted_traces/cod_mobile/
 ...
 ```
+
+[CIPD]: https://chromium.googlesource.com/infra/luci/luci-go/+/master/cipd/README.md
 
 ## Building the trace tests
 
@@ -60,7 +61,8 @@ Run them like so:
 out/<config>/angle_perftests --gtest_filter=TracePerfTest*
 ```
 
-# Adding new Android traces
+# Capturing and adding new Android traces
+
 Generally we want to use a Debug setup for recording new traces. That allows us to see asserts and
 errors if the tracer needs to be improved.
 Add the following GN arg to your Debug setup:
@@ -73,6 +75,7 @@ After [building](../../../doc/DevSetupAndroid.md#building-angle-for-android) and
 we're ready to start capturing.
 
 ## Determine the target app
+
 We first need to identify which application we want to trace.  That can generally be done by
 looking at the web-based Play Store entry for your app.  For instance, Angry Birds 2 is listed
 here: https://play.google.com/store/apps/details?id=com.rovio.baba
@@ -100,22 +103,27 @@ Track the package name for use in later steps:
 ```
 export PACKAGE_NAME=com.rovio.baba
 ```
-## Choose a trace label
-Next, we need to chose a label for the trace. This is a style based choice, but we want to choose
-something simple that identifies the app, then use snake case. This will end up being the name of
-the trace, including the directory it is written to. Changing this value later is possible, but
-tedious, since it will appear in all source files for the trace:
+
+## Choose a trace name
+
+Next, we need to chose a name for the trace. Choose something simple that identifies the app, then use snake
+case. This will be the name of the trace files, including the trace directory. Changing this value later is possible,
+but not recommended.
 ```
 export LABEL=angry_birds_2
 ```
+
 ## Opt the application into ANGLE
+
 Next, opt the application into using your ANGLE with capture enabled by default:
 ```
 adb shell settings put global angle_debug_package org.chromium.angle
 adb shell settings put global angle_gl_driver_selection_pkgs $PACKAGE_NAME
 adb shell settings put global angle_gl_driver_selection_values angle
 ```
+
 ## Set up some Capture/Replay properties
+
 We also need to set some debug properties used by the tracer.
 
 Ensure frame capture is enabled. This might be redundant, but ensure the property isn't set to
@@ -138,13 +146,17 @@ require more. Use your discretion here:
 ```
 adb shell setprop debug.angle.capture.trigger 10
 ```
+
 ## Create output location
+
 We need to write out the trace file in a location accessible by the app. We use the app's data
 storage on sdcard, but create a subfolder to isolate ANGLE's files:
 ```
 adb shell mkdir -p /sdcard/Android/data/$PACKAGE_NAME/angle_capture
 ```
+
 ## Start the target app
+
 From here, you can start the application. You should see logcat entries like the following,
 indicating that we've succesfully turned on capturing:
 ```
@@ -158,6 +170,7 @@ ANGLE   : INFO: Disabling GL_NV_shader_noperspective_interpolation during captur
 ANGLE   : INFO: Limiting draw buffer count to 4 while FrameCapture enabled
 ```
 ## Trigger the capture
+
 When you have reached the content in your application that you want to record, set the trigger
 value to zero:
 ```
@@ -172,7 +185,7 @@ the file system:
 ```
 adb shell ls -la /sdcard/Android/data/$PACKAGE_NAME/angle_capture
 ```
-Allow the app to run until the “*angledata.gz” file is non-zero and no longer growing. The app
+Allow the app to run until the `*angledata.gz` file is non-zero and no longer growing. The app
 should continue rendering after that:
 ```
 $ adb shell ls -s -w 1 /sdcard/Android/data/$PACKAGE_NAME/angle_capture
@@ -195,17 +208,22 @@ $ adb shell ls -s -w 1 /sdcard/Android/data/$PACKAGE_NAME/angle_capture
 Note, you may see multiple contexts captured in the output. When this happens, look at the size of
 the files. The larger files should be the context you care about it. You should move or delete the
 other context files.
+
 ## Pull the trace files
+
 Next, we want to pull those files over to the host and run some scripts.
 ```
 cd $CHROMIUM_SRC/third_party/angle/src/tests/restricted_traces
 mkdir -p $LABEL
 adb pull /sdcard/Android/data/$PACKAGE_NAME/angle_capture/. $LABEL/
 ```
-## Add the new trace to our list
-The list of traces is tracked in [restricted_traces.json](restricted_traces.json).
 
-For simplicity, we use a tool called `jq` to update the list. This ensures we get them in
+## Add the new trace to the JSON list
+
+The list of traces is tracked in [restricted_traces.json](restricted_traces.json). Manually add your
+new trace to this list. Use version "1" for the trace version.
+
+You can also use a tool called `jq` to update the list. This ensures we get them in
 alphabetical order with no duplicates. It can also be done by hand if you are unable to install it,
 for some reason.
 ```
@@ -213,16 +231,12 @@ sudo apt-get install jq
 ```
 Then run the following command:
 ```
-jq ".traces = (.traces + [\"$LABEL\"] | unique)" restricted_traces.json \ | sponge restricted_traces.json
+export $VERSION=1
+jq ".traces = (.traces + [\"$LABEL $VERSION\"] | unique)" restricted_traces.json \ | sponge restricted_traces.json
 ```
-## Generate a sha1
-For local testing, we must first create an empty sha1. This is to satisfy GN dependencies elsewhere
-in the build. It will be overwritten with a real value if/when you upload the trace to our cloud
-bucket:
-```
-touch ${LABEL}.tar.gz.sha1
-```
-## Autogen the wrappers
+
+## Run code auto-generation
+
 We use two scripts to update the test harness so it will compile and run the new trace:
 ```
 python ./gen_restricted_traces.py
@@ -243,31 +257,22 @@ $ git diff --stat
 Note the absence of the traces themselves listed above.  They are automatically .gitignored since
 they won't be checked in directly to the repo.
 
-## Upload to the cloud
-Once you feel good about your trace, you can upload it to our collection of traces.  Again, this
-requires special access granted by Google.
+## Upload your trace to CIPD
 
-Starting from your ANGLE root directory:
+Once you feel good about your trace, you can upload it to our collection of traces.  This can only
+be done by Googlers with write access to the trace CIPD prefix. If you need write access contact
+someone listed in the `OWNERS` file.
+
 ```
-cd src/tests/restricted_traces
-upload_to_google_storage.py --bucket chrome-angle-capture-binaries --archive $LABEL
+sync_restricted_traces_to_cipd.py
 ```
-After uploading, the sha1 file you touched above will be populated.
 
 ## Upload your CL
-Before you can submit, you'll need to re-run the last code generation script to track the new sha1:
-```
-cd ../../..
-python ./scripts/run_code_generation.py
-```
-The additional diff to reflect the new sha1 should be quite small:
-```
-$ git diff --stat
- scripts/code_generation_hashes/restricted_traces.json | 2 +-
- src/tests/restricted_traces/angry_birds_2.tar.gz.sha1   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-```
-Add those to your CL and upload away!
+
+Ensure your current working directory is up-to-date, and upload:
+
 ```
 git cl upload
 ```
+
+You're now ready to run your new trace on CI!

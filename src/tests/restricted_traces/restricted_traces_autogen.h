@@ -126,12 +126,6 @@ enum class RestrictedTraceID
     EnumCount = InvalidEnum
 };
 
-using ReplayFunc           = void (*)(uint32_t);
-using ResetFunc            = void (*)();
-using SetupFunc            = void (*)();
-using DecompressFunc       = uint8_t *(*)(const std::vector<uint8_t> &);
-using SetBinaryDataDirFunc = void (*)(const char *);
-
 static constexpr size_t kTraceInfoMaxNameLen = 32;
 
 static constexpr uint32_t kDefaultReplayContextClientMajorVersion = 3;
@@ -148,15 +142,7 @@ struct TraceInfo
     char name[kTraceInfoMaxNameLen];
 };
 
-using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
-
 ANGLE_TRACE_EXPORT const TraceInfo &GetTraceInfo(RestrictedTraceID traceID);
-ANGLE_TRACE_EXPORT void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex);
-ANGLE_TRACE_EXPORT void ResetReplay(RestrictedTraceID traceID);
-ANGLE_TRACE_EXPORT void SetupReplay(RestrictedTraceID traceID);
-ANGLE_TRACE_EXPORT void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir);
-ANGLE_TRACE_EXPORT void SetBinaryDataDecompressCallback(RestrictedTraceID traceID,
-                                                        DecompressCallback callback);
 }  // namespace angle
 
 #endif  // ANGLE_RESTRICTED_TRACES_H_

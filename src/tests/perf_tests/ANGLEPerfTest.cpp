@@ -848,7 +848,10 @@ void ANGLERenderTest::step()
         mOSWindow->messageLoop();
 
 #if defined(ANGLE_ENABLE_ASSERTS)
-        EXPECT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError());
+        if (!gRetraceMode)
+        {
+            EXPECT_EQ(static_cast<GLenum>(GL_NO_ERROR), glGetError());
+        }
 #endif  // defined(ANGLE_ENABLE_ASSERTS)
     }
 
@@ -899,7 +902,7 @@ void ANGLERenderTest::startTest() {}
 void ANGLERenderTest::finishTest()
 {
     if (mTestParams.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_NULL_ANGLE &&
-        !gNoFinish)
+        !gNoFinish && !gRetraceMode)
     {
         glFinish();
     }

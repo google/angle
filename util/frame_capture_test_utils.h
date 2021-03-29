@@ -12,9 +12,12 @@
 
 #include <iostream>
 #include <memory>
+#include <sstream>
+#include <type_traits>
 #include <vector>
 
 #include "common/angleutils.h"
+#include "common/system_utils.h"
 
 #define USE_SYSTEM_ZLIB
 #include "compression_utils_portable.h"
@@ -46,6 +49,72 @@ inline uint8_t *DecompressBinaryData(const std::vector<uint8_t> &compressedData)
 
     return uncompressedData.release();
 }
+
+using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);
+
+using SetBinaryDataDecompressCallbackFunc = void (*)(DecompressCallback);
+using SetBinaryDataDirFunc                = void (*)(const char *);
+using SetupReplayFunc                     = void (*)();
+using ReplayFrameFunc                     = void (*)(uint32_t);
+using ResetReplayFunc                     = void (*)();
+using FinishReplayFunc                    = void (*)();
+using GetSerializedContextStateFunc       = const char *(*)(uint32_t);
+
+class TraceLibrary
+{
+  public:
+    TraceLibrary(const char *traceNameIn)
+    {
+        std::stringstream traceNameStr;
+#if !defined(ANGLE_PLATFORM_WINDOWS)
+        traceNameStr << "lib";
+#endif  // !defined(ANGLE_PLATFORM_WINDOWS)
+        traceNameStr << traceNameIn;
+        std::string traceName = traceNameStr.str();
+        mTraceLibrary.reset(OpenSharedLibrary(traceName.c_str(), SearchType::ApplicationDir));
+    }
+
+    bool valid() const { return mTraceLibrary != nullptr; }
+
+    void setBinaryDataDir(const char *dataDir)
+    {
+        callFunc<SetBinaryDataDirFunc>("SetBinaryDataDir", dataDir);
+    }
+
+    void setBinaryDataDecompressCallback(DecompressCallback callback)
+    {
+        callFunc<SetBinaryDataDecompressCallbackFunc>("SetBinaryDataDecompressCallback", callback);
+    }
+
+    void replayFrame(uint32_t frameIndex) { callFunc<ReplayFrameFunc>("ReplayFrame", frameIndex); }
+
+    void setupReplay() { callFunc<SetupReplayFunc>("SetupReplay"); }
+
+    void resetReplay() { callFunc<ResetReplayFunc>("ResetReplay"); }
+
+    void finishReplay() { callFunc<FinishReplayFunc>("FinishReplay"); }
+
+    const char *getSerializedContextState(uint32_t frameIndex)
+    {
+        return callFunc<GetSerializedContextStateFunc>("GetSerializedContextState", frameIndex);
+    }
+
+  private:
+    template <typename FuncT, typename... ArgsT>
+    typename std::result_of<FuncT(ArgsT...)>::type callFunc(const char *funcName, ArgsT... args)
+    {
+        void *untypedFunc = mTraceLibrary->getSymbol(funcName);
+        if (!untypedFunc)
+        {
+            fprintf(stderr, "Error loading function: %s\n", funcName);
+            ASSERT(untypedFunc);
+        }
+        auto typedFunc = reinterpret_cast<FuncT>(untypedFunc);
+        return typedFunc(args...);
+    }
+
+    std::unique_ptr<Library> mTraceLibrary;
+};
 
 }  // namespace angle
 

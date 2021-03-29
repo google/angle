@@ -26,10 +26,6 @@ declare_args() {
   # Link in system libGL, to work with apitrace.  See doc/DebuggingTips.md.
   angle_link_glx = false
 
-  # Defaults to capture building to $root_out_dir/angle_libs/with_capture.
-  # Switch on to build capture to $root_out_dir.
-  angle_with_capture_by_default = false
-
   # Don't build extra (test, samples etc) for Windows UWP. We don't have
   # infrastructure (e.g. windowing helper functions) in place to run them.
   angle_build_all = !build_with_chromium && !angle_is_winuwp && angle_has_build
@@ -1096,14 +1092,6 @@ angle_static_library("libGLESv2_static") {
   public_deps = [ ":libANGLE" ]
 }
 
-angle_static_library("libGLESv2_with_capture_static") {
-  sources = libglesv2_sources
-  configs += [ ":debug_annotations_config" ]
-  public_configs += [ ":angle_static" ]
-  deps = [ ":includes" ]
-  public_deps = [ ":libANGLE_with_capture" ]
-}
-
 angle_shared_library("libGLESv1_CM") {
   sources = libglesv1_cm_sources
   output_name = "libGLESv1_CM${angle_libs_suffix}"
@@ -1195,22 +1183,6 @@ angle_static_library("libEGL_static") {
   deps = [
     ":includes",
     ":libGLESv2_static",
-  ]
-}
-
-angle_static_library("libEGL_with_capture_static") {
-  sources = libegl_sources
-
-  configs += [
-    ":debug_annotations_config",
-    ":library_name_config",
-  ]
-
-  public_configs += [ ":angle_static" ]
-
-  deps = [
-    ":includes",
-    ":libGLESv2_with_capture_static",
   ]
 }
 

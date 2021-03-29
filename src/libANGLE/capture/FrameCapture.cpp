@@ -187,17 +187,14 @@ std::ostream &operator<<(std::ostream &os, const FmtReplayFunction &fmt)
 
 struct FmtSetupFunction
 {
-    FmtSetupFunction(gl::ContextID contextIdIn, uint32_t partIdIn)
-        : contextId(contextIdIn), partId(partIdIn)
-    {}
+    FmtSetupFunction(uint32_t partIdIn) : partId(partIdIn) {}
 
-    gl::ContextID contextId;
     uint32_t partId;
 };
 
 std::ostream &operator<<(std::ostream &os, const FmtSetupFunction &fmt)
 {
-    os << "SetupContext" << fmt.contextId << "Replay";
+    os << "SetupReplay";
     if (fmt.partId != kNoPartId)
     {
         os << "Part" << fmt.partId;
@@ -208,14 +205,12 @@ std::ostream &operator<<(std::ostream &os, const FmtSetupFunction &fmt)
 
 struct FmtResetFunction
 {
-    FmtResetFunction(gl::ContextID contextIdIn) : contextId(contextIdIn) {}
-
-    gl::ContextID contextId;
+    FmtResetFunction() {}
 };
 
 std::ostream &operator<<(std::ostream &os, const FmtResetFunction &fmt)
 {
-    os << "ResetContext" << fmt.contextId << "Replay()";
+    os << "ResetReplay()";
     return os;
 }
 
@@ -243,11 +238,11 @@ std::ostream &operator<<(std::ostream &os, const FmtFunction &fmt)
             break;
 
         case ReplayFunc::Setup:
-            os << FmtSetupFunction(fmt.contextId, fmt.partId);
+            os << FmtSetupFunction(fmt.partId);
             break;
 
         case ReplayFunc::Reset:
-            os << FmtResetFunction(fmt.contextId);
+            os << FmtResetFunction();
             break;
 
         default:
@@ -795,13 +790,16 @@ void SaveBinaryData(bool compression,
     }
 }
 
-void WriteLoadBinaryDataCall(bool compression,
-                             std::ostream &out,
-                             gl::ContextID contextId,
-                             const std::string &captureLabel)
+void WriteInitReplayCall(bool compression,
+                         std::ostream &out,
+                         gl::ContextID contextId,
+                         const std::string &captureLabel,
+                         size_t maxClientArraySize,
+                         size_t readBufferSize)
 {
     std::string binaryDataFileName = GetBinaryDataFilePath(compression, contextId, captureLabel);
-    out << "    LoadBinaryData(\"" << binaryDataFileName << "\");\n";
+    out << "    InitializeReplay(\"" << binaryDataFileName << "\", " << maxClientArraySize << ", "
+        << readBufferSize << ");\n";
 }
 
 void MaybeResetResources(std::stringstream &out,
@@ -1002,6 +1000,8 @@ void WriteCppReplay(bool compression,
                     const std::vector<CallCapture> &setupCalls,
                     ResourceTracker *resourceTracker,
                     std::vector<uint8_t> *binaryData,
+                    const gl::AttribArray<size_t> &clientArraySizes,
+                    size_t readBufferSize,
                     bool serializeStateEnabled)
 {
     DataTracker dataTracker;
@@ -1016,32 +1016,33 @@ void WriteCppReplay(bool compression,
     header << "namespace\n";
     header << "{\n";
 
-    if (!captureLabel.empty())
+    if (frameIndex == 1 || frameIndex == frameCount)
     {
-        out << "namespace " << captureLabel << "\n";
-        out << "{\n";
+        out << "extern \"C\" {\n";
     }
 
     if (frameIndex == 1)
     {
         std::stringstream setupCallStream;
 
-        setupCallStream << "void " << FmtSetupFunction(context->id(), kNoPartId) << "\n";
+        setupCallStream << "void " << FmtSetupFunction(kNoPartId) << "\n";
         setupCallStream << "{\n";
 
-        WriteLoadBinaryDataCall(compression, setupCallStream, context->id(), captureLabel);
+        size_t maxClientArraySize = MaxClientArraySize(clientArraySizes);
+
+        WriteInitReplayCall(compression, setupCallStream, context->id(), captureLabel,
+                            maxClientArraySize, readBufferSize);
         WriteCppReplayFunctionWithParts(context, ReplayFunc::Setup, &dataTracker, frameIndex,
                                         binaryData, setupCalls, header, setupCallStream, out);
 
         out << setupCallStream.str();
         out << "}\n";
-        out << "\n";
     }
 
     if (frameIndex == frameCount)
     {
         // Emit code to reset back to starting state
-        out << "void " << FmtResetFunction(context->id()) << "\n";
+        out << "void " << FmtResetFunction() << "\n";
         out << "{\n";
 
         std::stringstream restoreCallStream;
@@ -1057,7 +1058,18 @@ void WriteCppReplay(bool compression,
         out << restoreCallStream.str();
 
         out << "}\n";
+    }
+
+    if (frameIndex == 1 || frameIndex == frameCount)
+    {
+        out << "}  // extern \"C\"\n";
         out << "\n";
+    }
+
+    if (!captureLabel.empty())
+    {
+        out << "namespace " << captureLabel << "\n";
+        out << "{\n";
     }
 
     {
@@ -1113,8 +1125,6 @@ void WriteCppReplayIndexFiles(bool compression,
                               const std::string &captureLabel,
                               uint32_t frameCount,
                               const SurfaceDimensions &drawSurfaceDimensions,
-                              size_t readBufferSize,
-                              const gl::AttribArray<size_t> &clientArraySizes,
                               const HasResourceTypeMap &hasResourceType,
                               bool serializeStateEnabled,
                               bool writeResetContextCall,
@@ -1122,7 +1132,6 @@ void WriteCppReplayIndexFiles(bool compression,
 {
     const gl::ContextID contextId       = context->id();
     const egl::Config *config           = context->getConfig();
-    size_t maxClientArraySize           = MaxClientArraySize(clientArraySizes);
     const egl::AttributeMap &attributes = context->getDisplay()->getAttributeMap();
 
     std::stringstream header;
@@ -1131,28 +1140,7 @@ void WriteCppReplayIndexFiles(bool compression,
     header << "#pragma once\n";
     header << "\n";
     header << "#include <EGL/egl.h>\n";
-    header << "#include \"angle_gl.h\"\n";
-    header << "\n";
     header << "#include <cstdint>\n";
-    header << "#include <cstdio>\n";
-    header << "#include <cstring>\n";
-    header << "#include <limits>\n";
-    header << "#include <vector>\n";
-    header << "#include <unordered_map>\n";
-    header << "\n";
-    header << "#if !defined(ANGLE_REPLAY_EXPORT)\n";
-    header << "#    if defined(_WIN32)\n";
-    header << "#        if defined(ANGLE_REPLAY_IMPLEMENTATION)\n";
-    header << "#            define ANGLE_REPLAY_EXPORT __declspec(dllexport)\n";
-    header << "#        else\n";
-    header << "#            define ANGLE_REPLAY_EXPORT __declspec(dllimport)\n";
-    header << "#        endif\n";
-    header << "#    elif defined(__GNUC__)\n";
-    header << "#        define ANGLE_REPLAY_EXPORT __attribute__((visibility(\"default\")))\n";
-    header << "#    else\n";
-    header << "#        define ANGLE_REPLAY_EXPORT\n";
-    header << "#    endif\n";
-    header << "#endif  // !defined(ANGLE_REPLAY_EXPORT)\n";
     header << "\n";
 
     if (!captureLabel.empty())
@@ -1199,160 +1187,40 @@ void WriteCppReplayIndexFiles(bool compression,
            << ";\n";
     header << "// End Trace Metadata\n";
     header << "\n";
-    header << "// Begin Exported Methods\n";
-    header << "ANGLE_REPLAY_EXPORT void SetupContext" << contextId << "Replay();\n";
-    header << "ANGLE_REPLAY_EXPORT void ReplayContext" << contextId
-           << "Frame(uint32_t frameIndex);\n";
-    header << "ANGLE_REPLAY_EXPORT void ResetContext" << contextId << "Replay();\n";
-    if (serializeStateEnabled)
-    {
-        header << "ANGLE_REPLAY_EXPORT const char * GetSerializedContext" << contextId
-               << "State(uint32_t frameIndex);\n";
-    }
-    header << "\n";
     for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
     {
-        header << "ANGLE_REPLAY_EXPORT void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
+        header << "void " << FmtReplayFunction(contextId, frameIndex) << ";\n";
     }
     header << "\n";
     if (serializeStateEnabled)
     {
         for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
         {
-            header << "ANGLE_REPLAY_EXPORT const char *"
-                   << FmtGetSerializedContextStateFunction(contextId, frameIndex) << ";\n";
+            header << "const char *" << FmtGetSerializedContextStateFunction(contextId, frameIndex)
+                   << ";\n";
         }
         header << "\n";
     }
 
-    header << "using DecompressCallback = uint8_t *(*)(const std::vector<uint8_t> &);\n";
-    header << "ANGLE_REPLAY_EXPORT void SetBinaryDataDecompressCallback(DecompressCallback "
-              "callback);\n";
-    header << "ANGLE_REPLAY_EXPORT void SetBinaryDataDir(const char *dataDir);\n";
-    header << "// End Exported Methods\n";
-    header << "\n";
-    header << "// Maps from <captured Program ID, captured location> to run-time location.\n";
-    header
-        << "using LocationsMap = std::unordered_map<GLuint, std::unordered_map<GLint, GLint>>;\n";
-    header << "extern LocationsMap gUniformLocations;\n";
-    header << "using BlockIndexesMap = std::unordered_map<GLuint, std::unordered_map<GLuint, "
-              "GLuint>>;\n";
-    header << "extern BlockIndexesMap gUniformBlockIndexes;\n";
-    header << "extern GLuint gCurrentProgram;\n";
-    header << "void UpdateUniformLocation(GLuint program, const char *name, GLint location);\n";
-    header << "void DeleteUniformLocations(GLuint program);\n";
-    header << "void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index);\n";
-    header << "void UpdateCurrentProgram(GLuint program);\n";
-    header << "\n";
-    header << "// Maps from captured Resource ID to run-time Resource ID.\n";
-    header << "class ResourceMap\n";
-    header << "{\n";
-    header << "  public:\n";
-    header << "    ResourceMap() {}\n";
-    header << "    GLuint &operator[](GLuint index)\n";
-    header << "    {\n";
-    header << "        if (mIDs.size() <= static_cast<size_t>(index))\n";
-    header << "            mIDs.resize(index + 1, 0);\n";
-    header << "        return mIDs[index];\n";
-    header << "    }\n";
-    header << "  private:\n";
-    header << "    std::vector<GLuint> mIDs;\n";
-    header << "};\n";
-    header << "\n";
-    header << "void LoadBinaryData(const char *fileName);\n";
-    header << "\n";
-    header << "// Global state\n";
-    header << "\n";
-    header << "extern uint8_t *gBinaryData;\n";
-
     source << "#include \"" << FmtCapturePrefix(contextId, captureLabel) << ".h\"\n";
-    source << "#include \"angle_trace_gl.h\"\n";
+    source << "#include \"trace_fixture.h\"\n";
     source << "\n";
 
     if (!captureLabel.empty())
     {
-        source << "namespace " << captureLabel << "\n";
-        source << "{\n";
+        source << "using namespace " << captureLabel << ";\n";
+        source << "\n";
     }
 
-    source << "namespace\n";
-    source << "{\n";
-    source << "void UpdateResourceMap(ResourceMap *resourceMap, GLuint id, GLsizei "
-              "readBufferOffset)\n";
-    source << "{\n";
-    if (readBufferSize > 0)
-    {
-        source << "    GLuint returnedID;\n";
-        std::string captureNamespace = !captureLabel.empty() ? captureLabel + "::" : "";
-        source << "    memcpy(&returnedID, &" << captureNamespace
-               << "gReadBuffer[readBufferOffset], sizeof(GLuint));\n";
-        source << "    (*resourceMap)[id] = returnedID;\n";
-    }
-    source << "}\n";
-    source << "\n";
-    source << "DecompressCallback gDecompressCallback;\n";
-    source << "const char *gBinaryDataDir = \".\";\n";
-    source << "}  // namespace\n";
-    source << "\n";
-    source << "LocationsMap gUniformLocations;\n";
-    source << "BlockIndexesMap gUniformBlockIndexes;\n";
-    source << "GLuint gCurrentProgram = 0;\n";
-    source << "\n";
-    source << "void UpdateUniformLocation(GLuint program, const char *name, GLint location)\n";
-    source << "{\n";
-    source << "    gUniformLocations[program][location] = glGetUniformLocation(program, name);\n";
-    source << "}\n";
-    source << "void DeleteUniformLocations(GLuint program)\n";
-    source << "{\n";
-    source << "    gUniformLocations.erase(program);\n";
-    source << "}\n";
-    source << "void UpdateUniformBlockIndex(GLuint program, const char *name, GLuint index)\n";
-    source << "{\n";
-    source << "    gUniformBlockIndexes[program][index] = glGetUniformBlockIndex(program, name);\n";
-    source << "}\n";
-    source << "void UpdateCurrentProgram(GLuint program)\n";
-    source << "{\n";
-    source << "    gCurrentProgram = program;\n";
-    source << "}\n";
-    source << "\n";
-
-    source << "uint8_t *gBinaryData = nullptr;\n";
-
-    if (readBufferSize > 0)
-    {
-        header << "extern uint8_t gReadBuffer[" << readBufferSize << "];\n";
-        source << "uint8_t gReadBuffer[" << readBufferSize << "];\n";
-    }
-    if (maxClientArraySize > 0)
-    {
-        header << "extern uint8_t gClientArrays[" << gl::MAX_VERTEX_ATTRIBS << "]["
-               << maxClientArraySize << "];\n";
-        source << "uint8_t gClientArrays[" << gl::MAX_VERTEX_ATTRIBS << "][" << maxClientArraySize
-               << "];\n";
-    }
-    for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
-    {
-        // TODO: Only emit resources needed by the frames (anglebug.com/4223)
-        const char *name = GetResourceIDTypeName(resourceType);
-        header << "extern ResourceMap g" << name << "Map;\n";
-        source << "ResourceMap g" << name << "Map;\n";
-    }
-
-    header << "using SyncResourceMap = std::unordered_map<uintptr_t, GLsync>;\n";
-    header << "extern SyncResourceMap gSyncMap;\n";
-    source << "SyncResourceMap gSyncMap;\n";
-
-    header << "\n";
-
-    source << "\n";
-    source << "void ReplayContext" << contextId << "Frame(uint32_t frameIndex)\n";
+    source << "extern \"C\" {\n";
+    source << "void ReplayFrame(uint32_t frameIndex)\n";
     source << "{\n";
     source << "    switch (frameIndex)\n";
     source << "    {\n";
     for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
     {
         source << "        case " << frameIndex << ":\n";
-        source << "            ReplayContext" << contextId << "Frame" << frameIndex << "();\n";
+        source << "            " << FmtReplayFunction(contextId, frameIndex) << ";\n";
         source << "            break;\n";
     }
     source << "        default:\n";
@@ -1363,7 +1231,7 @@ void WriteCppReplayIndexFiles(bool compression,
 
     if (writeResetContextCall)
     {
-        source << "void ResetContext" << contextId << "Replay()\n";
+        source << "void ResetReplay()\n";
         source << "{\n";
         source << "    // Reset context is empty because context is destroyed before end "
                   "frame is reached\n";
@@ -1373,7 +1241,7 @@ void WriteCppReplayIndexFiles(bool compression,
 
     if (serializeStateEnabled)
     {
-        source << "const char *GetSerializedContext" << contextId << "State(uint32_t frameIndex)\n";
+        source << "const char *GetSerializedContextState(uint32_t frameIndex)\n";
         source << "{\n";
         source << "    switch (frameIndex)\n";
         source << "    {\n";
@@ -1384,105 +1252,17 @@ void WriteCppReplayIndexFiles(bool compression,
                    << FmtGetSerializedContextStateFunction(contextId, frameIndex) << ";\n";
         }
         source << "        default:\n";
-        source << "            return {};\n";
+        source << "            return \"\";\n";
         source << "    }\n";
         source << "}\n";
         source << "\n";
     }
 
-    source << "void SetBinaryDataDecompressCallback(DecompressCallback callback)\n";
-    source << "{\n";
-    source << "    gDecompressCallback = callback;\n";
-    source << "}\n";
-    source << "\n";
-    source << "void SetBinaryDataDir(const char *dataDir)\n";
-    source << "{\n";
-    source << "    gBinaryDataDir = dataDir;\n";
-    source << "}\n";
-    source << "\n";
-    source << "void LoadBinaryData(const char *fileName)\n";
-    source << "{\n";
-    source << "    if (gBinaryData != nullptr)\n";
-    source << "    {\n";
-    source << "        delete [] gBinaryData;\n";
-    source << "    }\n";
-    source << "    char pathBuffer[1000] = {};\n";
-    source << "    sprintf(pathBuffer, \"%s/%s\", gBinaryDataDir, fileName);\n";
-    source << "    FILE *fp = fopen(pathBuffer, \"rb\");\n";
-    source << "    if (fp == 0)\n";
-    source << "    {\n";
-    source << "        fprintf(stderr, \"Error loading binary data file: %s\\n\", fileName);\n";
-    source << "        return;\n";
-    source << "    }\n";
-    source << "    fseek(fp, 0, SEEK_END);\n";
-    source << "    long size = ftell(fp);\n";
-    source << "    fseek(fp, 0, SEEK_SET);\n";
-    source << "    if (gDecompressCallback)\n";
-    source << "    {\n";
-    source << "        if (!strstr(fileName, \".gz\"))\n";
-    source << "        {\n";
-    source << "            fprintf(stderr, \"Filename does not end in .gz\");\n";
-    source << "            exit(1);\n";
-    source << "        }\n";
-    source << "        std::vector<uint8_t> compressedData(size);\n";
-    source << "        (void)fread(compressedData.data(), 1, size, fp);\n";
-    source << "        gBinaryData = gDecompressCallback(compressedData);\n";
-    source << "    }\n";
-    source << "    else\n";
-    source << "    {\n";
-    source << "        if (!strstr(fileName, \".angledata\"))\n";
-    source << "        {\n";
-    source << "            fprintf(stderr, \"Filename does not end in .angledata\");\n";
-    source << "            exit(1);\n";
-    source << "        }\n";
-    source << "        gBinaryData = new uint8_t[size];\n";
-    source << "        (void)fread(gBinaryData, 1, size, fp);\n";
-    source << "    }\n";
-    source << "    fclose(fp);\n";
-    source << "}\n";
-
-    if (maxClientArraySize > 0)
-    {
-        header
-            << "void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size);\n";
-
-        source << "\n";
-        source << "void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size)"
-               << "\n";
-        source << "{\n";
-        source << "    memcpy(gClientArrays[arrayIndex], data, static_cast<size_t>(size));\n";
-        source << "}\n";
-    }
-
-    // Data types and functions for tracking contents of mapped buffers
-    header << "using BufferHandleMap = std::unordered_map<GLuint, void*>;\n";
-    header << "extern BufferHandleMap gMappedBufferData;\n";
-    header << "void UpdateClientBufferData(GLuint bufferID, const void *source, GLsizei size);\n";
-    source << "BufferHandleMap gMappedBufferData;\n";
-    source << "\n";
-    source << "void UpdateClientBufferData(GLuint bufferID, const void *source, GLsizei size)";
-    source << "\n";
-    source << "{\n";
-    source << "    memcpy(gMappedBufferData[gBufferMap[bufferID]], source, size);\n";
-    source << "}\n";
-
-    for (ResourceIDType resourceType : AllEnums<ResourceIDType>())
-    {
-        // TODO: Only emit resources needed by the frames (anglebug.com/4223)
-        const char *name = GetResourceIDTypeName(resourceType);
-        header << "void Update" << name << "ID(GLuint id, GLsizei readBufferOffset);\n";
-
-        source << "\n";
-        source << "void Update" << name << "ID(GLuint id, GLsizei readBufferOffset)\n";
-        source << "{\n";
-        source << "    UpdateResourceMap(&g" << name << "Map, id, readBufferOffset);\n";
-        source << "}\n";
-    }
+    source << "}  // extern \"C\"\n";
 
     if (!captureLabel.empty())
     {
         header << "} // namespace " << captureLabel << "\n";
-        source << "} // namespace " << captureLabel << "\n";
     }
 
     {
@@ -4618,14 +4398,13 @@ void FrameCapture::onEndFrame(const gl::Context *context)
         }
         WriteCppReplay(mCompression, mOutDirectory, context, mCaptureLabel, getReplayFrameIndex(),
                        getFrameCount(), mFrameCalls, mSetupCalls, &mResourceTracker, &mBinaryData,
-                       mSerializeStateEnabled);
+                       mClientArraySizes, mReadBufferSize, mSerializeStateEnabled);
         if (mFrameIndex == mCaptureEndFrame)
         {
             // Save the index files after the last frame.
             WriteCppReplayIndexFiles(mCompression, mOutDirectory, context, mCaptureLabel,
-                                     getFrameCount(), mDrawSurfaceDimensions, mReadBufferSize,
-                                     mClientArraySizes, mHasResourceType, mSerializeStateEnabled,
-                                     false, mBinaryData);
+                                     getFrameCount(), mDrawSurfaceDimensions, mHasResourceType,
+                                     mSerializeStateEnabled, false, mBinaryData);
             if (!mBinaryData.empty())
             {
                 SaveBinaryData(mCompression, mOutDirectory, context->id(), mCaptureLabel,
@@ -4674,9 +4453,8 @@ void FrameCapture::onDestroyContext(const gl::Context *context)
         mFrameIndex -= 1;
         mCaptureEndFrame = mFrameIndex;
         WriteCppReplayIndexFiles(mCompression, mOutDirectory, context, mCaptureLabel,
-                                 getFrameCount(), mDrawSurfaceDimensions, mReadBufferSize,
-                                 mClientArraySizes, mHasResourceType, mSerializeStateEnabled, true,
-                                 mBinaryData);
+                                 getFrameCount(), mDrawSurfaceDimensions, mHasResourceType,
+                                 mSerializeStateEnabled, true, mBinaryData);
         if (!mBinaryData.empty())
         {
             SaveBinaryData(mCompression, mOutDirectory, context->id(), mCaptureLabel, mBinaryData);

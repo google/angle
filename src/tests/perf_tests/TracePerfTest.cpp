@@ -129,6 +129,7 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
     uint32_t mCurrentFrame         = 0;
     uint32_t mOffscreenFrameCount  = 0;
     bool mScreenshotSaved          = false;
+    std::unique_ptr<TraceLibrary> mTraceLibrary;
 };
 
 class TracePerfTest;
@@ -502,9 +503,15 @@ TracePerfTest::TracePerfTest()
 
 void TracePerfTest::initializeBenchmark()
 {
-    const auto &params = GetParam();
+    const auto &params         = GetParam();
+    const TraceInfo &traceInfo = GetTraceInfo(params.testID);
 
     mStartingDirectory = angle::GetCWD().value();
+
+    std::stringstream traceNameStr;
+    traceNameStr << "angle_restricted_trace_" << traceInfo.name;
+    std::string traceName = traceNameStr.str();
+    mTraceLibrary.reset(new TraceLibrary(traceName.c_str()));
 
     // To load the trace data path correctly we set the CWD to the executable dir.
     if (!IsAndroid())
@@ -515,10 +522,16 @@ void TracePerfTest::initializeBenchmark()
 
     trace_angle::LoadGLES(TraceLoadProc);
 
-    const TraceInfo &traceInfo = GetTraceInfo(params.testID);
-    mStartFrame                = traceInfo.startFrame;
-    mEndFrame                  = traceInfo.endFrame;
-    SetBinaryDataDecompressCallback(params.testID, DecompressBinaryData);
+    if (!mTraceLibrary->valid())
+    {
+        ERR() << "Could not load trace library.";
+        mSkipTest = true;
+        return;
+    }
+
+    mStartFrame = traceInfo.startFrame;
+    mEndFrame   = traceInfo.endFrame;
+    mTraceLibrary->setBinaryDataDecompressCallback(DecompressBinaryData);
 
     std::string relativeTestDataDir = std::string("src/tests/restricted_traces/") + traceInfo.name;
 
@@ -528,9 +541,10 @@ void TracePerfTest::initializeBenchmark()
     {
         ERR() << "Could not find test data folder.";
         mSkipTest = true;
+        return;
     }
 
-    SetBinaryDataDir(params.testID, testDataDir);
+    mTraceLibrary->setBinaryDataDir(testDataDir);
 
     mWindowWidth  = mTestParams.windowWidth;
     mWindowHeight = mTestParams.windowHeight;
@@ -575,7 +589,7 @@ void TracePerfTest::initializeBenchmark()
     }
 
     // Potentially slow. Can load a lot of resources.
-    SetupReplay(params.testID);
+    mTraceLibrary->setupReplay();
 
     glFinish();
 
@@ -586,7 +600,7 @@ void TracePerfTest::initializeBenchmark()
 
     // If we're re-tracing, trigger capture start after setup. This ensures the Setup function gets
     // recaptured into another Setup function and not merged with the first frame.
-    if (angle::gStartTraceAfterSetup)
+    if (angle::gRetraceMode)
     {
         angle::SetEnvironmentVar("ANGLE_CAPTURE_TRIGGER", "0");
         getGLWindow()->swap();
@@ -614,6 +628,9 @@ void TracePerfTest::destroyBenchmark()
         glDeleteFramebuffers(1, &mOffscreenFramebuffer);
         mOffscreenFramebuffer = 0;
     }
+
+    mTraceLibrary->finishReplay();
+    mTraceLibrary.reset(nullptr);
 
     // In order for the next test to load, restore the working directory
     angle::SetCWD(mStartingDirectory.c_str());
@@ -669,7 +686,7 @@ void TracePerfTest::drawBenchmark()
     beginInternalTraceEvent(frameName);
 
     startGpuTimer();
-    ReplayFrame(params.testID, mCurrentFrame);
+    mTraceLibrary->replayFrame(mCurrentFrame);
     stopGpuTimer();
 
     if (params.surfaceType == SurfaceType::Offscreen)
@@ -732,7 +749,7 @@ void TracePerfTest::drawBenchmark()
 
     if (mCurrentFrame == mEndFrame)
     {
-        ResetReplay(params.testID);
+        mTraceLibrary->resetReplay();
         mCurrentFrame = mStartFrame;
     }
     else

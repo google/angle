@@ -114,7 +114,7 @@ def main():
     with open(os.path.join(script_dir, DEFAULT_TEST_JSON)) as f:
         traces = json.loads(f.read())
 
-    traces = traces['traces']
+    traces = [trace.split(' ')[0] for trace in traces['traces']]
 
     binary = os.path.join(args.gn_path, DEFAULT_TEST_SUITE)
     if os.name == 'nt':
@@ -145,11 +145,8 @@ def main():
         run_args = [
             binary,
             trace_filter,
-            '--no-warmup',
-            '--trials',
-            '1',
-            '--start-trace-after-setup',
-            '--steps',
+            '--retrace-mode',
+            '--max-steps-performed',
             str(num_frames),
             '--enable-all-trace-tests',
         ]
