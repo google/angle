@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f5e2314_40081d62",
+        "filename": "src/common/string_utils_unittest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-29T15:08:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9ca4cbd_7c5d6442",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 4
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a2080bee_b72b17a3",
@@ -75,6 +99,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "43f3f9fe_7a1ae022",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-29T15:08:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2080bee_b72b17a3",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7379f675_41e97fdd",
@@ -88,6 +130,30 @@
       "writtenOn": "2021-03-29T13:10:25Z",
       "side": 1,
       "message": "nit: ANGLE Project Authors",
+      "range": {
+        "startLine": 3,
+        "startChar": 25,
+        "endLine": 3,
+        "endChar": 32
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e725935_f6d04a1f",
+        "filename": "src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2",
+        "patchSetId": 8
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-29T15:08:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7379f675_41e97fdd",
       "range": {
         "startLine": 3,
         "startChar": 25,
@@ -121,6 +187,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b591f4b2_56cf1ba6",
+        "filename": "src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-29T15:08:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6903a419_b4e0bcb3",
+      "range": {
+        "startLine": 34,
+        "startChar": 55,
+        "endLine": 34,
+        "endChar": 56
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "048ed2f9_b8c21361",
@@ -134,6 +224,30 @@
       "writtenOn": "2021-03-29T13:10:25Z",
       "side": 1,
       "message": "same nit here, also please add a file-level comment.",
+      "range": {
+        "startLine": 1,
+        "startChar": 22,
+        "endLine": 1,
+        "endChar": 31
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2589889e_fe62479e",
+        "filename": "src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleNativeTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-29T15:08:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "048ed2f9_b8c21361",
       "range": {
         "startLine": 1,
         "startChar": 22,
