@@ -106,6 +106,24 @@
       "parentUuid": "7b7050d3_45648f13",
       "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e3b09db7_c24df911",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-29T19:50:56Z",
+      "side": 1,
+      "message": "Ah, right, GL_EXT_geometry_shader requires GLES3.1.   Switching to that exposes the crash, which is fixed with this CL.\n\nAs for how we get to that code in the first place:\n\nCall stack:\n    gl::StateCache::updateValidDrawModes Context.cpp:9309\n    gl::StateCache::initialize Context.cpp:9048\n    gl::Context::updateCaps Context.cpp:3953\n    gl::Context::initCaps Context.cpp:3791\n    gl::Context::initializeDefaultResources Context.cpp:411\n    gl::Context::makeCurrent Context.cpp:721\n    egl::Display::makeCurrent Display.cpp:1312\n    egl::MakeCurrent egl_stubs.cpp:481\n\n\n    // The rest default to false.\n    constexpr angle::PackedEnumMap\u003cPrimitiveMode, bool, angle::EnumSize\u003cPrimitiveMode\u003e() + 1\u003e\n        kValidBasicDrawModes \u003d {{\n            {PrimitiveMode::Points, true},\n            {PrimitiveMode::Lines, true},\n            {PrimitiveMode::LineLoop, true},\n            {PrimitiveMode::LineStrip, true},\n            {PrimitiveMode::Triangles, true},\n            {PrimitiveMode::TriangleStrip, true},\n            {PrimitiveMode::TriangleFan, true},\n        }};\n\n    void StateCache::updateValidDrawModes(Context *context)\n    {\n    ...\n        [[[... No program bound, so no programExecutable ...]]]\n        if (!programExecutable || !programExecutable-\u003ehasLinkedShaderStage(ShaderType::Geometry))\n        {\n            [[[... mCachedValidDrawModes[PrimitiveMode::LineStripAdjacency] \u003d false ...]]]\n            mCachedValidDrawModes \u003d kValidBasicDrawModes;\n            return;\n        }\n\n\nCall stack:\n    gl::ValidateDrawBase validationES.h:377\n    gl::ValidateDrawArraysCommon validationES.h:857\n    gl::ValidateDrawArrays validationES2.h:23\n    GL_DrawArrays entry_points_gles_2_0_autogen.cpp:1060\n    (anonymous namespace)::SimpleOperationTest31_DrawLineStripAdjacencyWithoutProgramBound_Test::TestBody SimpleOperationTest.cpp:1217\n\n\n    ANGLE_INLINE bool ValidateDrawBase(const Context *context, PrimitiveMode mode)\n    {\n    ...\n        [[[... returns false for PrimitiveMode::LineStripAdjacency ...]]]\n        if (!context-\u003egetStateCache().isValidDrawMode(mode))\n        {\n            RecordDrawModeError(context, mode);\n            return false;\n        }\n\n\nI think this all looks correct for this case and we do just need to properly handle the nullptr with this CL.",
+      "parentUuid": "b8554953_c1f6a4fa",
+      "revId": "9b5090a53f2c219ac4c2d4a5bea0d21be8922692",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
