@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b60123d_14e9a77c",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1038,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T16:25:33Z",
+      "side": 1,
+      "message": "nit: suggest you use const \u0026 to avoid the copy.",
+      "range": {
+        "startLine": 1038,
+        "startChar": 14,
+        "endLine": 1038,
+        "endChar": 23
+      },
+      "revId": "685921f9398ca42795426cd2eb4ca4eefc36a9b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c7df68c_5b3450cf",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1039,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T16:25:33Z",
+      "side": 1,
+      "message": "does this compile? I see AllShaderTypes as a struct.",
+      "range": {
+        "startLine": 1039,
+        "startChar": 41,
+        "endLine": 1039,
+        "endChar": 55
+      },
+      "revId": "685921f9398ca42795426cd2eb4ca4eefc36a9b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
