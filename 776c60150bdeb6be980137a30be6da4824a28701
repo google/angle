@@ -34,6 +34,24 @@
       "parentUuid": "bc8a5e0d_527f83b7",
       "revId": "776c60150bdeb6be980137a30be6da4824a28701",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69c7b37e_b3e73317",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-29T15:47:54Z",
+      "side": 1,
+      "message": "\u003e I guess, define angle_glslang_dir and angle_spirv_tools_dir in build_overrides/angle.gni like we do a few other things?\n\nI\u0027d say so, yes. Let me know if you run into more trouble with this change.",
+      "parentUuid": "7988d3c2_e559bca2",
+      "revId": "776c60150bdeb6be980137a30be6da4824a28701",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
