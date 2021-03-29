@@ -16,6 +16,166 @@
       "message": "Jamie can you please take a look? I think that this CL is now ready for review. The tests no longer have a //base dependency. I will remove the build_with_chromium if() condition in the GN file in a separate CL.\n\nNew things since you last looked at the CL:\n- Updated DebuggingTips.md\n- NativeTest.java is now duplicated in Angle repository as AngleNativeTest.java\n- TestStatusReporter.java is now duplicated in Angle repository",
       "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "810534f9_61e16abd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "This is fantastic. Is it ready to be tried on the CQ or does it need the src CL to land first? If so please mention in the CL description.",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9ca4cbd_7c5d6442",
+        "filename": "src/common/string_utils_unittest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "nit: can you add a one-line comment before each new test?",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 4
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2080bee_b72b17a3",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "nit: can you please add a file-level comment?",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7379f675_41e97fdd",
+        "filename": "src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2",
+        "patchSetId": 8
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "nit: ANGLE Project Authors",
+      "range": {
+        "startLine": 3,
+        "startChar": 25,
+        "endLine": 3,
+        "endChar": 32
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6903a419_b4e0bcb3",
+        "filename": "src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "nit: trailing space",
+      "range": {
+        "startLine": 34,
+        "startChar": 55,
+        "endLine": 34,
+        "endChar": 56
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "048ed2f9_b8c21361",
+        "filename": "src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleNativeTest.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "same nit here, also please add a file-level comment.",
+      "range": {
+        "startLine": 1,
+        "startChar": 22,
+        "endLine": 1,
+        "endChar": 31
+      },
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cef11ae6_9bbf2883",
+        "filename": "src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleUnitTestActivity.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "nit: can you please add a file-level comment",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff6e0a61_b4dd5a26",
+        "filename": "src/tests/test_utils/runner/android/java/src/com/android/angle/test/TestStatusReporter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:10:25Z",
+      "side": 1,
+      "message": "same nits",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
