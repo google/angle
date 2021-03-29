@@ -52,6 +52,24 @@
       "parentUuid": "7988d3c2_e559bca2",
       "revId": "776c60150bdeb6be980137a30be6da4824a28701",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18e7d311_ede00468",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T16:04:46Z",
+      "side": 1,
+      "message": "Dealing with integrating our spir-v toolchain in Skia seems like a bigger task - can you make this stuff disabled in the Skia build to preserve the prior configuration (no SPIR-V builds in Skia).",
+      "parentUuid": "69c7b37e_b3e73317",
+      "revId": "776c60150bdeb6be980137a30be6da4824a28701",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
