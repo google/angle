@@ -1315,6 +1315,7 @@ angle::Result ContextVk::handleDirtyGraphicsPipelineDesc(DirtyBits::Iterator *di
     }
     else if (mGraphicsPipelineTransition.any())
     {
+        ASSERT(mCurrentGraphicsPipeline->valid());
         if (!mCurrentGraphicsPipeline->findTransition(
                 mGraphicsPipelineTransition, *mGraphicsPipelineDesc, &mCurrentGraphicsPipeline))
         {
@@ -4604,11 +4605,6 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
         // TODO(http://anglebug.com/5033): This will recreate the descriptor pools each time, which
         // will likely affect performance negatively.
         ANGLE_TRY(mExecutable->createPipelineLayout(context, &mActiveTextures));
-        invalidateCurrentGraphicsPipeline();
-
-        // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),
-        // and handleDirtyGraphicsPipeline().
-        mCurrentGraphicsPipeline = nullptr;
 
         // The default uniforms descriptor set was reset during createPipelineLayout(), so mark them
         // dirty to get everything reallocated/rebound before the next draw.
@@ -5470,6 +5466,37 @@ angle::Result ContextVk::initializeMultisampleTextureToBlack(const gl::Context *
     TextureVk *textureVk = vk::GetImpl(glTexture);
 
     return textureVk->initializeContents(context, gl::ImageIndex::Make2DMultisample());
+}
+
+void ContextVk::onProgramExecutableReset(ProgramExecutableVk *executableVk)
+{
+    const gl::ProgramExecutable *executable = getState().getProgramExecutable();
+    if (!executable)
+    {
+        return;
+    }
+
+    // Only do this for the currently bound ProgramExecutableVk, since Program A can be linked while
+    // Program B is currently in use and we don't want to reset/invalidate Program B's pipeline.
+    if (executableVk != mExecutable)
+    {
+        return;
+    }
+
+    // Reset *ContextVk::mCurrentGraphicsPipeline, since programInfo.release() freed the
+    // PipelineHelper that it's currently pointing to.
+    // TODO(http://anglebug.com/5624): rework updateActiveTextures(), createPipelineLayout(),
+    // handleDirtyGraphicsPipeline(), and ProgramPipelineVk::link().
+    resetCurrentGraphicsPipeline();
+
+    if (executable->isCompute())
+    {
+        invalidateCurrentComputePipeline();
+    }
+    else
+    {
+        invalidateCurrentGraphicsPipeline();
+    }
 }
 
 angle::Result ContextVk::updateRenderPassDepthStencilAccess()
