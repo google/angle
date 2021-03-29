@@ -656,20 +656,6 @@ void ProgramPipeline::validate(const gl::Context *context)
     }
 }
 
-bool ProgramPipeline::validateSamplers(InfoLog *infoLog, const Caps &caps)
-{
-    for (const ShaderType shaderType : gl::AllShaderTypes())
-    {
-        Program *shaderProgram = mState.mPrograms[shaderType];
-        if (shaderProgram && !shaderProgram->validateSamplers(infoLog, caps))
-        {
-            return false;
-        }
-    }
-
-    return true;
-}
-
 void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::SubjectMessage message)
 {
     switch (message)
@@ -681,6 +667,9 @@ void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
         case angle::SubjectMessage::ProgramRelinked:
             mState.mIsLinked = false;
             updateExecutable();
+            break;
+        case angle::SubjectMessage::SamplerUniformsUpdated:
+            getExecutable().resetCachedValidateSamplersResult();
             break;
         default:
             UNREACHABLE();

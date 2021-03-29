@@ -459,10 +459,6 @@ TEST_P(ProgramPipelineTest31, DifferentTextureTypes)
     // Only the Vulkan backend supports PPO
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
-    // TODO (timvp): Fix this test for Vulkan with PPO
-    // http://anglebug.com/3570
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Per the OpenGL ES 3.1 spec:
     //
     // It is not allowed to have variables of different sampler types pointing to the same texture

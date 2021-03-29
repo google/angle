@@ -751,6 +751,7 @@ void ProgramExecutable::updateActiveSamplers(const ProgramState &programState)
             {
                 if (mActiveSamplerTypes[textureUnit] != samplerBinding.textureType)
                 {
+                    // Conflicts are marked with InvalidEnum
                     mActiveSamplerTypes[textureUnit] = TextureType::InvalidEnum;
                 }
                 if (mActiveSamplerYUV.test(textureUnit) !=
@@ -1110,6 +1111,31 @@ void ProgramExecutable::updateTransformFeedbackStrides()
                 static_cast<GLsizei>(varying.size() * VariableExternalSize(varying.type));
         }
     }
+}
+
+bool ProgramExecutable::validateSamplersImpl(InfoLog *infoLog, const Caps &caps) const
+{
+    // if any two active samplers in a program are of different types, but refer to the same
+    // texture image unit, and this is the current program, then ValidateProgram will fail, and
+    // DrawArrays and DrawElements will issue the INVALID_OPERATION error.
+    for (size_t textureUnit : mActiveSamplersMask)
+    {
+        if (mActiveSamplerTypes[textureUnit] == TextureType::InvalidEnum)
+        {
+            if (infoLog)
+            {
+                (*infoLog) << "Samplers of conflicting types refer to the same texture "
+                              "image unit ("
+                           << textureUnit << ").";
+            }
+
+            mCachedValidateSamplersResult = false;
+            return false;
+        }
+    }
+
+    mCachedValidateSamplersResult = true;
+    return true;
 }
 
 }  // namespace gl

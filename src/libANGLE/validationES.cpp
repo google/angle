@@ -3808,11 +3808,6 @@ const char *ValidateDrawStates(const Context *context)
 
         if (program)
         {
-            if (!program->validateSamplers(nullptr, context->getCaps()))
-            {
-                return kTextureTypeConflict;
-            }
-
             const char *errorMsg = ValidateProgramDrawStates(state, extensions, program);
             if (errorMsg)
             {
@@ -3827,11 +3822,6 @@ const char *ValidateDrawStates(const Context *context)
             if (errorMsg)
             {
                 return errorMsg;
-            }
-
-            if (!programPipeline->validateSamplers(nullptr, context->getCaps()))
-            {
-                return kTextureTypeConflict;
             }
 
             errorMsg = ValidateProgramPipelineDrawStates(state, extensions, programPipeline);
@@ -3855,17 +3845,25 @@ const char *ValidateDrawStates(const Context *context)
             programIsYUVOutput = executable->isYUVOutput();
         }
 
-        if (executable && executable->hasLinkedTessellationShader())
+        if (executable)
         {
-            if (!executable->hasLinkedShaderStage(ShaderType::Vertex))
+            if (!executable->validateSamplers(nullptr, context->getCaps()))
             {
-                return kTessellationShaderRequiresVertexShader;
+                return kTextureTypeConflict;
             }
 
-            if (!executable->hasLinkedShaderStage(ShaderType::TessControl) ||
-                !executable->hasLinkedShaderStage(ShaderType::TessEvaluation))
+            if (executable->hasLinkedTessellationShader())
             {
-                return kTessellationShaderRequiresBothControlAndEvaluation;
+                if (!executable->hasLinkedShaderStage(ShaderType::Vertex))
+                {
+                    return kTessellationShaderRequiresVertexShader;
+                }
+
+                if (!executable->hasLinkedShaderStage(ShaderType::TessControl) ||
+                    !executable->hasLinkedShaderStage(ShaderType::TessEvaluation))
+                {
+                    return kTessellationShaderRequiresBothControlAndEvaluation;
+                }
             }
         }
 

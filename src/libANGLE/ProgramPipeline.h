@@ -131,13 +131,6 @@ class ProgramPipeline final : public RefCountObject<ProgramPipelineID>,
     angle::Result link(const gl::Context *context);
     bool linkVaryings(InfoLog &infoLog) const;
     void validate(const gl::Context *context);
-    bool validateSamplers(InfoLog *infoLog, const Caps &caps);
-
-    bool usesShaderProgram(ShaderProgramID program) const
-    {
-        return mState.usesShaderProgram(program);
-    }
-
     GLboolean isValid() const { return mState.isValid(); }
 
     // ObserverInterface implementation.
