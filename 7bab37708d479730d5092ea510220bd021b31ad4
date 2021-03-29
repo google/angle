@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcbc07b8_0bacfd72",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T15:39:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d971cb1_6b2cf402",
+      "range": {
+        "startLine": 140,
+        "startChar": 20,
+        "endLine": 140,
+        "endChar": 27
+      },
+      "revId": "7bab37708d479730d5092ea510220bd021b31ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65dafa6a_83345382",
@@ -81,6 +105,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cafe28de_58148bb7",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T15:39:42Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65dafa6a_83345382",
+      "range": {
+        "startLine": 144,
+        "startChar": 20,
+        "endLine": 144,
+        "endChar": 34
+      },
+      "revId": "7bab37708d479730d5092ea510220bd021b31ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d60c4315_cd77a61f",
@@ -94,6 +142,30 @@
       "writtenOn": "2021-03-29T14:52:55Z",
       "side": 1,
       "message": "Nice, a fix snuck in here. :)\nThe use of auto here jumps out. Can you replace them with the real types?\nAlso the lack of braces differs from the rest of your CL.",
+      "range": {
+        "startLine": 1039,
+        "startChar": 0,
+        "endLine": 1044,
+        "endChar": 5
+      },
+      "revId": "7bab37708d479730d5092ea510220bd021b31ad4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30afe760_63575870",
+        "filename": "src/libANGLE/capture/frame_capture_utils.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1044,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-03-29T15:39:42Z",
+      "side": 1,
+      "message": "Yeah, your coding style is quite different from what I adopted over the years. All fixed now.",
+      "parentUuid": "d60c4315_cd77a61f",
       "range": {
         "startLine": 1039,
         "startChar": 0,
