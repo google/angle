@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d68fb30_97f20f53",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T19:55:59Z",
+      "side": 1,
+      "message": "IIRC we treat drawing without a program specifically as not-an-error except in WebGL. Was meaning to dig into this and uncover the testing situation.",
+      "revId": "e0cf9a702f525e927197526e654f2dca27499291",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
