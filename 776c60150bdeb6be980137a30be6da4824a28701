@@ -16,6 +16,24 @@
       "message": "Any thoughts on what we\u0027d need to get this to roll into Skia?\n\nERROR at //third_party/externals/angle2/BUILD.gn:565:10: Undefined identifier\n      \"${angle_glslang_dir}:glslang_default_resource_limits_sources\",\n         ^----------------\nSee //third_party/angle2/BUILD.gn:11:5: which caused the file to be included.\n    \"//third_party/externals/angle2:libEGL\",\n    ^--------------------------------------\n\n(C.f. https://skia-review.googlesource.com/c/skia/+/389437)\n\nI guess, define angle_glslang_dir and angle_spirv_tools_dir in build_overrides/angle.gni like we do a few other things?\n",
       "revId": "776c60150bdeb6be980137a30be6da4824a28701",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7988d3c2_e559bca2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-29T13:12:27Z",
+      "side": 1,
+      "message": "Or we could switch off this functionality when angle_enable_vulkan and metal are false. Sorry for the breakage, feel free to file a bug at anglebug.com/new if you haven\u0027t already.",
+      "parentUuid": "bc8a5e0d_527f83b7",
+      "revId": "776c60150bdeb6be980137a30be6da4824a28701",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
