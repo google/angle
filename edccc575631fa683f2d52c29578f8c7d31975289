@@ -91,6 +91,69 @@
       "message": "Nice!",
       "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20c1f5f7_33d19d6d",
+        "filename": "src/common/string_utils_unittest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-30T14:56:46Z",
+      "side": 1,
+      "message": "nit: a few more tests, like char to be removed is first char, or not found.",
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2e23713_d692208f",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-30T14:56:46Z",
+      "side": 1,
+      "message": "What\u0027s the exact format of this file? SplitStringAlongWhitespaceSkipQuotes is using std::getline, so it sounds like you have one argument per line (which is sane). Why is there whitespace splitting and quotation handling?",
+      "range": {
+        "startLine": 148,
+        "startChar": 36,
+        "endLine": 148,
+        "endChar": 55
+      },
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68cb4ddd_b8d7f780",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-30T14:56:46Z",
+      "side": 1,
+      "message": "Is there no way to get the args split already (like C\u0027s main() takes)? Parsing command line args after they are concatenated is a not a great idea. There\u0027s inconsistency with the rest of the system in handling quotation for example, not to mention the complexity of nested quotations (which are not handled in this change).",
+      "range": {
+        "startLine": 153,
+        "startChar": 24,
+        "endLine": 153,
+        "endChar": 40
+      },
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
