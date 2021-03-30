@@ -145,17 +145,33 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
         },
     },
     {
-        ImageLayout::ColorAttachmentAndShaderRead,
+        ImageLayout::ColorAttachmentAndFragmentShaderRead,
         ImageMemoryBarrierData{
-            "ColorAttachmentAndShaderRead",
+            "ColorAttachmentAndFragmentShaderRead",
             VK_IMAGE_LAYOUT_GENERAL,
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
             // Transition to: all reads and writes must happen after barrier.
             VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT,
             // Transition from: all writes must finish before barrier.
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
             ResourceAccess::Write,
+            PipelineStage::FragmentShader,
+        },
+    },
+    {
+        ImageLayout::ColorAttachmentAndAllShadersRead,
+        ImageMemoryBarrierData{
+            "ColorAttachmentAndAllShadersRead",
+            VK_IMAGE_LAYOUT_GENERAL,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
+            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
+            // Transition to: all reads must happen after barrier.
+            VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT,
+            // Transition from: RAR and WAR don't need memory barrier.
+            VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            ResourceAccess::Write,
+            // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::VertexShader,
         },
     },
@@ -1239,7 +1255,8 @@ void CommandBufferHelper::finalizeColorImageLayout(Context *context,
     {
         // texture code already picked layout and inserted barrier
         imageLayout = image->getCurrentImageLayout();
-        ASSERT(imageLayout == ImageLayout::ColorAttachmentAndShaderRead);
+        ASSERT(imageLayout == ImageLayout::ColorAttachmentAndFragmentShaderRead ||
+               imageLayout == ImageLayout::ColorAttachmentAndAllShadersRead);
     }
     else
     {

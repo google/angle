@@ -1487,13 +1487,6 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
             // using specialized barriers without breaking the RenderPass.
             textureLayout = vk::ImageLayout::DepthStencilReadOnly;
         }
-        else if (image.hasRenderPassUseFlag(vk::RenderPassUsage::RenderTargetAttachment))
-        {
-            // Right now we set this flag only when RenderTargetAttachment is set since we do not
-            // track all textures in the renderpass.
-            image.setRenderPassUsageFlag(vk::RenderPassUsage::TextureSampler);
-            textureLayout = vk::ImageLayout::ColorAttachmentAndShaderRead;
-        }
         else
         {
             gl::ShaderBitSet remainingShaderBits =
@@ -1503,22 +1496,41 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
             gl::ShaderType lastShader  = remainingShaderBits.last();
             remainingShaderBits.reset(firstShader);
             remainingShaderBits.reset(lastShader);
-            // We barrier against either:
-            // - Vertex only
-            // - Fragment only
-            // - Pre-fragment only (vertex, geometry and tessellation together)
-            if (remainingShaderBits.any() || firstShader != lastShader)
+
+            if (image.hasRenderPassUseFlag(vk::RenderPassUsage::RenderTargetAttachment))
             {
-                textureLayout = lastShader == gl::ShaderType::Fragment
-                                    ? vk::ImageLayout::AllGraphicsShadersReadOnly
-                                    : vk::ImageLayout::PreFragmentShadersReadOnly;
+                // Right now we set this flag only when RenderTargetAttachment is set since we do
+                // not track all textures in the renderpass.
+                image.setRenderPassUsageFlag(vk::RenderPassUsage::TextureSampler);
+
+                if (firstShader == gl::ShaderType::Fragment)
+                {
+                    textureLayout = vk::ImageLayout::ColorAttachmentAndFragmentShaderRead;
+                }
+                else
+                {
+                    textureLayout = vk::ImageLayout::ColorAttachmentAndAllShadersRead;
+                }
             }
             else
             {
-                textureLayout = kShaderReadOnlyImageLayouts[firstShader];
+                // We barrier against either:
+                // - Vertex only
+                // - Fragment only
+                // - Pre-fragment only (vertex, geometry and tessellation together)
+                if (remainingShaderBits.any() || firstShader != lastShader)
+                {
+                    textureLayout = lastShader == gl::ShaderType::Fragment
+                                        ? vk::ImageLayout::AllGraphicsShadersReadOnly
+                                        : vk::ImageLayout::PreFragmentShadersReadOnly;
+                }
+                else
+                {
+                    textureLayout = kShaderReadOnlyImageLayouts[firstShader];
+                }
             }
         }
-        // Ensure the image is in read-only layout
+        // Ensure the image is in the desired layout
         commandBufferHelper->imageRead(this, image.getAspectFlags(), textureLayout, &image);
 
         textureVk->retainImageViews(&mResourceUseList);
