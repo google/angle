@@ -141,6 +141,30 @@
       },
       "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caa973e9_a693f353",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-30T21:25:33Z",
+      "side": 1,
+      "message": "FYI ... I think the history is a little different.  IIRC Cody introduced base and max level mid-2019 to deal with texture that are slowly added to/defined over time (including level n having different format/type than level n-1).  Then, I ran into NBA 2K20 that did fully-define a texture up-front but kept changing max level (between 4 and 6), which led to optimizing that case.  Now, we\u0027re dealing with an interesting case of immutable textures.",
+      "parentUuid": "8e648f8f_de52fa1c",
+      "range": {
+        "startLine": 2067,
+        "startChar": 4,
+        "endLine": 2067,
+        "endChar": 39
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

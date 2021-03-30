@@ -241,6 +241,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "91eadabf_310146ec",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2063,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-30T21:25:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "05a0a7e2_8c94bc70",
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da88a5c7_0f7a0d42",
@@ -335,6 +353,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "594ea3b4_12638e30",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 2744,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-30T21:25:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3cf74294_1b3e915b",
+      "range": {
+        "startLine": 2744,
+        "startChar": 23,
+        "endLine": 2744,
+        "endChar": 53
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59db8809_c8740903",
@@ -372,6 +414,30 @@
       "side": 1,
       "message": "I think for immutable baseLevel could be non-zero, when you change base level and then bind it to compute, which changes usage flag, which will reallocate ImageHelper.",
       "parentUuid": "59db8809_c8740903",
+      "range": {
+        "startLine": 3826,
+        "startChar": 0,
+        "endLine": 3826,
+        "endChar": 36
+      },
+      "revId": "c0f42f84eed9d051f3deb9031a78ab495f28f7e8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c683809b_e4c6e0f2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 3826,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-30T21:25:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "65c917b0_26499147",
       "range": {
         "startLine": 3826,
         "startChar": 0,
