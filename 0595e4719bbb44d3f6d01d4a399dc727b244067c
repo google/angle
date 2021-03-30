@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d043591e_b11af3a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1165541
+      },
+      "writtenOn": "2021-03-30T02:36:04Z",
+      "side": 1,
+      "message": "LGTM\n+Geoff/Jamie take a look, thanks.\n\nXinghua, can you go through all situations that needs padding when translating to structuredBuffer and add more full coverage tests in a follow up PR if needed?",
+      "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
