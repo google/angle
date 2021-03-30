@@ -21,7 +21,7 @@
 #    define VK_EXT_multisampled_render_to_single_sampled 1
 #    define VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_SPEC_VERSION 1
 #    define VK_EXT_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_EXTENSION_NAME \
-        "VK_EXT_multisampled_render_to_single_sampled"
+        "VK_GOOGLEX_multisampled_render_to_single_sampled"
 
 #    define VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT \
         ((VkStructureType)(1000376000))
