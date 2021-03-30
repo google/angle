@@ -33,6 +33,69 @@
       "message": "LGTM\n+Geoff/Jamie take a look, thanks.\n\nXinghua, can you go through all situations that needs padding when translating to structuredBuffer and add more full coverage tests in a follow up PR if needed?",
       "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76e02d81_e0c210cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-30T13:59:41Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be9bd421_caa331be",
+        "filename": "src/compiler/translator/StructureHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-30T13:59:41Z",
+      "side": 1,
+      "message": "nit: factor this into a small function. int GetElementPadding(elementIndex)",
+      "range": {
+        "startLine": 128,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 98
+      },
+      "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3e68e175_0f6d0b94",
+        "filename": "src/compiler/translator/StructureHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-03-30T13:59:41Z",
+      "side": 1,
+      "message": "The other cases didn\u0027t change mElementIndex but this case did. Is that intentional?",
+      "range": {
+        "startLine": 153,
+        "startChar": 43,
+        "endLine": 153,
+        "endChar": 61
+      },
+      "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
