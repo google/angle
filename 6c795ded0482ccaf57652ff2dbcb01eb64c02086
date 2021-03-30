@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f87ca9e1_68cb8898",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-30T19:22:46Z",
+      "side": 1,
+      "message": "Right. I will change \"Allocate\" to \"Allocated\" in next update.",
+      "parentUuid": "4b2eddeb_d039e990",
+      "range": {
+        "startLine": 55,
+        "startChar": 51,
+        "endLine": 55,
+        "endChar": 72
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "54ed5fa8_1a5ba64d",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
         "patchSetId": 21
@@ -61,6 +85,30 @@
       "writtenOn": "2021-03-30T18:17:42Z",
       "side": 1,
       "message": "this kind of worries me. The intent of our current base level implementation was a \"hack\" to get around the complexity of dealing with two cases - the \"good\" case where we change the base level and don\u0027t reallocate the texture, and the \"bad\" case where we need to. Here you\u0027re building in more technical debt by adding a third case for immutable textures.",
+      "range": {
+        "startLine": 2067,
+        "startChar": 4,
+        "endLine": 2067,
+        "endChar": 39
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e648f8f_de52fa1c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-30T19:22:46Z",
+      "side": 1,
+      "message": "I am not sure why this is a debt though, what is the alternative solution?\nWe could do a follow up CL to address the current usage of mBaseLevel, given that after this CL, the use of it is much reduced. This might help you remove the existing debt.",
+      "parentUuid": "54ed5fa8_1a5ba64d",
       "range": {
         "startLine": 2067,
         "startChar": 4,
