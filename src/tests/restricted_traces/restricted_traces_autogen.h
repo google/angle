@@ -70,6 +70,7 @@ enum class RestrictedTraceID
     cod_mobile,
     coin_master,
     dragon_ball_legends,
+    dragon_raja,
     efootball_pes_2021,
     egypt_1500,
     eight_ball_pool,

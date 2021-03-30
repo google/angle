@@ -1,6 +1,6 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "dfc50f056ec1b5f5bf70e01daa127cca",
+    "4fbdf9f45b9a615c42005c39c14dd5a1",
   "src/tests/restricted_traces/aliexpress.tar.gz.sha1":
     "12f48ff0c4ca7980ea879c81b0c9518b",
   "src/tests/restricted_traces/among_us.tar.gz.sha1":
@@ -33,6 +33,8 @@
     "c40fb4ab22955e4713d52616cbe4975f",
   "src/tests/restricted_traces/dragon_ball_legends.tar.gz.sha1":
     "baabf75c08e7417bd2194e6d69bfce71",
+  "src/tests/restricted_traces/dragon_raja.tar.gz.sha1":
+    "3c111fe0d8a1ac4e121114c14f3cf581",
   "src/tests/restricted_traces/efootball_pes_2021.tar.gz.sha1":
     "3cea8bb2d5d9e3516e5e261f5cb96fa7",
   "src/tests/restricted_traces/egypt_1500.tar.gz.sha1":
@@ -106,13 +108,13 @@
   "src/tests/restricted_traces/real_gangster_crime.tar.gz.sha1":
     "c85be329035a760edad673eb2ca7c3f1",
   "src/tests/restricted_traces/restricted_traces.json":
-    "debaedd4ff42ff354575bc4c7f7f2f8a",
+    "fe4b0321246ef9ac4243c0d5ed9553d0",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "f907fcbb6e36bc18e8ae196a9ec86e57",
+    "46620754f74076ee16756075fa16c9ca",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "04c28d463752abe5fa1fb2c285864f7e",
+    "eff15c7c32bbab20ad5e211c99236bff",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "6a03447b0e2d52ec4a22bcb09acffd4b",
+    "cfab65aadcb9090a90099538b5083bc5",
   "src/tests/restricted_traces/rise_of_kingdoms.tar.gz.sha1":
     "d4618f857c44f0dfa642ae3af8f161d9",
   "src/tests/restricted_traces/romancing_saga.tar.gz.sha1":
