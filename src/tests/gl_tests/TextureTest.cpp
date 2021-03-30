@@ -3977,6 +3977,59 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineMutableToImmutable)
     }
 }
 
+// Test that redefine a level with incompatible size beyond the max level.
+TEST_P(Texture2DBaseMaxTestES3, RedefineIncompatibleLevelBeyondMaxLevel)
+{
+    initTest(false);
+
+    // Test that all mips have the expected data initially (this makes sure the texture image is
+    // created already).
+    for (uint32_t lod = 0; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    uint32_t maxLevel = 1;
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, maxLevel);
+
+    // Update level 0
+    const GLColor kNewMipLevle0Color = GLColor::yellow;
+    std::array<GLColor, getMipDataSize(kMip0Size, 0)> newMipData;
+    std::fill(newMipData.begin(), newMipData.end(), kNewMipLevle0Color);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kMip0Size, kMip0Size, GL_RGBA, GL_UNSIGNED_BYTE,
+                    newMipData.data());
+
+    // Update level 2 with incompatible data
+    glTexImage2D(GL_TEXTURE_2D, 2, GL_RGBA8, 10, 10, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 newMipData.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Test that the texture looks as expected.
+    const int w = getWindowWidth() - 1;
+    const int h = getWindowHeight() - 1;
+    for (uint32_t lod = 0; lod < maxLevel; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        if (lod == 0)
+        {
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipLevle0Color);
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kNewMipLevle0Color);
+            EXPECT_PIXEL_COLOR_EQ(0, h, kNewMipLevle0Color);
+            EXPECT_PIXEL_COLOR_EQ(w, h, kNewMipLevle0Color);
+        }
+        else
+        {
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[lod]);
+            EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[lod]);
+        }
+    }
+}
+
 // Test to check that texture completeness is determined correctly when the texture base level is
 // greater than 0, and also that level 0 is not sampled when base level is greater than 0.
 TEST_P(Texture2DTestES3, DrawWithBaseLevel1)

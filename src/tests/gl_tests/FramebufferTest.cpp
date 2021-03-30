@@ -2708,7 +2708,7 @@ TEST_P(FramebufferTest_ES3, RenderAndInvalidateImmutableTextureWithBellowBaseLev
 TEST_P(FramebufferTest_ES3, RenderImmutableTextureWithSubImageWithBeyondMaxLevel)
 {
     // ToDo: https://issuetracker.google.com/181800403
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsMetal());
+    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // Set up program to sample from specific lod level.
     GLProgram textureLodProgram;

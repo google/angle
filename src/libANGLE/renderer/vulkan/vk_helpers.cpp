@@ -3636,7 +3636,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mYuvConversionSampler(std::move(other.mYuvConversionSampler)),
       mExternalFormat(other.mExternalFormat),
       mFirstAllocatedLevel(other.mFirstAllocatedLevel),
-      mMaxLevel(other.mMaxLevel),
       mLayerCount(other.mLayerCount),
       mLevelCount(other.mLevelCount),
       mStagingBuffer(std::move(other.mStagingBuffer)),
@@ -3670,7 +3669,6 @@ void ImageHelper::resetCachedProperties()
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
     mFirstAllocatedLevel         = gl::LevelIndex(0);
-    mMaxLevel                    = gl::LevelIndex(0);
     mLayerCount                  = 0;
     mLevelCount                  = 0;
     mExternalFormat              = 0;
@@ -3838,7 +3836,6 @@ angle::Result ImageHelper::initExternal(Context *context,
     mSamples             = std::max(samples, 1);
     mImageSerial         = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
     mFirstAllocatedLevel = immutable ? gl::LevelIndex(0) : baseLevel;
-    mMaxLevel            = maxLevel;
     mLevelCount          = mipLevels;
     mLayerCount          = layerCount;
     mUsage               = usage;
@@ -4382,12 +4379,12 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
              : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
     constexpr VkImageCreateFlags kMultisampledCreateFlags = 0;
 
-    ANGLE_TRY(initExternal(context, textureType, resolveImage.getExtents(),
-                           resolveImage.getFormat(), samples, kMultisampledUsageFlags,
-                           kMultisampledCreateFlags, ImageLayout::Undefined, nullptr,
-                           resolveImage.getFirstAllocatedLevel(), resolveImage.getMaxLevel(),
-                           resolveImage.getLevelCount(), resolveImage.getLayerCount(),
-                           isRobustResourceInitEnabled, false, nullptr));
+    ANGLE_TRY(
+        initExternal(context, textureType, resolveImage.getExtents(), resolveImage.getFormat(),
+                     samples, kMultisampledUsageFlags, kMultisampledCreateFlags,
+                     ImageLayout::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
+                     resolveImage.getLastAllocatedLevel(), resolveImage.getLevelCount(),
+                     resolveImage.getLayerCount(), isRobustResourceInitEnabled, false, nullptr));
 
     const VkMemoryPropertyFlags kMultisampledMemoryFlags =
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
@@ -4399,7 +4396,7 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
 
     // Remove the emulated format clear from the multisampled image if any.  There is one already
     // staged on the resolve image if needed.
-    removeStagedUpdates(context, getFirstAllocatedLevel(), getMaxLevel());
+    removeStagedUpdates(context, getFirstAllocatedLevel(), getLastAllocatedLevel());
 
     return angle::Result::Continue;
 }
@@ -4569,11 +4566,6 @@ void ImageHelper::setFirstAllocatedLevel(gl::LevelIndex firstLevel)
     ASSERT(!mImmutable);
     ASSERT(!valid());
     mFirstAllocatedLevel = firstLevel;
-}
-
-void ImageHelper::setMaxLevel(gl::LevelIndex maxLevel)
-{
-    mMaxLevel = maxLevel;
 }
 
 LevelIndex ImageHelper::toVkLevel(gl::LevelIndex levelIndexGL) const
@@ -5984,9 +5976,6 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             uint32_t updateBaseLayer, updateLayerCount;
             update.getDestSubresource(mLayerCount, &updateBaseLayer, &updateLayerCount);
 
-            // If the update level is not within the requested range, skip the update.
-            const bool isUpdateLevelOutsideRange = updateMipLevelGL > mMaxLevel;
-
             // If the update layers don't intersect the requested layers, skip the update.
             const bool areUpdateLayersOutsideRange =
                 updateBaseLayer + updateLayerCount <= layerStart || updateBaseLayer >= layerEnd;
@@ -5997,8 +5986,7 @@ angle::Result ImageHelper::flushStagedUpdates(ContextVk *contextVk,
             // them. This can happen when recreating an image that has been partially incompatibly
             // redefined, in which case only updates to the levels that haven't been redefined
             // should be flushed.
-            if (isUpdateLevelOutsideRange || areUpdateLayersOutsideRange ||
-                skipLevelsMask.test(updateMipLevelVk.get()))
+            if (areUpdateLayersOutsideRange || skipLevelsMask.test(updateMipLevelVk.get()))
             {
                 updatesToKeep.emplace_back(std::move(update));
                 continue;
@@ -6152,9 +6140,14 @@ bool ImageHelper::hasStagedUpdatesForSubresource(gl::LevelIndex levelGL,
     return false;
 }
 
+gl::LevelIndex ImageHelper::getLastAllocatedLevel() const
+{
+    return mFirstAllocatedLevel + mLevelCount - 1;
+}
+
 bool ImageHelper::hasStagedUpdatesInAllocatedLevels() const
 {
-    return hasStagedUpdatesInLevels(mFirstAllocatedLevel, mMaxLevel + 1);
+    return hasStagedUpdatesInLevels(mFirstAllocatedLevel, getLastAllocatedLevel() + 1);
 }
 
 bool ImageHelper::hasStagedUpdatesInLevels(gl::LevelIndex levelStart, gl::LevelIndex levelEnd) const
@@ -6263,16 +6256,15 @@ void ImageHelper::removeSupersededUpdates(ContextVk *contextVk, gl::TexLevelMask
         return false;
     };
 
-    for (gl::LevelIndex level = mFirstAllocatedLevel; level <= mMaxLevel; ++level)
+    for (LevelIndex levelVk(0); levelVk < LevelIndex(mLevelCount); ++levelVk)
     {
-        std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(level);
+        gl::LevelIndex levelGL                       = toGLLevel(levelVk);
+        std::vector<SubresourceUpdate> *levelUpdates = getLevelUpdates(levelGL);
         if (levelUpdates == nullptr)
         {
-            ASSERT(static_cast<size_t>(level.get()) >= mSubresourceUpdates.size());
+            ASSERT(static_cast<size_t>(levelGL.get()) >= mSubresourceUpdates.size());
             break;
         }
-
-        LevelIndex levelVk = toVkLevel(level);
 
         // If level is skipped (because incompatibly redefined), don't remove any of its updates.
         if (skipLevelsMask.test(levelVk.get()))

@@ -1747,15 +1747,16 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
 
     // If the image has more levels than supported, generate as many mips as possible at a time.
     const vk::LevelIndex maxGenerateLevels(UtilsVk::GetGenerateMipmapMaxLevels(contextVk));
+    vk::LevelIndex destMaxLevelVk = mImage->toVkLevel(gl::LevelIndex(mState.getMipmapMaxLevel()));
     for (vk::LevelIndex destBaseLevelVk =
              mImage->toVkLevel(gl::LevelIndex(mState.getEffectiveBaseLevel() + 1));
-         destBaseLevelVk < vk::LevelIndex(mImage->getLevelCount());
+         destBaseLevelVk <= destMaxLevelVk;
          destBaseLevelVk = destBaseLevelVk + maxGenerateLevels.get())
     {
         vk::CommandBufferAccess access;
 
         uint32_t writeLevelCount =
-            std::min(maxGenerateLevels.get(), mImage->getLevelCount() - destBaseLevelVk.get());
+            std::min(maxGenerateLevels.get(), destMaxLevelVk.get() + 1 - destBaseLevelVk.get());
         access.onImageComputeShaderWrite(mImage->toGLLevel(destBaseLevelVk), writeLevelCount, 0,
                                          mImage->getLayerCount(), VK_IMAGE_ASPECT_COLOR_BIT,
                                          mImage);
@@ -1781,7 +1782,7 @@ angle::Result TextureVk::generateMipmapsWithCompute(ContextVk *contextVk)
                 vk::LevelIndex destLevelVk = destBaseLevelVk + levelVk.get();
 
                 // If fewer levels left than maxGenerateLevels, cut the loop short.
-                if (destLevelVk >= vk::LevelIndex(mImage->getLevelCount()))
+                if (destLevelVk > destMaxLevelVk)
                 {
                     destLevelCount = levelVk;
                     break;
@@ -1925,7 +1926,6 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
         {
             mImage->setFirstAllocatedLevel(baseLevel);
         }
-        mImage->setMaxLevel(maxLevel);
 
         // No further work to do, let staged updates handle the new levels
         return angle::Result::Continue;
@@ -1939,7 +1939,7 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
         ASSERT(!baseLevelChanged || baseLevel >= mImage->getFirstAllocatedLevel());
         ASSERT(!maxLevelChanged || maxLevel < gl::LevelIndex(mImage->getLevelCount()));
     }
-    else if (!baseLevelChanged && (maxLevel < baseLevel + mImage->getLevelCount()))
+    else if (!baseLevelChanged && (maxLevel <= mImage->getLastAllocatedLevel()))
     {
         // With a valid image, check if only changing the maxLevel to a subset of the texture's
         // actual number of mip levels
@@ -1954,9 +1954,6 @@ angle::Result TextureVk::updateBaseMaxLevels(ContextVk *contextVk,
     {
         // Don't need to respecify the texture; but do need to update which vkImageView's are
         // served up by ImageViewHelper
-
-        // Track the levels in our ImageHelper
-        mImage->setMaxLevel(maxLevel);
 
         // Update the current max level in ImageViewHelper
         const gl::ImageDesc &baseLevelDesc = mState.getBaseLevelDesc();
@@ -2026,7 +2023,7 @@ angle::Result TextureVk::respecifyImageStorageAndLevels(ContextVk *contextVk,
     {
         ASSERT((mImage->getFirstAllocatedLevel() == gl::LevelIndex(0)) ||
                (mImage->getFirstAllocatedLevel() == baseLevel));
-        ASSERT((mImage->getMaxLevel() == gl::LevelIndex(0)) || (mImage->getMaxLevel() == maxLevel));
+        ASSERT(!mState.getImmutableFormat());
         releaseImage(contextVk);
         return angle::Result::Continue;
     }
@@ -2073,10 +2070,6 @@ angle::Result TextureVk::respecifyImageStorageAndLevels(ContextVk *contextVk,
         // Set the newly created mImage as the destination for the staging operation
         dstImage = mImage;
     }
-
-    // After flushing prior staged updates, track the new levels (they are used in the flush, hence
-    // the wait)
-    dstImage->setMaxLevel(maxLevel);
 
     // Transfer the entire contents of the source image into the destination image.
     ANGLE_TRY(copyAndStageImageData(contextVk, previousFirstAllocateLevel, srcImage, dstImage));

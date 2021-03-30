@@ -1795,8 +1795,7 @@ class ImageHelper final : public Resource, public angle::Subject
 
     gl::LevelIndex getFirstAllocatedLevel() const { return mFirstAllocatedLevel; }
     void setFirstAllocatedLevel(gl::LevelIndex firstLevel);
-    void setMaxLevel(gl::LevelIndex maxLevel);
-    gl::LevelIndex getMaxLevel() const { return mMaxLevel; }
+    gl::LevelIndex getLastAllocatedLevel() const;
     LevelIndex toVkLevel(gl::LevelIndex levelIndexGL) const;
     gl::LevelIndex toGLLevel(LevelIndex levelIndexVk) const;
 
@@ -2070,7 +2069,6 @@ class ImageHelper final : public Resource, public angle::Subject
     gl::LevelIndex mFirstAllocatedLevel;
 
     // Cached properties.
-    gl::LevelIndex mMaxLevel;
     uint32_t mLayerCount;
     uint32_t mLevelCount;
 
