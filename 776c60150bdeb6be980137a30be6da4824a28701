@@ -105,6 +105,24 @@
       "message": "Looks like this adds a static initializer and thus blocks rolling ANGLE into Chromium\nhttps://chromium-review.googlesource.com/c/chromium/src/+/2786374\nDidn\u0027t roll since March 25th.",
       "revId": "776c60150bdeb6be980137a30be6da4824a28701",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37c1ff41_849cc686",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-30T19:28:41Z",
+      "side": 1,
+      "message": "I\u0027m aware of this. The static initializer is in glslang (and always has been). It looks like this CL just brings that to light.",
+      "parentUuid": "f8b89199_75938c1d",
+      "revId": "776c60150bdeb6be980137a30be6da4824a28701",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
