@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "459c98d5_1f441b2d",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-30T18:17:42Z",
+      "side": 1,
+      "message": "nit: AllocatedLevel I think is what you mean, or LevelToAllocate, not sure which is your intent.",
+      "range": {
+        "startLine": 55,
+        "startChar": 51,
+        "endLine": 55,
+        "endChar": 72
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54ed5fa8_1a5ba64d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-30T18:17:42Z",
+      "side": 1,
+      "message": "this kind of worries me. The intent of our current base level implementation was a \"hack\" to get around the complexity of dealing with two cases - the \"good\" case where we change the base level and don\u0027t reallocate the texture, and the \"bad\" case where we need to. Here you\u0027re building in more technical debt by adding a third case for immutable textures.",
+      "range": {
+        "startLine": 2067,
+        "startChar": 4,
+        "endLine": 2067,
+        "endChar": 39
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
