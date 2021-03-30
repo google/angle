@@ -88,6 +88,23 @@
       "parentUuid": "18e7d311_ede00468",
       "revId": "776c60150bdeb6be980137a30be6da4824a28701",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8b89199_75938c1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 16
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-30T19:22:02Z",
+      "side": 1,
+      "message": "Looks like this adds a static initializer and thus blocks rolling ANGLE into Chromium\nhttps://chromium-review.googlesource.com/c/chromium/src/+/2786374\nDidn\u0027t roll since March 25th.",
+      "revId": "776c60150bdeb6be980137a30be6da4824a28701",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
