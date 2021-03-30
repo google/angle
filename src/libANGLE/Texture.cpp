@@ -1351,6 +1351,8 @@ angle::Result Texture::copyImage(Context *context,
         }
     }
 
+    InitState initState = DetermineInitState(context, nullptr, nullptr);
+
     // If we need to initialize the destination texture we split the call into a create call,
     // an initializeContents call, and then a copySubImage call. This ensures the destination
     // texture exists before we try to clear it.
@@ -1360,8 +1362,7 @@ angle::Result Texture::copyImage(Context *context,
         ANGLE_TRY(mTexture->setImage(context, index, internalFormat, size,
                                      internalFormatInfo.format, internalFormatInfo.type,
                                      PixelUnpackState(), nullptr, nullptr));
-        mState.setImageDesc(target, level,
-                            ImageDesc(size, Format(internalFormatInfo), InitState::MayNeedInit));
+        mState.setImageDesc(target, level, ImageDesc(size, Format(internalFormatInfo), initState));
         ANGLE_TRY(ensureSubImageInitialized(context, index, destBox));
         ANGLE_TRY(mTexture->copySubImage(context, index, Offset(), sourceArea, source));
     }
@@ -1376,7 +1377,7 @@ angle::Result Texture::copyImage(Context *context,
     ANGLE_TRY(handleMipmapGenerationHint(context, level));
 
     // Because this could affect the texture storage we might need to init other layers/levels.
-    signalDirtyStorage(InitState::MayNeedInit);
+    signalDirtyStorage(initState);
 
     return angle::Result::Continue;
 }
@@ -1572,8 +1573,9 @@ angle::Result Texture::setStorage(Context *context,
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
     mState.clearImageDescs();
+    InitState initState = DetermineInitState(context, nullptr, nullptr);
     mState.setImageDescChain(0, static_cast<GLuint>(levels - 1), size, Format(internalFormat),
-                             InitState::MayNeedInit);
+                             initState);
 
     ANGLE_TRY(mTexture->setStorage(context, type, levels, internalFormat, size));
 
@@ -1584,7 +1586,7 @@ angle::Result Texture::setStorage(Context *context,
     mDirtyBits.set(DIRTY_BIT_BASE_LEVEL);
     mDirtyBits.set(DIRTY_BIT_MAX_LEVEL);
 
-    signalDirtyStorage(InitState::MayNeedInit);
+    signalDirtyStorage(initState);
 
     return angle::Result::Continue;
 }
@@ -1641,13 +1643,13 @@ angle::Result Texture::setStorageMultisample(Context *context,
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(1);
     mState.clearImageDescs();
+    InitState initState = DetermineInitState(context, nullptr, nullptr);
     mState.setImageDescChainMultisample(size, Format(internalFormat), samples, fixedSampleLocations,
-                                        InitState::MayNeedInit);
+                                        initState);
 
     ANGLE_TRY(mTexture->setStorageMultisample(context, type, samples, internalFormat, size,
                                               fixedSampleLocations));
-
-    signalDirtyStorage(InitState::MayNeedInit);
+    signalDirtyStorage(initState);
 
     return angle::Result::Continue;
 }
@@ -1678,8 +1680,9 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
     mState.mImmutableFormat = true;
     mState.mImmutableLevels = static_cast<GLuint>(levels);
     mState.clearImageDescs();
+    InitState initState = DetermineInitState(context, nullptr, nullptr);
     mState.setImageDescChain(0, static_cast<GLuint>(levels - 1), size, Format(internalFormat),
-                             InitState::MayNeedInit);
+                             initState);
 
     // Changing the texture to immutable can trigger a change in the base and max levels:
     // GLES 3.0.4 section 3.8.10 pg 158:
@@ -1688,7 +1691,7 @@ angle::Result Texture::setStorageExternalMemory(Context *context,
     mDirtyBits.set(DIRTY_BIT_BASE_LEVEL);
     mDirtyBits.set(DIRTY_BIT_MAX_LEVEL);
 
-    signalDirtyStorage(InitState::Initialized);
+    signalDirtyStorage(initState);
 
     return angle::Result::Continue;
 }
@@ -2032,7 +2035,8 @@ angle::Result Texture::setBufferRange(const gl::Context *context,
     if (buffer == nullptr)
     {
         mBufferObserver.reset();
-        signalDirtyStorage(InitState::MayNeedInit);
+        InitState initState = DetermineInitState(context, nullptr, nullptr);
+        signalDirtyStorage(initState);
         return angle::Result::Continue;
     }
 
@@ -2042,10 +2046,10 @@ angle::Result Texture::setBufferRange(const gl::Context *context,
     InternalFormat internalFormatInfo = GetSizedInternalFormatInfo(internalFormat);
     Format format(internalFormat);
     Extents extents(static_cast<GLuint>(size / internalFormatInfo.pixelBytes), 1, 1);
-    mState.setImageDesc(TextureTarget::Buffer, 0,
-                        ImageDesc(extents, format, InitState::MayNeedInit));
+    InitState initState = buffer->initState();
+    mState.setImageDesc(TextureTarget::Buffer, 0, ImageDesc(extents, format, initState));
 
-    signalDirtyStorage(InitState::MayNeedInit);
+    signalDirtyStorage(initState);
 
     // Observe modifications to the buffer, so that extents can be updated.
     mBufferObserver.bind(buffer);
