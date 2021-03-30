@@ -1613,7 +1613,9 @@ class ImageHelper final : public Resource, public angle::Subject
                                           GLsizei srcDepth);
 
     // Generate mipmap from level 0 into the rest of the levels with blit.
-    angle::Result generateMipmapsWithBlit(ContextVk *contextVk, LevelIndex maxLevel);
+    angle::Result generateMipmapsWithBlit(ContextVk *contextVk,
+                                          LevelIndex baseLevel,
+                                          LevelIndex maxLevel);
 
     // Resolve this image into a destination image.  This image should be in the TransferSrc layout.
     // The destination image is automatically transitioned into TransferDst.
@@ -1792,8 +1794,8 @@ class ImageHelper final : public Resource, public angle::Subject
     bool isReleasedToExternal() const;
 
     gl::LevelIndex getFirstAllocatedLevel() const { return mFirstAllocatedLevel; }
-    gl::LevelIndex getBaseLevel() const { return mBaseLevel; }
-    void setBaseAndMaxLevels(gl::LevelIndex baseLevel, gl::LevelIndex maxLevel);
+    void setFirstAllocatedLevel(gl::LevelIndex firstLevel);
+    void setMaxLevel(gl::LevelIndex maxLevel);
     gl::LevelIndex getMaxLevel() const { return mMaxLevel; }
     LevelIndex toVkLevel(gl::LevelIndex levelIndexGL) const;
     gl::LevelIndex toGLLevel(LevelIndex levelIndexVk) const;
@@ -2068,7 +2070,6 @@ class ImageHelper final : public Resource, public angle::Subject
     gl::LevelIndex mFirstAllocatedLevel;
 
     // Cached properties.
-    gl::LevelIndex mBaseLevel;
     gl::LevelIndex mMaxLevel;
     uint32_t mLayerCount;
     uint32_t mLevelCount;

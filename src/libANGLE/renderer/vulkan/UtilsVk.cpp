@@ -3272,7 +3272,7 @@ angle::Result UtilsVk::cullOverlayWidgets(ContextVk *contextVk,
                                     &descriptorSet));
 
     ASSERT(dest->getLevelCount() == 1 && dest->getLayerCount() == 1 &&
-           dest->getBaseLevel() == gl::LevelIndex(0));
+           dest->getFirstAllocatedLevel() == gl::LevelIndex(0));
 
     vk::CommandBufferAccess access;
     access.onBufferComputeShaderRead(enabledWidgetsBuffer);
@@ -3349,7 +3349,7 @@ angle::Result UtilsVk::drawOverlay(ContextVk *contextVk,
                                     &descriptorSet));
 
     ASSERT(dest->getLevelCount() == 1 && dest->getLayerCount() == 1 &&
-           dest->getBaseLevel() == gl::LevelIndex(0));
+           dest->getFirstAllocatedLevel() == gl::LevelIndex(0));
 
     vk::CommandBufferAccess access;
     access.onImageComputeShaderWrite(gl::LevelIndex(0), 1, 0, 1, VK_IMAGE_ASPECT_COLOR_BIT, dest);

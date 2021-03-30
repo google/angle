@@ -3922,6 +3922,61 @@ TEST_P(Texture2DBaseMaxTestES3, StageInvalidLevels)
     }
 }
 
+// Test redefine a mutable texture into an immutable texture.
+TEST_P(Texture2DBaseMaxTestES3, RedefineMutableToImmutable)
+{
+    // http://anglebug.com/4710
+    ANGLE_SKIP_TEST_IF(IsD3D());
+
+    // http://anglebug.com/4701
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsIntel() && IsOSX());
+
+    constexpr uint32_t kBaseLevel          = 1;
+    const GLColor kNewMipColors[kMipCount] = {
+        GLColor::yellow,
+        GLColor::cyan,
+        GLColor::white,
+        GLColor(127u, 127u, 127u, 255u),
+    };
+
+    initTest(false);
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, kBaseLevel);
+
+    // Test that all mips have the expected data
+    for (uint32_t lod = kBaseLevel; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod - kBaseLevel);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+    }
+
+    glTexStorage2D(GL_TEXTURE_2D, kMipCount, GL_RGBA8, kMip0Size, kMip0Size);
+    std::array<GLColor, getTotalMipDataSize(kMip0Size)> mipData;
+    fillMipData(mipData.data(), kMip0Size, kNewMipColors);
+    for (size_t mip = 0; mip < kMipCount; ++mip)
+    {
+        glTexSubImage2D(GL_TEXTURE_2D, mip, 0, 0, kMip0Size >> mip, kMip0Size >> mip, GL_RGBA,
+                        GL_UNSIGNED_BYTE, mipData.data() + getMipDataOffset(kMip0Size, mip));
+    }
+
+    // Test that all enabled mips have the expected data
+    for (uint32_t lod = kBaseLevel; lod < kMipCount; ++lod)
+    {
+        setLodUniform(lod - kBaseLevel);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColors[lod]);
+    }
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    for (uint32_t lod = 0; lod < kBaseLevel; ++lod)
+    {
+        setLodUniform(lod);
+        drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColors[lod]);
+    }
+}
+
 // Test to check that texture completeness is determined correctly when the texture base level is
 // greater than 0, and also that level 0 is not sampled when base level is greater than 0.
 TEST_P(Texture2DTestES3, DrawWithBaseLevel1)

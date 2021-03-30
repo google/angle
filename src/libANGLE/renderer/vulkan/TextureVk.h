@@ -450,8 +450,8 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     // Update base and max levels, and re-create image if needed.
     angle::Result updateBaseMaxLevels(ContextVk *contextVk,
-                                      gl::LevelIndex baseLevelGL,
-                                      gl::LevelIndex maxLevelGL);
+                                      bool baseLevelChanged,
+                                      bool maxLevelChanged);
 
     bool isFastUnpackPossible(const vk::Format &vkFormat, size_t offset) const;
 

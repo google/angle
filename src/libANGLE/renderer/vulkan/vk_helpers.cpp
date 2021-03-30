@@ -3636,7 +3636,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mYuvConversionSampler(std::move(other.mYuvConversionSampler)),
       mExternalFormat(other.mExternalFormat),
       mFirstAllocatedLevel(other.mFirstAllocatedLevel),
-      mBaseLevel(other.mBaseLevel),
       mMaxLevel(other.mMaxLevel),
       mLayerCount(other.mLayerCount),
       mLevelCount(other.mLevelCount),
@@ -3671,7 +3670,6 @@ void ImageHelper::resetCachedProperties()
     mLastNonShaderReadOnlyLayout = ImageLayout::Undefined;
     mCurrentShaderReadStageMask  = 0;
     mFirstAllocatedLevel         = gl::LevelIndex(0);
-    mBaseLevel                   = gl::LevelIndex(0);
     mMaxLevel                    = gl::LevelIndex(0);
     mLayerCount                  = 0;
     mLevelCount                  = 0;
@@ -3840,7 +3838,6 @@ angle::Result ImageHelper::initExternal(Context *context,
     mSamples             = std::max(samples, 1);
     mImageSerial         = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
     mFirstAllocatedLevel = immutable ? gl::LevelIndex(0) : baseLevel;
-    mBaseLevel           = baseLevel;
     mMaxLevel            = maxLevel;
     mLevelCount          = mipLevels;
     mLayerCount          = layerCount;
@@ -4565,17 +4562,18 @@ bool ImageHelper::isReleasedToExternal() const
 #endif
 }
 
-void ImageHelper::setBaseAndMaxLevels(gl::LevelIndex baseLevel, gl::LevelIndex maxLevel)
+void ImageHelper::setFirstAllocatedLevel(gl::LevelIndex firstLevel)
 {
-    mBaseLevel = baseLevel;
-    mMaxLevel  = maxLevel;
-
     // For immutable texture, we always allocate the entire mipmap chain [0, mLevelCount-1].
     // For mutable textures, we will try to reallocate based on baseLevel change
-    if (!mImmutable)
-    {
-        mFirstAllocatedLevel = baseLevel;
-    }
+    ASSERT(!mImmutable);
+    ASSERT(!valid());
+    mFirstAllocatedLevel = firstLevel;
+}
+
+void ImageHelper::setMaxLevel(gl::LevelIndex maxLevel)
+{
+    mMaxLevel = maxLevel;
 }
 
 LevelIndex ImageHelper::toVkLevel(gl::LevelIndex levelIndexGL) const
@@ -4943,10 +4941,13 @@ angle::Result ImageHelper::CopyImageSubData(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, LevelIndex maxLevel)
+angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
+                                                   LevelIndex baseLevel,
+                                                   LevelIndex maxLevel)
 {
     CommandBufferAccess access;
-    access.onImageTransferWrite(mBaseLevel + 1, maxLevel.get(), 0, mLayerCount,
+    gl::LevelIndex baseLevelGL = toGLLevel(baseLevel);
+    access.onImageTransferWrite(baseLevelGL + 1, maxLevel.get(), 0, mLayerCount,
                                 VK_IMAGE_ASPECT_COLOR_BIT, this);
 
     CommandBuffer *commandBuffer;
@@ -4970,7 +4971,6 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, LevelIn
     barrier.subresourceRange.levelCount     = 1;
 
     const VkFilter filter = gl_vk::GetFilter(CalculateGenerateMipmapFilter(contextVk, getFormat()));
-    LevelIndex baseLevelVk = toVkLevel(mBaseLevel);
 
     for (LevelIndex mipLevel(1); mipLevel <= LevelIndex(mLevelCount); ++mipLevel)
     {
@@ -4978,7 +4978,7 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk, LevelIn
         int32_t nextMipHeight = std::max<int32_t>(1, mipHeight >> 1);
         int32_t nextMipDepth  = std::max<int32_t>(1, mipDepth >> 1);
 
-        if (mipLevel > baseLevelVk && mipLevel <= maxLevel)
+        if (mipLevel > baseLevel && mipLevel <= maxLevel)
         {
             barrier.subresourceRange.baseMipLevel = mipLevel.get() - 1;
             barrier.oldLayout                     = getCurrentLayout();
