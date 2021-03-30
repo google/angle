@@ -374,7 +374,8 @@ TracePerfTest::TracePerfTest()
     {
         // TODO: https://anglebug.com/5663 Incorrect pixels on Nvidia Windows for first frame
         if (IsWindows() && IsNVIDIA() &&
-            param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+            param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
+            param.getDeviceType() != EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
         {
             mSkipTest = true;
         }
