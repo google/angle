@@ -137,6 +137,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "04653743_5d4dffc7",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T18:27:15Z",
+      "side": 1,
+      "message": "\u003e Clarifying question for Shabi: are you trying to get baseLevel to be non-0 before the glTexStorage2D call?\n\nYes.",
+      "parentUuid": "11ca9c47_0cbac8b2",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0add6b0b_034c8cc0",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
