@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07178e69_e8fb5284",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T22:04:28Z",
+      "side": 1,
+      "message": "LGTM!\n\nI gave a +2 since Shabi isn\u0027t listed as a reviewer.  Best to give Shabi a chance to look at this just in case.",
+      "revId": "781f29f8e55cd06210bc0ba32d7b2c02ab452b6d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
