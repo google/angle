@@ -157,6 +157,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a4f3aae_e5c83162",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T17:54:03Z",
+      "side": 1,
+      "message": "Ack.\n\nIf this is something we can control or influence, it\u0027d be best if the file had one arg per line.",
+      "parentUuid": "326d9216_ef9d3508",
+      "range": {
+        "startLine": 148,
+        "startChar": 36,
+        "endLine": 148,
+        "endChar": 55
+      },
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68cb4ddd_b8d7f780",
@@ -194,6 +218,30 @@
       "side": 1,
       "message": "- The command line parameters are passed in conactenated from Python to Java as an Android Intent extra (or via a file if there are a lot of parameters)\n- According to stackoverflow wordexp would be a way of doing this. I don\u0027t want to use wordexp because wordexp validates input. It throws an error if it is given unescaped braces.",
       "parentUuid": "68cb4ddd_b8d7f780",
+      "range": {
+        "startLine": 153,
+        "startChar": 24,
+        "endLine": 153,
+        "endChar": 40
+      },
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "14f32a12_166268cd",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T17:54:03Z",
+      "side": 1,
+      "message": "\u003e The command line parameters are passed in conactenated from Python to Java as an Android Intent extra (or via a file if there are a lot of parameters)\n\nAck if that\u0027s something we cannot influence. If it\u0027s in our control, it\u0027s infinitely better not to concat the args and then have to split them.",
+      "parentUuid": "96f7dbc9_272d0240",
       "range": {
         "startLine": 153,
         "startChar": 24,
