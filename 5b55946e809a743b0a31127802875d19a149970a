@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "87fbe187_55b0fd2c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6133,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:35:53Z",
+      "side": 1,
+      "message": "Right, there is slight change here, but I don\u0027t think it is harmful. IMO, it is worth it so that we do not need to track base/max in ImageHelper. And I think we may have a potential bug here for immutable texture that we might miss a flush for level outside [base, max]. The perf penalty you are talking about here is that if a level is outside of [base, max], and has update in it. Before this CL, it will not updated here (The update is deferred until the level is within [base, max]). With this CL, it will updated even outside [base, max]. But we have to do it regardless of [base, max] for immutable textures. For mutable, we could potentially still defer it. But the we only update it once. Once updated, there will be no more update there when next time we come to this call. Unless app repeatedly provide data for a level that is outside [base, max] (which I don\u0027t think any real app does that), the difference here really is update early versus later. The other difference is we just are looping a few more times, which I don\u0027t think it really matters as well. The upside is that we avoid caching of base/max level in ImageHelper object which is what Jamie mentioned in the other CL as technical debt. \n\nCorrect me if I am wrong: I guess the real optimization you did for NBA is to avoid recreating mImage object just because of maxLevel changed. That optimization is still kept here (in TextureVk::updateBaseMaxLevel).\n\nIf there is any specific thing you want me to check, please do let me know. The texture code is complicated enough to deserve multiple eyes on it.",
+      "parentUuid": "f575dca6_5df35494",
+      "range": {
+        "startLine": 6133,
+        "startChar": 58,
+        "endLine": 6133,
+        "endChar": 81
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d2f95fa6_fe591069",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 7
@@ -37,6 +61,30 @@
       "writtenOn": "2021-03-31T18:43:07Z",
       "side": 1,
       "message": "nit: Same comment as above about mLevelCount potentially being larger than mMaxLevel.",
+      "range": {
+        "startLine": 6242,
+        "startChar": 53,
+        "endLine": 6242,
+        "endChar": 64
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fc00aca_0f151156",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6242,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:35:53Z",
+      "side": 1,
+      "message": "See reply on the other comment.",
+      "parentUuid": "d2f95fa6_fe591069",
       "range": {
         "startLine": 6242,
         "startChar": 53,
@@ -94,6 +142,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "589f4855_6b1ef41e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3944,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:35:53Z",
+      "side": 1,
+      "message": "kMip0Size is 13x13, bigger than 10x10, so we are good.",
+      "parentUuid": "275e7047_d65c10c4",
+      "range": {
+        "startLine": 3944,
+        "startChar": 4,
+        "endLine": 3944,
+        "endChar": 64
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fd36d814_19c0c26e",
@@ -107,6 +179,24 @@
       "writtenOn": "2021-03-31T18:43:07Z",
       "side": 1,
       "message": "Should we check for a GL_INVALID_VALUE error here?",
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "58aa421d_30610e43",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3952,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:35:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fd36d814_19c0c26e",
       "revId": "5b55946e809a743b0a31127802875d19a149970a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

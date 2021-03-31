@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19b59068_507a6c2b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 6128,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:35:53Z",
+      "side": 1,
+      "message": "Ref",
+      "range": {
+        "startLine": 6128,
+        "startChar": 11,
+        "endLine": 6128,
+        "endChar": 50
+      },
+      "revId": "adfabbb5af34d85f98aec4f515b746157c429126",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
