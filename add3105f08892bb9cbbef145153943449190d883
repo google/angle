@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0eaab74d_8f62db1e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-31T15:40:20Z",
+      "side": 1,
+      "message": "This patch does only impact the ES1 tests. It fixes compilation, and in several cases it makes tests related to gl*Pointer fully pass, now where there is a draw call. Unfortunately it breaks all GLES1 tests where gl*Pointer functions are called and there is no draw call. A fix for that is in progress here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2788209\n\nI also have adjusted the capture/replay test expectations file for ES1, I will submit it after fixing the above issue.\n\nAs currently the ES1 tests are not executed by the CI, and ES1 tests are not yet part of the expectations list, this patch does not have impact related to that.",
+      "parentUuid": "2a395325_9a2f525f",
+      "revId": "add3105f08892bb9cbbef145153943449190d883",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ab18dc64_e5432e77",
