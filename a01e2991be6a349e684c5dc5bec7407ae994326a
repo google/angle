@@ -56,6 +56,24 @@
       "message": "For my own sake: since the layout can be something other than read-only, is there an imageWrite() call happening somewhere else too, assuming it\u0027s necessary?   Looking at the calls to `image-\u003esetRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment)`, I\u0027m not seeing one, but I could be missing it.",
       "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52f05e88_f468cd04",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T15:38:04Z",
+      "side": 1,
+      "message": "Since it\u0027s a framebuffer attachment, it should have the appropriate imageWrite() (or equivalent) somewhere as would the normal attachments (that are not also bound as sampler).",
+      "parentUuid": "fa5d038c_031df784",
+      "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
