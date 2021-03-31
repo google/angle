@@ -237,6 +237,30 @@
       },
       "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "722a5742_7ea09d28",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T17:53:40Z",
+      "side": 1,
+      "message": "Ack, maybe I don\u0027t have a complete understanding of what the CL is doing. Don\u0027t want to block it any longer.",
+      "parentUuid": "336e5caf_09b06ea7",
+      "range": {
+        "startLine": 2067,
+        "startChar": 4,
+        "endLine": 2067,
+        "endChar": 39
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
