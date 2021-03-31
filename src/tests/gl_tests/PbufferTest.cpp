@@ -368,9 +368,9 @@ TEST_P(PbufferTest, ClearAndBindTexImageSrgbSkipDecode)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_SRGB_DECODE_EXT, GL_SKIP_DECODE_EXT);
     drawQuad(mTextureProgram, "position", 0.5f);
 
-    // Texture is in skip decode mode, expect glReadPixels to be `kSrgbColor`
-    EXPECT_PIXEL_EQ(getWindowWidth() / 2, getWindowHeight() / 2, kSrgbColor[0], kSrgbColor[1],
-                    kSrgbColor[2], kSrgbColor[3]);
+    // Texture is in skip decode mode, expect glReadPixels to be `kSrgbColor` with tolerance of 1
+    EXPECT_PIXEL_NEAR(getWindowWidth() / 2, getWindowHeight() / 2, kSrgbColor[0], kSrgbColor[1],
+                      kSrgbColor[2], kSrgbColor[3], 1);
 
     // Unbind the texture
     eglReleaseTexImage(window->getDisplay(), mPbuffer, EGL_BACK_BUFFER);
