@@ -13,7 +13,6 @@
 
 #include "GLSLANG/ShaderLang.h"
 #include "common/PackedEnums.h"
-#include "common/spirv/spirv_types.h"
 
 #include <string>
 #include <vector>
@@ -28,7 +27,7 @@ void GlslangFinalize();
 ANGLE_NO_DISCARD bool GlslangCompileToSpirv(const ShBuiltInResources &resources,
                                             sh::GLenum shaderType,
                                             const std::string &shaderSource,
-                                            angle::spirv::Blob *spirvBlobOut);
+                                            std::vector<uint32_t> *spirvBlobOut);
 #else
 ANGLE_INLINE void GlslangInitialize()
 {

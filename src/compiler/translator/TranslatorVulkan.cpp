@@ -1372,7 +1372,7 @@ bool TranslatorVulkan::shouldFlattenPragmaStdglInvariantAll()
 
 bool TranslatorVulkan::compileToSpirv(const TInfoSinkBase &glsl)
 {
-    angle::spirv::Blob spirvBlob;
+    std::vector<uint32_t> spirvBlob;
     if (!GlslangCompileToSpirv(getResources(), getShaderType(), glsl.str(), &spirvBlob))
     {
         return false;
