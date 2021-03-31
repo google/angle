@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "55366ad9_685f3c76",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2516,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-31T08:36:17Z",
+      "side": 1,
+      "message": "Thanks Shahbaz. I use Context::mThreadPool to replace the new created one in newest PatchSet. But I have a question about Context::mThreadPool.\nThe mMaxThreads of mThreadPool will be set to std::thread::hardware_concurrency() which is not 1 in my local test. It seems we can only make sure that the tasks are submitted in order, but we can\u0027t make sure the compressed data are stored in order. Is it possible that the task submitted later is completed earlier than the previous task, though the later task won\u0027t be smaller than the previous task?\nIf so, the pipeline cache data stored in blob cache may be replaced by the earlier data.",
+      "parentUuid": "b014b85d_e2d8f7ab",
+      "range": {
+        "startLine": 2516,
+        "startChar": 79,
+        "endLine": 2516,
+        "endChar": 88
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7aa09878_c4204413",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 1
@@ -71,6 +95,30 @@
       "writtenOn": "2021-03-29T16:06:51Z",
       "side": 1,
       "message": "There\u0027s a threading bug here. This MemoryBuffer came from a pool (ScratchBuffer) and handing it off to a thread is not safe. I\u0027m not quite familiar with the scratch buffer, so maybe Jamie would have a better idea, but it looks to me like if a thread is to be used, the memory should be allocated separately and handed off to the thread (which would free it when done).",
+      "range": {
+        "startLine": 2583,
+        "startChar": 66,
+        "endLine": 2583,
+        "endChar": 83
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b082d88_f577a73b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2583,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-03-31T08:36:17Z",
+      "side": 1,
+      "message": "Hi Jamie, do you have any suggestion about the used MemoryBuffer ?",
+      "parentUuid": "7aa09878_c4204413",
       "range": {
         "startLine": 2583,
         "startChar": 66,
