@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "f49ff8540768462611570191ed102265a93fb612",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc444296_513da30d",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3648,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-31T01:41:44Z",
+      "side": 1,
+      "message": "I think this fits better below in ValidateProgramPipelineAttachedPrograms().\n\nShould this also check if EXT_geometry_shader is enabled (or the context is GLES 3.2?)?",
+      "range": {
+        "startLine": 3638,
+        "startChar": 0,
+        "endLine": 3648,
+        "endChar": 5
+      },
+      "revId": "f49ff8540768462611570191ed102265a93fb612",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
