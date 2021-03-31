@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12c00c64_d87c0394",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T18:27:02Z",
+      "side": 1,
+      "message": "LGTM. Failure looks unrelated and should be fixed by http://anglebug.com/5811 ",
+      "revId": "a9a098d7efcb04135580a7fcb023b48f77da8b69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
