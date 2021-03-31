@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "0557156f_5538299a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-31T16:21:07Z",
+      "side": 1,
+      "message": "That is a good idea, I will add the test line from the bug report.\nI looked into the impact of this patch on DepthStencilTest, and \"unfortunately\" the test fully passes on recent master. I had a discussion with Jamie and will try to reproduce the issue this patch fixes in extending the DepthStencilTest, as mentioned by him below.",
+      "parentUuid": "e84ecc56_b88cd74f",
+      "revId": "1f81055e20b1f998c02778a923c9071323d4ca4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "b4f1029c_fe2d0701",
