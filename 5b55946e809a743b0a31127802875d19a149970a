@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f575dca6_5df35494",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6133,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T18:43:07Z",
+      "side": 1,
+      "message": "nit: Is there a slight performance penalty for this change?  \n\nConsider getLastAllocatedLevel() returns 6 and mMaxLevel is 4 (I\u0027m thinking about NBA 2K20 which switches max level between those two values).  Seems like the loop within hasStagedUpdatesInLevels() will do some extra work.  I don\u0027t think it\u0027s harmful, but a little wasteful.  True?",
+      "range": {
+        "startLine": 6133,
+        "startChar": 58,
+        "endLine": 6133,
+        "endChar": 81
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2f95fa6_fe591069",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6242,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T18:43:07Z",
+      "side": 1,
+      "message": "nit: Same comment as above about mLevelCount potentially being larger than mMaxLevel.",
+      "range": {
+        "startLine": 6242,
+        "startChar": 53,
+        "endLine": 6242,
+        "endChar": 64
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb810bd4_3273cb2d",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3944,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T18:43:07Z",
+      "side": 1,
+      "message": "This is smaller than what is needed for the glTexImage2D call (10x10).  I\u0027m guessing that because that call is an error situation, the size of this doesn\u0027t matter.  True?",
+      "range": {
+        "startLine": 3944,
+        "startChar": 4,
+        "endLine": 3944,
+        "endChar": 64
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fd36d814_19c0c26e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3952,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T18:43:07Z",
+      "side": 1,
+      "message": "Should we check for a GL_INVALID_VALUE error here?",
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

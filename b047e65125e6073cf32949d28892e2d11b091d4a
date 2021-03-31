@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1dbe5872_23ee8fdc",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1948,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T18:43:07Z",
+      "side": 0,
+      "message": "I think this is correct, but I have a vague recollection that there was a case adding baseLevel mattered.",
+      "range": {
+        "startLine": 1948,
+        "startChar": 46,
+        "endLine": 1948,
+        "endChar": 58
+      },
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "cd2ea2c9_ba969953",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 5
