@@ -11,12 +11,11 @@
 
 #include "common/debug.h"
 
+#include <anglebase/sha1.h>
 #include <rapidjson/document.h>
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/prettywriter.h>
-
-#include <anglebase/sha1.h>
 
 namespace angle
 {

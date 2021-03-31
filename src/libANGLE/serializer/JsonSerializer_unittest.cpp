@@ -6,9 +6,10 @@
 // JsonSerializer_unittests-cpp: Unit tests for the JSON based serializer
 //
 
-#include "JsonSerializer.h"
+#if defined(ANGLE_HAVE_RAPIDJSON)
+#    include "JsonSerializer.h"
 
-#include <gtest/gtest.h>
+#    include <gtest/gtest.h>
 
 class JsonSerializerTest : public ::testing::Test
 {
@@ -183,3 +184,5 @@ void JsonSerializerTest::check(const std::string &expect)
     std::vector<uint8_t> expect_as_ubyte(expect.begin(), expect.end());
     EXPECT_EQ(js.getData(), expect_as_ubyte);
 }
+
+#endif

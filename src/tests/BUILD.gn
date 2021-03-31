@@ -135,9 +135,15 @@ angle_test("angle_unittests") {
     }
   }
 
+  defines = []
+
   if (angle_enable_hlsl) {
     sources += angle_unittests_hlsl_sources
-    defines = [ "ANGLE_ENABLE_HLSL" ]
+    defines += [ "ANGLE_ENABLE_HLSL" ]
+  }
+
+  if (angle_has_build) {
+    defines += [ "ANGLE_HAS_RAPIDJSON" ]
   }
 
   deps = [
@@ -151,6 +157,7 @@ angle_test("angle_unittests") {
     "$angle_root:translator",
     "$angle_root/util:angle_util_static",
   ]
+
   if (!is_android && !is_fuchsia) {
     # SystemUtils.RunApp, the only unittest using a helper binary, is not supported on these
     # platforms yet.
