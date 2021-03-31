@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0761622_7686e3e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 23
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T22:06:34Z",
+      "side": 1,
+      "message": "LGTM.  Will defer to Shabi to +2.",
+      "revId": "f8887a9e5cf9423ed5800a067aea4cd38f3be260",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
