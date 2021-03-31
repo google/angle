@@ -57,6 +57,20 @@ class EGLMultiContextTest : public ANGLETest
     GLuint mTexture;
 };
 
+// Test that calling eglDeleteContext on a context that is not current succeeds.
+TEST_P(EGLMultiContextTest, TestContextDestroySimple)
+{
+    EGLWindow *window = getEGLWindow();
+    EGLDisplay dpy    = window->getDisplay();
+
+    EGLContext context1 = window->createContext(EGL_NO_CONTEXT);
+    EGLContext context2 = window->createContext(EGL_NO_CONTEXT);
+
+    EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, context1));
+    EXPECT_EGL_TRUE(eglDestroyContext(dpy, context2));
+    EXPECT_EGL_SUCCESS();
+}
+
 // Test that a compute shader running in one thread will still work when rendering is happening in
 // another thread (with non-shared contexts).  The non-shared context will still share a Vulkan
 // command buffer.

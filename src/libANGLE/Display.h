@@ -180,6 +180,11 @@ class Display final : public LabeledObject,
     void destroyImage(Image *image);
     void destroyStream(Stream *stream);
     Error destroyContext(const Thread *thread, gl::Context *context);
+    Error destroyContextWithSurfaces(const Thread *thread,
+                                     gl::Context *context,
+                                     gl::Context *currentContext,
+                                     Surface *currentDrawSurface,
+                                     Surface *currentReadSurface);
     void destroySync(Sync *sync);
 
     bool isInitialized() const;

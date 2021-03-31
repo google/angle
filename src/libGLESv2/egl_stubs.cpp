@@ -275,18 +275,41 @@ EGLSurface CreateWindowSurface(Thread *thread,
 
 EGLBoolean DestroyContext(Thread *thread, Display *display, gl::Context *context)
 {
+
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglDestroyContext",
                          GetDisplayIfValid(display), EGL_FALSE);
-    bool contextWasCurrent = context == thread->getContext();
 
-    ANGLE_EGL_TRY_RETURN(thread, display->destroyContext(thread, context), "eglDestroyContext",
-                         GetContextIfValid(display, context), EGL_FALSE);
+    gl::Context *contextForThread = thread->getContext();
+    bool contextWasCurrent        = context == contextForThread;
+
+    bool shouldMakeCurrent =
+        !contextWasCurrent && !context->isExternal() && context->getRefCount() <= 1;
+
+    // Display can't access the current global context, but does exhibit a context switch,
+    // so ensuring the current global context is correct needs to happen here.
+    Surface *currentDrawSurface = thread->getCurrentDrawSurface();
+    Surface *currentReadSurface = thread->getCurrentReadSurface();
+
+    if (shouldMakeCurrent)
+    {
+        SetContextCurrent(thread, context);
+    }
+
+    ANGLE_EGL_TRY_RETURN(
+        thread,
+        display->destroyContextWithSurfaces(thread, context, contextForThread, currentDrawSurface,
+                                            currentReadSurface),
+        "eglDestroyContext", GetContextIfValid(display, context), EGL_FALSE);
 
     if (contextWasCurrent)
     {
         ANGLE_EGL_TRY_RETURN(thread, display->makeCurrent(context, nullptr, nullptr, nullptr),
                              "eglDestroyContext", GetContextIfValid(display, context), EGL_FALSE);
         SetContextCurrent(thread, nullptr);
+    }
+    else if (shouldMakeCurrent)
+    {
+        SetContextCurrent(thread, contextForThread);
     }
 
     thread->setSuccess();
