@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c77082e_af759511",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6133,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T22:25:18Z",
+      "side": 1,
+      "message": "Okay, I\u0027m fine with this.  Thanks!\n\nYou are correct about NBA 2K20.",
+      "parentUuid": "87fbe187_55b0fd2c",
+      "range": {
+        "startLine": 6133,
+        "startChar": 58,
+        "endLine": 6133,
+        "endChar": 81
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d2f95fa6_fe591069",
