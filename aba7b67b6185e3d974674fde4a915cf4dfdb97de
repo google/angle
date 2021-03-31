@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e14ea58a_f1e60a52",
+        "filename": "BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-31T18:27:41Z",
+      "side": 0,
+      "message": "Why is this no longer needed?",
+      "range": {
+        "startLine": 551,
+        "startChar": 0,
+        "endLine": 554,
+        "endChar": 0
+      },
+      "revId": "aba7b67b6185e3d974674fde4a915cf4dfdb97de",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
