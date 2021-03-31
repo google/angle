@@ -72,6 +72,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "275e7047_d65c10c4",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 3944,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T18:48:28Z",
+      "side": 1,
+      "message": "No it should be fixed. Otherwise the test is reading OOB of this array.",
+      "parentUuid": "bb810bd4_3273cb2d",
+      "range": {
+        "startLine": 3944,
+        "startChar": 4,
+        "endLine": 3944,
+        "endChar": 64
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "fd36d814_19c0c26e",
         "filename": "src/tests/gl_tests/TextureTest.cpp",
         "patchSetId": 7
