@@ -7,6 +7,7 @@
 //   Various tests related for Frambuffers.
 //
 
+#include "common/mathutil.h"
 #include "platform/FeaturesD3D.h"
 #include "test_utils/ANGLETest.h"
 #include "test_utils/gl_raii.h"
@@ -2697,6 +2698,83 @@ TEST_P(FramebufferTest_ES3, RenderAndInvalidateImmutableTextureWithBellowBaseLev
 
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test render to a texture level that is excluded from [base_level, max_level]. This specific test
+// renders to an immutable texture at the level that is bigger than GL_TEXTURE_MAX_LEVEL. The
+// texture level that we render to has been initialized with data before rendering. This test if
+// render to that level will get flush the level update even though it is outside [base, max]
+// levels.
+TEST_P(FramebufferTest_ES3, RenderImmutableTextureWithSubImageWithBeyondMaxLevel)
+{
+    // ToDo: https://issuetracker.google.com/181800403
+    ANGLE_SKIP_TEST_IF(IsVulkan() || IsMetal());
+
+    // Set up program to sample from specific lod level.
+    GLProgram textureLodProgram;
+    textureLodProgram.makeRaster(essl3_shaders::vs::Texture2DLod(),
+                                 essl3_shaders::fs::Texture2DLod());
+    ASSERT(textureLodProgram.valid());
+    glUseProgram(textureLodProgram);
+
+    GLint textureLocation =
+        glGetUniformLocation(textureLodProgram, essl3_shaders::Texture2DUniform());
+    ASSERT_NE(-1, textureLocation);
+    GLint lodLocation = glGetUniformLocation(textureLodProgram, essl3_shaders::LodUniform());
+    ASSERT_NE(-1, lodLocation);
+
+    constexpr GLuint kLevel0Size = 4;
+    constexpr GLuint kLevel1Size = kLevel0Size / 2;
+    std::array<GLColor, kLevel0Size * kLevel0Size> gData;
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexStorage2D(GL_TEXTURE_2D, 2, GL_RGBA8, kLevel0Size, kLevel0Size);
+    // Initialize level 0 with blue
+    gData.fill(GLColor::blue);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kLevel0Size, kLevel0Size, GL_RGBA, GL_UNSIGNED_BYTE,
+                    gData.data());
+    // set max_level to 0
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    // Draw with level 0
+    glUniform1f(lodLocation, 0);
+    drawQuad(textureLodProgram, essl3_shaders::PositionAttrib(), 0.5f);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Initalize level 1 with green
+    gData.fill(GLColor::green);
+    glTexSubImage2D(GL_TEXTURE_2D, 1, 0, 0, kLevel1Size, kLevel1Size, GL_RGBA, GL_UNSIGNED_BYTE,
+                    gData.data());
+    // Attach level 1 to a FBO
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 1);
+    ASSERT_GL_NO_ERROR();
+    ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+    // Render to FBO (i.e. level 1) with Red and blend with existing texture level data
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+    glViewport(0, 0, kLevel1Size, kLevel1Size);
+    glScissor(0, 0, kLevel1Size, kLevel1Size);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    ANGLE_GL_PROGRAM(redProgram, essl3_shaders::vs::Simple(), essl3_shaders::fs::Red());
+    glUseProgram(redProgram);
+    drawQuad(redProgram, essl3_shaders::PositionAttrib(), 0.5f);
+
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+    glDisable(GL_SCISSOR_TEST);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    ASSERT_GL_NO_ERROR();
+    // Expect to see Red + Green, which is Yellow
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::yellow);
 }
 
 // Covers a bug in ANGLE's Vulkan back-end. Our VkFramebuffer cache would in some cases forget to
