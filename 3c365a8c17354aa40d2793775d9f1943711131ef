@@ -16,6 +16,23 @@
       "message": "For a fix it is sufficient to not append the attribs to the list when noError is not set.\nThe noError extension seems to only be enabled for gles2 tests in some cases:\n\nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/tests/test_utils/ANGLETest.cpp;l\u003d1228;drc\u003da4f2102d976e72f57b7f06b64fabadf1fead9495;bpv\u003d1;bpt\u003d1\n\nI could add a check for EGL_CONTEXT_MAJOR_VERSION_KHR to be required at 1 for this extension. Unfortunately I did not find a GLES version requirement for this extension apart from mesa. See the bug report for more info.",
       "revId": "3c365a8c17354aa40d2793775d9f1943711131ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "763ad8d1_a27b05b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-31T15:47:11Z",
+      "side": 1,
+      "message": "I\u0027m okay with omitting the attrib if its not enabled, as above.\n\nSince this is a mesa workaound, let\u0027s tag it with something like:\n// TODO (http://anglebug.com/5809) Mesa fails to create context with noError",
+      "revId": "3c365a8c17354aa40d2793775d9f1943711131ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
