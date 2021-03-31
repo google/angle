@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bd935b16_16d12007",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-03-31T15:21:50Z",
+      "side": 1,
+      "message": "Rather than ifdefs, should we have a JsonSerializer_stub.cpp, similar to FrameCapture_mock.cpp?\n\nIf there\u0027s no clean way to do that, defining the entire file contents like Shabi suggested is fine.",
+      "revId": "06459ea763aa82ad657e7632f7d5fa9c4e5cf2d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "95e33531_55a59fcd",
         "filename": "src/libANGLE/serializer/JsonSerializer.h",
         "patchSetId": 1
