@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27603ef3_d7d85b55",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-31T21:48:33Z",
+      "side": 1,
+      "message": "LGTM. Looks like good cleanup in general.",
+      "revId": "8315fd828419b1994e916aa4397cd59fd635e33b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
