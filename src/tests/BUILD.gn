@@ -116,7 +116,9 @@ angle_test("angle_system_info_test") {
   sources = [ "angle_system_info_tests_main.cpp" ]
   deps = [
     "$angle_root:angle_gpu_info_util",
-    "$angle_root/util:angle_util",
+    "$angle_root:libEGL_static",
+    "$angle_root:libGLESv2_static",
+    "$angle_root/util:angle_util_static",
   ]
 }
 
