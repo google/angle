@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '8599134e632fcdcacdc7c91433e0ec229c73e2e6',
+  'chromium_revision': 'c181ac047c8bb72b8e3df977c46595dd9d521f8a',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -65,18 +65,18 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'c8248182dbaaf337c1f61c77bb54b8e00be4d2e0',
+  'catapult_revision': '117862727826bd34303450d23fa94d784b20d846',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
   # and whatever else without interference from each other.
-  'luci_go': 'git_revision:62439191b003e76fb15094bd142ba9b80387ba85',
+  'luci_go': 'git_revision:84c2e8c00bcf3bcea776a4b4a62134921d8a177a',
 }
 
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@8d5bcfe61d47c1ab4fcf3bde3aad5427c94204f6',
+    'url': '{chromium_git}/chromium/src/build.git@5cfbfa7a2fbc52acd7f89cb89fcb8770d187bbba',
     'condition': 'not build_with_chromium',
   },
 
@@ -94,7 +94,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-amd64',
-        'version': 'git_revision:b2e3d8622c1ce1bd853c7a11f62a739946669cdd',
+        'version': 'git_revision:5667cc61018864b17542e0baff8b790f245583b0',
       }
     ],
     'dep_type': 'cipd',
@@ -105,7 +105,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:b2e3d8622c1ce1bd853c7a11f62a739946669cdd',
+        'version': 'git_revision:5667cc61018864b17542e0baff8b790f245583b0',
       }
     ],
     'dep_type': 'cipd',
@@ -118,7 +118,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@cbf9455e837f39dac89f9e3365692e9251019d4e',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@77b3c6ba9b261df3d5f3af5f3df9f4885bae9f21',
     'condition': 'not build_with_chromium',
   },
 
@@ -126,7 +126,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:b2e3d8622c1ce1bd853c7a11f62a739946669cdd',
+        'version': 'git_revision:5667cc61018864b17542e0baff8b790f245583b0',
       }
     ],
     'dep_type': 'cipd',
@@ -134,7 +134,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@901c2aa8dc9478512fd43f8f54379af21c41db53',
+    'url': '{chromium_git}/chromium/src/testing@3f8eac94d9974a41ec0ffcc840bfcedf2e3c8b26',
     'condition': 'not build_with_chromium',
   },
 
@@ -269,7 +269,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@3bf4cc37a89ce28873a89241123c1a75490f8523',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@ddfad9cce368bc8fc61c88673f09f4f65b2e48d2',
     'condition': 'not build_with_chromium',
   },
 
@@ -304,7 +304,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@fd8d4ca0663a3397137d9c99d0ee00cfb7daa1d1',
+    'url': '{chromium_git}/chromium/src/tools/mb@c41470fd4c01ed082fcce52898ae69c4bb97fae1',
     'condition': 'not build_with_chromium',
   },
 
