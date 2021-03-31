@@ -135,6 +135,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "326d9216_ef9d3508",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-31T04:40:36Z",
+      "side": 1,
+      "message": "- The command line file has a single line.\n- I removed the handling for quotations because it looks like quotes in command line parameters are uncommon. test_runner.py strips quotes from command line parameters passed to it. The quote handling in testing/android/native_test/native_test_util.cc was added in 2012",
+      "parentUuid": "c2e23713_d692208f",
+      "range": {
+        "startLine": 148,
+        "startChar": 36,
+        "endLine": 148,
+        "endChar": 55
+      },
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "68cb4ddd_b8d7f780",
         "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
         "patchSetId": 10
@@ -146,6 +170,30 @@
       "writtenOn": "2021-03-30T14:56:46Z",
       "side": 1,
       "message": "Is there no way to get the args split already (like C\u0027s main() takes)? Parsing command line args after they are concatenated is a not a great idea. There\u0027s inconsistency with the rest of the system in handling quotation for example, not to mention the complexity of nested quotations (which are not handled in this change).",
+      "range": {
+        "startLine": 153,
+        "startChar": 24,
+        "endLine": 153,
+        "endChar": 40
+      },
+      "revId": "edccc575631fa683f2d52c29578f8c7d31975289",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "96f7dbc9_272d0240",
+        "filename": "src/tests/test_utils/runner/android/AngleNativeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-03-31T04:40:36Z",
+      "side": 1,
+      "message": "- The command line parameters are passed in conactenated from Python to Java as an Android Intent extra (or via a file if there are a lot of parameters)\n- According to stackoverflow wordexp would be a way of doing this. I don\u0027t want to use wordexp because wordexp validates input. It throws an error if it is given unescaped braces.",
+      "parentUuid": "68cb4ddd_b8d7f780",
       "range": {
         "startLine": 153,
         "startChar": 24,
