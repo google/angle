@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebe19f3c_b618bbf6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 6133,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T22:49:32Z",
+      "side": 1,
+      "message": "\"And I think we may have a potential bug here for immutable texture that we might miss a flush for level outside [base, max]\", I added a test for this crrev.com/c/2797724, and my local test shows it still fail even after crrev.com/c/2368038, but passes after this CL.",
+      "parentUuid": "6c77082e_af759511",
+      "range": {
+        "startLine": 6133,
+        "startChar": 58,
+        "endLine": 6133,
+        "endChar": 81
+      },
+      "revId": "5b55946e809a743b0a31127802875d19a149970a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d2f95fa6_fe591069",

@@ -123,6 +123,24 @@
       "parentUuid": "cf958b9d_b16b2606",
       "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad93e881_61a66169",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5971,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T22:49:32Z",
+      "side": 0,
+      "message": "crrev.com/c/2797724",
+      "parentUuid": "209f7b94_80bc78b8",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
