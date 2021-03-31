@@ -213,6 +213,30 @@
       },
       "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "336e5caf_09b06ea7",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T03:27:47Z",
+      "side": 1,
+      "message": "mBaseLevel was eliminated partly because we have mFirstAllocatedLevel. Various places does need mFirstAllocatedLevel.\nThis CL needs to come first, since other Cls rely on mFirstAllocatedLevel.",
+      "parentUuid": "a63252cb_ce4472b4",
+      "range": {
+        "startLine": 2067,
+        "startChar": 4,
+        "endLine": 2067,
+        "endChar": 39
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
