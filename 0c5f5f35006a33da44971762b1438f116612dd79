@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9acab512_13d03b0f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2516,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T14:15:51Z",
+      "side": 1,
+      "message": "How about we simply check if the last task is done (isReady() I believe), and if it\u0027s not done, skip this round. So for example if the worker thread usually takes 1.5 seconds to finish, we end up actually storing the cache every 2 seconds (instead of the default 1s). If it\u0027s fast enough but there is an occasional hitch, we would just skip storing it every now and then.",
+      "parentUuid": "55366ad9_685f3c76",
+      "range": {
+        "startLine": 2516,
+        "startChar": 79,
+        "endLine": 2516,
+        "endChar": 88
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7aa09878_c4204413",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 1
@@ -119,6 +143,30 @@
       "side": 1,
       "message": "Hi Jamie, do you have any suggestion about the used MemoryBuffer ?",
       "parentUuid": "7aa09878_c4204413",
+      "range": {
+        "startLine": 2583,
+        "startChar": 66,
+        "endLine": 2583,
+        "endChar": 83
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5277e87f_39431a3f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2583,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T14:15:51Z",
+      "side": 1,
+      "message": "How about we go with a simple std::vector that gets std::move\u0027d into the thread?",
+      "parentUuid": "2b082d88_f577a73b",
       "range": {
         "startLine": 2583,
         "startChar": 66,
