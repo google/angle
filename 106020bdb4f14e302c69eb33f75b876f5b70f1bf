@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72f024b7_c9ab652c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-31T21:39:46Z",
+      "side": 1,
+      "message": "Could you take another look?\nThe fix is in PS2.\nWe need \"Revert as WIP\" button 😊",
+      "revId": "106020bdb4f14e302c69eb33f75b876f5b70f1bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e68d206_19928861",
+        "filename": "src/tests/BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-31T21:39:46Z",
+      "side": 1,
+      "message": "Is adding these 2 deps acceptable?\nThe alternative is to split ANativeWindow glue from angle_util.",
+      "range": {
+        "startLine": 119,
+        "startChar": 0,
+        "endLine": 120,
+        "endChar": 35
+      },
+      "revId": "106020bdb4f14e302c69eb33f75b876f5b70f1bf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
