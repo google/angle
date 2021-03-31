@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d68f5de_03211f80",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T16:52:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6f27b794_51505bc6",
+      "range": {
+        "startLine": 1505,
+        "startChar": 74,
+        "endLine": 1506,
+        "endChar": 59
+      },
+      "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "635d9947_8e647413",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-03-31T15:32:48Z",
       "side": 1,
       "message": "Probably worth updating/removing this comment now, since the layout can contain \u0027color attachment\u0027 (which isn\u0027t read-only).",
+      "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e924be55_894a5c35",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1533,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T16:52:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "635d9947_8e647413",
       "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -72,6 +114,24 @@
       "side": 1,
       "message": "Since it\u0027s a framebuffer attachment, it should have the appropriate imageWrite() (or equivalent) somewhere as would the normal attachments (that are not also bound as sampler).",
       "parentUuid": "fa5d038c_031df784",
+      "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "845aa23d_8b8c9709",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1534,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T16:52:30Z",
+      "side": 1,
+      "message": "colorImageDraw call should have handled all the retain and add to use list etc. All we need here is layout change.",
+      "parentUuid": "52f05e88_f468cd04",
       "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
