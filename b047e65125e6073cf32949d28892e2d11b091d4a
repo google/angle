@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d50b6d6b_504a7511",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1916,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T17:55:58Z",
+      "side": 1,
+      "message": "Given the change in parameters (with a reliance on DIRTY_BIT_{MAX|BASE}_LEVEL, it seems like this can\u0027t happen.  Therefore, we should assert this will never happen.\n\nOtherwise, there\u0027s a problem and we need the old \"previous{Base|Max}Level variables/logic.",
+      "range": {
+        "startLine": 1916,
+        "startChar": 4,
+        "endLine": 1916,
+        "endChar": 47
+      },
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9155a32f_83bbcbc8",
         "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
         "patchSetId": 6
@@ -67,6 +90,47 @@
       "side": 1,
       "message": "Great. A regression test for that would be perfect.",
       "parentUuid": "438ca8e4_f092cee6",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "11ca9c47_0cbac8b2",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T17:55:58Z",
+      "side": 1,
+      "message": "\u003e Use it with non-zero base (like sample from it)\n\nClarifying question for Shabi: are you trying to get baseLevel to be non-0 before the glTexStorage2D call?\n\n\u003e ... The first thing it does is call releaseAndDeleteImageAndViews and then call initImmutableImage. Everything is going to start with a new VkImage.\n\nThat\u0027s only if !mOwnsImage.  Will that be the case in the scenario Shabi described?  I was going to look, but figured you already know.",
+      "parentUuid": "9155a32f_83bbcbc8",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0add6b0b_034c8cc0",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1977,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-03-31T17:55:58Z",
+      "side": 1,
+      "message": "Is this always guaranteed now to be the same as what previousBaseLevel would have been?",
+      "range": {
+        "startLine": 1977,
+        "startChar": 53,
+        "endLine": 1977,
+        "endChar": 85
+      },
       "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
