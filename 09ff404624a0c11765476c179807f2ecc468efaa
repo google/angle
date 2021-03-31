@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ee149e97_ac9c4c09",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-03-31T15:41:03Z",
+      "side": 1,
+      "message": "nit: Probably a micro-optimization since we\u0027re typically only doing 1-2 iterations, but rather than creating multiple copies of the string inside of the loop, you can instead only increment \u0027i\u0027 inside the loop and then do a single copy when it\u0027s done.   I think something like this should work:\n            while file[len(file) - i].isdigit():\n                i +\u003d 1\n            context \u003d file[len(file) - i:-3]",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 22
+      },
+      "revId": "09ff404624a0c11765476c179807f2ecc468efaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1a6d7810_49024088",
         "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
         "patchSetId": 3
