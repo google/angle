@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6e7e6a1_e7c46947",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-03-31T15:34:03Z",
+      "side": 1,
+      "message": "We don\u0027t have a bot that runs tests on Fuchsia on our CQ, so I\u0027ll trust you this works.",
+      "revId": "057131ce14c4a3daa9238469177a00f965e22282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
