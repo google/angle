@@ -41,6 +41,29 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5786398_dc63b05e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1293,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:03:02Z",
+      "side": 1,
+      "message": "Ref. Old mImage released here.",
+      "range": {
+        "startLine": 1290,
+        "startChar": 4,
+        "endLine": 1293,
+        "endChar": 5
+      },
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d50b6d6b_504a7511",
@@ -54,6 +77,30 @@
       "writtenOn": "2021-03-31T17:55:58Z",
       "side": 1,
       "message": "Given the change in parameters (with a reliance on DIRTY_BIT_{MAX|BASE}_LEVEL, it seems like this can\u0027t happen.  Therefore, we should assert this will never happen.\n\nOtherwise, there\u0027s a problem and we need the old \"previous{Base|Max}Level variables/logic.",
+      "range": {
+        "startLine": 1916,
+        "startChar": 4,
+        "endLine": 1916,
+        "endChar": 47
+      },
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4041e87_3f19a834",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1916,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:03:02Z",
+      "side": 1,
+      "message": "Good point!",
+      "parentUuid": "d50b6d6b_504a7511",
       "range": {
         "startLine": 1916,
         "startChar": 4,
@@ -153,6 +200,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "34d935b8_1789c037",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:03:02Z",
+      "side": 1,
+      "message": "Test added. The old miutable texture will gets released from TextureVk::setStorageMultiSample line 1292 (see Ref).",
+      "parentUuid": "04653743_5d4dffc7",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0add6b0b_034c8cc0",
@@ -166,6 +231,30 @@
       "writtenOn": "2021-03-31T17:55:58Z",
       "side": 1,
       "message": "Is this always guaranteed now to be the same as what previousBaseLevel would have been?",
+      "range": {
+        "startLine": 1977,
+        "startChar": 53,
+        "endLine": 1977,
+        "endChar": 85
+      },
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "379e42f4_a27e5cc3",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1977,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T21:03:02Z",
+      "side": 1,
+      "message": "For immutable, it will return 0. Previously it will return actual mBaseLevel. So there is a change here. But this change is correct, because if you look at how this previousBaseLevel is been used by respecifyImageStorageAndLevels, it is used to convert the levelVk to levelGL, which means what you need here is the mFirstAllocatedLevel instead of mBaseLevel.",
+      "parentUuid": "0add6b0b_034c8cc0",
       "range": {
         "startLine": 1977,
         "startChar": 53,
