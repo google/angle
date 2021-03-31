@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cd2ea2c9_ba969953",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5971,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T03:04:58Z",
+      "side": 0,
+      "message": "This may be incorrect. Could you write a test like this?\n\n- Create a texture with 3 levels, 4x4, 2x2 and 1x1\n- Use the texture (so everything is flushed)\n- Set max level to 1 (i.e. include only 4x4 and 2x2)\n- Upload data to level 0 (so there\u0027s something to flush in the base-max range)\n- Upload incompatible data to level 2 (for example with glTexImage2D with a size of 10x10)\n- Use the texture again (so flushStagedUpdates is called)\n\nIt looks like flushStagedUpdates at the last step would end up attempting to upload the 10x10 data to the last level. Unless levelGLEnd was already capped to max level, in which case this was redundant in the first place.",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
