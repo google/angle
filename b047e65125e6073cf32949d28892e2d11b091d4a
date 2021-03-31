@@ -16,6 +16,24 @@
       "message": "Please add a test that does this:\n\n- Define a texture with glTexImage2D\n- Use it with non-zero base (like sample from it)\n- Redefine the texture with glTexStorage2D\n- Use it and make sure everything is correct\n\nSince this is conditioned to !mState.getImmutableFormat(), it looks like mFirstAllocatedLevel will be stuck at the old base level after the texture is redefined.",
       "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "438ca8e4_f092cee6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T17:02:43Z",
+      "side": 1,
+      "message": "In the sequence you dexcribed above, because in the previous CL crrev.com/c/2368038 glTexStorage2D will call setStorage immediately, which calls TextureVk::setStorageMultisample. The first thing it does is call releaseAndDeleteImageAndViews and then call initImmutableImage. Everything is going to start with a new VkImage.",
+      "parentUuid": "9155a32f_83bbcbc8",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
