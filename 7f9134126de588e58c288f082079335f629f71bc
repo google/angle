@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3462022d_c2d2e92f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T17:43:17Z",
+      "side": 1,
+      "message": "Used in combination with https://chromium-review.googlesource.com/c/chromium/src/+/2797512 (which will turn into a manual roll).\n\nThe other CL is still running, but I can confirm locally that the issue is gone (i.e. static initializers from glslang are no longer detected).",
+      "revId": "7f9134126de588e58c288f082079335f629f71bc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
