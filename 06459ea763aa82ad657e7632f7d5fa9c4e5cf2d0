@@ -39,6 +39,30 @@
       },
       "revId": "06459ea763aa82ad657e7632f7d5fa9c4e5cf2d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e44fcf4_dac2cd95",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T15:34:30Z",
+      "side": 1,
+      "message": "Agree with the sentiment to try and minimize ifdefs. I was thinking maybe in frame_capture_utils, you make a single #ifdef around all the serialize functions, and include an #else with the main serialize function no-oped. You will also need another #ifdef for conditionally including this header.",
+      "parentUuid": "95e33531_55a59fcd",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 21
+      },
+      "revId": "06459ea763aa82ad657e7632f7d5fa9c4e5cf2d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
