@@ -33,6 +33,29 @@
       "message": "I\u0027m okay with omitting the attrib if its not enabled, as above.\n\nSince this is a mesa workaound, let\u0027s tag it with something like:\n// TODO (http://anglebug.com/5809) Mesa fails to create context with noError",
       "revId": "3c365a8c17354aa40d2793775d9f1943711131ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a83ed684_66823ef7",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T16:01:33Z",
+      "side": 1,
+      "message": "can you include a link to the Mesa upstream bug here?",
+      "range": {
+        "startLine": 529,
+        "startChar": 56,
+        "endLine": 529,
+        "endChar": 63
+      },
+      "revId": "3c365a8c17354aa40d2793775d9f1943711131ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
