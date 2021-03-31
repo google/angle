@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f27b794_51505bc6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1506,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T02:47:57Z",
+      "side": 1,
+      "message": "Redundant. If frontShader is Fragment, both other conditions would be false too.",
+      "range": {
+        "startLine": 1505,
+        "startChar": 74,
+        "endLine": 1506,
+        "endChar": 59
+      },
+      "revId": "a01e2991be6a349e684c5dc5bec7407ae994326a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
