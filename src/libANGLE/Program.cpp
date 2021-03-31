@@ -4445,6 +4445,14 @@ void Program::updateSamplerUniform(Context *context,
             }
         }
 
+        // Update the observing PPO's executable, if any.
+        // Do this before any of the Context work, since that uses the current ProgramExecutable,
+        // which will be the PPO's if this Program is bound to it, rather than this Program's.
+        if (isSeparable())
+        {
+            onStateChange(angle::SubjectMessage::ProgramTextureOrImageBindingChanged);
+        }
+
         // Notify context.
         if (context)
         {

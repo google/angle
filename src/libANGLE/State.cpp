@@ -3581,7 +3581,7 @@ void State::onActiveTextureChange(const Context *context, size_t textureUnit)
                                      : nullptr;
         updateTextureBinding(context, textureUnit, activeTexture);
 
-        mExecutable->onStateChange(angle::SubjectMessage::SubjectChanged);
+        mExecutable->onStateChange(angle::SubjectMessage::ProgramTextureOrImageBindingChanged);
     }
 }
 
@@ -3618,7 +3618,7 @@ void State::onImageStateChange(const Context *context, size_t unit)
             mDirtyObjects.set(DIRTY_OBJECT_IMAGES_INIT);
         }
 
-        mExecutable->onStateChange(angle::SubjectMessage::SubjectChanged);
+        mExecutable->onStateChange(angle::SubjectMessage::ProgramTextureOrImageBindingChanged);
     }
 }
 

@@ -660,8 +660,9 @@ void ProgramPipeline::onSubjectStateChange(angle::SubjectIndex index, angle::Sub
 {
     switch (message)
     {
-        case angle::SubjectMessage::SubjectChanged:
+        case angle::SubjectMessage::ProgramTextureOrImageBindingChanged:
             mState.mIsLinked = false;
+            mState.mExecutable->mActiveSamplerRefCounts.fill(0);
             mState.updateExecutableTextures();
             break;
         case angle::SubjectMessage::ProgramRelinked:
