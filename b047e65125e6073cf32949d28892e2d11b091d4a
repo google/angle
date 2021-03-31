@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9155a32f_83bbcbc8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T03:05:05Z",
+      "side": 1,
+      "message": "Please add a test that does this:\n\n- Define a texture with glTexImage2D\n- Use it with non-zero base (like sample from it)\n- Redefine the texture with glTexStorage2D\n- Use it and make sure everything is correct\n\nSince this is conditioned to !mState.getImmutableFormat(), it looks like mFirstAllocatedLevel will be stuck at the old base level after the texture is redefined.",
+      "revId": "b047e65125e6073cf32949d28892e2d11b091d4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
