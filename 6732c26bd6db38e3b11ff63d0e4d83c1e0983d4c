@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe5b64e7_9353bc54",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T17:43:03Z",
+      "side": 1,
+      "message": "re-lgtm. Still a few license comment nits. Shabi were those answers satisfactory?\n\nBTW Peter beware of your upload clobbering the commit message because ANGLE uses no-squash.",
+      "revId": "6732c26bd6db38e3b11ff63d0e4d83c1e0983d4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
