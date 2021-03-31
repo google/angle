@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75944f6b_28c8db49",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-03-31T22:40:07Z",
+      "side": 1,
+      "message": "Add a test that demonstrate the bug that we might miss a flush of a level that is outside of [base, max] when we render to it. ",
+      "revId": "08040631ed931f0759e598d953e7446626258133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
