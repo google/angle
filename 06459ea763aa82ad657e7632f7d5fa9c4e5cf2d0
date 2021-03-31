@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95e33531_55a59fcd",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T14:27:41Z",
+      "side": 1,
+      "message": "Please avoid #ifdefs all over the place. You can make this file look like this:\n\n#ifdef HAVE_RAPIDJSON\n// what the file contained previously\n#else\n// put the stub definition of class in its entirety here, with every function declared as {}.\n#endif\n\nThen remove all #ifdefs from the cpp file and in BUILD.gn simply include the cpp file only when angle_has_build",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 21
+      },
+      "revId": "06459ea763aa82ad657e7632f7d5fa9c4e5cf2d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
