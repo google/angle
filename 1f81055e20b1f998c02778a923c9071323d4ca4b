@@ -33,6 +33,23 @@
       "message": "LGTM",
       "revId": "1f81055e20b1f998c02778a923c9071323d4ca4b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "787ca599_f65f873b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T15:36:11Z",
+      "side": 1,
+      "message": "I think it would be possible to write an NV_read_depth angle_end2end_test to cover this bug.",
+      "revId": "1f81055e20b1f998c02778a923c9071323d4ca4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
