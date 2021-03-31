@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "7815f96d93b532bf3602df0bddda3e6d6946faa2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03c507af_28329094",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 9323,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T17:05:11Z",
+      "side": 1,
+      "message": "I\u0027d suggest you instead modify this code to be\n\nif (!geometry)\n{\n   setValidDrawModes(true....);\n}\n\n// keep the same code as before.",
+      "range": {
+        "startLine": 9323,
+        "startChar": 4,
+        "endLine": 9323,
+        "endChar": 70
+      },
+      "revId": "7815f96d93b532bf3602df0bddda3e6d6946faa2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
