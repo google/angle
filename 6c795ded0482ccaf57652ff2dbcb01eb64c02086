@@ -189,6 +189,30 @@
       },
       "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a63252cb_ce4472b4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 21
+      },
+      "lineNbr": 2067,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T03:07:35Z",
+      "side": 1,
+      "message": "Good changes getting rid of mBaseLevel and mMaxLevel. Maybe the CLs could be reordered so those land first?\n\nAt this point, is mFirstAllocatedLevel still necessary? Since it\u0027s always 0 for immutable textures and base level for mutable ones, the texture knows this value. The same way mBaseLevel was eliminated, it looks like mFirstAllocatedLevel can also be eliminated.",
+      "parentUuid": "5d49a436_1ed79e0f",
+      "range": {
+        "startLine": 2067,
+        "startChar": 4,
+        "endLine": 2067,
+        "endChar": 39
+      },
+      "revId": "6c795ded0482ccaf57652ff2dbcb01eb64c02086",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
