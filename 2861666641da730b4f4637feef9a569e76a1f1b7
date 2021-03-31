@@ -56,6 +56,24 @@
       "message": "+Mohan. Dependency on VK_KHR_image_format_list was added here [1]. Mohan, is that mandatory? Why isn\u0027t the test added in [1] failing with this change?\n\n[1]: https://chromium-review.googlesource.com/c/angle/angle/+/2530535",
       "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16e1d70b_99f31191",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-03-31T14:54:13Z",
+      "side": 1,
+      "message": "both \"EGL_KHR_gl_colorspace\" and \"EGL_EXT_image_gl_colorspace\" allows for reinterpretation of colorspace. VK_KHR_image_format_list provides the efficient path for that. I believe we had a discussion about removing the inefficient emulation path but i think the consensus was bots will take about a year to have \"VK_KHR_image_format_list\" enabled and so we keep the emulation path around for a bit.\n\n\u003e Why isn\u0027t the test added in [1] failing with this change?\n\nneed confirmation but their platform may have default support for \"VK_KHR_image_format_list\" so removing that requirement ends up being a noop for them?",
+      "parentUuid": "f32490b1_6db0024b",
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
