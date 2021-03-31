@@ -16,6 +16,29 @@
       "message": "Required fix for Dragon Raja trace.",
       "revId": "09ff404624a0c11765476c179807f2ecc468efaa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a6d7810_49024088",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-03-31T15:10:21Z",
+      "side": 1,
+      "message": "nit: \u003d\u003d True is redundant",
+      "range": {
+        "startLine": 311,
+        "startChar": 19,
+        "endLine": 311,
+        "endChar": 46
+      },
+      "revId": "09ff404624a0c11765476c179807f2ecc468efaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
