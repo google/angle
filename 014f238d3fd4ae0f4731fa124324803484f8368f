@@ -39,6 +39,30 @@
       },
       "revId": "014f238d3fd4ae0f4731fa124324803484f8368f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "619cf790_b7b8424b",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-03-31T13:59:53Z",
+      "side": 1,
+      "message": "I added a CaptureVertexPointerGLES1 function that removes duplication for this.",
+      "parentUuid": "0b93d381_6212701f",
+      "range": {
+        "startLine": 301,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 94
+      },
+      "revId": "014f238d3fd4ae0f4731fa124324803484f8368f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
