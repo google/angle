@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "a08b4d59_277a0f0a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-03-31T14:23:57Z",
+      "side": 1,
+      "message": "Not clear how this conclusion was made. Why does having imageGLColorspace mean that glColorspace wouldn\u0027t need the Vulkan extension for format override?",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 2
+      },
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "26f009ea_bc65c1a7",
