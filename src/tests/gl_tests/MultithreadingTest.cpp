@@ -215,6 +215,80 @@ TEST_P(MultithreadingTest, MultiContextClear)
     runMultithreadedGLTest(testBody, 72);
 }
 
+// Verify that threads can interleave eglDestroyContext and draw calls without
+// any crashes.
+TEST_P(MultithreadingTest, MultiContextDeleteDraw)
+{
+    // Skip this test on non-D3D11 backends, as it has the potential to time-out
+    // and this test was originally intended to catch a crash on the D3D11 backend.
+    ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
+    ANGLE_SKIP_TEST_IF(!IsD3D11());
+
+    EGLWindow *window = getEGLWindow();
+    EGLDisplay dpy    = window->getDisplay();
+    EGLConfig config  = window->getConfig();
+
+    std::thread t1 = std::thread([&]() {
+        // 5000 is chosen here as it reliably reproduces the former crash.
+        for (int i = 0; i < 5000; i++)
+        {
+            EGLContext ctx1 = window->createContext(EGL_NO_CONTEXT);
+            EGLContext ctx2 = window->createContext(EGL_NO_CONTEXT);
+
+            EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, ctx2));
+            EXPECT_EGL_TRUE(eglMakeCurrent(dpy, EGL_NO_SURFACE, EGL_NO_SURFACE, ctx1));
+
+            EXPECT_EGL_TRUE(eglDestroyContext(dpy, ctx2));
+            EXPECT_EGL_TRUE(eglDestroyContext(dpy, ctx1));
+        }
+    });
+
+    std::thread t2 = std::thread([&]() {
+        EGLint pbufferAttributes[] = {
+            EGL_WIDTH, 256, EGL_HEIGHT, 256, EGL_NONE, EGL_NONE,
+        };
+
+        EGLSurface surface = eglCreatePbufferSurface(dpy, config, pbufferAttributes);
+        EXPECT_EGL_SUCCESS();
+
+        auto ctx = window->createContext(EGL_NO_CONTEXT);
+        EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, ctx));
+
+        constexpr size_t kIterationsPerThread = 512;
+        constexpr size_t kDrawsPerIteration   = 512;
+
+        ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        glUseProgram(program);
+
+        GLint colorLocation = glGetUniformLocation(program, essl1_shaders::ColorUniform());
+
+        auto quadVertices = GetQuadVertices();
+
+        GLBuffer vertexBuffer;
+        glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 3 * 6, quadVertices.data(), GL_STATIC_DRAW);
+
+        GLint positionLocation = glGetAttribLocation(program, essl1_shaders::PositionAttrib());
+        glEnableVertexAttribArray(positionLocation);
+        glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, 0);
+        for (size_t iteration = 0; iteration < kIterationsPerThread; iteration++)
+        {
+            const GLColor color(static_cast<GLubyte>(15151 % 255),
+                                static_cast<GLubyte>(iteration % 255), 0, 255);
+            const angle::Vector4 floatColor = color.toNormalizedVector();
+            glUniform4fv(colorLocation, 1, floatColor.data());
+            for (size_t draw = 0; draw < kDrawsPerIteration; draw++)
+            {
+                EXPECT_EGL_TRUE(eglMakeCurrent(dpy, surface, surface, ctx));
+                glDrawArrays(GL_TRIANGLES, 0, 6);
+            }
+        }
+    });
+
+    t1.join();
+    t2.join();
+}
+
 // Test that multiple threads can draw and readback pixels successfully at the same time
 TEST_P(MultithreadingTest, MultiContextDraw)
 {
@@ -701,13 +775,16 @@ ANGLE_INSTANTIATE_TEST(MultithreadingTest,
                        WithNoVirtualContexts(ES2_OPENGLES()),
                        WithNoVirtualContexts(ES3_OPENGLES()),
                        WithNoVirtualContexts(ES3_VULKAN()),
-                       WithNoVirtualContexts(ES3_VULKAN_SWIFTSHADER()));
+                       WithNoVirtualContexts(ES3_VULKAN_SWIFTSHADER()),
+                       WithNoVirtualContexts(ES2_D3D11()),
+                       WithNoVirtualContexts(ES3_D3D11()));
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(MultithreadingTestES3);
 ANGLE_INSTANTIATE_TEST(MultithreadingTestES3,
                        WithNoVirtualContexts(ES3_OPENGL()),
                        WithNoVirtualContexts(ES3_OPENGLES()),
                        WithNoVirtualContexts(ES3_VULKAN()),
-                       WithNoVirtualContexts(ES3_VULKAN_SWIFTSHADER()));
+                       WithNoVirtualContexts(ES3_VULKAN_SWIFTSHADER()),
+                       WithNoVirtualContexts(ES3_D3D11()));
 
 }  // namespace angle
