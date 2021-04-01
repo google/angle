@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "638f5b78_832f341d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 28
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:52:16Z",
+      "side": 1,
+      "message": "Can you add a perf warning in TextureVk::setImageImpl() if context version \u003e\u003d 3.0 that says \"stop using glTexImage* already\"?",
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44eefcba_4e1e0080",
@@ -37,6 +54,23 @@
         "endLine": 211,
         "endChar": 67
       },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1221f96d_2104f97a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1295,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:52:16Z",
+      "side": 1,
+      "message": "Isn\u0027t this always true in setStorage*? Could be turned into ASSERT I think.",
       "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
