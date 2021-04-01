@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5169468_e483d612",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-01T16:22:32Z",
+      "side": 1,
+      "message": "LGTM with Shabi\u0027s concerns cleared up",
+      "revId": "8bf79e062bcda8ada326953cf0d061b2f1954ba9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
