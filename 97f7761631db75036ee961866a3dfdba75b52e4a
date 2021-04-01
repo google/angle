@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e80b651_3d2a66b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-01T23:09:44Z",
+      "side": 1,
+      "message": "\u003e The first one is not an interface mismatch, it\u0027s a compile error.\n\nCompile error for this case is not a mandatory.\n\nIn ES3.2 spec (11.2.3.3),\nA tessellation evaluation shader may also declare user-defined per-vertex input\nvariables. User-defined per-vertex input variables are declared with the qualifier\nin and have a value for each vertex in the input patch. User-defined per-vertex\ninput variables have a value for each vertex and thus need to be declared as arrays\nor inside input blocks declared as arrays. Declaring an array size is optional. If\nno size is specified, it will be taken from the implementation-dependent maximum\npatch size (gl_MaxPatchVertices). If a size is specified, it must match the\nmaximum patch size; otherwise, a compile or link error will occur.\n\nAlso, expected_compilation_result value set in this dEQP test is COMPILATION_RESULT_CAN_FAIL.\nThis flag allows both compilation pass and failure.\n\n\u003e A separable program with only GS ...\n\nspec. (11.3.4.3) -\nSimilarly to the built-in inputs, each user-defined input has a value for each\nvertex and thus needs to be declared as arrays or inside input blocks declared as\narrays. Declaring an array size is optional. If no size is specified, it will be inferred\nby the linker from the input primitive type. If a size is specified, it must match the\nnumber of vertices for the input primitive type; otherwise a link error will occur.\n\nThere is no mention about separable program case. But it should be same. link() function will be called before the test uses the program. and a link error will occur at that time.",
+      "parentUuid": "a60a6a3d_77993bc9",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "97f7761631db75036ee961866a3dfdba75b52e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e5de0d76_50b3892b",
