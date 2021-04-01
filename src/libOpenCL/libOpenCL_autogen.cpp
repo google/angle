@@ -749,4 +749,544 @@ cl_int CL_API_CALL clEnqueueTask(cl_command_queue command_queue,
                                    event);
 }
 
+// CL 1.1
+cl_mem CL_API_CALL clCreateSubBuffer(cl_mem buffer,
+                                     cl_mem_flags flags,
+                                     cl_buffer_create_type buffer_create_type,
+                                     const void *buffer_create_info,
+                                     cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateSubBuffer(buffer, flags, buffer_create_type, buffer_create_info,
+                                       errcode_ret);
+}
+
+cl_int CL_API_CALL clSetMemObjectDestructorCallback(cl_mem memobj,
+                                                    void(CL_CALLBACK *pfn_notify)(cl_mem memobj,
+                                                                                  void *user_data),
+                                                    void *user_data)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetMemObjectDestructorCallback(memobj, pfn_notify, user_data);
+}
+
+cl_event CL_API_CALL clCreateUserEvent(cl_context context, cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateUserEvent(context, errcode_ret);
+}
+
+cl_int CL_API_CALL clSetUserEventStatus(cl_event event, cl_int execution_status)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetUserEventStatus(event, execution_status);
+}
+
+cl_int CL_API_CALL clSetEventCallback(cl_event event,
+                                      cl_int command_exec_callback_type,
+                                      void(CL_CALLBACK *pfn_notify)(cl_event event,
+                                                                    cl_int event_command_status,
+                                                                    void *user_data),
+                                      void *user_data)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetEventCallback(event, command_exec_callback_type, pfn_notify, user_data);
+}
+
+cl_int CL_API_CALL clEnqueueReadBufferRect(cl_command_queue command_queue,
+                                           cl_mem buffer,
+                                           cl_bool blocking_read,
+                                           const size_t *buffer_origin,
+                                           const size_t *host_origin,
+                                           const size_t *region,
+                                           size_t buffer_row_pitch,
+                                           size_t buffer_slice_pitch,
+                                           size_t host_row_pitch,
+                                           size_t host_slice_pitch,
+                                           void *ptr,
+                                           cl_uint num_events_in_wait_list,
+                                           const cl_event *event_wait_list,
+                                           cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_origin,
+                                             host_origin, region, buffer_row_pitch,
+                                             buffer_slice_pitch, host_row_pitch, host_slice_pitch,
+                                             ptr, num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueWriteBufferRect(cl_command_queue command_queue,
+                                            cl_mem buffer,
+                                            cl_bool blocking_write,
+                                            const size_t *buffer_origin,
+                                            const size_t *host_origin,
+                                            const size_t *region,
+                                            size_t buffer_row_pitch,
+                                            size_t buffer_slice_pitch,
+                                            size_t host_row_pitch,
+                                            size_t host_slice_pitch,
+                                            const void *ptr,
+                                            cl_uint num_events_in_wait_list,
+                                            const cl_event *event_wait_list,
+                                            cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_origin,
+                                              host_origin, region, buffer_row_pitch,
+                                              buffer_slice_pitch, host_row_pitch, host_slice_pitch,
+                                              ptr, num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueCopyBufferRect(cl_command_queue command_queue,
+                                           cl_mem src_buffer,
+                                           cl_mem dst_buffer,
+                                           const size_t *src_origin,
+                                           const size_t *dst_origin,
+                                           const size_t *region,
+                                           size_t src_row_pitch,
+                                           size_t src_slice_pitch,
+                                           size_t dst_row_pitch,
+                                           size_t dst_slice_pitch,
+                                           cl_uint num_events_in_wait_list,
+                                           const cl_event *event_wait_list,
+                                           cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueCopyBufferRect(command_queue, src_buffer, dst_buffer, src_origin,
+                                             dst_origin, region, src_row_pitch, src_slice_pitch,
+                                             dst_row_pitch, dst_slice_pitch,
+                                             num_events_in_wait_list, event_wait_list, event);
+}
+
+// CL 1.2
+cl_int CL_API_CALL clCreateSubDevices(cl_device_id in_device,
+                                      const cl_device_partition_property *properties,
+                                      cl_uint num_devices,
+                                      cl_device_id *out_devices,
+                                      cl_uint *num_devices_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateSubDevices(in_device, properties, num_devices, out_devices,
+                                        num_devices_ret);
+}
+
+cl_int CL_API_CALL clRetainDevice(cl_device_id device)
+{
+    EnsureCLLoaded();
+    return cl_loader.clRetainDevice(device);
+}
+
+cl_int CL_API_CALL clReleaseDevice(cl_device_id device)
+{
+    EnsureCLLoaded();
+    return cl_loader.clReleaseDevice(device);
+}
+
+cl_mem CL_API_CALL clCreateImage(cl_context context,
+                                 cl_mem_flags flags,
+                                 const cl_image_format *image_format,
+                                 const cl_image_desc *image_desc,
+                                 void *host_ptr,
+                                 cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateImage(context, flags, image_format, image_desc, host_ptr, errcode_ret);
+}
+
+cl_program CL_API_CALL clCreateProgramWithBuiltInKernels(cl_context context,
+                                                         cl_uint num_devices,
+                                                         const cl_device_id *device_list,
+                                                         const char *kernel_names,
+                                                         cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateProgramWithBuiltInKernels(context, num_devices, device_list,
+                                                       kernel_names, errcode_ret);
+}
+
+cl_int CL_API_CALL clCompileProgram(cl_program program,
+                                    cl_uint num_devices,
+                                    const cl_device_id *device_list,
+                                    const char *options,
+                                    cl_uint num_input_headers,
+                                    const cl_program *input_headers,
+                                    const char **header_include_names,
+                                    void(CL_CALLBACK *pfn_notify)(cl_program program,
+                                                                  void *user_data),
+                                    void *user_data)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCompileProgram(program, num_devices, device_list, options, num_input_headers,
+                                      input_headers, header_include_names, pfn_notify, user_data);
+}
+
+cl_program CL_API_CALL clLinkProgram(cl_context context,
+                                     cl_uint num_devices,
+                                     const cl_device_id *device_list,
+                                     const char *options,
+                                     cl_uint num_input_programs,
+                                     const cl_program *input_programs,
+                                     void(CL_CALLBACK *pfn_notify)(cl_program program,
+                                                                   void *user_data),
+                                     void *user_data,
+                                     cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clLinkProgram(context, num_devices, device_list, options, num_input_programs,
+                                   input_programs, pfn_notify, user_data, errcode_ret);
+}
+
+cl_int CL_API_CALL clUnloadPlatformCompiler(cl_platform_id platform)
+{
+    EnsureCLLoaded();
+    return cl_loader.clUnloadPlatformCompiler(platform);
+}
+
+cl_int CL_API_CALL clGetKernelArgInfo(cl_kernel kernel,
+                                      cl_uint arg_index,
+                                      cl_kernel_arg_info param_name,
+                                      size_t param_value_size,
+                                      void *param_value,
+                                      size_t *param_value_size_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clGetKernelArgInfo(kernel, arg_index, param_name, param_value_size,
+                                        param_value, param_value_size_ret);
+}
+
+cl_int CL_API_CALL clEnqueueFillBuffer(cl_command_queue command_queue,
+                                       cl_mem buffer,
+                                       const void *pattern,
+                                       size_t pattern_size,
+                                       size_t offset,
+                                       size_t size,
+                                       cl_uint num_events_in_wait_list,
+                                       const cl_event *event_wait_list,
+                                       cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueFillBuffer(command_queue, buffer, pattern, pattern_size, offset, size,
+                                         num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueFillImage(cl_command_queue command_queue,
+                                      cl_mem image,
+                                      const void *fill_color,
+                                      const size_t *origin,
+                                      const size_t *region,
+                                      cl_uint num_events_in_wait_list,
+                                      const cl_event *event_wait_list,
+                                      cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueFillImage(command_queue, image, fill_color, origin, region,
+                                        num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueMigrateMemObjects(cl_command_queue command_queue,
+                                              cl_uint num_mem_objects,
+                                              const cl_mem *mem_objects,
+                                              cl_mem_migration_flags flags,
+                                              cl_uint num_events_in_wait_list,
+                                              const cl_event *event_wait_list,
+                                              cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueMigrateMemObjects(command_queue, num_mem_objects, mem_objects, flags,
+                                                num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueMarkerWithWaitList(cl_command_queue command_queue,
+                                               cl_uint num_events_in_wait_list,
+                                               const cl_event *event_wait_list,
+                                               cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueMarkerWithWaitList(command_queue, num_events_in_wait_list,
+                                                 event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueBarrierWithWaitList(cl_command_queue command_queue,
+                                                cl_uint num_events_in_wait_list,
+                                                const cl_event *event_wait_list,
+                                                cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueBarrierWithWaitList(command_queue, num_events_in_wait_list,
+                                                  event_wait_list, event);
+}
+
+void *CL_API_CALL clGetExtensionFunctionAddressForPlatform(cl_platform_id platform,
+                                                           const char *func_name)
+{
+    EnsureCLLoaded();
+    return cl_loader.clGetExtensionFunctionAddressForPlatform(platform, func_name);
+}
+
+// CL 2.0
+cl_command_queue CL_API_CALL
+clCreateCommandQueueWithProperties(cl_context context,
+                                   cl_device_id device,
+                                   const cl_queue_properties *properties,
+                                   cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateCommandQueueWithProperties(context, device, properties, errcode_ret);
+}
+
+cl_mem CL_API_CALL clCreatePipe(cl_context context,
+                                cl_mem_flags flags,
+                                cl_uint pipe_packet_size,
+                                cl_uint pipe_max_packets,
+                                const cl_pipe_properties *properties,
+                                cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreatePipe(context, flags, pipe_packet_size, pipe_max_packets, properties,
+                                  errcode_ret);
+}
+
+cl_int CL_API_CALL clGetPipeInfo(cl_mem pipe,
+                                 cl_pipe_info param_name,
+                                 size_t param_value_size,
+                                 void *param_value,
+                                 size_t *param_value_size_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clGetPipeInfo(pipe, param_name, param_value_size, param_value,
+                                   param_value_size_ret);
+}
+
+void *CL_API_CALL clSVMAlloc(cl_context context,
+                             cl_svm_mem_flags flags,
+                             size_t size,
+                             cl_uint alignment)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSVMAlloc(context, flags, size, alignment);
+}
+
+void CL_API_CALL clSVMFree(cl_context context, void *svm_pointer)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSVMFree(context, svm_pointer);
+}
+
+cl_sampler CL_API_CALL
+clCreateSamplerWithProperties(cl_context context,
+                              const cl_sampler_properties *sampler_properties,
+                              cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateSamplerWithProperties(context, sampler_properties, errcode_ret);
+}
+
+cl_int CL_API_CALL clSetKernelArgSVMPointer(cl_kernel kernel,
+                                            cl_uint arg_index,
+                                            const void *arg_value)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetKernelArgSVMPointer(kernel, arg_index, arg_value);
+}
+
+cl_int CL_API_CALL clSetKernelExecInfo(cl_kernel kernel,
+                                       cl_kernel_exec_info param_name,
+                                       size_t param_value_size,
+                                       const void *param_value)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetKernelExecInfo(kernel, param_name, param_value_size, param_value);
+}
+
+cl_int CL_API_CALL clEnqueueSVMFree(cl_command_queue command_queue,
+                                    cl_uint num_svm_pointers,
+                                    void *svm_pointers[],
+                                    void(CL_CALLBACK *pfn_free_func)(cl_command_queue queue,
+                                                                     cl_uint num_svm_pointers,
+                                                                     void *svm_pointers[],
+                                                                     void *user_data),
+                                    void *user_data,
+                                    cl_uint num_events_in_wait_list,
+                                    const cl_event *event_wait_list,
+                                    cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueSVMFree(command_queue, num_svm_pointers, svm_pointers, pfn_free_func,
+                                      user_data, num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueSVMMemcpy(cl_command_queue command_queue,
+                                      cl_bool blocking_copy,
+                                      void *dst_ptr,
+                                      const void *src_ptr,
+                                      size_t size,
+                                      cl_uint num_events_in_wait_list,
+                                      const cl_event *event_wait_list,
+                                      cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueSVMMemcpy(command_queue, blocking_copy, dst_ptr, src_ptr, size,
+                                        num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueSVMMemFill(cl_command_queue command_queue,
+                                       void *svm_ptr,
+                                       const void *pattern,
+                                       size_t pattern_size,
+                                       size_t size,
+                                       cl_uint num_events_in_wait_list,
+                                       const cl_event *event_wait_list,
+                                       cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueSVMMemFill(command_queue, svm_ptr, pattern, pattern_size, size,
+                                         num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueSVMMap(cl_command_queue command_queue,
+                                   cl_bool blocking_map,
+                                   cl_map_flags flags,
+                                   void *svm_ptr,
+                                   size_t size,
+                                   cl_uint num_events_in_wait_list,
+                                   const cl_event *event_wait_list,
+                                   cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueSVMMap(command_queue, blocking_map, flags, svm_ptr, size,
+                                     num_events_in_wait_list, event_wait_list, event);
+}
+
+cl_int CL_API_CALL clEnqueueSVMUnmap(cl_command_queue command_queue,
+                                     void *svm_ptr,
+                                     cl_uint num_events_in_wait_list,
+                                     const cl_event *event_wait_list,
+                                     cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueSVMUnmap(command_queue, svm_ptr, num_events_in_wait_list,
+                                       event_wait_list, event);
+}
+
+// CL 2.1
+cl_int CL_API_CALL clSetDefaultDeviceCommandQueue(cl_context context,
+                                                  cl_device_id device,
+                                                  cl_command_queue command_queue)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetDefaultDeviceCommandQueue(context, device, command_queue);
+}
+
+cl_int CL_API_CALL clGetDeviceAndHostTimer(cl_device_id device,
+                                           cl_ulong *device_timestamp,
+                                           cl_ulong *host_timestamp)
+{
+    EnsureCLLoaded();
+    return cl_loader.clGetDeviceAndHostTimer(device, device_timestamp, host_timestamp);
+}
+
+cl_int CL_API_CALL clGetHostTimer(cl_device_id device, cl_ulong *host_timestamp)
+{
+    EnsureCLLoaded();
+    return cl_loader.clGetHostTimer(device, host_timestamp);
+}
+
+cl_program CL_API_CALL clCreateProgramWithIL(cl_context context,
+                                             const void *il,
+                                             size_t length,
+                                             cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateProgramWithIL(context, il, length, errcode_ret);
+}
+
+cl_kernel CL_API_CALL clCloneKernel(cl_kernel source_kernel, cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCloneKernel(source_kernel, errcode_ret);
+}
+
+cl_int CL_API_CALL clGetKernelSubGroupInfo(cl_kernel kernel,
+                                           cl_device_id device,
+                                           cl_kernel_sub_group_info param_name,
+                                           size_t input_value_size,
+                                           const void *input_value,
+                                           size_t param_value_size,
+                                           void *param_value,
+                                           size_t *param_value_size_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clGetKernelSubGroupInfo(kernel, device, param_name, input_value_size,
+                                             input_value, param_value_size, param_value,
+                                             param_value_size_ret);
+}
+
+cl_int CL_API_CALL clEnqueueSVMMigrateMem(cl_command_queue command_queue,
+                                          cl_uint num_svm_pointers,
+                                          const void **svm_pointers,
+                                          const size_t *sizes,
+                                          cl_mem_migration_flags flags,
+                                          cl_uint num_events_in_wait_list,
+                                          const cl_event *event_wait_list,
+                                          cl_event *event)
+{
+    EnsureCLLoaded();
+    return cl_loader.clEnqueueSVMMigrateMem(command_queue, num_svm_pointers, svm_pointers, sizes,
+                                            flags, num_events_in_wait_list, event_wait_list, event);
+}
+
+// CL 2.2
+cl_int CL_API_CALL clSetProgramReleaseCallback(cl_program program,
+                                               void(CL_CALLBACK *pfn_notify)(cl_program program,
+                                                                             void *user_data),
+                                               void *user_data)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetProgramReleaseCallback(program, pfn_notify, user_data);
+}
+
+cl_int CL_API_CALL clSetProgramSpecializationConstant(cl_program program,
+                                                      cl_uint spec_id,
+                                                      size_t spec_size,
+                                                      const void *spec_value)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetProgramSpecializationConstant(program, spec_id, spec_size, spec_value);
+}
+
+// CL 3.0
+cl_int CL_API_CALL clSetContextDestructorCallback(cl_context context,
+                                                  void(CL_CALLBACK *pfn_notify)(cl_context context,
+                                                                                void *user_data),
+                                                  void *user_data)
+{
+    EnsureCLLoaded();
+    return cl_loader.clSetContextDestructorCallback(context, pfn_notify, user_data);
+}
+
+cl_mem CL_API_CALL clCreateBufferWithProperties(cl_context context,
+                                                const cl_mem_properties *properties,
+                                                cl_mem_flags flags,
+                                                size_t size,
+                                                void *host_ptr,
+                                                cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateBufferWithProperties(context, properties, flags, size, host_ptr,
+                                                  errcode_ret);
+}
+
+cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
+                                               const cl_mem_properties *properties,
+                                               cl_mem_flags flags,
+                                               const cl_image_format *image_format,
+                                               const cl_image_desc *image_desc,
+                                               void *host_ptr,
+                                               cl_int *errcode_ret)
+{
+    EnsureCLLoaded();
+    return cl_loader.clCreateImageWithProperties(context, properties, flags, image_format,
+                                                 image_desc, host_ptr, errcode_ret);
+}
+
 }  // extern "C"

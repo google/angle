@@ -1225,6 +1225,9 @@ def just_the_name(param):
     def get_name(param_string):
         return param_string[type_name_sep_index(param_string) + 1:].strip()
 
+    if param.find("[]") != -1:
+        param = param.replace("[]", "")
+
     left_paren = param.find("(")
     if left_paren == -1:
         return get_name(param)

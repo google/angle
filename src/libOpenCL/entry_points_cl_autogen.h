@@ -341,6 +341,281 @@ ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueTask(cl_command_queue command_queue,
                                                cl_uint num_events_in_wait_list,
                                                const cl_event *event_wait_list,
                                                cl_event *event);
+
+// CL 1.1
+ANGLE_EXPORT cl_mem CL_API_CALL CL_CreateSubBuffer(cl_mem buffer,
+                                                   cl_mem_flags flags,
+                                                   cl_buffer_create_type buffer_create_type,
+                                                   const void *buffer_create_info,
+                                                   cl_int *errcode_ret);
+ANGLE_EXPORT cl_int CL_API_CALL
+CL_SetMemObjectDestructorCallback(cl_mem memobj,
+                                  void(CL_CALLBACK *pfn_notify)(cl_mem memobj, void *user_data),
+                                  void *user_data);
+ANGLE_EXPORT cl_event CL_API_CALL CL_CreateUserEvent(cl_context context, cl_int *errcode_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_SetUserEventStatus(cl_event event, cl_int execution_status);
+ANGLE_EXPORT cl_int CL_API_CALL CL_SetEventCallback(
+    cl_event event,
+    cl_int command_exec_callback_type,
+    void(CL_CALLBACK *pfn_notify)(cl_event event, cl_int event_command_status, void *user_data),
+    void *user_data);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueReadBufferRect(cl_command_queue command_queue,
+                                                         cl_mem buffer,
+                                                         cl_bool blocking_read,
+                                                         const size_t *buffer_origin,
+                                                         const size_t *host_origin,
+                                                         const size_t *region,
+                                                         size_t buffer_row_pitch,
+                                                         size_t buffer_slice_pitch,
+                                                         size_t host_row_pitch,
+                                                         size_t host_slice_pitch,
+                                                         void *ptr,
+                                                         cl_uint num_events_in_wait_list,
+                                                         const cl_event *event_wait_list,
+                                                         cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueWriteBufferRect(cl_command_queue command_queue,
+                                                          cl_mem buffer,
+                                                          cl_bool blocking_write,
+                                                          const size_t *buffer_origin,
+                                                          const size_t *host_origin,
+                                                          const size_t *region,
+                                                          size_t buffer_row_pitch,
+                                                          size_t buffer_slice_pitch,
+                                                          size_t host_row_pitch,
+                                                          size_t host_slice_pitch,
+                                                          const void *ptr,
+                                                          cl_uint num_events_in_wait_list,
+                                                          const cl_event *event_wait_list,
+                                                          cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueCopyBufferRect(cl_command_queue command_queue,
+                                                         cl_mem src_buffer,
+                                                         cl_mem dst_buffer,
+                                                         const size_t *src_origin,
+                                                         const size_t *dst_origin,
+                                                         const size_t *region,
+                                                         size_t src_row_pitch,
+                                                         size_t src_slice_pitch,
+                                                         size_t dst_row_pitch,
+                                                         size_t dst_slice_pitch,
+                                                         cl_uint num_events_in_wait_list,
+                                                         const cl_event *event_wait_list,
+                                                         cl_event *event);
+
+// CL 1.2
+ANGLE_EXPORT cl_int CL_API_CALL CL_CreateSubDevices(cl_device_id in_device,
+                                                    const cl_device_partition_property *properties,
+                                                    cl_uint num_devices,
+                                                    cl_device_id *out_devices,
+                                                    cl_uint *num_devices_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_RetainDevice(cl_device_id device);
+ANGLE_EXPORT cl_int CL_API_CALL CL_ReleaseDevice(cl_device_id device);
+ANGLE_EXPORT cl_mem CL_API_CALL CL_CreateImage(cl_context context,
+                                               cl_mem_flags flags,
+                                               const cl_image_format *image_format,
+                                               const cl_image_desc *image_desc,
+                                               void *host_ptr,
+                                               cl_int *errcode_ret);
+ANGLE_EXPORT cl_program CL_API_CALL
+CL_CreateProgramWithBuiltInKernels(cl_context context,
+                                   cl_uint num_devices,
+                                   const cl_device_id *device_list,
+                                   const char *kernel_names,
+                                   cl_int *errcode_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_CompileProgram(cl_program program,
+                                                  cl_uint num_devices,
+                                                  const cl_device_id *device_list,
+                                                  const char *options,
+                                                  cl_uint num_input_headers,
+                                                  const cl_program *input_headers,
+                                                  const char **header_include_names,
+                                                  void(CL_CALLBACK *pfn_notify)(cl_program program,
+                                                                                void *user_data),
+                                                  void *user_data);
+ANGLE_EXPORT cl_program CL_API_CALL CL_LinkProgram(cl_context context,
+                                                   cl_uint num_devices,
+                                                   const cl_device_id *device_list,
+                                                   const char *options,
+                                                   cl_uint num_input_programs,
+                                                   const cl_program *input_programs,
+                                                   void(CL_CALLBACK *pfn_notify)(cl_program program,
+                                                                                 void *user_data),
+                                                   void *user_data,
+                                                   cl_int *errcode_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_UnloadPlatformCompiler(cl_platform_id platform);
+ANGLE_EXPORT cl_int CL_API_CALL CL_GetKernelArgInfo(cl_kernel kernel,
+                                                    cl_uint arg_index,
+                                                    cl_kernel_arg_info param_name,
+                                                    size_t param_value_size,
+                                                    void *param_value,
+                                                    size_t *param_value_size_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueFillBuffer(cl_command_queue command_queue,
+                                                     cl_mem buffer,
+                                                     const void *pattern,
+                                                     size_t pattern_size,
+                                                     size_t offset,
+                                                     size_t size,
+                                                     cl_uint num_events_in_wait_list,
+                                                     const cl_event *event_wait_list,
+                                                     cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueFillImage(cl_command_queue command_queue,
+                                                    cl_mem image,
+                                                    const void *fill_color,
+                                                    const size_t *origin,
+                                                    const size_t *region,
+                                                    cl_uint num_events_in_wait_list,
+                                                    const cl_event *event_wait_list,
+                                                    cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueMigrateMemObjects(cl_command_queue command_queue,
+                                                            cl_uint num_mem_objects,
+                                                            const cl_mem *mem_objects,
+                                                            cl_mem_migration_flags flags,
+                                                            cl_uint num_events_in_wait_list,
+                                                            const cl_event *event_wait_list,
+                                                            cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueMarkerWithWaitList(cl_command_queue command_queue,
+                                                             cl_uint num_events_in_wait_list,
+                                                             const cl_event *event_wait_list,
+                                                             cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueBarrierWithWaitList(cl_command_queue command_queue,
+                                                              cl_uint num_events_in_wait_list,
+                                                              const cl_event *event_wait_list,
+                                                              cl_event *event);
+ANGLE_EXPORT void *CL_API_CALL CL_GetExtensionFunctionAddressForPlatform(cl_platform_id platform,
+                                                                         const char *func_name);
+
+// CL 2.0
+ANGLE_EXPORT cl_command_queue CL_API_CALL
+CL_CreateCommandQueueWithProperties(cl_context context,
+                                    cl_device_id device,
+                                    const cl_queue_properties *properties,
+                                    cl_int *errcode_ret);
+ANGLE_EXPORT cl_mem CL_API_CALL CL_CreatePipe(cl_context context,
+                                              cl_mem_flags flags,
+                                              cl_uint pipe_packet_size,
+                                              cl_uint pipe_max_packets,
+                                              const cl_pipe_properties *properties,
+                                              cl_int *errcode_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_GetPipeInfo(cl_mem pipe,
+                                               cl_pipe_info param_name,
+                                               size_t param_value_size,
+                                               void *param_value,
+                                               size_t *param_value_size_ret);
+ANGLE_EXPORT void *CL_API_CALL CL_SVMAlloc(cl_context context,
+                                           cl_svm_mem_flags flags,
+                                           size_t size,
+                                           cl_uint alignment);
+ANGLE_EXPORT void CL_API_CALL CL_SVMFree(cl_context context, void *svm_pointer);
+ANGLE_EXPORT cl_sampler CL_API_CALL
+CL_CreateSamplerWithProperties(cl_context context,
+                               const cl_sampler_properties *sampler_properties,
+                               cl_int *errcode_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_SetKernelArgSVMPointer(cl_kernel kernel,
+                                                          cl_uint arg_index,
+                                                          const void *arg_value);
+ANGLE_EXPORT cl_int CL_API_CALL CL_SetKernelExecInfo(cl_kernel kernel,
+                                                     cl_kernel_exec_info param_name,
+                                                     size_t param_value_size,
+                                                     const void *param_value);
+ANGLE_EXPORT cl_int CL_API_CALL
+CL_EnqueueSVMFree(cl_command_queue command_queue,
+                  cl_uint num_svm_pointers,
+                  void *svm_pointers[],
+                  void(CL_CALLBACK *pfn_free_func)(cl_command_queue queue,
+                                                   cl_uint num_svm_pointers,
+                                                   void *svm_pointers[],
+                                                   void *user_data),
+                  void *user_data,
+                  cl_uint num_events_in_wait_list,
+                  const cl_event *event_wait_list,
+                  cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueSVMMemcpy(cl_command_queue command_queue,
+                                                    cl_bool blocking_copy,
+                                                    void *dst_ptr,
+                                                    const void *src_ptr,
+                                                    size_t size,
+                                                    cl_uint num_events_in_wait_list,
+                                                    const cl_event *event_wait_list,
+                                                    cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueSVMMemFill(cl_command_queue command_queue,
+                                                     void *svm_ptr,
+                                                     const void *pattern,
+                                                     size_t pattern_size,
+                                                     size_t size,
+                                                     cl_uint num_events_in_wait_list,
+                                                     const cl_event *event_wait_list,
+                                                     cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueSVMMap(cl_command_queue command_queue,
+                                                 cl_bool blocking_map,
+                                                 cl_map_flags flags,
+                                                 void *svm_ptr,
+                                                 size_t size,
+                                                 cl_uint num_events_in_wait_list,
+                                                 const cl_event *event_wait_list,
+                                                 cl_event *event);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueSVMUnmap(cl_command_queue command_queue,
+                                                   void *svm_ptr,
+                                                   cl_uint num_events_in_wait_list,
+                                                   const cl_event *event_wait_list,
+                                                   cl_event *event);
+
+// CL 2.1
+ANGLE_EXPORT cl_int CL_API_CALL CL_SetDefaultDeviceCommandQueue(cl_context context,
+                                                                cl_device_id device,
+                                                                cl_command_queue command_queue);
+ANGLE_EXPORT cl_int CL_API_CALL CL_GetDeviceAndHostTimer(cl_device_id device,
+                                                         cl_ulong *device_timestamp,
+                                                         cl_ulong *host_timestamp);
+ANGLE_EXPORT cl_int CL_API_CALL CL_GetHostTimer(cl_device_id device, cl_ulong *host_timestamp);
+ANGLE_EXPORT cl_program CL_API_CALL CL_CreateProgramWithIL(cl_context context,
+                                                           const void *il,
+                                                           size_t length,
+                                                           cl_int *errcode_ret);
+ANGLE_EXPORT cl_kernel CL_API_CALL CL_CloneKernel(cl_kernel source_kernel, cl_int *errcode_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_GetKernelSubGroupInfo(cl_kernel kernel,
+                                                         cl_device_id device,
+                                                         cl_kernel_sub_group_info param_name,
+                                                         size_t input_value_size,
+                                                         const void *input_value,
+                                                         size_t param_value_size,
+                                                         void *param_value,
+                                                         size_t *param_value_size_ret);
+ANGLE_EXPORT cl_int CL_API_CALL CL_EnqueueSVMMigrateMem(cl_command_queue command_queue,
+                                                        cl_uint num_svm_pointers,
+                                                        const void **svm_pointers,
+                                                        const size_t *sizes,
+                                                        cl_mem_migration_flags flags,
+                                                        cl_uint num_events_in_wait_list,
+                                                        const cl_event *event_wait_list,
+                                                        cl_event *event);
+
+// CL 2.2
+ANGLE_EXPORT cl_int CL_API_CALL
+CL_SetProgramReleaseCallback(cl_program program,
+                             void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
+                             void *user_data);
+ANGLE_EXPORT cl_int CL_API_CALL CL_SetProgramSpecializationConstant(cl_program program,
+                                                                    cl_uint spec_id,
+                                                                    size_t spec_size,
+                                                                    const void *spec_value);
+
+// CL 3.0
+ANGLE_EXPORT cl_int CL_API_CALL
+CL_SetContextDestructorCallback(cl_context context,
+                                void(CL_CALLBACK *pfn_notify)(cl_context context, void *user_data),
+                                void *user_data);
+ANGLE_EXPORT cl_mem CL_API_CALL CL_CreateBufferWithProperties(cl_context context,
+                                                              const cl_mem_properties *properties,
+                                                              cl_mem_flags flags,
+                                                              size_t size,
+                                                              void *host_ptr,
+                                                              cl_int *errcode_ret);
+ANGLE_EXPORT cl_mem CL_API_CALL CL_CreateImageWithProperties(cl_context context,
+                                                             const cl_mem_properties *properties,
+                                                             cl_mem_flags flags,
+                                                             const cl_image_format *image_format,
+                                                             const cl_image_desc *image_desc,
+                                                             void *host_ptr,
+                                                             cl_int *errcode_ret);
 }  // extern "C"
 
 #endif  // LIBOPENCL_ENTRY_POINTS_CL_AUTOGEN_H_
