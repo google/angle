@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "027d178e_afbbeee0",
+        "filename": "extensions/EGL_ANGLE_device_metal.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-04-01T01:36:14Z",
+      "side": 1,
+      "message": "Done. I know it would be conflicted and require your inputs. Thanks",
+      "parentUuid": "16b15b9f_2b9a5e79",
+      "range": {
+        "startLine": 63,
+        "startChar": 44,
+        "endLine": 63,
+        "endChar": 50
+      },
+      "revId": "de2592bf34011c438fcae31d210a9ca48cce7f61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f6ded640_c1172df2",
@@ -81,6 +105,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6df07891_e8bbb243",
+        "filename": "include/EGL/eglext_angle.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 338,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-04-01T01:36:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6ded640_c1172df2",
+      "range": {
+        "startLine": 338,
+        "startChar": 31,
+        "endLine": 338,
+        "endChar": 37
+      },
+      "revId": "de2592bf34011c438fcae31d210a9ca48cce7f61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bb5f5dc4_06b05fb5",
@@ -94,6 +142,30 @@
       "writtenOn": "2021-03-29T19:42:19Z",
       "side": 1,
       "message": "nit: deviceMetal for consistency with other names",
+      "range": {
+        "startLine": 1249,
+        "startChar": 9,
+        "endLine": 1249,
+        "endChar": 18
+      },
+      "revId": "de2592bf34011c438fcae31d210a9ca48cce7f61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bda28671_21084719",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1249,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-04-01T01:36:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bb5f5dc4_06b05fb5",
       "range": {
         "startLine": 1249,
         "startChar": 9,
