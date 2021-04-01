@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0b4fbb9_2c4551c9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 4558,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:23:33Z",
+      "side": 0,
+      "message": "I think you can remove this member now. This is a GL detail that should ideally not leak to vk::ImageHelper.",
+      "range": {
+        "startLine": 4558,
+        "startChar": 9,
+        "endLine": 4558,
+        "endChar": 19
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
