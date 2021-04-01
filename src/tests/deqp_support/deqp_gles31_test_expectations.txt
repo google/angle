@@ -183,7 +183,6 @@
 
 // Geometry shader support:
 5430 VULKAN : dEQP-GLES31.functional.geometry_shading.query.primitives_generated_* = FAIL
-5452 VULKAN : dEQP-GLES31.functional.geometry_shading.layered.layer_provoking_vertex_* = FAIL
 
 // Tessellation shader support:
 5557 VULKAN : dEQP-GLES31.functional.tessellation.shader_input_output.gl_position_tcs_to_tes = FAIL
