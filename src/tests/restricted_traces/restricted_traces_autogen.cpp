@@ -42,6 +42,7 @@
 #include "junes_journey/junes_journey_capture_context2.h"
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
 #include "klondike_adventures/klondike_adventures_capture_context2.h"
+#include "league_of_legends_wild_rift/league_of_legends_wild_rift_capture_context2.h"
 #include "lego_legacy/lego_legacy_capture_context2.h"
 #include "lineage_m/lineage_m_capture_context2.h"
 #include "magic_tiles_3/magic_tiles_3_capture_context2.h"
@@ -228,6 +229,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       klondike_adventures::kReplayFrameStart, klondike_adventures::kReplayFrameEnd,
       klondike_adventures::kReplayDrawSurfaceWidth, klondike_adventures::kReplayDrawSurfaceHeight,
       "klondike_adventures"}},
+    {RestrictedTraceID::league_of_legends_wild_rift,
+     {league_of_legends_wild_rift::kReplayContextClientMajorVersion,
+      league_of_legends_wild_rift::kReplayContextClientMinorVersion,
+      league_of_legends_wild_rift::kReplayFrameStart, league_of_legends_wild_rift::kReplayFrameEnd,
+      league_of_legends_wild_rift::kReplayDrawSurfaceWidth,
+      league_of_legends_wild_rift::kReplayDrawSurfaceHeight, "league_of_legends_wild_rift"}},
     {RestrictedTraceID::lego_legacy,
      {kDefaultReplayContextClientMajorVersion, kDefaultReplayContextClientMinorVersion,
       lego_legacy::kReplayFrameStart, lego_legacy::kReplayFrameEnd,
@@ -497,6 +504,9 @@ void ReplayFrame(RestrictedTraceID traceID, uint32_t frameIndex)
         case RestrictedTraceID::klondike_adventures:
             klondike_adventures::ReplayContext2Frame(frameIndex);
             break;
+        case RestrictedTraceID::league_of_legends_wild_rift:
+            league_of_legends_wild_rift::ReplayContext2Frame(frameIndex);
+            break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::ReplayContext2Frame(frameIndex);
             break;
@@ -702,6 +712,9 @@ void ResetReplay(RestrictedTraceID traceID)
             break;
         case RestrictedTraceID::klondike_adventures:
             klondike_adventures::ResetContext2Replay();
+            break;
+        case RestrictedTraceID::league_of_legends_wild_rift:
+            league_of_legends_wild_rift::ResetContext2Replay();
             break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::ResetContext2Replay();
@@ -909,6 +922,9 @@ void SetupReplay(RestrictedTraceID traceID)
         case RestrictedTraceID::klondike_adventures:
             klondike_adventures::SetupContext2Replay();
             break;
+        case RestrictedTraceID::league_of_legends_wild_rift:
+            league_of_legends_wild_rift::SetupContext2Replay();
+            break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetupContext2Replay();
             break;
@@ -1115,6 +1131,9 @@ void SetBinaryDataDir(RestrictedTraceID traceID, const char *dataDir)
         case RestrictedTraceID::klondike_adventures:
             klondike_adventures::SetBinaryDataDir(dataDir);
             break;
+        case RestrictedTraceID::league_of_legends_wild_rift:
+            league_of_legends_wild_rift::SetBinaryDataDir(dataDir);
+            break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetBinaryDataDir(dataDir);
             break;
@@ -1320,6 +1339,9 @@ void SetBinaryDataDecompressCallback(RestrictedTraceID traceID, DecompressCallba
             break;
         case RestrictedTraceID::klondike_adventures:
             klondike_adventures::SetBinaryDataDecompressCallback(callback);
+            break;
+        case RestrictedTraceID::league_of_legends_wild_rift:
+            league_of_legends_wild_rift::SetBinaryDataDecompressCallback(callback);
             break;
         case RestrictedTraceID::lego_legacy:
             lego_legacy::SetBinaryDataDecompressCallback(callback);

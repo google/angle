@@ -85,6 +85,7 @@ enum class RestrictedTraceID
     junes_journey,
     kartrider_rush,
     klondike_adventures,
+    league_of_legends_wild_rift,
     lego_legacy,
     lineage_m,
     magic_tiles_3,
