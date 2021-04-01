@@ -33,6 +33,24 @@
       "message": "Uh-Oh, mac-dbg is a physical machine.\nIt\u0027s more complicated to clean it.\nI\u0027m not sure what\u0027s the directory structure on the machine, probably the safest way is to land a clobber CL in Chromium and then roll Chromium.\nhttp://dev.chromium.org/Home/chromium-clobber-landmines",
       "revId": "cae5dceb6a83b47d381294c745ea2ea3ce6db3b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e541dc26_96a380e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-01T00:42:48Z",
+      "side": 1,
+      "message": "Actually, since it\u0027s a standalone builder the above won\u0027t work.\nIs there clobbering functionality in the standalone recipe?\nMaybe easier to ask Labs to reimage it.",
+      "parentUuid": "3ec4f22b_171246e5",
+      "revId": "cae5dceb6a83b47d381294c745ea2ea3ce6db3b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
