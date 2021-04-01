@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4d0fd11_88c3232b",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-01T17:04:25Z",
+      "side": 1,
+      "message": "nit: const char[]?",
+      "range": {
+        "startLine": 1283,
+        "startChar": 8,
+        "endLine": 1283,
+        "endChar": 25
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6ccdb84_90a4aa5f",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-01T17:04:25Z",
+      "side": 1,
+      "message": "question: So core profile doesn\u0027t have the default vao (with name 0)?",
+      "range": {
+        "startLine": 199,
+        "startChar": 87,
+        "endLine": 199,
+        "endChar": 99
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac0e7183_7378ccb4",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-01T17:04:25Z",
+      "side": 1,
+      "message": "Looks like it tracks the current default VA state in the GL driver, and we share it with other VertexArrayGL instances if the feature is enabled, right? So ANGLE will compare VA state in front end context and |mDefaultVAOState|, and sync state to driver. Am I right? It would be better to have more detail comments in code to explain the implementation. It would be helpful for me to understand this CL, since I am not very familiar ANGLE code base. :)",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 376,
+        "endChar": 40
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b4c019f_ba298730",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-01T17:04:25Z",
+      "side": 1,
+      "message": "unrelated comment: it would be less confusing to not use macro here.\nlike:\n\n  case VertexArray::DIRTY_BIT_BINDING_0 ... VertexArray::DIRTY_BIT_BINDING_15:\n    int index \u003d VertexArray::DIRTY_BIT_BINDING_0 - dirtyBit;\n    ...\n\nBTW, I think switch case range is supported by gcc and clang. Not sure other compilers. Do we need compile ANGLE with other compilers?",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 929,
+        "endChar": 70
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
