@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27aee509_758247e8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-01T17:54:21Z",
+      "side": 1,
+      "message": "I\u0027ve identified a couple issues I need Google guidance on.",
+      "revId": "c20e53fddbd4283a2fad9471f22bff74dfcc2ed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12191b8f_43d1f0b1",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-01T17:54:21Z",
+      "side": 1,
+      "message": "Note that when using VkProtectedSubmitInfo when Making Uncurrent, this structure causes crash on pixel3. But seems needed by spec. Does not cause crash with MakeCurrrent with a valid Surface.",
+      "revId": "c20e53fddbd4283a2fad9471f22bff74dfcc2ed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc659f1b_c893b082",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-01T17:54:21Z",
+      "side": 1,
+      "message": "Is this adequate? \"if (IsAndroid())\" - does it depend on a version of Android to support protected SwapChain Images?",
+      "revId": "c20e53fddbd4283a2fad9471f22bff74dfcc2ed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
