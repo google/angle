@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c2d79104_56e460e1",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 921,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-01T13:12:37Z",
+      "side": 1,
+      "message": "nit: ANGLE_HAS_RAPIDJSON",
+      "range": {
+        "startLine": 921,
+        "startChar": 17,
+        "endLine": 921,
+        "endChar": 31
+      },
+      "revId": "b274fdd7e7c27cff56a8bb63a3a7d52c34b2adbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2c0ff4d_1da77ff6",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-01T13:12:37Z",
+      "side": 1,
+      "message": "nit: if defined(ANGLE_HAS_RAPIDJSON)",
+      "range": {
+        "startLine": 14,
+        "startChar": 1,
+        "endLine": 14,
+        "endChar": 7
+      },
+      "revId": "b274fdd7e7c27cff56a8bb63a3a7d52c34b2adbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a52763b1_50b16a74",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-01T13:12:37Z",
+      "side": 1,
+      "message": "you can omit all these. it shouldn\u0027t be producing any errors or warnings. if I\u0027m wrong, you can used ANGLE_UNUSED_VARIABLE",
+      "range": {
+        "startLine": 110,
+        "startChar": 8,
+        "endLine": 111,
+        "endChar": 20
+      },
+      "revId": "b274fdd7e7c27cff56a8bb63a3a7d52c34b2adbf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
