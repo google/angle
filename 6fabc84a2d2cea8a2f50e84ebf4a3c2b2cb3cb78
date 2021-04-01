@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a36cf735_a9ea087a",
+        "filename": "BUILD.gn",
+        "patchSetId": 3
+      },
+      "lineNbr": 921,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-01T15:44:34Z",
+      "side": 1,
+      "message": "I figured, the problem is the the build system layout doesn\u0027t really help to find  out where one has to define what, and the CI also doesn\u0027t seem to include a build that triggers the bug.",
+      "parentUuid": "7254b6ac_864a94ab",
+      "range": {
+        "startLine": 921,
+        "startChar": 17,
+        "endLine": 921,
+        "endChar": 37
+      },
+      "revId": "6fabc84a2d2cea8a2f50e84ebf4a3c2b2cb3cb78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d915cc58_40d28adf",
         "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
         "patchSetId": 3
@@ -37,6 +61,24 @@
       "writtenOn": "2021-04-01T14:11:10Z",
       "side": 1,
       "message": "No need for this #if, the file is not built altogether.",
+      "revId": "6fabc84a2d2cea8a2f50e84ebf4a3c2b2cb3cb78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d87c5d23_129b1b60",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-01T15:44:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d915cc58_40d28adf",
       "revId": "6fabc84a2d2cea8a2f50e84ebf4a3c2b2cb3cb78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -58,6 +100,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65d593d9_57810282",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-01T15:44:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d4756f0f_f65207a3",
+      "revId": "6fabc84a2d2cea8a2f50e84ebf4a3c2b2cb3cb78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3667dcb6_4c45fbdc",
@@ -71,6 +131,24 @@
       "writtenOn": "2021-04-01T14:11:10Z",
       "side": 1,
       "message": "Can also remove this #if and build the file conditionally instead",
+      "revId": "6fabc84a2d2cea8a2f50e84ebf4a3c2b2cb3cb78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "122e320a_5dbc13c7",
+        "filename": "src/libANGLE/serializer/JsonSerializer_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-01T15:44:34Z",
+      "side": 1,
+      "message": "Tried that, but angle_unittest.gni, where the sources are listed, doesn\u0027t know anout angle_has_build.",
+      "parentUuid": "3667dcb6_4c45fbdc",
       "revId": "6fabc84a2d2cea8a2f50e84ebf4a3c2b2cb3cb78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
