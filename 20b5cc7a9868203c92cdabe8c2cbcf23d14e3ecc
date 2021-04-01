@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "36932054_3e2c2b9d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-01T17:47:53Z",
+      "side": 1,
+      "message": "New set of changes for EGL_EXT_protected_content and GL_EXT_protected_textures (commits in the waiting)",
+      "revId": "20b5cc7a9868203c92cdabe8c2cbcf23d14e3ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
