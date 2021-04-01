@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af6b1c98_aecbaa2f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 2778,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T18:42:46Z",
+      "side": 1,
+      "message": "This is a lot of duplicate code. Why not call initImage() at this point with the parameters that are calculated here?",
+      "range": {
+        "startLine": 2760,
+        "startChar": 0,
+        "endLine": 2778,
+        "endChar": 91
+      },
+      "revId": "304e599e1dd8778032f69059d50cb5d4ad92de5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

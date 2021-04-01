@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fca75e7c_6e3df674",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 28
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T18:42:46Z",
+      "side": 1,
+      "message": "glTexImage is ancient stuff no one should use. Anyway, not related to this change, just something that could be helpful down the line teaching developers what\u0027s the more efficient API to use.",
+      "parentUuid": "2dbc1e33_317adab4",
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "44eefcba_4e1e0080",
@@ -378,6 +396,30 @@
       "side": 1,
       "message": "There is no documentation on what getMipLevelCount(FullMipChain) supposedly should return. But when I read it, FullMipChain for immutable means all the mipmap levels specified by seStorage and EnabledLevels means [base,max]. I think this is doing what people would expect FullMipChain to return. Otherwise someday someone use it somewhere else and expect it to return \"FullMipChain\" will stumble again.",
       "parentUuid": "2aecadcd_2d201134",
+      "range": {
+        "startLine": 2869,
+        "startChar": 0,
+        "endLine": 2873,
+        "endChar": 77
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "754995be_5125b529",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T18:42:46Z",
+      "side": 1,
+      "message": "Then please add a comment that says:\n\n\u003e FullMipChain returns the number of levels that glGenerateMipmap would generate for mutable textures + 1 for base level.",
+      "parentUuid": "6ad83366_dc556c98",
       "range": {
         "startLine": 2869,
         "startChar": 0,
