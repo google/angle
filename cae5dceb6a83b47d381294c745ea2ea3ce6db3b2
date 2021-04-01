@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89c981e1_5d17a311",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-01T00:34:38Z",
+      "side": 1,
+      "message": "Wait, I think Shabi wanted to roll manually via changing translator target in Chromium to the new one he added in the last CL.",
+      "revId": "cae5dceb6a83b47d381294c745ea2ea3ce6db3b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
