@@ -107,6 +107,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "49c947d5_71a7a9ef",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-01T18:37:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fe922443_013658ca",
+      "range": {
+        "startLine": 666,
+        "startChar": 64,
+        "endLine": 666,
+        "endChar": 92
+      },
+      "revId": "7599bed2854ba8c29fe0c96d2c45c1eaea3395a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84fd60fc_bdc2f39d",
@@ -120,6 +144,30 @@
       "writtenOn": "2021-04-01T18:20:38Z",
       "side": 1,
       "message": "This comment doesn\u0027t jive with the code below.  You\u0027re describing reasons to skip it, but the code checks reasons to use it.  Can you invert one or the other?",
+      "range": {
+        "startLine": 137,
+        "startChar": 11,
+        "endLine": 138,
+        "endChar": 97
+      },
+      "revId": "7599bed2854ba8c29fe0c96d2c45c1eaea3395a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "370ecb93_2ca1e286",
+        "filename": "src/libANGLE/ProgramPipeline.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 138,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-01T18:37:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84fd60fc_bdc2f39d",
       "range": {
         "startLine": 137,
         "startChar": 11,
