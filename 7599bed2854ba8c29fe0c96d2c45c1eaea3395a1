@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5402580_8012ff00",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T18:11:17Z",
+      "side": 1,
+      "message": "So the app is relying on the fact that a draw call should fail? Amazing stuff",
+      "revId": "7599bed2854ba8c29fe0c96d2c45c1eaea3395a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de9ecfd1_7a915196",
+        "filename": "src/libANGLE/ProgramPipeline.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 666,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T18:11:17Z",
+      "side": 1,
+      "message": "nit: It\u0027s not intuitive that this means a conflict in types. Could you at least add a comment at ProgramExecutable.cpp:754 where this is set to indicate \"conflicts are marked with InvalidEnum\"?",
+      "range": {
+        "startLine": 666,
+        "startChar": 64,
+        "endLine": 666,
+        "endChar": 92
+      },
+      "revId": "7599bed2854ba8c29fe0c96d2c45c1eaea3395a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
