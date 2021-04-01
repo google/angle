@@ -39,6 +39,30 @@
       },
       "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "931f1e05_1c5c9ddd",
+        "filename": "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-01T22:21:02Z",
+      "side": 1,
+      "message": "Hey Jamie,\n\nI wanted to follow-up on this: the only thing I can think of as to what\u0027s happening here is that a malformed/invalid glTexStorage2D call is being made and the validation that we have is not catching it? Without ANGLE validation turned on (which is how we are running), it\u0027s trivial to introduce a crash via a call such as:\n\nglTexStorage2D(GL_TEXTURE_2D, 1, GL_RED, 1, 1);\n\nI\u0027ll follow-up in our validation layer and see if this is really the case. Let me know if you want any further action on ANGLE at the moment.",
+      "parentUuid": "8b8d58c5_e3bd4e31",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 0
+      },
+      "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
