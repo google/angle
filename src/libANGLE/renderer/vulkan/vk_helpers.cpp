@@ -3625,7 +3625,6 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mUsage(other.mUsage),
       mExtents(other.mExtents),
       mRotatedAspectRatio(other.mRotatedAspectRatio),
-      mImmutable(other.mImmutable),
       mFormat(other.mFormat),
       mSamples(other.mSamples),
       mImageSerial(other.mImageSerial),
@@ -3660,7 +3659,6 @@ void ImageHelper::resetCachedProperties()
     mUsage                       = 0;
     mExtents                     = {};
     mRotatedAspectRatio          = false;
-    mImmutable                   = false;
     mFormat                      = nullptr;
     mSamples                     = 1;
     mImageSerial                 = kInvalidImageSerial;
@@ -3770,16 +3768,14 @@ angle::Result ImageHelper::init(Context *context,
                                 const Format &format,
                                 GLint samples,
                                 VkImageUsageFlags usage,
-                                gl::LevelIndex baseLevel,
-                                gl::LevelIndex maxLevel,
+                                gl::LevelIndex firstLevel,
                                 uint32_t mipLevels,
                                 uint32_t layerCount,
                                 bool isRobustResourceInitEnabled)
 {
     return initExternal(context, textureType, extents, format, samples, usage,
-                        kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, baseLevel,
-                        maxLevel, mipLevels, layerCount, isRobustResourceInitEnabled, false,
-                        nullptr);
+                        kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
+                        mipLevels, layerCount, isRobustResourceInitEnabled, nullptr);
 }
 
 angle::Result ImageHelper::initMSAASwapchain(Context *context,
@@ -3789,16 +3785,14 @@ angle::Result ImageHelper::initMSAASwapchain(Context *context,
                                              const Format &format,
                                              GLint samples,
                                              VkImageUsageFlags usage,
-                                             gl::LevelIndex baseLevel,
-                                             gl::LevelIndex maxLevel,
+                                             gl::LevelIndex firstLevel,
                                              uint32_t mipLevels,
                                              uint32_t layerCount,
                                              bool isRobustResourceInitEnabled)
 {
     ANGLE_TRY(initExternal(context, textureType, extents, format, samples, usage,
-                           kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, baseLevel,
-                           maxLevel, mipLevels, layerCount, isRobustResourceInitEnabled, false,
-                           nullptr));
+                           kVkImageCreateFlagsNone, ImageLayout::Undefined, nullptr, firstLevel,
+                           mipLevels, layerCount, isRobustResourceInitEnabled, nullptr));
     if (rotatedAspectRatio)
     {
         std::swap(mExtents.width, mExtents.height);
@@ -3816,12 +3810,10 @@ angle::Result ImageHelper::initExternal(Context *context,
                                         VkImageCreateFlags additionalCreateFlags,
                                         ImageLayout initialLayout,
                                         const void *externalImageCreateInfo,
-                                        gl::LevelIndex baseLevel,
-                                        gl::LevelIndex maxLevel,
+                                        gl::LevelIndex firstLevel,
                                         uint32_t mipLevels,
                                         uint32_t layerCount,
                                         bool isRobustResourceInitEnabled,
-                                        bool immutable,
                                         bool *imageFormatListEnabledOut)
 {
     ASSERT(!valid());
@@ -3831,11 +3823,10 @@ angle::Result ImageHelper::initExternal(Context *context,
     mImageType           = gl_vk::GetImageType(textureType);
     mExtents             = extents;
     mRotatedAspectRatio  = false;
-    mImmutable           = immutable;
     mFormat              = &format;
     mSamples             = std::max(samples, 1);
     mImageSerial         = context->getRenderer()->getResourceSerialFactory().generateImageSerial();
-    mFirstAllocatedLevel = immutable ? gl::LevelIndex(0) : baseLevel;
+    mFirstAllocatedLevel = firstLevel;
     mLevelCount          = mipLevels;
     mLayerCount          = layerCount;
     mUsage               = usage;
@@ -4379,12 +4370,11 @@ angle::Result ImageHelper::initImplicitMultisampledRenderToTexture(
              : VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT);
     constexpr VkImageCreateFlags kMultisampledCreateFlags = 0;
 
-    ANGLE_TRY(
-        initExternal(context, textureType, resolveImage.getExtents(), resolveImage.getFormat(),
-                     samples, kMultisampledUsageFlags, kMultisampledCreateFlags,
-                     ImageLayout::Undefined, nullptr, resolveImage.getFirstAllocatedLevel(),
-                     resolveImage.getLastAllocatedLevel(), resolveImage.getLevelCount(),
-                     resolveImage.getLayerCount(), isRobustResourceInitEnabled, false, nullptr));
+    ANGLE_TRY(initExternal(context, textureType, resolveImage.getExtents(),
+                           resolveImage.getFormat(), samples, kMultisampledUsageFlags,
+                           kMultisampledCreateFlags, ImageLayout::Undefined, nullptr,
+                           resolveImage.getFirstAllocatedLevel(), resolveImage.getLevelCount(),
+                           resolveImage.getLayerCount(), isRobustResourceInitEnabled, nullptr));
 
     const VkMemoryPropertyFlags kMultisampledMemoryFlags =
         VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT |
@@ -4561,9 +4551,6 @@ bool ImageHelper::isReleasedToExternal() const
 
 void ImageHelper::setFirstAllocatedLevel(gl::LevelIndex firstLevel)
 {
-    // For immutable texture, we always allocate the entire mipmap chain [0, mLevelCount-1].
-    // For mutable textures, we will try to reallocate based on baseLevel change
-    ASSERT(!mImmutable);
     ASSERT(!valid());
     mFirstAllocatedLevel = firstLevel;
 }

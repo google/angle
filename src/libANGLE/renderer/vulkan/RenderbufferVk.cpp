@@ -105,8 +105,7 @@ angle::Result RenderbufferVk::setStorageImpl(const gl::Context *context,
     VkExtent3D extents = {static_cast<uint32_t>(width), static_cast<uint32_t>(height), 1u};
     ANGLE_TRY(mImage->initExternal(contextVk, gl::TextureType::_2D, extents, format, imageSamples,
                                    usage, vk::kVkImageCreateFlagsNone, vk::ImageLayout::Undefined,
-                                   nullptr, gl::LevelIndex(0), gl::LevelIndex(0), 1, 1, robustInit,
-                                   false, nullptr));
+                                   nullptr, gl::LevelIndex(0), 1, 1, robustInit, nullptr));
 
     VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT;
     ANGLE_TRY(mImage->initMemory(contextVk, renderer->getMemoryProperties(), flags));

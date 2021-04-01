@@ -2727,8 +2727,7 @@ angle::Result TextureVk::initImage(ContextVk *contextVk,
     ANGLE_TRY(mImage->initExternal(
         contextVk, mState.getType(), vkExtent, format, samples, mImageUsageFlags, mImageCreateFlags,
         vk::ImageLayout::Undefined, nullptr, gl::LevelIndex(mState.getEffectiveBaseLevel()),
-        gl::LevelIndex(mState.getEffectiveMaxLevel()), levelCount, layerCount,
-        contextVk->isRobustResourceInitEnabled(), false, &imageFormatListEnabled));
+        levelCount, layerCount, contextVk->isRobustResourceInitEnabled(), &imageFormatListEnabled));
 
     mRequiresMutableStorage = (mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0;
 
@@ -2756,12 +2755,11 @@ angle::Result TextureVk::initImmutableImage(ContextVk *contextVk, const vk::Form
     GLint samples = mState.getBaseLevelDesc().samples ? mState.getBaseLevelDesc().samples : 1;
 
     bool imageFormatListEnabled = false;
-    ANGLE_TRY(mImage->initExternal(
-        contextVk, mState.getType(), vkExtentLevel0, format, samples, mImageUsageFlags,
-        mImageCreateFlags, vk::ImageLayout::Undefined, nullptr,
-        gl::LevelIndex(mState.getEffectiveBaseLevel()),
-        gl::LevelIndex(mState.getEffectiveMaxLevel()), mState.getImmutableLevels(), layerCount,
-        contextVk->isRobustResourceInitEnabled(), true, &imageFormatListEnabled));
+    ANGLE_TRY(mImage->initExternal(contextVk, mState.getType(), vkExtentLevel0, format, samples,
+                                   mImageUsageFlags, mImageCreateFlags, vk::ImageLayout::Undefined,
+                                   nullptr, gl::LevelIndex(0), mState.getImmutableLevels(),
+                                   layerCount, contextVk->isRobustResourceInitEnabled(),
+                                   &imageFormatListEnabled));
 
     mRequiresMutableStorage = (mImageCreateFlags & VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT) != 0;
 
