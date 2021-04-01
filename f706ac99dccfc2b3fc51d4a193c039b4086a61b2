@@ -63,6 +63,30 @@
       },
       "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "885ffbf6_30f2c554",
+        "filename": "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1377582
+      },
+      "writtenOn": "2021-04-01T22:46:23Z",
+      "side": 1,
+      "message": "Doug, JFYI, I do see invalid format used when calling glRenderbufferStorage in GLEScontext::initEmulatedEGLESurface in gfxstream, when I turn on ANGLE assertion.",
+      "parentUuid": "931f1e05_1c5c9ddd",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 0
+      },
+      "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
