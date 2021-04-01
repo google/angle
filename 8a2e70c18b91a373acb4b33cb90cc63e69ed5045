@@ -39,6 +39,30 @@
       },
       "revId": "8a2e70c18b91a373acb4b33cb90cc63e69ed5045",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "456077ae_4668ff9d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-01T18:21:31Z",
+      "side": 1,
+      "message": "Ah, good point.   A Program doesn\u0027t need to be in use to link it, which would allow us to get here and invalidate things for a different program.\n\nI can add an isCurrentExecutable() type of check to prevent that.",
+      "parentUuid": "169e44c2_3526e611",
+      "range": {
+        "startLine": 272,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 43
+      },
+      "revId": "8a2e70c18b91a373acb4b33cb90cc63e69ed5045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
