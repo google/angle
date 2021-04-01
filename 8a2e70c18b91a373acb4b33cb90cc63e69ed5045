@@ -16,6 +16,29 @@
       "message": "Re: Tests\n\nThis assert will cause failures without the fix.   A formal test that exercises the path necessary to cause a crash is in the next CL in the chain since it also requires the PPO sampler fixes to pass:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2797951/2/src/tests/gl_tests/ProgramPipelineTest.cpp",
       "revId": "8a2e70c18b91a373acb4b33cb90cc63e69ed5045",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "169e44c2_3526e611",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T18:17:02Z",
+      "side": 1,
+      "message": "Should these be done only when the executable is \"current\"? Or is that implied when reaching this function?",
+      "range": {
+        "startLine": 272,
+        "startChar": 0,
+        "endLine": 273,
+        "endChar": 43
+      },
+      "revId": "8a2e70c18b91a373acb4b33cb90cc63e69ed5045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
