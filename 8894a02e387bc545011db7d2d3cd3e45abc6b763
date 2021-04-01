@@ -46,6 +46,30 @@
       },
       "revId": "8894a02e387bc545011db7d2d3cd3e45abc6b763",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ef38be5_8ecc6eb9",
+        "filename": "extensions/EGL_ANGLE_metal_texture_client_buffer.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-04-01T14:53:16Z",
+      "side": 1,
+      "message": "Yep, took care of it",
+      "parentUuid": "76387165_0b106835",
+      "range": {
+        "startLine": 50,
+        "startChar": 46,
+        "endLine": 50,
+        "endChar": 52
+      },
+      "revId": "8894a02e387bc545011db7d2d3cd3e45abc6b763",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
