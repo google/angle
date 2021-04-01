@@ -72,12 +72,22 @@ if (enable_java_templates) {
                   "root_out_dir")
           secondary_abi_loadable_modules = []
           foreach(_library, angle_libraries) {
-            secondary_abi_loadable_modules += [ "$_secondary_out_dir/lib.compressed/${_library}${angle_libs_suffix}.so" ]
+            if (is_component_build) {
+              secondary_abi_loadable_modules += [ "$_secondary_out_dir/lib.compressed/${_library}${angle_libs_suffix}.cr.so" ]
+            } else {
+              secondary_abi_loadable_modules += [ "$_secondary_out_dir/lib.compressed/${_library}${angle_libs_suffix}.so" ]
+            }
           }
           if (angle_enable_vulkan_validation_layers) {
             foreach(_layer, vulkan_validation_layers) {
-              secondary_abi_loadable_modules +=
-                  [ "${_secondary_out_dir}/lib.compressed/lib${_layer}.so" ]
+              if (is_component_build) {
+                secondary_abi_loadable_modules += [
+                  "${_secondary_out_dir}/lib.compressed/lib${_layer}.cr.so",
+                ]
+              } else {
+                secondary_abi_loadable_modules +=
+                    [ "${_secondary_out_dir}/lib.compressed/lib${_layer}.so" ]
+              }
             }
           }
         }
@@ -97,14 +107,23 @@ if (enable_java_templates) {
       } else {
         loadable_modules = []
         foreach(_library, angle_libraries) {
-          loadable_modules += [
-            "$root_out_dir/lib.compressed/${_library}${angle_libs_suffix}.so",
-          ]
+          if (is_component_build) {
+            loadable_modules += [ "$root_out_dir/lib.compressed/${_library}${angle_libs_suffix}.cr.so" ]
+          } else {
+            loadable_modules += [
+              "$root_out_dir/lib.compressed/${_library}${angle_libs_suffix}.so",
+            ]
+          }
         }
         if (angle_enable_vulkan_validation_layers) {
           foreach(_layer, vulkan_validation_layers) {
-            loadable_modules +=
-                [ "$root_out_dir/lib.compressed/lib${_layer}.so" ]
+            if (is_component_build) {
+              loadable_modules +=
+                  [ "$root_out_dir/lib.compressed/lib${_layer}.cr.so" ]
+            } else {
+              loadable_modules +=
+                  [ "$root_out_dir/lib.compressed/lib${_layer}.so" ]
+            }
           }
         }
       }

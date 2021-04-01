@@ -1265,15 +1265,23 @@ if (angle_standalone || build_with_chromium) {
   }
 }
 
-if (!is_component_build && is_android && symbol_level != 0) {
+if (is_android && symbol_level != 0) {
   action_foreach("compressed_symbols") {
     sources = []
     foreach(_library, angle_libraries) {
-      sources += [ "$root_out_dir/${_library}${angle_libs_suffix}.so" ]
+      if (is_component_build) {
+        sources += [ "$root_out_dir/${_library}${angle_libs_suffix}.cr.so" ]
+      } else {
+        sources += [ "$root_out_dir/${_library}${angle_libs_suffix}.so" ]
+      }
     }
     if (angle_enable_vulkan_validation_layers) {
       foreach(_layer, vulkan_validation_layers) {
-        sources += [ "$root_out_dir/lib${_layer}.so" ]
+        if (is_component_build) {
+          sources += [ "$root_out_dir/lib${_layer}.cr.so" ]
+        } else {
+          sources += [ "$root_out_dir/lib${_layer}.so" ]
+        }
       }
     }
 
@@ -1311,7 +1319,7 @@ if (!is_component_build && is_android && symbol_level != 0) {
   }
 }
 
-if (build_with_chromium && !is_component_build && is_android &&
+if (build_with_chromium && is_android &&
     current_toolchain == default_toolchain) {
   apk_version_code = "0"
   if (angle_enable_commit_id) {
