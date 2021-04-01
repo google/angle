@@ -237,6 +237,24 @@
       "parentUuid": "1446e18a_ad5def9e",
       "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ad3b0dc_3712060b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-01T17:28:39Z",
+      "side": 1,
+      "message": "I am marking this thread as resolved, feel free to ping me if having more comments.",
+      "parentUuid": "06606c52_b7394f6e",
+      "revId": "ea7c8c4dde49dad908ba26f369e2bf69edb3d2fd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
