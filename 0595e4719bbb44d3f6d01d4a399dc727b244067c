@@ -94,6 +94,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c5f16158_a822cce2",
+        "filename": "src/compiler/translator/StructureHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2021-04-01T14:21:08Z",
+      "side": 1,
+      "message": "Done. And I also add another parameter of `alignment`. Please review it again.",
+      "parentUuid": "be9bd421_caa331be",
+      "range": {
+        "startLine": 128,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 98
+      },
+      "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3e68e175_0f6d0b94",
         "filename": "src/compiler/translator/StructureHLSL.cpp",
         "patchSetId": 1
@@ -105,6 +129,30 @@
       "writtenOn": "2021-03-30T13:59:41Z",
       "side": 1,
       "message": "The other cases didn\u0027t change mElementIndex but this case did. Is that intentional?",
+      "range": {
+        "startLine": 153,
+        "startChar": 43,
+        "endLine": 153,
+        "endChar": 61
+      },
+      "revId": "0595e4719bbb44d3f6d01d4a399dc727b244067c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54b137f2_ead3be3f",
+        "filename": "src/compiler/translator/StructureHLSL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1166444
+      },
+      "writtenOn": "2021-04-01T14:21:08Z",
+      "side": 1,
+      "message": "Yes. But I don\u0027t know when `numComponents \u003e 4` is true for GLSL types, except when type is matrix, structure and array, which are already handled in the first `if` branch of this function. Could we use `if (numComponents \u003d\u003d 4)` to replace `if (numComponents \u003e\u003d 4)` here?\n\nI assume there is a type `vec5` and its numComponents is 5, and a structure is defined as show below,\nstruct S {\n  float a;\n  vec5 b;\n  float c;\n};\nThe element `b` straddles a 4-vector boundary, in order to follow std140 rules, we should pad as shown below, 64 bytes in total，\nstruct std_fp_S {\n  float a;\n  float padding1;\n  float padding2;\n  float padding3;\n  vec5 b;\n  float padding4;\n  float padding5;\n  float padding6;\n  float c;\n  float padding7;\n  float padding8;\n  float padding9;\n};\n\nWe had restricted the structure elements\u0027 types whether could translate the structure as HLSL StructuredBuffer element type, `numComponents` is always 4 here, so `mElementIndex` is always 0. But in order to make these code more generically, I still deal `numComponents \u003e 4` situation in Patchset 2.",
+      "parentUuid": "3e68e175_0f6d0b94",
       "range": {
         "startLine": 153,
         "startChar": 43,
