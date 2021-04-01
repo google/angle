@@ -16,6 +16,23 @@
       "message": "Thanks",
       "revId": "acf9b311003e921e3ea6e20c24b086eb2d0db2a6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef1ec89a_f61b9f34",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-01T17:41:47Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "acf9b311003e921e3ea6e20c24b086eb2d0db2a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
