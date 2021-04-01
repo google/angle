@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81bd83dd_cfb024d1",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1318,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-01T17:57:30Z",
+      "side": 1,
+      "message": "Re: Tests\n\nThis assert will cause failures without the fix.   A formal test that exercises the path necessary to cause a crash is in the next CL in the chain since it also requires the PPO sampler fixes to pass:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2797951/2/src/tests/gl_tests/ProgramPipelineTest.cpp",
+      "revId": "8a2e70c18b91a373acb4b33cb90cc63e69ed5045",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
