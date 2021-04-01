@@ -1,0 +1,205 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "44eefcba_4e1e0080",
+        "filename": "src/libANGLE/Texture.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1530,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "I remember I hit annoyance with this as well in the past, but IIRC the idea was that the function should only use parameters that are passed to it. Not sure if there\u0027s any real reason for calling this before updating the state. Like, is it trying to preserve the state in case this returns error?\n\n+Jamie",
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "909baf50_939d6d06",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "true? Also for Renderbuffer and Surface.\n\nSee my comment in the next CL though, doesn\u0027t matter if we can remove this in that change.",
+      "range": {
+        "startLine": 211,
+        "startChar": 62,
+        "endLine": 211,
+        "endChar": 67
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "754a73c6_ce19dd02",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 1755,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "This looks like a bugfix. Can you please add a test?",
+      "range": {
+        "startLine": 1755,
+        "startChar": 52,
+        "endLine": 1755,
+        "endChar": 86
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff12c45b_03cd89a8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2426,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "Probably more common is if the texture itself is used in compute (mipgen on compute is only on AMD/Nvidia) or has changed sRGB mode. You could drop this part of the comment.",
+      "range": {
+        "startLine": 2426,
+        "startChar": 21,
+        "endLine": 2426,
+        "endChar": 91
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6b556bc_3397e67a",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2429,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "How about instead you add `!mState.getImmutableFormat()` to the condition of the `if` that does this? It\u0027s not easily verifiable that doing this early prevents that if from doing anything.",
+      "range": {
+        "startLine": 2428,
+        "startChar": 37,
+        "endLine": 2429,
+        "endChar": 28
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00b289d9_9ccb11af",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2771,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "This doesn\u0027t look right.\n\nAlso, why not instead of adding `initImmutableImage()`, you just call `initImage` and have it send `mState.getImmutableFormat()` automatically to `mImage-\u003einitExternal()`?",
+      "range": {
+        "startLine": 2771,
+        "startChar": 30,
+        "endLine": 2771,
+        "endChar": 35
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2aecadcd_2d201134",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "Can be reverted. Only used with image respecify for mipgen which should be conditioned to !mState.getImmutableFormat() anyway (see another comment regarding that code)",
+      "range": {
+        "startLine": 2869,
+        "startChar": 0,
+        "endLine": 2873,
+        "endChar": 77
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dea38b83_804c8d6e",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2887,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "Can be reverted. Only used with getMipLevelCount().",
+      "range": {
+        "startLine": 2883,
+        "startChar": 0,
+        "endLine": 2887,
+        "endChar": 72
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6839aca2_3c0dbb3e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 28
+      },
+      "lineNbr": 2045,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-01T02:41:22Z",
+      "side": 1,
+      "message": "nit: underlying",
+      "range": {
+        "startLine": 2045,
+        "startChar": 7,
+        "endLine": 2045,
+        "endChar": 16
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
