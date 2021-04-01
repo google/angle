@@ -430,6 +430,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38aa60fa_ced0b65f",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-01T19:59:50Z",
+      "side": 1,
+      "message": "Lets deal with this in the follow up CL along with your other comment above.",
+      "parentUuid": "754995be_5125b529",
+      "range": {
+        "startLine": 2869,
+        "startChar": 0,
+        "endLine": 2873,
+        "endChar": 77
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dea38b83_804c8d6e",

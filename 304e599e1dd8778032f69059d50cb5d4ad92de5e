@@ -22,6 +22,30 @@
       },
       "revId": "304e599e1dd8778032f69059d50cb5d4ad92de5e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "536a0bf5_0a09bfca",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 29
+      },
+      "lineNbr": 2778,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-01T19:59:50Z",
+      "side": 1,
+      "message": "Lets handle that in the follow up CL. I don\u0027t want to make too much changes to a heavily reviewed CL.",
+      "parentUuid": "af6b1c98_aecbaa2f",
+      "range": {
+        "startLine": 2760,
+        "startChar": 0,
+        "endLine": 2778,
+        "endChar": 91
+      },
+      "revId": "304e599e1dd8778032f69059d50cb5d4ad92de5e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
