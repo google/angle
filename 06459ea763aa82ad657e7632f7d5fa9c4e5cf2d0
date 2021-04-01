@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6ca3c65_66eae8d2",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-01T08:45:09Z",
+      "side": 1,
+      "message": "There are some templated methods involved that make this impossible.",
+      "parentUuid": "bd935b16_16d12007",
+      "revId": "06459ea763aa82ad657e7632f7d5fa9c4e5cf2d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "95e33531_55a59fcd",
@@ -55,6 +73,54 @@
       "side": 1,
       "message": "Agree with the sentiment to try and minimize ifdefs. I was thinking maybe in frame_capture_utils, you make a single #ifdef around all the serialize functions, and include an #else with the main serialize function no-oped. You will also need another #ifdef for conditionally including this header.",
       "parentUuid": "95e33531_55a59fcd",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 21
+      },
+      "revId": "06459ea763aa82ad657e7632f7d5fa9c4e5cf2d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b5825cd_d384caeb",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-01T08:45:09Z",
+      "side": 1,
+      "message": "... but then one also has to deal with getting the build system right, and this would be more ifs there, so the sum of ifdefs/ifs is probably a constant.",
+      "parentUuid": "4e44fcf4_dac2cd95",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 21
+      },
+      "revId": "06459ea763aa82ad657e7632f7d5fa9c4e5cf2d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f83b300_f9dbc663",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-01T08:45:09Z",
+      "side": 1,
+      "message": "I went went this approach.",
+      "parentUuid": "4e44fcf4_dac2cd95",
       "range": {
         "startLine": 14,
         "startChar": 7,
