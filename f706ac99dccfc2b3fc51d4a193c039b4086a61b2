@@ -87,6 +87,30 @@
       },
       "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "588e2f3b_838bd966",
+        "filename": "src/tests/gl_tests/D3D11FormatTablesTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 181,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-01T22:58:37Z",
+      "side": 1,
+      "message": "Oh I see. Yeah if validation is off the realm of undefined behaviour is basically infinite.",
+      "parentUuid": "885ffbf6_30f2c554",
+      "range": {
+        "startLine": 157,
+        "startChar": 0,
+        "endLine": 181,
+        "endChar": 0
+      },
+      "revId": "f706ac99dccfc2b3fc51d4a193c039b4086a61b2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
