@@ -355,6 +355,9 @@ luci.cq_group(
             builder = 'chromium:try/fuchsia-angle-rel',
         ),
         luci.cq_tryjob_verifier(
+            builder = 'chromium:try/fuchsia-angle-try',
+        ),
+        luci.cq_tryjob_verifier(
             builder = 'chromium:try/linux_angle_deqp_rel_ng',
         ),
         luci.cq_tryjob_verifier(
@@ -362,6 +365,15 @@ luci.cq_group(
         ),
         luci.cq_tryjob_verifier(
             builder = 'chromium:try/linux-angle-rel',
+        ),
+        luci.cq_tryjob_verifier(
+            builder = 'chromium:try/linux-angle-chromium-try',
+        ),
+        luci.cq_tryjob_verifier(
+            builder = 'chromium:try/linux-angle-try',
+        ),
+        luci.cq_tryjob_verifier(
+            builder = 'chromium:try/linux-ozone-angle-try',
         ),
         luci.cq_tryjob_verifier(
             builder = 'chromium:try/linux-swangle-try-tot-angle-x64',
