@@ -195,6 +195,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf81d495_7d3f8976",
+        "filename": "extensions/EGL_ANGLE_mtl_texture_client_buffer.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-04-01T01:45:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "49f7eee6_4caa79b1",
+      "revId": "91191b2ea0cca767543435aae9c992b3babdf143",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cb311183_7d154fb0",

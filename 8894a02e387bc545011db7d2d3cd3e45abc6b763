@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24b8ebbe_422089b1",
+        "filename": "extensions/EGL_ANGLE_metal_texture_client_buffer.txt",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-04-01T01:45:49Z",
+      "side": 1,
+      "message": "Is this value need to be changed?",
+      "range": {
+        "startLine": 50,
+        "startChar": 46,
+        "endLine": 50,
+        "endChar": 52
+      },
+      "revId": "8894a02e387bc545011db7d2d3cd3e45abc6b763",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
