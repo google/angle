@@ -488,6 +488,15 @@
     "bits": { "red": 10, "green": 10, "blue": 10, "alpha": 2 },
     "glInternalFormat": "GL_RGB10_A2UI"
   },
+  "R10G10B10X2_UNORM": {
+    "texFormat": "DXGI_FORMAT_R10G10B10A2_UNORM",
+    "srvFormat": "DXGI_FORMAT_R10G10B10A2_UNORM",
+    "rtvFormat": "DXGI_FORMAT_R10G10B10A2_UNORM",
+    "channels": "rgba",
+    "componentType": "unorm",
+    "bits": { "red": 10, "green": 10, "blue": 10, "alpha": 2 },
+    "glInternalFormat": "GL_RGB10_UNORM_ANGLEX"
+  },
   "R16G16B16A16_SINT": {
     "texFormat": "DXGI_FORMAT_R16G16B16A16_SINT",
     "srvFormat": "DXGI_FORMAT_R16G16B16A16_SINT",

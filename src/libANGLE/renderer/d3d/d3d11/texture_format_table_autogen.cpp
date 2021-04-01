@@ -2098,6 +2098,20 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
                                          nullptr);
             return info;
         }
+        case GL_RGB10_UNORM_ANGLEX:
+        {
+            static constexpr Format info(GL_RGB10_UNORM_ANGLEX,
+                                         angle::FormatID::R10G10B10X2_UNORM,
+                                         DXGI_FORMAT_R10G10B10A2_UNORM,
+                                         DXGI_FORMAT_R10G10B10A2_UNORM,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_R10G10B10A2_UNORM,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_R10G10B10A2_UNORM,
+                                         GL_RGBA16_EXT,
+                                         nullptr);
+            return info;
+        }
         case GL_RGB16F:
         {
             static constexpr Format info(GL_RGB16F,
