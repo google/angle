@@ -241,17 +241,21 @@ void ProgramPipeline::updateExecutableAttributes()
 
 void ProgramPipeline::updateTransformFeedbackMembers()
 {
-    Program *vertexProgram = getShaderProgram(gl::ShaderType::Vertex);
-
-    if (!vertexProgram)
+    ShaderType lastVertexProcessingStage =
+        gl::GetLastPreFragmentStage(getExecutable().getLinkedShaderStages());
+    if (lastVertexProcessingStage == ShaderType::InvalidEnum)
     {
         return;
     }
 
-    const ProgramExecutable &vertexExecutable     = vertexProgram->getExecutable();
-    mState.mExecutable->mTransformFeedbackStrides = vertexExecutable.mTransformFeedbackStrides;
+    Program *shaderProgram = getShaderProgram(lastVertexProcessingStage);
+    ASSERT(shaderProgram);
+
+    const ProgramExecutable &lastPreFragmentExecutable = shaderProgram->getExecutable();
+    mState.mExecutable->mTransformFeedbackStrides =
+        lastPreFragmentExecutable.mTransformFeedbackStrides;
     mState.mExecutable->mLinkedTransformFeedbackVaryings =
-        vertexExecutable.mLinkedTransformFeedbackVaryings;
+        lastPreFragmentExecutable.mLinkedTransformFeedbackVaryings;
 }
 
 void ProgramPipeline::updateShaderStorageBlocks()
@@ -537,7 +541,16 @@ angle::Result ProgramPipeline::link(const Context *context)
         mergedVaryings = GetMergedVaryingsFromShaders(*this, getExecutable());
         // If separable program objects are in use, the set of attributes captured is taken
         // from the program object active on the last vertex processing stage.
-        Program *tfProgram = mState.mPrograms[ShaderType::Geometry];
+        ShaderType lastVertexProcessingStage =
+            gl::GetLastPreFragmentStage(getExecutable().getLinkedShaderStages());
+        if (lastVertexProcessingStage == ShaderType::InvalidEnum)
+        {
+            return angle::Result::Stop;
+        }
+
+        Program *tfProgram = getShaderProgram(lastVertexProcessingStage);
+        ASSERT(tfProgram);
+
         if (!tfProgram)
         {
             tfProgram = mState.mPrograms[ShaderType::Vertex];

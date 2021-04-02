@@ -71,8 +71,6 @@
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_invariance.invariance_rule* = SKIP
 // Crash on assert in libcpp. CTS passes to a function '&vector[0], size', where vector is empty.
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_point_mode.points_verification = SKIP
-// PPO Linking failure
-5557 VULKAN WIN : KHR-GLES32.core.separable_programs_tf.tessellation_active = FAIL
 
 // Geometry and tessellation failures on the Android and Linux bots, potentially due to missing
 // features from old drivers.  On up-to-date Linux, the expectations should be as above for windows.

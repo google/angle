@@ -87,6 +87,45 @@ class ProgramPipelineTest31 : public ProgramPipelineTest
     GLuint mPipeline;
 };
 
+class ProgramPipelineXFBTest31 : public ProgramPipelineTest31
+{
+  protected:
+    void testSetUp() override
+    {
+        glGenBuffers(1, &mTransformFeedbackBuffer);
+        glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBuffer);
+        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, mTransformFeedbackBufferSize, nullptr,
+                     GL_STATIC_DRAW);
+
+        glGenTransformFeedbacks(1, &mTransformFeedback);
+
+        ASSERT_GL_NO_ERROR();
+    }
+    void testTearDown() override
+    {
+        if (mTransformFeedbackBuffer != 0)
+        {
+            glDeleteBuffers(1, &mTransformFeedbackBuffer);
+            mTransformFeedbackBuffer = 0;
+        }
+
+        if (mTransformFeedback != 0)
+        {
+            glDeleteTransformFeedbacks(1, &mTransformFeedback);
+            mTransformFeedback = 0;
+        }
+    }
+
+    void bindProgramPipelineWithXFBVaryings(const GLchar *vertString,
+                                            const GLchar *fragStringconst,
+                                            const std::vector<std::string> &tfVaryings,
+                                            GLenum bufferMode);
+
+    static const size_t mTransformFeedbackBufferSize = 1 << 24;
+    GLuint mTransformFeedbackBuffer;
+    GLuint mTransformFeedback;
+};
+
 void ProgramPipelineTest31::bindProgramPipeline(const GLchar *vertString, const GLchar *fragString)
 {
     mVertProg = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &vertString);
@@ -94,6 +133,41 @@ void ProgramPipelineTest31::bindProgramPipeline(const GLchar *vertString, const 
     mFragProg = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &fragString);
     ASSERT_NE(mFragProg, 0u);
 
+    // Generate a program pipeline and attach the programs to their respective stages
+    glGenProgramPipelines(1, &mPipeline);
+    EXPECT_GL_NO_ERROR();
+    glUseProgramStages(mPipeline, GL_VERTEX_SHADER_BIT, mVertProg);
+    EXPECT_GL_NO_ERROR();
+    glUseProgramStages(mPipeline, GL_FRAGMENT_SHADER_BIT, mFragProg);
+    EXPECT_GL_NO_ERROR();
+    glBindProgramPipeline(mPipeline);
+    EXPECT_GL_NO_ERROR();
+}
+
+void ProgramPipelineXFBTest31::bindProgramPipelineWithXFBVaryings(
+    const GLchar *vertString,
+    const GLchar *fragString,
+    const std::vector<std::string> &tfVaryings,
+    GLenum bufferMode)
+{
+    mVertProg = glCreateShaderProgramv(GL_VERTEX_SHADER, 1, &vertString);
+    ASSERT_NE(mVertProg, 0u);
+    mFragProg = glCreateShaderProgramv(GL_FRAGMENT_SHADER, 1, &fragString);
+    ASSERT_NE(mFragProg, 0u);
+
+    if (tfVaryings.size() > 0)
+    {
+        std::vector<const char *> constCharTFVaryings;
+
+        for (const std::string &transformFeedbackVarying : tfVaryings)
+        {
+            constCharTFVaryings.push_back(transformFeedbackVarying.c_str());
+        }
+
+        glTransformFeedbackVaryings(mVertProg, static_cast<GLsizei>(tfVaryings.size()),
+                                    &constCharTFVaryings[0], bufferMode);
+        glLinkProgram(mVertProg);
+    }
     // Generate a program pipeline and attach the programs to their respective stages
     glGenProgramPipelines(1, &mPipeline);
     EXPECT_GL_NO_ERROR();
@@ -678,10 +752,71 @@ TEST_P(ProgramPipelineTest31, VaryingIOBlockSeparableProgram)
         })";
 
     bindProgramPipeline(kVS, kFS);
-
     drawQuadWithPPO("inputAttribute", 0.5f, 1.0f);
     ASSERT_GL_NO_ERROR();
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+}
+
+// Test that a shader IO block varying with separable program links
+// successfully.
+TEST_P(ProgramPipelineXFBTest31, VaryingIOBlockSeparableProgramWithXFB)
+{
+    // Only the Vulkan backend supports PPOs
+    ANGLE_SKIP_TEST_IF(!IsVulkan());
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_io_blocks"));
+    // http://anglebug.com/5486
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    constexpr char kVS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        in vec4 inputAttribute;
+        out Block_inout { vec4 value; } user_out;
+
+        void main()
+        {
+            gl_Position    = inputAttribute;
+            user_out.value = vec4(4.0, 5.0, 6.0, 7.0);
+        })";
+
+    constexpr char kFS[] =
+        R"(#version 310 es
+        #extension GL_EXT_shader_io_blocks : require
+
+        precision highp float;
+        layout(location = 0) out mediump vec4 color;
+        in Block_inout { vec4 value; } user_in;
+
+        void main()
+        {
+            color = vec4(1, 0, 0, 1);
+        })";
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("Block_inout.value");
+    bindProgramPipelineWithXFBVaryings(kVS, kFS, tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, mTransformFeedbackBuffer);
+
+    glBeginTransformFeedback(GL_TRIANGLES);
+    drawQuadWithPPO("inputAttribute", 0.5f, 1.0f);
+    glEndTransformFeedback();
+
+    ASSERT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::red);
+
+    void *mappedBuffer =
+        glMapBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, sizeof(float) * 4, GL_MAP_READ_BIT);
+    ASSERT_NE(nullptr, mappedBuffer);
+
+    float *mappedFloats = static_cast<float *>(mappedBuffer);
+    for (unsigned int cnt = 0; cnt < 4; ++cnt)
+    {
+        EXPECT_EQ(4 + cnt, mappedFloats[cnt]);
+    }
+    glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+
+    EXPECT_GL_NO_ERROR();
 }
 
 // Test modifying a shader and re-linking it updates the PPO too
@@ -919,5 +1054,8 @@ ANGLE_INSTANTIATE_TEST_ES3_AND_ES31(ProgramPipelineTest);
 
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramPipelineTest31);
 ANGLE_INSTANTIATE_TEST_ES31(ProgramPipelineTest31);
+
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(ProgramPipelineXFBTest31);
+ANGLE_INSTANTIATE_TEST_ES31(ProgramPipelineXFBTest31);
 
 }  // namespace

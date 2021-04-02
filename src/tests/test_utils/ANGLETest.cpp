@@ -873,7 +873,12 @@ void ANGLETestBase::drawQuadPPO(GLuint vertProgram,
                                 const GLfloat positionAttribZ,
                                 const GLfloat positionAttribXYScale)
 {
-    glUseProgram(0);
+    GLint activeProgram = 0;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &activeProgram);
+    if (activeProgram)
+    {
+        glUseProgram(0);
+    }
 
     std::array<Vector3, 6> quadVertices = GetQuadVertices();
 
@@ -894,6 +899,11 @@ void ANGLETestBase::drawQuadPPO(GLuint vertProgram,
 
     glDisableVertexAttribArray(positionLocation);
     glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+
+    if (activeProgram)
+    {
+        glUseProgram(static_cast<GLuint>(activeProgram));
+    }
 }
 
 void ANGLETestBase::drawIndexedQuad(GLuint program,

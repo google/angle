@@ -306,12 +306,11 @@ void TransformFeedbackVk::getBufferOffsets(ContextVk *contextVk,
         return;
     }
 
-    GLsizeiptr verticesDrawn = mState.getVerticesDrawn();
-    const std::vector<GLsizei> &bufferStrides =
-        mState.getBoundProgram()->getTransformFeedbackStrides();
+    GLsizeiptr verticesDrawn                = mState.getVerticesDrawn();
     const gl::ProgramExecutable *executable = contextVk->getState().getProgramExecutable();
     ASSERT(executable);
-    size_t xfbBufferCount = executable->getTransformFeedbackBufferCount();
+    const std::vector<GLsizei> &bufferStrides = executable->getTransformFeedbackStrides();
+    size_t xfbBufferCount                     = executable->getTransformFeedbackBufferCount();
 
     ASSERT(xfbBufferCount > 0);
 

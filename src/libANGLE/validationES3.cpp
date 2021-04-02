@@ -2703,17 +2703,18 @@ bool ValidateBeginTransformFeedback(const Context *context, PrimitiveMode primit
         }
     }
 
-    Program *program = context->getState().getLinkedProgram(context);
-
-    if (!program)
+    const ProgramExecutable *programExecutable = context->getState().getProgramExecutable();
+    if (programExecutable)
+    {
+        if (programExecutable->getLinkedTransformFeedbackVaryings().size() == 0)
+        {
+            context->validationError(GL_INVALID_OPERATION, kNoTransformFeedbackOutputVariables);
+            return false;
+        }
+    }
+    else
     {
         context->validationError(GL_INVALID_OPERATION, kProgramNotBound);
-        return false;
-    }
-
-    if (program->getTransformFeedbackVaryingCount() == 0)
-    {
-        context->validationError(GL_INVALID_OPERATION, kNoTransformFeedbackOutputVariables);
         return false;
     }
 
