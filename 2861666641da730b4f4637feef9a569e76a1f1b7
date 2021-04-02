@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "36beca1d_60550295",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-04-02T02:28:26Z",
+      "side": 1,
+      "message": "Based on assumption that imageGlColorspace depends on glColorspace and supportsImageFormatList:\n\n```\noutExtensions-\u003eimageGlColorspace \u003d\n        outExtensions-\u003eglColorspace \u0026\u0026 getRenderer()-\u003egetFeatures().supportsImageFormatList.enabled;\n```\n\nMight be misunderstanding...",
+      "parentUuid": "a08b4d59_277a0f0a",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 2
+      },
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "26f009ea_bc65c1a7",
