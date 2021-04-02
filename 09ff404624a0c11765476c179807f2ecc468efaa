@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "afd0ad26_2d83b028",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-02T18:09:18Z",
+      "side": 1,
+      "message": "LGTM\n\nThe only other thing I\u0027d add is a comment describing what the string being parsed is expected to look like:\n\n    # app_capture_context123.h\n    #                      ^^\n    #              start---||---end",
+      "parentUuid": "6a7db1c8_236971f8",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 22
+      },
+      "revId": "09ff404624a0c11765476c179807f2ecc468efaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1a6d7810_49024088",
         "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
         "patchSetId": 3
