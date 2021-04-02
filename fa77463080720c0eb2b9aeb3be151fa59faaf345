@@ -52,6 +52,41 @@
       "parentUuid": "10096f97_1969c8dc",
       "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74927907_66d15197",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-02T16:28:28Z",
+      "side": 1,
+      "message": "Yeah, it\u0027ll certainly be tricky getting the developer messaging right since they\u0027re debugging on one driver but shipping on another (I probably sound like a broken record at this point).\n\nIf we really want to clarify the user messaging, we should be taking a page out of (for example) ARM\u0027s playbook and publishing some \"best practices\" articles.   Those could include things like what developers should do to write the most \"portable\" version of their game by doing things like using formats both the native GLES driver and ANGLE support.   Unfortunately, since that\u0027s HW-specific, it may also need to be accompanied with tools that query the underlying hardware and output which formats ANGLE can support natively vs having to emulate.\n\n\u003e This came up because Fran asked the ISV to compress their vertex attributes and they replied that they already had, but that AGI was showing something different.  We don\u0027t want ISVs to be misled by this.\n\nThis should be treated as a really big issue with the AGI+ANGLE product.   Once a developer can\u0027t trust a tool, they\u0027ll move on and it\u0027ll be a long time to earn that trust back.   Luckily this was a quick \"oops\", versus them wasting any amount of time due to AGI lying to them.",
+      "parentUuid": "a05ea5d8_f06cef86",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bfa5286_b6d0f7ef",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-02T16:28:28Z",
+      "side": 1,
+      "message": "Based on your other comment \"Hardware\" is not entirely accurate and should probably be updated to \"Vulkan driver\".\n\nAlso, it would be good to output which format is unsupported and, if possible, what it\u0027s being converted to.",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
