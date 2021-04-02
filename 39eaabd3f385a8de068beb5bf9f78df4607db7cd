@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8ed0dd4_649f7241",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-02T05:31:59Z",
+      "side": 1,
+      "message": "With this CL, \"C\u0026C: Rivals\" finally renders correctly without any crashes.",
+      "revId": "39eaabd3f385a8de068beb5bf9f78df4607db7cd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
