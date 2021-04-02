@@ -131,6 +131,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2c0008a4_97848608",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-04-02T18:22:56Z",
+      "side": 1,
+      "message": "Hey Jamie, I don\u0027t think it\u0027s a bug \n\nIn the ESSL 3.0 spec, on page 39, it prohibits using booleans as a vertex attribute input.\n```\nIt is a compile-time error to declare a vertex shader input with, or that contains, any of the following types(see  4.1.10 “Definitions of Terms”):\n•A boolean type\n```\n\nOn page 19 of the ESSL spec it states:\n```\nThe following are the keywords reserved for future use. Using them will result in an error:\n... (ommitted list of irrelevant keywords)\nlong    short    double    half    fixed  \n```\n\nOn page 22 of the ESSL spec it has a table listing the supported basic data types. If we look at it, apart from bool which is prohibited due to the first quote, there are only data types of type int, unsigned int, float, and data types that consist of multiple components of the previously mentioned types. All 3 of these types that are allowed as vertex attributes and their vec/mat derivatives have a bit width of 32, which matches up with the current bit widths in kMismatchedComponentTypeMap. This means that if we\u0027re always going to use 4 channels, the only allowed vkFormats are the ones listed in kMismatchedComponentTypeMap. If we use any other, we\u0027ll end up triggering a vulkan validation layer complaint about mismatched formats\n\nNow, glVertexAttrib(i)Pointer can take in GL_BYTE and GL_SHORT data, but this isn\u0027t an issue either as the way these are interpreted are defined by the GLES spec. It\u0027ll either be converted to a float, unsigned int, or int.\nIn the GLES 3.0 spec on page 25 there\u0027s a table captioned with the following:\n```\nTable 2.4: Vertex array sizes (values per vertex) and data types. The “Integer Han-dling” column indicates how fixed-point data types are handled:  “integer” means that they remain as integer values, and “flag” means that they are either converted to floating-point directly, or converted by normalizing to[0,1](for unsigned types)or[−1,1](for signed types), ...\n```\n\nWithin angle, we do convert GL_UNSIGNED_BYTE into a gl::ComponentType of Float. If we pass in GL_UNSIGNED_BYTE to glVertexAttribIPointer, and we have an ivec in the glsl shader as the vertex attribute, the vkFormat will be set to match the program\u0027s(VK_FORMAT_R32G32B32A32_SINT). \n\nAs for data correctness - if the app specifies a GL_UNSIGNED_BYTE in glVertexAttribIPointer and they specified ivec in the shader, we\u0027re going to read in 4 bytes per component since we set the vkFormat to VK_FORMAT_R32G32B32A32_SINT. This is enough to fill out each component. I believe this to be the behavior expected by glVertexAttribPointer when used with bytes or any specifier smaller than the shader\u0027s (it\u0027s also how it works on the native gles driver - it packs in 4 bytes into a 32 bit format). \n\n\nSpecs referenced:\nhttps://www.khronos.org/registry/OpenGL/specs/es/3.0/GLSL_ES_Specification_3.00.pdf - referenced as ESSL\nhttps://www.khronos.org/registry/OpenGL/specs/es/3.0/es_spec_3.0.pdf - referenced as GLES\n\nThank you!",
+      "parentUuid": "1ff0be71_0acfd9e2",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
