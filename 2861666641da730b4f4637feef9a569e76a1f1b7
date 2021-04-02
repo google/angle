@@ -92,6 +92,24 @@
       "parentUuid": "16e1d70b_99f31191",
       "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6be8fa0c_803838c0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-04-02T02:24:59Z",
+      "side": 1,
+      "message": "Hi,\n\nWe\u0027re on a platform with:\nsupportsSwapchainColorspace.enabled \u003d true (VK_EXT_swapchain_colorspace)\nsupportsImageFormatList.enabled \u003d false (VK_KHR_image_format_list)\n\nWhen replaying trace file with EGL_GL_COLORSPACE_KHR specified, such as EGL_GL_COLORSPACE_LINEAR, it failed(EGL_BAD_ATTRIBUTE) to create the windowsurface at AOSP framework:\nhttps://cs.android.com/android/platform/superproject/+/master:frameworks/native/opengl/libs/EGL/egl_platform_entries.cpp;l\u003d539?q\u003dprocessAttributes\n\nWith this patch we can proceed on the trace replaying, then we proposed this. If this is inappropriate then we can discard this, and keep this a WA for internal usage.",
+      "parentUuid": "6e59fea7_8be94746",
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
