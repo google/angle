@@ -454,6 +454,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5fe1f36_669f86f8",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 28
+      },
+      "lineNbr": 2873,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-02T02:24:25Z",
+      "side": 1,
+      "message": "crrev.com/c/2800422",
+      "parentUuid": "38aa60fa_ced0b65f",
+      "range": {
+        "startLine": 2869,
+        "startChar": 0,
+        "endLine": 2873,
+        "endChar": 77
+      },
+      "revId": "e8bbb9676feace0e4e26d6a015b1ef205120bf1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dea38b83_804c8d6e",
