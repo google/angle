@@ -718,6 +718,9 @@ struct Extensions
 
     // GL_EXT_clip_cull_distance
     bool clipCullDistanceEXT = false;
+
+    // GL_ANGLE_get_serialized_context_string
+    bool getSerializedContextStringANGLE = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

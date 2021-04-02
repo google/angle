@@ -782,6 +782,9 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     // Note: we use a raw pointer here so we can exclude frame capture sources from the build.
     std::unique_ptr<angle::FrameCapture> mFrameCapture;
 
+    // Cache representation of the serialized context string.
+    mutable std::string mCachedSerializedStateString;
+
     mutable size_t mRefCount;
 
     OverlayType mOverlay;

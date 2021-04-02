@@ -3903,6 +3903,14 @@ bool ValidateGetString(const Context *context, GLenum name)
             }
             break;
 
+        case GL_SERIALIZED_CONTEXT_STRING_ANGLE:
+            if (!context->getExtensions().getSerializedContextStringANGLE)
+            {
+                context->validationError(GL_INVALID_ENUM, kInvalidName);
+                return false;
+            }
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidName);
             return false;

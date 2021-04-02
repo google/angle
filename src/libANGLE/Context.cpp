@@ -40,6 +40,7 @@
 #include "libANGLE/TransformFeedback.h"
 #include "libANGLE/VertexArray.h"
 #include "libANGLE/capture/FrameCapture.h"
+#include "libANGLE/capture/frame_capture_utils.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
@@ -3215,6 +3216,17 @@ const GLubyte *Context::getString(GLenum name) const
         case GL_REQUESTABLE_EXTENSIONS_ANGLE:
             return reinterpret_cast<const GLubyte *>(mRequestableExtensionString);
 
+        case GL_SERIALIZED_CONTEXT_STRING_ANGLE:
+            if (angle::SerializeContextToString(this, &mCachedSerializedStateString) ==
+                angle::Result::Continue)
+            {
+                return reinterpret_cast<const GLubyte *>(mCachedSerializedStateString.c_str());
+            }
+            else
+            {
+                return nullptr;
+            }
+
         default:
             UNREACHABLE();
             return nullptr;
@@ -3534,6 +3546,9 @@ Extensions Context::generateSupportedExtensions() const
 
     // GL_ANGLE_get_tex_level_parameter is implemented in the frontend
     supportedExtensions.getTexLevelParameterANGLE = true;
+
+    // Always enabled. Will return a default string if capture is not enabled.
+    supportedExtensions.getSerializedContextStringANGLE = true;
 
     return supportedExtensions;
 }

@@ -276,6 +276,7 @@
     void getTexImage(TextureTarget targetPacked, GLint level, GLenum format, GLenum type,          \
                      void *pixels);                                                                \
     void getRenderbufferImage(GLenum target, GLenum format, GLenum type, void *pixels);            \
+    /* GL_ANGLE_get_serialized_context_string */                                                   \
     /* GL_ANGLE_get_tex_level_parameter */                                                         \
     /* GL_ANGLE_program_binary */                                                                  \
     /* GL_ANGLE_request_extension */                                                               \
