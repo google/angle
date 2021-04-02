@@ -227,6 +227,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "21668a60_d0241c2b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-02T20:32:48Z",
+      "side": 1,
+      "message": "For a simple example, not this workaround, I\u0027d expect UBYTE to produce VK_FORMAT_R8G8..._UINT. Maybe we have a test case in one of the end2end_tests.",
+      "parentUuid": "bf7bf47f_c5e4258d",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
