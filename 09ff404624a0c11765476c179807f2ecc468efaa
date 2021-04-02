@@ -89,6 +89,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "76ccf10a_66811ce3",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-02T19:22:24Z",
+      "side": 1,
+      "message": "Done, thanks Tim",
+      "parentUuid": "afd0ad26_2d83b028",
+      "range": {
+        "startLine": 308,
+        "startChar": 0,
+        "endLine": 310,
+        "endChar": 22
+      },
+      "revId": "09ff404624a0c11765476c179807f2ecc468efaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1a6d7810_49024088",
@@ -102,6 +126,30 @@
       "writtenOn": "2021-03-31T15:10:21Z",
       "side": 1,
       "message": "nit: \u003d\u003d True is redundant",
+      "range": {
+        "startLine": 311,
+        "startChar": 19,
+        "endLine": 311,
+        "endChar": 46
+      },
+      "revId": "09ff404624a0c11765476c179807f2ecc468efaa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0fba2440_55dc2f63",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-02T19:22:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1a6d7810_49024088",
       "range": {
         "startLine": 311,
         "startChar": 19,
