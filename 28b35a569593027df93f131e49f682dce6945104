@@ -33,6 +33,24 @@
       "message": "Let me try cq\u0027ing this for you.\n",
       "revId": "28b35a569593027df93f131e49f682dce6945104",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9f3bdf4_a42211d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2021-04-02T01:59:05Z",
+      "side": 1,
+      "message": "Thanks, not sure why it didn\u0027t CQ automatically",
+      "parentUuid": "2b452614_83d0d2da",
+      "revId": "28b35a569593027df93f131e49f682dce6945104",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
