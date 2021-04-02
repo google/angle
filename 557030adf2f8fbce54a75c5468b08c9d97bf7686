@@ -203,6 +203,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bf7bf47f_c5e4258d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-04-02T20:11:39Z",
+      "side": 1,
+      "message": "Hey Jamie,\nI verified and recorded it producing VK_FORMAT_R32G32B32A32_SINT here(no audio on the video due to other household member\u0027s meetings):\nyoutube.com/watch?v\u003d8EG3ck_u3uk\n\nWhat result do you expect when we do glVertexAttribIPointer with GL_UNSIGNED_BYTE and an ivec4?\nCurrently it seems to combine the bytes into ints like other drivers, but that can probably be changed(although I think it\u0027s fine as is) \n\nI\u0027ll go check and see if I can find anything disagreeing with the evaluation we\u0027re getting from the driver in the vk spec, I think it\u0027s just a descriptor though. Like we have a buffer of GLubytes [0x80,0x00,0x00,0x00], and we can say we have vkformat of bit width 32, and it tries to read from the buffer as if we had a bit with of 32 so it just takes our bytes and makes an int of it\n\nTY again :)",
+      "parentUuid": "84f9bea5_8c11be61",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
