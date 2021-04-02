@@ -10,7 +10,6 @@
 #include "common/system_utils.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/capture/frame_capture_utils.h"
-#include "libANGLE/serializer/JsonSerializer.h"
 #include "util/EGLPlatformParameters.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
@@ -131,13 +130,15 @@ class CaptureReplayTests
         {
             ReplayContextFrame(testIndex, frame);
             gl::Context *context = static_cast<gl::Context *>(mEGLWindow->getContext());
-            angle::JsonSerializer json;
-            if (angle::SerializeContext(&json, context) != angle::Result::Continue)
+            std::string serializedContextString;
+            if (angle::SerializeContextToString(context, &serializedContextString) !=
+                angle::Result::Continue)
             {
                 cleanupTest();
                 return -1;
             }
-            bool isEqual = compareSerializedContexts(testIndex, frame, json.data());
+            bool isEqual =
+                compareSerializedContexts(testIndex, frame, serializedContextString.c_str());
             // Swap always to allow RenderDoc/other tools to capture frames.
             swap();
             if (!isEqual)

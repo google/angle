@@ -11,13 +11,16 @@
 
 #include "common/angleutils.h"
 
-#if defined(ANGLE_HAVE_RAPIDJSON)
-#    include <rapidjson/document.h>
+#if !defined(ANGLE_HAS_RAPIDJSON)
+#    error RapidJSON must be available to build this file.
+#endif  // !defined(ANGLE_HAVE_RAPIDJSON)
 
-#    include <memory>
-#    include <sstream>
-#    include <stack>
-#    include <type_traits>
+#include <rapidjson/document.h>
+
+#include <memory>
+#include <sstream>
+#include <stack>
+#include <type_traits>
 
 namespace angle
 {
@@ -99,46 +102,5 @@ class JsonSerializer : public angle::NonCopyable
 };
 
 }  // namespace angle
-#else
-namespace angle
-{
-
-class JsonSerializer : public angle::NonCopyable
-{
-
-    JsonSerializer() {}
-    ~JsonSerializer() {}
-
-    void startDocument(const std::string &name) { (void)name; }
-    void endDocument() {}
-
-    void addCString(const std::string &name, const char *value) {}
-
-    void addString(const std::string &name, const std::string &value) {}
-
-    void addBlob(const std::string &name, const uint8_t *value, size_t length) {}
-
-    void startGroup(const std::string &name) { (void)name; }
-
-    void endGroup() {}
-
-    const char *data() const { return ""; }
-
-    std::vector<uint8_t> getData() const { return std::vector<uint8_t>(); }
-
-    size_t length() const { return 0; }
-
-    template <typename T>
-    void addScalar(const std::string &name, T value)
-    {}
-
-    template <typename T>
-    void addVector(const std::string &name, const std::vector<T> &value)
-    {}
-};
-
-}  // namespace angle
-
-#endif
 
 #endif  // JSONSERIALIZER_H

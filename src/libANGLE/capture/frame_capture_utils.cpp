@@ -31,6 +31,10 @@
 #include "libANGLE/renderer/RenderbufferImpl.h"
 #include "libANGLE/serializer/JsonSerializer.h"
 
+#if !ANGLE_CAPTURE_ENABLED
+#    error Frame capture must be enabled to build this file.
+#endif  // !ANGLE_CAPTURE_ENABLED
+
 // Note: when diagnosing serialization comparison failures, you can disable the unused function
 // compiler warning to allow bisecting the comparison function. One first check is to disable
 // Framebuffer Attachment pixel comparison which includes the pixel contents of the default FBO.
@@ -588,7 +592,7 @@ void SerializeImageUnit(JsonSerializer *json, const gl::ImageUnit &imageUnit)
     json->addScalar("Texid", imageUnit.texture.id().value);
 }
 
-void SerializeGLContextStates(JsonSerializer *json, const gl::State &state)
+void SerializeContextState(JsonSerializer *json, const gl::State &state)
 {
     GroupScope group(json, "ContextStates");
     json->addScalar("ClientType", state.getClientType());
@@ -1250,37 +1254,38 @@ void SerializeVertexArray(JsonSerializer *json, gl::VertexArray *vertexArray)
 
 }  // namespace
 
-Result SerializeContext(JsonSerializer *json, const gl::Context *context)
+Result SerializeContextToString(const gl::Context *context, std::string *stringOut)
 {
-    json->startDocument("Context");
+    JsonSerializer json;
+    json.startDocument("Context");
 
-    SerializeGLContextStates(json, context->getState());
+    SerializeContextState(&json, context->getState());
     ScratchBuffer scratchBuffer(1);
     const gl::FramebufferManager &framebufferManager =
         context->getState().getFramebufferManagerForCapture();
     for (const auto &framebuffer : framebufferManager)
     {
         gl::Framebuffer *framebufferPtr = framebuffer.second;
-        ANGLE_TRY(SerializeFramebuffer(context, json, &scratchBuffer, framebufferPtr));
+        ANGLE_TRY(SerializeFramebuffer(context, &json, &scratchBuffer, framebufferPtr));
     }
     const gl::BufferManager &bufferManager = context->getState().getBufferManagerForCapture();
     for (const auto &buffer : bufferManager)
     {
         gl::Buffer *bufferPtr = buffer.second;
-        ANGLE_TRY(SerializeBuffer(context, json, &scratchBuffer, bufferPtr));
+        ANGLE_TRY(SerializeBuffer(context, &json, &scratchBuffer, bufferPtr));
     }
     const gl::SamplerManager &samplerManager = context->getState().getSamplerManagerForCapture();
     for (const auto &sampler : samplerManager)
     {
         gl::Sampler *samplerPtr = sampler.second;
-        SerializeSampler(json, samplerPtr);
+        SerializeSampler(&json, samplerPtr);
     }
     const gl::RenderbufferManager &renderbufferManager =
         context->getState().getRenderbufferManagerForCapture();
     for (const auto &renderbuffer : renderbufferManager)
     {
         gl::Renderbuffer *renderbufferPtr = renderbuffer.second;
-        ANGLE_TRY(SerializeRenderbuffer(context, json, &scratchBuffer, renderbufferPtr));
+        ANGLE_TRY(SerializeRenderbuffer(context, &json, &scratchBuffer, renderbufferPtr));
     }
     const gl::ShaderProgramManager &shaderProgramManager =
         context->getState().getShaderProgramManagerForCapture();
@@ -1289,28 +1294,30 @@ Result SerializeContext(JsonSerializer *json, const gl::Context *context)
     for (const auto &shader : shaderManager)
     {
         gl::Shader *shaderPtr = shader.second;
-        SerializeShader(json, shaderPtr);
+        SerializeShader(&json, shaderPtr);
     }
     const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programManager =
         shaderProgramManager.getProgramsForCaptureAndPerf();
     for (const auto &program : programManager)
     {
         gl::Program *programPtr = program.second;
-        SerializeProgram(json, programPtr);
+        SerializeProgram(&json, programPtr);
     }
     const gl::TextureManager &textureManager = context->getState().getTextureManagerForCapture();
     for (const auto &texture : textureManager)
     {
         gl::Texture *texturePtr = texture.second;
-        ANGLE_TRY(SerializeTexture(context, json, &scratchBuffer, texturePtr));
+        ANGLE_TRY(SerializeTexture(context, &json, &scratchBuffer, texturePtr));
     }
     const gl::VertexArrayMap &vertexArrayMap = context->getVertexArraysForCapture();
     for (auto &vertexArray : vertexArrayMap)
     {
         gl::VertexArray *vertexArrayPtr = vertexArray.second;
-        SerializeVertexArray(json, vertexArrayPtr);
+        SerializeVertexArray(&json, vertexArrayPtr);
     }
-    json->endDocument();
+    json.endDocument();
+
+    *stringOut = json.data();
 
     scratchBuffer.clear();
     return Result::Continue;

@@ -142,17 +142,13 @@ angle_test("angle_unittests") {
     defines += [ "ANGLE_ENABLE_HLSL" ]
   }
 
-  if (angle_has_build) {
-    defines += [ "ANGLE_HAS_RAPIDJSON" ]
-  }
-
   deps = [
     ":angle_test_expectations",
+    "$angle_root:angle_json_serializer",
     "$angle_root:libANGLE",
     "$angle_root:libEGL_static",
     "$angle_root:libGLESv2_static",
     "$angle_root:libfeature_support",
-    "$angle_root:libjson_serializer",
     "$angle_root:preprocessor",
     "$angle_root:translator",
     "$angle_root/util:angle_util_static",

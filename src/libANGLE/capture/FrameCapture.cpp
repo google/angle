@@ -39,13 +39,12 @@
 #include "libANGLE/capture/gl_enum_utils.h"
 #include "libANGLE/queryconversions.h"
 #include "libANGLE/queryutils.h"
-#include "libANGLE/serializer/JsonSerializer.h"
 
 #define USE_SYSTEM_ZLIB
 #include "compression_utils_portable.h"
 
 #if !ANGLE_CAPTURE_ENABLED
-#    error Frame capture must be enbled to include this file.
+#    error Frame capture must be enabled to include this file.
 #endif  // !ANGLE_CAPTURE_ENABLED
 
 namespace angle
@@ -1076,14 +1075,14 @@ void WriteCppReplay(bool compression,
 
     if (serializeStateEnabled)
     {
-        angle::JsonSerializer serializedContextData;
-        if (SerializeContext(&serializedContextData, const_cast<gl::Context *>(context)) ==
-            Result::Continue)
+        std::string serializedContextString;
+        if (SerializeContextToString(const_cast<gl::Context *>(context),
+                                     &serializedContextString) == Result::Continue)
         {
             out << "const char *" << FmtGetSerializedContextStateFunction(context->id(), frameIndex)
                 << "\n";
             out << "{\n";
-            out << "    return R\"(" << serializedContextData.data() << ")\";\n";
+            out << "    return R\"(" << serializedContextString << ")\";\n";
             out << "}\n";
             out << "\n";
         }
