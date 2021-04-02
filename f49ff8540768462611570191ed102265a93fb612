@@ -39,6 +39,30 @@
       },
       "revId": "f49ff8540768462611570191ed102265a93fb612",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6695c885_4e517200",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3648,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-04-02T21:20:06Z",
+      "side": 1,
+      "message": "I\u0027ve moved it below.\n\u003e Should this also check if EXT_geometry_shader is enabled\nThe check shouldn\u0027t be necessary. If the program has a geometry shader, it should have already provided an error during shader creation.",
+      "parentUuid": "bc444296_513da30d",
+      "range": {
+        "startLine": 3638,
+        "startChar": 0,
+        "endLine": 3648,
+        "endChar": 5
+      },
+      "revId": "f49ff8540768462611570191ed102265a93fb612",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
