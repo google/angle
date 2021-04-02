@@ -408,7 +408,7 @@ if (angle_standalone || build_with_chromium) {
       }
 
       if ((is_linux && !is_chromeos) ||
-          (build_with_chromium && chromeos_is_browser_only)) {
+          (build_with_chromium && is_chromeos_lacros && !is_chromeos_device)) {
         use_xvfb = true
       }
 
