@@ -251,6 +251,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "19692362_ae9d6dec",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-04-02T22:43:43Z",
+      "side": 1,
+      "message": "Ahh, yeah in the basic case it does eval to VK_FORMAT_R8G8..._UINT, sorry about that! There definitely is a discrepancy, but I wonder if the base case might be the case that\u0027s actually bugged\n\nI see this on:\nhttps://vulkan-tutorial.com/Vertex_buffers/Vertex_input_description\n```\nThe color type (SFLOAT, UINT, SINT) and bit width should also match the type of the shader input. \n```\n\nIf the tutorial is correct, then I think we\u0027d want the vkFormat to be 32 bits to match up with the shader\u0027s input of vec4 which has a 32 bit width. The test I\u0027m looking at is this one: \nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/tests/gl_tests/ReadPixelsTest.cpp;l\u003d539;drc\u003dd6b4c74e9ad2eaa769103e33added4faf2079f49?q\u003dReadPixelsTest\n\nThat test goes from GL_UNSIGNED_BYTE to vec4 so the component type mismatch isn\u0027t hit. \n\nI did a regex search through the vulkan spec 1.1.174 and found this:\n```\nFor each attribute, raw data is extracted starting at attribAddress and is converted from the VkVertexInputAttributeDescription’s format to either floating-point, unsigned integer, or signed integer based on the base type of the format; the base type of the format must match the base type of the input variable in the shader. If format is a packed format, attribAddress must be a multiple of the size in bytes of the whole attribute data type as described in Packed Formats. Otherwise, attribAddress must be a multiple of the size in bytes of the component type indicated by format (see Formats).\n```\n\nThat sounds similar to the vulkan tutorial, but not quite the same. This might not be what the vulkan tutorial is referencing though, I just couldn\u0027t find anything else related to this. That section\u0027s also about indexed rendering, but the rules probably apply regardless\n\nI just modified my test to use a value other than 1, I used 257 as it uses 9 bits of relevant info, and some of the bytes that I expect to get sent in are not getting sent if I use an 8 bit width.\n\nIf we want to be able to fill out a vec4 with 4 GL_UNSIGNED_BYTE specified in glVertexAttribPointer, I think it needs to actually use a 32 bit width as well.\nI\u0027m not sure we want to, but other drivers do let you combine 4 unsigned bytes into an int with glVertexAttribPointer",
+      "parentUuid": "21668a60_d0241c2b",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
