@@ -34,6 +34,24 @@
       "parentUuid": "11a72bfc_8d876df6",
       "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a05ea5d8_f06cef86",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-02T15:28:41Z",
+      "side": 1,
+      "message": "Great questions Tim.  The performance implications are less clear than we thought.  Omar did one round of testing yesterday and found no performance difference.  We\u0027ll learn more about this as he continues to investigate.\n\nChris reported that [redacting] has HW support for SSCALED, but didn\u0027t put it in their Vulkan driver because the spec didn\u0027t require it.\n\nOne thing clear is that AGI on Pixel 4 did not show what the application requested because ANGLE is falling back to FP32 in cases where SSCALED is requested and wasn\u0027t supported by the Pixel 4 Vulkan driver.  This came up because Fran asked the ISV to compress their vertex attributes and they replied that they already had, but that AGI was showing something different.  We don\u0027t want ISVs to be misled by this.",
+      "parentUuid": "10096f97_1969c8dc",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
