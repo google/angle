@@ -1679,6 +1679,11 @@ void GenerateCaps(const FunctionsGL *functions,
         (features.allowEtcFormats.enabled || functions->standard == STANDARD_GL_ES) &&
         gl::DetermineCompressedTextureETCSupport(*textureCapsMap);
 
+    // When running on top of desktop OpenGL drivers and allow_etc_formats feature is not enabled,
+    // mark ETC1 as emulated to hide it from WebGL clients.
+    limitations->emulatedEtc1 =
+        !features.allowEtcFormats.enabled && functions->standard == STANDARD_GL_DESKTOP;
+
     // To work around broken unsized sRGB textures, sized sRGB textures are used. Disable EXT_sRGB
     // if those formats are not available.
     if (features.unsizedsRGBReadPixelsDoesntTransform.enabled &&
