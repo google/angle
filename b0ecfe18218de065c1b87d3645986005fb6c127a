@@ -22,6 +22,30 @@
       },
       "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97bcf676_515354cd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 9306,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-04-02T16:10:24Z",
+      "side": 1,
+      "message": "From the spec\n    [EXT_geometry_shader] Section 10.1.7\n    If a geometry shader is not active, the \"adjacent\" vertices are ignored.\n\nIt\u0027s still valid to draw with these adjacency primitives (used with GS) even though there is no GS attached.",
+      "parentUuid": "9a22968e_74d0167d",
+      "range": {
+        "startLine": 9306,
+        "startChar": 14,
+        "endLine": 9306,
+        "endChar": 77
+      },
+      "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
