@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6d76d0f1_88cf4097",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-04-02T03:42:07Z",
+      "side": 1,
+      "message": "It\u0027s weird that ES2_OpenGL has IsMetal() \u003d true. Looks like OpenGL back-end on ARM mac has \"Metal\" in its renderer string.\nThis would cause a lot of failed tests on ARM mac due to wrong IsMetal() detection.",
+      "parentUuid": "a50780e2_4b03b64d",
+      "revId": "2ec3e0a1e6890da56de9dfd3da5c9f31a3f7fbb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8f01d918_7c169877",
         "filename": "src/tests/gl_tests/ImageTestMetal.mm",
         "patchSetId": 12
