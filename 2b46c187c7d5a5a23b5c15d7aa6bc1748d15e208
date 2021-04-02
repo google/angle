@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "136b32de_e8ad1bd6",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2864,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-02T02:23:35Z",
+      "side": 1,
+      "message": "Per feedback on other CL, this has been reverted. And I also added comment for each enum what it supposedly should return.",
+      "range": {
+        "startLine": 2864,
+        "startChar": 12,
+        "endLine": 2864,
+        "endChar": 71
+      },
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "72a1b935_dd6fed95",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2875,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-02T02:23:35Z",
+      "side": 1,
+      "message": "Per feedback on the other CL, this has been reverted.",
+      "range": {
+        "startLine": 2875,
+        "startChar": 11,
+        "endLine": 2875,
+        "endChar": 41
+      },
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
