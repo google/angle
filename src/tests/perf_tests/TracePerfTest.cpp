@@ -177,6 +177,211 @@ void KHRONOS_APIENTRY DiscardFramebufferEXTProc(GLenum target,
     gCurrentTracePerfTest->onReplayDiscardFramebufferEXT(target, numAttachments, attachments);
 }
 
+void KHRONOS_APIENTRY ViewportMinimizedProc(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    glViewport(x, y, 1, 1);
+}
+
+void KHRONOS_APIENTRY ScissorMinimizedProc(GLint x, GLint y, GLsizei width, GLsizei height)
+{
+    glScissor(x, y, 1, 1);
+}
+
+// Interpose the calls that generate actual GPU work
+void KHRONOS_APIENTRY DrawElementsMinimizedProc(GLenum mode,
+                                                GLsizei count,
+                                                GLenum type,
+                                                const void *indices)
+{
+    glDrawElements(GL_POINTS, 1, type, indices);
+}
+
+void KHRONOS_APIENTRY DrawElementsIndirectMinimizedProc(GLenum mode,
+                                                        GLenum type,
+                                                        const void *indirect)
+{
+    glDrawElementsInstancedBaseVertex(GL_POINTS, 1, type, 0, 1, 0);
+}
+
+void KHRONOS_APIENTRY DrawElementsInstancedMinimizedProc(GLenum mode,
+                                                         GLsizei count,
+                                                         GLenum type,
+                                                         const void *indices,
+                                                         GLsizei instancecount)
+{
+    glDrawElementsInstanced(GL_POINTS, 1, type, indices, 1);
+}
+
+void KHRONOS_APIENTRY DrawElementsBaseVertexMinimizedProc(GLenum mode,
+                                                          GLsizei count,
+                                                          GLenum type,
+                                                          const void *indices,
+                                                          GLint basevertex)
+{
+    glDrawElementsBaseVertex(GL_POINTS, 1, type, indices, basevertex);
+}
+
+void KHRONOS_APIENTRY DrawElementsInstancedBaseVertexMinimizedProc(GLenum mode,
+                                                                   GLsizei count,
+                                                                   GLenum type,
+                                                                   const void *indices,
+                                                                   GLsizei instancecount,
+                                                                   GLint basevertex)
+{
+    glDrawElementsInstancedBaseVertex(GL_POINTS, 1, type, indices, 1, basevertex);
+}
+
+void KHRONOS_APIENTRY DrawRangeElementsMinimizedProc(GLenum mode,
+                                                     GLuint start,
+                                                     GLuint end,
+                                                     GLsizei count,
+                                                     GLenum type,
+                                                     const void *indices)
+{
+    glDrawRangeElements(GL_POINTS, start, end, 1, type, indices);
+}
+
+void KHRONOS_APIENTRY DrawArraysMinimizedProc(GLenum mode, GLint first, GLsizei count)
+{
+    glDrawArrays(GL_POINTS, first, 1);
+}
+
+void KHRONOS_APIENTRY DrawArraysInstancedMinimizedProc(GLenum mode,
+                                                       GLint first,
+                                                       GLsizei count,
+                                                       GLsizei instancecount)
+{
+    glDrawArraysInstanced(GL_POINTS, first, 1, 1);
+}
+
+void KHRONOS_APIENTRY DrawArraysIndirectMinimizedProc(GLenum mode, const void *indirect)
+{
+    glDrawArraysInstanced(GL_POINTS, 0, 1, 1);
+}
+
+void KHRONOS_APIENTRY DispatchComputeMinimizedProc(GLuint num_groups_x,
+                                                   GLuint num_groups_y,
+                                                   GLuint num_groups_z)
+{
+    glDispatchCompute(1, 1, 1);
+}
+
+void KHRONOS_APIENTRY DispatchComputeIndirectMinimizedProc(GLintptr indirect)
+{
+    glDispatchCompute(1, 1, 1);
+}
+
+// Interpose the calls that generate data copying work
+void KHRONOS_APIENTRY BufferDataMinimizedProc(GLenum target,
+                                              GLsizeiptr size,
+                                              const void *data,
+                                              GLenum usage)
+{
+    glBufferData(target, size, nullptr, usage);
+}
+
+void KHRONOS_APIENTRY BufferSubDataMinimizedProc(GLenum target,
+                                                 GLintptr offset,
+                                                 GLsizeiptr size,
+                                                 const void *data)
+{
+    glBufferSubData(target, offset, 1, data);
+}
+
+void KHRONOS_APIENTRY TexImage2DMinimizedProc(GLenum target,
+                                              GLint level,
+                                              GLint internalformat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLint border,
+                                              GLenum format,
+                                              GLenum type,
+                                              const void *pixels)
+{
+    glTexImage2D(target, level, internalformat, width, height, border, format, type, nullptr);
+}
+
+void KHRONOS_APIENTRY TexSubImage2DMinimizedProc(GLenum target,
+                                                 GLint level,
+                                                 GLint xoffset,
+                                                 GLint yoffset,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLenum format,
+                                                 GLenum type,
+                                                 const void *pixels)
+{
+    glTexSubImage2D(target, level, xoffset, yoffset, 1, 1, format, type, pixels);
+}
+
+void KHRONOS_APIENTRY TexImage3DMinimizedProc(GLenum target,
+                                              GLint level,
+                                              GLint internalformat,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLsizei depth,
+                                              GLint border,
+                                              GLenum format,
+                                              GLenum type,
+                                              const void *pixels)
+{
+    glTexImage3D(target, level, internalformat, width, height, depth, border, format, type,
+                 nullptr);
+}
+
+void KHRONOS_APIENTRY TexSubImage3DMinimizedProc(GLenum target,
+                                                 GLint level,
+                                                 GLint xoffset,
+                                                 GLint yoffset,
+                                                 GLint zoffset,
+                                                 GLsizei width,
+                                                 GLsizei height,
+                                                 GLsizei depth,
+                                                 GLenum format,
+                                                 GLenum type,
+                                                 const void *pixels)
+{
+    glTexSubImage3D(target, level, xoffset, yoffset, zoffset, 1, 1, 1, format, type, pixels);
+}
+
+void KHRONOS_APIENTRY GenerateMipmapMinimizedProc(GLenum target)
+{
+    // Noop it for now. There is a risk that this will leave an incomplete mipmap chain and cause
+    // other issues. If this turns out to be a real issue with app traces, we can turn this into a
+    // glTexImage2D call for each generated level.
+}
+
+void KHRONOS_APIENTRY BlitFramebufferMinimizedProc(GLint srcX0,
+                                                   GLint srcY0,
+                                                   GLint srcX1,
+                                                   GLint srcY1,
+                                                   GLint dstX0,
+                                                   GLint dstY0,
+                                                   GLint dstX1,
+                                                   GLint dstY1,
+                                                   GLbitfield mask,
+                                                   GLenum filter)
+{
+    glBlitFramebuffer(srcX0, srcY0, srcX0 + 1, srcY0 + 1, dstX0, dstY0, dstX0 + 1, dstY0 + 1, mask,
+                      filter);
+}
+
+void KHRONOS_APIENTRY ReadPixelsMinimizedProc(GLint x,
+                                              GLint y,
+                                              GLsizei width,
+                                              GLsizei height,
+                                              GLenum format,
+                                              GLenum type,
+                                              void *pixels)
+{
+    glReadPixels(x, y, 1, 1, format, type, pixels);
+}
+
+void KHRONOS_APIENTRY BeginTransformFeedbackMinimizedProc(GLenum primitiveMode)
+{
+    glBeginTransformFeedback(GL_POINTS);
+}
+
 angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
 {
     if (strcmp(procName, "glBindFramebuffer") == 0)
@@ -203,6 +408,116 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
     {
         return reinterpret_cast<angle::GenericProc>(DiscardFramebufferEXTProc);
     }
+
+    if (gMinimizeGPUWork)
+    {
+        if (strcmp(procName, "glViewport") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(ViewportMinimizedProc);
+        }
+
+        if (strcmp(procName, "glScissor") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(ScissorMinimizedProc);
+        }
+
+        // Interpose the calls that generate actual GPU work
+        if (strcmp(procName, "glDrawElements") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawElementsMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawElementsIndirect") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawElementsIndirectMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawElementsInstanced") == 0 ||
+            strcmp(procName, "glDrawElementsInstancedEXT") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawElementsInstancedMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawElementsBaseVertex") == 0 ||
+            strcmp(procName, "glDrawElementsBaseVertexEXT") == 0 ||
+            strcmp(procName, "glDrawElementsBaseVertexOES") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawElementsBaseVertexMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawElementsInstancedBaseVertex") == 0 ||
+            strcmp(procName, "glDrawElementsInstancedBaseVertexEXT") == 0 ||
+            strcmp(procName, "glDrawElementsInstancedBaseVertexOES") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(
+                DrawElementsInstancedBaseVertexMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawRangeElements") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawRangeElementsMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawArrays") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawArraysMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawArraysInstanced") == 0 ||
+            strcmp(procName, "glDrawArraysInstancedEXT") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawArraysInstancedMinimizedProc);
+        }
+        if (strcmp(procName, "glDrawArraysIndirect") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DrawArraysIndirectMinimizedProc);
+        }
+        if (strcmp(procName, "glDispatchCompute") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DispatchComputeMinimizedProc);
+        }
+        if (strcmp(procName, "glDispatchComputeIndirect") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(DispatchComputeIndirectMinimizedProc);
+        }
+
+        // Interpose the calls that generate data copying work
+        if (strcmp(procName, "glBufferData") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(BufferDataMinimizedProc);
+        }
+        if (strcmp(procName, "glBufferSubData") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(BufferSubDataMinimizedProc);
+        }
+        if (strcmp(procName, "glTexImage2D") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(TexImage2DMinimizedProc);
+        }
+        if (strcmp(procName, "glTexImage3D") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(TexImage3DMinimizedProc);
+        }
+        if (strcmp(procName, "glTexSubImage2D") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(TexSubImage2DMinimizedProc);
+        }
+        if (strcmp(procName, "glTexSubImage3D") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(TexSubImage3DMinimizedProc);
+        }
+        if (strcmp(procName, "glGenerateMipmap") == 0 ||
+            strcmp(procName, "glGenerateMipmapOES") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(GenerateMipmapMinimizedProc);
+        }
+        if (strcmp(procName, "glBlitFramebuffer") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(BlitFramebufferMinimizedProc);
+        }
+        if (strcmp(procName, "glReadPixels") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(ReadPixelsMinimizedProc);
+        }
+        if (strcmp(procName, "glBeginTransformFeedback") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(BeginTransformFeedbackMinimizedProc);
+        }
+    }
+
     return gCurrentTracePerfTest->getGLWindow()->getProcAddress(procName);
 }
 

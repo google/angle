@@ -26,6 +26,7 @@ int gTestTrials                = 3;
 bool gNoFinish                 = false;
 bool gEnableAllTraceTests      = false;
 bool gRetraceMode              = false;
+bool gMinimizeGPUWork          = false;
 
 // Default to three warmup loops. There's no science to this. More than two loops was experimentally
 // helpful on a Windows NVIDIA setup when testing with Vulkan and native trace tests.
@@ -144,6 +145,10 @@ void ANGLEProcessPerfTestArgs(int *argc, char **argv)
         else if (strcmp("--retrace-mode", argv[argIndex]) == 0)
         {
             gRetraceMode = true;
+        }
+        else if (strcmp("--minimize-gpu-work", argv[argIndex]) == 0)
+        {
+            gMinimizeGPUWork = true;
         }
         else
         {
