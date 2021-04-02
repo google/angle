@@ -55,6 +55,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b6de6c4d_c15c3905",
+        "filename": "src/tests/gl_tests/ImageTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1010,
+      "author": {
+        "id": 1172235
+      },
+      "writtenOn": "2021-04-02T18:54:04Z",
+      "side": 1,
+      "message": "We have many failing tests on Mac ARM and I don\u0027t know what they all are, so it is very possible that many tests are failing for this exact reason.\n\nIf they are, this is not necessary to fix before relanding, but we do need to clean all of these failures up eventually. Thanks for investigating!",
+      "parentUuid": "6d76d0f1_88cf4097",
+      "revId": "2ec3e0a1e6890da56de9dfd3da5c9f31a3f7fbb7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8f01d918_7c169877",
         "filename": "src/tests/gl_tests/ImageTestMetal.mm",
         "patchSetId": 12
