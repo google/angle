@@ -72,6 +72,41 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "42eab51b_127bc8da",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-02T17:09:04Z",
+      "side": 1,
+      "message": "Since the discussion was turning broader, I\u0027m cc\u0027ing Fran and Omar + other ANGLE team members.",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "016264ba_034c98db",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-02T17:09:04Z",
+      "side": 1,
+      "message": "\u003e ... publishing some \"best practices\" articles.\n\nYes.  Fran, Omar, et.al are trying to create an Android \"best practice\" guide for applications.  They are using AGI/ANGLE for GLES apps.\n\nGood point that we should broaden it to take into account what we are learning about ANGLE and not just native GLES drivers.\n\n\n\u003e Yeah, it\u0027ll certainly be tricky getting the developer messaging right since they\u0027re debugging on one driver but shipping on another (I probably sound like a broken record at this point)\n\nPlease keep being a \"broken record\" on this point:-).  It reinforces part of why we must keep improving ANGLE\u0027s performance, app-compat, etc.\n\nBTW, I get pinged at times with cases where ANGLE appears to behave differently than the native GLES drivers.  I\u0027ll try to share that info more broadly.  In one case, ANGLE was more optimal (ANGLE didn\u0027t break a render pass and/or store depth/stencil at the end of a render pass because the app invalidated depth/stencil and didn\u0027t draw to it afterwards).  We\u0027ll live with that difference:-).\n\n\u003e ... tools that query the underlying hardware and output which formats ANGLE can support natively vs having to emulate.\n\nGood point.  We might want to create a little tool/APK that we can install on a variety of phones (different GPUs and drivers) to see what formats are [well-]supported via native GLES and Vulkan drivers; and maybe do some performance comparisons of ANGLE vs. native GLES.  Perhaps this is something that Omar and his team should do?\n\nGiven what Chris found (at least one Vulkan driver didn\u0027t advertise SSCALE formats that the HW supported because the Vulkan spec didn\u0027t require it), we should probably create a Vulkan extension that we ask mobile IHVs to support.  Technically, an extension might not be needed, but it\u0027s easily queried, so that we can quickly discover which drivers support the desired foramts.\n\n\u003e This should be treated as a really big issue with the AGI+ANGLE product.\n\nYes, it\u0027s being treated as a big issue!\n\nWhen Fran requested Vulkan debug-util markers that AGI can show, I immediately thought about the performance warnings that ANGLE sends to logcat.  We should look at surfacing some/all of those (appropriately) through AGI.",
+      "parentUuid": "74927907_66d15197",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1bfa5286_b6d0f7ef",
@@ -85,6 +120,24 @@
       "writtenOn": "2021-04-02T16:28:28Z",
       "side": 1,
       "message": "Based on your other comment \"Hardware\" is not entirely accurate and should probably be updated to \"Vulkan driver\".\n\nAlso, it would be good to output which format is unsupported and, if possible, what it\u0027s being converted to.",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ddacf391_4891cab7",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-02T17:09:04Z",
+      "side": 1,
+      "message": "Agreed.  I did want to act on Fran\u0027s request (by starting the CL), but at this point, I want to wait on the wording until we get more data.",
+      "parentUuid": "1bfa5286_b6d0f7ef",
       "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
