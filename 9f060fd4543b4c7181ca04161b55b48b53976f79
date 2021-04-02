@@ -16,6 +16,23 @@
       "message": "responded to your comments shabi",
       "revId": "9f060fd4543b4c7181ca04161b55b48b53976f79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d1577c7_5500ee81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-02T00:41:58Z",
+      "side": 1,
+      "message": "jamie, is the -1 still relevant?",
+      "revId": "9f060fd4543b4c7181ca04161b55b48b53976f79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
