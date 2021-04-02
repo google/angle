@@ -16,6 +16,24 @@
       "message": "Fran wants AGI to get debug-utils markers for cases when the vertex attribute format isn\u0027t supported by the Vulkan driver (e.g. R16G16_SSCALED).  Seems like it also warrants a performance warning.\n\nSeems like at least some of the other performance warnings should be raised to AGI as well.  I\u0027m thinking of combining these.  I\u0027d like your thoughts.",
       "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10096f97_1969c8dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-02T14:51:35Z",
+      "side": 1,
+      "message": "\u003e Fran wants AGI to get debug-utils markers for cases when the vertex attribute format isn\u0027t supported by the Vulkan driver (e.g. R16G16_SSCALED).  Seems like it also warrants a performance warning.\n\nIs it a performance impact for the native driver also?   Or are we misleading developers using AGI to profile their applications which won\u0027t be using ANGLE in production?   Since it\u0027s the same underlying HW, presumably the format is handled the same for both GLES and VK, but I don\u0027t know what kinds of tricks are available to the native driver that we can\u0027t use.",
+      "parentUuid": "11a72bfc_8d876df6",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
