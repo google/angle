@@ -46,6 +46,30 @@
       },
       "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d2487182_08c997da",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 9306,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-02T16:11:23Z",
+      "side": 1,
+      "message": "The \"trick\" is the extra GS primitive type checking in the block following this one and the validation that occurs in RecordDrawModeError():\n\n    void RecordDrawModeError(const Context *context, PrimitiveMode mode)\n    {\n    ...\n    [[[ The extra validation being referred to here ]]]\n            // Do geometry shader specific validations\n            if (executable-\u003ehasLinkedShaderStage(ShaderType::Geometry))\n            {\n                if (!IsCompatibleDrawModeWithGeometryShader(\n                        mode, executable-\u003egetGeometryShaderInputPrimitiveType()))\n                {\n                    context-\u003evalidationError(GL_INVALID_OPERATION,\n                                             kIncompatibleDrawModeAgainstGeometryShader);\n                    return;\n                }\n            }\n\n    [[[ The extra TS checking referred to by the \"patchOK \u003d false\" comment ]]]\n            if (executable-\u003ehasLinkedTessellationShader() \u0026\u0026 mode !\u003d PrimitiveMode::Patches)\n            {\n                context-\u003evalidationError(GL_INVALID_OPERATION,\n                                         kIncompatibleDrawModeWithTessellationShader);\n                return;\n            }\n\n            if (!executable-\u003ehasLinkedTessellationShader() \u0026\u0026 mode \u003d\u003d PrimitiveMode::Patches)\n            {\n                context-\u003evalidationError(GL_INVALID_OPERATION,\n                                         kIncompatibleDrawModeWithoutTessellationShader);\n                return;\n            }",
+      "parentUuid": "9a22968e_74d0167d",
+      "range": {
+        "startLine": 9306,
+        "startChar": 14,
+        "endLine": 9306,
+        "endChar": 77
+      },
+      "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
