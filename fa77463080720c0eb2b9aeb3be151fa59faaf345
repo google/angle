@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11a72bfc_8d876df6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-02T00:06:38Z",
+      "side": 1,
+      "message": "Fran wants AGI to get debug-utils markers for cases when the vertex attribute format isn\u0027t supported by the Vulkan driver (e.g. R16G16_SSCALED).  Seems like it also warrants a performance warning.\n\nSeems like at least some of the other performance warnings should be raised to AGI as well.  I\u0027m thinking of combining these.  I\u0027d like your thoughts.",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
