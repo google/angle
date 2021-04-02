@@ -155,6 +155,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bd345620_2c551df3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-02T18:44:10Z",
+      "side": 1,
+      "message": "Hey Kevin,\n\nOn holiday. Please confirm with a debugger that a simple \"GL_UNSIGNED_BYTE in glVertexAttribIPointer\" produces VK_FORMAT_R32G32B32A32_SINT in the pipeline. This is not my expectation.",
+      "parentUuid": "2c0008a4_97848608",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
