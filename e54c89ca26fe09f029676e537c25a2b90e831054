@@ -16,6 +16,24 @@
       "message": "Mohan that failure doesn\u0027t look random.",
       "revId": "e54c89ca26fe09f029676e537c25a2b90e831054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a1391bd_e3aee1d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-03T00:31:17Z",
+      "side": 1,
+      "message": "i have no idea what xfb validation has to do with \"dEQP.KHR_GLES32/core_internalformat_texture2d*\"\n\nok, will need to debug",
+      "parentUuid": "9607804f_a7682eda",
+      "revId": "e54c89ca26fe09f029676e537c25a2b90e831054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
