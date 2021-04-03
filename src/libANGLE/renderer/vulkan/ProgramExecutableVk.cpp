@@ -85,6 +85,9 @@ bool ValidateTransformedSpirV(const gl::ShaderBitSet &linkedShaderStages,
     }
     return true;
 }
+
+constexpr VkDescriptorType kUniformBufferDescriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+constexpr VkDescriptorType kStorageBufferDescriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
 }  // namespace
 
 DefaultUniformBlock::DefaultUniformBlock() = default;
@@ -527,7 +530,7 @@ void ProgramExecutableVk::addAtomicCounterBufferDescriptorSetDesc(
     }
 
     // A single storage buffer array is used for all stages for simplicity.
-    descOut->update(info.binding, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+    descOut->update(info.binding, kStorageBufferDescriptorType,
                     gl::IMPLEMENTATION_MAX_ATOMIC_COUNTER_BUFFER_BINDINGS,
                     gl_vk::kShaderStageMap[shaderType], nullptr);
 }
@@ -840,7 +843,7 @@ angle::Result ProgramExecutableVk::initDynamicDescriptorPools(
         // index, so make sure their pools are initialized.
         VkDescriptorPoolSize poolSize = {};
         // The type doesn't matter, since it's not actually used for anything.
-        poolSize.type            = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        poolSize.type            = kUniformBufferDescriptorType;
         poolSize.descriptorCount = 1;
         descriptorPoolSizes.emplace_back(poolSize);
     }
@@ -917,9 +920,9 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
         ASSERT(programState);
 
         addInterfaceBlockDescriptorSetDesc(programState->getUniformBlocks(), shaderType,
-                                           VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, &resourcesSetDesc);
+                                           kUniformBufferDescriptorType, &resourcesSetDesc);
         addInterfaceBlockDescriptorSetDesc(programState->getShaderStorageBlocks(), shaderType,
-                                           VK_DESCRIPTOR_TYPE_STORAGE_BUFFER, &resourcesSetDesc);
+                                           kStorageBufferDescriptorType, &resourcesSetDesc);
         addAtomicCounterBufferDescriptorSetDesc(programState->getAtomicCounterBuffers(), shaderType,
                                                 &resourcesSetDesc);
     }
@@ -1095,9 +1098,9 @@ angle::Result ProgramExecutableVk::updateBuffersDescriptorSet(
         return angle::Result::Continue;
     }
 
-    ASSERT(descriptorType == VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER ||
-           descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER);
-    const bool isStorageBuffer = descriptorType == VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+    ASSERT(descriptorType == kUniformBufferDescriptorType ||
+           descriptorType == kStorageBufferDescriptorType);
+    const bool isStorageBuffer = descriptorType == kStorageBufferDescriptorType;
 
     // Write uniform or storage buffers.
     const gl::State &glState = contextVk->getState();
@@ -1221,9 +1224,8 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
 
         VkDeviceSize size = gl::GetBoundBufferAvailableSize(bufferBinding);
         WriteBufferDescriptorSetBinding(bufferHelper, bufferBinding.getOffset(), size,
-                                        descriptorSet, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
-                                        info.binding, binding, requiredOffsetAlignment, &bufferInfo,
-                                        &writeInfo);
+                                        descriptorSet, kStorageBufferDescriptorType, info.binding,
+                                        binding, requiredOffsetAlignment, &bufferInfo, &writeInfo);
 
         // We set SHADER_READ_BIT to be conservative.
         commandBufferHelper->bufferWrite(
@@ -1252,7 +1254,7 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
         writeInfos[writeCount].dstBinding       = info.binding;
         writeInfos[writeCount].dstArrayElement  = static_cast<uint32_t>(binding);
         writeInfos[writeCount].descriptorCount  = 1;
-        writeInfos[writeCount].descriptorType   = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER;
+        writeInfos[writeCount].descriptorType   = kStorageBufferDescriptorType;
         writeInfos[writeCount].pImageInfo       = nullptr;
         writeInfos[writeCount].pBufferInfo      = &bufferInfos[writeCount];
         writeInfos[writeCount].pTexelBufferView = nullptr;
@@ -1404,10 +1406,10 @@ angle::Result ProgramExecutableVk::updateShaderResourcesDescriptorSet(
 
         ANGLE_TRY(updateBuffersDescriptorSet(contextVk, shaderType, commandBufferHelper,
                                              programState->getUniformBlocks(),
-                                             VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER));
+                                             kUniformBufferDescriptorType));
         ANGLE_TRY(updateBuffersDescriptorSet(contextVk, shaderType, commandBufferHelper,
                                              programState->getShaderStorageBlocks(),
-                                             VK_DESCRIPTOR_TYPE_STORAGE_BUFFER));
+                                             kStorageBufferDescriptorType));
         ANGLE_TRY(updateAtomicCounterBuffersDescriptorSet(*programState, shaderType, contextVk,
                                                           commandBufferHelper));
         ANGLE_TRY(updateImagesDescriptorSet(contextVk, programState->getExecutable(), shaderType));
