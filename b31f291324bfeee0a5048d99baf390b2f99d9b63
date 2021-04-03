@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03e22e7e_d4f6e084",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-03T00:04:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "011d7709_f8b4ef12",
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eaf624f9_1b0da9f8",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-03-19T20:40:27Z",
       "side": 1,
       "message": "Use spaces, rather than tabs.",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5486c0e3_2011ce32",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-03T00:04:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eaf624f9_1b0da9f8",
       "range": {
         "startLine": 15,
         "startChar": 0,
@@ -76,6 +118,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "549cc38a_71685626",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-03T00:04:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "21ef63f3_68a6eeb6",
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f62c4286_6411b855",
@@ -89,6 +149,30 @@
       "writtenOn": "2021-03-19T20:40:27Z",
       "side": 1,
       "message": "Why isn\u0027t this in scripts/generate_android_bp.sh also?",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 29
+      },
+      "revId": "b31f291324bfeee0a5048d99baf390b2f99d9b63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8415aa2b_68de9d3b",
+        "filename": "scripts/roll_aosp.sh",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-03T00:04:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f62c4286_6411b855",
       "range": {
         "startLine": 56,
         "startChar": 0,

@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7003036c_c730f437",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-03T00:04:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "dbcded53_7dc9803c",
+      "range": {
+        "startLine": 26,
+        "startChar": 0,
+        "endLine": 26,
+        "endChar": 15
+      },
+      "revId": "0e23e6252584dc94d892ded40e95bef9a505de84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aaa3a1ab_54955664",
@@ -102,6 +126,30 @@
       "side": 1,
       "message": "Have you tried removing it from there?",
       "parentUuid": "aaa3a1ab_54955664",
+      "range": {
+        "startLine": 30,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 42
+      },
+      "revId": "0e23e6252584dc94d892ded40e95bef9a505de84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a6d192b_747b9e82",
+        "filename": "scripts/generate_android_bp.sh",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-03T00:04:34Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "3dc34d67_cd20c2ee",
       "range": {
         "startLine": 30,
         "startChar": 0,
