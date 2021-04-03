@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b7977ec_32e423c7",
+        "filename": "extensions/ANGLE_get_serialized_context_string.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-03T00:38:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f8086959_2e5fa9e8",
+      "range": {
+        "startLine": 3,
+        "startChar": 4,
+        "endLine": 3,
+        "endChar": 23
+      },
+      "revId": "777c73518b97d629798b99e58bff98e60f3ec0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2268893e_008a5f77",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-04-02T21:13:37Z",
       "side": 1,
       "message": "Would this be due to the string not being extended to cover all states?  If so, worth clarifying.  If not, why not?",
+      "range": {
+        "startLine": 51,
+        "startChar": 35,
+        "endLine": 52,
+        "endChar": 45
+      },
+      "revId": "777c73518b97d629798b99e58bff98e60f3ec0b1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e190694b_e3f665b0",
+        "filename": "extensions/ANGLE_get_serialized_context_string.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-03T00:38:31Z",
+      "side": 1,
+      "message": "Done ,addressed in \"issues\".",
+      "parentUuid": "2268893e_008a5f77",
       "range": {
         "startLine": 51,
         "startChar": 35,
