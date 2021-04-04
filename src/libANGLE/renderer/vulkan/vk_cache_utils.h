@@ -827,9 +827,8 @@ struct PackedPushConstantRange
 };
 
 template <typename T>
-using DescriptorSetLayoutArray = angle::PackedEnumMap<DescriptorSetIndex, T>;
-using DescriptorSetLayoutPointerArray =
-    DescriptorSetLayoutArray<BindingPointer<DescriptorSetLayout>>;
+using DescriptorSetArray              = angle::PackedEnumMap<DescriptorSetIndex, T>;
+using DescriptorSetLayoutPointerArray = DescriptorSetArray<BindingPointer<DescriptorSetLayout>>;
 template <typename T>
 using PushConstantRangeArray = gl::ShaderMap<T>;
 
@@ -851,7 +850,7 @@ class PipelineLayoutDesc final
     const PushConstantRangeArray<PackedPushConstantRange> &getPushConstantRanges() const;
 
   private:
-    DescriptorSetLayoutArray<DescriptorSetLayoutDesc> mDescriptorSetLayouts;
+    DescriptorSetArray<DescriptorSetLayoutDesc> mDescriptorSetLayouts;
     PushConstantRangeArray<PackedPushConstantRange> mPushConstantRanges;
 
     // Verify the arrays are properly packed.
@@ -864,9 +863,8 @@ class PipelineLayoutDesc final
 };
 
 // Verify the structure is properly packed.
-static_assert(sizeof(PipelineLayoutDesc) ==
-                  (sizeof(DescriptorSetLayoutArray<DescriptorSetLayoutDesc>) +
-                   sizeof(gl::ShaderMap<PackedPushConstantRange>)),
+static_assert(sizeof(PipelineLayoutDesc) == (sizeof(DescriptorSetArray<DescriptorSetLayoutDesc>) +
+                                             sizeof(gl::ShaderMap<PackedPushConstantRange>)),
               "Unexpected Size");
 
 // Packed sampler description for the sampler cache.

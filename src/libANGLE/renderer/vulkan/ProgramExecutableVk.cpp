@@ -219,7 +219,6 @@ void ProgramInfo::release(ContextVk *contextVk)
 ProgramExecutableVk::ProgramExecutableVk()
     : mEmptyDescriptorSets{},
       mNumDefaultUniformDescriptors(0),
-      mDynamicBufferOffsets{},
       mProgram(nullptr),
       mProgramPipeline(nullptr),
       mPerfCounters{},
@@ -987,7 +986,7 @@ angle::Result ProgramExecutableVk::createPipelineLayout(
         contextVk, driverUniformsSetDesc, DescriptorSetIndex::Internal,
         mDescriptorSetLayouts[DescriptorSetIndex::Internal].get().getHandle()));
 
-    mDynamicBufferOffsets.resize(glExecutable.getLinkedShaderStageCount());
+    mDynamicDescriptorOffsets.resize(glExecutable.getLinkedShaderStageCount());
 
     return angle::Result::Continue;
 }
@@ -1046,30 +1045,16 @@ void ProgramExecutableVk::updateDefaultUniformsDescriptorSet(
     VkWriteDescriptorSet &writeInfo    = contextVk->allocWriteDescriptorSet();
     VkDescriptorBufferInfo &bufferInfo = contextVk->allocDescriptorBufferInfo();
 
-    if (!defaultUniformBlock.uniformData.empty())
+    vk::BufferHelper *bufferHelper = defaultUniformBuffer;
+    if (defaultUniformBlock.uniformData.empty())
     {
-        bufferInfo.buffer = defaultUniformBuffer->getBuffer().getHandle();
-    }
-    else
-    {
-        vk::BufferHelper &emptyBuffer = contextVk->getEmptyBuffer();
-        emptyBuffer.retain(&contextVk->getResourceUseList());
-        bufferInfo.buffer = emptyBuffer.getBuffer().getHandle();
+        bufferHelper = &contextVk->getEmptyBuffer();
+        bufferHelper->retain(&contextVk->getResourceUseList());
     }
 
-    bufferInfo.offset = 0;
-    bufferInfo.range  = VK_WHOLE_SIZE;
-
-    writeInfo.sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-    writeInfo.pNext            = nullptr;
-    writeInfo.dstSet           = mDescriptorSets[DescriptorSetIndex::UniformsAndXfb];
-    writeInfo.dstBinding       = info.binding;
-    writeInfo.dstArrayElement  = 0;
-    writeInfo.descriptorCount  = 1;
-    writeInfo.descriptorType   = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
-    writeInfo.pImageInfo       = nullptr;
-    writeInfo.pBufferInfo      = &bufferInfo;
-    writeInfo.pTexelBufferView = nullptr;
+    WriteBufferDescriptorSetBinding(
+        *bufferHelper, 0, VK_WHOLE_SIZE, mDescriptorSets[DescriptorSetIndex::UniformsAndXfb],
+        VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, info.binding, 0, 0, &bufferInfo, &writeInfo);
 }
 
 // Lazily allocate the descriptor set. We may not need one if all of the buffers are inactive.
@@ -1244,20 +1229,10 @@ angle::Result ProgramExecutableVk::updateAtomicCounterBuffersDescriptorSet(
     size_t writeCount                   = 0;
     for (size_t binding : ~writtenBindings)
     {
-        bufferInfos[writeCount].buffer = emptyBuffer.getBuffer().getHandle();
-        bufferInfos[writeCount].offset = 0;
-        bufferInfos[writeCount].range  = VK_WHOLE_SIZE;
-
-        writeInfos[writeCount].sType            = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        writeInfos[writeCount].pNext            = nullptr;
-        writeInfos[writeCount].dstSet           = descriptorSet;
-        writeInfos[writeCount].dstBinding       = info.binding;
-        writeInfos[writeCount].dstArrayElement  = static_cast<uint32_t>(binding);
-        writeInfos[writeCount].descriptorCount  = 1;
-        writeInfos[writeCount].descriptorType   = kStorageBufferDescriptorType;
-        writeInfos[writeCount].pImageInfo       = nullptr;
-        writeInfos[writeCount].pBufferInfo      = &bufferInfos[writeCount];
-        writeInfos[writeCount].pTexelBufferView = nullptr;
+        WriteBufferDescriptorSetBinding(emptyBuffer, 0, VK_WHOLE_SIZE, descriptorSet,
+                                        kStorageBufferDescriptorType, info.binding,
+                                        static_cast<uint32_t>(binding), 0, &bufferInfos[writeCount],
+                                        &writeInfos[writeCount]);
         writeCount++;
     }
 
@@ -1758,15 +1733,18 @@ angle::Result ProgramExecutableVk::updateDescriptorSets(ContextVk *contextVk,
         // Default uniforms are encompassed in a block per shader stage, and they are assigned
         // through dynamic uniform buffers (requiring dynamic offsets).  No other descriptor
         // requires a dynamic offset.
-        const uint32_t uniformBlockOffsetCount =
-            descriptorSetIndex == DescriptorSetIndex::UniformsAndXfb
-                ? static_cast<uint32_t>(mNumDefaultUniformDescriptors)
-                : 0;
-
-        commandBuffer->bindDescriptorSets(getPipelineLayout(), pipelineBindPoint,
-                                          static_cast<DescriptorSetIndex>(descriptorSetIndex), 1,
-                                          &descSet, uniformBlockOffsetCount,
-                                          mDynamicBufferOffsets.data());
+        if (descriptorSetIndex == DescriptorSetIndex::UniformsAndXfb)
+        {
+            commandBuffer->bindDescriptorSets(
+                getPipelineLayout(), pipelineBindPoint, descriptorSetIndex, 1, &descSet,
+                static_cast<uint32_t>(mDynamicDescriptorOffsets.size()),
+                mDynamicDescriptorOffsets.data());
+        }
+        else
+        {
+            commandBuffer->bindDescriptorSets(getPipelineLayout(), pipelineBindPoint,
+                                              descriptorSetIndex, 1, &descSet, 0, nullptr);
+        }
     }
 
     return angle::Result::Continue;

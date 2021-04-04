@@ -179,7 +179,7 @@ angle::Result ProgramPipelineVk::updateUniforms(ContextVk *contextVk)
             const angle::MemoryBuffer &uniformData =
                 programVk->getDefaultUniformBlocks()[shaderType].uniformData;
             memcpy(&bufferData[offsets[shaderType]], uniformData.data(), uniformData.size());
-            mExecutable.mDynamicBufferOffsets[offsetIndex] =
+            mExecutable.mDynamicDescriptorOffsets[offsetIndex] =
                 static_cast<uint32_t>(bufferOffset + offsets[shaderType]);
             programVk->clearShaderUniformDirtyBit(shaderType);
         }

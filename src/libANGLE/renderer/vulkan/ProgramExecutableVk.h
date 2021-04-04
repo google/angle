@@ -245,8 +245,8 @@ class ProgramExecutableVk
     void outputCumulativePerfCounters();
 
     // Descriptor sets for uniform blocks and textures for this program.
-    vk::DescriptorSetLayoutArray<VkDescriptorSet> mDescriptorSets;
-    vk::DescriptorSetLayoutArray<VkDescriptorSet> mEmptyDescriptorSets;
+    vk::DescriptorSetArray<VkDescriptorSet> mDescriptorSets;
+    vk::DescriptorSetArray<VkDescriptorSet> mEmptyDescriptorSets;
     size_t mNumDefaultUniformDescriptors;
     vk::BufferSerial mCurrentDefaultUniformBufferSerial;
 
@@ -262,14 +262,15 @@ class ProgramExecutableVk
 
     // Keep bindings to the descriptor pools. This ensures the pools stay valid while the Program
     // is in use.
-    vk::DescriptorSetLayoutArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
+    vk::DescriptorSetArray<vk::RefCountedDescriptorPoolBinding> mDescriptorPoolBindings;
 
     // Store descriptor pools here. We store the descriptors in the Program to facilitate descriptor
     // cache management. It can also allow fewer descriptors for shaders which use fewer
     // textures/buffers.
-    vk::DescriptorSetLayoutArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
+    vk::DescriptorSetArray<vk::DynamicDescriptorPool> mDynamicDescriptorPools;
 
-    gl::ShaderVector<uint32_t> mDynamicBufferOffsets;
+    // A set of dynamic offsets used with vkCmdBindDescriptorSets for the default uniform buffers.
+    gl::ShaderVector<uint32_t> mDynamicDescriptorOffsets;
 
     // TODO: http://anglebug.com/4524: Need a different hash key than a string,
     // since that's slow to calculate.
