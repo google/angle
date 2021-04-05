@@ -126,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eec61fd0_75e28cc1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T14:49:35Z",
+      "side": 1,
+      "message": "\u003e Once a developer can\u0027t trust a tool, they\u0027ll move on and it\u0027ll be a long time to earn that trust back.   Luckily this was a quick \"oops\", versus them wasting any amount of time due to AGI lying to them.\n\nMy take away from this is we should be up front about the messaging.  Don\u0027t pretend that you\u0027re running on the native driver.  Present the data such that it is clear what ANGLE is doing, a layered approach that will sometimes behave unexpectedly.  If we get some messages in there that explain why something happened, it will build trust and increase the quality of the AGI+ANGLE experience.",
+      "parentUuid": "016264ba_034c98db",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1bfa5286_b6d0f7ef",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
