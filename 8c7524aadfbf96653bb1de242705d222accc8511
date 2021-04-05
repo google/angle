@@ -18,6 +18,138 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b871600_5e895f45",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T17:01:34Z",
+      "side": 1,
+      "message": "This is a sprawling CL, but it comes together nicely.\n\nLGTM, mostly nits and comments.  There will be follow up work to update internal docs with the new process as well.\n\nI pulled it down and verified I can still capture and play back on Android.  I\u0027ll test out the upload and DEPS stuff after it lands.",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54e58c80_9a90ce1b",
+        "filename": "src/tests/restricted_traces/BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T17:01:34Z",
+      "side": 1,
+      "message": "This comment needs an update",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 33,
+        "endChar": 32
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb76655a_ea6aac51",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T17:01:34Z",
+      "side": 1,
+      "message": "Please include the definition of CIPD, i.e. \n\u003eauthenticate with CIPD (Chrome Infrastructure Package Deployment).",
+      "range": {
+        "startLine": 10,
+        "startChar": 23,
+        "endLine": 10,
+        "endChar": 35
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd284ff8_3428d300",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T17:01:34Z",
+      "side": 1,
+      "message": "Is there a reason you want to downplay use of jq?  Manually editing it is a pain.",
+      "range": {
+        "startLine": 222,
+        "startChar": 83,
+        "endLine": 222,
+        "endChar": 91
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b50e9aec_964b4022",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T17:01:34Z",
+      "side": 1,
+      "message": "Can you make this more explicit, add a code block with:\n```\nexport $VERSION\u003d1\n```\nand use it below.",
+      "range": {
+        "startLine": 222,
+        "startChar": 83,
+        "endLine": 223,
+        "endChar": 62
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4728a076_3f1f9635",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T17:01:34Z",
+      "side": 1,
+      "message": "jq \".traces \u003d (.traces + [\\\"$LABEL $VERSION\\\"] | unique)\" restricted_traces.json \\ | sponge restricted_traces.json",
+      "range": {
+        "startLine": 233,
+        "startChar": 26,
+        "endLine": 233,
+        "endChar": 37
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "76a259bd_30b78fca",
@@ -31,6 +163,30 @@
       "writtenOn": "2021-04-05T15:51:06Z",
       "side": 1,
       "message": "will change this to the canonical one before landing.",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 17
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51925e2a_66dcf143",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T17:01:34Z",
+      "side": 1,
+      "message": "Should each of these be prefixed with ANGLE_?",
+      "parentUuid": "76a259bd_30b78fca",
       "range": {
         "startLine": 147,
         "startChar": 0,
