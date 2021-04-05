@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3c01a0b_88c5fd67",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T15:42:54Z",
+      "side": 1,
+      "message": "Changes LGTM, but needs at least one fix.\n\nI pulled it down and tried it out.  I\u0027m getting the following compile errors when trying to build the resulting trace:\n\n    disney_tsum_tsum_capture_context3.cpp:2:10: fatal error: \u0027trace_fixture.h\u0027 file not found\n    #include \"trace_fixture.h\"\n             ^~~~~~~~~~~~~~~~~\n\nThis leads to a bunch of other errors.\n\nI\u0027m okay with the tracer being broken for a single commit, but only if the follow up that fixes it is ready to land.",
+      "revId": "00cdb81acf5ce595a987f7ae3d3af6b475abf44b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20370d60_658b9bd6",
+        "filename": "src/tests/restricted_traces/retrace_restricted_traces.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-05T15:42:54Z",
+      "side": 1,
+      "message": "What prompted this? Shouldn\u0027t be any whitespace in the trace names.",
+      "range": {
+        "startLine": 117,
+        "startChar": 4,
+        "endLine": 117,
+        "endChar": 64
+      },
+      "revId": "00cdb81acf5ce595a987f7ae3d3af6b475abf44b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
