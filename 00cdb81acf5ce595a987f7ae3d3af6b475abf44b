@@ -39,6 +39,30 @@
       },
       "revId": "00cdb81acf5ce595a987f7ae3d3af6b475abf44b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c862a88b_43eba7b9",
+        "filename": "src/tests/restricted_traces/retrace_restricted_traces.py",
+        "patchSetId": 8
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T18:36:00Z",
+      "side": 1,
+      "message": "Ack, should be clear why in the next patch.",
+      "parentUuid": "20370d60_658b9bd6",
+      "range": {
+        "startLine": 117,
+        "startChar": 4,
+        "endLine": 117,
+        "endChar": 64
+      },
+      "revId": "00cdb81acf5ce595a987f7ae3d3af6b475abf44b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
