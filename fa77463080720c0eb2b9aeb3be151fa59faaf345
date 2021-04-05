@@ -177,6 +177,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "75bac835_925dfce9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1287062
+      },
+      "writtenOn": "2021-04-05T20:53:54Z",
+      "side": 1,
+      "message": "Just an additional thought that might be outside the scope of this specific CL but might be something to discuss\n\nis there a way to disable ANGLE\u0027s interventions entirely (I vaguely remember there being something along these lines available but I\u0027m not super sure)? Even if it\u0027s the case that the app will crash, disabling ANGLE\u0027s actions on behalf of the app would potentially help developers see what they are doing wrong in the first place, rather than (potentially unknowingly) depending on ANGLE to take care of it for them",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1bfa5286_b6d0f7ef",
@@ -226,6 +243,24 @@
       "side": 1,
       "message": "Would be good to issue the warning when !bindingIsAligned too (or a different warning).\n\nAlso, I suggest different warnings for the CPU- and GPU-based conversion paths. The former should be a HIGH severity warning that includes the words \"GPU stall\".",
       "parentUuid": "ddacf391_4891cab7",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ed089e18_7f8f3f87",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1287062
+      },
+      "writtenOn": "2021-04-05T20:53:54Z",
+      "side": 1,
+      "message": "I\u0027m going to +1 what Tim mentioned above about referring to specifically what changes ANGLE is making",
+      "parentUuid": "88f28bd8_26044bb1",
       "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
