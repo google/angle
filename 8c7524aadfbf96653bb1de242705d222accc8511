@@ -52,6 +52,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8d55fc4_77a7271f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "They were already separate modules before this CL. It steps towards a future where we could run one-at-a-time. It\u0027s still blocked on modifying the test runner. Will require a solution for which traces to install on the device depending on the gtest_filter or some other mechanism for transferring traces to the device on demand.",
+      "parentUuid": "7ada3b52_654c488e",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c1864c53_04b6ac51",
@@ -65,6 +83,30 @@
       "writtenOn": "2021-04-05T19:54:11Z",
       "side": 1,
       "message": "Can you expand on this?   I don\u0027t understand how the counter is helpful in reducing a trace path length.",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 33,
+        "endChar": 93
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5635945f_803c816b",
+        "filename": "src/tests/capture_replay_tests/BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c1864c53_04b6ac51",
       "range": {
         "startLine": 33,
         "startChar": 36,
@@ -98,6 +140,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70809ab4_fb6755ed",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack - this should fail with the ERR() call.",
+      "parentUuid": "1a0b88d9_b6e39079",
+      "range": {
+        "startLine": 525,
+        "startChar": 0,
+        "endLine": 530,
+        "endChar": 5
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54e58c80_9a90ce1b",
@@ -111,6 +177,30 @@
       "writtenOn": "2021-04-05T17:01:34Z",
       "side": 1,
       "message": "This comment needs an update",
+      "range": {
+        "startLine": 33,
+        "startChar": 19,
+        "endLine": 33,
+        "endChar": 32
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6e918f1c_cb393b62",
+        "filename": "src/tests/restricted_traces/BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54e58c80_9a90ce1b",
       "range": {
         "startLine": 33,
         "startChar": 19,
@@ -144,6 +234,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea596759_bdb52bea",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack, The curious can click on the link. Not critical they remember what CIPD stands for.",
+      "parentUuid": "cb76655a_ea6aac51",
+      "range": {
+        "startLine": 10,
+        "startChar": 23,
+        "endLine": 10,
+        "endChar": 35
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0fa4c8a8_831d794d",
@@ -157,6 +271,24 @@
       "writtenOn": "2021-04-05T19:54:11Z",
       "side": 1,
       "message": "nit: gclient sync -D\n\nThat will remove any directories that may have been removed from that last sync, for example if we remove a trace because it\u0027s bad/outdated/etc.",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a0f8e11_af487645",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0fa4c8a8_831d794d",
       "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -184,6 +316,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cb6a67a_4b8dc673",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "242b9136_3d4ba0ae",
+      "range": {
+        "startLine": 187,
+        "startChar": 31,
+        "endLine": 187,
+        "endChar": 47
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2556ab8a_6a8e86a1",
@@ -201,6 +357,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d16a6b6_02c30ea7",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack left for a future maintainance patch.",
+      "parentUuid": "2556ab8a_6a8e86a1",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd284ff8_3428d300",
@@ -214,6 +388,30 @@
       "writtenOn": "2021-04-05T17:01:34Z",
       "side": 1,
       "message": "Is there a reason you want to downplay use of jq?  Manually editing it is a pain.",
+      "range": {
+        "startLine": 222,
+        "startChar": 83,
+        "endLine": 222,
+        "endChar": 91
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6be7dd76_72c18a23",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Not available on Windows for instance. I had to add this section for my own workflow.",
+      "parentUuid": "dd284ff8_3428d300",
       "range": {
         "startLine": 222,
         "startChar": 83,
@@ -247,6 +445,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "764ede0a_14a04cbc",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b50e9aec_964b4022",
+      "range": {
+        "startLine": 222,
+        "startChar": 83,
+        "endLine": 223,
+        "endChar": 62
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4728a076_3f1f9635",
@@ -270,6 +492,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "337415f7_21efbf09",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4728a076_3f1f9635",
+      "range": {
+        "startLine": 233,
+        "startChar": 26,
+        "endLine": 233,
+        "endChar": 37
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a70226c4_3b4906d3",
@@ -283,6 +529,30 @@
       "writtenOn": "2021-04-05T19:54:11Z",
       "side": 1,
       "message": "Can you define what this is?   Unfortunately, I\u0027m not finding a good definition in the CIPD docs either.",
+      "range": {
+        "startLine": 261,
+        "startChar": 51,
+        "endLine": 261,
+        "endChar": 62
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8359453e_a4552fae",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack, listed who to contact in case of write access needed.",
+      "parentUuid": "a70226c4_3b4906d3",
       "range": {
         "startLine": 261,
         "startChar": 51,
@@ -340,6 +610,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77936f2b_e12c4de6",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack, The ANGLE_ prefix we use for #define constants because they all fill up the same namespace. For individual py files seems fine to use any old name.",
+      "parentUuid": "51925e2a_66dcf143",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 17
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cd194621_648d9c5b",
@@ -353,6 +647,30 @@
       "writtenOn": "2021-04-05T19:54:11Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 275,
+        "startChar": 15,
+        "endLine": 275,
+        "endChar": 28
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "995b24cb_51c44574",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd194621_648d9c5b",
       "range": {
         "startLine": 275,
         "startChar": 15,
@@ -380,6 +698,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ea029480_c666c770",
+        "filename": "src/tests/restricted_traces/restricted_traces.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack, I did consider this. It was going to slow me down so I went with the easy maintenance approach. Won\u0027t be terribly hard to change this file in the future if we need to add more fields.",
+      "parentUuid": "9c629f79_9eb63dbe",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c24a0be4_c7bb4b3a",
@@ -393,6 +729,30 @@
       "writtenOn": "2021-04-05T15:51:06Z",
       "side": 1,
       "message": "will change this to the canonical one before landing.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 11
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ceae39c3_d482193a",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c24a0be4_c7bb4b3a",
       "range": {
         "startLine": 19,
         "startChar": 0,
@@ -420,6 +780,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c3c4617_13c59841",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack, this is run on upload, not download.",
+      "parentUuid": "ee715c00_b328caf8",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b16d9fb2_3559e8ee",
@@ -433,6 +811,30 @@
       "writtenOn": "2021-04-05T19:54:11Z",
       "side": 1,
       "message": "It might be nice to have a \"dev\" mode type of flag where a trace being worked on can be continuously updated without having to update the version number.   Or we can agree that the version number doesn\u0027t necessarily relate in the sense that it\u0027s a trace of an updated version of app, since it will likely bump up just while debugging an app (in case CQ catches missing GL calls or something).",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 20
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c23b67d8_363c499d",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack, left for a future implementer.",
+      "parentUuid": "b16d9fb2_3559e8ee",
       "range": {
         "startLine": 42,
         "startChar": 0,
@@ -460,6 +862,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32b9ddc7_dbc249d4",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff0761d0_6f5018b2",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "80d9128a_0355d1e3",
@@ -473,6 +893,24 @@
       "writtenOn": "2021-04-05T19:54:11Z",
       "side": 1,
       "message": "nit: To try and cover some of the more obvious problems, it would be good to indicate that only Googlers can upload traces and that running \"cipd auth-login\" is required beforehand.",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f73a864_8861539e",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:41:41Z",
+      "side": 1,
+      "message": "Ack, will leave that for a follow-up when it becomes a problem.",
+      "parentUuid": "80d9128a_0355d1e3",
       "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
