@@ -157,6 +157,24 @@
       "parentUuid": "1bfa5286_b6d0f7ef",
       "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88f28bd8_26044bb1",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-05T06:34:52Z",
+      "side": 1,
+      "message": "Would be good to issue the warning when !bindingIsAligned too (or a different warning).\n\nAlso, I suggest different warnings for the CPU- and GPU-based conversion paths. The former should be a HIGH severity warning that includes the words \"GPU stall\".",
+      "parentUuid": "ddacf391_4891cab7",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
