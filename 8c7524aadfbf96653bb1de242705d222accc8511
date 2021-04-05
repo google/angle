@@ -35,6 +35,69 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ada3b52_654c488e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "LGTM\n\nSince the traces are now compiled as separate modules, does this mean that the Android testing only uploads the necessary trace(s) when running angle_perftests?   For example, will this only upload the \u0027magic_tiles_3\u0027 trace module?\n\n    ./out/Debug/angle_perftests --gtest_filter\u003dTracePerfTest.Run/*magic_tiles_3*",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c1864c53_04b6ac51",
+        "filename": "src/tests/capture_replay_tests/BUILD.gn",
+        "patchSetId": 7
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "Can you expand on this?   I don\u0027t understand how the counter is helpful in reducing a trace path length.",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 33,
+        "endChar": 93
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a0b88d9_b6e39079",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "Why doesn\u0027t this fail the test instead of just skipping it?   It seems like this could lead to silent \"failures\" on the bots.",
+      "range": {
+        "startLine": 525,
+        "startChar": 0,
+        "endLine": 530,
+        "endChar": 5
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54e58c80_9a90ce1b",
@@ -77,6 +140,63 @@
         "endLine": 10,
         "endChar": 35
       },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0fa4c8a8_831d794d",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "nit: gclient sync -D\n\nThat will remove any directories that may have been removed from that last sync, for example if we remove a trace because it\u0027s bad/outdated/etc.",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "242b9136_3d4ba0ae",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "nit: rather than escaping the \"*\", use backticks to mark this text as code: `*angledata.gz`",
+      "range": {
+        "startLine": 187,
+        "startChar": 31,
+        "endLine": 187,
+        "endChar": 47
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2556ab8a_6a8e86a1",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "It would be good to have a section describing how to update the trace.   It looks like this currently requires updating the JSON to change the version number so sync_restricted_traces_to_cipd.py will detect a difference and upload the new data.",
       "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -152,6 +272,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a70226c4_3b4906d3",
+        "filename": "src/tests/restricted_traces/README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "Can you define what this is?   Unfortunately, I\u0027m not finding a good definition in the CIPD docs either.",
+      "range": {
+        "startLine": 261,
+        "startChar": 51,
+        "endLine": 261,
+        "endChar": 62
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "76a259bd_30b78fca",
         "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
         "patchSetId": 7
@@ -199,6 +342,46 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cd194621_648d9c5b",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 275,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 275,
+        "startChar": 15,
+        "endLine": 275,
+        "endChar": 28
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c629f79_9eb63dbe",
+        "filename": "src/tests/restricted_traces/restricted_traces.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "For maintainability and readability, these should be more like:\n\n    \"traces\": [\n        {\n            \"label\": \"aliexpress\",\n            \"version\": 1\n        },\n        {\n            \"label\": \"among_us\",\n            \"version\": 1\n        }\n\nThat will allow gen_restricted_traces.py and sync_restricted_traces_to_cipd.py to not have to split on \" \" and make getting names/version numbers more readable there also.",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c24a0be4_c7bb4b3a",
         "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
         "patchSetId": 7
@@ -216,6 +399,80 @@
         "endLine": 19,
         "endChar": 11
       },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee715c00_b328caf8",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "The commit message indicates that this checking can take a few seconds per trace.   Since we\u0027re already at 65 traces, that\u0027s at least 2-3 minutes that the `gclient sync` will appear hung to the user.\n\nTo keep them from killing the sync while it\u0027s still making progress, it would be good to add some type of progress indicator.   For example, something as simple as:\n\n    currTraceCount \u003d 0\n    for trace_info in traces[\u0027traces\u0027]:\n        logging.info(\u0027Checking trace (%d / %d)\u0027, trace, currTraceCount, len(traces))\n        currTraceCount +\u003d 1\n\nA further improvement would be to rewrite the same line so it doesn\u0027t fill the terminal:\nhttps://stackoverflow.com/a/11986396",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b16d9fb2_3559e8ee",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "It might be nice to have a \"dev\" mode type of flag where a trace being worked on can be continuously updated without having to update the version number.   Or we can agree that the version number doesn\u0027t necessarily relate in the sense that it\u0027s a trace of an updated version of app, since it will likely bump up just while debugging an app (in case CQ catches missing GL calls or something).",
+      "range": {
+        "startLine": 42,
+        "startChar": 0,
+        "endLine": 44,
+        "endChar": 20
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ff0761d0_6f5018b2",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "This should probably be expanded to give some more context.   It also needs to have something defined for the \"%s\" argument.\n\n    logging.info(\u0027%s not found in CIPD. Creating entry and uploading trace.\u0027, trace)",
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80d9128a_0355d1e3",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-05T19:54:11Z",
+      "side": 1,
+      "message": "nit: To try and cover some of the more obvious problems, it would be good to indicate that only Googlers can upload traces and that running \"cipd auth-login\" is required beforehand.",
       "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
