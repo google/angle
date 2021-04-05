@@ -16,6 +16,24 @@
       "message": "friendly ping",
       "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "307903ff_6769f00e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T21:17:31Z",
+      "side": 1,
+      "message": "Canadian holiday Fri/Mon, will look Tuesday.",
+      "parentUuid": "6be6fbf3_c1c36788",
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
