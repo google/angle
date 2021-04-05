@@ -16,6 +16,52 @@
       "message": "PTAL Cody/Tim. Need to get this landed ASAP to prevent further CQ breakage.",
       "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76a259bd_30b78fca",
+        "filename": "src/tests/restricted_traces/gen_restricted_traces.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T15:51:06Z",
+      "side": 1,
+      "message": "will change this to the canonical one before landing.",
+      "range": {
+        "startLine": 147,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 17
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c24a0be4_c7bb4b3a",
+        "filename": "src/tests/restricted_traces/sync_restricted_traces_to_cipd.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-05T15:51:06Z",
+      "side": 1,
+      "message": "will change this to the canonical one before landing.",
+      "range": {
+        "startLine": 19,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 11
+      },
+      "revId": "8c7524aadfbf96653bb1de242705d222accc8511",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
