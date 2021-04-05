@@ -144,6 +144,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d7c77d28_1a104522",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-05T16:05:30Z",
+      "side": 1,
+      "message": "Good points!",
+      "parentUuid": "eec61fd0_75e28cc1",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6a4c997c_ce33b5ae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-05T16:05:30Z",
+      "side": 1,
+      "message": "cc\u0027ing Pascal, Hugues, and Pau\n\nFYI ... Pascal is on holiday this week, which may delay a final solution (e.g. Shabi\u0027s feedback about an event marker vs. begin-end markers).\n\nThanks for the feedback here and the discussion in Chat and Omar\u0027s document!",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1bfa5286_b6d0f7ef",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -208,6 +243,30 @@
       "writtenOn": "2021-04-05T06:35:34Z",
       "side": 1,
       "message": "Why not `insertEventMarker`?",
+      "range": {
+        "startLine": 585,
+        "startChar": 41,
+        "endLine": 586,
+        "endChar": 55
+      },
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5506173d_4191e358",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-05T16:05:30Z",
+      "side": 1,
+      "message": "Good question.  I\u0027ll work with the AGI team to determine if that will work.",
+      "parentUuid": "616275e6_df46e900",
       "range": {
         "startLine": 585,
         "startChar": 41,
