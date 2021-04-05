@@ -120,6 +120,7 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
     properties = {
         "debug": debug,
         "target_cpu": cpu,
+        "builder_group": "angle",
     }
     os = get_os_from_name(name)
     dimensions = {}
