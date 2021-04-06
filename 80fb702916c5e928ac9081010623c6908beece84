@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70ad2e8f_b3aac5d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T15:23:34Z",
+      "side": 1,
+      "message": "Setting up the review..\n\nOne request John, please add a README.md with a description of your local modifications (just the API thing). See includes/GLES/README.md for an example. These aren\u0027t generated so the regeneration steps don\u0027t apply.",
+      "revId": "80fb702916c5e928ac9081010623c6908beece84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
