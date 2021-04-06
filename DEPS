@@ -20,7 +20,7 @@ vars = {
   'checkout_angle_internal': False,
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '99ef73b66e73093d14c00a4a768c4cbf7ddca177',
+  'chromium_revision': '9bacc030553c5f92a18e2f245659e2f324bfe03a',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -76,7 +76,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@728a23351d1237da9bbc56f908114194ba74fce3',
+    'url': '{chromium_git}/chromium/src/build.git@83694c4d991ef636ae0cbb1c96a7ae3ce6a252e9',
     'condition': 'not build_with_chromium',
   },
 
@@ -94,7 +94,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/linux-amd64',
-        'version': 'git_revision:a95c8a3ccc7de65eb740aa68a0d021cdc8550205',
+        'version': 'git_revision:dba01723a441c358d843a575cb7720d54ddcdf92',
       }
     ],
     'dep_type': 'cipd',
@@ -105,7 +105,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/mac-${{arch}}',
-        'version': 'git_revision:a95c8a3ccc7de65eb740aa68a0d021cdc8550205',
+        'version': 'git_revision:dba01723a441c358d843a575cb7720d54ddcdf92',
       }
     ],
     'dep_type': 'cipd',
@@ -126,7 +126,7 @@ deps = {
     'packages': [
       {
         'package': 'gn/gn/windows-amd64',
-        'version': 'git_revision:a95c8a3ccc7de65eb740aa68a0d021cdc8550205',
+        'version': 'git_revision:dba01723a441c358d843a575cb7720d54ddcdf92',
       }
     ],
     'dep_type': 'cipd',
@@ -134,7 +134,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@9a03e1204d282685de155739507457e8ae98de12',
+    'url': '{chromium_git}/chromium/src/testing@41c8c7acfb15ec651f6fc7cedac7e64a7d6ab116',
     'condition': 'not build_with_chromium',
   },
 
@@ -269,7 +269,7 @@ deps = {
   },
 
   'tools/clang': {
-    'url': '{chromium_git}/chromium/src/tools/clang.git@ada51aa11396422cb7db4761cfc97c95f7bf5ecc',
+    'url': '{chromium_git}/chromium/src/tools/clang.git@a387faa2a6741f565e45d78804a49a0e55de5909',
     'condition': 'not build_with_chromium',
   },
 
