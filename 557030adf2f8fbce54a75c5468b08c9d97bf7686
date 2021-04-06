@@ -299,6 +299,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "10110f9a_92e20e67",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-04-06T18:06:21Z",
+      "side": 1,
+      "message": "Hi Shahbaz, the GL_UNSIGNED_BYTE with vec4 use case is bugged as it\u0027s dropping data with an 8 bit width\n\nIf we use an 8 bit width we only get the first byte of data. Other gles drivers don\u0027t drop the next 3 bytes. If we use a 32 bit width format (this matches the vec4) we transfer all necessary bytes.\n\nIn my opinion, the \"workaround\" is the actual correct solution rather than a workaround and the original solution may have to be discarded in favor of always using a 32 bit width.\n\nThe reason this didn\u0027t show up in testing is because all previous tests only used the first byte of data.\n\nIf we don\u0027t want to fix this use case, I can just change this to match the original and drop the data here too with an 8 bit width. LMK if this what we want to do. I suppose having incorrect behavior here probably doesn\u0027t matter much as we haven\u0027t seen any apps relying on it so far. \n\nI can also see if I can get a test that demonstrates the issue approved if you want more info \n\nThanks!",
+      "parentUuid": "9f7c0d08_5225faae",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
