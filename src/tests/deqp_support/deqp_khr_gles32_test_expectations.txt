@@ -6,10 +6,6 @@
 
 // For now we only log Vulkan test expectations. More back-ends can follow as we need them.
 
-// Test bug with missing glMemoryBarrier call
-5673 VULKAN LINUX : KHR-GLES32.core.texture_buffer.texture_buffer_operations_transform_feedback = FAIL
-5673 VULKAN WIN : KHR-GLES32.core.texture_buffer.texture_buffer_operations_transform_feedback = FAIL
-
 // Geometry shader support (conditioned to windows as that's our only bot capable of running these
 // tests)
 // Translator's lack of support for redefining gl_PerVertex
