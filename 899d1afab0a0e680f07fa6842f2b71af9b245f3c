@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd43df62_f8ee7817",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:38:37Z",
+      "side": 1,
+      "message": "The test is in the next CL:\n\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2797951/2/src/tests/gl_tests/ProgramPipelineTest.cpp",
+      "parentUuid": "31dbc697_62346000",
+      "revId": "899d1afab0a0e680f07fa6842f2b71af9b245f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "983e9c95_51bedbef",
@@ -43,6 +61,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f140fd4a_470e0410",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 5486,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:38:37Z",
+      "side": 1,
+      "message": "It should be fine.   PPOs are \"graphics\" by default, until a dispatch is issued and we switch to \"compute\":\n\n    void Context::convertPpoToComputeOrDraw(bool isCompute)\n    {\n        Program *program          \u003d mState.getProgram();\n        ProgramPipeline *pipeline \u003d mState.getProgramPipeline();\n        if (!program \u0026\u0026 pipeline)\n        {\n            pipeline-\u003egetExecutable().setIsCompute(isCompute);\n            pipeline-\u003eresetIsLinked();\n\n            // The PPO\u0027s isCompute() has changed, so its ProgramExecutable will produce different\n            // results for things like getShaderStorageBlocks() or getImageBindings().\n            mState.mDirtyBits.set(State::DirtyBitType::DIRTY_BIT_PROGRAM_EXECUTABLE);\n            mStateCache.onProgramExecutableChange(this);\n        }\n    }\n\nPart of the DIRTY_BIT_PROGRAM_EXECUTABLE handling is to invalidate the compute pipeline:\n\n    angle::Result ContextVk::syncState(const gl::Context *context,\n                                       const gl::State::DirtyBits \u0026dirtyBits,\n                                       const gl::State::DirtyBits \u0026bitMask)\n    {\n    ...\n            case gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE:\n            {\n                ASSERT(programExecutable);\n                invalidateCurrentDefaultUniforms();\n                ASSERT(gl::State::DIRTY_BIT_TEXTURE_BINDINGS \u003e\n                       gl::State::DIRTY_BIT_PROGRAM_EXECUTABLE);\n                iter.setLaterBit(gl::State::DIRTY_BIT_TEXTURE_BINDINGS);\n                ANGLE_TRY(invalidateCurrentShaderResources());\n                ANGLE_TRY(invalidateProgramExecutableHelper(context));\n                break;\n            }\n\n\n    angle::Result ContextVk::invalidateProgramExecutableHelper(const gl::Context *context)\n    {\n    ...\n        if (glState.getProgramExecutable()-\u003eisCompute())\n        {\n            invalidateCurrentComputePipeline();\n        }\n\nThere are some dEQP tests that cover the compute+graphics PPO cases, though those were obviously passing before too, so things at least aren\u0027t regressing.",
+      "parentUuid": "983e9c95_51bedbef",
+      "range": {
+        "startLine": 5479,
+        "startChar": 0,
+        "endLine": 5486,
+        "endChar": 5
+      },
+      "revId": "899d1afab0a0e680f07fa6842f2b71af9b245f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "657c10ea_342dbf9f",
         "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
         "patchSetId": 10
@@ -54,6 +96,30 @@
       "writtenOn": "2021-04-06T13:35:25Z",
       "side": 1,
       "message": "maybe change this api to \"onProgramExecutableReset\" so you don\u0027t need so many APIs?",
+      "range": {
+        "startLine": 274,
+        "startChar": 19,
+        "endLine": 274,
+        "endChar": 38
+      },
+      "revId": "899d1afab0a0e680f07fa6842f2b71af9b245f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71839daa_4f3e4eca",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:38:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "657c10ea_342dbf9f",
       "range": {
         "startLine": 274,
         "startChar": 19,
