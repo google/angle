@@ -16,6 +16,24 @@
       "message": "Why is this a concern?\n\nIf this is helpful, then it should be done for every use of VK_DESCRIPTOR_TYPE_* in libANGLE/renderer/vulkan/:\n\nContextVk.cpp\nProgramExecutableVk.cpp\nTransformFeedbackVk.cpp\nUtilsVk.cpp",
       "revId": "9780dcfcb6111d5283b0745513a42ff0a7222b5a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "095d1b7b_556435a4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T17:35:51Z",
+      "side": 1,
+      "message": "See the main change in the chain. The type of one of them is changed to DYNAMIC. It shouldn\u0027t blindly apply to other buffer types.\n\nMaybe the name could be changed to make it clear, like kProgramUniformBufferDescriptorType",
+      "parentUuid": "4995b432_b21f1c1c",
+      "revId": "9780dcfcb6111d5283b0745513a42ff0a7222b5a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
