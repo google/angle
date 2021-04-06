@@ -170,6 +170,23 @@
       "parentUuid": "661fb82f_beaae07c",
       "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acc8bbc9_23c57281",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:38:53Z",
+      "side": 1,
+      "message": "LGTM - would prefer if you enable image_format_list on Mali in this CL instead.",
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
