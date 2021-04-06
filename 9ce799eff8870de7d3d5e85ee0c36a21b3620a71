@@ -34,6 +34,138 @@
       "parentUuid": "6be6fbf3_c1c36788",
       "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13f5d76d_5ce0eb7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:52:00Z",
+      "side": 1,
+      "message": "A simple test of DestroyContext with a non-current context might be welcome.",
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ebc835b9_4a5216a0",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:52:00Z",
+      "side": 1,
+      "message": "nit: omit this-\u003e outside of some template inheritance scenarios where it\u0027s required.",
+      "range": {
+        "startLine": 1443,
+        "startChar": 10,
+        "endLine": 1443,
+        "endChar": 17
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4eb7cd5a_5a737deb",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:52:00Z",
+      "side": 1,
+      "message": "nit: generally avoid overloading in ANGLE to keep the code semantically simpler. good for code browsing tools, and makes it easier to understand when calling.",
+      "range": {
+        "startLine": 183,
+        "startChar": 10,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8382ac9_aedec636",
+        "filename": "src/libGLESv2/egl_stubs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:52:00Z",
+      "side": 1,
+      "message": "nit: shouldMakeCurrent",
+      "range": {
+        "startLine": 285,
+        "startChar": 9,
+        "endLine": 285,
+        "endChar": 28
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9ebebf4_d8e442d4",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:52:00Z",
+      "side": 1,
+      "message": "this is a bit sensitive. I\u0027m going to run the manually-added tsan bot to this CL and see what it flushes out. Please wait until it\u0027s green before landing. If it flushes out unrelated bugs, can work on enabling this in another CL.",
+      "range": {
+        "startLine": 776,
+        "startChar": 23,
+        "endLine": 776,
+        "endChar": 44
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80419c1e_233a319a",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:52:00Z",
+      "side": 1,
+      "message": "same warning here.",
+      "range": {
+        "startLine": 1083,
+        "startChar": 58,
+        "endLine": 1083,
+        "endChar": 65
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
