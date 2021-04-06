@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f042cb8e_ed8e6af6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-06T22:47:48Z",
+      "side": 1,
+      "message": "Please start reviewing changes to ProtectedMemory - Mostly changes to RendererVk, ContextVk, CommandQueue, CommandProcessor.\n\nCurrently resolving issues and making tests",
+      "revId": "9386ea694123b2b79e3c4db0616c238428a98470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
