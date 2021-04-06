@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85692c40_f697a7f5",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 914,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-06T22:01:10Z",
+      "side": 1,
+      "message": "I\u0027d rather see red verified, then green verified, but probably fine to use blending.  Just adds another variable to the test that isn\u0027t your target.",
+      "range": {
+        "startLine": 914,
+        "startChar": 0,
+        "endLine": 914,
+        "endChar": 65
+      },
+      "revId": "fe98e5176b993f13717bf887d5d5b53a4bc02f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03e415d4_cd3fe584",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-06T22:01:10Z",
+      "side": 1,
+      "message": "This draw sequence differs from the other test.  Is there a reason?",
+      "range": {
+        "startLine": 153,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 25
+      },
+      "revId": "fe98e5176b993f13717bf887d5d5b53a4bc02f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
