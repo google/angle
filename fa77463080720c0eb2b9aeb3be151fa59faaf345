@@ -212,6 +212,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c6367ec_f038cf05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1287062
+      },
+      "writtenOn": "2021-04-06T15:51:59Z",
+      "side": 1,
+      "message": "Yes things like the format emulation\n\nI see what you\u0027re saying, I guess I was thinking more in line of making it some sort of option, not the default behavior (perhaps in like the developer options or something) but considering ANGLE is a driver I\u0027m not sure how feasible something like that is with all that you have to consider to be a functional driver\n\nBut yea I agree the warning is definitely something we need",
+      "parentUuid": "96818411_31212196",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1bfa5286_b6d0f7ef",
