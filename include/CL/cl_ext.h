@@ -102,7 +102,7 @@ clIcdGetPlatformIDsKHR(cl_uint          num_entries,
                        cl_platform_id * platforms,
                        cl_uint *        num_platforms);
 
-typedef CL_API_ENTRY cl_int
+typedef cl_int
 (CL_API_CALL *clIcdGetPlatformIDsKHR_fn)(cl_uint          num_entries,
                                          cl_platform_id * platforms,
                                          cl_uint *        num_platforms);
@@ -129,7 +129,7 @@ clCreateProgramWithILKHR(cl_context   context,
                          size_t       length,
                          cl_int *     errcode_ret);
 
-typedef CL_API_ENTRY cl_program
+typedef cl_program
 (CL_API_CALL *clCreateProgramWithILKHR_fn)(cl_context   context,
                                            const void * il,
                                            size_t       length,
@@ -178,7 +178,7 @@ typedef CL_API_ENTRY cl_program
 extern CL_API_ENTRY cl_int CL_API_CALL
 clTerminateContextKHR(cl_context context) CL_EXT_SUFFIX__VERSION_1_2;
 
-typedef CL_API_ENTRY cl_int
+typedef cl_int
 (CL_API_CALL *clTerminateContextKHR_fn)(cl_context context) CL_EXT_SUFFIX__VERSION_1_2;
 
 
@@ -206,7 +206,7 @@ clCreateCommandQueueWithPropertiesKHR(cl_context context,
                                       const cl_queue_properties_khr* properties,
                                       cl_int* errcode_ret) CL_EXT_SUFFIX__VERSION_1_2;
 
-typedef CL_API_ENTRY cl_command_queue
+typedef cl_command_queue
 (CL_API_CALL *clCreateCommandQueueWithPropertiesKHR_fn)(cl_context context,
                                                         cl_device_id device,
                                                         const cl_queue_properties_khr* properties,
@@ -270,13 +270,13 @@ typedef CL_API_ENTRY cl_command_queue
 extern CL_API_ENTRY cl_int CL_API_CALL
 clReleaseDeviceEXT(cl_device_id device) CL_EXT_SUFFIX__VERSION_1_1;
 
-typedef CL_API_ENTRY cl_int
+typedef cl_int
 (CL_API_CALL *clReleaseDeviceEXT_fn)(cl_device_id device) CL_EXT_SUFFIX__VERSION_1_1;
 
 extern CL_API_ENTRY cl_int CL_API_CALL
 clRetainDeviceEXT(cl_device_id device) CL_EXT_SUFFIX__VERSION_1_1;
 
-typedef CL_API_ENTRY cl_int
+typedef cl_int
 (CL_API_CALL *clRetainDeviceEXT_fn)(cl_device_id device) CL_EXT_SUFFIX__VERSION_1_1;
 
 typedef cl_ulong  cl_device_partition_property_ext;
@@ -287,7 +287,7 @@ clCreateSubDevicesEXT(cl_device_id   in_device,
                       cl_device_id * out_devices,
                       cl_uint *      num_devices) CL_EXT_SUFFIX__VERSION_1_1;
 
-typedef CL_API_ENTRY cl_int
+typedef cl_int
 (CL_API_CALL * clCreateSubDevicesEXT_fn)(cl_device_id   in_device,
                                          const cl_device_partition_property_ext * properties,
                                          cl_uint        num_entries,
@@ -346,7 +346,7 @@ clEnqueueMigrateMemObjectEXT(cl_command_queue command_queue,
                              const cl_event * event_wait_list,
                              cl_event *       event);
 
-typedef CL_API_ENTRY cl_int
+typedef cl_int
 (CL_API_CALL *clEnqueueMigrateMemObjectEXT_fn)(cl_command_queue command_queue,
                                                cl_uint          num_mem_objects,
                                                const cl_mem *   mem_objects,
@@ -566,7 +566,7 @@ clGetKernelSubGroupInfoKHR(cl_kernel    in_kernel,
                            void *       param_value,
                            size_t *     param_value_size_ret) CL_EXT_SUFFIX__VERSION_2_0_DEPRECATED;
 
-typedef CL_API_ENTRY cl_int
+typedef cl_int
 (CL_API_CALL * clGetKernelSubGroupInfoKHR_fn)(cl_kernel    in_kernel,
                                               cl_device_id in_device,
                                               cl_kernel_sub_group_info param_name,
@@ -1068,7 +1068,7 @@ clCreateAcceleratorINTEL(
     const void*                  descriptor,
     cl_int*                      errcode_ret) CL_EXT_SUFFIX__VERSION_1_2;
 
-typedef CL_API_ENTRY cl_accelerator_intel (CL_API_CALL *clCreateAcceleratorINTEL_fn)(
+typedef cl_accelerator_intel (CL_API_CALL *clCreateAcceleratorINTEL_fn)(
     cl_context                   context,
     cl_accelerator_type_intel    accelerator_type,
     size_t                       descriptor_size,
@@ -1083,7 +1083,7 @@ clGetAcceleratorInfoINTEL(
     void*                        param_value,
     size_t*                      param_value_size_ret) CL_EXT_SUFFIX__VERSION_1_2;
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *clGetAcceleratorInfoINTEL_fn)(
+typedef cl_int (CL_API_CALL *clGetAcceleratorInfoINTEL_fn)(
     cl_accelerator_intel         accelerator,
     cl_accelerator_info_intel    param_name,
     size_t                       param_value_size,
@@ -1094,14 +1094,14 @@ extern CL_API_ENTRY cl_int CL_API_CALL
 clRetainAcceleratorINTEL(
     cl_accelerator_intel         accelerator) CL_EXT_SUFFIX__VERSION_1_2;
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *clRetainAcceleratorINTEL_fn)(
+typedef cl_int (CL_API_CALL *clRetainAcceleratorINTEL_fn)(
     cl_accelerator_intel         accelerator) CL_EXT_SUFFIX__VERSION_1_2;
 
 extern CL_API_ENTRY cl_int CL_API_CALL
 clReleaseAcceleratorINTEL(
     cl_accelerator_intel         accelerator) CL_EXT_SUFFIX__VERSION_1_2;
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *clReleaseAcceleratorINTEL_fn)(
+typedef cl_int (CL_API_CALL *clReleaseAcceleratorINTEL_fn)(
     cl_accelerator_intel         accelerator) CL_EXT_SUFFIX__VERSION_1_2;
 
 /******************************************
@@ -1374,7 +1374,7 @@ clHostMemAllocINTEL(
             cl_uint alignment,
             cl_int* errcode_ret);
 
-typedef CL_API_ENTRY void* (CL_API_CALL *
+typedef void* (CL_API_CALL *
 clHostMemAllocINTEL_fn)(
             cl_context context,
             const cl_mem_properties_intel* properties,
@@ -1391,7 +1391,7 @@ clDeviceMemAllocINTEL(
             cl_uint alignment,
             cl_int* errcode_ret);
 
-typedef CL_API_ENTRY void* (CL_API_CALL *
+typedef void* (CL_API_CALL *
 clDeviceMemAllocINTEL_fn)(
             cl_context context,
             cl_device_id device,
@@ -1409,7 +1409,7 @@ clSharedMemAllocINTEL(
             cl_uint alignment,
             cl_int* errcode_ret);
 
-typedef CL_API_ENTRY void* (CL_API_CALL *
+typedef void* (CL_API_CALL *
 clSharedMemAllocINTEL_fn)(
             cl_context context,
             cl_device_id device,
@@ -1423,7 +1423,7 @@ clMemFreeINTEL(
             cl_context context,
             void* ptr);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clMemFreeINTEL_fn)(
             cl_context context,
             void* ptr);
@@ -1433,7 +1433,7 @@ clMemBlockingFreeINTEL(
             cl_context context,
             void* ptr);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clMemBlockingFreeINTEL_fn)(
             cl_context context,
             void* ptr);
@@ -1447,7 +1447,7 @@ clGetMemAllocInfoINTEL(
             void* param_value,
             size_t* param_value_size_ret);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clGetMemAllocInfoINTEL_fn)(
             cl_context context,
             const void* ptr,
@@ -1462,7 +1462,7 @@ clSetKernelArgMemPointerINTEL(
             cl_uint arg_index,
             const void* arg_value);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clSetKernelArgMemPointerINTEL_fn)(
             cl_kernel kernel,
             cl_uint arg_index,
@@ -1478,7 +1478,7 @@ clEnqueueMemsetINTEL(       /* Deprecated */
             const cl_event* event_wait_list,
             cl_event* event);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clEnqueueMemsetINTEL_fn)(   /* Deprecated */
             cl_command_queue command_queue,
             void* dst_ptr,
@@ -1499,7 +1499,7 @@ clEnqueueMemFillINTEL(
             const cl_event* event_wait_list,
             cl_event* event);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clEnqueueMemFillINTEL_fn)(
             cl_command_queue command_queue,
             void* dst_ptr,
@@ -1521,7 +1521,7 @@ clEnqueueMemcpyINTEL(
             const cl_event* event_wait_list,
             cl_event* event);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clEnqueueMemcpyINTEL_fn)(
             cl_command_queue command_queue,
             cl_bool blocking,
@@ -1547,7 +1547,7 @@ clEnqueueMigrateMemINTEL(
             const cl_event* event_wait_list,
             cl_event* event);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clEnqueueMigrateMemINTEL_fn)(
             cl_command_queue command_queue,
             const void* ptr,
@@ -1569,7 +1569,7 @@ clEnqueueMemAdviseINTEL(
             const cl_event* event_wait_list,
             cl_event* event);
 
-typedef CL_API_ENTRY cl_int (CL_API_CALL *
+typedef cl_int (CL_API_CALL *
 clEnqueueMemAdviseINTEL_fn)(
             cl_command_queue command_queue,
             const void* ptr,
@@ -1594,7 +1594,7 @@ clCreateBufferWithPropertiesINTEL(
     void *       host_ptr,
     cl_int *     errcode_ret) CL_EXT_SUFFIX__VERSION_1_0;
 
-typedef CL_API_ENTRY cl_mem (CL_API_CALL *
+typedef cl_mem (CL_API_CALL *
 clCreateBufferWithPropertiesINTEL_fn)(
     cl_context   context,
     const cl_mem_properties_intel* properties,

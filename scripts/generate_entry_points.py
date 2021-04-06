@@ -246,7 +246,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 """
 
 TEMPLATE_CL_ENTRY_POINT_NO_RETURN = """\
-void CL_API_ENTRY CL_{name}({params})
+void CL_API_CALL CL_{name}({params})
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
@@ -255,7 +255,7 @@ void CL_API_ENTRY CL_{name}({params})
 """
 
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN = """\
-{return_type}CL_API_ENTRY CL_{name}({params})
+{return_type}CL_API_CALL CL_{name}({params})
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
@@ -327,7 +327,7 @@ CONTEXT_HEADER = """\
 CONTEXT_DECL_FORMAT = """    {return_type} {name_lower_no_suffix}({internal_params}){maybe_const}; \\"""
 
 TEMPLATE_CL_ENTRY_POINT_EXPORT = """\
-ANGLE_EXPORT {return_type}CL_API_ENTRY cl{name}({params}) CL_API_CALL
+{return_type} CL_API_CALL cl{name}({params})
 {{
     EnsureCLLoaded();
     return cl_loader.cl{name}({internal_params});
@@ -827,7 +827,7 @@ std::unique_ptr<angle::Library> &EntryPointsLib()
     return *sEntryPointsLib;
 }
 
-angle::GenericProc CL_API_ENTRY GlobalLoad(const char *symbol)
+angle::GenericProc CL_API_CALL GlobalLoad(const char *symbol)
 {
     return reinterpret_cast<angle::GenericProc>(EntryPointsLib()->getSymbol(symbol));
 }
@@ -937,6 +937,9 @@ void EnsureEGLLoaded() {}
 LIBCL_HEADER_INCLUDES = """\
 #include "export.h"
 
+#ifndef CL_API_ENTRY
+#    define CL_API_ENTRY ANGLE_EXPORT
+#endif
 #include <CL/cl.h>
 """
 
@@ -1186,7 +1189,7 @@ def get_api_entry_def(api):
     if api == apis.EGL:
         return "EGLAPIENTRY"
     elif api == apis.CL:
-        return "CL_API_ENTRY"
+        return "CL_API_CALL"
     else:
         return "GL_APIENTRY"
 

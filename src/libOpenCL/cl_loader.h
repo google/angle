@@ -11,6 +11,9 @@
 
 #include <export.h>
 
+#ifndef CL_API_ENTRY
+#    define CL_API_ENTRY ANGLE_EXPORT
+#endif
 #include <CL/cl_icd.h>
 
 ANGLE_NO_EXPORT extern cl_icd_dispatch cl_loader;
@@ -18,7 +21,7 @@ ANGLE_NO_EXPORT extern cl_icd_dispatch cl_loader;
 namespace angle
 {
 using GenericProc = void (*)();
-using LoadProc    = GenericProc(CL_API_ENTRY *)(const char *);
+using LoadProc    = GenericProc(CL_API_CALL *)(const char *);
 ANGLE_NO_EXPORT void LoadCL(LoadProc loadProc);
 }  // namespace angle
 
