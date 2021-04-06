@@ -194,6 +194,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96818411_31212196",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T15:38:32Z",
+      "side": 1,
+      "message": "By intervention, do you mean things like format emulation? Unfortunately deciding not to emulate certain formats means we won\u0027t be conformant to certain version of GLES, possibly not even GLES2, so I don\u0027t see that as an option. It\u0027s not right for ANGLE to advertise conformance for GLES3.1 for example but crash when some formats are used.\n\nAn in-your-face warning about emulation is preferred IMO.",
+      "parentUuid": "75bac835_925dfce9",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1bfa5286_b6d0f7ef",
