@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17faee9c_30143e4d",
+        "filename": "src/libANGLE/Observer.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:38:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dc17a4cb_8a8e1b32",
+      "range": {
+        "startLine": 59,
+        "startChar": 22,
+        "endLine": 59,
+        "endChar": 24
+      },
+      "revId": "50fd82e14360af4199ff3821579687236072b30e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73ab11b7_2201d386",
@@ -37,6 +61,24 @@
       "writtenOn": "2021-04-06T06:16:58Z",
       "side": 1,
       "message": "Use additive blending and expect yellow to make sure both draw calls happened correctly.",
+      "revId": "50fd82e14360af4199ff3821579687236072b30e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "49f0f0de_afa32c52",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 910,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:38:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73ab11b7_2201d386",
       "revId": "50fd82e14360af4199ff3821579687236072b30e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -58,6 +100,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "56cd92de_e4af10ec",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:38:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8217c16_ccf5d294",
+      "revId": "50fd82e14360af4199ff3821579687236072b30e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1ebee785_30011dea",
@@ -71,6 +131,24 @@
       "writtenOn": "2021-04-06T06:16:58Z",
       "side": 1,
       "message": "You can use additive blending with a half-red and green texture, then verify that the result is yellow, which ensures all the draw calls went through.",
+      "revId": "50fd82e14360af4199ff3821579687236072b30e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01aef26a_05e2228d",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:38:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1ebee785_30011dea",
       "revId": "50fd82e14360af4199ff3821579687236072b30e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
