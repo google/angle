@@ -230,6 +230,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a37c9594_835c9e2b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T15:54:17Z",
+      "side": 1,
+      "message": "To to repeat one of Shabi\u0027s points: format emulation is not what we usually mean by intervention. We usually use \u0027intervention\u0027 to refer to non-conformant behaviour. This format conversion a necessary feature to be conformant and to allow the app to render correctly.",
+      "parentUuid": "3c6367ec_f038cf05",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1bfa5286_b6d0f7ef",
