@@ -56,6 +56,30 @@
       },
       "revId": "3c365a8c17354aa40d2793775d9f1943711131ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a026c4cc_dae166fa",
+        "filename": "util/EGLWindow.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 529,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-06T14:59:37Z",
+      "side": 1,
+      "message": "I added the ANGLE bug as a comment, which links to the Mesa bug. And the mesa bug to the commit message.",
+      "parentUuid": "a83ed684_66823ef7",
+      "range": {
+        "startLine": 529,
+        "startChar": 56,
+        "endLine": 529,
+        "endChar": 63
+      },
+      "revId": "3c365a8c17354aa40d2793775d9f1943711131ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
