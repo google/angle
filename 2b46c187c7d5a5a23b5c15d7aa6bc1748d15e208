@@ -64,6 +64,40 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9478694b_761dfd01",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1305,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T06:04:21Z",
+      "side": 1,
+      "message": "To be fair, it\u0027s fine if there\u0027s an `initImmutableImage` that calls `initImage` with the above parameters.",
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87f0e195_48e8268b",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2492,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T06:04:21Z",
+      "side": 1,
+      "message": "nit: comment change can be reverted. If you are autoformatting with your editor, it\u0027s textwidth seems to be off by one.",
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "136b32de_e8ad1bd6",
