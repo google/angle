@@ -33,6 +33,23 @@
       "message": "jamie, is the -1 still relevant?",
       "revId": "9f060fd4543b4c7181ca04161b55b48b53976f79",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f531bdb8_1fa75317",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:31:30Z",
+      "side": 1,
+      "message": "LGTM.",
+      "revId": "9f060fd4543b4c7181ca04161b55b48b53976f79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
