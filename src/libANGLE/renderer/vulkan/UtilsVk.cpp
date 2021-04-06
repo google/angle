@@ -115,10 +115,6 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
         // Note that HalfFloat conversion uses the same shader as Uint.
         flags = ConvertVertex_comp::kUintToUint;
     }
-    else if (srcIsFloat && destIsHalfFloat)
-    {
-        flags = ConvertVertex_comp::kFloatToHalf;
-    }
     else if (srcIsSint && destIsSint)
     {
         flags = ConvertVertex_comp::kSintToSint;
@@ -1844,7 +1840,6 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
             shaderParams.srcEmulatedAlpha = 0x10000;
             break;
 
-        case ConvertVertex_comp::kFloatToHalf:
         case ConvertVertex_comp::kFloatToFloat:
             ASSERT(ValidateFloatOneAsUint());
             shaderParams.srcEmulatedAlpha = kFloatOneAsUint;

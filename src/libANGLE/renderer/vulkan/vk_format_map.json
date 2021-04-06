@@ -299,51 +299,51 @@
         },
         "A2R10G10B10_SINT_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "A2R10G10B10_UINT_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "A2R10G10B10_SSCALED_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "A2R10G10B10_USCALED_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "A2R10G10B10_SNORM_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "A2R10G10B10_UNORM_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "X2R10G10B10_SINT_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "X2R10G10B10_USCALED_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "X2R10G10B10_SSCALED_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "X2R10G10B10_UINT_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "X2R10G10B10_SNORM_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "X2R10G10B10_UNORM_VERTEX": {
             "image": "NONE",
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "D32_FLOAT_S8X24_UINT": {
             "image": ["D24_UNORM_S8_UINT", "D32_FLOAT_S8X24_UINT"]
@@ -390,16 +390,16 @@
             "buffer": "R32G32B32_FLOAT"
         },
         "R8G8B8A8_UNORM": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "R8G8B8A8_SNORM": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "R8G8B8A8_USCALED": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "R8G8B8A8_SSCALED": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
 
         "R16_UNORM": {
@@ -445,10 +445,12 @@
             "buffer": "R32G32B32A32_FLOAT"
         },
         "R16G16B16A16_USCALED": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R32G32B32A32_FLOAT",
+            "buffer_compressed": "R16G16B16A16_FLOAT"
         },
         "R16G16B16A16_SSCALED": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R32G32B32A32_FLOAT",
+            "buffer_compressed": "R16G16B16A16_FLOAT"
         },
         "R32G32B32_UINT": {
             "image": "R32G32B32A32_UINT"
@@ -511,13 +513,13 @@
             "image": ["R16G16_SNORM", "R16G16_FLOAT"]
         },
         "R10G10B10A2_SNORM": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "R10G10B10A2_USCALED": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "R10G10B10A2_SSCALED": {
-            "buffer": "R32G32B32A32_FLOAT"
+            "buffer": "R16G16B16A16_FLOAT"
         },
         "R10G10B10A2_UINT": {
             "buffer": "R16G16B16A16_UINT"

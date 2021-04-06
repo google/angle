@@ -46,20 +46,22 @@
 //     * UnormToFloat: Similar to UintToFloat, but normalized.
 //     * FixedToFloat: 16.16 signed fixed-point to floating point.
 //     * FloatToFloat: float.
-//     * FloatToHalf: float to half-float
 //
-// SintToSint, UintToUint and FloatToFloat correspond to CopyNativeVertexData() and
-// Copy8SintTo16SintVertexData() in renderer/copyvertex.inc.
+// The *ToFloat conversions can convert to a half-precision float based on a parameter.  When not
+// converting to half:
 //
-// FixedToFloat corresponds to Copy32FixedTo32FVertexData.
+// - SintToSint, UintToUint and FloatToFloat correspond to CopyNativeVertexData() and
+//   Copy8SintTo16SintVertexData() in renderer/copyvertex.inc.
 //
-// SintToFloat and UintToFloat correspond to CopyTo32FVertexData with normalized=false.
+// - FixedToFloat corresponds to Copy32FixedTo32FVertexData.
 //
-// SnormToFloat and UnormToFloat correspond to CopyTo32FVertexData with normalized=true.
+// - SintToFloat and UintToFloat correspond to CopyToFloatVertexData with normalized=false.
 //
-// If isSrcHDR, SintToSint, UintToUint, SintToFloat, UintToFloat and SnormToFloat
-// correspond to CopyXYZ10W2ToXYZW32FVertexData (if isSrcA2BGR10) or CopyW2XYZ10ToXYZW32FVertexData
-// (if !isSrcA2BGR10) with the proper options.
+// - SnormToFloat and UnormToFloat correspond to CopyToFloatVertexData with normalized=true.
+//
+// - If isSrcHDR, SintToSint, UintToUint, SintToFloat, UintToFloat and SnormToFloat correspond to
+//   CopyXYZ10W2ToXYZWFloatVertexData (if isSrcA2BGR10) or CopyW2XYZ10ToXYZWFloatVertexData (if
+//   !isSrcA2BGR10) with the proper options.
 
 #version 450 core
 
@@ -68,7 +70,7 @@
 #define SrcType int
 #elif UintToUint || UintToFloat
 #define SrcType uint
-#elif SnormToFloat || UnormToFloat || FixedToFloat || FloatToFloat || FloatToHalf
+#elif SnormToFloat || UnormToFloat || FixedToFloat || FloatToFloat
 #define SrcType float
 #else
 #error "Not all conversions are accounted for"
@@ -77,16 +79,10 @@
 // Destination type
 #if SintToSint
 #define DestType int
-#define IsDestFloat 0
 #elif UintToUint
 #define DestType uint
-#define IsDestFloat 0
 #elif SintToFloat || UintToFloat || SnormToFloat || UnormToFloat || FixedToFloat || FloatToFloat
 #define DestType float
-#define IsDestFloat 1
-#elif FloatToHalf
-#define DestType float
-#define IsDestFloat 0
 #else
 #error "Not all conversions are accounted for"
 #endif
@@ -134,8 +130,8 @@ layout (push_constant) uniform PushConstants
     // other data from source is.
     uint srcEmulatedAlpha;
 
-    bool isSrcHDR; // Whether source is either of A2BGR10 or RGB10A2
-    bool isSrcA2BGR10;  // Whether source is A2BGR10
+    bool isSrcHDR;     // Whether source is either of A2BGR10 or RGB10A2
+    bool isSrcA2BGR10; // Whether source is A2BGR10
 } params;
 
 // Define shorthands for more readable formulas:
@@ -144,8 +140,8 @@ layout (push_constant) uniform PushConstants
 #define Nd params.Nd
 #define Sd params.Sd
 
-// With fixed-point and float types, Bs and Bd can only be 4, so they are hardcoded for more
-// efficiency.
+// With fixed-point and float types, Bs can only be 4, so it is hardcoded for more efficiency.  The
+// same is not true for Bd because it can be a half-float type.
 #if FixedToFloat || FloatToFloat
 #define Bs 4
 #define Es 1
@@ -154,13 +150,8 @@ layout (push_constant) uniform PushConstants
 #define Es params.Es
 #endif
 
-#if IsDestFloat
-#define Bd 4
-#define Ed 1
-#else
 #define Bd params.Bd
 #define Ed params.Ed
-#endif
 
 uint getSourceComponentOffset(uint vertex, uint component)
 {
@@ -288,7 +279,7 @@ SrcType loadSourceComponent(uint cd)
 #elif FixedToFloat
     float divisor = 1.0f / 65536.0f;
     SrcType value = int(valueAsUint) * divisor;
-#elif FloatToFloat || FloatToHalf
+#elif FloatToFloat
     SrcType value = uintBitsToFloat(valueAsUint);
 #else
 #error "Not all conversions are accounted for"
@@ -320,14 +311,19 @@ uint makeDestinationComponent(uint cd, DestType value)
     uint valueMask = valueBits == 32 ? -1 : (1 << valueBits) - 1;
     uint valueAsUint = (uint(value) & valueMask) << shiftBits;
 
-#elif FloatToHalf
-    uint shift = ((cd & 1) == 0) ? 0 : 16;
-    uint valueAsUint = packHalf2x16(vec2(value, 0.0)) << shift;
+#elif SintToFloat || UintToFloat || SnormToFloat || UnormToFloat || FixedToFloat || FloatToFloat
+    uint valueAsUint;
 
-#elif IsDestFloat
-    // If the destination is float, it will occupy the whole result.
-    uint valueAsUint = floatBitsToInt(value);
-
+    if (Bd == 2)
+    {
+        // It's a half-precision float.
+        uint shift = ((cd & 1) == 0) ? 0 : 16;
+        valueAsUint = packHalf2x16(vec2(value, 0.0)) << shift;
+    }
+    else
+    {
+        valueAsUint = floatBitsToInt(value);
+    }
 #else
 #error "Not all conversions are accounted for"
 #endif

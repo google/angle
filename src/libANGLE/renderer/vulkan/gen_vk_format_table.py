@@ -147,7 +147,9 @@ def get_vertex_copy_function(src_format, dst_format, vk_format):
         is_signed = 'false' if 'UINT' in src_format or 'UNORM' in src_format or 'USCALED' in src_format else 'true'
         normalized = 'true' if 'NORM' in src_format else 'false'
         to_float = 'false' if 'INT' in src_format else 'true'
-        return 'CopyXYZ10W2ToXYZW32FVertexData<%s, %s, %s>' % (is_signed, normalized, to_float)
+        to_half = to_float
+        return 'CopyXYZ10W2ToXYZWFloatVertexData<%s, %s, %s, %s>' % (is_signed, normalized,
+                                                                     to_float, to_half)
     return angle_format.get_vertex_copy_function(src_format, dst_format)
 
 

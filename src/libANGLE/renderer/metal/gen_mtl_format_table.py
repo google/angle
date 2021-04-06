@@ -205,7 +205,8 @@ def get_vertex_copy_function_and_default_alpha(src_format, dst_format):
                                        ' not to ' + dst_format)
         is_signed = 'true' if 'SINT' in src_format or 'SNORM' in src_format or 'SSCALED' in src_format else 'false'
         is_normal = 'true' if 'NORM' in src_format else 'false'
-        return 'CopyXYZ10W2ToXYZW32FVertexData<%s, %s, true>' % (is_signed, is_normal), 0, "false"
+        return 'CopyXYZ10W2ToXYZWFloatVertexData<%s, %s, true, false>' % (is_signed,
+                                                                          is_normal), 0, "false"
 
     return angle_format_utils.get_vertex_copy_function(src_format, dst_format), 0, "false"
 
@@ -287,8 +288,8 @@ def gen_image_map_switch_mac_case(angle_format, actual_angle_format_info, angle_
                 mtl_format_fallback=angle_to_mtl_map[actual_angle_format_fallback],
                 init_function_fallback=angle_format_utils.get_internal_format_initializer(
                     gl_format, actual_angle_format_fallback),
-                fallback_condition="metalDevice.depth24Stencil8PixelFormatSupported && \
-                    !display->getFeatures().forceD24S8AsUnsupported.enabled")
+                fallback_condition=("metalDevice.depth24Stencil8PixelFormatSupported && " +
+                                    "!display->getFeatures().forceD24S8AsUnsupported.enabled"))
         else:
             # return ordinary block:
             return image_format_assign_template1.format(
