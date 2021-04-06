@@ -231,8 +231,8 @@ sudo apt-get install jq
 ```
 Then run the following command:
 ```
-export $VERSION=1
-jq ".traces = (.traces + [\"$LABEL $VERSION\"] | unique)" restricted_traces.json \ | sponge restricted_traces.json
+export VERSION=1
+jq ".traces = (.traces + [\"$LABEL $VERSION\"] | unique)" restricted_traces.json | sponge restricted_traces.json
 ```
 
 ## Run code auto-generation
