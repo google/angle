@@ -134,6 +134,24 @@
       "parentUuid": "6e59fea7_8be94746",
       "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "661fb82f_beaae07c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T06:07:57Z",
+      "side": 1,
+      "message": "Ack. According to Mohan there\u0027s a fallback path, so this change should be ok.\n\nIt would be nice if you could implement VK_KHR_image_format_list in your driver nevertheless so we can eventually remove the fallback path.",
+      "parentUuid": "6be8fa0c_803838c0",
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
