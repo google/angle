@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "965e47ff_ff2fc587",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T20:38:38Z",
+      "side": 1,
+      "message": "Will work on this - should I create a new test in angle_end2end_tests/egl_tests? Or do you have a suggestion on an existing test this could live in?",
+      "parentUuid": "13f5d76d_5ce0eb7e",
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ebc835b9_4a5216a0",
@@ -66,6 +84,30 @@
       "writtenOn": "2021-04-06T13:52:00Z",
       "side": 1,
       "message": "nit: omit this-\u003e outside of some template inheritance scenarios where it\u0027s required.",
+      "range": {
+        "startLine": 1443,
+        "startChar": 10,
+        "endLine": 1443,
+        "endChar": 17
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "512795f4_b6fc83d0",
+        "filename": "src/libANGLE/Display.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T20:38:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ebc835b9_4a5216a0",
       "range": {
         "startLine": 1443,
         "startChar": 10,
@@ -99,6 +141,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dce8ec1f_d843b049",
+        "filename": "src/libANGLE/Display.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T20:38:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4eb7cd5a_5a737deb",
+      "range": {
+        "startLine": 183,
+        "startChar": 10,
+        "endLine": 183,
+        "endChar": 24
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d8382ac9_aedec636",
@@ -112,6 +178,30 @@
       "writtenOn": "2021-04-06T13:52:00Z",
       "side": 1,
       "message": "nit: shouldMakeCurrent",
+      "range": {
+        "startLine": 285,
+        "startChar": 9,
+        "endLine": 285,
+        "endChar": 28
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0c89f0e_b69735d7",
+        "filename": "src/libGLESv2/egl_stubs.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 285,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T20:38:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d8382ac9_aedec636",
       "range": {
         "startLine": 285,
         "startChar": 9,
@@ -171,6 +261,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a5f89328_94b4e8db",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T20:38:38Z",
+      "side": 1,
+      "message": "Should I keep this disabled for now, then?",
+      "parentUuid": "529bed1b_2a3d9f23",
+      "range": {
+        "startLine": 776,
+        "startChar": 23,
+        "endLine": 776,
+        "endChar": 44
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "80419c1e_233a319a",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 5
@@ -182,6 +296,30 @@
       "writtenOn": "2021-04-06T13:52:00Z",
       "side": 1,
       "message": "same warning here.",
+      "range": {
+        "startLine": 1083,
+        "startChar": 58,
+        "endLine": 1083,
+        "endChar": 65
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "842a2e27_9d00c935",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T20:38:38Z",
+      "side": 1,
+      "message": "Same question as above :)",
+      "parentUuid": "80419c1e_233a319a",
       "range": {
         "startLine": 1083,
         "startChar": 58,
