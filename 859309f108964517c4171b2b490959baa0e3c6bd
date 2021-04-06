@@ -50,6 +50,23 @@
       "message": "tim, any comments?",
       "revId": "859309f108964517c4171b2b490959baa0e3c6bd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41d50cbe_b6f35ae3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T22:22:26Z",
+      "side": 1,
+      "message": "LGTM. Thanks much.",
+      "revId": "859309f108964517c4171b2b490959baa0e3c6bd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
