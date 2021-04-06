@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1f49b0c_39b41a94",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-06T22:28:56Z",
+      "side": 1,
+      "message": "LGTM, but please fixup the README.md before landing.",
+      "revId": "35b0ba15df6421ae940fd9166c7a233d147a92c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9dd467d_179121cf",
+        "filename": "include/CL/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-06T22:28:56Z",
+      "side": 1,
+      "message": "This doesn\u0027t quite make sense.",
+      "range": {
+        "startLine": 3,
+        "startChar": 82,
+        "endLine": 3,
+        "endChar": 132
+      },
+      "revId": "35b0ba15df6421ae940fd9166c7a233d147a92c0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

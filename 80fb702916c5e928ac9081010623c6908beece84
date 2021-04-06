@@ -51,6 +51,24 @@
       "parentUuid": "70ad2e8f_b3aac5d8",
       "revId": "80fb702916c5e928ac9081010623c6908beece84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8d19829_7db18a6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-06T22:28:56Z",
+      "side": 1,
+      "message": "Is there a reason we don\u0027t want to upstream the fixes? Or are these changes intrinsically tied to how ANGLE generates its own entrypoints?",
+      "parentUuid": "0bc39398_ee9e3a94",
+      "revId": "80fb702916c5e928ac9081010623c6908beece84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
