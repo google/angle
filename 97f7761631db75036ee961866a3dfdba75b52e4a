@@ -96,6 +96,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "aefd833a_c8ad99b7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T05:59:55Z",
+      "side": 1,
+      "message": "Thanks for the quote. Ok link failure instead of compile failure is fine (though I still think compile failure would be simpler). Could you please add a test with a separable GS-only program and link it? I suspect it wouldn\u0027t fail because `LinkValidateProgramVariables` is not called (because there are no two stages to match), so this solution is incomplete. Compile failure wouldn\u0027t have such a limitation.",
+      "parentUuid": "9e80b651_3d2a66b5",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "97f7761631db75036ee961866a3dfdba75b52e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e5de0d76_50b3892b",
