@@ -275,6 +275,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9f7c0d08_5225faae",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T15:05:07Z",
+      "side": 1,
+      "message": "How did we get to vec4 when we were talking about ivec4 (\"the program\u0027s (VK_FORMAT_R32G32B32A32_SINT)\")? I think it\u0027s pretty obvious that both GL_BYTE and GL_UNSIGNED_BYTE when the shader requires ivec4 should use VK_FORMAT_R8..._SINT, the former is well defined, the latter is our workaround.",
+      "parentUuid": "19692362_ae9d6dec",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
