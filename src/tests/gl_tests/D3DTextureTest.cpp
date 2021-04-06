@@ -1606,9 +1606,7 @@ class D3DTextureYUVTest : public D3DTextureTest
 
         EXPECT_TRUE(SUCCEEDED(mD3D11Device->CreateTexture2D(&desc, &data, &d3d11_texture)));
 
-        const EGLint yAttribs[] = {EGL_D3D11_TEXTURE_PLANE_ANGLE, 0,
-                                   EGL_TEXTURE_INTERNAL_FORMAT_ANGLE,
-                                   isNV12 ? GL_R8_EXT : GL_R16_EXT, EGL_NONE};
+        const EGLint yAttribs[] = {EGL_D3D11_TEXTURE_PLANE_ANGLE, 0, EGL_NONE};
         EGLImage yImage = eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
                                             static_cast<EGLClientBuffer>(d3d11_texture), yAttribs);
         ASSERT_EGL_SUCCESS();
@@ -1665,9 +1663,7 @@ class D3DTextureYUVTest : public D3DTextureTest
         }
         ASSERT_GL_NO_ERROR();
 
-        const EGLint uvAttribs[] = {EGL_D3D11_TEXTURE_PLANE_ANGLE, 1,
-                                    EGL_TEXTURE_INTERNAL_FORMAT_ANGLE,
-                                    isNV12 ? GL_RG8_EXT : GL_RG16_EXT, EGL_NONE};
+        const EGLint uvAttribs[] = {EGL_D3D11_TEXTURE_PLANE_ANGLE, 1, EGL_NONE};
         EGLImage uvImage =
             eglCreateImageKHR(display, EGL_NO_CONTEXT, EGL_D3D11_TEXTURE_ANGLE,
                               static_cast<EGLClientBuffer>(d3d11_texture), uvAttribs);

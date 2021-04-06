@@ -1504,20 +1504,9 @@ egl::Error Renderer11::getD3DTextureInfo(const egl::Config *configuration,
         {
             return egl::EglBadParameter() << "Invalid client buffer texture plane: " << plane;
         }
+
         ASSERT(textureAngleFormat);
-
         sizedInternalFormat = textureAngleFormat->glInternalFormat;
-
-        if (attribs.contains(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE))
-        {
-            const GLenum internalFormat =
-                static_cast<GLenum>(attribs.get(EGL_TEXTURE_INTERNAL_FORMAT_ANGLE));
-            if (internalFormat != sizedInternalFormat)
-            {
-                return egl::EglBadParameter()
-                       << "Invalid client buffer internal format: " << std::hex << internalFormat;
-            }
-        }
     }
     else
     {
