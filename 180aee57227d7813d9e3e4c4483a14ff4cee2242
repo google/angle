@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcffaeaa_53ce7567",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T14:11:15Z",
+      "side": 1,
+      "message": "cleanup LGTM - suggest you update the description and remove the vulkan_memory_allocator.gni.",
+      "revId": "180aee57227d7813d9e3e4c4483a14ff4cee2242",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
