@@ -147,6 +147,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "529bed1b_2a3d9f23",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T18:54:17Z",
+      "side": 1,
+      "message": "Forgot that tsan only works on Linux. Did flush out one unexpected failure though.",
+      "parentUuid": "b9ebebf4_d8e442d4",
+      "range": {
+        "startLine": 776,
+        "startChar": 23,
+        "endLine": 776,
+        "endChar": 44
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "80419c1e_233a319a",
         "filename": "src/tests/test_utils/ANGLETest.cpp",
         "patchSetId": 5
