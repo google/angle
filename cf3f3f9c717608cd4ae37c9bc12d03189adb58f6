@@ -39,6 +39,30 @@
       },
       "revId": "cf3f3f9c717608cd4ae37c9bc12d03189adb58f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0a47ecd_eff2339a",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:37:12Z",
+      "side": 1,
+      "message": "same q, looks like a testing gap.",
+      "parentUuid": "00df9676_4f992361",
+      "range": {
+        "startLine": 2720,
+        "startChar": 17,
+        "endLine": 2720,
+        "endChar": 35
+      },
+      "revId": "cf3f3f9c717608cd4ae37c9bc12d03189adb58f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
