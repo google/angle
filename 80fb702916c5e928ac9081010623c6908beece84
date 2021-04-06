@@ -16,6 +16,23 @@
       "message": "Setting up the review..\n\nOne request John, please add a README.md with a description of your local modifications (just the API thing). See includes/GLES/README.md for an example. These aren\u0027t generated so the regeneration steps don\u0027t apply.",
       "revId": "80fb702916c5e928ac9081010623c6908beece84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0bc39398_ee9e3a94",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-06T15:24:36Z",
+      "side": 1,
+      "message": "Few comments about this CL:\n- The relevant changes are actually small, though it is marked as XL commit.\n- The main change in the OpenCL headers is the removal of macro CL_API_ENTRY from the typedefs. Additional changes are only in cl_icd.h (fixed include order which was messed up by clang-format) and in cl_platform.h (preserve CL_API_ENTRY if set).\n- Added \u0027SortIncludes: false\u0027 to .clang-format files to ensure that they really don\u0027t format anything.\n- The remaining changes are quite small if you ignore the generated files.",
+      "revId": "80fb702916c5e928ac9081010623c6908beece84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
