@@ -69,6 +69,24 @@
       "parentUuid": "0bc39398_ee9e3a94",
       "revId": "80fb702916c5e928ac9081010623c6908beece84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5f3fa5d_630e3701",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T22:34:44Z",
+      "side": 1,
+      "message": "We do want to upstream the fixes. John did you have a chance to file a bug upstream? Maybe can link to it in the README.",
+      "parentUuid": "d8d19829_7db18a6f",
+      "revId": "80fb702916c5e928ac9081010623c6908beece84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
