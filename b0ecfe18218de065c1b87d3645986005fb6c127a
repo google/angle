@@ -1,6 +1,69 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "48949a1c_bb19d9fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:42:46Z",
+      "side": 1,
+      "message": "LGTM, I think this change has the same effect as Brandon\u0027s now.",
+      "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51e8d7a8_32fa8c70",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 9259,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:42:46Z",
+      "side": 1,
+      "message": "nit: suggest you remove these, they shouldn\u0027t ever change from the default.",
+      "range": {
+        "startLine": 9257,
+        "startChar": 0,
+        "endLine": 9259,
+        "endChar": 73
+      },
+      "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f19c5ff_aa579bcf",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 9266,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:42:46Z",
+      "side": 1,
+      "message": "same here, just wasted instructions, right?",
+      "range": {
+        "startLine": 9266,
+        "startChar": 0,
+        "endLine": 9266,
+        "endChar": 62
+      },
+      "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a22968e_74d0167d",
