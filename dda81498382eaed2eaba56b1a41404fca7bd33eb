@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27a3ba18_44622611",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T16:07:08Z",
+      "side": 1,
+      "message": "nit: unnecessary parentheses are unnecessary\n\nSounds to me like we should fix the test not to do something so invalid. Either the test should create some context, or should become an end2end test.\n\nActually even better would be if the function took a ProgramExecutable instead of a Program. The `bindProgram(context, program);` call is probably incorrect for PPOs.",
+      "range": {
+        "startLine": 147,
+        "startChar": 8,
+        "endLine": 147,
+        "endChar": 17
+      },
+      "revId": "dda81498382eaed2eaba56b1a41404fca7bd33eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3de0d468_b9d654ce",
+        "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 804,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T16:07:08Z",
+      "side": 1,
+      "message": "Ideally you should map the buffer after the draw call and validate the contents.",
+      "revId": "dda81498382eaed2eaba56b1a41404fca7bd33eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

@@ -105,6 +105,24 @@
       "parentUuid": "6489d5b6_500eb3c9",
       "revId": "e54c89ca26fe09f029676e537c25a2b90e831054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac08ccd0_1507a4ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 15
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T16:07:08Z",
+      "side": 1,
+      "message": "Looking at the qpa file (https://isolateserver.appspot.com/browse?namespace\u003ddefault-gzip\u0026digest\u003da20b429aa8d67092fecf0c10872acbfd589eb232\u0026as\u003dTestResults-Batch001.qpa (thanks Jamie)), it may be that a previous failure is causing this. Can you run the following two tests in sequence? It probably doesn\u0027t matter which operating system.\n\n#beginTestCaseResult KHR-GLES32.core.separable_programs_tf.tessellation_active\n\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\n\u003cTestCaseResult Version\u003d\"0.3.4\" CasePath\u003d\"KHR-GLES32.core.separable_programs_tf.tessellation_active\" CaseType\u003d\"SelfValidate\"\u003e\n \u003cText\u003eglDrawArrays() call failed.: glGetError() returned GL_INVALID_OPERATION at glcSeparableProgramsTransformFeedbackTests.cpp:280\u003c/Text\u003e\n \u003cText\u003eTransformation state reset failed: glGetError() returned GL_INVALID_OPERATION at gluStateReset.cpp:106\u003c/Text\u003e\n \u003cText\u003eError in test case deinit, test program will terminate.\u003c/Text\u003e\n \u003cResult StatusCode\u003d\"Fail\"\u003eglDrawArrays() call failed.: glGetError() returned GL_INVALID_OPERATION at glcSeparableProgramsTransformFeedbackTests.cpp:280\u003c/Result\u003e\n\u003c/TestCaseResult\u003e\n\n#endTestCaseResult\n\n#beginTestCaseResult KHR-GLES32.core.internalformat.texture2d.rgb_unsigned_byte_rgb\n\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\n\u003cTestCaseResult Version\u003d\"0.3.4\" CasePath\u003d\"KHR-GLES32.core.internalformat.texture2d.rgb_unsigned_byte_rgb\" CaseType\u003d\"SelfValidate\"\u003e\n \u003cText\u003eUploading buffer data failed: glGetError() returned GL_INVALID_OPERATION at gluDrawUtil.cpp:334\u003c/Text\u003e\n \u003cText\u003eTransformation state reset failed: glGetError() returned GL_INVALID_OPERATION at gluStateReset.cpp:106\u003c/Text\u003e\n \u003cText\u003eError in test case deinit, test program will terminate.\u003c/Text\u003e\n \u003cResult StatusCode\u003d\"Fail\"\u003eUploading buffer data failed: glGetError() returned GL_INVALID_OPERATION at gluDrawUtil.cpp:334\u003c/Result\u003e\n\u003c/TestCaseResult\u003e",
+      "parentUuid": "36a57046_08bdc447",
+      "revId": "e54c89ca26fe09f029676e537c25a2b90e831054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
