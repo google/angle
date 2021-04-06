@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "46bdb2a1_9f5921a5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-06T15:39:53Z",
+      "side": 1,
+      "message": "i think the commit message needs rewording. the commit message says -\n the enable of glColorspace should not depend on the check of image colorspace.\n\nif you look at the code, enabling \"glColorspace\" only depends on 2 things -\n 1. VK swapchain colorspace\n 2. VK_KHR_image_format_list\n\nSo, im not sure where/how \"glColorspace\" depends on \"image colorspace\"\n\nAn aside - the idea was to enable all colorspace related extensions on platforms that have the fast path and discourage relying on the fallback/emulation path, since we want to remove it from ANGLE.",
+      "parentUuid": "36beca1d_60550295",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 2
+      },
+      "revId": "2861666641da730b4f4637feef9a569e76a1f1b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "26f009ea_bc65c1a7",
