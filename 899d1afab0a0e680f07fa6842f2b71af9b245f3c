@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "31dbc697_62346000",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:35:25Z",
+      "side": 1,
+      "message": "Please add a regression test for this based on the fuzzer test cases.",
+      "revId": "899d1afab0a0e680f07fa6842f2b71af9b245f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "983e9c95_51bedbef",
@@ -19,6 +36,29 @@
         "startChar": 0,
         "endLine": 5486,
         "endChar": 5
+      },
+      "revId": "899d1afab0a0e680f07fa6842f2b71af9b245f3c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "657c10ea_342dbf9f",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-06T13:35:25Z",
+      "side": 1,
+      "message": "maybe change this api to \"onProgramExecutableReset\" so you don\u0027t need so many APIs?",
+      "range": {
+        "startLine": 274,
+        "startChar": 19,
+        "endLine": 274,
+        "endChar": 38
       },
       "revId": "899d1afab0a0e680f07fa6842f2b71af9b245f3c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
