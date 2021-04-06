@@ -323,6 +323,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1c0bd16b_b4d0c32e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T18:17:16Z",
+      "side": 1,
+      "message": "Ok, but to be clear, vec4 in the shader doesn\u0027t mean R32G32B32A32 in the API. R8G8B8A8_UNORM for example is also acceptable for vec4. I\u0027m not sure I quite followed how using an 8 bit format (like R8G8B8A8_UNORM) would get only the first byte of data. Also R32G32B32A32 where UNSIGNED_BYTE is provided sounds like it can be dangerous as it could read outside the boundaries of the buffer.",
+      "parentUuid": "10110f9a_92e20e67",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4b62df61_b9c2d850",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
         "patchSetId": 4
