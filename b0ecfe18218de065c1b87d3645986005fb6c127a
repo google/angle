@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d7971f9_c3c11c09",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 9259,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:31:56Z",
+      "side": 1,
+      "message": "There are no \"default\" values being set.   To fix that, I\u0027ve added filling mCachedValidDrawModes with \u0027false\u0027 in the StateCache ctor.\n\nFor completeness, without this change, there are end2end failures:\nhttps://ci.chromium.org/ui/p/chromium/builders/try/mac-angle-try/b8850679770844242192/overview",
+      "parentUuid": "51e8d7a8_32fa8c70",
+      "range": {
+        "startLine": 9257,
+        "startChar": 0,
+        "endLine": 9259,
+        "endChar": 73
+      },
+      "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1f19c5ff_aa579bcf",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-04-06T13:42:46Z",
       "side": 1,
       "message": "same here, just wasted instructions, right?",
+      "range": {
+        "startLine": 9266,
+        "startChar": 0,
+        "endLine": 9266,
+        "endChar": 62
+      },
+      "revId": "b0ecfe18218de065c1b87d3645986005fb6c127a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ded55f8d_4d072d2b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 9266,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-06T21:31:56Z",
+      "side": 1,
+      "message": "Same as above - moved to StateCache ctor.\n\nWhen a test issues a call with an invalid primitive enum value, we index into the map with PrimitiveMode::InvalidEnum, which requires us to have put a valid entry into it.\n\nSee:\nhttps://ci.chromium.org/ui/p/chromium/builders/try/win-angle-x64-try/b8851136613670602560/overview",
+      "parentUuid": "1f19c5ff_aa579bcf",
       "range": {
         "startLine": 9266,
         "startChar": 0,
