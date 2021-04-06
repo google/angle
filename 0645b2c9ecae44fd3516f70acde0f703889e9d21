@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a30da853_f5775688",
+        "filename": "src/tests/deqp_support/deqp_khr_gles32_test_expectations.txt",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-06T06:20:42Z",
+      "side": 1,
+      "message": "Our Linux and Android bots seem to be using too old drivers. You can keep these two blocks intact and remove expectations from the VULKAN WIN lines above.",
+      "revId": "0645b2c9ecae44fd3516f70acde0f703889e9d21",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
