@@ -89,6 +89,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1bb9334_2197856b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T22:22:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "631e8e04_742e6038",
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ebc835b9_4a5216a0",
@@ -255,6 +273,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "817c23d4_b30e7312",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T22:22:22Z",
+      "side": 1,
+      "message": "Swiftshader was taking a very long time, I was worried it would timeout.",
+      "parentUuid": "c2eba56f_1ff7da5e",
+      "range": {
+        "startLine": 223,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 40
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5f247661_7967cfb7",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 5
@@ -266,6 +308,30 @@
       "writtenOn": "2021-04-06T21:14:22Z",
       "side": 1,
       "message": "can you use a much smaller constant and still repro? I\u0027m worried that the test is timing out because of this large constant.",
+      "range": {
+        "startLine": 230,
+        "startChar": 28,
+        "endLine": 230,
+        "endChar": 32
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb2aa97f_0f805a5a",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T22:22:22Z",
+      "side": 1,
+      "message": "(responded in other comment)",
+      "parentUuid": "5f247661_7967cfb7",
       "range": {
         "startLine": 230,
         "startChar": 28,
@@ -289,6 +355,30 @@
       "writtenOn": "2021-04-06T21:14:22Z",
       "side": 1,
       "message": "nit: please use explicit types for these",
+      "range": {
+        "startLine": 232,
+        "startChar": 12,
+        "endLine": 232,
+        "endChar": 17
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89c243f2_a0e75d08",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T22:22:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30ba7155_dff52757",
       "range": {
         "startLine": 232,
         "startChar": 12,
@@ -384,6 +474,30 @@
       "side": 1,
       "message": "It seems your test times out on Vulkan. You could skip it, but it is a bit odd that it would time out. Maybe decreasing the 5000 would be sufficient.",
       "parentUuid": "a5f89328_94b4e8db",
+      "range": {
+        "startLine": 776,
+        "startChar": 23,
+        "endLine": 776,
+        "endChar": 44
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f1401d1_fe3be191",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-06T22:22:22Z",
+      "side": 1,
+      "message": "Less than 5000 is not super consistent at reproing the original crash. WDYT about only running on D3D11 ES2/ES3?",
+      "parentUuid": "b73bb580_3c2f6388",
       "range": {
         "startLine": 776,
         "startChar": 23,
