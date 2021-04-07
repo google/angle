@@ -364,7 +364,8 @@ def main():
                 skia_gold_temp_dir, gold_properties)
             gold_session = gold_session_manager.GetSkiaGoldSession(keys)
 
-            for test in tests['traces']:
+            traces = [trace.split(' ')[0] for trace in tests['traces']]
+            for test in traces:
 
                 # Apply test filter if present.
                 if args.isolated_script_test_filter:
