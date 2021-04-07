@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "adecd04e_538dff9a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T22:43:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ab6e0707_cf0d5f30",
+      "range": {
+        "startLine": 15,
+        "startChar": 28,
+        "endLine": 15,
+        "endChar": 36
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "877d3f0d_915f11b3",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 8
@@ -71,6 +95,30 @@
       "writtenOn": "2021-04-07T22:05:41Z",
       "side": 1,
       "message": "can you add this flag to README.md under the command line argument section?",
+      "range": {
+        "startLine": 149,
+        "startChar": 27,
+        "endLine": 149,
+        "endChar": 35
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efe9947c_6d02660a",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T22:43:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "31d16241_03c63570",
       "range": {
         "startLine": 149,
         "startChar": 27,
@@ -130,6 +178,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3bea9ebb_8dc639fe",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T22:43:32Z",
+      "side": 1,
+      "message": "If I do that, I can get rid of onDrawElements completely. I just make the reduced call in the DrawElementsProc.",
+      "parentUuid": "a54b6c20_d09c608b",
+      "range": {
+        "startLine": 86,
+        "startChar": 9,
+        "endLine": 86,
+        "endChar": 23
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "40144d7e_b145d168",
         "filename": "src/tests/perf_tests/TracePerfTest.cpp",
         "patchSetId": 8
@@ -164,6 +236,30 @@
       "writtenOn": "2021-04-07T22:01:39Z",
       "side": 1,
       "message": "3",
+      "range": {
+        "startLine": 1379,
+        "startChar": 29,
+        "endLine": 1379,
+        "endChar": 30
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16d7d202_1011d86e",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T22:43:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09819ac4_26b194ca",
       "range": {
         "startLine": 1379,
         "startChar": 29,
