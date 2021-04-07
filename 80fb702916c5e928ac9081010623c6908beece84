@@ -87,6 +87,24 @@
       "parentUuid": "d8d19829_7db18a6f",
       "revId": "80fb702916c5e928ac9081010623c6908beece84",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ffa656b4_677e3ee4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-07T12:12:27Z",
+      "side": 1,
+      "message": "Yes, I submitted two PRs to Khronos (headers + doc). Link is added",
+      "parentUuid": "f5f3fa5d_630e3701",
+      "revId": "80fb702916c5e928ac9081010623c6908beece84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
