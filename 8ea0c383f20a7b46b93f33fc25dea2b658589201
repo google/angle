@@ -112,6 +112,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c187d3d_074422dc",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1212,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-07T20:26:26Z",
+      "side": 1,
+      "message": "Okay, thanks",
+      "parentUuid": "ace46d31_764f0b47",
+      "range": {
+        "startLine": 1211,
+        "startChar": 20,
+        "endLine": 1212,
+        "endChar": 75
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ad442454_46ce7546",
