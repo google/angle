@@ -3969,7 +3969,7 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
                 {
                     mBufferDataMap.erase(bufferDataInfo);
                 }
-                // If we're capturing, track what new buffers have been genned
+                // If we're capturing, track what buffers have been deleted
                 if (mFrameIndex >= mCaptureStartFrame)
                 {
                     mResourceTracker.setDeletedBuffer(bufferIDs[i]);
@@ -4531,6 +4531,12 @@ ResourceTracker::~ResourceTracker() = default;
 
 void ResourceTracker::setDeletedBuffer(gl::BufferID id)
 {
+    if (id.value == 0)
+    {
+        // Ignore buffer ID 0
+        return;
+    }
+
     if (mNewBuffers.find(id) != mNewBuffers.end())
     {
         // This is a buffer genned after MEC was initialized, just clear it, since there will be no
