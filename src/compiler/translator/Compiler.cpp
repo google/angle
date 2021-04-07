@@ -37,7 +37,6 @@
 #include "compiler/translator/tree_ops/RemoveArrayLengthMethod.h"
 #include "compiler/translator/tree_ops/RemoveDynamicIndexing.h"
 #include "compiler/translator/tree_ops/RemoveInvariantDeclaration.h"
-#include "compiler/translator/tree_ops/RemovePow.h"
 #include "compiler/translator/tree_ops/RemoveUnreferencedVariables.h"
 #include "compiler/translator/tree_ops/ScalarizeVecAndMatConstructorArgs.h"
 #include "compiler/translator/tree_ops/SeparateDeclarations.h"
@@ -716,14 +715,6 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
     if ((compileOptions & SH_UNFOLD_SHORT_CIRCUIT) != 0)
     {
         if (!UnfoldShortCircuitAST(this, root))
-        {
-            return false;
-        }
-    }
-
-    if ((compileOptions & SH_REMOVE_POW_WITH_CONSTANT_EXPONENT) != 0)
-    {
-        if (!RemovePow(this, root, &mSymbolTable))
         {
             return false;
         }

@@ -124,7 +124,6 @@ angle_unittests_compiler_tests_sources = [
   "compiler_tests/QualificationOrder_test.cpp",
   "compiler_tests/RecordConstantPrecision_test.cpp",
   "compiler_tests/RegenerateStructNames_test.cpp",
-  "compiler_tests/RemovePow_test.cpp",
   "compiler_tests/RemoveUnreferencedVariables_test.cpp",
   "compiler_tests/SamplerMultisample_test.cpp",
   "compiler_tests/SamplerVideoWEBGL_test.cpp",

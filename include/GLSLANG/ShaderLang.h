@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 256
+#define ANGLE_SH_VERSION 257
 
 enum ShShaderSpec
 {
@@ -91,15 +91,6 @@ const ShCompileOptions SH_SOURCE_PATH            = UINT64_C(1) << 5;
 // If requested, validates the AST after every transformation.  Useful for debugging.
 const ShCompileOptions SH_VALIDATE_AST = UINT64_C(1) << 6;
 
-// This flag will keep invariant declaration for input in fragment shader for GLSL >=4.20 on AMD.
-// From GLSL >= 4.20, it's optional to add invariant for fragment input, but GPU vendors have
-// different implementations about this. Some drivers forbid invariant in fragment for GLSL>= 4.20,
-// e.g. Linux Mesa, some drivers treat that as optional, e.g. NVIDIA, some drivers require invariant
-// must match between vertex and fragment shader, e.g. AMD. The behavior on AMD is obviously wrong.
-// Remove invariant for input in fragment shader to workaround the restriction on Intel Mesa.
-// But don't remove on AMD Linux to avoid triggering the bug on AMD.
-const ShCompileOptions SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT = UINT64_C(1) << 7;
-
 // Due to spec difference between GLSL 4.1 or lower and ESSL3, some platforms (for example, Mac OSX
 // core profile) require a variable's "invariant"/"centroid" qualifiers to match between vertex and
 // fragment shader. A simple solution to allow such shaders to link is to omit the two qualifiers.
@@ -112,11 +103,11 @@ const ShCompileOptions SH_DONT_REMOVE_INVARIANT_FOR_FRAGMENT_INPUT = UINT64_C(1)
 // TODO(zmo): This is not a good long-term solution. Simply dropping these qualifiers may break some
 // developers' content. A more complex workaround of dynamically generating, compiling, and
 // re-linking shaders that use these qualifiers should be implemented.
-const ShCompileOptions SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3 = UINT64_C(1) << 8;
+const ShCompileOptions SH_REMOVE_INVARIANT_AND_CENTROID_FOR_ESSL3 = UINT64_C(1) << 7;
 
 // This flag works around bug in Intel Mac drivers related to abs(i) where
 // i is an integer.
-const ShCompileOptions SH_EMULATE_ABS_INT_FUNCTION = UINT64_C(1) << 9;
+const ShCompileOptions SH_EMULATE_ABS_INT_FUNCTION = UINT64_C(1) << 8;
 
 // Enforce the GLSL 1.017 Appendix A section 7 packing restrictions.
 // This flag only enforces (and can only enforce) the packing
@@ -124,7 +115,7 @@ const ShCompileOptions SH_EMULATE_ABS_INT_FUNCTION = UINT64_C(1) << 9;
 // shaders. ShCheckVariablesWithinPackingLimits() lets embedders
 // enforce the packing restrictions for varying variables during
 // program link time.
-const ShCompileOptions SH_ENFORCE_PACKING_RESTRICTIONS = UINT64_C(1) << 10;
+const ShCompileOptions SH_ENFORCE_PACKING_RESTRICTIONS = UINT64_C(1) << 9;
 
 // This flag ensures all indirect (expression-based) array indexing
 // is clamped to the bounds of the array. This ensures, for example,
@@ -133,78 +124,74 @@ const ShCompileOptions SH_ENFORCE_PACKING_RESTRICTIONS = UINT64_C(1) << 10;
 // specified in the ShBuiltInResources when constructing the
 // compiler, selects the strategy for the clamping implementation.
 // TODO(http://anglebug.com/4361): fix for compute shaders.
-const ShCompileOptions SH_CLAMP_INDIRECT_ARRAY_BOUNDS = UINT64_C(1) << 11;
+const ShCompileOptions SH_CLAMP_INDIRECT_ARRAY_BOUNDS = UINT64_C(1) << 10;
 
 // This flag limits the complexity of an expression.
-const ShCompileOptions SH_LIMIT_EXPRESSION_COMPLEXITY = UINT64_C(1) << 12;
+const ShCompileOptions SH_LIMIT_EXPRESSION_COMPLEXITY = UINT64_C(1) << 11;
 
 // This flag limits the depth of the call stack.
-const ShCompileOptions SH_LIMIT_CALL_STACK_DEPTH = UINT64_C(1) << 13;
+const ShCompileOptions SH_LIMIT_CALL_STACK_DEPTH = UINT64_C(1) << 12;
 
 // This flag initializes gl_Position to vec4(0,0,0,0) at the
 // beginning of the vertex shader's main(), and has no effect in the
 // fragment shader. It is intended as a workaround for drivers which
 // incorrectly fail to link programs if gl_Position is not written.
-const ShCompileOptions SH_INIT_GL_POSITION = UINT64_C(1) << 14;
+const ShCompileOptions SH_INIT_GL_POSITION = UINT64_C(1) << 13;
 
 // This flag replaces
 //   "a && b" with "a ? b : false",
 //   "a || b" with "a ? true : b".
 // This is to work around a MacOSX driver bug that |b| is executed
 // independent of |a|'s value.
-const ShCompileOptions SH_UNFOLD_SHORT_CIRCUIT = UINT64_C(1) << 15;
+const ShCompileOptions SH_UNFOLD_SHORT_CIRCUIT = UINT64_C(1) << 14;
 
 // This flag initializes output variables to 0 at the beginning of main().
 // It is to avoid undefined behaviors.
-const ShCompileOptions SH_INIT_OUTPUT_VARIABLES = UINT64_C(1) << 16;
+const ShCompileOptions SH_INIT_OUTPUT_VARIABLES = UINT64_C(1) << 15;
 
 // This flag scalarizes vec/ivec/bvec/mat constructor args.
 // It is intended as a workaround for Linux/Mac driver bugs.
-const ShCompileOptions SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = UINT64_C(1) << 17;
+const ShCompileOptions SH_SCALARIZE_VEC_AND_MAT_CONSTRUCTOR_ARGS = UINT64_C(1) << 16;
 
 // This flag overwrites a struct name with a unique prefix.
 // It is intended as a workaround for drivers that do not handle
 // struct scopes correctly, including all Mac drivers and Linux AMD.
-const ShCompileOptions SH_REGENERATE_STRUCT_NAMES = UINT64_C(1) << 18;
-
-// This flag works around a bug in NVIDIA 331 series drivers related
-// to pow(x, y) where y is a constant vector.
-const ShCompileOptions SH_REMOVE_POW_WITH_CONSTANT_EXPONENT = UINT64_C(1) << 19;
+const ShCompileOptions SH_REGENERATE_STRUCT_NAMES = UINT64_C(1) << 17;
 
 // This flag works around bugs in Mac drivers related to do-while by
 // transforming them into an other construct.
-const ShCompileOptions SH_REWRITE_DO_WHILE_LOOPS = UINT64_C(1) << 20;
+const ShCompileOptions SH_REWRITE_DO_WHILE_LOOPS = UINT64_C(1) << 18;
 
 // This flag works around a bug in the HLSL compiler optimizer that folds certain
 // constant pow expressions incorrectly. Only applies to the HLSL back-end. It works
 // by expanding the integer pow expressions into a series of multiplies.
-const ShCompileOptions SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS = UINT64_C(1) << 21;
+const ShCompileOptions SH_EXPAND_SELECT_HLSL_INTEGER_POW_EXPRESSIONS = UINT64_C(1) << 19;
 
 // Flatten "#pragma STDGL invariant(all)" into the declarations of
 // varying variables and built-in GLSL variables. This compiler
 // option is enabled automatically when needed.
-const ShCompileOptions SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL = UINT64_C(1) << 22;
+const ShCompileOptions SH_FLATTEN_PRAGMA_STDGL_INVARIANT_ALL = UINT64_C(1) << 20;
 
 // Some drivers do not take into account the base level of the texture in the results of the
 // HLSL GetDimensions builtin.  This flag instructs the compiler to manually add the base level
 // offsetting.
-const ShCompileOptions SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL = UINT64_C(1) << 23;
+const ShCompileOptions SH_HLSL_GET_DIMENSIONS_IGNORES_BASE_LEVEL = UINT64_C(1) << 21;
 
 // This flag works around an issue in translating GLSL function texelFetchOffset on
 // INTEL drivers. It works by translating texelFetchOffset into texelFetch.
-const ShCompileOptions SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH = UINT64_C(1) << 24;
+const ShCompileOptions SH_REWRITE_TEXELFETCHOFFSET_TO_TEXELFETCH = UINT64_C(1) << 22;
 
 // This flag works around condition bug of for and while loops in Intel Mac OSX drivers.
 // Condition calculation is not correct. Rewrite it from "CONDITION" to "CONDITION && true".
-const ShCompileOptions SH_ADD_AND_TRUE_TO_LOOP_CONDITION = UINT64_C(1) << 25;
+const ShCompileOptions SH_ADD_AND_TRUE_TO_LOOP_CONDITION = UINT64_C(1) << 23;
 
 // This flag works around a bug in evaluating unary minus operator on integer on some INTEL
 // drivers. It works by translating -(int) into ~(int) + 1.
-const ShCompileOptions SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR = UINT64_C(1) << 26;
+const ShCompileOptions SH_REWRITE_INTEGER_UNARY_MINUS_OPERATOR = UINT64_C(1) << 24;
 
 // This flag works around a bug in evaluating isnan() on some INTEL D3D and Mac OSX drivers.
 // It works by using an expression to emulate this function.
-const ShCompileOptions SH_EMULATE_ISNAN_FLOAT_FUNCTION = UINT64_C(1) << 27;
+const ShCompileOptions SH_EMULATE_ISNAN_FLOAT_FUNCTION = UINT64_C(1) << 25;
 
 // This flag will use all uniforms of unused std140 and shared uniform blocks at the
 // beginning of the vertex/fragment shader's main(). It is intended as a workaround for Mac
@@ -212,19 +199,19 @@ const ShCompileOptions SH_EMULATE_ISNAN_FLOAT_FUNCTION = UINT64_C(1) << 27;
 // std140 and shared uniform blocks' members as inactive. However, WebGL2.0 based on
 // OpenGL ES3.0.4 requires all members of a named uniform block declared with a shared or std140
 // layout qualifier to be considered active. The uniform block itself is also considered active.
-const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 28;
+const ShCompileOptions SH_USE_UNUSED_STANDARD_SHARED_BLOCKS = UINT64_C(1) << 26;
 
 // This flag works around a bug in unary minus operator on float numbers on Intel
 // Mac OSX 10.11 drivers. It works by translating -float into 0.0 - float.
-const ShCompileOptions SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR = UINT64_C(1) << 29;
+const ShCompileOptions SH_REWRITE_FLOAT_UNARY_MINUS_OPERATOR = UINT64_C(1) << 27;
 
 // This flag works around a bug in evaluating atan(y, x) on some NVIDIA OpenGL drivers.
 // It works by using an expression to emulate this function.
-const ShCompileOptions SH_EMULATE_ATAN2_FLOAT_FUNCTION = UINT64_C(1) << 30;
+const ShCompileOptions SH_EMULATE_ATAN2_FLOAT_FUNCTION = UINT64_C(1) << 28;
 
 // Set to initialize uninitialized local and global temporary variables. Should only be used with
 // GLSL output. In HLSL output variables are initialized regardless of if this flag is set.
-const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 31;
+const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 29;
 
 // The flag modifies the shader in the following way:
 // Every occurrence of gl_InstanceID is replaced by the global temporary variable InstanceID.
@@ -233,7 +220,7 @@ const ShCompileOptions SH_INITIALIZE_UNINITIALIZED_LOCALS = UINT64_C(1) << 31;
 // ViewID_OVR = uint(gl_InstanceID) % num_views;
 // InstanceID = gl_InstanceID / num_views;
 // ViewID_OVR is added as a varying variable to both the vertex and fragment shaders.
-const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C(1) << 32;
+const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C(1) << 30;
 
 // With the flag enabled the GLSL/ESSL vertex shader is modified to include code for viewport
 // selection in the following way:
@@ -243,11 +230,11 @@ const ShCompileOptions SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW = UINT64_C
 // - A declaration of the uniform multiviewBaseViewLayerIndex.
 // Note: The SH_INITIALIZE_BUILTINS_FOR_INSTANCED_MULTIVIEW flag also has to be enabled to have the
 // temporary variable ViewID_OVR declared and initialized.
-const ShCompileOptions SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER = UINT64_C(1) << 33;
+const ShCompileOptions SH_SELECT_VIEW_IN_NV_GLSL_VERTEX_SHADER = UINT64_C(1) << 31;
 
 // If the flag is enabled, gl_PointSize is clamped to the maximum point size specified in
 // ShBuiltInResources in vertex shaders.
-const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 34;
+const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 32;
 
 // Turn some arithmetic operations that operate on a float vector-scalar pair into vector-vector
 // operations. This is done recursively. Some scalar binary operations inside vector constructors
@@ -255,100 +242,100 @@ const ShCompileOptions SH_CLAMP_POINT_SIZE = UINT64_C(1) << 34;
 //
 // This is targeted to work around a bug in NVIDIA OpenGL drivers that was reproducible on NVIDIA
 // driver version 387.92. It works around the most common occurrences of the bug.
-const ShCompileOptions SH_REWRITE_VECTOR_SCALAR_ARITHMETIC = UINT64_C(1) << 35;
+const ShCompileOptions SH_REWRITE_VECTOR_SCALAR_ARITHMETIC = UINT64_C(1) << 33;
 
 // Don't use loops to initialize uninitialized variables. Only has an effect if some kind of
 // variable initialization is turned on.
-const ShCompileOptions SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES = UINT64_C(1) << 36;
+const ShCompileOptions SH_DONT_USE_LOOPS_TO_INITIALIZE_VARIABLES = UINT64_C(1) << 34;
 
 // Don't use D3D constant register zero when allocating space for uniforms. This is targeted to work
 // around a bug in NVIDIA D3D driver version 388.59 where in very specific cases the driver would
 // not handle constant register zero correctly. Only has an effect on HLSL translation.
-const ShCompileOptions SH_SKIP_D3D_CONSTANT_REGISTER_ZERO = UINT64_C(1) << 37;
+const ShCompileOptions SH_SKIP_D3D_CONSTANT_REGISTER_ZERO = UINT64_C(1) << 35;
 
 // Clamp gl_FragDepth to the range [0.0, 1.0] in case it is statically used.
-const ShCompileOptions SH_CLAMP_FRAG_DEPTH = UINT64_C(1) << 38;
+const ShCompileOptions SH_CLAMP_FRAG_DEPTH = UINT64_C(1) << 36;
 
 // Rewrite expressions like "v.x = z = expression;". Works around a bug in NVIDIA OpenGL drivers
 // prior to version 397.31.
-const ShCompileOptions SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED = UINT64_C(1) << 39;
+const ShCompileOptions SH_REWRITE_REPEATED_ASSIGN_TO_SWIZZLED = UINT64_C(1) << 37;
 
 // Rewrite gl_DrawID as a uniform int
-const ShCompileOptions SH_EMULATE_GL_DRAW_ID = UINT64_C(1) << 40;
+const ShCompileOptions SH_EMULATE_GL_DRAW_ID = UINT64_C(1) << 38;
 
 // This flag initializes shared variables to 0.
 // It is to avoid ompute shaders being able to read undefined values that could be coming from
 // another webpage/application.
-const ShCompileOptions SH_INIT_SHARED_VARIABLES = UINT64_C(1) << 41;
+const ShCompileOptions SH_INIT_SHARED_VARIABLES = UINT64_C(1) << 39;
 
 // Forces the value returned from an atomic operations to be always be resolved. This is targeted to
 // workaround a bug in NVIDIA D3D driver where the return value from
 // RWByteAddressBuffer.InterlockedAdd does not get resolved when used in the .yzw components of a
 // RWByteAddressBuffer.Store operation. Only has an effect on HLSL translation.
 // http://anglebug.com/3246
-const ShCompileOptions SH_FORCE_ATOMIC_VALUE_RESOLUTION = UINT64_C(1) << 42;
+const ShCompileOptions SH_FORCE_ATOMIC_VALUE_RESOLUTION = UINT64_C(1) << 40;
 
 // Rewrite gl_BaseVertex and gl_BaseInstance as uniform int
-const ShCompileOptions SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE = UINT64_C(1) << 43;
+const ShCompileOptions SH_EMULATE_GL_BASE_VERTEX_BASE_INSTANCE = UINT64_C(1) << 41;
 
 // Emulate seamful cube map sampling for OpenGL ES2.0.  Currently only applies to the Vulkan
 // backend, as is done after samplers are moved out of structs.  Can likely be made to work on
 // the other backends as well.
-const ShCompileOptions SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING = UINT64_C(1) << 44;
+const ShCompileOptions SH_EMULATE_SEAMFUL_CUBE_MAP_SAMPLING = UINT64_C(1) << 42;
 
 // This flag controls how to translate WEBGL_video_texture sampling function.
-const ShCompileOptions SH_TAKE_VIDEO_TEXTURE_AS_EXTERNAL_OES = UINT64_C(1) << 45;
+const ShCompileOptions SH_TAKE_VIDEO_TEXTURE_AS_EXTERNAL_OES = UINT64_C(1) << 43;
 
 // This flag works around a inconsistent behavior in Mac AMD driver where gl_VertexID doesn't
 // include base vertex value. It replaces gl_VertexID with (gl_VertexID + angle_BaseVertex)
 // when angle_BaseVertex is available.
-const ShCompileOptions SH_ADD_BASE_VERTEX_TO_VERTEX_ID = UINT64_C(1) << 46;
+const ShCompileOptions SH_ADD_BASE_VERTEX_TO_VERTEX_ID = UINT64_C(1) << 44;
 
 // This works around the dynamic lvalue indexing of swizzled vectors on various platforms.
-const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(1) << 47;
+const ShCompileOptions SH_REMOVE_DYNAMIC_INDEXING_OF_SWIZZLED_VECTOR = UINT64_C(1) << 45;
 
 // This flag works around a slow fxc compile performance issue with dynamic uniform indexing.
-const ShCompileOptions SH_ALLOW_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 48;
+const ShCompileOptions SH_ALLOW_TRANSLATE_UNIFORM_BLOCK_TO_STRUCTUREDBUFFER = UINT64_C(1) << 46;
 
 // This flag indicates whether Bresenham line raster emulation code should be generated.  This
 // emulation is necessary if the backend uses a differnet algorithm to draw lines.  Currently only
 // implemented for the Vulkan backend.
-const ShCompileOptions SH_ADD_BRESENHAM_LINE_RASTER_EMULATION = UINT64_C(1) << 49;
+const ShCompileOptions SH_ADD_BRESENHAM_LINE_RASTER_EMULATION = UINT64_C(1) << 47;
 
 // This flag allows disabling ARB_texture_rectangle on a per-compile basis. This is necessary
 // for WebGL contexts becuase ARB_texture_rectangle may be necessary for the WebGL implementation
 // internally but shouldn't be exposed to WebGL user code.
-const ShCompileOptions SH_DISABLE_ARB_TEXTURE_RECTANGLE = UINT64_C(1) << 50;
+const ShCompileOptions SH_DISABLE_ARB_TEXTURE_RECTANGLE = UINT64_C(1) << 48;
 
 // This flag works around a driver bug by rewriting uses of row-major matrices
 // as column-major in ESSL 3.00 and greater shaders.
-const ShCompileOptions SH_REWRITE_ROW_MAJOR_MATRICES = UINT64_C(1) << 51;
+const ShCompileOptions SH_REWRITE_ROW_MAJOR_MATRICES = UINT64_C(1) << 49;
 
 // Drop any explicit precision qualifiers from shader.
-const ShCompileOptions SH_IGNORE_PRECISION_QUALIFIERS = UINT64_C(1) << 52;
+const ShCompileOptions SH_IGNORE_PRECISION_QUALIFIERS = UINT64_C(1) << 50;
 
 // Allow compiler to do early fragment tests as an optimization.
-const ShCompileOptions SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION = UINT64_C(1) << 53;
+const ShCompileOptions SH_EARLY_FRAGMENT_TESTS_OPTIMIZATION = UINT64_C(1) << 51;
 
 // Allow compiler to insert Android pre-rotation code.
-const ShCompileOptions SH_ADD_PRE_ROTATION = UINT64_C(1) << 54;
+const ShCompileOptions SH_ADD_PRE_ROTATION = UINT64_C(1) << 52;
 
-const ShCompileOptions SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP = UINT64_C(1) << 55;
+const ShCompileOptions SH_FORCE_SHADER_PRECISION_HIGHP_TO_MEDIUMP = UINT64_C(1) << 53;
 
 // Allow compiler to use specialization constant to do pre-rotation and y flip.
-const ShCompileOptions SH_USE_SPECIALIZATION_CONSTANT = UINT64_C(1) << 56;
+const ShCompileOptions SH_USE_SPECIALIZATION_CONSTANT = UINT64_C(1) << 54;
 
 // Ask compiler to generate Vulkan transform feedback emulation support code.
-const ShCompileOptions SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE = UINT64_C(1) << 57;
+const ShCompileOptions SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE = UINT64_C(1) << 55;
 
 // Ask compiler to generate Vulkan transform feedback support code when using the
 // VK_EXT_transform_feedback extension.
-const ShCompileOptions SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE = UINT64_C(1) << 58;
+const ShCompileOptions SH_ADD_VULKAN_XFB_EXTENSION_SUPPORT_CODE = UINT64_C(1) << 56;
 
 // This flag initializes fragment shader's output variables to zero at the beginning of the fragment
 // shader's main(). It is intended as a workaround for drivers which get context lost if
 // gl_FragColor is not written.
-const ShCompileOptions SH_INIT_FRAGMENT_OUTPUT_VARIABLES = UINT64_C(1) << 59;
+const ShCompileOptions SH_INIT_FRAGMENT_OUTPUT_VARIABLES = UINT64_C(1) << 57;
 
 // Defines alternate strategies for implementing array index clamping.
 enum ShArrayIndexClampingStrategy
