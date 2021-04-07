@@ -16,6 +16,23 @@
       "message": "Strange that we haven\u0027t hit this before.  Folks are using ANGLE on Mesa already.\n\nValue looks right from https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkVendorId.html",
       "revId": "5bb2306216d7f8335b3cddc7e16048f0cadefd71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6aa18a5_8fb7256d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T15:19:43Z",
+      "side": 1,
+      "message": "Probably only shows up for LLVMpipe or something. Usually we see Intel/NVIDIA/etc.",
+      "revId": "5bb2306216d7f8335b3cddc7e16048f0cadefd71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
