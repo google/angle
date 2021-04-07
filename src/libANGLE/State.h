@@ -890,6 +890,11 @@ class State : angle::NonCopyable
 
     const std::vector<ImageUnit> &getImageUnits() const { return mImageUnits; }
 
+    const ProgramPipelineManager *getProgramPipelineManagerForCapture() const
+    {
+        return mProgramPipelineManager;
+    }
+
   private:
     friend class Context;
 

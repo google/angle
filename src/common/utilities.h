@@ -252,6 +252,7 @@ enum class SrgbWriteControlMode
 };
 
 ShaderType GetShaderTypeFromBitfield(size_t singleShaderType);
+GLbitfield GetBitfieldFromShaderType(ShaderType shaderType);
 bool ShaderTypeSupportsTransformFeedback(ShaderType shaderType);
 // Given a set of shader stages, returns the last vertex processing stage.  This is the stage that
 // interfaces the fragment shader.

@@ -516,6 +516,11 @@ void CaptureGenHandles(GLsizei n, T *handles, ParamCapture *paramCapture)
     CaptureGenHandlesImpl(n, reinterpret_cast<GLuint *>(handles), paramCapture);
 }
 
+void CaptureShaderStrings(GLsizei count,
+                          const GLchar *const *strings,
+                          const GLint *length,
+                          ParamCapture *paramCapture);
+
 template <ParamType ParamT, typename T>
 void WriteParamValueReplay(std::ostream &os, const CallCapture &call, T value);
 

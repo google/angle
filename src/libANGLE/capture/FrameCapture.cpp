@@ -527,7 +527,8 @@ void WriteCppReplayForCall(const CallCapture &call,
     std::ostringstream callOut;
 
     if (call.entryPoint == EntryPoint::GLCreateShader ||
-        call.entryPoint == EntryPoint::GLCreateProgram)
+        call.entryPoint == EntryPoint::GLCreateProgram ||
+        call.entryPoint == EntryPoint::GLCreateShaderProgramv)
     {
         GLuint id = call.params.getReturnValue().value.GLuintVal;
         callOut << "gShaderProgramMap[" << id << "] = ";
@@ -1623,10 +1624,9 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
 
     const std::vector<gl::LinkedUniform> &uniforms = program->getState().getUniforms();
 
-    for (size_t i = 0; i < uniforms.size(); i++)
+    for (const gl::LinkedUniform &uniform : uniforms)
     {
-        const gl::LinkedUniform &uniform = uniforms[i];
-        std::string uniformName          = uniform.name;
+        std::string uniformName = uniform.name;
 
         int uniformCount = 1;
         if (uniform.isArray())
@@ -1651,11 +1651,15 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
 
         // If the uniform is unused, just continue
         if (readLoc.value == -1)
+        {
             continue;
+        }
 
         // Image uniforms are special and cannot be set this way
         if (typeInfo->isImageType)
+        {
             continue;
+        }
 
         // Samplers should be populated with GL_INT, regardless of return type
         if (typeInfo->isSampler)
@@ -2704,6 +2708,8 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         shadersAndPrograms.getShadersForCapture();
     const gl::ResourceMap<gl::Program, gl::ShaderProgramID> &programs =
         shadersAndPrograms.getProgramsForCaptureAndPerf();
+    const gl::ProgramPipelineManager *programPipelineManager =
+        apiState.getProgramPipelineManagerForCapture();
 
     // Capture Program binary state. Use max ID as a temporary shader ID.
     gl::ShaderProgramID tempShaderID = {resourceTracker->getMaxShaderPrograms()};
@@ -2770,10 +2776,21 @@ void CaptureMidExecutionSetup(const gl::Context *context,
                 continue;
             }
 
-            ASSERT(attrib.location != -1);
+            // Separable programs may not have a VS, meaning it may not have attributes.
+            if (program->getExecutable().hasLinkedShaderStage(gl::ShaderType::Vertex))
+            {
+                ASSERT(attrib.location != -1);
+                cap(CaptureBindAttribLocation(replayState, true, id,
+                                              static_cast<GLuint>(attrib.location),
+                                              attrib.name.c_str()));
+            }
+        }
 
-            cap(CaptureBindAttribLocation(
-                replayState, true, id, static_cast<GLuint>(attrib.location), attrib.name.c_str()));
+        if (program->isSeparable())
+        {
+            // MEC manually recreates separable programs, rather than attempting to recreate a call
+            // to glCreateShaderProgramv(), so insert a call to mark it separable.
+            cap(CaptureProgramParameteri(replayState, true, id, GL_PROGRAM_SEPARABLE, GL_TRUE));
         }
 
         cap(CaptureLinkProgram(replayState, true, id));
@@ -2791,6 +2808,36 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
 
         resourceTracker->onShaderProgramAccess(id);
+    }
+
+    for (const auto &ppoIterator : *programPipelineManager)
+    {
+        gl::ProgramPipeline *pipeline = ppoIterator.second;
+        gl::ProgramPipelineID id      = {ppoIterator.first};
+        cap(CaptureGenProgramPipelines(replayState, true, 1, &id));
+        MaybeCaptureUpdateResourceIDs(setupCalls);
+
+        // PPOs can contain graphics and compute programs, so loop through all shader types rather
+        // than just the linked ones since getLinkedShaderStages() will return either only graphics
+        // or compute stages.
+        for (gl::ShaderType shaderType : gl::AllShaderTypes())
+        {
+            gl::Program *program = pipeline->getShaderProgram(shaderType);
+            if (!program)
+            {
+                continue;
+            }
+            ASSERT(program->isLinked());
+            GLbitfield gLbitfield = GetBitfieldFromShaderType(shaderType);
+            cap(CaptureUseProgramStages(replayState, true, pipeline->id(), gLbitfield,
+                                        program->id()));
+        }
+
+        gl::Program *program = pipeline->getActiveShaderProgram();
+        if (program)
+        {
+            cap(CaptureActiveShaderProgram(replayState, true, id, program->id()));
+        }
     }
 
     // Handle shaders.
@@ -2839,6 +2886,20 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     {
         cap(CaptureUseProgram(replayState, true, apiState.getProgram()->id()));
         CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
+    }
+    else if (apiState.getProgramPipeline())
+    {
+        // glUseProgram() is called above to update the necessary uniform values for each program
+        // that's being recreated. If there is no program currently bound, then we need to unbind
+        // the last bound program so the PPO will be used instead:
+        // 7.4 Program Pipeline Objects
+        // If no current program object has been established by UseProgram, the program objects used
+        // for each shader stage and for uniform updates are taken from the bound program pipeline
+        // object, if any. If there is a current program object established by UseProgram, the bound
+        // program pipeline object has no effect on rendering or uniform updates.
+        cap(CaptureUseProgram(replayState, true, {0}));
+        CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
+        cap(CaptureBindProgramPipeline(replayState, true, apiState.getProgramPipeline()->id()));
     }
 
     // TODO(http://anglebug.com/3662): ES 3.x objects.
@@ -4040,6 +4101,27 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
             break;
         }
 
+        case EntryPoint::GLCreateShaderProgramv:
+        {
+            // Refresh the cached shader sources.
+            // The command CreateShaderProgramv() creates a stand-alone program from an array of
+            // null-terminated source code strings for a single shader type, so we need update the
+            // Shader and Program sources, similar to GLCompileShader + GLLinkProgram handling.
+            gl::ShaderProgramID programID = {call.params.getReturnValue().value.GLuintVal};
+            const ParamCapture &paramCapture =
+                call.params.getParam("typePacked", ParamType::TShaderType, 0);
+            gl::ShaderType shaderType = paramCapture.value.ShaderTypeVal;
+            gl::Program *program      = context->getProgramResolveLink(programID);
+            ASSERT(program);
+            const gl::Shader *shader = program->getAttachedShader(shaderType);
+            ASSERT(shader);
+            FrameCaptureShared *frameCaptureShared =
+                context->getShareGroup()->getFrameCaptureShared();
+            frameCaptureShared->setShaderSource(shader->getHandle(), shader->getSourceString());
+            frameCaptureShared->setProgramSources(programID, GetAttachedProgramSources(program));
+            break;
+        }
+
         case EntryPoint::GLCompileShader:
         {
             // Refresh the cached shader sources.
@@ -4243,6 +4325,15 @@ void FrameCapture::maybeCapturePostCallUpdates(const gl::Context *context)
     const CallCapture &lastCall = mFrameCalls.back();
     switch (lastCall.entryPoint)
     {
+        case EntryPoint::GLCreateShaderProgramv:
+        {
+            gl::ShaderProgramID programId;
+            programId.value            = lastCall.params.getReturnValue().value.GLuintVal;
+            const gl::Program *program = context->getProgramResolveLink(programId);
+            CaptureUpdateUniformLocations(program, &mFrameCalls);
+            CaptureUpdateUniformBlockIndexes(program, &mFrameCalls);
+            break;
+        }
         case EntryPoint::GLLinkProgram:
         {
             const ParamCapture &param =
@@ -4933,6 +5024,21 @@ void CaptureGenHandlesImpl(GLsizei n, GLuint *handles, ParamCapture *paramCaptur
 {
     paramCapture->readBufferSizeBytes = sizeof(GLuint) * n;
     CaptureMemory(handles, paramCapture->readBufferSizeBytes, paramCapture);
+}
+
+void CaptureShaderStrings(GLsizei count,
+                          const GLchar *const *strings,
+                          const GLint *length,
+                          ParamCapture *paramCapture)
+{
+    for (GLsizei index = 0; index < count; ++index)
+    {
+        size_t len = ((length && length[index] >= 0) ? length[index] : strlen(strings[index]));
+        // includes the '\0' suffix
+        std::vector<uint8_t> data(len + 1, 0);
+        memcpy(data.data(), strings[index], len);
+        paramCapture->data.emplace_back(std::move(data));
+    }
 }
 
 template <>

@@ -649,14 +649,7 @@ void CaptureShaderSource_string(const State &glState,
                                 const GLint *length,
                                 ParamCapture *paramCapture)
 {
-    for (GLsizei index = 0; index < count; ++index)
-    {
-        size_t len = ((length && length[index] >= 0) ? length[index] : strlen(string[index]));
-        // includes the '\0' suffix
-        std::vector<uint8_t> data(len + 1, 0);
-        memcpy(data.data(), string[index], len);
-        paramCapture->data.emplace_back(std::move(data));
-    }
+    CaptureShaderStrings(count, string, length, paramCapture);
 }
 
 void CaptureShaderSource_length(const State &glState,

@@ -20,7 +20,7 @@ void CaptureCreateShaderProgramv_strings(const State &glState,
                                          const GLchar *const *strings,
                                          ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureShaderStrings(count, strings, nullptr, paramCapture);
 }
 
 void CaptureDeleteProgramPipelines_pipelinesPacked(const State &glState,
@@ -273,7 +273,7 @@ void CaptureProgramUniform1fv_value(const State &glState,
                                     const GLfloat *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * count, paramCapture);
 }
 
 void CaptureProgramUniform1iv_value(const State &glState,
@@ -284,7 +284,7 @@ void CaptureProgramUniform1iv_value(const State &glState,
                                     const GLint *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLint) * count, paramCapture);
 }
 
 void CaptureProgramUniform1uiv_value(const State &glState,
@@ -295,7 +295,7 @@ void CaptureProgramUniform1uiv_value(const State &glState,
                                      const GLuint *value,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLuint) * count, paramCapture);
 }
 
 void CaptureProgramUniform2fv_value(const State &glState,
@@ -306,7 +306,7 @@ void CaptureProgramUniform2fv_value(const State &glState,
                                     const GLfloat *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 2 * count, paramCapture);
 }
 
 void CaptureProgramUniform2iv_value(const State &glState,
@@ -317,7 +317,7 @@ void CaptureProgramUniform2iv_value(const State &glState,
                                     const GLint *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLint) * 2 * count, paramCapture);
 }
 
 void CaptureProgramUniform2uiv_value(const State &glState,
@@ -328,7 +328,7 @@ void CaptureProgramUniform2uiv_value(const State &glState,
                                      const GLuint *value,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLuint) * 2 * count, paramCapture);
 }
 
 void CaptureProgramUniform3fv_value(const State &glState,
@@ -339,7 +339,7 @@ void CaptureProgramUniform3fv_value(const State &glState,
                                     const GLfloat *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 3 * count, paramCapture);
 }
 
 void CaptureProgramUniform3iv_value(const State &glState,
@@ -350,7 +350,7 @@ void CaptureProgramUniform3iv_value(const State &glState,
                                     const GLint *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLint) * 3 * count, paramCapture);
 }
 
 void CaptureProgramUniform3uiv_value(const State &glState,
@@ -361,7 +361,7 @@ void CaptureProgramUniform3uiv_value(const State &glState,
                                      const GLuint *value,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLuint) * 3 * count, paramCapture);
 }
 
 void CaptureProgramUniform4fv_value(const State &glState,
@@ -372,7 +372,7 @@ void CaptureProgramUniform4fv_value(const State &glState,
                                     const GLfloat *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 4 * count, paramCapture);
 }
 
 void CaptureProgramUniform4iv_value(const State &glState,
@@ -383,7 +383,7 @@ void CaptureProgramUniform4iv_value(const State &glState,
                                     const GLint *value,
                                     ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLint) * 4 * count, paramCapture);
 }
 
 void CaptureProgramUniform4uiv_value(const State &glState,
@@ -394,7 +394,7 @@ void CaptureProgramUniform4uiv_value(const State &glState,
                                      const GLuint *value,
                                      ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLuint) * 4 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix2fv_value(const State &glState,
@@ -406,7 +406,7 @@ void CaptureProgramUniformMatrix2fv_value(const State &glState,
                                           const GLfloat *value,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 2 * 2 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix2x3fv_value(const State &glState,
@@ -418,7 +418,7 @@ void CaptureProgramUniformMatrix2x3fv_value(const State &glState,
                                             const GLfloat *value,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 2 * 3 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix2x4fv_value(const State &glState,
@@ -430,7 +430,7 @@ void CaptureProgramUniformMatrix2x4fv_value(const State &glState,
                                             const GLfloat *value,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 2 * 4 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix3fv_value(const State &glState,
@@ -442,7 +442,7 @@ void CaptureProgramUniformMatrix3fv_value(const State &glState,
                                           const GLfloat *value,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 3 * 3 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix3x2fv_value(const State &glState,
@@ -454,7 +454,7 @@ void CaptureProgramUniformMatrix3x2fv_value(const State &glState,
                                             const GLfloat *value,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 3 * 2 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix3x4fv_value(const State &glState,
@@ -466,7 +466,7 @@ void CaptureProgramUniformMatrix3x4fv_value(const State &glState,
                                             const GLfloat *value,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 3 * 4 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix4fv_value(const State &glState,
@@ -478,7 +478,7 @@ void CaptureProgramUniformMatrix4fv_value(const State &glState,
                                           const GLfloat *value,
                                           ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 4 * 4 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix4x2fv_value(const State &glState,
@@ -490,7 +490,7 @@ void CaptureProgramUniformMatrix4x2fv_value(const State &glState,
                                             const GLfloat *value,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 4 * 2 * count, paramCapture);
 }
 
 void CaptureProgramUniformMatrix4x3fv_value(const State &glState,
@@ -502,7 +502,7 @@ void CaptureProgramUniformMatrix4x3fv_value(const State &glState,
                                             const GLfloat *value,
                                             ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(value, sizeof(GLfloat) * 4 * 3 * count, paramCapture);
 }
 
 }  // namespace gl
