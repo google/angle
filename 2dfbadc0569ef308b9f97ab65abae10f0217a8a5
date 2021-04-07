@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1746478_433bd7f2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:52:45Z",
+      "side": 1,
+      "message": "typo\n\nAlso, if this is at the discretion of the drive (i.e. ANGLE), why not unconditionally advertise FIRST?",
+      "range": {
+        "startLine": 929,
+        "startChar": 61,
+        "endLine": 929,
+        "endChar": 71
+      },
+      "revId": "2dfbadc0569ef308b9f97ab65abae10f0217a8a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
