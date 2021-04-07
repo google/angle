@@ -87,6 +87,30 @@
       },
       "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64d79b74_b1b0cb85",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T17:11:32Z",
+      "side": 1,
+      "message": "Not sure. Is there a testing coverage gap you can identify?",
+      "parentUuid": "9c0447e1_2be038bb",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 10
+      },
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
