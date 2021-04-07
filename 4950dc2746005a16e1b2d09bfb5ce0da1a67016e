@@ -135,6 +135,30 @@
       },
       "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6635e0d2_5e022f8b",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T17:30:24Z",
+      "side": 1,
+      "message": "UINT formats are GLES 3.x and higher. GLES 2.0 only has scaled and normalized.",
+      "parentUuid": "c5e7ebaa_2fa4c71e",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 10
+      },
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
