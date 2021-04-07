@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c91e993_0d94a18f",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T18:49:21Z",
+      "side": 1,
+      "message": "typo: to\n\nalso nit: security or privacy?",
+      "range": {
+        "startLine": 534,
+        "startChar": 50,
+        "endLine": 534,
+        "endChar": 53
+      },
+      "revId": "e059a5ab1ada5fc32393a139108f81659d0cd5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
