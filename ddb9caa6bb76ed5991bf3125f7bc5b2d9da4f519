@@ -39,6 +39,30 @@
       },
       "revId": "ddb9caa6bb76ed5991bf3125f7bc5b2d9da4f519",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0671477e_1b391188",
+        "filename": "include/platform/FeaturesVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 489,
+      "author": {
+        "id": 1106289
+      },
+      "writtenOn": "2021-04-07T14:36:57Z",
+      "side": 1,
+      "message": "https://crbug.com/angleproject/5804",
+      "parentUuid": "a53c952e_2ece3214",
+      "range": {
+        "startLine": 489,
+        "startChar": 7,
+        "endLine": 489,
+        "endChar": 31
+      },
+      "revId": "ddb9caa6bb76ed5991bf3125f7bc5b2d9da4f519",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
