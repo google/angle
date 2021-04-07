@@ -253,6 +253,11 @@ bool EGLWindow::initializeDisplay(OSWindow *osWindow,
         enabledFeatureOverrides.push_back("asynchronousCommandProcessing");
     }
 
+    if (params.directSPIRVGeneration == EGL_TRUE)
+    {
+        enabledFeatureOverrides.push_back("directSPIRVGeneration");
+    }
+
     if (params.hasExplicitMemBarrierFeatureMtl == EGL_FALSE)
     {
         disabledFeatureOverrides.push_back("has_explicit_mem_barrier_mtl");

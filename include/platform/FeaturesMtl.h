@@ -83,6 +83,12 @@ struct FeaturesMtl : FeatureSetBase
 
     Feature forceD24S8AsUnsupported = {"force_d24s8_as_unsupported", FeatureCategory::MetalFeatures,
                                        "Force Depth24Stencil8 format as unsupported.", &members};
+
+    // Whether SPIR-V should be generated directly instead of through glslang.  Transitory feature
+    // until the work is complete.
+    Feature directSPIRVGeneration = {"directSPIRVGeneration", FeatureCategory::MetalFeatures,
+                                     "Direct translation to SPIR-V.", &members,
+                                     "http://anglebug.com/4889"};
 };
 
 }  // namespace angle

@@ -37,11 +37,11 @@ using Microsoft::WRL::ComPtr;
 #endif  // defined(ANGLE_ENABLE_D3D9) || defined(ANGLE_ENABLE_D3D11)
 
 #if defined(ANGLE_USE_ABSEIL)
-template <typename Key, typename T>
-using HashMap = absl::flat_hash_map<Key, T>;
+template <typename Key, typename T, class Hash = absl::container_internal::hash_default_hash<Key>>
+using HashMap = absl::flat_hash_map<Key, T, Hash>;
 #else
-template <typename Key, typename T>
-using HashMap = std::unordered_map<Key, T>;
+template <typename Key, typename T, class Hash = std::hash<Key>>
+using HashMap = std::unordered_map<Key, T, Hash>;
 #endif  // defined(ANGLE_USE_ABSEIL)
 
 class NonCopyable

@@ -489,6 +489,12 @@ struct FeaturesVk : FeatureSetBase
                                       "Emulate 270-degree prerotation.", &members,
                                       "http://anglebug.com/4901"};
 
+    // Whether SPIR-V should be generated directly instead of through glslang.  Transitory feature
+    // until the work is complete.
+    Feature directSPIRVGeneration = {"directSPIRVGeneration", FeatureCategory::VulkanFeatures,
+                                     "Direct translation to SPIR-V.", &members,
+                                     "http://anglebug.com/4889"};
+
     // Whether we should use driver uniforms over specialization constants for some shader
     // modifications like yflip and rotation.
     Feature forceDriverUniformOverSpecConst = {

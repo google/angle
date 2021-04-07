@@ -12,6 +12,7 @@
 #include "common/debug.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/renderer/metal/ContextMtl.h"
+#include "libANGLE/renderer/metal/DisplayMtl.h"
 
 namespace rx
 {
@@ -24,6 +25,8 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
                                                          gl::ShCompilerInstance *compilerInstance,
                                                          ShCompileOptions options)
 {
+    ContextMtl *contextMtl = mtl::GetImpl(context);
+
     ShCompileOptions compileOptions = SH_INITIALIZE_UNINITIALIZED_LOCALS;
 
     bool isWebGL = context->getExtensions().webglCompatibility;
@@ -36,6 +39,11 @@ std::shared_ptr<WaitableCompileEvent> ShaderMtl::compile(const gl::Context *cont
 
     // Transform feedback is always emulated on Metal.
     compileOptions |= SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE;
+
+    if (contextMtl->getDisplay()->getFeatures().directSPIRVGeneration.enabled)
+    {
+        compileOptions |= SH_GENERATE_SPIRV_DIRECTLY;
+    }
 
     return compileImpl(context, compilerInstance, mState.getSource(), compileOptions | options);
 }

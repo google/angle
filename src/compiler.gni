@@ -309,6 +309,10 @@ angle_translator_hlsl_sources = [
   "src/compiler/translator/tree_ops/d3d/WrapSwitchStatementsInBlocks.h",
 ]
 angle_translator_lib_vulkan_sources = [
+  "src/compiler/translator/BuildSPIRV.cpp",
+  "src/compiler/translator/BuildSPIRV.h",
+  "src/compiler/translator/OutputSPIRV.cpp",
+  "src/compiler/translator/OutputSPIRV.h",
   "src/compiler/translator/OutputVulkanGLSL.cpp",
   "src/compiler/translator/OutputVulkanGLSL.h",
   "src/compiler/translator/TranslatorVulkan.cpp",

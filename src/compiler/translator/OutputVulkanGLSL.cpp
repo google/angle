@@ -73,16 +73,12 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
     TIntermSymbol *symbol = variable->getAsSymbolNode();
     ASSERT(symbol);
 
-    ImmutableString name      = symbol->getName();
     const char *blockStorage  = nullptr;
     const char *matrixPacking = nullptr;
 
-    // For interface blocks, use the block name instead.  When the layout qualifier is being
-    // replaced in the backend, that would be the name that's available.
     if (type.isInterfaceBlock())
     {
         const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
-        name                                  = interfaceBlock->name();
         TLayoutBlockStorage storage           = interfaceBlock->blockStorage();
 
         // Make sure block storage format is specified.
@@ -128,8 +124,9 @@ void TOutputVulkanGLSL::writeLayoutQualifier(TIntermTyped *variable)
 
     if (needsLocation)
     {
-        const unsigned int locationCount = CalculateVaryingLocationCount(symbol, getShaderType());
-        uint32_t location                = IsShaderIn(type.getQualifier())
+        const unsigned int locationCount =
+            CalculateVaryingLocationCount(symbol->getType(), getShaderType());
+        uint32_t location = IsShaderIn(type.getQualifier())
                                 ? nextUnusedInputLocation(locationCount)
                                 : nextUnusedOutputLocation(locationCount);
 

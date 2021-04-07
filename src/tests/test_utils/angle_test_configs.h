@@ -297,6 +297,12 @@ inline PlatformParameters WithEmulatedVAOs(const PlatformParameters &params)
     return emualtedVAOParams;
 }
 
+inline PlatformParameters WithDirectSPIRVGeneration(const PlatformParameters &params)
+{
+    PlatformParameters directSPIRVGeneration                  = params;
+    directSPIRVGeneration.eglParameters.directSPIRVGeneration = true;
+    return directSPIRVGeneration;
+}
 }  // namespace angle
 
 #endif  // ANGLE_TEST_CONFIGS_H_

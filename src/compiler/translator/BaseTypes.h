@@ -1125,14 +1125,18 @@ enum TLayoutImageInternalFormat
     EiifRGBA8I,
     EiifR32I,
     EiifRGBA8,
-    EiifRGBA8_SNORM
+    EiifRGBA8_SNORM,
+
+    EiifLast = EiifRGBA8_SNORM,
 };
 
 enum TLayoutMatrixPacking
 {
     EmpUnspecified,
     EmpRowMajor,
-    EmpColumnMajor
+    EmpColumnMajor,
+
+    EmpLast = EmpColumnMajor,
 };
 
 enum TLayoutBlockStorage
@@ -1141,7 +1145,9 @@ enum TLayoutBlockStorage
     EbsShared,
     EbsPacked,
     EbsStd140,
-    EbsStd430
+    EbsStd430,
+
+    EbsLast = EbsStd430,
 };
 
 enum TYuvCscStandardEXT
