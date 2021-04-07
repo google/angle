@@ -793,6 +793,82 @@ TEST_P(UniformBufferTest31, BindingMustBeBothSpecified)
     ASSERT_EQ(0u, program);
 }
 
+// Test that uploading data to buffer that's in use then using it as indirect buffer works.
+TEST_P(UniformBufferTest31, UseAsUBOThenUpdateThenDrawIndirect)
+{
+    // http://anglebug.com/5826
+    ANGLE_SKIP_TEST_IF(IsD3D11());
+
+    const std::array<uint32_t, 4> kInitialData = {100, 200, 300, 400};
+    const std::array<uint32_t, 4> kUpdateData  = {4, 1, 0, 0};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kVerifyUBO[] = R"(#version 310 es
+precision mediump float;
+layout(binding = 0) uniform block {
+    uvec4 data;
+} ubo;
+out vec4 colorOut;
+void main()
+{
+    if (all(equal(ubo.data, uvec4(100, 200, 300, 400))))
+        colorOut = vec4(0, 1.0, 0, 1.0);
+    else
+        colorOut = vec4(1.0, 0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(verifyUbo, essl31_shaders::vs::Simple(), kVerifyUBO);
+    drawQuad(verifyUbo, essl31_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Update buffer data
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData), kUpdateData.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Draw indirect using the updated parameters
+    constexpr char kVS[] = R"(#version 310 es
+void main()
+{
+    // gl_VertexID    x    y
+    //      0        -1   -1
+    //      1         1   -1
+    //      2        -1    1
+    //      3         1    1
+    int bit0 = gl_VertexID & 1;
+    int bit1 = gl_VertexID >> 1;
+    gl_Position = vec4(bit0 * 2 - 1, bit1 * 2 - 1, 0, 1);
+})";
+
+    constexpr char kFS[] = R"(#version 310 es
+precision mediump float;
+out vec4 colorOut;
+void main()
+{
+    colorOut = vec4(0, 0, 1.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(draw, kVS, kFS);
+    glUseProgram(draw);
+
+    glBindBuffer(GL_DRAW_INDIRECT_BUFFER, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    GLVertexArray vao;
+    glBindVertexArray(vao);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glDrawArraysIndirect(GL_TRIANGLE_STRIP, nullptr);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
 // Test with a block containing an array of structs.
 TEST_P(UniformBufferTest, BlockContainingArrayOfStructs)
 {

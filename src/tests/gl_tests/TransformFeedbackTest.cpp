@@ -373,6 +373,102 @@ TEST_P(TransformFeedbackTest, SpanMultipleRenderPasses)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that uploading data to buffer that's in use then using it for transform feedback works.
+TEST_P(TransformFeedbackTest, UseAsUBOThenUpdateThenCapture)
+{
+    // http://anglebug.com/5833
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsQualcomm());
+
+    // TODO(anglebug.com/4533) This fails after the upgrade to the 26.20.100.7870 driver.
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsIntel() && IsVulkan());
+
+    // Fails on Mac GL drivers. http://anglebug.com/4992
+    ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
+
+    const std::array<uint32_t, 12> kInitialData = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    const std::array<uint32_t, 12> kUpdateData  = {
+        0x12345678u, 0x9ABCDEF0u, 0x13579BDFu, 0x2468ACE0u, 0x23456781u, 0xABCDEF09u,
+        0x3579BDF1u, 0x468ACE02u, 0x34567812u, 0xBCDEF09Au, 0x579BDF13u, 0x68ACE024u,
+    };
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kVerifyUBO[] = R"(#version 300 es
+precision mediump float;
+uniform block {
+    uvec4 data[3];
+} ubo;
+out vec4 colorOut;
+void main()
+{
+    bool data0Ok = all(equal(ubo.data[0], uvec4(0, 1, 2, 3)));
+    bool data1Ok = all(equal(ubo.data[1], uvec4(4, 5, 6, 7)));
+    bool data2Ok = all(equal(ubo.data[2], uvec4(8, 9, 10, 11)));
+    if (data0Ok && data1Ok && data2Ok)
+        colorOut = vec4(0, 1.0, 0, 1.0);
+    else
+        colorOut = vec4(0, 0, 1.0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(verifyUbo, essl3_shaders::vs::Simple(), kVerifyUBO);
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Update buffer data
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData), kUpdateData.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Set the program's transform feedback varyings (just gl_Position)
+    std::vector<std::string> tfVaryings;
+    tfVaryings.push_back("gl_Position");
+    compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
+
+    glUseProgram(mProgram);
+
+    GLint positionLocation = glGetAttribLocation(mProgram, essl1_shaders::PositionAttrib());
+
+    // First pass: draw 3 points to the XFB buffer
+    glEnable(GL_RASTERIZER_DISCARD);
+
+    const GLfloat vertices[] = {
+        -1.0f, 3.0f, 0.5f, -1.0f, -1.0f, 0.5f, 3.0f, -1.0f, 0.5f,
+    };
+
+    glVertexAttribPointer(positionLocation, 3, GL_FLOAT, GL_FALSE, 0, vertices);
+    glEnableVertexAttribArray(positionLocation);
+
+    // Bind the buffer for transform feedback output and start transform feedback
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, buffer);
+    glBeginTransformFeedback(GL_POINTS);
+
+    glDrawArrays(GL_POINTS, 0, 3);
+
+    glDisableVertexAttribArray(positionLocation);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
+    glEndTransformFeedback();
+
+    glBindBufferBase(GL_TRANSFORM_FEEDBACK_BUFFER, 0, 0);
+
+    glDisable(GL_RASTERIZER_DISCARD);
+
+    // Second pass: draw from the feedback buffer
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glVertexAttribPointer(positionLocation, 4, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(positionLocation);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    EXPECT_GL_NO_ERROR();
+
+    // Make sure both draws succeeded
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::yellow);
+}
+
 void TransformFeedbackTest::midRecordOpDoesNotContributeTest(std::function<void()> op)
 {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

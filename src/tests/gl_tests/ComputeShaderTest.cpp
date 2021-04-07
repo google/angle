@@ -629,8 +629,6 @@ TEST_P(ComputeShaderTest, DispatchComputeIndirect)
     // Flaky crash on teardown, see http://anglebug.com/3349
     ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel() && IsWindows());
 
-    GLTexture texture;
-    GLFramebuffer framebuffer;
     const char kCSSource[] = R"(#version 310 es
 layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
 layout(r32ui, binding = 0) uniform highp uimage2D uImage;
@@ -649,6 +647,7 @@ void main()
     GLuint params[] = {kWidth, kHeight, 1};
     glBufferData(GL_DISPATCH_INDIRECT_BUFFER, sizeof(params), params, GL_STATIC_DRAW);
 
+    GLTexture texture;
     glBindTexture(GL_TEXTURE_2D, texture);
     glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
@@ -662,21 +661,116 @@ void main()
     EXPECT_GL_NO_ERROR();
 
     glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
-    glUseProgram(0);
-    GLuint outputValues[kWidth][kHeight];
-    GLuint expectedValue = 100u;
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 
+    GLuint outputValues[kWidth][kHeight];
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
     glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
     EXPECT_GL_NO_ERROR();
+
     glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
     EXPECT_GL_NO_ERROR();
 
-    for (int i = 0; i < kWidth; i++)
+    constexpr GLuint kExpectedValue = 100u;
+    for (int x = 0; x < kWidth; x++)
     {
-        for (int j = 0; j < kHeight; j++)
+        for (int y = 0; y < kHeight; y++)
         {
-            EXPECT_EQ(expectedValue, outputValues[i][j]);
+            EXPECT_EQ(kExpectedValue, outputValues[x][y]);
+        }
+    }
+}
+
+// Test that uploading data to buffer that's in use then using it as indirect buffer works.
+TEST_P(ComputeShaderTest, UseAsUBOThenUpdateThenDispatchComputeIndirect)
+{
+    // Flaky crash on teardown, see http://anglebug.com/3349
+    ANGLE_SKIP_TEST_IF(IsD3D11() && IsIntel() && IsWindows());
+
+    constexpr GLsizei kWidth = 4, kHeight = 6;
+
+    const std::array<uint32_t, 4> kInitialData = {1, 2, 3, 4};
+    const std::array<uint32_t, 4> kUpdateData  = {kWidth, kHeight, 1, 0};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kVerifyUBO[] = R"(#version 310 es
+precision mediump float;
+layout(binding = 0) uniform block {
+    uvec4 data;
+} ubo;
+out vec4 colorOut;
+void main()
+{
+    if (all(equal(ubo.data, uvec4(1, 2, 3, 4))))
+        colorOut = vec4(0, 1.0, 0, 1.0);
+    else
+        colorOut = vec4(1.0, 0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(verifyUbo, essl31_shaders::vs::Simple(), kVerifyUBO);
+    drawQuad(verifyUbo, essl31_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Update buffer data
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData), kUpdateData.data());
+    EXPECT_GL_NO_ERROR();
+
+    const char kCS[] = R"(#version 310 es
+layout(local_size_x=1, local_size_y=1, local_size_z=1) in;
+layout(r32ui, binding = 0) uniform highp uimage2D uImage;
+void main()
+{
+    imageStore(uImage, ivec2(gl_WorkGroupID.x, gl_WorkGroupID.y), uvec4(100, 0, 0, 0));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kCS);
+    glUseProgram(program.get());
+
+    glBindBuffer(GL_DISPATCH_INDIRECT_BUFFER, buffer);
+
+    const std::vector<GLuint> inputValues(kWidth * kHeight, 0);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexStorage2D(GL_TEXTURE_2D, 1, GL_R32UI, kWidth, kHeight);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT,
+                    inputValues.data());
+    EXPECT_GL_NO_ERROR();
+
+    glBindImageTexture(0, texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_R32UI);
+    EXPECT_GL_NO_ERROR();
+
+    glDispatchComputeIndirect(0);
+    EXPECT_GL_NO_ERROR();
+
+    glMemoryBarrier(GL_FRAMEBUFFER_BARRIER_BIT);
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+
+    GLuint outputValues[kWidth][kHeight];
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+    glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0);
+    EXPECT_GL_FRAMEBUFFER_COMPLETE(GL_READ_FRAMEBUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    glReadPixels(0, 0, kWidth, kHeight, GL_RED_INTEGER, GL_UNSIGNED_INT, outputValues);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr GLuint kExpectedValue = 100u;
+    for (int x = 0; x < kWidth; x++)
+    {
+        for (int y = 0; y < kHeight; y++)
+        {
+            EXPECT_EQ(kExpectedValue, outputValues[x][y]);
         }
     }
 }

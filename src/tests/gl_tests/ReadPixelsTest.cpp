@@ -317,6 +317,9 @@ class ReadPixelsPBOTest : public ReadPixelsPBONVTest
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mTexture, 0);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+        mFBOWidth  = fboWidth;
+        mFBOHeight = fboHeight;
+
         ASSERT_GL_NO_ERROR();
     }
 };
@@ -488,6 +491,77 @@ TEST_P(ReadPixelsPBOTest, SubDataOffsetPreservesContents)
 
     glUnmapBuffer(GL_ARRAY_BUFFER);
     EXPECT_GL_NO_ERROR();
+}
+
+// Test that uploading data to buffer that's in use then writing to it as PBO works.
+TEST_P(ReadPixelsPBOTest, UseAsUBOThenUpdateThenReadFromFBO)
+{
+    glBindFramebuffer(GL_FRAMEBUFFER, mFBO);
+    glViewport(0, 0, mFBOWidth, mFBOHeight);
+
+    const std::array<GLColor, 4> kInitialData = {GLColor::red, GLColor::red, GLColor::red,
+                                                 GLColor::red};
+    const std::array<GLColor, 4> kUpdateData  = {GLColor::white, GLColor::white, GLColor::white,
+                                                GLColor::white};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_COPY);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    constexpr char kVerifyUBO[] = R"(#version 300 es
+precision mediump float;
+uniform block {
+    uvec4 data;
+} ubo;
+out vec4 colorOut;
+void main()
+{
+    if (all(equal(ubo.data, uvec4(0xFF0000FFu))))
+        colorOut = vec4(0, 1.0, 0, 1.0);
+    else
+        colorOut = vec4(1.0, 0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(verifyUbo, essl3_shaders::vs::Simple(), kVerifyUBO);
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Update buffer data
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData), kUpdateData.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Clear first pixel to blue
+    glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+    glScissor(0, 0, 1, 1);
+    glEnable(GL_SCISSOR_TEST);
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, buffer);
+
+    // Read the framebuffer pixels
+    glReadPixels(0, 0, mFBOWidth, mFBOHeight, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    void *mappedPtr =
+        glMapBufferRange(GL_PIXEL_PACK_BUFFER, 0, sizeof(kInitialData), GL_MAP_READ_BIT);
+    GLColor *dataColor = static_cast<GLColor *>(mappedPtr);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_EQ(GLColor::blue, dataColor[0]);
+    EXPECT_EQ(GLColor::green, dataColor[1]);
+    EXPECT_EQ(GLColor::green, dataColor[2]);
+    EXPECT_EQ(GLColor::green, dataColor[3]);
+
+    glUnmapBuffer(GL_PIXEL_PACK_BUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, 0);
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+    EXPECT_PIXEL_COLOR_EQ(1, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(2, 0, GLColor::green);
+    EXPECT_PIXEL_COLOR_EQ(3, 0, GLColor::green);
 }
 
 class ReadPixelsPBODrawTest : public ReadPixelsPBOTest
