@@ -211,6 +211,24 @@
       "parentUuid": "eb03b1da_699cafdb",
       "revId": "d0239af8ef2c7dffa307196fbd130f4c85708115",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "833a0a1b_2a8447a3",
+        "filename": "util/shader_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T16:13:28Z",
+      "side": 1,
+      "message": "Ack, you\u0027re probably right. I skipped this because it was a fairly small improvement and I was trying to land this quickly.",
+      "parentUuid": "65c0c706_2968340c",
+      "revId": "d0239af8ef2c7dffa307196fbd130f4c85708115",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
