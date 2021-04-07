@@ -40,7 +40,7 @@ def main(args):
         trace_name = '%s/%s' % (args.prefix, trace)
         # Determine if this version exists
         if cipd('describe', trace_name, '-version', 'version:%s' % trace_version) == 0:
-            logging.info('%s version %s already present', (trace, trace_version))
+            logging.info('%s version %s already present' % (trace, trace_version))
             continue
 
         logging.info('%s version %s missing. calling create.' % (trace, trace_version))
