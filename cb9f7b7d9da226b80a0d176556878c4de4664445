@@ -299,6 +299,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4245a49e_69f0f880",
+        "filename": "src/tests/test_utils/runner/android/java/src/com/android/angle/test/AngleUnitTestActivity.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 4,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-04-07T15:28:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cef11ae6_9bbf2883",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ff6e0a61_b4dd5a26",
@@ -312,6 +330,24 @@
       "writtenOn": "2021-03-29T13:10:25Z",
       "side": 1,
       "message": "same nits",
+      "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8b0ab41_048561b3",
+        "filename": "src/tests/test_utils/runner/android/java/src/com/android/angle/test/TestStatusReporter.java",
+        "patchSetId": 8
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1176654
+      },
+      "writtenOn": "2021-04-07T15:28:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff6e0a61_b4dd5a26",
       "revId": "cb9f7b7d9da226b80a0d176556878c4de4664445",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
