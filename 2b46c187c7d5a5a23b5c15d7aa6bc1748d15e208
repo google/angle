@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5452eb2_f81069f7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T01:14:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16d878f0_e57a7274",
+      "range": {
+        "startLine": 10,
+        "startChar": 63,
+        "endLine": 10,
+        "endChar": 67
+      },
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "15ed2e1e_43dd73e3",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-04-02T22:11:01Z",
       "side": 1,
       "message": "nit: uses",
+      "range": {
+        "startLine": 11,
+        "startChar": 26,
+        "endLine": 11,
+        "endChar": 30
+      },
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e1b2b72_2ddcbac3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T01:14:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "15ed2e1e_43dd73e3",
       "range": {
         "startLine": 11,
         "startChar": 26,
@@ -81,6 +129,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fffaa92_2f8fea68",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1305,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T01:14:48Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "9478694b_761dfd01",
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "87f0e195_48e8268b",
@@ -94,6 +160,24 @@
       "writtenOn": "2021-04-06T06:04:21Z",
       "side": 1,
       "message": "nit: comment change can be reverted. If you are autoformatting with your editor, it\u0027s textwidth seems to be off by one.",
+      "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48a6cf8b_7883a40c",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 2492,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T01:14:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "87f0e195_48e8268b",
       "revId": "2b46c187c7d5a5a23b5c15d7aa6bc1748d15e208",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
