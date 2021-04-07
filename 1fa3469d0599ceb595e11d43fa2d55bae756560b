@@ -16,6 +16,24 @@
       "message": "Mock ICD should be more accurate",
       "revId": "1fa3469d0599ceb595e11d43fa2d55bae756560b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39f16199_816a406e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T16:50:16Z",
+      "side": 1,
+      "message": "That measures something different though, since it never makes it into the VK driver itself to do all of the associated work for a particular call.   It\u0027s possible ANGLE is doing something \"bad\" and performing lots of driver calls whose overhead can be measurable (versus coalescing them or some other fix) that would otherwise be hidden by the mock ICD returning immediately.\n\nThis type of change gives a more accurate overall view of the CPU workload since it measures things more end-to-end, rather than just what ANGLE is doing.",
+      "parentUuid": "704b2323_0f327451",
+      "revId": "1fa3469d0599ceb595e11d43fa2d55bae756560b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
