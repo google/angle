@@ -207,6 +207,30 @@
       },
       "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3dbcca8_d0342183",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:12:56Z",
+      "side": 1,
+      "message": "It\u0027s more that float16 may have oddities preventing it from encoding something RGB10A2 could. Unlikely I guess, I think we can just go ahead with it and see if there are any complaints.",
+      "parentUuid": "a81e6dcd_0de260e1",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 10
+      },
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

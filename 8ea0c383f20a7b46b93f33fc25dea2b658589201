@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4438cb55_837ec819",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 7
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:12:56Z",
+      "side": 1,
+      "message": "Done in follow up change.",
+      "parentUuid": "c77b8256_d33e3860",
+      "range": {
+        "startLine": 370,
+        "startChar": 1,
+        "endLine": 380,
+        "endChar": 36
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3800eb6_c93f3414",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-04-07T20:06:22Z",
       "side": 1,
       "message": "Shouldn\u0027t this be removed too?",
+      "range": {
+        "startLine": 1211,
+        "startChar": 20,
+        "endLine": 1212,
+        "endChar": 75
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ace46d31_764f0b47",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1212,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:12:56Z",
+      "side": 1,
+      "message": "See \"buffer_compression\" entries in the format map. These will not be used (because float32 support is mandatory in Vulkan) unless forced to by an intervention.",
+      "parentUuid": "f3800eb6_c93f3414",
       "range": {
         "startLine": 1211,
         "startChar": 20,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68363422_579ca401",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1252,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:12:56Z",
+      "side": 1,
+      "message": "Ditto back",
+      "parentUuid": "ad442454_46ce7546",
+      "range": {
+        "startLine": 1251,
+        "startChar": 20,
+        "endLine": 1252,
+        "endChar": 77
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3eef9546_f326481a",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-04-07T20:06:22Z",
       "side": 1,
       "message": "Can\u0027t this (and the USCALED) use R16G16_FLOAT?",
+      "range": {
+        "startLine": 2150,
+        "startChar": 20,
+        "endLine": 2151,
+        "endChar": 77
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65aab3d9_23284bd8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2151,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:12:56Z",
+      "side": 1,
+      "message": "Done in follow up change.",
+      "parentUuid": "3eef9546_f326481a",
       "range": {
         "startLine": 2150,
         "startChar": 20,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d72da2f_c20ed50a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2227,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:12:56Z",
+      "side": 1,
+      "message": "Done in follow up change.",
+      "parentUuid": "f2924953_d738a51e",
+      "range": {
+        "startLine": 2226,
+        "startChar": 20,
+        "endLine": 2227,
+        "endChar": 77
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d928edd0_97040b3e",
@@ -146,6 +266,30 @@
       "writtenOn": "2021-04-07T20:06:22Z",
       "side": 1,
       "message": "Ditto",
+      "range": {
+        "startLine": 2274,
+        "startChar": 19,
+        "endLine": 2275,
+        "endChar": 78
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69617761_0cf0c5c8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2275,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T20:12:56Z",
+      "side": 1,
+      "message": "Done in follow up change.",
+      "parentUuid": "d928edd0_97040b3e",
       "range": {
         "startLine": 2274,
         "startChar": 19,
