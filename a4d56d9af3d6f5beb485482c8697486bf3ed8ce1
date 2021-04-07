@@ -202,6 +202,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "00b2b11e_df9f2e62",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T23:28:55Z",
+      "side": 1,
+      "message": "Putting the reduced calls in the Proc functions SGTM, as it\u0027s less code.",
+      "parentUuid": "3bea9ebb_8dc639fe",
+      "range": {
+        "startLine": 86,
+        "startChar": 9,
+        "endLine": 86,
+        "endChar": 23
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "40144d7e_b145d168",
         "filename": "src/tests/perf_tests/TracePerfTest.cpp",
         "patchSetId": 8
@@ -213,6 +237,30 @@
       "writtenOn": "2021-04-07T22:31:18Z",
       "side": 1,
       "message": "@Jamie Actually I thinking to check gMinimizeGPUWork here and load ViewportProc only if gMinimizeGPUWork is true. That way when \"--minimize-gpu-work\" not specififed, there will be ZERO cost.",
+      "range": {
+        "startLine": 451,
+        "startChar": 8,
+        "endLine": 451,
+        "endChar": 65
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0ea44969_5f5d05cd",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 451,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T23:28:55Z",
+      "side": 1,
+      "message": "Ack. sounds good. the extra indirection isn\u0027t too bad probably but yeah couldn\u0027t hurt.",
+      "parentUuid": "40144d7e_b145d168",
       "range": {
         "startLine": 451,
         "startChar": 8,
@@ -354,6 +402,30 @@
       "side": 1,
       "message": "True. I just can not identify an easy way to reduce it. Two options: 1) noop it like I did here and hope we don\u0027t run into trouble, after all, it really only need to work for the app traces. Or, 2) I change it to something like this:\n for(level\u003dbase+1; level\u003cmax, level++)\n    glTexImage2D(..., null);\nBasically respecify every level without data.\nI feel that we just do option 1) for now.",
       "parentUuid": "f4ca6927_57bf9159",
+      "range": {
+        "startLine": 1645,
+        "startChar": 8,
+        "endLine": 1645,
+        "endChar": 24
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e3ffdbf_475ab4d6",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1645,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T23:28:55Z",
+      "side": 1,
+      "message": "Maybe just leave a comment with 1).",
+      "parentUuid": "066c3768_fb11f00f",
       "range": {
         "startLine": 1645,
         "startChar": 8,
