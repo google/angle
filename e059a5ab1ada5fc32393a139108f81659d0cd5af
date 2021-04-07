@@ -22,6 +22,30 @@
       },
       "revId": "e059a5ab1ada5fc32393a139108f81659d0cd5af",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8ece72d_7a8d28b3",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-04-07T21:25:06Z",
+      "side": 1,
+      "message": "Arg these types of typos are happening all the time because of my macbook pro keyboard, but I can\u0027t get it fixed due to policy.\n\nAnd in https://bugs.chromium.org/p/chromium/issues/detail?id\u003d1181193#c6 it says both security and privacy, I\u0027ll change to privacy since it\u0027s more obvious.",
+      "parentUuid": "7c91e993_0d94a18f",
+      "range": {
+        "startLine": 534,
+        "startChar": 50,
+        "endLine": 534,
+        "endChar": 53
+      },
+      "revId": "e059a5ab1ada5fc32393a139108f81659d0cd5af",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
