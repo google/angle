@@ -297,6 +297,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6ce4314d_d8151b69",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T15:31:21Z",
+      "side": 1,
+      "message": "Can you mention that in a comment, along with why you chose 5000?",
+      "parentUuid": "817c23d4_b30e7312",
+      "range": {
+        "startLine": 223,
+        "startChar": 4,
+        "endLine": 223,
+        "endChar": 40
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5f247661_7967cfb7",
         "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
         "patchSetId": 5
@@ -498,6 +522,30 @@
       "side": 1,
       "message": "Less than 5000 is not super consistent at reproing the original crash. WDYT about only running on D3D11 ES2/ES3?",
       "parentUuid": "b73bb580_3c2f6388",
+      "range": {
+        "startLine": 776,
+        "startChar": 23,
+        "endLine": 776,
+        "endChar": 44
+      },
+      "revId": "9ce799eff8870de7d3d5e85ee0c36a21b3620a71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5122317_3de1a46d",
+        "filename": "src/tests/gl_tests/MultithreadingTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T15:31:21Z",
+      "side": 1,
+      "message": "Sure, sounds good. Please go ahead and update the comment like suggested, and to be safe, mark your test as slow in angle_end2end_tests_main.cpp.",
+      "parentUuid": "8f1401d1_fe3be191",
       "range": {
         "startLine": 776,
         "startChar": 23,
