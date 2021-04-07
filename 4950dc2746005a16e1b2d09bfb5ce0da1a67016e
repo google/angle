@@ -159,6 +159,30 @@
       },
       "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e26e2e7_820eda40",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T19:08:45Z",
+      "side": 1,
+      "message": "Reverted to 32-bit float.",
+      "parentUuid": "6635e0d2_5e022f8b",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 10
+      },
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
