@@ -52,6 +52,24 @@
       "parentUuid": "7137a74f_09bb6472",
       "revId": "8cc1031f2e3c877db945603a786b03832ad49895",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fcd5a69f_4cd01657",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T16:02:32Z",
+      "side": 1,
+      "message": "I see. Thanks.",
+      "parentUuid": "7e0127cc_a7982c49",
+      "revId": "8cc1031f2e3c877db945603a786b03832ad49895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
