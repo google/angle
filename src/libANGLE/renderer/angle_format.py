@@ -242,8 +242,9 @@ def get_vertex_copy_function(src_format, dst_format):
     if dst_format == "NONE":
         return "nullptr"
 
-    num_channel = len(get_channel_tokens(src_format))
-    if num_channel < 1 or num_channel > 4:
+    src_num_channel = len(get_channel_tokens(src_format))
+    dst_num_channel = len(get_channel_tokens(dst_format))
+    if src_num_channel < 1 or src_num_channel > 4:
         return "nullptr"
 
     if src_format.endswith('_VERTEX'):
@@ -259,7 +260,7 @@ def get_vertex_copy_function(src_format, dst_format):
     if 'FIXED' in src_format:
         assert 'FLOAT' in dst_format, (
             'get_vertex_copy_function: can only convert fixed to float,' + ' not to ' + dst_format)
-        return 'Copy32FixedTo32FVertexData<%d, %d>' % (num_channel, num_channel)
+        return 'Copy32FixedTo32FVertexData<%d, %d>' % (src_num_channel, dst_num_channel)
 
     src_gl_type = get_format_gl_type(src_format)
     dst_gl_type = get_format_gl_type(dst_format)
@@ -268,13 +269,24 @@ def get_vertex_copy_function(src_format, dst_format):
         return "nullptr"
 
     if src_gl_type == dst_gl_type:
-        dst_num_channel = len(get_channel_tokens(dst_format))
-        return 'CopyNativeVertexData<%s, %d, %d, 0>' % (src_gl_type, num_channel, dst_num_channel)
+        default_alpha = '1'
+
+        if src_num_channel == dst_num_channel or dst_num_channel < 4:
+            default_alpha = '0'
+        elif 'A16_FLOAT' in dst_format:
+            default_alpha = 'gl::Float16One'
+        elif 'A32_FLOAT' in dst_format:
+            default_alpha = 'gl::Float32One'
+        elif 'NORM' in dst_format:
+            default_alpha = 'std::numeric_limits<%s>::max()' % (src_gl_type)
+
+        return 'CopyNativeVertexData<%s, %d, %d, %s>' % (src_gl_type, src_num_channel,
+                                                         dst_num_channel, default_alpha)
 
     assert 'FLOAT' in dst_format, (
         'get_vertex_copy_function: can only convert to float,' + ' not to ' + dst_format)
     normalized = 'true' if 'NORM' in src_format else 'false'
 
     dst_is_half = 'true' if dst_gl_type == 'GLhalf' else 'false'
-    return "CopyToFloatVertexData<%s, %d, %d, %s, %s>" % (src_gl_type, num_channel, num_channel,
-                                                          normalized, dst_is_half)
+    return "CopyToFloatVertexData<%s, %d, %d, %s, %s>" % (src_gl_type, src_num_channel,
+                                                          dst_num_channel, normalized, dst_is_half)

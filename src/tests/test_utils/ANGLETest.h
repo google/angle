@@ -268,17 +268,6 @@ void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driver);
         EXPECT_EQ((a), pixel[3]);                                     \
     } while (0)
 
-#define EXPECT_PIXEL_RGB_EQ_HELPER(x, y, r, g, b, ctype, format, type) \
-    do                                                                 \
-    {                                                                  \
-        ctype pixel[4];                                                \
-        glReadPixels((x), (y), 1, 1, format, type, pixel);             \
-        EXPECT_GL_NO_ERROR();                                          \
-        EXPECT_EQ((r), pixel[0]);                                      \
-        EXPECT_EQ((g), pixel[1]);                                      \
-        EXPECT_EQ((b), pixel[2]);                                      \
-    } while (0)
-
 #define EXPECT_PIXEL_NEAR(x, y, r, g, b, a, abs_error) \
     EXPECT_PIXEL_NEAR_HELPER(x, y, r, g, b, a, abs_error, GLubyte, GL_RGBA, GL_UNSIGNED_BYTE)
 
@@ -296,9 +285,6 @@ void LoadEntryPointsWithUtilLoader(angle::GLESDriverType driver);
 
 #define EXPECT_PIXEL_16UI_COLOR(x, y, color) \
     EXPECT_PIXEL_16UI(x, y, color.R, color.G, color.B, color.A)
-
-#define EXPECT_PIXEL_RGB_EQUAL(x, y, r, g, b) \
-    EXPECT_PIXEL_RGB_EQ_HELPER(x, y, r, g, b, GLubyte, GL_RGBA, GL_UNSIGNED_BYTE)
 
 // TODO(jmadill): Figure out how we can use GLColor's nice printing with EXPECT_NEAR.
 #define EXPECT_PIXEL_COLOR_NEAR(x, y, angleColor, abs_error) \

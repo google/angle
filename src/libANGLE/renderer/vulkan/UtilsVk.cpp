@@ -63,8 +63,6 @@ constexpr uint32_t kOverlayDrawFontBinding          = 4;
 constexpr uint32_t kGenerateMipmapDestinationBinding = 0;
 constexpr uint32_t kGenerateMipmapSourceBinding      = 1;
 
-constexpr uint32_t kFloatOneAsUint = 0x3F80'0000u;
-
 bool ValidateFloatOneAsUint()
 {
     union
@@ -72,7 +70,7 @@ bool ValidateFloatOneAsUint()
         uint32_t asUint;
         float asFloat;
     } one;
-    one.asUint = kFloatOneAsUint;
+    one.asUint = gl::Float32One;
     return one.asFloat == 1.0f;
 }
 
@@ -88,6 +86,8 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 
     bool destIsSint      = params.destFormat->isSint();
     bool destIsUint      = params.destFormat->isUint();
+    bool destIsSnorm     = params.destFormat->isSnorm();
+    bool destIsUnorm     = params.destFormat->isUnorm();
     bool destIsFloat     = params.destFormat->isFloat();
     bool destIsHalfFloat = params.destFormat->isVertexTypeHalfFloat();
 
@@ -99,7 +99,8 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
 
     // One of each bool set must be true
     ASSERT(srcIsSint || srcIsUint || srcIsSnorm || srcIsUnorm || srcIsFixed || srcIsFloat);
-    ASSERT(destIsSint || destIsUint || destIsFloat || destIsHalfFloat);
+    ASSERT(destIsSint || destIsUint || destIsSnorm || destIsUnorm || destIsFloat ||
+           destIsHalfFloat);
 
     // We currently don't have any big-endian devices in the list of supported platforms.  The
     // shader is capable of supporting big-endian architectures, but the relevant flag (IsBigEndian)
@@ -113,6 +114,13 @@ uint32_t GetConvertVertexFlags(const UtilsVk::ConvertVertexParameters &params)
     if (srcIsHalfFloat && destIsHalfFloat)
     {
         // Note that HalfFloat conversion uses the same shader as Uint.
+        flags = ConvertVertex_comp::kUintToUint;
+    }
+    else if ((srcIsSnorm && destIsSnorm) || (srcIsUnorm && destIsUnorm))
+    {
+        // Do snorm->snorm and unorm->unorm copies using the uint->uint shader.  Currently only
+        // supported for same-width formats, so it's only used when adding channels.
+        ASSERT(params.srcFormat->redBits == params.destFormat->redBits);
         flags = ConvertVertex_comp::kUintToUint;
     }
     else if (srcIsSint && destIsSint)
@@ -1793,7 +1801,7 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     shaderParams.componentCount = static_cast<uint32_t>(params.vertexCount * shaderParams.Nd);
     // Total number of 4-byte outputs is the number of components divided by how many components can
     // fit in a 4-byte value.  Note that this value is also the invocation size of the shader.
-    shaderParams.outputCount = shaderParams.componentCount / shaderParams.Ed;
+    shaderParams.outputCount = UnsignedCeilDivide(shaderParams.componentCount, shaderParams.Ed);
     shaderParams.srcOffset   = static_cast<uint32_t>(params.srcOffset);
     shaderParams.destOffset  = static_cast<uint32_t>(params.destOffset);
 
@@ -1816,11 +1824,33 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
     switch (flags)
     {
         case ConvertVertex_comp::kSintToSint:
-        case ConvertVertex_comp::kUintToUint:
         case ConvertVertex_comp::kSintToFloat:
         case ConvertVertex_comp::kUintToFloat:
             // For integers, alpha should take a value of 1.
             shaderParams.srcEmulatedAlpha = 1;
+            break;
+
+        case ConvertVertex_comp::kUintToUint:
+            // For integers, alpha should take a value of 1.  However, uint->uint is also used to
+            // add channels to RGB snorm, unorm and half formats.
+            if (params.destFormat->isSnorm())
+            {
+                // See case ConvertVertex_comp::kSnormToFloat below.
+                shaderParams.srcEmulatedAlpha = srcValueMask >> 1;
+            }
+            else if (params.destFormat->isUnorm())
+            {
+                // See case ConvertVertex_comp::kUnormToFloat below.
+                shaderParams.srcEmulatedAlpha = srcValueMask;
+            }
+            else if (params.destFormat->isVertexTypeHalfFloat())
+            {
+                shaderParams.srcEmulatedAlpha = gl::Float16One;
+            }
+            else
+            {
+                shaderParams.srcEmulatedAlpha = 1;
+            }
             break;
 
         case ConvertVertex_comp::kSnormToFloat:
@@ -1842,7 +1872,7 @@ angle::Result UtilsVk::convertVertexBuffer(ContextVk *contextVk,
 
         case ConvertVertex_comp::kFloatToFloat:
             ASSERT(ValidateFloatOneAsUint());
-            shaderParams.srcEmulatedAlpha = kFloatOneAsUint;
+            shaderParams.srcEmulatedAlpha = gl::Float32One;
             break;
 
         default:
@@ -2942,14 +2972,13 @@ angle::Result UtilsVk::copyImageBits(ContextVk *contextVk,
     else if (shaderParams.Bd == 2)
     {
         ASSERT(dstImageFormat.isFloat());
-        // 1.0 in half-float is represented with 0 01111 0000000000
-        shaderParams.srcEmulatedAlpha = 0x3C00;
+        shaderParams.srcEmulatedAlpha = gl::Float16One;
     }
     else if (shaderParams.Bd == 4)
     {
         ASSERT(dstImageFormat.isFloat());
         ASSERT(ValidateFloatOneAsUint());
-        shaderParams.srcEmulatedAlpha = kFloatOneAsUint;
+        shaderParams.srcEmulatedAlpha = gl::Float32One;
     }
     else
     {

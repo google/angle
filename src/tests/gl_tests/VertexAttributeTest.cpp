@@ -214,9 +214,7 @@ class VertexAttributeTest : public ANGLETest
         glEnableVertexAttribArray(mExpectedAttrib);
     }
 
-    void checkPixels() { checkRGBPixels(true); }
-
-    void checkRGBPixels(bool checkAlpha)
+    void checkPixels()
     {
         GLint viewportSize[4];
         glGetIntegerv(GL_VIEWPORT, viewportSize);
@@ -227,20 +225,10 @@ class VertexAttributeTest : public ANGLETest
         // We need to offset our checks from triangle edges to ensure we don't fall on a single tri
         // Avoid making assumptions of drawQuad with four checks to check the four possible tri
         // regions
-        if (checkAlpha)
-        {
-            EXPECT_PIXEL_EQ((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
-            EXPECT_PIXEL_EQ((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
-            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
-            EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
-        }
-        else
-        {
-            EXPECT_PIXEL_RGB_EQUAL((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255);
-            EXPECT_PIXEL_RGB_EQUAL((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255);
-            EXPECT_PIXEL_RGB_EQUAL(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255);
-            EXPECT_PIXEL_RGB_EQUAL(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255);
-        }
+        EXPECT_PIXEL_EQ((midPixelX + viewportSize[0]) / 2, midPixelY, 255, 255, 255, 255);
+        EXPECT_PIXEL_EQ((midPixelX + viewportSize[2]) / 2, midPixelY, 255, 255, 255, 255);
+        EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[1]) / 2, 255, 255, 255, 255);
+        EXPECT_PIXEL_EQ(midPixelX, (midPixelY + viewportSize[3]) / 2, 255, 255, 255, 255);
     }
 
     void checkPixelsUnEqual()
@@ -284,16 +272,7 @@ class VertexAttributeTest : public ANGLETest
 
             if (checkPixelEqual)
             {
-                if ((test.type == GL_HALF_FLOAT || test.type == GL_HALF_FLOAT_OES) && IsVulkan() &&
-                    typeSize == 3)
-                {  // We need a special case for RGB16F format on a Vulkan backend due to the fact
-                   // that in such a usecase, we need to ignore the alpha channel.
-                    checkRGBPixels(false);
-                }
-                else
-                {
-                    checkPixels();
-                }
+                checkPixels();
             }
             else
             {
