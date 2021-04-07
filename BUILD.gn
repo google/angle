@@ -567,6 +567,7 @@ template("translator_lib") {
     deps = [
       ":includes",
       ":preprocessor",
+      "$angle_root/src/common/spirv:angle_spirv_headers",
     ]
 
     if (_uses_spirv) {
@@ -764,6 +765,7 @@ if (angle_enable_vulkan || angle_enable_metal) {
       ":libANGLE_headers",
       "$angle_root/src/common/spirv:angle_spirv_base",
       "$angle_root/src/common/spirv:angle_spirv_builder",
+      "$angle_root/src/common/spirv:angle_spirv_headers",
       "$angle_root/src/common/spirv:angle_spirv_parser",
       "${angle_spirv_headers_dir}:spv_headers",
     ]

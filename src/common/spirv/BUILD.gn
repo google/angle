@@ -4,12 +4,16 @@
 
 import("../../../gni/angle.gni")
 
+angle_source_set("angle_spirv_headers") {
+  sources = [ "spirv_types.h" ]
+
+  deps = [ "$angle_root:angle_common" ]
+}
+
 angle_source_set("angle_spirv_base") {
-  sources = [
-    "angle_spirv_utils.cpp",
-    "spirv_types.h",
-  ]
+  sources = [ "angle_spirv_utils.cpp" ]
   deps = [
+    ":angle_spirv_headers",
     "$angle_root:angle_common",
     "${angle_spirv_headers_dir}:spv_headers",
     "${angle_spirv_tools_dir}:spvtools_headers",
@@ -27,6 +31,7 @@ angle_source_set("angle_spirv_builder") {
   ]
   deps = [
     ":angle_spirv_base",
+    ":angle_spirv_headers",
     "$angle_root:angle_common",
     "${angle_spirv_headers_dir}:spv_headers",
   ]
@@ -39,6 +44,7 @@ angle_source_set("angle_spirv_parser") {
   ]
   deps = [
     ":angle_spirv_base",
+    ":angle_spirv_headers",
     "$angle_root:angle_common",
     "${angle_spirv_headers_dir}:spv_headers",
   ]

@@ -108,7 +108,7 @@ void GlslangFinalize()
 ANGLE_NO_DISCARD bool GlslangCompileToSpirv(const ShBuiltInResources &resources,
                                             sh::GLenum shaderType,
                                             const std::string &shaderSource,
-                                            std::vector<uint32_t> *spirvBlobOut)
+                                            angle::spirv::Blob *spirvBlobOut)
 {
     TBuiltInResource builtInResources(glslang::DefaultTBuiltInResource);
     GetBuiltInResources(resources, &builtInResources);
