@@ -111,6 +111,30 @@
       },
       "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5e7ebaa_2fa4c71e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T17:28:13Z",
+      "side": 1,
+      "message": "Given that almost all tests pass with these, I speculate that given that these are float formats there\u0027s an error threshold in all tests so exact values are never expected.\n\nLike a test could maybe upload 65532 to a USCALED buffer and then check in the shader that it got exactly 65532.0. I honestly can\u0027t imagine why anyone would want such a precision and not use UINT instead.",
+      "parentUuid": "64d79b74_b1b0cb85",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 10
+      },
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
