@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4d660ce_a940b69f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-07T19:06:59Z",
+      "side": 1,
+      "message": "update commit message to reflect updated logic",
+      "revId": "b734ee1e05775a489b2dec49d85e84e5e2702e1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5d123b1_35740e2c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 927,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-07T19:06:59Z",
+      "side": 1,
+      "message": "add a comment briefly explaining this logic",
+      "revId": "b734ee1e05775a489b2dec49d85e84e5e2702e1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
