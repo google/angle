@@ -183,6 +183,30 @@
       },
       "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a81e6dcd_0de260e1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-07T20:06:22Z",
+      "side": 1,
+      "message": "\u003e 16-bit float has a 10-bit mantissa so I think it should be able to cover the RGB10A2 formats, but not sure if there\u0027s some weirdness I\u0027m missing (denormlized floats or other such oddities).\n\nI think RGB10A2 should work out, as the original RGB10A2 data can\u0027t encode any \"oddities\".  Are you concerned about what might happen after the data is in the buffer?",
+      "parentUuid": "6635e0d2_5e022f8b",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 10
+      },
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
