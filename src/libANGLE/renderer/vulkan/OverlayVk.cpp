@@ -23,12 +23,15 @@ OverlayVk::OverlayVk(const gl::OverlayState &state)
       mSupportsSubgroupBallot(false),
       mSupportsSubgroupArithmetic(false),
       mRefreshCulledWidgets(false),
+      mSubgroupSize{},
       mPresentImageExtent{}
 {}
 OverlayVk::~OverlayVk() = default;
 
-angle::Result OverlayVk::init(const gl::Context *context)
+angle::Result OverlayVk::init(const gl::Context *context, bool *successOut)
 {
+    *successOut = false;
+
     ContextVk *contextVk   = vk::GetImpl(context);
     RendererVk *rendererVk = contextVk->getRenderer();
 
@@ -66,7 +69,9 @@ angle::Result OverlayVk::init(const gl::Context *context)
 
     mRefreshCulledWidgets = true;
 
-    return contextVk->flushImpl(nullptr);
+    ANGLE_TRY(contextVk->flushImpl(nullptr));
+    *successOut = true;
+    return angle::Result::Continue;
 }
 
 void OverlayVk::onDestroy(const gl::Context *context)
