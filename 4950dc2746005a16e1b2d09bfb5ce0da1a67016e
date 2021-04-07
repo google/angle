@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "47639b78_aa91ed2c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T17:01:20Z",
+      "side": 1,
+      "message": "Looks like this might fail on some Adreno?",
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1b459076_690692e7",
@@ -14,6 +31,30 @@
       "writtenOn": "2021-04-07T14:46:41Z",
       "side": 1,
       "message": "These are wrong unfortunately as they can\u0027t accurately represent the values in the format. However, they are usable as \"buffer_compressed\" for an intervention.\n\nI\u0027m putting this up for review so we can go over the rest of the formats and see if they are ok or not. Also, more importantly, this change lays the ground for the next change that converts more formats to 16-bit float.",
+      "range": {
+        "startLine": 441,
+        "startChar": 0,
+        "endLine": 452,
+        "endChar": 10
+      },
+      "revId": "4950dc2746005a16e1b2d09bfb5ce0da1a67016e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cc42e751_0ffa3cc0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_map.json",
+        "patchSetId": 6
+      },
+      "lineNbr": 452,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T17:01:20Z",
+      "side": 1,
+      "message": "Just please remember to take this out before landing.",
+      "parentUuid": "1b459076_690692e7",
       "range": {
         "startLine": 441,
         "startChar": 0,
