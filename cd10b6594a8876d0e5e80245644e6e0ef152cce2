@@ -16,6 +16,24 @@
       "message": "LGTM. John can you confirm this is OK to land?",
       "revId": "cd10b6594a8876d0e5e80245644e6e0ef152cce2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e486e1fc_412523a4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-07T12:40:52Z",
+      "side": 1,
+      "message": "Yes, LGTM. Just needs to be rebased and regenerated now, because I just merged https://chromium-review.googlesource.com/c/angle/angle/+/2807717.",
+      "parentUuid": "bd650467_b41685b3",
+      "revId": "cd10b6594a8876d0e5e80245644e6e0ef152cce2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
