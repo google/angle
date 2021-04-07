@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "edecd46f_d5e39725",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T23:38:15Z",
+      "side": 1,
+      "message": "Brandon are you guys looking into ES 3.2 support? There\u0027s a bunch of missing validation functions in there.",
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75ec108f_f4fce9b0",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2724,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T23:38:15Z",
+      "side": 1,
+      "message": "Your comment seems incorrect. ES 3.2 spec under FramebufferTexture2D:\n\n\"An INVALID_VALUE error is generated if texture is not zero and level is\nnot a supported texture level for textarget, as described above.\"\n\nThe \"above\" section puts some restrictions on this level, including on the max.",
+      "range": {
+        "startLine": 2715,
+        "startChar": 0,
+        "endLine": 2724,
+        "endChar": 9
+      },
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34ce529b_d4616220",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2732,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T23:38:15Z",
+      "side": 1,
+      "message": "please instead add this to ValidateFramebufferTextureBase . Seems like another small testing gap.",
+      "range": {
+        "startLine": 2726,
+        "startChar": 0,
+        "endLine": 2732,
+        "endChar": 9
+      },
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
