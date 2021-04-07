@@ -42,6 +42,9 @@ declare_args() {
 
   # Enables non-conformant extensions and features
   angle_expose_non_conformant_extensions_and_versions = false
+
+  # Optional feature that forces dirty state whenever we use a new context regardless of thread.
+  angle_force_context_check_every_call = false
 }
 
 if (angle_build_all) {
@@ -646,11 +649,14 @@ config("angle_backend_config") {
     defines += [ "ANGLE_DELEGATE_WORKERS" ]
   }
 
+  if (angle_force_context_check_every_call) {
+    defines += [ "ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL=1" ]
+  }
+
   configs = []
 
   if (angle_enable_d3d11) {
     configs += [ "src/libANGLE/renderer/d3d:angle_d3d11_backend_config" ]
-    defines += [ "ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL=1" ]
   }
 
   if (angle_enable_d3d9) {
