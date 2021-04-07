@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9025e9d1_0d4e6b84",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 306,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T20:00:13Z",
+      "side": 1,
+      "message": "In this case the offset and size are implicitly cast to 64-bit when passed to append64BitValue. So it\u0027s not necessary for compilation to handle 32-bit specially. We could possibly save some space on 32-bit by specializing this code. That would be a minor perf improvement. I\u0027ve left a comment here and did not change the logic.",
+      "parentUuid": "5e30b6d3_9b26f37f",
+      "range": {
+        "startLine": 305,
+        "startChar": 0,
+        "endLine": 306,
+        "endChar": 50
+      },
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05cada54_31c7e7ae",
@@ -71,6 +95,24 @@
       "writtenOn": "2021-03-23T02:31:02Z",
       "side": 1,
       "message": "Why is this done here during invalidate rather than during updateShaderResourcesDescriptorSet()?   I would expect all of the necessary mState values to have the most up-to-date values during updateShaderResourcesDescriptorSet() when we are handling dirty bits and about to draw.",
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01074668_1760e2d4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3863,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T20:00:13Z",
+      "side": 1,
+      "message": "Generally, for consistency. This is how the textures work as well. We can do a deep dive on CPU performance in the upcoming year. Keep in mind this function is called during dirty bit processing for the front-end dirty bits.",
+      "parentUuid": "05cada54_31c7e7ae",
       "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -100,6 +142,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8176a11a_9253c113",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3868,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T20:00:13Z",
+      "side": 1,
+      "message": "Agreed. I didn\u0027t clean this up in this CL yet. I was thinking it might be easier instead to mark gaps with \"0\" and the end of each block of buffers with 0xFFFFFFFF. The only thing preventing me was switching how we iterate. I could clean this up in a follow-up if it works nicely.",
+      "parentUuid": "4137b559_806408b3",
+      "range": {
+        "startLine": 3868,
+        "startChar": 90,
+        "endLine": 3868,
+        "endChar": 91
+      },
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f54a3bc3_c1bdd846",
         "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
         "patchSetId": 8
@@ -111,6 +177,30 @@
       "writtenOn": "2021-03-23T19:44:58Z",
       "side": 1,
       "message": "Does the textures desc set cache behave similarly? IIUC, if the application loops between too many programs (with different resources) such that a new pool is allocated, it will effectively never use the cache, right?",
+      "range": {
+        "startLine": 1084,
+        "startChar": 0,
+        "endLine": 1088,
+        "endChar": 13
+      },
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7c20cbb8_3af472fd",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T20:00:13Z",
+      "side": 1,
+      "message": "Yeah. It would work the same way with textures.",
+      "parentUuid": "f54a3bc3_c1bdd846",
       "range": {
         "startLine": 1084,
         "startChar": 0,
@@ -152,6 +242,24 @@
       "side": 1,
       "message": "The descriptors for EXT_shader_framebuffer_fetch_non_coherent should move to the driver\u0027s desc set, because they are independent of the program.\n\nCreated a bug for it: anglebug.com/5787",
       "parentUuid": "1a7b9e44_1f8538a9",
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fa2a68f_e031b0d6",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1460,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T20:00:13Z",
+      "side": 1,
+      "message": "It also wouldn\u0027t be hard to put the other descriptors for storage images and fetch images in this cache. I just didn\u0027t do it to keep this implementation fairly simple. I didn\u0027t file a TODO or anything because I didn\u0027t intend to implement it. Would be fairly straight-forward though.",
+      "parentUuid": "a71afad9_74979c57",
       "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

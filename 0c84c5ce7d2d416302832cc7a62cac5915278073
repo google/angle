@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6d22f46_d6de36fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T20:00:13Z",
+      "side": 1,
+      "message": "PTAL, should be good to go now. The Gold differences on Windows Intel seem to be because of small subpixel differences associated with switching descriptor set types. All other platforms had pixel-perfect rendering. Re-running CQ, I ironed out all the 32-bit and other failures. Will try to update the CL with some meaningful perf numbers before landing.",
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
