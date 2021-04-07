@@ -148,6 +148,29 @@
       },
       "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aff8a577_6efc5d2e",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1645,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-07T22:08:00Z",
+      "side": 1,
+      "message": "If we disable mip map generation, should we force all the glTexImage calls to level 0?",
+      "range": {
+        "startLine": 1645,
+        "startChar": 8,
+        "endLine": 1645,
+        "endChar": 24
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
