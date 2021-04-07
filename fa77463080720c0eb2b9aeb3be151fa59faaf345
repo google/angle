@@ -321,6 +321,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "72e19050_f6b5c195",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-07T22:33:12Z",
+      "side": 1,
+      "message": "I redid the message, doing the following:\n\n- I put the intended and actual format into it.\n- I point out that it\u0027s because the Vulkan driver doesn\u0027t support the format.\n\nStill to do:\u0027\n\n- [ ] Shabi\u0027s idea of CPU and GPU-based conversion paths with different severity levels.\n- [ ] Add some of the GL_*SCALE_ANGLEX formats to GLenumToString()",
+      "parentUuid": "ed089e18_7f8f3f87",
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "616275e6_df46e900",
         "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
         "patchSetId": 1
@@ -356,6 +374,30 @@
       "side": 1,
       "message": "Good question.  I\u0027ll work with the AGI team to determine if that will work.",
       "parentUuid": "616275e6_df46e900",
+      "range": {
+        "startLine": 585,
+        "startChar": 41,
+        "endLine": 586,
+        "endChar": 55
+      },
+      "revId": "fa77463080720c0eb2b9aeb3be151fa59faaf345",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "698b6656_c941b783",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-07T22:33:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5506173d_4191e358",
       "range": {
         "startLine": 585,
         "startChar": 41,

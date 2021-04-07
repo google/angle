@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0d6cc8f_e0b046f7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-07T22:33:12Z",
+      "side": 1,
+      "message": "I changed the bug number and updated the message (PTAL at it--tried to brief and clear).\n\nStill some work to do, particularly when Pascal gets back from vacation.",
+      "revId": "0b25a0fa71202091a0ae05bcbe2158fdd907e558",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
