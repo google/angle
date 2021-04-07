@@ -518,6 +518,19 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_OES_EGL_image_external");
     }
 
+    if (param.testID == RestrictedTraceID::professional_baseball_spirits)
+    {
+        // TODO(https://anglebug.com/5827) Linux+Mesa/RADV Vulkan generates
+        // GL_INVALID_FRAMEBUFFER_OPERATION.
+        // Mesa versions below 20.3.5 produce the same issue on Linux+Mesa/Intel Vulkan
+        if (IsLinux() && (IsAMD() || IsIntel()) &&
+            param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE &&
+            param.eglParameters.deviceType != EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

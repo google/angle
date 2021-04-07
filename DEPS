@@ -827,6 +827,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_internal',
   },
+  'src/tests/restricted_traces/professional_baseball_spirits': {
+      'packages': [
+        {
+            'package': 'angle/traces/professional_baseball_spirits',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_internal',
+  },
   'src/tests/restricted_traces/pubg_mobile_lite': {
       'packages': [
         {
