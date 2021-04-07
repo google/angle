@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "293307cf_e2f6c39d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-04-07T23:57:40Z",
+      "side": 1,
+      "message": "We\u0027re looking into resolving the geometry shader related failures found in the deqp test expectations files.",
+      "parentUuid": "edecd46f_d5e39725",
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "75ec108f_f4fce9b0",
