@@ -3,6 +3,29 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "31341521_6ec18169",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 20
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T23:15:06Z",
+      "side": 1,
+      "message": "Nice.",
+      "range": {
+        "startLine": 31,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 69
+      },
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "e6d22f46_d6de36fe",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 20
@@ -14,6 +37,103 @@
       "writtenOn": "2021-04-07T20:00:13Z",
       "side": 1,
       "message": "PTAL, should be good to go now. The Gold differences on Windows Intel seem to be because of small subpixel differences associated with switching descriptor set types. All other platforms had pixel-perfect rendering. Re-running CQ, I ironed out all the 32-bit and other failures. Will try to update the CL with some meaningful perf numbers before landing.",
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06ea587b_897b68e3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T23:15:06Z",
+      "side": 1,
+      "message": "re-LGTM",
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b3c4e20_75785bc6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 3914,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T23:15:06Z",
+      "side": 1,
+      "message": "This should be removed and just use \u0027mExecutable\u0027 directly below.",
+      "range": {
+        "startLine": 3903,
+        "startChar": 0,
+        "endLine": 3914,
+        "endChar": 9
+      },
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a79f615_e6fd4b78",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T23:15:06Z",
+      "side": 1,
+      "message": "Should be a const reference.",
+      "range": {
+        "startLine": 939,
+        "startChar": 31,
+        "endLine": 939,
+        "endChar": 36
+      },
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d074f6dd_7dd0f3e0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1147,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T23:15:06Z",
+      "side": 1,
+      "message": "It may be good to add to this block:\n\n    if (blocks.empty() || (cacheHit \u0026\u0026 !IsDynamicDescriptor(descriptorType)))",
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "904f03a9_bee9434f",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-07T23:15:06Z",
+      "side": 1,
+      "message": "This can be moved outside of the loop.",
       "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
