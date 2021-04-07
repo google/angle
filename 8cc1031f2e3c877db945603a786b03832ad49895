@@ -16,6 +16,24 @@
       "message": "Why does this fail with the null ICD?\n\nWhy don\u0027t any future flushes also fail?",
       "revId": "8cc1031f2e3c877db945603a786b03832ad49895",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7137a74f_09bb6472",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T15:57:23Z",
+      "side": 1,
+      "message": "That\u0027s not what\u0027s failing. There\u0027s an early out in the middle of this function.",
+      "parentUuid": "cf5b6b86_b3f6999a",
+      "revId": "8cc1031f2e3c877db945603a786b03832ad49895",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
