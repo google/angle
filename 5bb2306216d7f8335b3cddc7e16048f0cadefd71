@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c2997b0_146e00c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-07T03:28:52Z",
+      "side": 1,
+      "message": "Strange that we haven\u0027t hit this before.  Folks are using ANGLE on Mesa already.\n\nValue looks right from https://www.khronos.org/registry/vulkan/specs/1.2-extensions/man/html/VkVendorId.html",
+      "revId": "5bb2306216d7f8335b3cddc7e16048f0cadefd71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
