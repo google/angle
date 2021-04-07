@@ -22,6 +22,30 @@
       },
       "revId": "2dfbadc0569ef308b9f97ab65abae10f0217a8a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12903eaa_e6d8e8cd",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-07T21:05:01Z",
+      "side": 1,
+      "message": "GLES default provoking vertex mode is LAST. If the underlying Vulkan ICD supports the \"VK_EXT_provoking_vertex \" extension we program all vulkan pipelines to have the provoking vertex mode as LAST to match what GLES uses as default.",
+      "parentUuid": "b1746478_433bd7f2",
+      "range": {
+        "startLine": 929,
+        "startChar": 61,
+        "endLine": 929,
+        "endChar": 71
+      },
+      "revId": "2dfbadc0569ef308b9f97ab65abae10f0217a8a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
