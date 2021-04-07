@@ -34,6 +34,24 @@
       "parentUuid": "704b2323_0f327451",
       "revId": "1fa3469d0599ceb595e11d43fa2d55bae756560b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aeaebdfe_ae204334",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-07T17:00:56Z",
+      "side": 1,
+      "message": "I guess they are complimentary. ANGLE could also potentially change its behavior based on the call parameters. Simple example is nooping draw calls whose count parameter is too small, but it could potentially also do other things, like changing behavior based on render area size, or deciding to flush based on a measure of how much work has been accumulated.\n\nContradicting myself, ANGLE also changes behavior based on driver features, so Mock ICD is also not representative.",
+      "parentUuid": "39f16199_816a406e",
+      "revId": "1fa3469d0599ceb595e11d43fa2d55bae756560b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
