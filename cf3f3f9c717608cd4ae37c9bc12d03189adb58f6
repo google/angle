@@ -63,6 +63,30 @@
       },
       "revId": "cf3f3f9c717608cd4ae37c9bc12d03189adb58f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f6cd859_a2e06e47",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-04-07T22:44:22Z",
+      "side": 1,
+      "message": "Sorry, this was a mistake on my part, initially I thought it only applied if it was immutable\nThanks!",
+      "parentUuid": "c0a47ecd_eff2339a",
+      "range": {
+        "startLine": 2720,
+        "startChar": 17,
+        "endLine": 2720,
+        "endChar": 35
+      },
+      "revId": "cf3f3f9c717608cd4ae37c9bc12d03189adb58f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
