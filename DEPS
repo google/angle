@@ -507,6 +507,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_internal',
   },
+  'src/tests/restricted_traces/disney_tsum_tsum': {
+      'packages': [
+        {
+            'package': 'angle/traces/disney_tsum_tsum',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_internal',
+  },
   'src/tests/restricted_traces/dragon_ball_legends': {
       'packages': [
         {
