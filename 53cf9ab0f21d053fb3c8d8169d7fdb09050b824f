@@ -16,6 +16,23 @@
       "message": "As discussed over chat.",
       "revId": "53cf9ab0f21d053fb3c8d8169d7fdb09050b824f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f28e766f_e56bfab1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T16:26:51Z",
+      "side": 1,
+      "message": "Thanks for fixing.",
+      "revId": "53cf9ab0f21d053fb3c8d8169d7fdb09050b824f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
