@@ -634,10 +634,7 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
         return false;
     }
 
-    if ((compileOptions & SH_DONT_PRUNE_UNUSED_FUNCTIONS) == 0)
-    {
-        pruneUnusedFunctions(root);
-    }
+    pruneUnusedFunctions(root);
     if (IsSpecWithFunctionBodyNewScope(mShaderSpec, mShaderVersion))
     {
         if (!ReplaceShadowingVariables(this, root, &mSymbolTable))
