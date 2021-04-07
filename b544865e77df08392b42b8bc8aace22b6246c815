@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "acb0a48d_54d0cbb8",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1302,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T21:51:50Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac1b7d97_396d1602",
+      "revId": "b544865e77df08392b42b8bc8aace22b6246c815",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a1922b90_df5e248d",
@@ -55,6 +73,30 @@
       "side": 1,
       "message": "My suggestion would be to instead keep draw mode as specified, but cap \"count\" based on mode (or just use 3 which should be fine for everything probably). Then also specify a scissor of 1x1 right before the draw call to make sure not much is done.",
       "parentUuid": "a1922b90_df5e248d",
+      "range": {
+        "startLine": 1319,
+        "startChar": 23,
+        "endLine": 1319,
+        "endChar": 32
+      },
+      "revId": "b544865e77df08392b42b8bc8aace22b6246c815",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "849994b8_a479745b",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-07T21:51:50Z",
+      "side": 1,
+      "message": "Right. ANGLE also have some handling when primitive type changes.",
+      "parentUuid": "9951694b_1fa8742e",
       "range": {
         "startLine": 1319,
         "startChar": 23,
