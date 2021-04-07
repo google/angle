@@ -41,6 +41,69 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6888346_aa2868af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T22:05:41Z",
+      "side": 1,
+      "message": "Nice work! Will try this out with Manhattan 3.1 and my descriptor set change.",
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31d16241_03c63570",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T22:05:41Z",
+      "side": 1,
+      "message": "can you add this flag to README.md under the command line argument section?",
+      "range": {
+        "startLine": 149,
+        "startChar": 27,
+        "endLine": 149,
+        "endChar": 35
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79af0b4b_0597dbd9",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T22:05:41Z",
+      "side": 1,
+      "message": "it\u0027s good that you did these now - but you maybe didn\u0027t have to make \"on\" functions for all these methods since they don\u0027t interact with any member variables.\n\nTo make them consistent can yo ucall them \"onReplayDraw...\" etc (missing the \"Replay\" word that would match the above methods.",
+      "range": {
+        "startLine": 86,
+        "startChar": 9,
+        "endLine": 86,
+        "endChar": 23
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "09819ac4_26b194ca",
@@ -59,6 +122,29 @@
         "startChar": 29,
         "endLine": 1379,
         "endChar": 30
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4ca6927_57bf9159",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1645,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-07T22:05:41Z",
+      "side": 1,
+      "message": "this sets up a mip chain - I think in some scenarios it would lead to incorrect gl streams if we don\u0027t set up a chain of 1x1 mips.",
+      "range": {
+        "startLine": 1645,
+        "startChar": 8,
+        "endLine": 1645,
+        "endChar": 24
       },
       "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
