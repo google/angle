@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5f2149d_effc1ef8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-07T16:40:46Z",
+      "side": 1,
+      "message": "Ran into this while setting up a new laptop.  Trying to avoid installing python2.",
+      "revId": "c112235cef965e5703502bd3d32b645cbcaa49a1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
