@@ -20,6 +20,7 @@
 #include "avakin_life/avakin_life_capture_context1.h"
 #include "aztec_ruins/aztec_ruins_capture_context1.h"
 #include "brawl_stars/brawl_stars_capture_context1.h"
+#include "bubble_shooter/bubble_shooter_capture_context5.h"
 #include "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1.h"
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
 #include "car_parking_multiplayer/car_parking_multiplayer_capture_context1.h"
@@ -122,6 +123,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {brawl_stars::kReplayContextClientMajorVersion, brawl_stars::kReplayContextClientMinorVersion,
       brawl_stars::kReplayFrameStart, brawl_stars::kReplayFrameEnd,
       brawl_stars::kReplayDrawSurfaceWidth, brawl_stars::kReplayDrawSurfaceHeight, "brawl_stars"}},
+    {RestrictedTraceID::bubble_shooter,
+     {bubble_shooter::kReplayContextClientMajorVersion,
+      bubble_shooter::kReplayContextClientMinorVersion, bubble_shooter::kReplayFrameStart,
+      bubble_shooter::kReplayFrameEnd, bubble_shooter::kReplayDrawSurfaceWidth,
+      bubble_shooter::kReplayDrawSurfaceHeight, "bubble_shooter"}},
     {RestrictedTraceID::bus_simulator_indonesia,
      {bus_simulator_indonesia::kReplayContextClientMajorVersion,
       bus_simulator_indonesia::kReplayContextClientMinorVersion,

@@ -437,6 +437,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_internal',
   },
+  'src/tests/restricted_traces/bubble_shooter': {
+      'packages': [
+        {
+            'package': 'angle/traces/bubble_shooter',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_internal',
+  },
   'src/tests/restricted_traces/bus_simulator_indonesia': {
       'packages': [
         {
