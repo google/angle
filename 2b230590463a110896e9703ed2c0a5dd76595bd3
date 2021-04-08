@@ -16,6 +16,98 @@
       "message": "Sorry to reply so late, I have taken a holiday.",
       "revId": "2b230590463a110896e9703ed2c0a5dd76595bd3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bb957b2a_ca310a51",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2544,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T14:58:07Z",
+      "side": 1,
+      "message": "You should be able to avoid `new`ing this and just `std::move` it into `CompressTask`. That also fixes leaks here where this doesn\u0027t get deleted on failure or early out.",
+      "range": {
+        "startLine": 2544,
+        "startChar": 24,
+        "endLine": 2544,
+        "endChar": 25
+      },
+      "revId": "2b230590463a110896e9703ed2c0a5dd76595bd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7bdeb7c_c130c1a9",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2586,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T14:58:07Z",
+      "side": 1,
+      "message": "You can move this up to before `angle::MemoryBuffer pipelineCacheData;` so we don\u0027t make allocations, read data etc for nothing.",
+      "range": {
+        "startLine": 2584,
+        "startChar": 0,
+        "endLine": 2586,
+        "endChar": 63
+      },
+      "revId": "2b230590463a110896e9703ed2c0a5dd76595bd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a5b840c_01c0a90c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T14:58:07Z",
+      "side": 1,
+      "message": "This is unnecessary I believe. Couldn\u0027t `mCompressEvent` simply be `std::shared_ptr\u003crx::WaitableEvent\u003e`?",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 2
+      },
+      "revId": "2b230590463a110896e9703ed2c0a5dd76595bd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea834691_e3cdbbec",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T14:58:07Z",
+      "side": 1,
+      "message": "No need to cache this, you should be able to remove it.",
+      "range": {
+        "startLine": 533,
+        "startChar": 0,
+        "endLine": 534,
+        "endChar": 65
+      },
+      "revId": "2b230590463a110896e9703ed2c0a5dd76595bd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
