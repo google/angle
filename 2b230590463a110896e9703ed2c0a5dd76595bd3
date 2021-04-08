@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9466457a_fcd42aaf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-08T09:32:35Z",
+      "side": 1,
+      "message": "Sorry to reply so late, I have taken a holiday.",
+      "revId": "2b230590463a110896e9703ed2c0a5dd76595bd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

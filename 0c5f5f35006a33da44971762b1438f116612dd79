@@ -106,6 +106,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9561b132_8a55eb4d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2516,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-08T09:32:35Z",
+      "side": 1,
+      "message": "Thanks Shahbaz, I think it\u0027s a good way to ensure the compression tasks can be finished in order and decrease the waiting time when it\u0027s fast enough.",
+      "parentUuid": "9acab512_13d03b0f",
+      "range": {
+        "startLine": 2516,
+        "startChar": 79,
+        "endLine": 2516,
+        "endChar": 88
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7aa09878_c4204413",
@@ -167,6 +191,30 @@
       "side": 1,
       "message": "How about we go with a simple std::vector that gets std::move\u0027d into the thread?",
       "parentUuid": "2b082d88_f577a73b",
+      "range": {
+        "startLine": 2583,
+        "startChar": 66,
+        "endLine": 2583,
+        "endChar": 83
+      },
+      "revId": "0c5f5f35006a33da44971762b1438f116612dd79",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b2e1c91_63e7b987",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2583,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-08T09:32:35Z",
+      "side": 1,
+      "message": "I define pipelineCacheData as a normal memory buffer in the new patch to avoid insecurity:\n\"\nangle::MemoryBuffer *pipelineCacheData \u003d new angle::MemoryBuffer();\npipelineCacheData-\u003eresize(pipelineCacheSize)\n\"",
+      "parentUuid": "5277e87f_39431a3f",
       "range": {
         "startLine": 2583,
         "startChar": 66,
