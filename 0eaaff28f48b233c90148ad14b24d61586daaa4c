@@ -22,6 +22,30 @@
       },
       "revId": "0eaaff28f48b233c90148ad14b24d61586daaa4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c165f233_34254f2b",
+        "filename": "src/tests/restricted_traces/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-08T21:34:31Z",
+      "side": 1,
+      "message": "Strange, worked when I\u0027ve tested it.\nI didn\u0027t run the exact same command as the bot does, though.\nWithout this it complained that including trace_egl_loader_autogen.h is not allowed, e.g.\nhttps://luci-milo.appspot.com/p/chromium/builders/ci/ios-angle-builder/10833",
+      "parentUuid": "6eaeaedf_7c2d72e1",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 8
+      },
+      "revId": "0eaaff28f48b233c90148ad14b24d61586daaa4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
