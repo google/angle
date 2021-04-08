@@ -51,6 +51,23 @@
       "parentUuid": "8528eb27_f92b5218",
       "revId": "e4bfd36eba21a7e766b0c5b6050d2c8e323d3246",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1ee538a_de42d307",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-08T23:36:57Z",
+      "side": 1,
+      "message": "Why can\u0027t/isn\u0027t this underneath \u0027if (_uses_spirv)\u0027 below with spirv:angle_spirv_base?\n\nAlso, since angle_spirv_base includes angle_spirv_headers, do we need both?",
+      "revId": "e4bfd36eba21a7e766b0c5b6050d2c8e323d3246",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
