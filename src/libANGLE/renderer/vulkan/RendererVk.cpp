@@ -2366,6 +2366,10 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     // http://anglebug.com/3529
     ANGLE_FEATURE_CONDITION(&mFeatures, enableBufferAge, !isSwiftShader);
 
+    // Disabled by default. Only enable it for experimental purpose, as this will cause various
+    // tests to fail.
+    ANGLE_FEATURE_CONDITION(&mFeatures, forceFragmentShaderPrecisionHighpToMediump, false);
+
     angle::PlatformMethods *platform = ANGLEPlatformCurrent();
     platform->overrideFeaturesVk(platform, &mFeatures);
 

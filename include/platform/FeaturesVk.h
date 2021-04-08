@@ -496,6 +496,13 @@ struct FeaturesVk : FeatureSetBase
     // http://anglebug.com/3529
     Feature enableBufferAge = {"enableBufferAge", FeatureCategory::VulkanWorkarounds,
                                "Expose EGL_EXT_buffer_age", &members, "http://anglebug.com/3529"};
+
+    // Whether we should force any highp precision in the fragment shader to mediump.
+    // ANGLE is non-conformant if this feature is enabled.
+    Feature forceFragmentShaderPrecisionHighpToMediump = {
+        "forceFragmentShaderPrecisionHighpToMediump", FeatureCategory::VulkanWorkarounds,
+        "Forces highp precision in fragment shader to mediump.", &members,
+        "https://issuetracker.google.com/184850002"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
