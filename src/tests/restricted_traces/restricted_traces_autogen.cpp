@@ -22,6 +22,7 @@
 #include "brawl_stars/brawl_stars_capture_context1.h"
 #include "bubble_shooter/bubble_shooter_capture_context5.h"
 #include "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1.h"
+#include "call_break_offline_card_game/call_break_offline_card_game_capture_context2.h"
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
 #include "car_parking_multiplayer/car_parking_multiplayer_capture_context1.h"
 #include "clash_of_clans/clash_of_clans_capture_context1.h"
@@ -134,6 +135,13 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       bus_simulator_indonesia::kReplayFrameStart, bus_simulator_indonesia::kReplayFrameEnd,
       bus_simulator_indonesia::kReplayDrawSurfaceWidth,
       bus_simulator_indonesia::kReplayDrawSurfaceHeight, "bus_simulator_indonesia"}},
+    {RestrictedTraceID::call_break_offline_card_game,
+     {call_break_offline_card_game::kReplayContextClientMajorVersion,
+      call_break_offline_card_game::kReplayContextClientMinorVersion,
+      call_break_offline_card_game::kReplayFrameStart,
+      call_break_offline_card_game::kReplayFrameEnd,
+      call_break_offline_card_game::kReplayDrawSurfaceWidth,
+      call_break_offline_card_game::kReplayDrawSurfaceHeight, "call_break_offline_card_game"}},
     {RestrictedTraceID::candy_crush_500,
      {candy_crush_500::kReplayContextClientMajorVersion,
       candy_crush_500::kReplayContextClientMinorVersion, candy_crush_500::kReplayFrameStart,

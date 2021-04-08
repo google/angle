@@ -457,6 +457,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_internal',
   },
+  'src/tests/restricted_traces/call_break_offline_card_game': {
+      'packages': [
+        {
+            'package': 'angle/traces/call_break_offline_card_game',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_internal',
+  },
   'src/tests/restricted_traces/candy_crush_500': {
       'packages': [
         {

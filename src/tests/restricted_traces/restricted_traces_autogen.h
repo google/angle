@@ -64,6 +64,7 @@ enum class RestrictedTraceID
     brawl_stars,
     bubble_shooter,
     bus_simulator_indonesia,
+    call_break_offline_card_game,
     candy_crush_500,
     car_parking_multiplayer,
     clash_of_clans,
