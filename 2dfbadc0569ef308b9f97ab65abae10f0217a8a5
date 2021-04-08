@@ -93,6 +93,30 @@
       },
       "revId": "2dfbadc0569ef308b9f97ab65abae10f0217a8a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "93a7025f_5e4d400a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T14:15:24Z",
+      "side": 1,
+      "message": "The *layer* provoking vertex is independent from the default provoking vertex. This can be unconditionally set to GL_FIRST_VERTEX_CONVENTION_EXT and avoid interaction with the extension.\n\n\u003e The vertex convention followed for gl_Layer may be determined by calling GetIntegerv with pname LAYER_PROVOKING_VERTEX. If the value returned is FIRST_VERTEX_CONVENTION, selection is always taken from the first vertex of a primitive. If the value returned is LAST_VERTEX_CONVENTION, the selection is always taken from the last vertex of a primitive.\n\nIt can even be unspecified but I\u0027d say explicitly saying FIRST is better:\n\n\u003e If the value returned is UNDEFINED_VERTEX, the selection is not guaranteed to be taken from any specific vertex in the primitive.\n\n(note: desktop GL also accepts GL_PROVOKING_VERTEX so the layer follows the default, but that\u0027s not acceptable in GLES).",
+      "parentUuid": "12903eaa_e6d8e8cd",
+      "range": {
+        "startLine": 929,
+        "startChar": 61,
+        "endLine": 929,
+        "endChar": 71
+      },
+      "revId": "2dfbadc0569ef308b9f97ab65abae10f0217a8a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
