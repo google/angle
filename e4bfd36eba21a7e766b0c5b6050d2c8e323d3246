@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1cd5f7f5_759a9abe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T18:30:31Z",
+      "side": 1,
+      "message": "I hacked it last time so we could unblock the autoroller, so here it is properly fixed. Necessary anyway to do more SPIR-V stuff in the translator.",
+      "revId": "e4bfd36eba21a7e766b0c5b6050d2c8e323d3246",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
