@@ -52,6 +52,24 @@
       "parentUuid": "81819a4a_6aff1b7b",
       "revId": "4543efb42bca8bcabceb014dc50806515b64ad0d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11a20527_e0557a14",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-08T18:28:42Z",
+      "side": 1,
+      "message": "And have verified on linux that no GL error is generated while running all app traces.",
+      "parentUuid": "9da3b4c5_a940ca26",
+      "revId": "4543efb42bca8bcabceb014dc50806515b64ad0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
