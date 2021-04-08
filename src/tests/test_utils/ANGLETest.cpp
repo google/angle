@@ -1080,7 +1080,7 @@ void ANGLETestBase::draw3DTexturedQuad(GLfloat positionAttribZ,
 
 bool ANGLETestBase::platformSupportsMultithreading() const
 {
-    return (IsOpenGLES() && IsAndroid()) || IsVulkan() || IsD3D11();
+    return (IsOpenGLES() && IsAndroid()) || IsVulkan();
 }
 
 void ANGLETestBase::checkD3D11SDKLayersMessages()

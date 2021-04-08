@@ -21,8 +21,7 @@ void RegisterContextCompatibilityTests();
 // If we ever move to a text-based expectations format, we should move this list in that file.
 namespace
 {
-const char *kSlowTests[] = {"GLSLTest.VerifyMaxVertexUniformVectors*",
-                            "MultiThreadingTest.MultiContextDeleteDraw*"};
+const char *kSlowTests[] = {"GLSLTest.VerifyMaxVertexUniformVectors*"};
 }  // namespace
 
 int main(int argc, char **argv)
