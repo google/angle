@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6eaeaedf_7c2d72e1",
+        "filename": "src/tests/restricted_traces/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-08T19:56:25Z",
+      "side": 1,
+      "message": "I\u0027m not actually sure why you need this - might want to check locally. Fails on the bots becaduse it says this variable is unused. note that angle_trace_fixture is a template which calls angle_source_set.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 8
+      },
+      "revId": "0eaaff28f48b233c90148ad14b24d61586daaa4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
