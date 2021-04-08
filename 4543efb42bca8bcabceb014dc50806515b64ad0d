@@ -16,6 +16,24 @@
       "message": "This could be a full-screen triangle. My suggestion was to make a `glScissor(0, 0, 1, 1)` call right above the draw calls to make sure that doesn\u0027t happen. Either that or make a one time scissor call at the beginning of the trace to make sure the \"default\" scissor is not used (then ScissorProc would take care of it)",
       "revId": "4543efb42bca8bcabceb014dc50806515b64ad0d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81819a4a_6aff1b7b",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-08T17:56:03Z",
+      "side": 1,
+      "message": "If you look at all app traces, they all call glScissor at some point, so I think we are good here. if you really worry about it, then you will have more things to worry, for example, what if scissor is called but is disabled? I think we can revise it when we find more issues with the hack when we using this for investigation.\n\nThe other option is just draw one point. It is safer memory wise, safer on actual workload generated. It loss a bit of coverage for how driver handle primitive mode switches, but should not a deal breaker. We will have to interpose XFB API as well and handle that issue as well. But overall it generates more defined workloads. Maybe I should switch back to draw a point.",
+      "parentUuid": "4d2519e0_788d57d4",
+      "revId": "4543efb42bca8bcabceb014dc50806515b64ad0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
