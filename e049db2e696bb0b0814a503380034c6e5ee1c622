@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d185758_c6090d73",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 1283,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-08T15:57:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4d0fd11_88c3232b",
+      "range": {
+        "startLine": 1283,
+        "startChar": 8,
+        "endLine": 1283,
+        "endChar": 25
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d6ccdb84_90a4aa5f",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-04-01T17:04:25Z",
       "side": 1,
       "message": "question: So core profile doesn\u0027t have the default vao (with name 0)?",
+      "range": {
+        "startLine": 199,
+        "startChar": 87,
+        "endLine": 199,
+        "endChar": 99
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c813e0c2_b28c2b12",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-08T15:57:38Z",
+      "side": 1,
+      "message": "Correct, it was deprecated.",
+      "parentUuid": "d6ccdb84_90a4aa5f",
       "range": {
         "startLine": 199,
         "startChar": 87,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f8fbb62a_9d07731e",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-08T15:57:38Z",
+      "side": 1,
+      "message": "Done, added a comment. You\u0027re right, StateManagerGL owns the default (native) VAO state and shares it out to multiple VertexArrayGL objects when this feature is enabled.\n\nThe synchronization is forced every time a new frontend VAO is bound because otherwise the frontend VAOs will not know something has changed.\n\nLet me know if anything else isn\u0027t clear and I\u0027ll add more comments.",
+      "parentUuid": "ac0e7183_7378ccb4",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 376,
+        "endChar": 40
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9b4c019f_ba298730",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 19
@@ -83,6 +155,30 @@
       "writtenOn": "2021-04-01T17:04:25Z",
       "side": 1,
       "message": "unrelated comment: it would be less confusing to not use macro here.\nlike:\n\n  case VertexArray::DIRTY_BIT_BINDING_0 ... VertexArray::DIRTY_BIT_BINDING_15:\n    int index \u003d VertexArray::DIRTY_BIT_BINDING_0 - dirtyBit;\n    ...\n\nBTW, I think switch case range is supported by gcc and clang. Not sure other compilers. Do we need compile ANGLE with other compilers?",
+      "range": {
+        "startLine": 927,
+        "startChar": 0,
+        "endLine": 929,
+        "endChar": 70
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "845af9b6_19bed79b",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 19
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-08T15:57:38Z",
+      "side": 1,
+      "message": "Looks like MSVC doesn\u0027t support case ranges. I didn\u0027t know that was a feature though, thanks for pointing it out.",
+      "parentUuid": "9b4c019f_ba298730",
       "range": {
         "startLine": 927,
         "startChar": 0,
