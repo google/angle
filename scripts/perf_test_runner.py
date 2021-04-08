@@ -100,7 +100,7 @@ def main(raw_args):
         type=int)
     parser.add_argument('-v', '--verbose', help='Extra verbose logging.', action='store_true')
     parser.add_argument('test_name', help='Test to run', default=DEFAULT_TEST_NAME)
-    args = parser.parse_args(raw_args)
+    args, extra_args = parser.parse_known_args(raw_args)
 
     if args.verbose:
         logging.basicConfig(level='DEBUG')
@@ -130,8 +130,7 @@ def main(raw_args):
     print('Test name: %s' % args.test_name)
 
     def get_results(metric, extra_args=[]):
-        run = [perftests_path, '--enable-all-trace-tests',
-               '--gtest_filter=%s' % args.test_name] + extra_args
+        run = [perftests_path, '--gtest_filter=%s' % args.test_name] + extra_args
         logging.info('running %s' % str(run))
         process = subprocess.Popen(run, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         output, err = process.communicate()
@@ -153,12 +152,13 @@ def main(raw_args):
         return [float(value) for value in m]
 
     # Calibrate the number of steps
-    steps = get_results("steps_to_run", ["--calibration"])[0]
+    steps = get_results("steps_to_run", ["--calibration"] + extra_args)[0]
     print("running with %d steps." % steps)
 
     # Loop 'args.experiments' times, running the tests.
     for experiment in range(args.experiments):
-        experiment_scores = get_results(args.metric, ["--steps-per-trial", str(steps)])
+        experiment_scores = get_results(args.metric,
+                                        ["--steps-per-trial", str(steps)] + extra_args)
 
         for score in experiment_scores:
             sys.stdout.write("%s: %.2f" % (args.metric, score))
