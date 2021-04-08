@@ -117,6 +117,30 @@
       },
       "revId": "fe98e5176b993f13717bf887d5d5b53a4bc02f68",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f9dc6e3_7df05cb2",
+        "filename": "src/tests/gl_tests/SamplersTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-08T16:01:10Z",
+      "side": 1,
+      "message": "Ack.\n\nThis test is enough to hit the error and show things are working.   We can get more complex if we see other issues in the future.",
+      "parentUuid": "b6eab545_e7b6aeeb",
+      "range": {
+        "startLine": 153,
+        "startChar": 0,
+        "endLine": 173,
+        "endChar": 25
+      },
+      "revId": "fe98e5176b993f13717bf887d5d5b53a4bc02f68",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
