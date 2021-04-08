@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf4c6d77_089eaf0a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-08T20:58:06Z",
+      "side": 1,
+      "message": "LGTM, one comment on naming.  Thanks Charlie!",
+      "revId": "4cc374aeba759a0d4938f4a8276d18bd40b3d43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b505d82_b6d3bdad",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-08T20:58:06Z",
+      "side": 1,
+      "message": "These should probably be named \"ReducedViewportProc\" or \"MinimizedViewportProc\" etc to be clear what they do.  This will allow us to have other versions with a distinct name.",
+      "range": {
+        "startLine": 180,
+        "startChar": 22,
+        "endLine": 180,
+        "endChar": 34
+      },
+      "revId": "4cc374aeba759a0d4938f4a8276d18bd40b3d43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
