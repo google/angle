@@ -9013,6 +9013,16 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
 }
 
+// Test that the correct error is generated if texture buffer support used anyway when not enabled.
+TEST_P(TextureBufferTestES31, TestErrorWhenNotEnabled)
+{
+    ANGLE_SKIP_TEST_IF(IsGLExtensionEnabled("GL_EXT_texture_buffer"));
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_BUFFER, texture);
+    ASSERT_GL_ERROR(GL_INVALID_ENUM);
+}
+
 class CopyImageTestES31 : public ANGLETest
 {
   protected:

@@ -6147,6 +6147,12 @@ void RecordBindTextureTypeError(const Context *context, TextureType target)
             context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
             break;
 
+        case TextureType::Buffer:
+            ASSERT(!context->getExtensions().textureBufferOES &&
+                   !context->getExtensions().textureBufferEXT);
+            context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);
+            break;
+
         default:
             context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
     }
