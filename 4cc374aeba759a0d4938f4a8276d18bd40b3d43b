@@ -87,6 +87,30 @@
       },
       "revId": "4cc374aeba759a0d4938f4a8276d18bd40b3d43b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79d49f73_1edae8b2",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-08T21:21:43Z",
+      "side": 1,
+      "message": "Picked MinimizedProc. A bit shorter and also work better with various func names (viewportMinimizedProc, scissorMinimizedProc, DrawArraysMinimizedProc etc).",
+      "parentUuid": "ea1e6b20_8bd73129",
+      "range": {
+        "startLine": 180,
+        "startChar": 22,
+        "endLine": 180,
+        "endChar": 34
+      },
+      "revId": "4cc374aeba759a0d4938f4a8276d18bd40b3d43b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
