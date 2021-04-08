@@ -70,6 +70,11 @@ class TraceLibrary
         traceNameStr << "lib";
 #endif  // !defined(ANGLE_PLATFORM_WINDOWS)
         traceNameStr << traceNameIn;
+#if defined(ANGLE_PLATFORM_ANDROID) && defined(COMPONENT_BUILD)
+        // Added to shared library names in Android component builds in
+        // https://chromium.googlesource.com/chromium/src/+/9bacc8c4868cc802f69e1e858eea6757217a508f/build/toolchain/toolchain.gni#56
+        traceNameStr << ".cr";
+#endif  // defined(ANGLE_PLATFORM_ANDROID) && defined(COMPONENT_BUILD)
         std::string traceName = traceNameStr.str();
         mTraceLibrary.reset(OpenSharedLibrary(traceName.c_str(), SearchType::ApplicationDir));
     }
