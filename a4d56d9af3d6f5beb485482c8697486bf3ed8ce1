@@ -434,6 +434,30 @@
       },
       "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c481e7c_eb36bd7d",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1645,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T14:37:14Z",
+      "side": 1,
+      "message": "2 is more accurate. An application could do:\n\n- Set up level 0\n- Generate mipmap\n- Attach level 1 to framebuffer, or storage image etc.\n\nBut 1 is fine as long as that doesn\u0027t happen in practice.",
+      "parentUuid": "1e3ffdbf_475ab4d6",
+      "range": {
+        "startLine": 1645,
+        "startChar": 8,
+        "endLine": 1645,
+        "endChar": 24
+      },
+      "revId": "a4d56d9af3d6f5beb485482c8697486bf3ed8ce1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

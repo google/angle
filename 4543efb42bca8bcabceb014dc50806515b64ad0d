@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d2519e0_788d57d4",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T14:37:14Z",
+      "side": 1,
+      "message": "This could be a full-screen triangle. My suggestion was to make a `glScissor(0, 0, 1, 1)` call right above the draw calls to make sure that doesn\u0027t happen. Either that or make a one time scissor call at the beginning of the trace to make sure the \"default\" scissor is not used (then ScissorProc would take care of it)",
+      "revId": "4543efb42bca8bcabceb014dc50806515b64ad0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
