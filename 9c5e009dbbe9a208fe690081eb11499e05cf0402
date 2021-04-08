@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0817ddc0_38df4f9a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-08T18:39:15Z",
+      "side": 1,
+      "message": "LGTM and thanks for the work.",
+      "revId": "9c5e009dbbe9a208fe690081eb11499e05cf0402",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c0f0e62_66182457",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 2026,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-08T18:39:15Z",
+      "side": 1,
+      "message": "nit: should we track which attrib is modified and only sync modified? Do we always use all attribs?",
+      "range": {
+        "startLine": 2026,
+        "startChar": 44,
+        "endLine": 2026,
+        "endChar": 50
+      },
+      "revId": "9c5e009dbbe9a208fe690081eb11499e05cf0402",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0101aa2_5bdf4a45",
+        "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 722,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-08T18:39:15Z",
+      "side": 1,
+      "message": "This method is confusing. why it is `\u0026\u0026` instead of `||`? Is it for testing emulated VAO? maybe add a comment.",
+      "range": {
+        "startLine": 722,
+        "startChar": 55,
+        "endLine": 722,
+        "endChar": 57
+      },
+      "revId": "9c5e009dbbe9a208fe690081eb11499e05cf0402",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

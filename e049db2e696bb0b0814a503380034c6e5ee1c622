@@ -144,6 +144,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c59b3289_ec40e366",
+        "filename": "src/libANGLE/renderer/gl/StateManagerGL.h",
+        "patchSetId": 19
+      },
+      "lineNbr": 376,
+      "author": {
+        "id": 1000050
+      },
+      "writtenOn": "2021-04-08T18:39:15Z",
+      "side": 1,
+      "message": "Thanks for the explanation.",
+      "parentUuid": "f8fbb62a_9d07731e",
+      "range": {
+        "startLine": 376,
+        "startChar": 0,
+        "endLine": 376,
+        "endChar": 40
+      },
+      "revId": "e049db2e696bb0b0814a503380034c6e5ee1c622",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9b4c019f_ba298730",
         "filename": "src/libANGLE/renderer/gl/VertexArrayGL.cpp",
         "patchSetId": 19
