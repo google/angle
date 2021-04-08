@@ -16,6 +16,23 @@
       "message": "I hacked it last time so we could unblock the autoroller, so here it is properly fixed. Necessary anyway to do more SPIR-V stuff in the translator.",
       "revId": "e4bfd36eba21a7e766b0c5b6050d2c8e323d3246",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8528eb27_f92b5218",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-08T19:47:28Z",
+      "side": 1,
+      "message": "LGTM once bots are ironed out.",
+      "revId": "e4bfd36eba21a7e766b0c5b6050d2c8e323d3246",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
