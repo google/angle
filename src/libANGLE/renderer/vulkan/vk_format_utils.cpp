@@ -178,7 +178,7 @@ void Format::initBufferFallback(RendererVk *renderer,
         vertexLoadRequiresConversion = info[i].vertexLoadRequiresConversion;
     }
 
-    if (compressedStartIndex < numInfo)
+    if (renderer->getFeatures().compressVertexData.enabled && compressedStartIndex < numInfo)
     {
         int i = FindSupportedFormat(renderer, info, compressedStartIndex, numInfo,
                                     HasFullBufferFormatSupport);
