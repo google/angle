@@ -70,6 +70,24 @@
       "parentUuid": "9da3b4c5_a940ca26",
       "revId": "4543efb42bca8bcabceb014dc50806515b64ad0d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0239ec2c_35bebbac",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-08T18:37:13Z",
+      "side": 1,
+      "message": "Good point about scissor being disabled. It\u0027s still not correct for geometry and tessellation, but I guess it\u0027s fine until there are traces that actually use them. Maybe add a comment for it?",
+      "parentUuid": "11a20527_e0557a14",
+      "revId": "4543efb42bca8bcabceb014dc50806515b64ad0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
