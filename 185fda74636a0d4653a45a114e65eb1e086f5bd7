@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdeebcd9_1af25e67",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-08T22:58:34Z",
+      "side": 1,
+      "message": "Hey Doug, we have this process defined for re-lands:\n\nhttps://chromium.googlesource.com/angle/angle/+/master/doc/ContributingCode.md#relanding-a-reverted-cl\n\nCan you indicate what changed in the re-land in review comments and the issue description?",
+      "revId": "185fda74636a0d4653a45a114e65eb1e086f5bd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
