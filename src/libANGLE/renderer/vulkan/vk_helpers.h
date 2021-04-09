@@ -1350,6 +1350,8 @@ enum class ImageLayout
     ColorAttachment,
     ColorAttachmentAndFragmentShaderRead,
     ColorAttachmentAndAllShadersRead,
+    DepthStencilAttachmentAndFragmentShaderRead,
+    DepthStencilAttachmentAndAllShadersRead,
     DepthStencilReadOnly,
     DepthStencilAttachment,
     DepthStencilResolveAttachment,

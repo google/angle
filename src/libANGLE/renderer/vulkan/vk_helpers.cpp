@@ -76,7 +76,7 @@ constexpr size_t kDefaultPoolAllocatorPageSize = 16 * 1024;
 
 struct ImageMemoryBarrierData
 {
-    char name[40];
+    char name[44];
 
     // The Vk layout corresponding to the ImageLayout key.
     VkImageLayout layout;
@@ -166,10 +166,41 @@ constexpr angle::PackedEnumMap<ImageLayout, ImageMemoryBarrierData> kImageMemory
             VK_IMAGE_LAYOUT_GENERAL,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
             VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | kAllShadersPipelineStageFlags,
-            // Transition to: all reads must happen after barrier.
+            // Transition to: all reads and writes must happen after barrier.
             VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT,
-            // Transition from: RAR and WAR don't need memory barrier.
+            // Transition from: all writes must finish before barrier.
             VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+            ResourceAccess::Write,
+            // In case of multiple destination stages, We barrier the earliest stage
+            PipelineStage::VertexShader,
+        },
+    },
+    {
+        ImageLayout::DepthStencilAttachmentAndFragmentShaderRead,
+        ImageMemoryBarrierData{
+            "DepthStencilAttachmentAndFragmentShaderRead",
+            VK_IMAGE_LAYOUT_GENERAL,
+            kAllDepthStencilPipelineStageFlags | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            kAllDepthStencilPipelineStageFlags | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            // Transition to: all reads and writes must happen after barrier.
+            VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT,
+            // Transition from: all writes must finish before barrier.
+            VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+            ResourceAccess::Write,
+            PipelineStage::FragmentShader,
+        },
+    },
+    {
+        ImageLayout::DepthStencilAttachmentAndAllShadersRead,
+        ImageMemoryBarrierData{
+            "DepthStencilAttachmentAndAllShadersRead",
+            VK_IMAGE_LAYOUT_GENERAL,
+            kAllDepthStencilPipelineStageFlags | kAllShadersPipelineStageFlags,
+            kAllDepthStencilPipelineStageFlags | kAllShadersPipelineStageFlags,
+            // Transition to: all reads and writes must happen after barrier.
+            VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT | VK_ACCESS_SHADER_READ_BIT,
+            // Transition from: all writes must finish before barrier.
+            VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
             ResourceAccess::Write,
             // In case of multiple destination stages, We barrier the earliest stage
             PipelineStage::VertexShader,
@@ -1090,6 +1121,7 @@ void CommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseLis
     mDepthStencilLevelIndex = level;
     mDepthStencilLayerIndex = layerStart;
     mDepthStencilLayerCount = layerCount;
+    image->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
 
     if (resolveImage)
     {
@@ -1099,6 +1131,7 @@ void CommandBufferHelper::depthStencilImagesDraw(ResourceUseList *resourceUseLis
         resolveImage->retain(resourceUseList);
         mRenderPassUsedImages.insert(resolveImage->getImageSerial().getValue());
         mDepthStencilResolveImage = resolveImage;
+        resolveImage->setRenderPassUsageFlag(RenderPassUsage::RenderTargetAttachment);
     }
 }
 
@@ -1294,7 +1327,18 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
     ImageLayout imageLayout;
     bool barrierRequired;
 
-    if (mReadOnlyDepthStencilMode)
+    if (mDepthStencilImage->usedByCurrentRenderPassAsAttachmentAndSampler())
+    {
+        // texture code already picked layout and inserted barrier
+        imageLayout = mDepthStencilImage->getCurrentImageLayout();
+        ASSERT(imageLayout == ImageLayout::DepthStencilAttachmentAndFragmentShaderRead ||
+               imageLayout == ImageLayout::DepthStencilAttachmentAndAllShadersRead ||
+               imageLayout == ImageLayout::DepthStencilReadOnly);
+        barrierRequired = imageLayout == ImageLayout::DepthStencilReadOnly
+                              ? mDepthStencilImage->isReadBarrierNecessary(imageLayout)
+                              : true;
+    }
+    else if (mReadOnlyDepthStencilMode)
     {
         imageLayout     = ImageLayout::DepthStencilReadOnly;
         barrierRequired = mDepthStencilImage->isReadBarrierNecessary(imageLayout);
@@ -1337,6 +1381,8 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
                                         mDepthStencilLayerCount, definedAspects);
         }
     }
+
+    mDepthStencilImage->resetRenderPassUsageFlags();
 }
 
 void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *context)
@@ -1373,6 +1419,8 @@ void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *contex
                                                mDepthStencilLayerCount, definedAspects);
         }
     }
+
+    mDepthStencilResolveImage->resetRenderPassUsageFlags();
 }
 
 void CommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelper *image)

@@ -2852,7 +2852,7 @@ TEST_P(FramebufferTest_ES3, RenderImmutableTextureWithSubImageWithBeyondMaxLevel
 TEST_P(FramebufferTest_ES3, RenderSampleDepthTextureWithExcludedLevel)
 {
     // ToDo: https://issuetracker.google.com/181800403
-    ANGLE_SKIP_TEST_IF(IsVulkan() || IsMetal());
+    ANGLE_SKIP_TEST_IF(IsMetal());
 
     // Set up program to copy depth texture's value to color.red.
     constexpr char kVS[] = R"(precision mediump float;
