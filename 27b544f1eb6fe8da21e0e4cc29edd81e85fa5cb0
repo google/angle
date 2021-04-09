@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "100d3262_5f81b1bf",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-09T16:14:43Z",
+      "side": 1,
+      "message": "The reason why I created a new class was to not initialize `testSetUp`, to have a clean environment. But retrospectively this does not influence the result of the test. I will put it into the ES3 test.",
+      "parentUuid": "40dfef6b_3af0903b",
+      "range": {
+        "startLine": 333,
+        "startChar": 7,
+        "endLine": 333,
+        "endChar": 18
+      },
+      "revId": "27b544f1eb6fe8da21e0e4cc29edd81e85fa5cb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "43785b28_b2011108",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-04-09T14:57:07Z",
       "side": 1,
       "message": "nit: suggest something that\u0027s accurately representable as unorm. How about 0.125?",
+      "range": {
+        "startLine": 396,
+        "startChar": 18,
+        "endLine": 396,
+        "endChar": 22
+      },
+      "revId": "27b544f1eb6fe8da21e0e4cc29edd81e85fa5cb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "888c4634_d2b9ae21",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-09T16:14:43Z",
+      "side": 1,
+      "message": "Sounds very good to me.",
+      "parentUuid": "43785b28_b2011108",
       "range": {
         "startLine": 396,
         "startChar": 18,
