@@ -26,6 +26,21 @@ void OutputGLenumString(std::ostream &out, GLenumGroup enumGroup, unsigned int v
         return;
     }
 
+    if (enumGroup == GLenumGroup::Boolean)
+    {
+        // If an unknown enum was submitted as GLboolean, just write out the value.
+        if (enumStr == kUnknownGLenumString)
+        {
+            out << value;
+        }
+        else
+        {
+            out << enumStr;
+        }
+
+        return;
+    }
+
     if (enumGroup != GLenumGroup::DefaultGroup)
     {
         // Retry with the "Default" group
@@ -47,15 +62,7 @@ void OutputGLbitfieldString(std::ostream &out, GLenumGroup enumGroup, unsigned i
 
 const char *GLbooleanToString(unsigned int value)
 {
-    switch (value)
-    {
-        case 0x0:
-            return "GL_FALSE";
-        case 0x1:
-            return "GL_TRUE";
-        default:
-            return kUnknownGLenumString;
-    }
+    return GLenumToString(GLenumGroup::Boolean, value);
 }
 
 std::string GLbitfieldToString(GLenumGroup enumGroup, unsigned int value)

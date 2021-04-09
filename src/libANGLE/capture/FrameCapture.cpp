@@ -4949,7 +4949,7 @@ void WriteParamValueReplay<ParamType::TGLboolean>(std::ostream &os,
             os << "GL_FALSE";
             break;
         default:
-            os << "GL_INVALID_ENUM";
+            os << "0x" << std::hex << std::uppercase << GLint(value);
     }
 }
 
