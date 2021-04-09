@@ -22,6 +22,30 @@
       },
       "revId": "5b618b5c285cba3f9b6e0404fa5dc3b11516a080",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f9083b1_e0765785",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 453,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-09T22:30:15Z",
+      "side": 1,
+      "message": "Done\n\nangle_capture_replay_tests_fixture doesn\u0027t depend on angle_restricted_trace_loader,\nso I thought it doesn\u0027t need it.\nBut, the bot probably doesn\u0027t complain since it doesn\u0027t angle_build_capture_replay_tests",
+      "parentUuid": "1a63cd45_574e26c3",
+      "range": {
+        "startLine": 453,
+        "startChar": 4,
+        "endLine": 453,
+        "endChar": 57
+      },
+      "revId": "5b618b5c285cba3f9b6e0404fa5dc3b11516a080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
