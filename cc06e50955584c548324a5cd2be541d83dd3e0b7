@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c811579d_546b1f1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-09T16:42:53Z",
+      "side": 1,
+      "message": "It\u0027s good opportunity for me to study. Thanks for your patient guidance!",
+      "parentUuid": "bcb69869_61f3f7e2",
+      "revId": "cc06e50955584c548324a5cd2be541d83dd3e0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7ab259b0_2456acab",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-04-09T14:00:51Z",
       "side": 1,
       "message": "`const std::vector\u003cuint8_t\u003e \u0026` per style guide.",
+      "range": {
+        "startLine": 511,
+        "startChar": 46,
+        "endLine": 511,
+        "endChar": 68
+      },
+      "revId": "cc06e50955584c548324a5cd2be541d83dd3e0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9afbe4ab_89040326",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-09T16:42:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ab259b0_2456acab",
       "range": {
         "startLine": 511,
         "startChar": 46,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eed070e6_5fd62d11",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 586,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-09T16:42:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ef9ed60_04052c8a",
+      "range": {
+        "startLine": 586,
+        "startChar": 37,
+        "endLine": 586,
+        "endChar": 38
+      },
+      "revId": "cc06e50955584c548324a5cd2be541d83dd3e0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e747df2d_fe748dcf",
@@ -94,6 +160,30 @@
       "writtenOn": "2021-04-09T14:00:51Z",
       "side": 1,
       "message": "std::move to avoid copy.",
+      "range": {
+        "startLine": 590,
+        "startChar": 21,
+        "endLine": 590,
+        "endChar": 30
+      },
+      "revId": "cc06e50955584c548324a5cd2be541d83dd3e0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8656fa00_c40a186d",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-09T16:42:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e747df2d_fe748dcf",
       "range": {
         "startLine": 590,
         "startChar": 21,
@@ -127,6 +217,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9999074f_b9e01c56",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 600,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-09T16:42:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69512f15_29399b03",
+      "range": {
+        "startLine": 600,
+        "startChar": 23,
+        "endLine": 600,
+        "endChar": 27
+      },
+      "revId": "cc06e50955584c548324a5cd2be541d83dd3e0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ece9985d_471d84f8",
@@ -144,6 +258,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20b6cf9b_b36ad2f5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 709,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-09T16:42:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ece9985d_471d84f8",
+      "revId": "cc06e50955584c548324a5cd2be541d83dd3e0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1f21c13_c6a769e5",
@@ -157,6 +289,30 @@
       "writtenOn": "2021-04-09T14:00:51Z",
       "side": 1,
       "message": "I still think you can delete this and use:\n\n    std::shared_ptr\u003crx::WaitableEvent\u003e mCompressEvent;\n\nWhat\u0027s the reason to create a wrapper class that forwards everything to the real event?",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 115,
+        "endChar": 2
+      },
+      "revId": "cc06e50955584c548324a5cd2be541d83dd3e0b7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "885013cf_4f2f12cf",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-09T16:42:53Z",
+      "side": 1,
+      "message": "Yes, you are right. This is no longer needed after the getResult() function is moved.",
+      "parentUuid": "e1f21c13_c6a769e5",
       "range": {
         "startLine": 100,
         "startChar": 0,
