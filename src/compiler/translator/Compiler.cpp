@@ -547,6 +547,12 @@ bool TCompiler::validateAST(TIntermNode *root)
     {
         bool valid = ValidateAST(root, &mDiagnostics, mValidateASTOptions);
 
+#if defined(ANGLE_ENABLE_ASSERTS)
+        if (!valid)
+        {
+            fprintf(stderr, "AST validation error(s):\n%s\n", mInfoSink.info.c_str());
+        }
+#endif
         // In debug, assert validation.  In release, validation errors will be returned back to the
         // application as internal ANGLE errors.
         ASSERT(valid);
@@ -561,6 +567,10 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                     ShCompileOptions compileOptions)
 {
     mValidateASTOptions = {};
+    if (!validateAST(root))
+    {
+        return false;
+    }
 
     // Disallow expressions deemed too complex.
     if ((compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY) != 0 && !limitExpressionComplexity(root))

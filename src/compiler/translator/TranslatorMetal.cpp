@@ -284,6 +284,10 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
     TIntermBlock *root,
     const DriverUniformMetal *driverUniforms)
 {
+    // This transformation leaves the tree in an inconsistent state by using a variable that's
+    // defined in text, outside of the knowledge of the AST.
+    mValidateASTOptions.validateVariableReferences = false;
+
     TSymbolTable *symbolTable = &getSymbolTable();
 
     // Insert coverageMaskEnabled specialization constant and sample_mask writing function.
@@ -337,6 +341,10 @@ ANGLE_NO_DISCARD bool TranslatorMetal::insertSampleMaskWritingLogic(
 ANGLE_NO_DISCARD bool TranslatorMetal::insertRasterizerDiscardLogic(TInfoSinkBase &sink,
                                                                     TIntermBlock *root)
 {
+    // This transformation leaves the tree in an inconsistent state by using a variable that's
+    // defined in text, outside of the knowledge of the AST.
+    mValidateASTOptions.validateVariableReferences = false;
+
     TSymbolTable *symbolTable = &getSymbolTable();
 
     // Insert rasterizationDisabled specialization constant.

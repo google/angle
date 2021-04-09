@@ -46,6 +46,8 @@ class SpecConst
     void outputLayoutString(TInfoSinkBase &sink) const;
     SpecConstUsageBits getSpecConstUsageBits() const { return mUsageBits; }
 
+    static bool IsSpecConstName(const ImmutableString &name);
+
   private:
     TIntermSymbol *getFlipRotation();
     TIntermTyped *getNegFlipY();

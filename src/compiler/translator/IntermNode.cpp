@@ -413,6 +413,9 @@ TIntermBlock::TIntermBlock(const TIntermBlock &node)
     {
         mStatements.push_back(node->deepCopy());
     }
+
+    ASSERT(!node.mIsTreeRoot);
+    mIsTreeRoot = false;
 }
 
 size_t TIntermBlock::getChildCount() const

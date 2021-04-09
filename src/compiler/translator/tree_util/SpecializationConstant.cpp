@@ -471,4 +471,11 @@ TIntermBinary *SpecConst::getHalfRenderArea()
 
     return rotatedHalfRenderArea;
 }
+
+bool SpecConst::IsSpecConstName(const ImmutableString &name)
+{
+    return name == kLineRasterEmulationSpecConstVarName ||
+           name == kSurfaceRotationSpecConstVarName || name == kDrawableWidthSpecConstVarName ||
+           name == kDrawableHeightSpecConstVarName;
+}
 }  // namespace sh

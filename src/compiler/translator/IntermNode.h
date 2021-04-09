@@ -673,7 +673,7 @@ class TIntermAggregate : public TIntermOperator, public TIntermAggregateBase
 class TIntermBlock : public TIntermNode, public TIntermAggregateBase
 {
   public:
-    TIntermBlock() : TIntermNode() {}
+    TIntermBlock() : TIntermNode(), mIsTreeRoot(false) {}
     ~TIntermBlock() override {}
 
     TIntermBlock *getAsBlock() override { return this; }
@@ -694,8 +694,15 @@ class TIntermBlock : public TIntermNode, public TIntermAggregateBase
 
     TIntermBlock *deepCopy() const override { return new TIntermBlock(*this); }
 
+    void setIsTreeRoot() { mIsTreeRoot = true; }
+    bool isTreeRoot() const { return mIsTreeRoot; }
+
   protected:
     TIntermSequence mStatements;
+
+    // Used to distinguish the tree root from the other blocks.  When validating the AST, some
+    // validations are not applicable if not run on the entire tree and are thus skipped.
+    bool mIsTreeRoot;
 
   private:
     TIntermBlock(const TIntermBlock &);

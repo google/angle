@@ -214,6 +214,9 @@ class TCompiler : public TShHandleBase
     std::vector<sh::InterfaceBlock> mUniformBlocks;
     std::vector<sh::InterfaceBlock> mShaderStorageBlocks;
 
+    // Track what should be validated given passes currently applied.
+    ValidateASTOptions mValidateASTOptions;
+
     // Specialization constant usage bits
     SpecConstUsageBits mSpecConstUsageBits;
 
@@ -329,9 +332,6 @@ class TCompiler : public TShHandleBase
     NameMap mNameMap;
 
     TPragma mPragma;
-
-    // Track what should be validated given passes currently applied.
-    ValidateASTOptions mValidateASTOptions;
 
     ShCompileOptions mCompileOptions;
 };

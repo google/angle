@@ -7,7 +7,9 @@
 #include "compiler/translator/ValidateAST.h"
 
 #include "compiler/translator/Diagnostics.h"
+#include "compiler/translator/Symbol.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
+#include "compiler/translator/tree_util/SpecializationConstant.h"
 
 namespace sh
 {
@@ -48,6 +50,10 @@ class ValidateAST : public TIntermTraverser
     // Visit as a generic node
     void visitNode(Visit visit, TIntermNode *node);
 
+    void scope(Visit visit);
+    bool isVariableDeclared(const TVariable *variable);
+    bool variableNeedsDeclaration(const TVariable *variable);
+
     void expectNonNullChildren(Visit visit, TIntermNode *node, size_t least_count);
 
     bool validateInternal();
@@ -59,10 +65,15 @@ class ValidateAST : public TIntermTraverser
     std::map<TIntermNode *, TIntermNode *> mParent;
     bool mSingleParentFailed = false;
 
-    // For validateNullNodes
+    // For validateVariableReferences:
+    std::vector<std::set<const TVariable *>> mDeclaredVariables;
+    std::set<ImmutableString> mNamelessInterfaceBlockFields;
+    bool mVariableReferencesFailed = false;
+
+    // For validateNullNodes:
     bool mNullNodesFailed = false;
 
-    // For validateMultiDeclarations
+    // For validateMultiDeclarations:
     bool mMultiDeclarationsFailed = false;
 };
 
@@ -80,6 +91,14 @@ ValidateAST::ValidateAST(TIntermNode *root,
                          const ValidateASTOptions &options)
     : TIntermTraverser(true, false, true, nullptr), mOptions(options), mDiagnostics(diagnostics)
 {
+    bool isTreeRoot = root->getAsBlock() && root->getAsBlock()->isTreeRoot();
+
+    // Some validations are not applicable unless run on the entire tree.
+    if (!isTreeRoot)
+    {
+        mOptions.validateVariableReferences = false;
+    }
+
     if (mOptions.validateSingleParent)
     {
         mParent[root] = nullptr;
@@ -111,6 +130,55 @@ void ValidateAST::visitNode(Visit visit, TIntermNode *node)
     }
 }
 
+void ValidateAST::scope(Visit visit)
+{
+    if (mOptions.validateVariableReferences)
+    {
+        if (visit == PreVisit)
+        {
+            mDeclaredVariables.push_back({});
+        }
+        else if (visit == PostVisit)
+        {
+            mDeclaredVariables.pop_back();
+        }
+    }
+}
+
+bool ValidateAST::isVariableDeclared(const TVariable *variable)
+{
+    ASSERT(mOptions.validateVariableReferences);
+
+    for (const std::set<const TVariable *> &scopeVariables : mDeclaredVariables)
+    {
+        if (scopeVariables.count(variable) > 0)
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool ValidateAST::variableNeedsDeclaration(const TVariable *variable)
+{
+    // Don't expect declaration for built-in variables.
+    if (variable->name().beginsWith("gl_"))
+    {
+        return false;
+    }
+
+    // Additionally, don't expect declaration for Vulkan specialization constants.  There is no
+    // representation for them in the AST.
+    if (variable->symbolType() == SymbolType::AngleInternal &&
+        SpecConst::IsSpecConstName(variable->name()))
+    {
+        return false;
+    }
+
+    return true;
+}
+
 void ValidateAST::expectNonNullChildren(Visit visit, TIntermNode *node, size_t least_count)
 {
     if (visit == PreVisit && mOptions.validateNullNodes)
@@ -136,6 +204,36 @@ void ValidateAST::expectNonNullChildren(Visit visit, TIntermNode *node, size_t l
 void ValidateAST::visitSymbol(TIntermSymbol *node)
 {
     visitNode(PreVisit, node);
+
+    const TVariable *variable = &node->variable();
+    const TType &type         = node->getType();
+
+    if (mOptions.validateVariableReferences && variableNeedsDeclaration(variable))
+    {
+        // If it's a reference to a field of a nameless interface block, match it by name.
+        if (type.getInterfaceBlock() && !type.isInterfaceBlock())
+        {
+            if (mNamelessInterfaceBlockFields.count(node->getName()) == 0)
+            {
+                mDiagnostics->error(node->getLine(),
+                                    "Found reference to undeclared nameless interface block field "
+                                    "<validateVariableReferences>",
+                                    node->getName().data());
+                mVariableReferencesFailed = true;
+            }
+        }
+        else
+        {
+            if (!isVariableDeclared(variable))
+            {
+                mDiagnostics->error(node->getLine(),
+                                    "Found reference to undeclared or inconsistently redeclared "
+                                    "variable <validateVariableReferences>",
+                                    node->getName().data());
+                mVariableReferencesFailed = true;
+            }
+        }
+    }
 }
 
 void ValidateAST::visitConstantUnion(TIntermConstantUnion *node)
@@ -193,6 +291,31 @@ void ValidateAST::visitFunctionPrototype(TIntermFunctionPrototype *node)
 bool ValidateAST::visitFunctionDefinition(Visit visit, TIntermFunctionDefinition *node)
 {
     visitNode(visit, node);
+    scope(visit);
+
+    if (mOptions.validateVariableReferences && visit == PreVisit)
+    {
+        const TFunction *function = node->getFunction();
+
+        size_t paramCount = function->getParamCount();
+        for (size_t paramIndex = 0; paramIndex < paramCount; ++paramIndex)
+        {
+            const TVariable *variable = function->getParam(paramIndex);
+
+            if (isVariableDeclared(variable))
+            {
+                mDiagnostics->error(node->getLine(),
+                                    "Found two declarations of the same function argument "
+                                    "<validateVariableReferences>",
+                                    variable->name().data());
+                mVariableReferencesFailed = true;
+                break;
+            }
+
+            mDeclaredVariables.back().insert(variable);
+        }
+    }
+
     return true;
 }
 
@@ -206,6 +329,7 @@ bool ValidateAST::visitAggregate(Visit visit, TIntermAggregate *node)
 bool ValidateAST::visitBlock(Visit visit, TIntermBlock *node)
 {
     visitNode(visit, node);
+    scope(visit);
     expectNonNullChildren(visit, node, 0);
     return true;
 }
@@ -222,9 +346,59 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
     visitNode(visit, node);
     expectNonNullChildren(visit, node, 0);
 
-    if (mOptions.validateMultiDeclarations && node->getSequence()->size() > 1)
+    const TIntermSequence &sequence = *(node->getSequence());
+
+    if (mOptions.validateMultiDeclarations && sequence.size() > 1)
     {
         mMultiDeclarationsFailed = true;
+    }
+
+    if (mOptions.validateVariableReferences && visit == PreVisit)
+    {
+        for (TIntermNode *instance : sequence)
+        {
+            TIntermSymbol *symbol = instance->getAsSymbolNode();
+            if (symbol == nullptr)
+            {
+                TIntermBinary *init = instance->getAsBinaryNode();
+                ASSERT(init && init->getOp() == EOpInitialize);
+                symbol = init->getLeft()->getAsSymbolNode();
+            }
+            ASSERT(symbol);
+
+            const TVariable *variable = &symbol->variable();
+
+            if (isVariableDeclared(variable))
+            {
+                mDiagnostics->error(
+                    node->getLine(),
+                    "Found two declarations of the same variable <validateVariableReferences>",
+                    variable->name().data());
+                mVariableReferencesFailed = true;
+                break;
+            }
+
+            mDeclaredVariables.back().insert(variable);
+
+            if (variable->symbolType() == SymbolType::Empty &&
+                variable->getType().getInterfaceBlock())
+            {
+                // Nameless interface blocks can only be declared at the top level.  Their fields
+                // are not identified by TVariables, so resort to name-matching.  Conflict in names
+                // should have already generated a compile error.
+                ASSERT(mDeclaredVariables.size() == 1);
+
+                const TFieldList &fieldList = variable->getType().getInterfaceBlock()->fields();
+
+                for (size_t memberIndex = 0; memberIndex < fieldList.size(); ++memberIndex)
+                {
+                    TField *field = fieldList[memberIndex];
+                    ASSERT(mNamelessInterfaceBlockFields.count(field->name()) == 0);
+
+                    mNamelessInterfaceBlockFields.insert(field->name());
+                }
+            }
+        }
     }
 
     return true;
@@ -249,7 +423,8 @@ void ValidateAST::visitPreprocessorDirective(TIntermPreprocessorDirective *node)
 
 bool ValidateAST::validateInternal()
 {
-    return !mSingleParentFailed && !mNullNodesFailed && !mMultiDeclarationsFailed;
+    return !mSingleParentFailed && !mVariableReferencesFailed && !mNullNodesFailed &&
+           !mMultiDeclarationsFailed;
 }
 
 }  // anonymous namespace

@@ -890,6 +890,9 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
 
     if (defaultUniformCount > 0)
     {
+        // This transformation leaves the tree in an inconsistent state.  TODO: anglebug.com/4889
+        mValidateASTOptions.validateVariableReferences = false;
+
         sink << "\nlayout(set=0, binding=" << outputGLSL->nextUnusedBinding()
              << ", std140) uniform " << kDefaultUniformNames[packedShaderType] << "\n{\n";
 

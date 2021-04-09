@@ -17,6 +17,13 @@ namespace angle
 void InitTestHarness(int *argc, char **argv);
 }  // namespace angle
 
+// If we ever move to a text-based expectations format, we should move this list in that file.
+namespace
+{
+const char *kSlowTests[] = {
+    "dEQP.KHR_GLES31/core_arrays_of_arrays_ConstructorsAndUnsizedDeclConstructors1"};
+}  // namespace
+
 int main(int argc, char **argv)
 {
 #if defined(ANGLE_PLATFORM_MACOS)
@@ -27,5 +34,6 @@ int main(int argc, char **argv)
 
     angle::InitTestHarness(&argc, argv);
     angle::TestSuite testSuite(&argc, argv);
+    testSuite.registerSlowTests(kSlowTests, ArraySize(kSlowTests));
     return testSuite.run();
 }

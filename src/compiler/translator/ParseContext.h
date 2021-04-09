@@ -64,7 +64,7 @@ class TParseContext : angle::NonCopyable
                          const char *token);
 
     TIntermBlock *getTreeRoot() const { return mTreeRoot; }
-    void setTreeRoot(TIntermBlock *treeRoot) { mTreeRoot = treeRoot; }
+    void setTreeRoot(TIntermBlock *treeRoot);
 
     bool getFragmentPrecisionHigh() const
     {

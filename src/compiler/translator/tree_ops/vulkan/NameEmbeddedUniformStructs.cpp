@@ -10,6 +10,7 @@
 
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
+#include "compiler/translator/tree_util/ReplaceVariable.h"
 
 namespace sh
 {
@@ -51,6 +52,15 @@ class Traverser : public TIntermTraverser
         return false;
     }
 
+    void visitSymbol(TIntermSymbol *symbol) override
+    {
+        const TVariable *variable = &symbol->variable();
+        if (mVariableMap.count(variable) > 0)
+        {
+            queueReplacement(mVariableMap[variable]->deepCopy(), OriginalNode::IS_DROPPED);
+        }
+    }
+
   private:
     void doReplacement(TIntermDeclaration *decl,
                        TIntermTyped *declarator,
@@ -85,11 +95,15 @@ class Traverser : public TIntermTraverser
             namedDecl->appendDeclarator(newSymbol);
 
             newSequence.push_back(namedDecl);
+
+            mVariableMap[&asSymbol->variable()] = new TIntermSymbol(newVar);
         }
 
         mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), decl,
                                         std::move(newSequence));
     }
+
+    VariableReplacementMap mVariableMap;
 };
 }  // anonymous namespace
 

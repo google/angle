@@ -399,6 +399,12 @@ void TParseContext::outOfRangeError(bool isError,
     }
 }
 
+void TParseContext::setTreeRoot(TIntermBlock *treeRoot)
+{
+    mTreeRoot = treeRoot;
+    mTreeRoot->setIsTreeRoot();
+}
+
 //
 // Same error message for all places assignments don't work.
 //
