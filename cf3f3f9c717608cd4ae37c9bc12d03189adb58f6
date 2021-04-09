@@ -87,6 +87,30 @@
       },
       "revId": "cf3f3f9c717608cd4ae37c9bc12d03189adb58f6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4894b80d_07213508",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2720,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T14:24:49Z",
+      "side": 1,
+      "message": "Based on changes I see from Charlie, perhaps the behavior should be different between mutable and immutable textures. I think Charlie was seeing an application that had a framebuffer attachment outside the base-max range on an immutable texture and supposedly that\u0027s fine (haven\u0027t checked the spec).\n\nSo maybe the check should be as-is for mutable and like it was in PS#1 for immutable textures. Again, I haven\u0027t checked the spec.\n\n+Charlie",
+      "parentUuid": "2f6cd859_a2e06e47",
+      "range": {
+        "startLine": 2720,
+        "startChar": 17,
+        "endLine": 2720,
+        "endChar": 35
+      },
+      "revId": "cf3f3f9c717608cd4ae37c9bc12d03189adb58f6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
