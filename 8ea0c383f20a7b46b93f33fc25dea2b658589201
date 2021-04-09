@@ -18,6 +18,109 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eab8f130_440e2613",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T00:15:53Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fa8fe60_127f04e0",
+        "filename": "src/libANGLE/renderer/copyvertex.inc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T00:15:53Z",
+      "side": 1,
+      "message": "nit: This name isn\u0027t entirely accurate if \u0027toHalf\u0027 is true.   Maybe just remove the \"32\".",
+      "range": {
+        "startLine": 185,
+        "startChar": 12,
+        "endLine": 185,
+        "endChar": 31
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99ef0bbd_c87a2809",
+        "filename": "src/libANGLE/renderer/copyvertex.inc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T00:15:53Z",
+      "side": 1,
+      "message": "Why isn\u0027t this GLhalf?",
+      "range": {
+        "startLine": 188,
+        "startChar": 46,
+        "endLine": 188,
+        "endChar": 54
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e50457df_1135c224",
+        "filename": "src/libANGLE/renderer/copyvertex.inc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T00:15:53Z",
+      "side": 1,
+      "message": "This is assuming we\u0027d only ever want to reduce precision on float values, and not want to go from say GLint to GLshort.   Maybe it\u0027s a silly question, but how safe is that assumption?   I know that the lowp/mediump/highp qualifiers are for floats, but what stops us from trying to convert 32b int/uint to 16b short/ushort for the same types of bandwidth benefits?",
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5922e67f_0b97ebc9",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T00:15:53Z",
+      "side": 1,
+      "message": "to_half",
+      "range": {
+        "startLine": 151,
+        "startChar": 67,
+        "endLine": 151,
+        "endChar": 75
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c77b8256_d33e3860",
