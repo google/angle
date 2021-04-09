@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "35d91596_f78e06ee",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "No, since GL_VERTEX_SHADER is different from GL_VERTEX_SHADER_BIT.",
+      "parentUuid": "060ff138_53be5542",
+      "range": {
+        "startLine": 1133,
+        "startChar": 11,
+        "endLine": 1133,
+        "endChar": 36
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "15bcbbf4_ef69b23b",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-04-09T17:39:36Z",
       "side": 1,
       "message": "nit: could be a table look up.",
+      "range": {
+        "startLine": 1156,
+        "startChar": 4,
+        "endLine": 1156,
+        "endChar": 10
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33e346ee_8b2b9b6e",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1156,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Are you referring to doing something similar to the ShaderType enum?",
+      "parentUuid": "15bcbbf4_ef69b23b",
       "range": {
         "startLine": 1156,
         "startChar": 4,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4259eea8_f9842659",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Reverted.\n\nThis isn\u0027t actually necessary with the other fixes.",
+      "parentUuid": "b106ad7d_3888246d",
+      "range": {
+        "startLine": 866,
+        "startChar": 48,
+        "endLine": 866,
+        "endChar": 85
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "816e0e3c_3b7c09f0",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-04-09T17:07:14Z",
       "side": 1,
       "message": "nit: explicit type for readability",
+      "range": {
+        "startLine": 1626,
+        "startChar": 15,
+        "endLine": 1626,
+        "endChar": 19
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aee412b9_8fc83b27",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1626,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "816e0e3c_3b7c09f0",
       "range": {
         "startLine": 1626,
         "startChar": 15,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "461babdb_dca28e5d",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2707,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a47de5e7_d46cb0c7",
+      "range": {
+        "startLine": 2707,
+        "startChar": 8,
+        "endLine": 2707,
+        "endChar": 57
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c656f915_a0c85cc2",
@@ -146,6 +266,30 @@
       "writtenOn": "2021-04-09T16:35:40Z",
       "side": 1,
       "message": "We typically try to mirror what the app did as close as possible.  Is there a reason we can\u0027t use glCreateShaderProgramv?",
+      "range": {
+        "startLine": 2781,
+        "startChar": 18,
+        "endLine": 2781,
+        "endChar": 40
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51bc3639_47634cf4",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2781,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "We can\u0027t know that the program was created with glCreateShaderProgramv() or manually.   It also doesn\u0027t matter, since our implementation of glCreateShaderProgramv() just does all of the steps manually (see Context::createShaderProgramv()).",
+      "parentUuid": "c656f915_a0c85cc2",
       "range": {
         "startLine": 2781,
         "startChar": 18,
@@ -179,6 +323,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18ddc092_e86737c3",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2805,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bfb8cd89_e01864c3",
+      "range": {
+        "startLine": 2805,
+        "startChar": 8,
+        "endLine": 2805,
+        "endChar": 55
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d39c4eb_2bbd530e",
@@ -192,6 +360,30 @@
       "writtenOn": "2021-04-09T16:35:40Z",
       "side": 1,
       "message": "Worth a comment here why you need this to active the pipeline.",
+      "range": {
+        "startLine": 2881,
+        "startChar": 8,
+        "endLine": 2881,
+        "endChar": 55
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "531a24b6_79eea9be",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2881,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d39c4eb_2bbd530e",
       "range": {
         "startLine": 2881,
         "startChar": 8,
@@ -225,6 +417,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "abf4d537_24e6f05f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4090,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "def204ea_c1ee9d91",
+      "range": {
+        "startLine": 4090,
+        "startChar": 12,
+        "endLine": 4090,
+        "endChar": 24
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cded4974_59f21224",
@@ -238,6 +454,30 @@
       "writtenOn": "2021-04-09T17:07:14Z",
       "side": 1,
       "message": "nit: can make this temporary",
+      "range": {
+        "startLine": 4096,
+        "startChar": 12,
+        "endLine": 4096,
+        "endChar": 63
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "de1ebc31_d608857c",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4096,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cded4974_59f21224",
       "range": {
         "startLine": 4096,
         "startChar": 12,
@@ -271,6 +511,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46949c81_fa10d60f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4100,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "961b3847_201b2d36",
+      "range": {
+        "startLine": 4088,
+        "startChar": 0,
+        "endLine": 4100,
+        "endChar": 18
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8cb1551d_e7175057",
@@ -284,6 +548,30 @@
       "writtenOn": "2021-04-09T17:07:14Z",
       "side": 1,
       "message": "can you please make this a helper you share with CaptureShaderSource_string",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 5
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e1cbab1_321f8301",
+        "filename": "src/libANGLE/capture/capture_gles_3_1_params.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-09T18:37:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cb1551d_e7175057",
       "range": {
         "startLine": 23,
         "startChar": 0,
