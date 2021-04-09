@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81ab25a8_dfe6bc40",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-09T14:51:58Z",
+      "side": 1,
+      "message": "This test in not necessarily for merging cont.\n\nWith this simple test I am able to reproduce anglebug.com/5799 in the capture/replay tests on ES2 and ES3. It is also fixed by my formatutils patch. Make sure the patch is not applied when trying to reproduce.\n\nasan is able to detect a heap-buffer-overflow when capturing this.",
+      "revId": "92104a61518f06fce7421c3b65e68a3db9f1b15f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
