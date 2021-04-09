@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e5e2fa7_59a4a656",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-09T17:46:33Z",
+      "side": 1,
+      "message": "The texture buffer extension was missing from some of the validation code, which resulted in the wrong error being generated for Omar\u0027s test APK (in a case where the texture buffer extension was used, but wasn\u0027t enabled by ANGLE).",
+      "revId": "3b402788e79573a042b55cf951b95f241828b635",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
