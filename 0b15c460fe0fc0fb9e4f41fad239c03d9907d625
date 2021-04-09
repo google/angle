@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eea41ce3_ca31a024",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-09T17:37:07Z",
+      "side": 1,
+      "message": "No, removed.",
+      "parentUuid": "2af56dc1_7fb7109f",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 71
+      },
+      "revId": "0b15c460fe0fc0fb9e4f41fad239c03d9907d625",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "20f64a7a_d24158a5",
@@ -66,6 +90,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f11fe1ae_e9484356",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 209,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-09T17:37:07Z",
+      "side": 1,
+      "message": "Maybe I\u0027m missing something but I couldn\u0027t get this to work \u0027checkout_android\u0027 isn\u0027t a valid variable at the time of \u0027vars\u0027 being interpreted.",
+      "parentUuid": "20f64a7a_d24158a5",
+      "range": {
+        "startLine": 209,
+        "startChar": 21,
+        "endLine": 209,
+        "endChar": 64
+      },
+      "revId": "0b15c460fe0fc0fb9e4f41fad239c03d9907d625",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "320baa71_e5ee73a7",
         "filename": "third_party/jdk/README.chromium",
         "patchSetId": 1
@@ -77,6 +125,30 @@
       "writtenOn": "2021-04-09T17:01:36Z",
       "side": 1,
       "message": "might want to mention somewhere this is a clone of the chromium tree?",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 4
+      },
+      "revId": "0b15c460fe0fc0fb9e4f41fad239c03d9907d625",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82e6c93a_71c1c818",
+        "filename": "third_party/jdk/README.chromium",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-09T17:37:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "320baa71_e5ee73a7",
       "range": {
         "startLine": 38,
         "startChar": 0,
