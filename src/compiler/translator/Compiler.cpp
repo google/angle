@@ -561,6 +561,8 @@ bool TCompiler::checkAndSimplifyAST(TIntermBlock *root,
                                     const TParseContext &parseContext,
                                     ShCompileOptions compileOptions)
 {
+    mValidateASTOptions = {};
+
     // Disallow expressions deemed too complex.
     if ((compileOptions & SH_LIMIT_EXPRESSION_COMPLEXITY) != 0 && !limitExpressionComplexity(root))
     {

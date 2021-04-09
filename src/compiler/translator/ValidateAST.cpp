@@ -61,6 +61,9 @@ class ValidateAST : public TIntermTraverser
 
     // For validateNullNodes
     bool mNullNodesFailed = false;
+
+    // For validateMultiDeclarations
+    bool mMultiDeclarationsFailed = false;
 };
 
 bool ValidateAST::validate(TIntermNode *root,
@@ -218,6 +221,12 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
 {
     visitNode(visit, node);
     expectNonNullChildren(visit, node, 0);
+
+    if (mOptions.validateMultiDeclarations && node->getSequence()->size() > 1)
+    {
+        mMultiDeclarationsFailed = true;
+    }
+
     return true;
 }
 
@@ -240,7 +249,7 @@ void ValidateAST::visitPreprocessorDirective(TIntermPreprocessorDirective *node)
 
 bool ValidateAST::validateInternal()
 {
-    return !mSingleParentFailed && !mNullNodesFailed;
+    return !mSingleParentFailed && !mNullNodesFailed && !mMultiDeclarationsFailed;
 }
 
 }  // anonymous namespace

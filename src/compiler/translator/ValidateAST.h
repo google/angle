@@ -46,7 +46,7 @@ struct ValidateASTOptions
     // Check that expression nodes have the correct type considering their operand(s).
     bool validateExpressionTypes = true;  // TODO
     // If SeparateDeclarations has been run, check for the absence of multi declarations as well.
-    bool validateMultiDeclarations = false;  // TODO
+    bool validateMultiDeclarations = false;
 };
 
 // Check for errors and output error messages on the context.
