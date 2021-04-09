@@ -20,6 +20,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "060ff138_53be5542",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1133,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T17:39:36Z",
+      "side": 1,
+      "message": "Just noticed this, isn\u0027t it the same as gl::FromGLenum\u003cgl::ShaderType\u003e(singleShaderType)?",
+      "range": {
+        "startLine": 1133,
+        "startChar": 11,
+        "endLine": 1133,
+        "endChar": 36
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "15bcbbf4_ef69b23b",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1156,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T17:39:36Z",
+      "side": 1,
+      "message": "nit: could be a table look up.",
+      "range": {
+        "startLine": 1156,
+        "startChar": 4,
+        "endLine": 1156,
+        "endChar": 10
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b106ad7d_3888246d",
         "filename": "src/libANGLE/Context.cpp",
         "patchSetId": 4
