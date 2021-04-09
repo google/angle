@@ -653,6 +653,10 @@ config("angle_backend_config") {
     defines += [ "ANGLE_FORCE_CONTEXT_CHECK_EVERY_CALL=1" ]
   }
 
+  if (angle_expose_non_conformant_extensions_and_versions) {
+    defines += [ "ANGLE_EXPOSE_NON_CONFORMANT_EXTENSIONS_AND_VERSIONS" ]
+  }
+
   configs = []
 
   if (angle_enable_d3d11) {
