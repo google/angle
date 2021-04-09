@@ -467,6 +467,10 @@ template("angle_trace_fixture") {
     if (defined(invoker.public_configs)) {
       public_configs += invoker.public_configs
     }
+    if (is_ios) {
+      # shared libraries are hidden inside ios_framework_bundle, but we include headers from them
+      check_includes = false
+    }
   }
 }
 
