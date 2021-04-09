@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba6a07c1_49f65200",
+        "filename": "util/android/AndroidWindow.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-09T20:04:42Z",
+      "side": 1,
+      "message": "04-09 19:51:36.487 14463 14477 F art     : art/runtime/java_vm_ext.cc:410] JNI DETECTED ERROR IN APPLICATION: GetStringUTFChars received NULL jstring\n04-09 19:51:36.487 14463 14477 F art     : art/runtime/java_vm_ext.cc:410]     in call to GetStringUTFChars\n04-09 19:51:36.487 14463 14477 F art     : art/runtime/java_vm_ext.cc:410]     from void com.android.angle.test.AngleNativeTest.nativeRunTests(java.lang.String, java.lang.String, java.lang.String)",
+      "range": {
+        "startLine": 245,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 71
+      },
+      "revId": "a65fb3085ad342dde967b35e6998391d8c7a3b94",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
