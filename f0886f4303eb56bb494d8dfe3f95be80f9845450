@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a2849cd_60403a52",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-09T20:55:25Z",
+      "side": 1,
+      "message": "With the Vulkan spec changed, we must pull pre-rotation out of ANGLE.",
+      "revId": "f0886f4303eb56bb494d8dfe3f95be80f9845450",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
