@@ -16,6 +16,52 @@
       "message": "This patch is not necessarily for merging.\n\nI was unable to reproduce anglebug.com/5799 using glReadPixels on a GL_DEPTH_COMPONENT24 framebuffer in the end2end tests.\nTo use GL_DEPTH_COMPONENT24 as an internal texture format ES3 is apparently required, the test does not work on ES2.\nI am able to draw to and read pixels form the created framebuffer without causing the bug. Context serialization also works with this test.",
       "revId": "27b544f1eb6fe8da21e0e4cc29edd81e85fa5cb0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40dfef6b_3af0903b",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T14:57:07Z",
+      "side": 1,
+      "message": "nit: you can just use DepthStencilTestES3",
+      "range": {
+        "startLine": 333,
+        "startChar": 7,
+        "endLine": 333,
+        "endChar": 18
+      },
+      "revId": "27b544f1eb6fe8da21e0e4cc29edd81e85fa5cb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43785b28_b2011108",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 396,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T14:57:07Z",
+      "side": 1,
+      "message": "nit: suggest something that\u0027s accurately representable as unorm. How about 0.125?",
+      "range": {
+        "startLine": 396,
+        "startChar": 18,
+        "endLine": 396,
+        "endChar": 22
+      },
+      "revId": "27b544f1eb6fe8da21e0e4cc29edd81e85fa5cb0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
