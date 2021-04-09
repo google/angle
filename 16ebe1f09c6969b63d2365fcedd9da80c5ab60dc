@@ -33,6 +33,29 @@
       "message": "LGTM\n\nThanks for the fix.",
       "revId": "16ebe1f09c6969b63d2365fcedd9da80c5ab60dc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0875bbf3_fd75a5f0",
+        "filename": "src/commit_id.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-09T15:06:46Z",
+      "side": 1,
+      "message": "removed the redundant \"join\"",
+      "range": {
+        "startLine": 35,
+        "startChar": 31,
+        "endLine": 35,
+        "endChar": 43
+      },
+      "revId": "16ebe1f09c6969b63d2365fcedd9da80c5ab60dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
