@@ -1068,7 +1068,7 @@
                                 "type":{
                                     "basic":"Int",
                                     "precision":"High",
-                                    "qualifier":"BaseVertex"
+                                    "qualifier":"Uniform"
                                 }
                             },
                             "gl_BaseInstance":{
@@ -1077,7 +1077,7 @@
                                 "type":{
                                     "basic":"Int",
                                     "precision":"High",
-                                    "qualifier":"BaseInstance"
+                                    "qualifier":"Uniform"
                                 }
                             },
                             "angle_BaseVertex":{
@@ -1086,7 +1086,7 @@
                                 "type":{
                                     "basic":"Int",
                                     "precision":"High",
-                                    "qualifier":"BaseVertex"
+                                    "qualifier":"Uniform"
                                 }
                             },
                             "angle_BaseInstance":{
@@ -1095,7 +1095,7 @@
                                 "type":{
                                     "basic":"Int",
                                     "precision":"High",
-                                    "qualifier":"BaseInstance"
+                                    "qualifier":"Uniform"
                                 }
                             }
                         }
