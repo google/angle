@@ -228,14 +228,14 @@ const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
                                        TSymbolTable *symbolTable,
                                        TFieldList *fieldList,
                                        TQualifier qualifier,
+                                       const TLayoutQualifier &layoutQualifier,
                                        const TMemoryQualifier &memoryQualifier,
                                        uint32_t arraySize,
                                        const ImmutableString &blockTypeName,
                                        const ImmutableString &blockVariableName)
 {
     // Define an interface block.
-    TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
-    TInterfaceBlock *interfaceBlock  = new TInterfaceBlock(
+    TInterfaceBlock *interfaceBlock = new TInterfaceBlock(
         symbolTable, blockTypeName, fieldList, layoutQualifier, SymbolType::AngleInternal);
 
     // Turn the inteface block into a declaration.
@@ -247,8 +247,9 @@ const TVariable *DeclareInterfaceBlock(TIntermBlock *root,
     }
 
     TIntermDeclaration *interfaceBlockDecl = new TIntermDeclaration;
-    TVariable *interfaceBlockVar = new TVariable(symbolTable, blockVariableName, interfaceBlockType,
-                                                 SymbolType::AngleInternal);
+    TVariable *interfaceBlockVar =
+        new TVariable(symbolTable, blockVariableName, interfaceBlockType,
+                      blockVariableName.empty() ? SymbolType::Empty : SymbolType::AngleInternal);
     TIntermSymbol *interfaceBlockDeclarator = new TIntermSymbol(interfaceBlockVar);
     interfaceBlockDecl->appendDeclarator(interfaceBlockDeclarator);
 

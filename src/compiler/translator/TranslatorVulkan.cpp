@@ -50,6 +50,18 @@ namespace sh
 
 namespace
 {
+constexpr ImmutableString kFlippedPointCoordName = ImmutableString("flippedPointCoord");
+constexpr ImmutableString kFlippedFragCoordName  = ImmutableString("flippedFragCoord");
+
+constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
+    {gl::ShaderType::Vertex, vk::kDefaultUniformsNameVS},
+    {gl::ShaderType::TessControl, vk::kDefaultUniformsNameTCS},
+    {gl::ShaderType::TessEvaluation, vk::kDefaultUniformsNameTES},
+    {gl::ShaderType::Geometry, vk::kDefaultUniformsNameGS},
+    {gl::ShaderType::Fragment, vk::kDefaultUniformsNameFS},
+    {gl::ShaderType::Compute, vk::kDefaultUniformsNameCS},
+};
+
 // This traverses nodes, find the struct ones and add their declarations to the sink. It also
 // removes the nodes from the tree as it processes them.
 class DeclareStructTypesTraverser : public TIntermTraverser
@@ -97,89 +109,122 @@ class DeclareStructTypesTraverser : public TIntermTraverser
     TOutputVulkanGLSL *mOutputVulkanGLSL;
 };
 
-class DeclareDefaultUniformsTraverser : public TIntermTraverser
+bool IsDefaultUniform(const TType &type)
+{
+    return type.getQualifier() == EvqUniform && type.getInterfaceBlock() == nullptr &&
+           !IsOpaqueType(type.getBasicType());
+}
+
+class ReplaceDefaultUniformsTraverser : public TIntermTraverser
 {
   public:
-    DeclareDefaultUniformsTraverser(TInfoSinkBase *sink,
-                                    ShHashFunction64 hashFunction,
-                                    NameMap *nameMap)
-        : TIntermTraverser(true, true, true),
-          mSink(sink),
-          mHashFunction(hashFunction),
-          mNameMap(nameMap),
-          mInDefaultUniform(false)
+    ReplaceDefaultUniformsTraverser(const VariableReplacementMap &variableMap)
+        : TIntermTraverser(true, false, false), mVariableMap(variableMap)
     {}
 
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override
     {
         const TIntermSequence &sequence = *(node->getSequence());
 
-        // TODO(jmadill): Compound declarations.
-        ASSERT(sequence.size() == 1);
-
         TIntermTyped *variable = sequence.front()->getAsTyped();
         const TType &type      = variable->getType();
-        bool isUniform         = type.getQualifier() == EvqUniform && !type.isInterfaceBlock() &&
-                         !IsOpaqueType(type.getBasicType());
 
-        if (visit == PreVisit)
+        if (IsDefaultUniform(type))
         {
-            if (isUniform)
-            {
-                (*mSink) << "    " << GetTypeName(type, mHashFunction, mNameMap) << " ";
-                mInDefaultUniform = true;
-            }
-        }
-        else if (visit == InVisit)
-        {
-            mInDefaultUniform = isUniform;
-        }
-        else if (visit == PostVisit)
-        {
-            if (isUniform)
-            {
-                (*mSink) << ";\n";
+            // Remove the uniform declaration.
+            TIntermSequence emptyReplacement;
+            mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
+                                            std::move(emptyReplacement));
 
-                // Remove the uniform declaration from the tree so it isn't parsed again.
-                TIntermSequence emptyReplacement;
-                mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
-                                                std::move(emptyReplacement));
-            }
-
-            mInDefaultUniform = false;
+            return false;
         }
+
         return true;
     }
 
     void visitSymbol(TIntermSymbol *symbol) override
     {
-        if (mInDefaultUniform)
+        const TVariable &variable = symbol->variable();
+        const TType &type         = variable.getType();
+
+        if (!IsDefaultUniform(type) || variable.name().beginsWith("gl_"))
         {
-            const ImmutableString &name = symbol->variable().name();
-            ASSERT(!name.beginsWith("gl_"));
-            (*mSink) << HashName(&symbol->variable(), mHashFunction, mNameMap)
-                     << ArrayString(symbol->getType());
+            return;
         }
+
+        ASSERT(mVariableMap.count(&variable) > 0);
+
+        queueReplacement(mVariableMap.at(&variable)->deepCopy(), OriginalNode::IS_DROPPED);
     }
 
   private:
-    TInfoSinkBase *mSink;
-    ShHashFunction64 mHashFunction;
-    NameMap *mNameMap;
-    bool mInDefaultUniform;
+    const VariableReplacementMap &mVariableMap;
 };
 
-constexpr ImmutableString kFlippedPointCoordName = ImmutableString("flippedPointCoord");
-constexpr ImmutableString kFlippedFragCoordName  = ImmutableString("flippedFragCoord");
+bool DeclareDefaultUniforms(TCompiler *compiler,
+                            TIntermBlock *root,
+                            TSymbolTable *symbolTable,
+                            gl::ShaderType shaderType)
+{
+    // First, collect all default uniforms and declare a uniform block.
+    TFieldList *uniformList = new TFieldList;
+    TVector<const TVariable *> uniformVars;
 
-constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
-    {gl::ShaderType::Vertex, vk::kDefaultUniformsNameVS},
-    {gl::ShaderType::TessControl, vk::kDefaultUniformsNameTCS},
-    {gl::ShaderType::TessEvaluation, vk::kDefaultUniformsNameTES},
-    {gl::ShaderType::Geometry, vk::kDefaultUniformsNameGS},
-    {gl::ShaderType::Fragment, vk::kDefaultUniformsNameFS},
-    {gl::ShaderType::Compute, vk::kDefaultUniformsNameCS},
-};
+    for (TIntermNode *node : *root->getSequence())
+    {
+        TIntermDeclaration *decl = node->getAsDeclarationNode();
+        if (decl == nullptr)
+        {
+            continue;
+        }
+
+        const TIntermSequence &sequence = *(decl->getSequence());
+
+        TIntermSymbol *symbol = sequence.front()->getAsSymbolNode();
+        if (symbol == nullptr)
+        {
+            continue;
+        }
+
+        const TType &type = symbol->getType();
+        if (IsDefaultUniform(type))
+        {
+            TType *fieldType = new TType(type);
+            fieldType->setPrecision(EbpUndefined);
+
+            uniformList->push_back(new TField(fieldType, symbol->getName(), symbol->getLine(),
+                                              symbol->variable().symbolType()));
+            uniformVars.push_back(&symbol->variable());
+        }
+    }
+
+    TLayoutQualifier layoutQualifier = TLayoutQualifier::Create();
+    layoutQualifier.blockStorage     = EbsStd140;
+    const TVariable *uniformBlock    = DeclareInterfaceBlock(
+        root, symbolTable, uniformList, EvqUniform, layoutQualifier, TMemoryQualifier::Create(), 0,
+        ImmutableString(kDefaultUniformNames[shaderType]), ImmutableString(""));
+
+    // Create a map from the uniform variables to new variables that reference the fields of the
+    // block.
+    VariableReplacementMap variableMap;
+    for (const TVariable *variable : uniformVars)
+    {
+        TType *replacementType = new TType(variable->getType());
+        replacementType->setPrecision(EbpUndefined);
+        replacementType->setInterfaceBlock(uniformBlock->getType().getInterfaceBlock());
+
+        TVariable *replacementVariable =
+            new TVariable(symbolTable, variable->name(), replacementType, variable->symbolType());
+
+        variableMap[variable] = new TIntermSymbol(replacementVariable);
+    }
+
+    // Finally transform the AST and make sure references to the uniforms are replaced with the new
+    // variables.
+    ReplaceDefaultUniformsTraverser defaultTraverser(variableMap);
+    root->traverse(&defaultTraverser);
+    return defaultTraverser.updateTree(compiler, root);
+}
 
 // Replaces a builtin variable with a version that is rotated and corrects the X and Y coordinates.
 ANGLE_NO_DISCARD bool RotateAndFlipBuiltinVariable(TCompiler *compiler,
@@ -529,8 +574,8 @@ ANGLE_NO_DISCARD bool AddXfbEmulationSupport(TCompiler *compiler,
         varName << vk::kXfbEmulationBufferName;
         varName.appendDecimal(bufferIndex);
 
-        DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, TMemoryQualifier::Create(),
-                              0, blockName, varName);
+        DeclareInterfaceBlock(root, symbolTable, fieldList, EvqBuffer, TLayoutQualifier::Create(),
+                              TMemoryQualifier::Create(), 0, blockName, varName);
     }
 
     return compiler->validateAST(root);
@@ -890,20 +935,10 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
 
     if (defaultUniformCount > 0)
     {
-        // This transformation leaves the tree in an inconsistent state.  TODO: anglebug.com/4889
-        mValidateASTOptions.validateVariableReferences = false;
-
-        sink << "\nlayout(set=0, binding=" << outputGLSL->nextUnusedBinding()
-             << ", std140) uniform " << kDefaultUniformNames[packedShaderType] << "\n{\n";
-
-        DeclareDefaultUniformsTraverser defaultTraverser(&sink, getHashFunction(), &getNameMap());
-        root->traverse(&defaultTraverser);
-        if (!defaultTraverser.updateTree(this, root))
+        if (!DeclareDefaultUniforms(this, root, &getSymbolTable(), packedShaderType))
         {
             return false;
         }
-
-        sink << "};\n";
     }
 
     if (getShaderType() == GL_COMPUTE_SHADER)

@@ -45,8 +45,9 @@ const TVariable *DeclareAtomicCountersBuffers(TIntermBlock *root, TSymbolTable *
 
     // Define a storage block "ANGLEAtomicCounters" with instance name "atomicCounters".
     return DeclareInterfaceBlock(
-        root, symbolTable, fieldList, EvqBuffer, coherentMemory, kMaxAtomicCounterBuffers,
-        ImmutableString(vk::kAtomicCountersBlockName), kAtomicCountersVarName);
+        root, symbolTable, fieldList, EvqBuffer, TLayoutQualifier::Create(), coherentMemory,
+        kMaxAtomicCounterBuffers, ImmutableString(vk::kAtomicCountersBlockName),
+        kAtomicCountersVarName);
 }
 
 TIntermTyped *CreateUniformBufferOffset(const TIntermTyped *uniformBufferOffsets, int binding)
