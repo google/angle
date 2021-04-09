@@ -628,8 +628,8 @@ TracePerfTest::TracePerfTest()
         // Intel doesn't support external images.
         addExtensionPrerequisite("GL_OES_EGL_image_external");
 
-        // Failing on Linux Intel due to invalid enum. http://anglebug.com/5822
-        if (IsLinux() && IsIntel() && param.driver != GLESDriverType::AngleEGL)
+        // Failing on Linux Intel and AMD due to invalid enum. http://anglebug.com/5822
+        if (IsLinux() && (IsIntel() || IsAMD()) && param.driver != GLESDriverType::AngleEGL)
         {
             mSkipTest = true;
         }
