@@ -3453,7 +3453,10 @@ void CaptureBufferStorageEXT_data(const State &glState,
                                   GLbitfield flags,
                                   angle::ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    if (data)
+    {
+        CaptureMemory(data, size, paramCapture);
+    }
 }
 
 // GL_EXT_separate_shader_objects

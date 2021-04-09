@@ -2191,9 +2191,19 @@ void CaptureMidExecutionSetup(const gl::Context *context,
             cap(CaptureBindBuffer(replayState, true, gl::BufferBinding::Array, id));
         }
 
-        cap(CaptureBufferData(replayState, true, gl::BufferBinding::Array,
-                              static_cast<GLsizeiptr>(buffer->getSize()), buffer->getMapPointer(),
-                              buffer->getUsage()));
+        if (buffer->isImmutable())
+        {
+            cap(CaptureBufferStorageEXT(replayState, true, gl::BufferBinding::Array,
+                                        static_cast<GLsizeiptr>(buffer->getSize()),
+                                        buffer->getMapPointer(),
+                                        buffer->getStorageExtUsageFlags()));
+        }
+        else
+        {
+            cap(CaptureBufferData(replayState, true, gl::BufferBinding::Array,
+                                  static_cast<GLsizeiptr>(buffer->getSize()),
+                                  buffer->getMapPointer(), buffer->getUsage()));
+        }
 
         if (bufferMapped)
         {
