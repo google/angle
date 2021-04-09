@@ -43,6 +43,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "816e0e3c_3b7c09f0",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1626,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T17:07:14Z",
+      "side": 1,
+      "message": "nit: explicit type for readability",
+      "range": {
+        "startLine": 1626,
+        "startChar": 15,
+        "endLine": 1626,
+        "endChar": 19
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a47de5e7_d46cb0c7",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2707,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T17:07:14Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 2707,
+        "startChar": 8,
+        "endLine": 2707,
+        "endChar": 57
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "c656f915_a0c85cc2",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 4
@@ -59,6 +105,29 @@
         "startChar": 18,
         "endLine": 2781,
         "endChar": 40
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bfb8cd89_e01864c3",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2805,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T17:07:14Z",
+      "side": 1,
+      "message": "nit: see pattern above for minor consistency change",
+      "range": {
+        "startLine": 2805,
+        "startChar": 8,
+        "endLine": 2805,
+        "endChar": 55
       },
       "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
@@ -89,6 +158,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "def204ea_c1ee9d91",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4090,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T17:07:14Z",
+      "side": 1,
+      "message": "nit: can this be const?",
+      "range": {
+        "startLine": 4090,
+        "startChar": 12,
+        "endLine": 4090,
+        "endChar": 24
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cded4974_59f21224",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4096,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T17:07:14Z",
+      "side": 1,
+      "message": "nit: can make this temporary",
+      "range": {
+        "startLine": 4096,
+        "startChar": 12,
+        "endLine": 4096,
+        "endChar": 63
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "961b3847_201b2d36",
         "filename": "src/libANGLE/capture/FrameCapture.cpp",
         "patchSetId": 4
@@ -105,6 +220,29 @@
         "startChar": 0,
         "endLine": 4100,
         "endChar": 18
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cb1551d_e7175057",
+        "filename": "src/libANGLE/capture/capture_gles_3_1_params.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T17:07:14Z",
+      "side": 1,
+      "message": "can you please make this a helper you share with CaptureShaderSource_string",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 5
       },
       "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
