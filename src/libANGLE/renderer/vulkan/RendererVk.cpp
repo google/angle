@@ -2132,13 +2132,6 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
         &mFeatures, supportsIncrementalPresent,
         ExtensionFound(VK_KHR_INCREMENTAL_PRESENT_EXTENSION_NAME, deviceExtensionNames));
 
-    // The Vulkan specification for the VK_KHR_incremental_present extension does not address
-    // rotation.  In Android, this extension is implemented on top of the same platform code as
-    // eglSwapBuffersWithDamageKHR(), which code assumes that it should rotate each rectangle.  To
-    // avoid double-rotating damage rectangles on Android, we must avoid pre-rotating
-    // application-provided rectangles.   See: https://issuetracker.google.com/issues/181796746
-    ANGLE_FEATURE_CONDITION(&mFeatures, disablePreRotateIncrementalPresentRectangles, IsAndroid());
-
 #if defined(ANGLE_PLATFORM_ANDROID)
     ANGLE_FEATURE_CONDITION(
         &mFeatures, supportsAndroidHardwareBuffer,
