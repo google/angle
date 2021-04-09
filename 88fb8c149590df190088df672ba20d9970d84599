@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26bbab86_01f8fa30",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1190898
+      },
+      "writtenOn": "2021-04-09T18:39:42Z",
+      "side": 1,
+      "message": "This is changed, which disables all of the failing multithreading tests for D3D11. A side-effect is the new MultithreadingTest,MultiContextDeleteDraw is not run on any platforms, but is not explicitly marked DISABLED. Let me know if I should do that.",
+      "revId": "88fb8c149590df190088df672ba20d9970d84599",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
