@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5039191b_cf1383f5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2544,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T14:00:51Z",
+      "side": 1,
+      "message": "MemoryBuffer is also movable, so you could have used that. std::vector is fine with me, no strong preference here.",
+      "parentUuid": "cb3eb2ba_ef1d6153",
+      "range": {
+        "startLine": 2544,
+        "startChar": 24,
+        "endLine": 2544,
+        "endChar": 25
+      },
+      "revId": "2b230590463a110896e9703ed2c0a5dd76595bd3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7bdeb7c_c130c1a9",
