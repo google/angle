@@ -67,7 +67,7 @@ class ValidateAST : public TIntermTraverser
 
     // For validateVariableReferences:
     std::vector<std::set<const TVariable *>> mDeclaredVariables;
-    std::set<ImmutableString> mNamelessInterfaceBlockFields;
+    std::set<const TInterfaceBlock *> mNamelessInterfaceBlocks;
     bool mVariableReferencesFailed = false;
 
     // For validateNullNodes:
@@ -210,14 +210,27 @@ void ValidateAST::visitSymbol(TIntermSymbol *node)
 
     if (mOptions.validateVariableReferences && variableNeedsDeclaration(variable))
     {
-        // If it's a reference to a field of a nameless interface block, match it by name.
+        // If it's a reference to a field of a nameless interface block, match it by index and name.
         if (type.getInterfaceBlock() && !type.isInterfaceBlock())
         {
-            if (mNamelessInterfaceBlockFields.count(node->getName()) == 0)
+            const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+            const TFieldList &fieldList           = interfaceBlock->fields();
+            const size_t fieldIndex               = type.getInterfaceBlockFieldIndex();
+
+            if (mNamelessInterfaceBlocks.count(interfaceBlock) == 0)
             {
                 mDiagnostics->error(node->getLine(),
-                                    "Found reference to undeclared nameless interface block field "
-                                    "<validateVariableReferences>",
+                                    "Found reference to undeclared or inconsistenly redeclared "
+                                    "nameless interface block <validateVariableReferences>",
+                                    node->getName().data());
+                mVariableReferencesFailed = true;
+            }
+            else if (fieldIndex >= fieldList.size() ||
+                     node->getName() != fieldList[fieldIndex]->name())
+            {
+                mDiagnostics->error(node->getLine(),
+                                    "Found reference to inconsistenly redeclared nameless "
+                                    "interface block field <validateVariableReferences>",
                                     node->getName().data());
                 mVariableReferencesFailed = true;
             }
@@ -380,23 +393,17 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
 
             mDeclaredVariables.back().insert(variable);
 
-            if (variable->symbolType() == SymbolType::Empty &&
-                variable->getType().getInterfaceBlock())
+            const TInterfaceBlock *interfaceBlock = variable->getType().getInterfaceBlock();
+
+            if (variable->symbolType() == SymbolType::Empty && interfaceBlock != nullptr)
             {
                 // Nameless interface blocks can only be declared at the top level.  Their fields
-                // are not identified by TVariables, so resort to name-matching.  Conflict in names
-                // should have already generated a compile error.
+                // are matched by field index, and then verified to match by name.  Conflict in
+                // names should have already generated a compile error.
                 ASSERT(mDeclaredVariables.size() == 1);
+                ASSERT(mNamelessInterfaceBlocks.count(interfaceBlock) == 0);
 
-                const TFieldList &fieldList = variable->getType().getInterfaceBlock()->fields();
-
-                for (size_t memberIndex = 0; memberIndex < fieldList.size(); ++memberIndex)
-                {
-                    TField *field = fieldList[memberIndex];
-                    ASSERT(mNamelessInterfaceBlockFields.count(field->name()) == 0);
-
-                    mNamelessInterfaceBlockFields.insert(field->name());
-                }
+                mNamelessInterfaceBlocks.insert(interfaceBlock);
             }
         }
     }

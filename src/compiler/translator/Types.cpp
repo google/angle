@@ -185,6 +185,7 @@ TType::TType(const TPublicType &p)
       mInterfaceBlock(nullptr),
       mStructure(nullptr),
       mIsStructSpecifier(false),
+      mInterfaceBlockFieldIndex(0),
       mMangledName(nullptr)
 {
     ASSERT(primarySize <= 4);
@@ -223,20 +224,21 @@ TType::TType(const TType &t)
 
 TType &TType::operator=(const TType &t)
 {
-    type               = t.type;
-    precision          = t.precision;
-    qualifier          = t.qualifier;
-    invariant          = t.invariant;
-    precise            = t.precise;
-    memoryQualifier    = t.memoryQualifier;
-    layoutQualifier    = t.layoutQualifier;
-    primarySize        = t.primarySize;
-    secondarySize      = t.secondarySize;
-    mArraySizesStorage = nullptr;
-    mInterfaceBlock    = t.mInterfaceBlock;
-    mStructure         = t.mStructure;
-    mIsStructSpecifier = t.mIsStructSpecifier;
-    mMangledName       = t.mMangledName;
+    type                      = t.type;
+    precision                 = t.precision;
+    qualifier                 = t.qualifier;
+    invariant                 = t.invariant;
+    precise                   = t.precise;
+    memoryQualifier           = t.memoryQualifier;
+    layoutQualifier           = t.layoutQualifier;
+    primarySize               = t.primarySize;
+    secondarySize             = t.secondarySize;
+    mArraySizesStorage        = nullptr;
+    mInterfaceBlock           = t.mInterfaceBlock;
+    mStructure                = t.mStructure;
+    mIsStructSpecifier        = t.mIsStructSpecifier;
+    mInterfaceBlockFieldIndex = t.mInterfaceBlockFieldIndex;
+    mMangledName              = t.mMangledName;
 
     if (t.mArraySizesStorage)
     {
@@ -705,6 +707,12 @@ void TType::setInterfaceBlock(const TInterfaceBlock *interfaceBlockIn)
         mInterfaceBlock = interfaceBlockIn;
         invalidateMangledName();
     }
+}
+
+void TType::setInterfaceBlockField(const TInterfaceBlock *interfaceBlockIn, size_t fieldIndex)
+{
+    setInterfaceBlock(interfaceBlockIn);
+    mInterfaceBlockFieldIndex = fieldIndex;
 }
 
 const char *TType::getMangledName() const

@@ -207,11 +207,14 @@ bool DeclareDefaultUniforms(TCompiler *compiler,
     // Create a map from the uniform variables to new variables that reference the fields of the
     // block.
     VariableReplacementMap variableMap;
-    for (const TVariable *variable : uniformVars)
+    for (size_t fieldIndex = 0; fieldIndex < uniformVars.size(); ++fieldIndex)
     {
+        const TVariable *variable = uniformVars[fieldIndex];
+
         TType *replacementType = new TType(variable->getType());
         replacementType->setPrecision(EbpUndefined);
-        replacementType->setInterfaceBlock(uniformBlock->getType().getInterfaceBlock());
+        replacementType->setInterfaceBlockField(uniformBlock->getType().getInterfaceBlock(),
+                                                fieldIndex);
 
         TVariable *replacementVariable =
             new TVariable(symbolTable, variable->name(), replacementType, variable->symbolType());

@@ -663,35 +663,29 @@ class RewriteRowMajorMatricesTraverser : public TIntermTraverser
 
             // Find which field it is
             const TVector<TField *> fields = interfaceBlock->fields();
-            for (size_t fieldIndex = 0; fieldIndex < fields.size(); ++fieldIndex)
+            const size_t fieldIndex        = variable->getType().getInterfaceBlockFieldIndex();
+            ASSERT(fieldIndex < fields.size());
+
+            const TField *field = fields[fieldIndex];
+            ASSERT(field->name() == symbolName);
+
+            // If this field doesn't need a rewrite, there's nothing to do.
+            if (mInterfaceBlockFieldConvertedIn.count(field) == 0 ||
+                !mInterfaceBlockFieldConvertedIn.at(field))
             {
-                const TField *field = fields[fieldIndex];
-                if (field->name() != symbolName)
-                {
-                    continue;
-                }
-
-                // If this field doesn't need a rewrite, there's nothing to do.
-                if (mInterfaceBlockFieldConvertedIn.count(field) == 0 ||
-                    !mInterfaceBlockFieldConvertedIn.at(field))
-                {
-                    break;
-                }
-
-                // Create a new variable that references the replaced interface block.
-                TType *newType = new TType(variable->getType());
-                newType->setInterfaceBlock(iter.second->getType().getInterfaceBlock());
-
-                TVariable *newVariable =
-                    new TVariable(mSymbolTable, variable->name(), newType, variable->symbolType(),
-                                  variable->extension());
-
-                (*mInterfaceBlockMap)[variable] = newVariable;
-
-                return true;
+                break;
             }
 
-            break;
+            // Create a new variable that references the replaced interface block.
+            TType *newType = new TType(variable->getType());
+            newType->setInterfaceBlockField(iter.second->getType().getInterfaceBlock(), fieldIndex);
+
+            TVariable *newVariable = new TVariable(mSymbolTable, variable->name(), newType,
+                                                   variable->symbolType(), variable->extension());
+
+            (*mInterfaceBlockMap)[variable] = newVariable;
+
+            return true;
         }
 
         return false;

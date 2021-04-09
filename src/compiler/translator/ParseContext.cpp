@@ -4506,7 +4506,7 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
             TType *fieldType = new TType(*field->type());
 
             // set parent pointer of the field variable
-            fieldType->setInterfaceBlock(interfaceBlock);
+            fieldType->setInterfaceBlockField(interfaceBlock, memberIndex);
 
             fieldType->setQualifier(typeQualifier.qualifier);
 
