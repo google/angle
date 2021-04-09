@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2af56dc1_7fb7109f",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-09T17:11:50Z",
+      "side": 1,
+      "message": "Is this comment relevant?",
+      "range": {
+        "startLine": 208,
+        "startChar": 0,
+        "endLine": 208,
+        "endChar": 71
+      },
+      "revId": "0b15c460fe0fc0fb9e4f41fad239c03d9907d625",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "20f64a7a_d24158a5",
         "filename": "DEPS",
         "patchSetId": 1
