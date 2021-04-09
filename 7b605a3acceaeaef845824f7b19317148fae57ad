@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9c9e3cf3_928c3944",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T17:36:41Z",
+      "side": 1,
+      "message": "You may be interested in testing synergy with this change:\n\n    https://chromium-review.googlesource.com/c/angle/angle/+/2807780/7/src/libANGLE/renderer/vulkan/vk_format_map.json#449\n\nThat should let 16-bit scaled formats use 16-bit floats.",
+      "revId": "7b605a3acceaeaef845824f7b19317148fae57ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
