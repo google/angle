@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdd6771d_1f3ad82f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-09T16:35:40Z",
+      "side": 1,
+      "message": "Tim, looks good, some questions, but great to see this come together.",
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b106ad7d_3888246d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-09T16:35:40Z",
+      "side": 1,
+      "message": "Any potential side effects from this?",
+      "range": {
+        "startLine": 866,
+        "startChar": 48,
+        "endLine": 866,
+        "endChar": 85
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c656f915_a0c85cc2",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2781,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-09T16:35:40Z",
+      "side": 1,
+      "message": "We typically try to mirror what the app did as close as possible.  Is there a reason we can\u0027t use glCreateShaderProgramv?",
+      "range": {
+        "startLine": 2781,
+        "startChar": 18,
+        "endLine": 2781,
+        "endChar": 40
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d39c4eb_2bbd530e",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 2881,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-09T16:35:40Z",
+      "side": 1,
+      "message": "Worth a comment here why you need this to active the pipeline.",
+      "range": {
+        "startLine": 2881,
+        "startChar": 8,
+        "endLine": 2881,
+        "endChar": 55
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "961b3847_201b2d36",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 4100,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-09T16:35:40Z",
+      "side": 1,
+      "message": "Quite the block of text, could use a newline, comment, or something.",
+      "range": {
+        "startLine": 4088,
+        "startChar": 0,
+        "endLine": 4100,
+        "endChar": 18
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
