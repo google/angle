@@ -431,7 +431,7 @@ void CaptureGetQueryObjectuiv_params(const State &glState,
                                      ParamCapture *paramCapture)
 {
     // This only returns one value
-    paramCapture->readBufferSizeBytes = sizeof(GLint);
+    paramCapture->readBufferSizeBytes = sizeof(GLuint);
 }
 
 void CaptureGetQueryiv_params(const State &glState,
@@ -441,7 +441,8 @@ void CaptureGetQueryiv_params(const State &glState,
                               GLint *params,
                               ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    // This only returns one value
+    paramCapture->readBufferSizeBytes = sizeof(GLint);
 }
 
 void CaptureGetSamplerParameterfv_params(const State &glState,
