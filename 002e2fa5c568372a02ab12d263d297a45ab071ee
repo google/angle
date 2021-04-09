@@ -164,6 +164,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec368940_a467577e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3868,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T14:19:24Z",
+      "side": 1,
+      "message": "SGTM",
+      "parentUuid": "8176a11a_9253c113",
+      "range": {
+        "startLine": 3868,
+        "startChar": 90,
+        "endLine": 3868,
+        "endChar": 91
+      },
+      "revId": "002e2fa5c568372a02ab12d263d297a45ab071ee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f54a3bc3_c1bdd846",
