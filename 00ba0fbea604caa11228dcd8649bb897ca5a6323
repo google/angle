@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4add919b_eb7884be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T17:25:11Z",
+      "side": 1,
+      "message": "Looking much better.\n\nOne thing that needs checking is whether a thread is actually used for this now or not! I see Context is creating the pool as such:\n\n    mThreadPool \u003d angle::WorkerThreadPool::Create(mState.mExtensions.parallelShaderCompile);\n\nI suspect outside chrome we are not actually using threads. Can you please verify?",
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82cc5918_fdf745b6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-09T17:25:11Z",
+      "side": 1,
+      "message": "One last comment. Please add an ANGLE_TRACE_EVENT here so Chrome wouldn\u0027t be blind to what\u0027s going on in the worker thread.",
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
