@@ -18,6 +18,115 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "94bdb578_7d43c196",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:13:30Z",
+      "side": 1,
+      "message": "Shabi and I chatted offline. To reduce the risk I suggest we land this as a runtime-enabled option that is disabled by default. The easiest way would be to implement a \"FrontendFeature\" that enables the multi-threaded worker pool. If this feature is disabled, the back-end will skip compression.",
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27ef5c22_f4162208",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:13:30Z",
+      "side": 1,
+      "message": "nit: reference style - no non-const parameter refs.",
+      "range": {
+        "startLine": 511,
+        "startChar": 46,
+        "endLine": 511,
+        "endChar": 68
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ffb12b8_feb5a9c2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:13:30Z",
+      "side": 1,
+      "message": "There is a potential race condition here with the error method. You\u0027ll need to store the error in the task and then later in the main thread retrieve it to break the race.",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 18
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea9918a8_f7bfb8bf",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:13:30Z",
+      "side": 1,
+      "message": "thread safety concern here, similarly to the above. We might have to use a mutex here (are we already doing that?)",
+      "range": {
+        "startLine": 573,
+        "startChar": 19,
+        "endLine": 573,
+        "endChar": 31
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd028a26_6969a088",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:13:30Z",
+      "side": 1,
+      "message": "nit: CompressAndStorePipelineCacheTask",
+      "range": {
+        "startLine": 579,
+        "startChar": 6,
+        "endLine": 579,
+        "endChar": 18
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "82cc5918_fdf745b6",
@@ -31,6 +140,29 @@
       "writtenOn": "2021-04-09T17:25:11Z",
       "side": 1,
       "message": "One last comment. Please add an ANGLE_TRACE_EVENT here so Chrome wouldn\u0027t be blind to what\u0027s going on in the worker thread.",
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b8a8d72_a2b08f51",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:13:30Z",
+      "side": 1,
+      "message": "nit: you can retrieve this from the ContextVk pointer.",
+      "range": {
+        "startLine": 604,
+        "startChar": 31,
+        "endLine": 604,
+        "endChar": 56
+      },
       "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
