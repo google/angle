@@ -16,6 +16,46 @@
       "message": "I can sleep at night now with this validation in place",
       "revId": "6997763f9f8720746efe5c77a6b24d1f4a7d64fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd0dd9e5_ea79d9e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:27:24Z",
+      "side": 1,
+      "message": "Nice fixes.",
+      "revId": "6997763f9f8720746efe5c77a6b24d1f4a7d64fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9c8400c_e6baa264",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:27:24Z",
+      "side": 1,
+      "message": "nit: maybe indicate what the stream is (e.g. \"AST validation error:\\n%s\\n\")",
+      "range": {
+        "startLine": 554,
+        "startChar": 30,
+        "endLine": 554,
+        "endChar": 31
+      },
+      "revId": "6997763f9f8720746efe5c77a6b24d1f4a7d64fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

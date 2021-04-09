@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f193e21e_22b48bcf",
+        "filename": "src/compiler/translator/glslang_wrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-09T21:27:24Z",
+      "side": 0,
+      "message": "this is the whole point of the define, right? is it double-printed?",
+      "range": {
+        "startLine": 178,
+        "startChar": 4,
+        "endLine": 178,
+        "endChar": 69
+      },
+      "revId": "b799b5b0eddcd2b67f156c7b4eb003fec4445ba5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
