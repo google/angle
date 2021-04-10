@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "178f2d10_2bfbdb4a",
+        "filename": "src/libANGLE/renderer/copyvertex.inc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-10T02:33:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fa8fe60_127f04e0",
+      "range": {
+        "startLine": 185,
+        "startChar": 12,
+        "endLine": 185,
+        "endChar": 31
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99ef0bbd_c87a2809",
@@ -71,6 +95,30 @@
       "writtenOn": "2021-04-09T00:15:53Z",
       "side": 1,
       "message": "Why isn\u0027t this GLhalf?",
+      "range": {
+        "startLine": 188,
+        "startChar": 46,
+        "endLine": 188,
+        "endChar": 54
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3747bb55_01359bed",
+        "filename": "src/libANGLE/renderer/copyvertex.inc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-10T02:33:30Z",
+      "side": 1,
+      "message": "Was like that elsewhere. They are the same type, changed.",
+      "parentUuid": "99ef0bbd_c87a2809",
       "range": {
         "startLine": 188,
         "startChar": 46,
@@ -98,6 +146,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "72e4e82c_783f7997",
+        "filename": "src/libANGLE/renderer/copyvertex.inc.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-10T02:33:30Z",
+      "side": 1,
+      "message": "Both float and half can represent values in the range [0, 1] (with varying degrees of precision. You can take any value in 32-bit float [0, 1] and get a value that\u0027s *close* in 16-bit float [0, 1].\n\nThat\u0027s not true for integers. You can\u0027t take any value in 32-bit integer and get a similar value in 16-bit integer, you know, like 0x12345678.",
+      "parentUuid": "e50457df_1135c224",
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5922e67f_0b97ebc9",
@@ -111,6 +177,30 @@
       "writtenOn": "2021-04-09T00:15:53Z",
       "side": 1,
       "message": "to_half",
+      "range": {
+        "startLine": 151,
+        "startChar": 67,
+        "endLine": 151,
+        "endChar": 75
+      },
+      "revId": "8ea0c383f20a7b46b93f33fc25dea2b658589201",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4e9ecf3_959d3244",
+        "filename": "src/libANGLE/renderer/vulkan/gen_vk_format_table.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-10T02:33:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5922e67f_0b97ebc9",
       "range": {
         "startLine": 151,
         "startChar": 67,
