@@ -59,6 +59,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "12f5a290_02de5a6c",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2724,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-04-10T01:52:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "75ec108f_f4fce9b0",
+      "range": {
+        "startLine": 2715,
+        "startChar": 0,
+        "endLine": 2724,
+        "endChar": 9
+      },
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34ce529b_d4616220",
@@ -72,6 +96,30 @@
       "writtenOn": "2021-04-07T23:38:15Z",
       "side": 1,
       "message": "please instead add this to ValidateFramebufferTextureBase . Seems like another small testing gap.",
+      "range": {
+        "startLine": 2726,
+        "startChar": 0,
+        "endLine": 2732,
+        "endChar": 9
+      },
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6412e844_27c3336e",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2732,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-04-10T01:52:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34ce529b_d4616220",
       "range": {
         "startLine": 2726,
         "startChar": 0,
