@@ -136,6 +136,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3cee109c_f5eb4fb2",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1156,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-10T00:08:29Z",
+      "side": 1,
+      "message": "That\u0027s essentially the same as what we have here, since we\u0027d still have to manually fill the ShaderMap (unless there\u0027s another C++ map trick that comes in handy here), so I\u0027m going to leave it as is for now.",
+      "parentUuid": "1160415a_6299753a",
+      "range": {
+        "startLine": 1156,
+        "startChar": 4,
+        "endLine": 1156,
+        "endChar": 10
+      },
+      "revId": "65d8a099cf304e127acdb07e7bf40c46b2e736ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b106ad7d_3888246d",
