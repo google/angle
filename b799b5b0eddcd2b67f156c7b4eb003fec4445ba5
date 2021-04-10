@@ -22,6 +22,30 @@
       },
       "revId": "b799b5b0eddcd2b67f156c7b4eb003fec4445ba5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a657d36a_9a31776a",
+        "filename": "src/compiler/translator/glslang_wrapper.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-10T01:40:25Z",
+      "side": 0,
+      "message": "Oops, this was not supposed to be deleted. Must have removed it when cleaning up logs I had added.",
+      "parentUuid": "f193e21e_22b48bcf",
+      "range": {
+        "startLine": 178,
+        "startChar": 4,
+        "endLine": 178,
+        "endChar": 69
+      },
+      "revId": "b799b5b0eddcd2b67f156c7b4eb003fec4445ba5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

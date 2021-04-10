@@ -56,6 +56,30 @@
       },
       "revId": "6997763f9f8720746efe5c77a6b24d1f4a7d64fb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f3de485_c310b147",
+        "filename": "src/compiler/translator/Compiler.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 554,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-10T01:40:25Z",
+      "side": 1,
+      "message": "Done, though it\u0027s kind of obvious TBH. Example output:\n\n    ERROR: 0:16: \u0027x\u0027 : Found reference to undeclared or inconsistently redeclared variable \u003cvalidateVariableReferences\u003e\n    ERROR: 0:17: \u0027y\u0027 : Found reference to undeclared or inconsistently redeclared variable \u003cvalidateVariableReferences\u003e\n\nNote that validation is disabled without DCHECk, so this is not a user-facing message.",
+      "parentUuid": "a9c8400c_e6baa264",
+      "range": {
+        "startLine": 554,
+        "startChar": 30,
+        "endLine": 554,
+        "endChar": 31
+      },
+      "revId": "6997763f9f8720746efe5c77a6b24d1f4a7d64fb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
