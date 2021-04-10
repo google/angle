@@ -83,6 +83,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6605ffcf_42a1f55d",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2724,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-10T15:09:25Z",
+      "side": 1,
+      "message": "Spec wording (excerpt):\n\n• If image is not an immutable-format texture, the selected level number is in\nthe range [levelbase, q], where levelbase and q are as defined in section 8.14.3.\n• If image is not an immutable-format texture and the selected level is not\nlevelbase, the texture must be mipmap complete; if image is part of a cubemap texture, the texture must also be mipmap cube complete.",
+      "parentUuid": "12f5a290_02de5a6c",
+      "range": {
+        "startLine": 2715,
+        "startChar": 0,
+        "endLine": 2724,
+        "endChar": 9
+      },
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34ce529b_d4616220",
