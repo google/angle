@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae21d77a_68af9c2e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-10T01:55:35Z",
+      "side": 1,
+      "message": "I need your help with this one Mohan. The change should be functionally correct, but as you can see adds a bit of complexity everywhere. It saves on buffer allocation and garbage collection, which should show on applications that frequently modify UBOs (basically anything from the past decade).\n\nWhat I don\u0027t know is whether the saving amounts to anything significant CPU-wise. Would you please give this change a spin and see if you see gains anywhere? If there are no gains, I\u0027d prefer not to submit it.\n\nAlso Jamie, this should have synergy with your descriptor cache work, so maybe you can try them together to see if this helps your change show some speed up.",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
