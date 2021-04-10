@@ -39,8 +39,7 @@ class TranslatorVulkan : public TCompiler
                                         ShCompileOptions compileOptions,
                                         PerformanceDiagnostics *perfDiagnostics,
                                         SpecConst *specConst,
-                                        DriverUniform *driverUniforms,
-                                        TOutputVulkanGLSL *outputGLSL);
+                                        DriverUniform *driverUniforms);
 
     // Give subclass such as TranslatorMetal a chance to do depth transform before
     // TranslatorVulkan apply its own transform.

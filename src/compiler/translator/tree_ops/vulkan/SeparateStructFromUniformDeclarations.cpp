@@ -3,10 +3,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// NameEmbeddedUniformStructs: Gives nameless uniform struct internal names.
+// SeparateStructFromUniformDeclarations: Separate struct declarations from uniform declarations.
 //
 
-#include "compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.h"
+#include "compiler/translator/tree_ops/vulkan/SeparateStructFromUniformDeclarations.h"
 
 #include "compiler/translator/SymbolTable.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -41,12 +41,7 @@ class Traverser : public TIntermTraverser
 
         if (type.isStructSpecifier() && type.getQualifier() == EvqUniform)
         {
-            const TStructure *structure = type.getStruct();
-
-            if (structure->symbolType() == SymbolType::Empty)
-            {
-                doReplacement(decl, declarator, structure);
-            }
+            doReplacement(decl, declarator, type.getStruct());
         }
 
         return false;
@@ -67,9 +62,13 @@ class Traverser : public TIntermTraverser
                        const TStructure *oldStructure)
     {
         // struct <structName> { ... };
-        TStructure *structure = new TStructure(mSymbolTable, kEmptyImmutableString,
-                                               &oldStructure->fields(), SymbolType::AngleInternal);
-        TType *namedType      = new TType(structure, true);
+        const TStructure *structure = oldStructure;
+        if (oldStructure->symbolType() == SymbolType::Empty)
+        {
+            structure = new TStructure(mSymbolTable, kEmptyImmutableString, &oldStructure->fields(),
+                                       SymbolType::AngleInternal);
+        }
+        TType *namedType = new TType(structure, true);
         namedType->setQualifier(EvqGlobal);
 
         TVariable *structVariable =
@@ -107,10 +106,12 @@ class Traverser : public TIntermTraverser
 };
 }  // anonymous namespace
 
-bool NameEmbeddedStructUniforms(TCompiler *compiler, TIntermBlock *root, TSymbolTable *symbolTable)
+bool SeparateStructFromUniformDeclarations(TCompiler *compiler,
+                                           TIntermBlock *root,
+                                           TSymbolTable *symbolTable)
 {
-    Traverser nameStructs(symbolTable);
-    root->traverse(&nameStructs);
-    return nameStructs.updateTree(compiler, root);
+    Traverser separateStructDecls(symbolTable);
+    root->traverse(&separateStructDecls);
+    return separateStructDecls.updateTree(compiler, root);
 }
 }  // namespace sh

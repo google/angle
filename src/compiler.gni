@@ -318,8 +318,6 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h",
   "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.cpp",
   "src/compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.h",
-  "src/compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.cpp",
-  "src/compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.h",
   "src/compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.cpp",
   "src/compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h",
   "src/compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.cpp",
@@ -340,6 +338,8 @@ angle_translator_lib_vulkan_sources = [
   "src/compiler/translator/tree_ops/vulkan/RewriteR32fImages.h",
   "src/compiler/translator/tree_ops/vulkan/RewriteStructSamplers.cpp",
   "src/compiler/translator/tree_ops/vulkan/RewriteStructSamplers.h",
+  "src/compiler/translator/tree_ops/vulkan/SeparateStructFromUniformDeclarations.cpp",
+  "src/compiler/translator/tree_ops/vulkan/SeparateStructFromUniformDeclarations.h",
 ]
 if (is_android) {
   angle_translator_sources += [

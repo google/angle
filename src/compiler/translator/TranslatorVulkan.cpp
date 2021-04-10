@@ -22,7 +22,6 @@
 #include "compiler/translator/glslang_wrapper.h"
 #include "compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h"
 #include "compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.h"
-#include "compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveInactiveInterfaceVariables.h"
 #include "compiler/translator/tree_ops/vulkan/ReplaceForShaderFramebufferFetch.h"
@@ -33,6 +32,7 @@
 #include "compiler/translator/tree_ops/vulkan/RewriteInterpolateAtOffset.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteR32fImages.h"
 #include "compiler/translator/tree_ops/vulkan/RewriteStructSamplers.h"
+#include "compiler/translator/tree_ops/vulkan/SeparateStructFromUniformDeclarations.h"
 #include "compiler/translator/tree_util/BuiltIn.h"
 #include "compiler/translator/tree_util/DriverUniform.h"
 #include "compiler/translator/tree_util/FindFunction.h"
@@ -60,53 +60,6 @@ constexpr gl::ShaderMap<const char *> kDefaultUniformNames = {
     {gl::ShaderType::Geometry, vk::kDefaultUniformsNameGS},
     {gl::ShaderType::Fragment, vk::kDefaultUniformsNameFS},
     {gl::ShaderType::Compute, vk::kDefaultUniformsNameCS},
-};
-
-// This traverses nodes, find the struct ones and add their declarations to the sink. It also
-// removes the nodes from the tree as it processes them.
-class DeclareStructTypesTraverser : public TIntermTraverser
-{
-  public:
-    explicit DeclareStructTypesTraverser(TOutputVulkanGLSL *outputVulkanGLSL)
-        : TIntermTraverser(true, false, false), mOutputVulkanGLSL(outputVulkanGLSL)
-    {}
-
-    bool visitDeclaration(Visit visit, TIntermDeclaration *node) override
-    {
-        ASSERT(visit == PreVisit);
-
-        if (!mInGlobalScope)
-        {
-            return false;
-        }
-
-        const TIntermSequence &sequence = *(node->getSequence());
-        TIntermTyped *declarator        = sequence.front()->getAsTyped();
-        const TType &type               = declarator->getType();
-
-        if (type.isStructSpecifier())
-        {
-            const TStructure *structure = type.getStruct();
-
-            // Embedded structs should be parsed away by now.
-            ASSERT(structure->symbolType() != SymbolType::Empty);
-            mOutputVulkanGLSL->writeStructType(structure);
-
-            TIntermSymbol *symbolNode = declarator->getAsSymbolNode();
-            if (symbolNode && symbolNode->variable().symbolType() == SymbolType::Empty)
-            {
-                // Remove the struct specifier declaration from the tree so it isn't parsed again.
-                TIntermSequence emptyReplacement;
-                mMultiReplacements.emplace_back(getParentNode()->getAsBlock(), node,
-                                                std::move(emptyReplacement));
-            }
-        }
-
-        return false;
-    }
-
-  private:
-    TOutputVulkanGLSL *mOutputVulkanGLSL;
 };
 
 bool IsDefaultUniform(const TType &type)
@@ -816,8 +769,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
                                      ShCompileOptions compileOptions,
                                      PerformanceDiagnostics * /*perfDiagnostics*/,
                                      SpecConst *specConst,
-                                     DriverUniform *driverUniforms,
-                                     TOutputVulkanGLSL *outputGLSL)
+                                     DriverUniform *driverUniforms)
 {
     if (getShaderType() == GL_VERTEX_SHADER)
     {
@@ -887,7 +839,7 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
 
     if (aggregateTypesUsedForUniforms > 0)
     {
-        if (!NameEmbeddedStructUniforms(this, root, &getSymbolTable()))
+        if (!SeparateStructFromUniformDeclarations(this, root, &getSymbolTable()))
         {
             return false;
         }
@@ -899,14 +851,6 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
             return false;
         }
         defaultUniformCount -= removedUniformsCount;
-
-        // We must declare the struct types before using them.
-        DeclareStructTypesTraverser structTypesTraverser(outputGLSL);
-        root->traverse(&structTypesTraverser);
-        if (!structTypesTraverser.updateTree(this, root))
-        {
-            return false;
-        }
     }
 
     // Replace array of array of opaque uniforms with a flattened array.  This is run after
@@ -1373,18 +1317,13 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 
     bool enablePrecision = (compileOptions & SH_IGNORE_PRECISION_QUALIFIERS) == 0;
 
-    TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
-                                 getNameMap(), &getSymbolTable(), getShaderType(),
-                                 getShaderVersion(), getOutputType(), precisionEmulation,
-                                 enablePrecision, compileOptions);
-
     SpecConst specConst(&getSymbolTable(), compileOptions, getShaderType());
 
     if ((compileOptions & SH_USE_SPECIALIZATION_CONSTANT) != 0)
     {
         DriverUniform driverUniforms;
-        if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst, &driverUniforms,
-                           &outputGLSL))
+        if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
+                           &driverUniforms))
         {
             return false;
         }
@@ -1393,13 +1332,17 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     {
         DriverUniformExtended driverUniformsExt;
         if (!translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
-                           &driverUniformsExt, &outputGLSL))
+                           &driverUniformsExt))
         {
             return false;
         }
     }
 
     // Write translated shader.
+    TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
+                                 getNameMap(), &getSymbolTable(), getShaderType(),
+                                 getShaderVersion(), getOutputType(), precisionEmulation,
+                                 enablePrecision, compileOptions);
     root->traverse(&outputGLSL);
 
     return compileToSpirv(sink);

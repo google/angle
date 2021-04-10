@@ -181,14 +181,10 @@ bool TranslatorMetal::translate(TIntermBlock *root,
 {
     TInfoSinkBase sink;
 
-    TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
-                                 getNameMap(), &getSymbolTable(), getShaderType(),
-                                 getShaderVersion(), getOutputType(), false, true, compileOptions);
-
     SpecConstMetal specConst(&getSymbolTable(), compileOptions, getShaderType());
     DriverUniformMetal driverUniforms;
     if (!TranslatorVulkan::translateImpl(sink, root, compileOptions, perfDiagnostics, &specConst,
-                                         &driverUniforms, &outputGLSL))
+                                         &driverUniforms))
     {
         return false;
     }
@@ -244,6 +240,9 @@ bool TranslatorMetal::translate(TIntermBlock *root,
     }
 
     // Write translated shader.
+    TOutputVulkanGLSL outputGLSL(sink, getArrayIndexClampingStrategy(), getHashFunction(),
+                                 getNameMap(), &getSymbolTable(), getShaderType(),
+                                 getShaderVersion(), getOutputType(), false, true, compileOptions);
     root->traverse(&outputGLSL);
 
     return compileToSpirv(sink);
