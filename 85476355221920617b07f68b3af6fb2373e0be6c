@@ -107,6 +107,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1915c51e_55d57b91",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2724,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-10T15:11:54Z",
+      "side": 1,
+      "message": "Close reading does show some differences in how the two APIs work (FramebufferTexture2D and FramebufferTexture) wrt level. The 2D restrictions are more nuanced, while FramebufferTexture just says \"is not a supported level\". So it may be necessary to have some differences in the implementation.",
+      "parentUuid": "6605ffcf_42a1f55d",
+      "range": {
+        "startLine": 2715,
+        "startChar": 0,
+        "endLine": 2724,
+        "endChar": 9
+      },
+      "revId": "85476355221920617b07f68b3af6fb2373e0be6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34ce529b_d4616220",
