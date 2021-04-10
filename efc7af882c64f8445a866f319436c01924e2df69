@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "efc7af882c64f8445a866f319436c01924e2df69",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "725d3f1f_f2282f6e",
+        "filename": "src/libANGLE/VaryingPacking.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 848,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-10T16:41:36Z",
+      "side": 1,
+      "message": "nit: this check isn\u0027t necessary. you can just iterate fields.",
+      "range": {
+        "startLine": 848,
+        "startChar": 5,
+        "endLine": 848,
+        "endChar": 41
+      },
+      "revId": "efc7af882c64f8445a866f319436c01924e2df69",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
