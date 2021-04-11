@@ -97,6 +97,7 @@ class DisplayMtl;
 class ContextMtl;
 class FramebufferMtl;
 class BufferMtl;
+class ImageMtl;
 class VertexArrayMtl;
 class TextureMtl;
 class ProgramMtl;
@@ -218,6 +219,12 @@ template <>
 struct ImplTypeHelper<egl::Display>
 {
     using ImplType = DisplayMtl;
+};
+
+template <>
+struct ImplTypeHelper<egl::Image>
+{
+    using ImplType = ImageMtl;
 };
 
 template <typename T>
