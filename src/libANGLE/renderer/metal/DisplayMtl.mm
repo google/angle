@@ -139,7 +139,7 @@ std::string DisplayMtl::getRendererDescription()
 {
     ANGLE_MTL_OBJC_SCOPE
     {
-        std::string desc = "Metal Renderer";
+        std::string desc = "ANGLE Metal Renderer";
 
         if (mMetalDevice)
         {

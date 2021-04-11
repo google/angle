@@ -77,7 +77,7 @@ bool IsMetal()
 {
     const char *renderer = reinterpret_cast<const char *>(glGetString(GL_RENDERER));
     std::string rendererString(renderer);
-    return (rendererString.find("Metal") != std::string::npos);
+    return (rendererString.find("ANGLE Metal") != std::string::npos);
 }
 
 bool IsD3D()
