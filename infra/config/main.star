@@ -136,9 +136,6 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
     properties["$build/goma"] = goma_props
 
     caches = []
-    if os.category == os_category.WINDOWS:
-        caches += [swarming.cache(name = "win_toolchain", path = "win_toolchain")]
-
     if os.category == os_category.MAC:
         # Cache for mac_toolchain tool and XCode.app
         caches += [swarming.cache(name = "osx_sdk", path = "osx_sdk")]
