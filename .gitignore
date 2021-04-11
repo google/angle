@@ -34,6 +34,7 @@
 /third_party/android_ndk
 /third_party/catapult
 /third_party/cherry
+/third_party/depot_tools
 /third_party/fuchsia-sdk
 /third_party/gles1_conform
 /third_party/glmark2/src
