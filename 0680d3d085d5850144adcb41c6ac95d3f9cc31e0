@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2452d194_67d35ac4",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T14:22:11Z",
+      "side": 1,
+      "message": "nit: suggest mInterfaceBlockFieldIndex to clarify",
+      "range": {
+        "startLine": 399,
+        "startChar": 11,
+        "endLine": 399,
+        "endChar": 22
+      },
+      "revId": "0680d3d085d5850144adcb41c6ac95d3f9cc31e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
