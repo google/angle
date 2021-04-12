@@ -34,6 +34,24 @@
       "parentUuid": "ae21d77a_68af9c2e",
       "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0ba8035_9a41c981",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T21:07:37Z",
+      "side": 1,
+      "message": "\u003e I can cherry-pick this change and grab a vtune profile while running manhattan with and without your change. Did you have anything else in mind?\n\nThanks that would be helpful!\n\n\u003e I think adding a perf test will help measure wall time a bit better with the vulkan null backend, is that possible?\n\nYes it should be, good idea. Though I would still like to know if there\u0027s tangible impact on actual applications.",
+      "parentUuid": "f5476221_65d1e014",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
