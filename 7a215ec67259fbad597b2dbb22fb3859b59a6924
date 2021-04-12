@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "efad4522_29638123",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-12T15:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1fec687e_12f88d96",
+      "range": {
+        "startLine": 144,
+        "startChar": 35,
+        "endLine": 144,
+        "endChar": 46
+      },
+      "revId": "7a215ec67259fbad597b2dbb22fb3859b59a6924",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1dae279d_e8fabc1f",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "00294af8_7e1e5b44",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 149,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-12T15:54:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1dae279d_e8fabc1f",
+      "range": {
+        "startLine": 149,
+        "startChar": 35,
+        "endLine": 149,
+        "endChar": 47
+      },
+      "revId": "7a215ec67259fbad597b2dbb22fb3859b59a6924",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a16f02d0_7388f384",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-04-12T15:24:16Z",
       "side": 1,
       "message": "nit: angle naming style, see doc",
+      "range": {
+        "startLine": 153,
+        "startChar": 16,
+        "endLine": 153,
+        "endChar": 30
+      },
+      "revId": "7a215ec67259fbad597b2dbb22fb3859b59a6924",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4c0daf2_9e72a969",
+        "filename": "src/tests/capture_replay_tests/CaptureReplayTests.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-12T15:54:17Z",
+      "side": 1,
+      "message": "Sorry, this underscore-stype must be hard-coded in my brain ... Fixed now.",
+      "parentUuid": "a16f02d0_7388f384",
       "range": {
         "startLine": 153,
         "startChar": 16,
