@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f4a56d4d_20b2309a",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-12T18:30:50Z",
+      "side": 1,
+      "message": "You mean create a function like get_api_entry_def(api) which returns the template?",
+      "parentUuid": "bc76c9ad_c08e1118",
+      "range": {
+        "startLine": 2449,
+        "startChar": 13,
+        "endLine": 2449,
+        "endChar": 34
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "84beb330_7d310931",
         "filename": "src/libGLESv2.gni",
         "patchSetId": 1
@@ -78,6 +102,30 @@
       "side": 1,
       "message": "instead of putting them in the build, add an angle_cl.h header and include that in place of \u003cCL/cl.h\u003e. See angle_gl.h.",
       "parentUuid": "84beb330_7d310931",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e10ba0c_74415dfa",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-12T18:30:50Z",
+      "side": 1,
+      "message": "I was thinking about that, but we don\u0027t always include the same OpenCL headers (loader needs cl_icd.h, entry points only need cl.h). So we need either multiple angle_*.h headers, or only one which includes all of OpenCL even it is not always all needed.",
+      "parentUuid": "e5f663c1_2c5c139c",
       "range": {
         "startLine": 530,
         "startChar": 0,
