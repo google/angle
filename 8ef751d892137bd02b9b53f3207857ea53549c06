@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fde34a2_817504b2",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T04:46:56Z",
+      "side": 1,
+      "message": "nit: added value?",
+      "range": {
+        "startLine": 101,
+        "startChar": 19,
+        "endLine": 101,
+        "endChar": 28
+      },
+      "revId": "8ef751d892137bd02b9b53f3207857ea53549c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "311f9dc8_95201959",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T04:46:56Z",
+      "side": 1,
+      "message": "How speculative is the usage of this extension? As far as I know, no application is coding against ANGLE (which would be the only driver exposing this extension).",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 103,
+        "endChar": 20
+      },
+      "revId": "8ef751d892137bd02b9b53f3207857ea53549c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05d66773_0cf57c4a",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T04:46:56Z",
+      "side": 1,
+      "message": "super nit: see message below this. It\u0027s a common convention that text files end in new line (so readers don\u0027t encounter a line that terminates with EOF). A good editor should have already been doing this, a half-good editor should at least be configurable.",
+      "revId": "8ef751d892137bd02b9b53f3207857ea53549c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
