@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "332cb04a_44331ea8",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-12T17:51:25Z",
+      "side": 1,
+      "message": "this extension is to primarily enable us to add YUV formats here -\u003e https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/libANGLE/formatutils.cpp#764\n\nsince it ties into -\u003e\n1. https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp#128\n2. https://chromium.googlesource.com/angle/angle/+/refs/heads/master/src/libANGLE/renderer/vulkan/android/HardwareBufferImageSiblingVkAndroid.cpp#195\n\nso ANGLE can support YUV formats natively instead of interpretting them as RGB, which is what we do before my gerrit chain\n\nLooking out a few years, when ANGLE is adopted more widely, also has the added advantage mentioned in this issue",
+      "parentUuid": "311f9dc8_95201959",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 103,
+        "endChar": 20
+      },
+      "revId": "8ef751d892137bd02b9b53f3207857ea53549c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "05d66773_0cf57c4a",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 3
