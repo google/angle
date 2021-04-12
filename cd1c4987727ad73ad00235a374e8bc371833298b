@@ -71,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "19e790c5_aaddc03e",
+        "filename": "src/compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T18:08:12Z",
+      "side": 1,
+      "message": "Because there may be multiple instances of this symbol. Technically the first time we see the variable we don\u0027t need a deep copy, but the copy should be fast enough that tracking whether it\u0027s already copied or not wouldn\u0027t be worth it.",
+      "parentUuid": "a32116e1_1ce5cccf",
+      "range": {
+        "startLine": 60,
+        "startChar": 29,
+        "endLine": 60,
+        "endChar": 63
+      },
+      "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e73dea22_a7c5d50a",
@@ -84,6 +108,24 @@
       "writtenOn": "2021-04-12T17:37:15Z",
       "side": 1,
       "message": "Unless it really is impossible and would be clutter (I\u0027m not enough of a translator expert), it may be good to add an assert that the map doesn\u0027t already contain an entry here so we don\u0027t leak memory.",
+      "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e85a7f4b_c4834270",
+        "filename": "src/compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T18:08:12Z",
+      "side": 1,
+      "message": "Well the same variable cannot be declared multiple times, and if that happens there\u0027d be some failure somewhere else.\n\nAlso a leak is impossible, the AST nodes are pool allocated and the entire pool is freed after compilation.",
+      "parentUuid": "e73dea22_a7c5d50a",
       "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
