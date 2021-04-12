@@ -81,6 +81,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "07048a6f_0a283c62",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 3914,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T15:58:56Z",
+      "side": 1,
+      "message": "mExecutable can be null when this is called directly from FramebufferVk::syncState. I did try using mExecutable before having to use this code.",
+      "parentUuid": "9b3c4e20_75785bc6",
+      "range": {
+        "startLine": 3903,
+        "startChar": 0,
+        "endLine": 3914,
+        "endChar": 9
+      },
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0a79f615_e6fd4b78",
@@ -94,6 +118,30 @@
       "writtenOn": "2021-04-07T23:15:06Z",
       "side": 1,
       "message": "Should be a const reference.",
+      "range": {
+        "startLine": 939,
+        "startChar": 31,
+        "endLine": 939,
+        "endChar": 36
+      },
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "70f31344_12f37257",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 939,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T15:58:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0a79f615_e6fd4b78",
       "range": {
         "startLine": 939,
         "startChar": 31,
@@ -121,6 +169,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f471cbb_16304c7d",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1147,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T15:58:56Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d074f6dd_7dd0f3e0",
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "904f03a9_bee9434f",
@@ -134,6 +200,24 @@
       "writtenOn": "2021-04-07T23:15:06Z",
       "side": 1,
       "message": "This can be moved outside of the loop.",
+      "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "da5ba517_57d1f2b0",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1269,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T15:58:56Z",
+      "side": 1,
+      "message": "Changed to a static_assert, left in place to keep it close to the code it\u0027s protecting.",
+      "parentUuid": "904f03a9_bee9434f",
       "revId": "0c84c5ce7d2d416302832cc7a62cac5915278073",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
