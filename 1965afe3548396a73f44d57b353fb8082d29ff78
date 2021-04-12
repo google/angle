@@ -16,6 +16,23 @@
       "message": "Hi Jonah,\n\nAre you the correct person to look at this change?\n\nAs some context on this change, for the various CrOS Broadwell boards, there are some specific DUTs where the GPU reports a class code of PCI_CLASS_DISPLAY_OTHER instead of PCI_CLASS_DISPLAY_VGA. It\u0027s not yet clear what\u0027s going on with these devices, but it\u0027s blocking stable release for those boards. The check here causes the library to report no GPUs to Chrome, which causes Chrome to skip some Intel-specific initialization and ends up breaking video encoding in ARC++.\n\nWe do want to figure out why those devices are reporting an unexpected PCI class code. However, this change does get things working again. I don\u0027t think we want to check a workaround into this project, but I was wondering if this makes sense as a bugfix for the library. Or is there a specific reason why PCI_CLASS_DISPLAY_OTHER is skipped when looking for GPUs?",
       "revId": "1965afe3548396a73f44d57b353fb8082d29ff78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a533e6b_e4263bc9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T17:18:45Z",
+      "side": 1,
+      "message": "Jonah, this probably also fixes the issue we were having with some desktops falling back to Vulkan",
+      "revId": "1965afe3548396a73f44d57b353fb8082d29ff78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
