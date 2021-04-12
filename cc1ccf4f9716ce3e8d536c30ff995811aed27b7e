@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c505cc65_a07ca513",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T18:06:26Z",
+      "side": 1,
+      "message": "Chris FYI. Couple small comments, otherwise looks good.",
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc76c9ad_c08e1118",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T18:06:26Z",
+      "side": 1,
+      "message": "instead pass the API and get it from that?",
+      "range": {
+        "startLine": 2449,
+        "startChar": 13,
+        "endLine": 2449,
+        "endChar": 34
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84beb330_7d310931",
@@ -14,6 +54,30 @@
       "writtenOn": "2021-04-12T16:47:26Z",
       "side": 1,
       "message": "The same defines are also used in src/libOpenCL/BUILD.gn. It would be good to have them shared in one place. Do we have (or should we create) a place for that, e.g. in angle/gni/?",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5f663c1_2c5c139c",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T18:06:26Z",
+      "side": 1,
+      "message": "instead of putting them in the build, add an angle_cl.h header and include that in place of \u003cCL/cl.h\u003e. See angle_gl.h.",
+      "parentUuid": "84beb330_7d310931",
       "range": {
         "startLine": 530,
         "startChar": 0,
