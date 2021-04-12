@@ -22,6 +22,30 @@
       },
       "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30b3500b_a2bed8a0",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T14:22:04Z",
+      "side": 1,
+      "message": "The fix is already up in a later CL in the chain. I\u0027ll add a temp TODO when addressing Tim\u0027s feedback.",
+      "parentUuid": "1dbb35f7_f11b4ff4",
+      "range": {
+        "startLine": 893,
+        "startChar": 66,
+        "endLine": 893,
+        "endChar": 71
+      },
+      "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
