@@ -16,6 +16,23 @@
       "message": "PTAL Yuly.",
       "revId": "1b775dd40f5095843108fdd4a7561b76e65edb60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "865e3dbc_470fc820",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T16:23:49Z",
+      "side": 1,
+      "message": "Looks to be working well:\n\nhttps://logs.chromium.org/logs/angle/buildbucket/cr-buildbucket.appspot.com/8850142460397683568/+/steps/gclient_runhooks/0/stdout",
+      "revId": "1b775dd40f5095843108fdd4a7561b76e65edb60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
