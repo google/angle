@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d75c04f6_873f96ba",
+        "filename": "src/compiler/translator/tree_ops/vulkan/SeparateStructFromUniformDeclarations.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-12T18:07:33Z",
+      "side": 1,
+      "message": "nit: remove",
+      "range": {
+        "startLine": 7,
+        "startChar": 64,
+        "endLine": 7,
+        "endChar": 78
+      },
+      "revId": "fb13857b208a1f2e4ec4eadf4152bfb3233d4c45",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
