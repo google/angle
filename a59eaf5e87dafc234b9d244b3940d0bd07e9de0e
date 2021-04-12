@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33806490_76fc3029",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T14:21:01Z",
+      "side": 1,
+      "message": "what\u0027s the difference between a Default uniform and a Loose uniform? If possible please stick with \"Default\" because that\u0027s the spec terminology. Otherwise use DefaultAndBlah if possible, or at the very least clearly define with Loose refers to in spec terms.",
+      "range": {
+        "startLine": 112,
+        "startChar": 5,
+        "endLine": 112,
+        "endChar": 19
+      },
+      "revId": "a59eaf5e87dafc234b9d244b3940d0bd07e9de0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
