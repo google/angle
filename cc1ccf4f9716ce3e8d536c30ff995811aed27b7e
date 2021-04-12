@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "808d7d1f_d9f9ec7d",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T18:37:20Z",
+      "side": 1,
+      "message": "sure, that sounds good. although I would use the word template in the helper.",
+      "parentUuid": "f4a56d4d_20b2309a",
+      "range": {
+        "startLine": 2449,
+        "startChar": 13,
+        "endLine": 2449,
+        "endChar": 34
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "84beb330_7d310931",
         "filename": "src/libGLESv2.gni",
         "patchSetId": 1
@@ -126,6 +150,30 @@
       "side": 1,
       "message": "I was thinking about that, but we don\u0027t always include the same OpenCL headers (loader needs cl_icd.h, entry points only need cl.h). So we need either multiple angle_*.h headers, or only one which includes all of OpenCL even it is not always all needed.",
       "parentUuid": "e5f663c1_2c5c139c",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fe698bc_420344b4",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T18:37:20Z",
+      "side": 1,
+      "message": "including all seems fine to me.",
+      "parentUuid": "2e10ba0c_74415dfa",
       "range": {
         "startLine": 530,
         "startChar": 0,
