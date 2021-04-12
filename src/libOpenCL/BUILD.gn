@@ -32,15 +32,22 @@ angle_source_set("cl_includes") {
 
 angle_shared_library("OpenCL") {
   defines = [ "LIBCL_IMPLEMENTATION" ]
+
   sources = [
     "cl_loader.h",
     "cl_loader_autogen.cpp",
-    "entry_points_cl_autogen.cpp",
-    "entry_points_cl_autogen.h",
-    "entry_points_cl_utils.h",
     "libOpenCL_autogen.cpp",
   ]
-  deps = [ ":cl_includes" ]
+
+  configs += [
+    "$angle_root:debug_annotations_config",
+    "$angle_root:library_name_config",
+  ]
+
+  deps = [
+    ":cl_includes",
+    "$angle_root:angle_common",
+  ]
 }
 
 group("angle_cl") {

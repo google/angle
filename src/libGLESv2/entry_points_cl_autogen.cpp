@@ -9,6 +9,8 @@
 //   Defines the CL entry points.
 
 #include "entry_points_cl_autogen.h"
+
+#include "cl_stubs_autogen.h"
 #include "entry_points_cl_utils.h"
 
 extern "C" {
@@ -24,7 +26,7 @@ cl_int CL_API_CALL CL_GetPlatformIDs(cl_uint num_entries,
 
     // TODO: GetPlatformIDs
 
-    return (cl_int)0;
+    return cl::GetPlatformIDs(num_entries, platforms, num_platforms);
 }
 
 cl_int CL_API_CALL CL_GetPlatformInfo(cl_platform_id platform,
@@ -42,7 +44,8 @@ cl_int CL_API_CALL CL_GetPlatformInfo(cl_platform_id platform,
 
     // TODO: GetPlatformInfo
 
-    return (cl_int)0;
+    return cl::GetPlatformInfo(platform, param_name, param_value_size, param_value,
+                               param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_GetDeviceIDs(cl_platform_id platform,
@@ -60,7 +63,7 @@ cl_int CL_API_CALL CL_GetDeviceIDs(cl_platform_id platform,
 
     // TODO: GetDeviceIDs
 
-    return (cl_int)0;
+    return cl::GetDeviceIDs(platform, device_type, num_entries, devices, num_devices);
 }
 
 cl_int CL_API_CALL CL_GetDeviceInfo(cl_device_id device,
@@ -78,7 +81,8 @@ cl_int CL_API_CALL CL_GetDeviceInfo(cl_device_id device,
 
     // TODO: GetDeviceInfo
 
-    return (cl_int)0;
+    return cl::GetDeviceInfo(device, param_name, param_value_size, param_value,
+                             param_value_size_ret);
 }
 
 cl_context CL_API_CALL CL_CreateContext(const cl_context_properties *properties,
@@ -100,7 +104,7 @@ cl_context CL_API_CALL CL_CreateContext(const cl_context_properties *properties,
 
     // TODO: CreateContext
 
-    return (cl_context)0;
+    return cl::CreateContext(properties, num_devices, devices, pfn_notify, user_data, errcode_ret);
 }
 
 cl_context CL_API_CALL
@@ -121,7 +125,7 @@ CL_CreateContextFromType(const cl_context_properties *properties,
 
     // TODO: CreateContextFromType
 
-    return (cl_context)0;
+    return cl::CreateContextFromType(properties, device_type, pfn_notify, user_data, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_RetainContext(cl_context context)
@@ -130,7 +134,7 @@ cl_int CL_API_CALL CL_RetainContext(cl_context context)
 
     // TODO: RetainContext
 
-    return (cl_int)0;
+    return cl::RetainContext(context);
 }
 
 cl_int CL_API_CALL CL_ReleaseContext(cl_context context)
@@ -139,7 +143,7 @@ cl_int CL_API_CALL CL_ReleaseContext(cl_context context)
 
     // TODO: ReleaseContext
 
-    return (cl_int)0;
+    return cl::ReleaseContext(context);
 }
 
 cl_int CL_API_CALL CL_GetContextInfo(cl_context context,
@@ -157,7 +161,8 @@ cl_int CL_API_CALL CL_GetContextInfo(cl_context context,
 
     // TODO: GetContextInfo
 
-    return (cl_int)0;
+    return cl::GetContextInfo(context, param_name, param_value_size, param_value,
+                              param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_RetainCommandQueue(cl_command_queue command_queue)
@@ -166,7 +171,7 @@ cl_int CL_API_CALL CL_RetainCommandQueue(cl_command_queue command_queue)
 
     // TODO: RetainCommandQueue
 
-    return (cl_int)0;
+    return cl::RetainCommandQueue(command_queue);
 }
 
 cl_int CL_API_CALL CL_ReleaseCommandQueue(cl_command_queue command_queue)
@@ -175,7 +180,7 @@ cl_int CL_API_CALL CL_ReleaseCommandQueue(cl_command_queue command_queue)
 
     // TODO: ReleaseCommandQueue
 
-    return (cl_int)0;
+    return cl::ReleaseCommandQueue(command_queue);
 }
 
 cl_int CL_API_CALL CL_GetCommandQueueInfo(cl_command_queue command_queue,
@@ -193,7 +198,8 @@ cl_int CL_API_CALL CL_GetCommandQueueInfo(cl_command_queue command_queue,
 
     // TODO: GetCommandQueueInfo
 
-    return (cl_int)0;
+    return cl::GetCommandQueueInfo(command_queue, param_name, param_value_size, param_value,
+                                   param_value_size_ret);
 }
 
 cl_mem CL_API_CALL CL_CreateBuffer(cl_context context,
@@ -209,7 +215,7 @@ cl_mem CL_API_CALL CL_CreateBuffer(cl_context context,
 
     // TODO: CreateBuffer
 
-    return (cl_mem)0;
+    return cl::CreateBuffer(context, flags, size, host_ptr, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_RetainMemObject(cl_mem memobj)
@@ -218,7 +224,7 @@ cl_int CL_API_CALL CL_RetainMemObject(cl_mem memobj)
 
     // TODO: RetainMemObject
 
-    return (cl_int)0;
+    return cl::RetainMemObject(memobj);
 }
 
 cl_int CL_API_CALL CL_ReleaseMemObject(cl_mem memobj)
@@ -227,7 +233,7 @@ cl_int CL_API_CALL CL_ReleaseMemObject(cl_mem memobj)
 
     // TODO: ReleaseMemObject
 
-    return (cl_int)0;
+    return cl::ReleaseMemObject(memobj);
 }
 
 cl_int CL_API_CALL CL_GetSupportedImageFormats(cl_context context,
@@ -246,7 +252,8 @@ cl_int CL_API_CALL CL_GetSupportedImageFormats(cl_context context,
 
     // TODO: GetSupportedImageFormats
 
-    return (cl_int)0;
+    return cl::GetSupportedImageFormats(context, flags, image_type, num_entries, image_formats,
+                                        num_image_formats);
 }
 
 cl_int CL_API_CALL CL_GetMemObjectInfo(cl_mem memobj,
@@ -264,7 +271,8 @@ cl_int CL_API_CALL CL_GetMemObjectInfo(cl_mem memobj,
 
     // TODO: GetMemObjectInfo
 
-    return (cl_int)0;
+    return cl::GetMemObjectInfo(memobj, param_name, param_value_size, param_value,
+                                param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_GetImageInfo(cl_mem image,
@@ -282,7 +290,7 @@ cl_int CL_API_CALL CL_GetImageInfo(cl_mem image,
 
     // TODO: GetImageInfo
 
-    return (cl_int)0;
+    return cl::GetImageInfo(image, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_RetainSampler(cl_sampler sampler)
@@ -291,7 +299,7 @@ cl_int CL_API_CALL CL_RetainSampler(cl_sampler sampler)
 
     // TODO: RetainSampler
 
-    return (cl_int)0;
+    return cl::RetainSampler(sampler);
 }
 
 cl_int CL_API_CALL CL_ReleaseSampler(cl_sampler sampler)
@@ -300,7 +308,7 @@ cl_int CL_API_CALL CL_ReleaseSampler(cl_sampler sampler)
 
     // TODO: ReleaseSampler
 
-    return (cl_int)0;
+    return cl::ReleaseSampler(sampler);
 }
 
 cl_int CL_API_CALL CL_GetSamplerInfo(cl_sampler sampler,
@@ -318,7 +326,8 @@ cl_int CL_API_CALL CL_GetSamplerInfo(cl_sampler sampler,
 
     // TODO: GetSamplerInfo
 
-    return (cl_int)0;
+    return cl::GetSamplerInfo(sampler, param_name, param_value_size, param_value,
+                              param_value_size_ret);
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithSource(cl_context context,
@@ -335,7 +344,7 @@ cl_program CL_API_CALL CL_CreateProgramWithSource(cl_context context,
 
     // TODO: CreateProgramWithSource
 
-    return (cl_program)0;
+    return cl::CreateProgramWithSource(context, count, strings, lengths, errcode_ret);
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithBinary(cl_context context,
@@ -355,7 +364,8 @@ cl_program CL_API_CALL CL_CreateProgramWithBinary(cl_context context,
 
     // TODO: CreateProgramWithBinary
 
-    return (cl_program)0;
+    return cl::CreateProgramWithBinary(context, num_devices, device_list, lengths, binaries,
+                                       binary_status, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_RetainProgram(cl_program program)
@@ -364,7 +374,7 @@ cl_int CL_API_CALL CL_RetainProgram(cl_program program)
 
     // TODO: RetainProgram
 
-    return (cl_int)0;
+    return cl::RetainProgram(program);
 }
 
 cl_int CL_API_CALL CL_ReleaseProgram(cl_program program)
@@ -373,7 +383,7 @@ cl_int CL_API_CALL CL_ReleaseProgram(cl_program program)
 
     // TODO: ReleaseProgram
 
-    return (cl_int)0;
+    return cl::ReleaseProgram(program);
 }
 
 cl_int CL_API_CALL CL_BuildProgram(cl_program program,
@@ -393,7 +403,7 @@ cl_int CL_API_CALL CL_BuildProgram(cl_program program,
 
     // TODO: BuildProgram
 
-    return (cl_int)0;
+    return cl::BuildProgram(program, num_devices, device_list, options, pfn_notify, user_data);
 }
 
 cl_int CL_API_CALL CL_GetProgramInfo(cl_program program,
@@ -411,7 +421,8 @@ cl_int CL_API_CALL CL_GetProgramInfo(cl_program program,
 
     // TODO: GetProgramInfo
 
-    return (cl_int)0;
+    return cl::GetProgramInfo(program, param_name, param_value_size, param_value,
+                              param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_GetProgramBuildInfo(cl_program program,
@@ -430,7 +441,8 @@ cl_int CL_API_CALL CL_GetProgramBuildInfo(cl_program program,
 
     // TODO: GetProgramBuildInfo
 
-    return (cl_int)0;
+    return cl::GetProgramBuildInfo(program, device, param_name, param_value_size, param_value,
+                                   param_value_size_ret);
 }
 
 cl_kernel CL_API_CALL CL_CreateKernel(cl_program program,
@@ -444,7 +456,7 @@ cl_kernel CL_API_CALL CL_CreateKernel(cl_program program,
 
     // TODO: CreateKernel
 
-    return (cl_kernel)0;
+    return cl::CreateKernel(program, kernel_name, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_CreateKernelsInProgram(cl_program program,
@@ -459,7 +471,7 @@ cl_int CL_API_CALL CL_CreateKernelsInProgram(cl_program program,
 
     // TODO: CreateKernelsInProgram
 
-    return (cl_int)0;
+    return cl::CreateKernelsInProgram(program, num_kernels, kernels, num_kernels_ret);
 }
 
 cl_int CL_API_CALL CL_RetainKernel(cl_kernel kernel)
@@ -468,7 +480,7 @@ cl_int CL_API_CALL CL_RetainKernel(cl_kernel kernel)
 
     // TODO: RetainKernel
 
-    return (cl_int)0;
+    return cl::RetainKernel(kernel);
 }
 
 cl_int CL_API_CALL CL_ReleaseKernel(cl_kernel kernel)
@@ -477,7 +489,7 @@ cl_int CL_API_CALL CL_ReleaseKernel(cl_kernel kernel)
 
     // TODO: ReleaseKernel
 
-    return (cl_int)0;
+    return cl::ReleaseKernel(kernel);
 }
 
 cl_int CL_API_CALL CL_SetKernelArg(cl_kernel kernel,
@@ -492,7 +504,7 @@ cl_int CL_API_CALL CL_SetKernelArg(cl_kernel kernel,
 
     // TODO: SetKernelArg
 
-    return (cl_int)0;
+    return cl::SetKernelArg(kernel, arg_index, arg_size, arg_value);
 }
 
 cl_int CL_API_CALL CL_GetKernelInfo(cl_kernel kernel,
@@ -510,7 +522,8 @@ cl_int CL_API_CALL CL_GetKernelInfo(cl_kernel kernel,
 
     // TODO: GetKernelInfo
 
-    return (cl_int)0;
+    return cl::GetKernelInfo(kernel, param_name, param_value_size, param_value,
+                             param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_GetKernelWorkGroupInfo(cl_kernel kernel,
@@ -529,7 +542,8 @@ cl_int CL_API_CALL CL_GetKernelWorkGroupInfo(cl_kernel kernel,
 
     // TODO: GetKernelWorkGroupInfo
 
-    return (cl_int)0;
+    return cl::GetKernelWorkGroupInfo(kernel, device, param_name, param_value_size, param_value,
+                                      param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_WaitForEvents(cl_uint num_events, const cl_event *event_list)
@@ -539,7 +553,7 @@ cl_int CL_API_CALL CL_WaitForEvents(cl_uint num_events, const cl_event *event_li
 
     // TODO: WaitForEvents
 
-    return (cl_int)0;
+    return cl::WaitForEvents(num_events, event_list);
 }
 
 cl_int CL_API_CALL CL_GetEventInfo(cl_event event,
@@ -557,7 +571,7 @@ cl_int CL_API_CALL CL_GetEventInfo(cl_event event,
 
     // TODO: GetEventInfo
 
-    return (cl_int)0;
+    return cl::GetEventInfo(event, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_RetainEvent(cl_event event)
@@ -566,7 +580,7 @@ cl_int CL_API_CALL CL_RetainEvent(cl_event event)
 
     // TODO: RetainEvent
 
-    return (cl_int)0;
+    return cl::RetainEvent(event);
 }
 
 cl_int CL_API_CALL CL_ReleaseEvent(cl_event event)
@@ -575,7 +589,7 @@ cl_int CL_API_CALL CL_ReleaseEvent(cl_event event)
 
     // TODO: ReleaseEvent
 
-    return (cl_int)0;
+    return cl::ReleaseEvent(event);
 }
 
 cl_int CL_API_CALL CL_GetEventProfilingInfo(cl_event event,
@@ -593,7 +607,8 @@ cl_int CL_API_CALL CL_GetEventProfilingInfo(cl_event event,
 
     // TODO: GetEventProfilingInfo
 
-    return (cl_int)0;
+    return cl::GetEventProfilingInfo(event, param_name, param_value_size, param_value,
+                                     param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_Flush(cl_command_queue command_queue)
@@ -602,7 +617,7 @@ cl_int CL_API_CALL CL_Flush(cl_command_queue command_queue)
 
     // TODO: Flush
 
-    return (cl_int)0;
+    return cl::Flush(command_queue);
 }
 
 cl_int CL_API_CALL CL_Finish(cl_command_queue command_queue)
@@ -611,7 +626,7 @@ cl_int CL_API_CALL CL_Finish(cl_command_queue command_queue)
 
     // TODO: Finish
 
-    return (cl_int)0;
+    return cl::Finish(command_queue);
 }
 
 cl_int CL_API_CALL CL_EnqueueReadBuffer(cl_command_queue command_queue,
@@ -634,7 +649,8 @@ cl_int CL_API_CALL CL_EnqueueReadBuffer(cl_command_queue command_queue,
 
     // TODO: EnqueueReadBuffer
 
-    return (cl_int)0;
+    return cl::EnqueueReadBuffer(command_queue, buffer, blocking_read, offset, size, ptr,
+                                 num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueWriteBuffer(cl_command_queue command_queue,
@@ -657,7 +673,8 @@ cl_int CL_API_CALL CL_EnqueueWriteBuffer(cl_command_queue command_queue,
 
     // TODO: EnqueueWriteBuffer
 
-    return (cl_int)0;
+    return cl::EnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, size, ptr,
+                                  num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyBuffer(cl_command_queue command_queue,
@@ -681,7 +698,8 @@ cl_int CL_API_CALL CL_EnqueueCopyBuffer(cl_command_queue command_queue,
 
     // TODO: EnqueueCopyBuffer
 
-    return (cl_int)0;
+    return cl::EnqueueCopyBuffer(command_queue, src_buffer, dst_buffer, src_offset, dst_offset,
+                                 size, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueReadImage(cl_command_queue command_queue,
@@ -708,7 +726,8 @@ cl_int CL_API_CALL CL_EnqueueReadImage(cl_command_queue command_queue,
 
     // TODO: EnqueueReadImage
 
-    return (cl_int)0;
+    return cl::EnqueueReadImage(command_queue, image, blocking_read, origin, region, row_pitch,
+                                slice_pitch, ptr, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueWriteImage(cl_command_queue command_queue,
@@ -735,7 +754,9 @@ cl_int CL_API_CALL CL_EnqueueWriteImage(cl_command_queue command_queue,
 
     // TODO: EnqueueWriteImage
 
-    return (cl_int)0;
+    return cl::EnqueueWriteImage(command_queue, image, blocking_write, origin, region,
+                                 input_row_pitch, input_slice_pitch, ptr, num_events_in_wait_list,
+                                 event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyImage(cl_command_queue command_queue,
@@ -760,7 +781,8 @@ cl_int CL_API_CALL CL_EnqueueCopyImage(cl_command_queue command_queue,
 
     // TODO: EnqueueCopyImage
 
-    return (cl_int)0;
+    return cl::EnqueueCopyImage(command_queue, src_image, dst_image, src_origin, dst_origin, region,
+                                num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyImageToBuffer(cl_command_queue command_queue,
@@ -785,7 +807,9 @@ cl_int CL_API_CALL CL_EnqueueCopyImageToBuffer(cl_command_queue command_queue,
 
     // TODO: EnqueueCopyImageToBuffer
 
-    return (cl_int)0;
+    return cl::EnqueueCopyImageToBuffer(command_queue, src_image, dst_buffer, src_origin, region,
+                                        dst_offset, num_events_in_wait_list, event_wait_list,
+                                        event);
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyBufferToImage(cl_command_queue command_queue,
@@ -810,7 +834,9 @@ cl_int CL_API_CALL CL_EnqueueCopyBufferToImage(cl_command_queue command_queue,
 
     // TODO: EnqueueCopyBufferToImage
 
-    return (cl_int)0;
+    return cl::EnqueueCopyBufferToImage(command_queue, src_buffer, dst_image, src_offset,
+                                        dst_origin, region, num_events_in_wait_list,
+                                        event_wait_list, event);
 }
 
 void *CL_API_CALL CL_EnqueueMapBuffer(cl_command_queue command_queue,
@@ -835,7 +861,8 @@ void *CL_API_CALL CL_EnqueueMapBuffer(cl_command_queue command_queue,
 
     // TODO: EnqueueMapBuffer
 
-    return (void *)0;
+    return cl::EnqueueMapBuffer(command_queue, buffer, blocking_map, map_flags, offset, size,
+                                num_events_in_wait_list, event_wait_list, event, errcode_ret);
 }
 
 void *CL_API_CALL CL_EnqueueMapImage(cl_command_queue command_queue,
@@ -865,7 +892,9 @@ void *CL_API_CALL CL_EnqueueMapImage(cl_command_queue command_queue,
 
     // TODO: EnqueueMapImage
 
-    return (void *)0;
+    return cl::EnqueueMapImage(command_queue, image, blocking_map, map_flags, origin, region,
+                               image_row_pitch, image_slice_pitch, num_events_in_wait_list,
+                               event_wait_list, event, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_EnqueueUnmapMemObject(cl_command_queue command_queue,
@@ -885,7 +914,8 @@ cl_int CL_API_CALL CL_EnqueueUnmapMemObject(cl_command_queue command_queue,
 
     // TODO: EnqueueUnmapMemObject
 
-    return (cl_int)0;
+    return cl::EnqueueUnmapMemObject(command_queue, memobj, mapped_ptr, num_events_in_wait_list,
+                                     event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueNDRangeKernel(cl_command_queue command_queue,
@@ -910,7 +940,9 @@ cl_int CL_API_CALL CL_EnqueueNDRangeKernel(cl_command_queue command_queue,
 
     // TODO: EnqueueNDRangeKernel
 
-    return (cl_int)0;
+    return cl::EnqueueNDRangeKernel(command_queue, kernel, work_dim, global_work_offset,
+                                    global_work_size, local_work_size, num_events_in_wait_list,
+                                    event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueNativeKernel(cl_command_queue command_queue,
@@ -937,7 +969,9 @@ cl_int CL_API_CALL CL_EnqueueNativeKernel(cl_command_queue command_queue,
 
     // TODO: EnqueueNativeKernel
 
-    return (cl_int)0;
+    return cl::EnqueueNativeKernel(command_queue, user_func, args, cb_args, num_mem_objects,
+                                   mem_list, args_mem_loc, num_events_in_wait_list, event_wait_list,
+                                   event);
 }
 
 cl_int CL_API_CALL CL_SetCommandQueueProperty(cl_command_queue command_queue,
@@ -952,7 +986,7 @@ cl_int CL_API_CALL CL_SetCommandQueueProperty(cl_command_queue command_queue,
 
     // TODO: SetCommandQueueProperty
 
-    return (cl_int)0;
+    return cl::SetCommandQueueProperty(command_queue, properties, enable, old_properties);
 }
 
 cl_mem CL_API_CALL CL_CreateImage2D(cl_context context,
@@ -974,7 +1008,8 @@ cl_mem CL_API_CALL CL_CreateImage2D(cl_context context,
 
     // TODO: CreateImage2D
 
-    return (cl_mem)0;
+    return cl::CreateImage2D(context, flags, image_format, image_width, image_height,
+                             image_row_pitch, host_ptr, errcode_ret);
 }
 
 cl_mem CL_API_CALL CL_CreateImage3D(cl_context context,
@@ -998,7 +1033,8 @@ cl_mem CL_API_CALL CL_CreateImage3D(cl_context context,
 
     // TODO: CreateImage3D
 
-    return (cl_mem)0;
+    return cl::CreateImage3D(context, flags, image_format, image_width, image_height, image_depth,
+                             image_row_pitch, image_slice_pitch, host_ptr, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_EnqueueMarker(cl_command_queue command_queue, cl_event *event)
@@ -1008,7 +1044,7 @@ cl_int CL_API_CALL CL_EnqueueMarker(cl_command_queue command_queue, cl_event *ev
 
     // TODO: EnqueueMarker
 
-    return (cl_int)0;
+    return cl::EnqueueMarker(command_queue, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueWaitForEvents(cl_command_queue command_queue,
@@ -1021,7 +1057,7 @@ cl_int CL_API_CALL CL_EnqueueWaitForEvents(cl_command_queue command_queue,
 
     // TODO: EnqueueWaitForEvents
 
-    return (cl_int)0;
+    return cl::EnqueueWaitForEvents(command_queue, num_events, event_list);
 }
 
 cl_int CL_API_CALL CL_EnqueueBarrier(cl_command_queue command_queue)
@@ -1030,7 +1066,7 @@ cl_int CL_API_CALL CL_EnqueueBarrier(cl_command_queue command_queue)
 
     // TODO: EnqueueBarrier
 
-    return (cl_int)0;
+    return cl::EnqueueBarrier(command_queue);
 }
 
 cl_int CL_API_CALL CL_UnloadCompiler()
@@ -1039,7 +1075,7 @@ cl_int CL_API_CALL CL_UnloadCompiler()
 
     // TODO: UnloadCompiler
 
-    return (cl_int)0;
+    return cl::UnloadCompiler();
 }
 
 void *CL_API_CALL CL_GetExtensionFunctionAddress(const char *func_name)
@@ -1048,7 +1084,7 @@ void *CL_API_CALL CL_GetExtensionFunctionAddress(const char *func_name)
 
     // TODO: GetExtensionFunctionAddress
 
-    return (void *)0;
+    return cl::GetExtensionFunctionAddress(func_name);
 }
 
 cl_command_queue CL_API_CALL CL_CreateCommandQueue(cl_context context,
@@ -1063,7 +1099,7 @@ cl_command_queue CL_API_CALL CL_CreateCommandQueue(cl_context context,
 
     // TODO: CreateCommandQueue
 
-    return (cl_command_queue)0;
+    return cl::CreateCommandQueue(context, device, properties, errcode_ret);
 }
 
 cl_sampler CL_API_CALL CL_CreateSampler(cl_context context,
@@ -1081,7 +1117,7 @@ cl_sampler CL_API_CALL CL_CreateSampler(cl_context context,
 
     // TODO: CreateSampler
 
-    return (cl_sampler)0;
+    return cl::CreateSampler(context, normalized_coords, addressing_mode, filter_mode, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_EnqueueTask(cl_command_queue command_queue,
@@ -1099,7 +1135,7 @@ cl_int CL_API_CALL CL_EnqueueTask(cl_command_queue command_queue,
 
     // TODO: EnqueueTask
 
-    return (cl_int)0;
+    return cl::EnqueueTask(command_queue, kernel, num_events_in_wait_list, event_wait_list, event);
 }
 
 // CL 1.1
@@ -1118,7 +1154,7 @@ cl_mem CL_API_CALL CL_CreateSubBuffer(cl_mem buffer,
 
     // TODO: CreateSubBuffer
 
-    return (cl_mem)0;
+    return cl::CreateSubBuffer(buffer, flags, buffer_create_type, buffer_create_info, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_SetMemObjectDestructorCallback(cl_mem memobj,
@@ -1133,7 +1169,7 @@ cl_int CL_API_CALL CL_SetMemObjectDestructorCallback(cl_mem memobj,
 
     // TODO: SetMemObjectDestructorCallback
 
-    return (cl_int)0;
+    return cl::SetMemObjectDestructorCallback(memobj, pfn_notify, user_data);
 }
 
 cl_event CL_API_CALL CL_CreateUserEvent(cl_context context, cl_int *errcode_ret)
@@ -1143,7 +1179,7 @@ cl_event CL_API_CALL CL_CreateUserEvent(cl_context context, cl_int *errcode_ret)
 
     // TODO: CreateUserEvent
 
-    return (cl_event)0;
+    return cl::CreateUserEvent(context, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_SetUserEventStatus(cl_event event, cl_int execution_status)
@@ -1153,7 +1189,7 @@ cl_int CL_API_CALL CL_SetUserEventStatus(cl_event event, cl_int execution_status
 
     // TODO: SetUserEventStatus
 
-    return (cl_int)0;
+    return cl::SetUserEventStatus(event, execution_status);
 }
 
 cl_int CL_API_CALL CL_SetEventCallback(cl_event event,
@@ -1171,7 +1207,7 @@ cl_int CL_API_CALL CL_SetEventCallback(cl_event event,
 
     // TODO: SetEventCallback
 
-    return (cl_int)0;
+    return cl::SetEventCallback(event, command_exec_callback_type, pfn_notify, user_data);
 }
 
 cl_int CL_API_CALL CL_EnqueueReadBufferRect(cl_command_queue command_queue,
@@ -1204,7 +1240,10 @@ cl_int CL_API_CALL CL_EnqueueReadBufferRect(cl_command_queue command_queue,
 
     // TODO: EnqueueReadBufferRect
 
-    return (cl_int)0;
+    return cl::EnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_origin,
+                                     host_origin, region, buffer_row_pitch, buffer_slice_pitch,
+                                     host_row_pitch, host_slice_pitch, ptr, num_events_in_wait_list,
+                                     event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueWriteBufferRect(cl_command_queue command_queue,
@@ -1237,7 +1276,10 @@ cl_int CL_API_CALL CL_EnqueueWriteBufferRect(cl_command_queue command_queue,
 
     // TODO: EnqueueWriteBufferRect
 
-    return (cl_int)0;
+    return cl::EnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_origin,
+                                      host_origin, region, buffer_row_pitch, buffer_slice_pitch,
+                                      host_row_pitch, host_slice_pitch, ptr,
+                                      num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyBufferRect(cl_command_queue command_queue,
@@ -1268,7 +1310,10 @@ cl_int CL_API_CALL CL_EnqueueCopyBufferRect(cl_command_queue command_queue,
 
     // TODO: EnqueueCopyBufferRect
 
-    return (cl_int)0;
+    return cl::EnqueueCopyBufferRect(command_queue, src_buffer, dst_buffer, src_origin, dst_origin,
+                                     region, src_row_pitch, src_slice_pitch, dst_row_pitch,
+                                     dst_slice_pitch, num_events_in_wait_list, event_wait_list,
+                                     event);
 }
 
 // CL 1.2
@@ -1287,7 +1332,7 @@ cl_int CL_API_CALL CL_CreateSubDevices(cl_device_id in_device,
 
     // TODO: CreateSubDevices
 
-    return (cl_int)0;
+    return cl::CreateSubDevices(in_device, properties, num_devices, out_devices, num_devices_ret);
 }
 
 cl_int CL_API_CALL CL_RetainDevice(cl_device_id device)
@@ -1296,7 +1341,7 @@ cl_int CL_API_CALL CL_RetainDevice(cl_device_id device)
 
     // TODO: RetainDevice
 
-    return (cl_int)0;
+    return cl::RetainDevice(device);
 }
 
 cl_int CL_API_CALL CL_ReleaseDevice(cl_device_id device)
@@ -1305,7 +1350,7 @@ cl_int CL_API_CALL CL_ReleaseDevice(cl_device_id device)
 
     // TODO: ReleaseDevice
 
-    return (cl_int)0;
+    return cl::ReleaseDevice(device);
 }
 
 cl_mem CL_API_CALL CL_CreateImage(cl_context context,
@@ -1324,7 +1369,7 @@ cl_mem CL_API_CALL CL_CreateImage(cl_context context,
 
     // TODO: CreateImage
 
-    return (cl_mem)0;
+    return cl::CreateImage(context, flags, image_format, image_desc, host_ptr, errcode_ret);
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithBuiltInKernels(cl_context context,
@@ -1341,7 +1386,8 @@ cl_program CL_API_CALL CL_CreateProgramWithBuiltInKernels(cl_context context,
 
     // TODO: CreateProgramWithBuiltInKernels
 
-    return (cl_program)0;
+    return cl::CreateProgramWithBuiltInKernels(context, num_devices, device_list, kernel_names,
+                                               errcode_ret);
 }
 
 cl_int CL_API_CALL CL_CompileProgram(cl_program program,
@@ -1366,7 +1412,8 @@ cl_int CL_API_CALL CL_CompileProgram(cl_program program,
 
     // TODO: CompileProgram
 
-    return (cl_int)0;
+    return cl::CompileProgram(program, num_devices, device_list, options, num_input_headers,
+                              input_headers, header_include_names, pfn_notify, user_data);
 }
 
 cl_program CL_API_CALL CL_LinkProgram(cl_context context,
@@ -1392,7 +1439,8 @@ cl_program CL_API_CALL CL_LinkProgram(cl_context context,
 
     // TODO: LinkProgram
 
-    return (cl_program)0;
+    return cl::LinkProgram(context, num_devices, device_list, options, num_input_programs,
+                           input_programs, pfn_notify, user_data, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_UnloadPlatformCompiler(cl_platform_id platform)
@@ -1401,7 +1449,7 @@ cl_int CL_API_CALL CL_UnloadPlatformCompiler(cl_platform_id platform)
 
     // TODO: UnloadPlatformCompiler
 
-    return (cl_int)0;
+    return cl::UnloadPlatformCompiler(platform);
 }
 
 cl_int CL_API_CALL CL_GetKernelArgInfo(cl_kernel kernel,
@@ -1421,7 +1469,8 @@ cl_int CL_API_CALL CL_GetKernelArgInfo(cl_kernel kernel,
 
     // TODO: GetKernelArgInfo
 
-    return (cl_int)0;
+    return cl::GetKernelArgInfo(kernel, arg_index, param_name, param_value_size, param_value,
+                                param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_EnqueueFillBuffer(cl_command_queue command_queue,
@@ -1444,7 +1493,8 @@ cl_int CL_API_CALL CL_EnqueueFillBuffer(cl_command_queue command_queue,
 
     // TODO: EnqueueFillBuffer
 
-    return (cl_int)0;
+    return cl::EnqueueFillBuffer(command_queue, buffer, pattern, pattern_size, offset, size,
+                                 num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueFillImage(cl_command_queue command_queue,
@@ -1467,7 +1517,8 @@ cl_int CL_API_CALL CL_EnqueueFillImage(cl_command_queue command_queue,
 
     // TODO: EnqueueFillImage
 
-    return (cl_int)0;
+    return cl::EnqueueFillImage(command_queue, image, fill_color, origin, region,
+                                num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueMigrateMemObjects(cl_command_queue command_queue,
@@ -1487,7 +1538,8 @@ cl_int CL_API_CALL CL_EnqueueMigrateMemObjects(cl_command_queue command_queue,
 
     // TODO: EnqueueMigrateMemObjects
 
-    return (cl_int)0;
+    return cl::EnqueueMigrateMemObjects(command_queue, num_mem_objects, mem_objects, flags,
+                                        num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueMarkerWithWaitList(cl_command_queue command_queue,
@@ -1504,7 +1556,8 @@ cl_int CL_API_CALL CL_EnqueueMarkerWithWaitList(cl_command_queue command_queue,
 
     // TODO: EnqueueMarkerWithWaitList
 
-    return (cl_int)0;
+    return cl::EnqueueMarkerWithWaitList(command_queue, num_events_in_wait_list, event_wait_list,
+                                         event);
 }
 
 cl_int CL_API_CALL CL_EnqueueBarrierWithWaitList(cl_command_queue command_queue,
@@ -1521,7 +1574,8 @@ cl_int CL_API_CALL CL_EnqueueBarrierWithWaitList(cl_command_queue command_queue,
 
     // TODO: EnqueueBarrierWithWaitList
 
-    return (cl_int)0;
+    return cl::EnqueueBarrierWithWaitList(command_queue, num_events_in_wait_list, event_wait_list,
+                                          event);
 }
 
 void *CL_API_CALL CL_GetExtensionFunctionAddressForPlatform(cl_platform_id platform,
@@ -1533,7 +1587,7 @@ void *CL_API_CALL CL_GetExtensionFunctionAddressForPlatform(cl_platform_id platf
 
     // TODO: GetExtensionFunctionAddressForPlatform
 
-    return (void *)0;
+    return cl::GetExtensionFunctionAddressForPlatform(platform, func_name);
 }
 
 // CL 2.0
@@ -1550,7 +1604,7 @@ CL_CreateCommandQueueWithProperties(cl_context context,
 
     // TODO: CreateCommandQueueWithProperties
 
-    return (cl_command_queue)0;
+    return cl::CreateCommandQueueWithProperties(context, device, properties, errcode_ret);
 }
 
 cl_mem CL_API_CALL CL_CreatePipe(cl_context context,
@@ -1570,7 +1624,8 @@ cl_mem CL_API_CALL CL_CreatePipe(cl_context context,
 
     // TODO: CreatePipe
 
-    return (cl_mem)0;
+    return cl::CreatePipe(context, flags, pipe_packet_size, pipe_max_packets, properties,
+                          errcode_ret);
 }
 
 cl_int CL_API_CALL CL_GetPipeInfo(cl_mem pipe,
@@ -1588,7 +1643,7 @@ cl_int CL_API_CALL CL_GetPipeInfo(cl_mem pipe,
 
     // TODO: GetPipeInfo
 
-    return (cl_int)0;
+    return cl::GetPipeInfo(pipe, param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 void *CL_API_CALL CL_SVMAlloc(cl_context context,
@@ -1601,7 +1656,7 @@ void *CL_API_CALL CL_SVMAlloc(cl_context context,
 
     // TODO: SVMAlloc
 
-    return (void *)0;
+    return cl::SVMAlloc(context, flags, size, alignment);
 }
 
 void CL_API_CALL CL_SVMFree(cl_context context, void *svm_pointer)
@@ -1610,6 +1665,8 @@ void CL_API_CALL CL_SVMFree(cl_context context, void *svm_pointer)
              (uintptr_t)context, (uintptr_t)svm_pointer);
 
     // TODO: SVMFree
+
+    cl::SVMFree(context, svm_pointer);
 }
 
 cl_sampler CL_API_CALL
@@ -1624,7 +1681,7 @@ CL_CreateSamplerWithProperties(cl_context context,
 
     // TODO: CreateSamplerWithProperties
 
-    return (cl_sampler)0;
+    return cl::CreateSamplerWithProperties(context, sampler_properties, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_SetKernelArgSVMPointer(cl_kernel kernel,
@@ -1637,7 +1694,7 @@ cl_int CL_API_CALL CL_SetKernelArgSVMPointer(cl_kernel kernel,
 
     // TODO: SetKernelArgSVMPointer
 
-    return (cl_int)0;
+    return cl::SetKernelArgSVMPointer(kernel, arg_index, arg_value);
 }
 
 cl_int CL_API_CALL CL_SetKernelExecInfo(cl_kernel kernel,
@@ -1652,7 +1709,7 @@ cl_int CL_API_CALL CL_SetKernelExecInfo(cl_kernel kernel,
 
     // TODO: SetKernelExecInfo
 
-    return (cl_int)0;
+    return cl::SetKernelExecInfo(kernel, param_name, param_value_size, param_value);
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMFree(cl_command_queue command_queue,
@@ -1679,7 +1736,8 @@ cl_int CL_API_CALL CL_EnqueueSVMFree(cl_command_queue command_queue,
 
     // TODO: EnqueueSVMFree
 
-    return (cl_int)0;
+    return cl::EnqueueSVMFree(command_queue, num_svm_pointers, svm_pointers, pfn_free_func,
+                              user_data, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMemcpy(cl_command_queue command_queue,
@@ -1701,7 +1759,8 @@ cl_int CL_API_CALL CL_EnqueueSVMMemcpy(cl_command_queue command_queue,
 
     // TODO: EnqueueSVMMemcpy
 
-    return (cl_int)0;
+    return cl::EnqueueSVMMemcpy(command_queue, blocking_copy, dst_ptr, src_ptr, size,
+                                num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMemFill(cl_command_queue command_queue,
@@ -1723,7 +1782,8 @@ cl_int CL_API_CALL CL_EnqueueSVMMemFill(cl_command_queue command_queue,
 
     // TODO: EnqueueSVMMemFill
 
-    return (cl_int)0;
+    return cl::EnqueueSVMMemFill(command_queue, svm_ptr, pattern, pattern_size, size,
+                                 num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMap(cl_command_queue command_queue,
@@ -1745,7 +1805,8 @@ cl_int CL_API_CALL CL_EnqueueSVMMap(cl_command_queue command_queue,
 
     // TODO: EnqueueSVMMap
 
-    return (cl_int)0;
+    return cl::EnqueueSVMMap(command_queue, blocking_map, flags, svm_ptr, size,
+                             num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMUnmap(cl_command_queue command_queue,
@@ -1763,7 +1824,8 @@ cl_int CL_API_CALL CL_EnqueueSVMUnmap(cl_command_queue command_queue,
 
     // TODO: EnqueueSVMUnmap
 
-    return (cl_int)0;
+    return cl::EnqueueSVMUnmap(command_queue, svm_ptr, num_events_in_wait_list, event_wait_list,
+                               event);
 }
 
 // CL 2.1
@@ -1778,7 +1840,7 @@ cl_int CL_API_CALL CL_SetDefaultDeviceCommandQueue(cl_context context,
 
     // TODO: SetDefaultDeviceCommandQueue
 
-    return (cl_int)0;
+    return cl::SetDefaultDeviceCommandQueue(context, device, command_queue);
 }
 
 cl_int CL_API_CALL CL_GetDeviceAndHostTimer(cl_device_id device,
@@ -1792,7 +1854,7 @@ cl_int CL_API_CALL CL_GetDeviceAndHostTimer(cl_device_id device,
 
     // TODO: GetDeviceAndHostTimer
 
-    return (cl_int)0;
+    return cl::GetDeviceAndHostTimer(device, device_timestamp, host_timestamp);
 }
 
 cl_int CL_API_CALL CL_GetHostTimer(cl_device_id device, cl_ulong *host_timestamp)
@@ -1802,7 +1864,7 @@ cl_int CL_API_CALL CL_GetHostTimer(cl_device_id device, cl_ulong *host_timestamp
 
     // TODO: GetHostTimer
 
-    return (cl_int)0;
+    return cl::GetHostTimer(device, host_timestamp);
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithIL(cl_context context,
@@ -1817,7 +1879,7 @@ cl_program CL_API_CALL CL_CreateProgramWithIL(cl_context context,
 
     // TODO: CreateProgramWithIL
 
-    return (cl_program)0;
+    return cl::CreateProgramWithIL(context, il, length, errcode_ret);
 }
 
 cl_kernel CL_API_CALL CL_CloneKernel(cl_kernel source_kernel, cl_int *errcode_ret)
@@ -1827,7 +1889,7 @@ cl_kernel CL_API_CALL CL_CloneKernel(cl_kernel source_kernel, cl_int *errcode_re
 
     // TODO: CloneKernel
 
-    return (cl_kernel)0;
+    return cl::CloneKernel(source_kernel, errcode_ret);
 }
 
 cl_int CL_API_CALL CL_GetKernelSubGroupInfo(cl_kernel kernel,
@@ -1850,7 +1912,8 @@ cl_int CL_API_CALL CL_GetKernelSubGroupInfo(cl_kernel kernel,
 
     // TODO: GetKernelSubGroupInfo
 
-    return (cl_int)0;
+    return cl::GetKernelSubGroupInfo(kernel, device, param_name, input_value_size, input_value,
+                                     param_value_size, param_value, param_value_size_ret);
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMigrateMem(cl_command_queue command_queue,
@@ -1872,7 +1935,8 @@ cl_int CL_API_CALL CL_EnqueueSVMMigrateMem(cl_command_queue command_queue,
 
     // TODO: EnqueueSVMMigrateMem
 
-    return (cl_int)0;
+    return cl::EnqueueSVMMigrateMem(command_queue, num_svm_pointers, svm_pointers, sizes, flags,
+                                    num_events_in_wait_list, event_wait_list, event);
 }
 
 // CL 2.2
@@ -1888,7 +1952,7 @@ cl_int CL_API_CALL CL_SetProgramReleaseCallback(cl_program program,
 
     // TODO: SetProgramReleaseCallback
 
-    return (cl_int)0;
+    return cl::SetProgramReleaseCallback(program, pfn_notify, user_data);
 }
 
 cl_int CL_API_CALL CL_SetProgramSpecializationConstant(cl_program program,
@@ -1903,7 +1967,7 @@ cl_int CL_API_CALL CL_SetProgramSpecializationConstant(cl_program program,
 
     // TODO: SetProgramSpecializationConstant
 
-    return (cl_int)0;
+    return cl::SetProgramSpecializationConstant(program, spec_id, spec_size, spec_value);
 }
 
 // CL 3.0
@@ -1919,7 +1983,7 @@ cl_int CL_API_CALL CL_SetContextDestructorCallback(cl_context context,
 
     // TODO: SetContextDestructorCallback
 
-    return (cl_int)0;
+    return cl::SetContextDestructorCallback(context, pfn_notify, user_data);
 }
 
 cl_mem CL_API_CALL CL_CreateBufferWithProperties(cl_context context,
@@ -1938,7 +2002,7 @@ cl_mem CL_API_CALL CL_CreateBufferWithProperties(cl_context context,
 
     // TODO: CreateBufferWithProperties
 
-    return (cl_mem)0;
+    return cl::CreateBufferWithProperties(context, properties, flags, size, host_ptr, errcode_ret);
 }
 
 cl_mem CL_API_CALL CL_CreateImageWithProperties(cl_context context,
@@ -1958,7 +2022,8 @@ cl_mem CL_API_CALL CL_CreateImageWithProperties(cl_context context,
 
     // TODO: CreateImageWithProperties
 
-    return (cl_mem)0;
+    return cl::CreateImageWithProperties(context, properties, flags, image_format, image_desc,
+                                         host_ptr, errcode_ret);
 }
 
 }  // extern "C"

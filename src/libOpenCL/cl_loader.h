@@ -9,7 +9,7 @@
 #ifndef LIBCL_CL_LOADER_H_
 #define LIBCL_CL_LOADER_H_
 
-#include <export.h>
+#include "export.h"
 
 #ifndef CL_API_ENTRY
 #    define CL_API_ENTRY ANGLE_EXPORT

@@ -8,8 +8,8 @@
 // entry_points_cl_autogen.h:
 //   Defines the CL entry points.
 
-#ifndef LIBOPENCL_ENTRY_POINTS_CL_AUTOGEN_H_
-#define LIBOPENCL_ENTRY_POINTS_CL_AUTOGEN_H_
+#ifndef LIBGLESV2_ENTRY_POINTS_CL_AUTOGEN_H_
+#define LIBGLESV2_ENTRY_POINTS_CL_AUTOGEN_H_
 
 #include "export.h"
 
@@ -618,4 +618,4 @@ ANGLE_EXPORT cl_mem CL_API_CALL CL_CreateImageWithProperties(cl_context context,
                                                              cl_int *errcode_ret);
 }  // extern "C"
 
-#endif  // LIBOPENCL_ENTRY_POINTS_CL_AUTOGEN_H_
+#endif  // LIBGLESV2_ENTRY_POINTS_CL_AUTOGEN_H_

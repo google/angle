@@ -10,128 +10,226 @@
 
 #include "cl_loader.h"
 
-// TODO(jplate): remove include after entry points moved to GLESV2 lib http://anglebug.com/5759
-#include "entry_points_cl_autogen.h"
-
 cl_icd_dispatch cl_loader;
 
 namespace angle
 {
 void LoadCL(LoadProc loadProc)
 {
-    cl_loader.clGetPlatformIDs                         = CL_GetPlatformIDs;
-    cl_loader.clGetPlatformInfo                        = CL_GetPlatformInfo;
-    cl_loader.clGetDeviceIDs                           = CL_GetDeviceIDs;
-    cl_loader.clGetDeviceInfo                          = CL_GetDeviceInfo;
-    cl_loader.clCreateContext                          = CL_CreateContext;
-    cl_loader.clCreateContextFromType                  = CL_CreateContextFromType;
-    cl_loader.clRetainContext                          = CL_RetainContext;
-    cl_loader.clReleaseContext                         = CL_ReleaseContext;
-    cl_loader.clGetContextInfo                         = CL_GetContextInfo;
-    cl_loader.clRetainCommandQueue                     = CL_RetainCommandQueue;
-    cl_loader.clReleaseCommandQueue                    = CL_ReleaseCommandQueue;
-    cl_loader.clGetCommandQueueInfo                    = CL_GetCommandQueueInfo;
-    cl_loader.clCreateBuffer                           = CL_CreateBuffer;
-    cl_loader.clRetainMemObject                        = CL_RetainMemObject;
-    cl_loader.clReleaseMemObject                       = CL_ReleaseMemObject;
-    cl_loader.clGetSupportedImageFormats               = CL_GetSupportedImageFormats;
-    cl_loader.clGetMemObjectInfo                       = CL_GetMemObjectInfo;
-    cl_loader.clGetImageInfo                           = CL_GetImageInfo;
-    cl_loader.clRetainSampler                          = CL_RetainSampler;
-    cl_loader.clReleaseSampler                         = CL_ReleaseSampler;
-    cl_loader.clGetSamplerInfo                         = CL_GetSamplerInfo;
-    cl_loader.clCreateProgramWithSource                = CL_CreateProgramWithSource;
-    cl_loader.clCreateProgramWithBinary                = CL_CreateProgramWithBinary;
-    cl_loader.clRetainProgram                          = CL_RetainProgram;
-    cl_loader.clReleaseProgram                         = CL_ReleaseProgram;
-    cl_loader.clBuildProgram                           = CL_BuildProgram;
-    cl_loader.clGetProgramInfo                         = CL_GetProgramInfo;
-    cl_loader.clGetProgramBuildInfo                    = CL_GetProgramBuildInfo;
-    cl_loader.clCreateKernel                           = CL_CreateKernel;
-    cl_loader.clCreateKernelsInProgram                 = CL_CreateKernelsInProgram;
-    cl_loader.clRetainKernel                           = CL_RetainKernel;
-    cl_loader.clReleaseKernel                          = CL_ReleaseKernel;
-    cl_loader.clSetKernelArg                           = CL_SetKernelArg;
-    cl_loader.clGetKernelInfo                          = CL_GetKernelInfo;
-    cl_loader.clGetKernelWorkGroupInfo                 = CL_GetKernelWorkGroupInfo;
-    cl_loader.clWaitForEvents                          = CL_WaitForEvents;
-    cl_loader.clGetEventInfo                           = CL_GetEventInfo;
-    cl_loader.clRetainEvent                            = CL_RetainEvent;
-    cl_loader.clReleaseEvent                           = CL_ReleaseEvent;
-    cl_loader.clGetEventProfilingInfo                  = CL_GetEventProfilingInfo;
-    cl_loader.clFlush                                  = CL_Flush;
-    cl_loader.clFinish                                 = CL_Finish;
-    cl_loader.clEnqueueReadBuffer                      = CL_EnqueueReadBuffer;
-    cl_loader.clEnqueueWriteBuffer                     = CL_EnqueueWriteBuffer;
-    cl_loader.clEnqueueCopyBuffer                      = CL_EnqueueCopyBuffer;
-    cl_loader.clEnqueueReadImage                       = CL_EnqueueReadImage;
-    cl_loader.clEnqueueWriteImage                      = CL_EnqueueWriteImage;
-    cl_loader.clEnqueueCopyImage                       = CL_EnqueueCopyImage;
-    cl_loader.clEnqueueCopyImageToBuffer               = CL_EnqueueCopyImageToBuffer;
-    cl_loader.clEnqueueCopyBufferToImage               = CL_EnqueueCopyBufferToImage;
-    cl_loader.clEnqueueMapBuffer                       = CL_EnqueueMapBuffer;
-    cl_loader.clEnqueueMapImage                        = CL_EnqueueMapImage;
-    cl_loader.clEnqueueUnmapMemObject                  = CL_EnqueueUnmapMemObject;
-    cl_loader.clEnqueueNDRangeKernel                   = CL_EnqueueNDRangeKernel;
-    cl_loader.clEnqueueNativeKernel                    = CL_EnqueueNativeKernel;
-    cl_loader.clSetCommandQueueProperty                = CL_SetCommandQueueProperty;
-    cl_loader.clCreateImage2D                          = CL_CreateImage2D;
-    cl_loader.clCreateImage3D                          = CL_CreateImage3D;
-    cl_loader.clEnqueueMarker                          = CL_EnqueueMarker;
-    cl_loader.clEnqueueWaitForEvents                   = CL_EnqueueWaitForEvents;
-    cl_loader.clEnqueueBarrier                         = CL_EnqueueBarrier;
-    cl_loader.clUnloadCompiler                         = CL_UnloadCompiler;
-    cl_loader.clGetExtensionFunctionAddress            = CL_GetExtensionFunctionAddress;
-    cl_loader.clCreateCommandQueue                     = CL_CreateCommandQueue;
-    cl_loader.clCreateSampler                          = CL_CreateSampler;
-    cl_loader.clEnqueueTask                            = CL_EnqueueTask;
-    cl_loader.clCreateSubBuffer                        = CL_CreateSubBuffer;
-    cl_loader.clSetMemObjectDestructorCallback         = CL_SetMemObjectDestructorCallback;
-    cl_loader.clCreateUserEvent                        = CL_CreateUserEvent;
-    cl_loader.clSetUserEventStatus                     = CL_SetUserEventStatus;
-    cl_loader.clSetEventCallback                       = CL_SetEventCallback;
-    cl_loader.clEnqueueReadBufferRect                  = CL_EnqueueReadBufferRect;
-    cl_loader.clEnqueueWriteBufferRect                 = CL_EnqueueWriteBufferRect;
-    cl_loader.clEnqueueCopyBufferRect                  = CL_EnqueueCopyBufferRect;
-    cl_loader.clCreateSubDevices                       = CL_CreateSubDevices;
-    cl_loader.clRetainDevice                           = CL_RetainDevice;
-    cl_loader.clReleaseDevice                          = CL_ReleaseDevice;
-    cl_loader.clCreateImage                            = CL_CreateImage;
-    cl_loader.clCreateProgramWithBuiltInKernels        = CL_CreateProgramWithBuiltInKernels;
-    cl_loader.clCompileProgram                         = CL_CompileProgram;
-    cl_loader.clLinkProgram                            = CL_LinkProgram;
-    cl_loader.clUnloadPlatformCompiler                 = CL_UnloadPlatformCompiler;
-    cl_loader.clGetKernelArgInfo                       = CL_GetKernelArgInfo;
-    cl_loader.clEnqueueFillBuffer                      = CL_EnqueueFillBuffer;
-    cl_loader.clEnqueueFillImage                       = CL_EnqueueFillImage;
-    cl_loader.clEnqueueMigrateMemObjects               = CL_EnqueueMigrateMemObjects;
-    cl_loader.clEnqueueMarkerWithWaitList              = CL_EnqueueMarkerWithWaitList;
-    cl_loader.clEnqueueBarrierWithWaitList             = CL_EnqueueBarrierWithWaitList;
-    cl_loader.clGetExtensionFunctionAddressForPlatform = CL_GetExtensionFunctionAddressForPlatform;
-    cl_loader.clCreateCommandQueueWithProperties       = CL_CreateCommandQueueWithProperties;
-    cl_loader.clCreatePipe                             = CL_CreatePipe;
-    cl_loader.clGetPipeInfo                            = CL_GetPipeInfo;
-    cl_loader.clSVMAlloc                               = CL_SVMAlloc;
-    cl_loader.clSVMFree                                = CL_SVMFree;
-    cl_loader.clCreateSamplerWithProperties            = CL_CreateSamplerWithProperties;
-    cl_loader.clSetKernelArgSVMPointer                 = CL_SetKernelArgSVMPointer;
-    cl_loader.clSetKernelExecInfo                      = CL_SetKernelExecInfo;
-    cl_loader.clEnqueueSVMFree                         = CL_EnqueueSVMFree;
-    cl_loader.clEnqueueSVMMemcpy                       = CL_EnqueueSVMMemcpy;
-    cl_loader.clEnqueueSVMMemFill                      = CL_EnqueueSVMMemFill;
-    cl_loader.clEnqueueSVMMap                          = CL_EnqueueSVMMap;
-    cl_loader.clEnqueueSVMUnmap                        = CL_EnqueueSVMUnmap;
-    cl_loader.clSetDefaultDeviceCommandQueue           = CL_SetDefaultDeviceCommandQueue;
-    cl_loader.clGetDeviceAndHostTimer                  = CL_GetDeviceAndHostTimer;
-    cl_loader.clGetHostTimer                           = CL_GetHostTimer;
-    cl_loader.clCreateProgramWithIL                    = CL_CreateProgramWithIL;
-    cl_loader.clCloneKernel                            = CL_CloneKernel;
-    cl_loader.clGetKernelSubGroupInfo                  = CL_GetKernelSubGroupInfo;
-    cl_loader.clEnqueueSVMMigrateMem                   = CL_EnqueueSVMMigrateMem;
-    cl_loader.clSetProgramSpecializationConstant       = CL_SetProgramSpecializationConstant;
-    cl_loader.clSetProgramReleaseCallback              = CL_SetProgramReleaseCallback;
-    cl_loader.clSetContextDestructorCallback           = CL_SetContextDestructorCallback;
-    cl_loader.clCreateBufferWithProperties             = CL_CreateBufferWithProperties;
-    cl_loader.clCreateImageWithProperties              = CL_CreateImageWithProperties;
+    cl_loader.clGetPlatformIDs =
+        reinterpret_cast<cl_api_clGetPlatformIDs>(loadProc("CL_GetPlatformIDs"));
+    cl_loader.clGetPlatformInfo =
+        reinterpret_cast<cl_api_clGetPlatformInfo>(loadProc("CL_GetPlatformInfo"));
+    cl_loader.clGetDeviceIDs = reinterpret_cast<cl_api_clGetDeviceIDs>(loadProc("CL_GetDeviceIDs"));
+    cl_loader.clGetDeviceInfo =
+        reinterpret_cast<cl_api_clGetDeviceInfo>(loadProc("CL_GetDeviceInfo"));
+    cl_loader.clCreateContext =
+        reinterpret_cast<cl_api_clCreateContext>(loadProc("CL_CreateContext"));
+    cl_loader.clCreateContextFromType =
+        reinterpret_cast<cl_api_clCreateContextFromType>(loadProc("CL_CreateContextFromType"));
+    cl_loader.clRetainContext =
+        reinterpret_cast<cl_api_clRetainContext>(loadProc("CL_RetainContext"));
+    cl_loader.clReleaseContext =
+        reinterpret_cast<cl_api_clReleaseContext>(loadProc("CL_ReleaseContext"));
+    cl_loader.clGetContextInfo =
+        reinterpret_cast<cl_api_clGetContextInfo>(loadProc("CL_GetContextInfo"));
+    cl_loader.clRetainCommandQueue =
+        reinterpret_cast<cl_api_clRetainCommandQueue>(loadProc("CL_RetainCommandQueue"));
+    cl_loader.clReleaseCommandQueue =
+        reinterpret_cast<cl_api_clReleaseCommandQueue>(loadProc("CL_ReleaseCommandQueue"));
+    cl_loader.clGetCommandQueueInfo =
+        reinterpret_cast<cl_api_clGetCommandQueueInfo>(loadProc("CL_GetCommandQueueInfo"));
+    cl_loader.clCreateBuffer = reinterpret_cast<cl_api_clCreateBuffer>(loadProc("CL_CreateBuffer"));
+    cl_loader.clRetainMemObject =
+        reinterpret_cast<cl_api_clRetainMemObject>(loadProc("CL_RetainMemObject"));
+    cl_loader.clReleaseMemObject =
+        reinterpret_cast<cl_api_clReleaseMemObject>(loadProc("CL_ReleaseMemObject"));
+    cl_loader.clGetSupportedImageFormats = reinterpret_cast<cl_api_clGetSupportedImageFormats>(
+        loadProc("CL_GetSupportedImageFormats"));
+    cl_loader.clGetMemObjectInfo =
+        reinterpret_cast<cl_api_clGetMemObjectInfo>(loadProc("CL_GetMemObjectInfo"));
+    cl_loader.clGetImageInfo = reinterpret_cast<cl_api_clGetImageInfo>(loadProc("CL_GetImageInfo"));
+    cl_loader.clRetainSampler =
+        reinterpret_cast<cl_api_clRetainSampler>(loadProc("CL_RetainSampler"));
+    cl_loader.clReleaseSampler =
+        reinterpret_cast<cl_api_clReleaseSampler>(loadProc("CL_ReleaseSampler"));
+    cl_loader.clGetSamplerInfo =
+        reinterpret_cast<cl_api_clGetSamplerInfo>(loadProc("CL_GetSamplerInfo"));
+    cl_loader.clCreateProgramWithSource =
+        reinterpret_cast<cl_api_clCreateProgramWithSource>(loadProc("CL_CreateProgramWithSource"));
+    cl_loader.clCreateProgramWithBinary =
+        reinterpret_cast<cl_api_clCreateProgramWithBinary>(loadProc("CL_CreateProgramWithBinary"));
+    cl_loader.clRetainProgram =
+        reinterpret_cast<cl_api_clRetainProgram>(loadProc("CL_RetainProgram"));
+    cl_loader.clReleaseProgram =
+        reinterpret_cast<cl_api_clReleaseProgram>(loadProc("CL_ReleaseProgram"));
+    cl_loader.clBuildProgram = reinterpret_cast<cl_api_clBuildProgram>(loadProc("CL_BuildProgram"));
+    cl_loader.clGetProgramInfo =
+        reinterpret_cast<cl_api_clGetProgramInfo>(loadProc("CL_GetProgramInfo"));
+    cl_loader.clGetProgramBuildInfo =
+        reinterpret_cast<cl_api_clGetProgramBuildInfo>(loadProc("CL_GetProgramBuildInfo"));
+    cl_loader.clCreateKernel = reinterpret_cast<cl_api_clCreateKernel>(loadProc("CL_CreateKernel"));
+    cl_loader.clCreateKernelsInProgram =
+        reinterpret_cast<cl_api_clCreateKernelsInProgram>(loadProc("CL_CreateKernelsInProgram"));
+    cl_loader.clRetainKernel = reinterpret_cast<cl_api_clRetainKernel>(loadProc("CL_RetainKernel"));
+    cl_loader.clReleaseKernel =
+        reinterpret_cast<cl_api_clReleaseKernel>(loadProc("CL_ReleaseKernel"));
+    cl_loader.clSetKernelArg = reinterpret_cast<cl_api_clSetKernelArg>(loadProc("CL_SetKernelArg"));
+    cl_loader.clGetKernelInfo =
+        reinterpret_cast<cl_api_clGetKernelInfo>(loadProc("CL_GetKernelInfo"));
+    cl_loader.clGetKernelWorkGroupInfo =
+        reinterpret_cast<cl_api_clGetKernelWorkGroupInfo>(loadProc("CL_GetKernelWorkGroupInfo"));
+    cl_loader.clWaitForEvents =
+        reinterpret_cast<cl_api_clWaitForEvents>(loadProc("CL_WaitForEvents"));
+    cl_loader.clGetEventInfo = reinterpret_cast<cl_api_clGetEventInfo>(loadProc("CL_GetEventInfo"));
+    cl_loader.clRetainEvent  = reinterpret_cast<cl_api_clRetainEvent>(loadProc("CL_RetainEvent"));
+    cl_loader.clReleaseEvent = reinterpret_cast<cl_api_clReleaseEvent>(loadProc("CL_ReleaseEvent"));
+    cl_loader.clGetEventProfilingInfo =
+        reinterpret_cast<cl_api_clGetEventProfilingInfo>(loadProc("CL_GetEventProfilingInfo"));
+    cl_loader.clFlush  = reinterpret_cast<cl_api_clFlush>(loadProc("CL_Flush"));
+    cl_loader.clFinish = reinterpret_cast<cl_api_clFinish>(loadProc("CL_Finish"));
+    cl_loader.clEnqueueReadBuffer =
+        reinterpret_cast<cl_api_clEnqueueReadBuffer>(loadProc("CL_EnqueueReadBuffer"));
+    cl_loader.clEnqueueWriteBuffer =
+        reinterpret_cast<cl_api_clEnqueueWriteBuffer>(loadProc("CL_EnqueueWriteBuffer"));
+    cl_loader.clEnqueueCopyBuffer =
+        reinterpret_cast<cl_api_clEnqueueCopyBuffer>(loadProc("CL_EnqueueCopyBuffer"));
+    cl_loader.clEnqueueReadImage =
+        reinterpret_cast<cl_api_clEnqueueReadImage>(loadProc("CL_EnqueueReadImage"));
+    cl_loader.clEnqueueWriteImage =
+        reinterpret_cast<cl_api_clEnqueueWriteImage>(loadProc("CL_EnqueueWriteImage"));
+    cl_loader.clEnqueueCopyImage =
+        reinterpret_cast<cl_api_clEnqueueCopyImage>(loadProc("CL_EnqueueCopyImage"));
+    cl_loader.clEnqueueCopyImageToBuffer = reinterpret_cast<cl_api_clEnqueueCopyImageToBuffer>(
+        loadProc("CL_EnqueueCopyImageToBuffer"));
+    cl_loader.clEnqueueCopyBufferToImage = reinterpret_cast<cl_api_clEnqueueCopyBufferToImage>(
+        loadProc("CL_EnqueueCopyBufferToImage"));
+    cl_loader.clEnqueueMapBuffer =
+        reinterpret_cast<cl_api_clEnqueueMapBuffer>(loadProc("CL_EnqueueMapBuffer"));
+    cl_loader.clEnqueueMapImage =
+        reinterpret_cast<cl_api_clEnqueueMapImage>(loadProc("CL_EnqueueMapImage"));
+    cl_loader.clEnqueueUnmapMemObject =
+        reinterpret_cast<cl_api_clEnqueueUnmapMemObject>(loadProc("CL_EnqueueUnmapMemObject"));
+    cl_loader.clEnqueueNDRangeKernel =
+        reinterpret_cast<cl_api_clEnqueueNDRangeKernel>(loadProc("CL_EnqueueNDRangeKernel"));
+    cl_loader.clEnqueueNativeKernel =
+        reinterpret_cast<cl_api_clEnqueueNativeKernel>(loadProc("CL_EnqueueNativeKernel"));
+    cl_loader.clSetCommandQueueProperty =
+        reinterpret_cast<cl_api_clSetCommandQueueProperty>(loadProc("CL_SetCommandQueueProperty"));
+    cl_loader.clCreateImage2D =
+        reinterpret_cast<cl_api_clCreateImage2D>(loadProc("CL_CreateImage2D"));
+    cl_loader.clCreateImage3D =
+        reinterpret_cast<cl_api_clCreateImage3D>(loadProc("CL_CreateImage3D"));
+    cl_loader.clEnqueueMarker =
+        reinterpret_cast<cl_api_clEnqueueMarker>(loadProc("CL_EnqueueMarker"));
+    cl_loader.clEnqueueWaitForEvents =
+        reinterpret_cast<cl_api_clEnqueueWaitForEvents>(loadProc("CL_EnqueueWaitForEvents"));
+    cl_loader.clEnqueueBarrier =
+        reinterpret_cast<cl_api_clEnqueueBarrier>(loadProc("CL_EnqueueBarrier"));
+    cl_loader.clUnloadCompiler =
+        reinterpret_cast<cl_api_clUnloadCompiler>(loadProc("CL_UnloadCompiler"));
+    cl_loader.clGetExtensionFunctionAddress =
+        reinterpret_cast<cl_api_clGetExtensionFunctionAddress>(
+            loadProc("CL_GetExtensionFunctionAddress"));
+    cl_loader.clCreateCommandQueue =
+        reinterpret_cast<cl_api_clCreateCommandQueue>(loadProc("CL_CreateCommandQueue"));
+    cl_loader.clCreateSampler =
+        reinterpret_cast<cl_api_clCreateSampler>(loadProc("CL_CreateSampler"));
+    cl_loader.clEnqueueTask = reinterpret_cast<cl_api_clEnqueueTask>(loadProc("CL_EnqueueTask"));
+    cl_loader.clCreateSubBuffer =
+        reinterpret_cast<cl_api_clCreateSubBuffer>(loadProc("CL_CreateSubBuffer"));
+    cl_loader.clSetMemObjectDestructorCallback =
+        reinterpret_cast<cl_api_clSetMemObjectDestructorCallback>(
+            loadProc("CL_SetMemObjectDestructorCallback"));
+    cl_loader.clCreateUserEvent =
+        reinterpret_cast<cl_api_clCreateUserEvent>(loadProc("CL_CreateUserEvent"));
+    cl_loader.clSetUserEventStatus =
+        reinterpret_cast<cl_api_clSetUserEventStatus>(loadProc("CL_SetUserEventStatus"));
+    cl_loader.clSetEventCallback =
+        reinterpret_cast<cl_api_clSetEventCallback>(loadProc("CL_SetEventCallback"));
+    cl_loader.clEnqueueReadBufferRect =
+        reinterpret_cast<cl_api_clEnqueueReadBufferRect>(loadProc("CL_EnqueueReadBufferRect"));
+    cl_loader.clEnqueueWriteBufferRect =
+        reinterpret_cast<cl_api_clEnqueueWriteBufferRect>(loadProc("CL_EnqueueWriteBufferRect"));
+    cl_loader.clEnqueueCopyBufferRect =
+        reinterpret_cast<cl_api_clEnqueueCopyBufferRect>(loadProc("CL_EnqueueCopyBufferRect"));
+    cl_loader.clCreateSubDevices =
+        reinterpret_cast<cl_api_clCreateSubDevices>(loadProc("CL_CreateSubDevices"));
+    cl_loader.clRetainDevice = reinterpret_cast<cl_api_clRetainDevice>(loadProc("CL_RetainDevice"));
+    cl_loader.clReleaseDevice =
+        reinterpret_cast<cl_api_clReleaseDevice>(loadProc("CL_ReleaseDevice"));
+    cl_loader.clCreateImage = reinterpret_cast<cl_api_clCreateImage>(loadProc("CL_CreateImage"));
+    cl_loader.clCreateProgramWithBuiltInKernels =
+        reinterpret_cast<cl_api_clCreateProgramWithBuiltInKernels>(
+            loadProc("CL_CreateProgramWithBuiltInKernels"));
+    cl_loader.clCompileProgram =
+        reinterpret_cast<cl_api_clCompileProgram>(loadProc("CL_CompileProgram"));
+    cl_loader.clLinkProgram = reinterpret_cast<cl_api_clLinkProgram>(loadProc("CL_LinkProgram"));
+    cl_loader.clUnloadPlatformCompiler =
+        reinterpret_cast<cl_api_clUnloadPlatformCompiler>(loadProc("CL_UnloadPlatformCompiler"));
+    cl_loader.clGetKernelArgInfo =
+        reinterpret_cast<cl_api_clGetKernelArgInfo>(loadProc("CL_GetKernelArgInfo"));
+    cl_loader.clEnqueueFillBuffer =
+        reinterpret_cast<cl_api_clEnqueueFillBuffer>(loadProc("CL_EnqueueFillBuffer"));
+    cl_loader.clEnqueueFillImage =
+        reinterpret_cast<cl_api_clEnqueueFillImage>(loadProc("CL_EnqueueFillImage"));
+    cl_loader.clEnqueueMigrateMemObjects = reinterpret_cast<cl_api_clEnqueueMigrateMemObjects>(
+        loadProc("CL_EnqueueMigrateMemObjects"));
+    cl_loader.clEnqueueMarkerWithWaitList = reinterpret_cast<cl_api_clEnqueueMarkerWithWaitList>(
+        loadProc("CL_EnqueueMarkerWithWaitList"));
+    cl_loader.clEnqueueBarrierWithWaitList = reinterpret_cast<cl_api_clEnqueueBarrierWithWaitList>(
+        loadProc("CL_EnqueueBarrierWithWaitList"));
+    cl_loader.clGetExtensionFunctionAddressForPlatform =
+        reinterpret_cast<cl_api_clGetExtensionFunctionAddressForPlatform>(
+            loadProc("CL_GetExtensionFunctionAddressForPlatform"));
+    cl_loader.clCreateCommandQueueWithProperties =
+        reinterpret_cast<cl_api_clCreateCommandQueueWithProperties>(
+            loadProc("CL_CreateCommandQueueWithProperties"));
+    cl_loader.clCreatePipe  = reinterpret_cast<cl_api_clCreatePipe>(loadProc("CL_CreatePipe"));
+    cl_loader.clGetPipeInfo = reinterpret_cast<cl_api_clGetPipeInfo>(loadProc("CL_GetPipeInfo"));
+    cl_loader.clSVMAlloc    = reinterpret_cast<cl_api_clSVMAlloc>(loadProc("CL_SVMAlloc"));
+    cl_loader.clSVMFree     = reinterpret_cast<cl_api_clSVMFree>(loadProc("CL_SVMFree"));
+    cl_loader.clCreateSamplerWithProperties =
+        reinterpret_cast<cl_api_clCreateSamplerWithProperties>(
+            loadProc("CL_CreateSamplerWithProperties"));
+    cl_loader.clSetKernelArgSVMPointer =
+        reinterpret_cast<cl_api_clSetKernelArgSVMPointer>(loadProc("CL_SetKernelArgSVMPointer"));
+    cl_loader.clSetKernelExecInfo =
+        reinterpret_cast<cl_api_clSetKernelExecInfo>(loadProc("CL_SetKernelExecInfo"));
+    cl_loader.clEnqueueSVMFree =
+        reinterpret_cast<cl_api_clEnqueueSVMFree>(loadProc("CL_EnqueueSVMFree"));
+    cl_loader.clEnqueueSVMMemcpy =
+        reinterpret_cast<cl_api_clEnqueueSVMMemcpy>(loadProc("CL_EnqueueSVMMemcpy"));
+    cl_loader.clEnqueueSVMMemFill =
+        reinterpret_cast<cl_api_clEnqueueSVMMemFill>(loadProc("CL_EnqueueSVMMemFill"));
+    cl_loader.clEnqueueSVMMap =
+        reinterpret_cast<cl_api_clEnqueueSVMMap>(loadProc("CL_EnqueueSVMMap"));
+    cl_loader.clEnqueueSVMUnmap =
+        reinterpret_cast<cl_api_clEnqueueSVMUnmap>(loadProc("CL_EnqueueSVMUnmap"));
+    cl_loader.clSetDefaultDeviceCommandQueue =
+        reinterpret_cast<cl_api_clSetDefaultDeviceCommandQueue>(
+            loadProc("CL_SetDefaultDeviceCommandQueue"));
+    cl_loader.clGetDeviceAndHostTimer =
+        reinterpret_cast<cl_api_clGetDeviceAndHostTimer>(loadProc("CL_GetDeviceAndHostTimer"));
+    cl_loader.clGetHostTimer = reinterpret_cast<cl_api_clGetHostTimer>(loadProc("CL_GetHostTimer"));
+    cl_loader.clCreateProgramWithIL =
+        reinterpret_cast<cl_api_clCreateProgramWithIL>(loadProc("CL_CreateProgramWithIL"));
+    cl_loader.clCloneKernel = reinterpret_cast<cl_api_clCloneKernel>(loadProc("CL_CloneKernel"));
+    cl_loader.clGetKernelSubGroupInfo =
+        reinterpret_cast<cl_api_clGetKernelSubGroupInfo>(loadProc("CL_GetKernelSubGroupInfo"));
+    cl_loader.clEnqueueSVMMigrateMem =
+        reinterpret_cast<cl_api_clEnqueueSVMMigrateMem>(loadProc("CL_EnqueueSVMMigrateMem"));
+    cl_loader.clSetProgramSpecializationConstant =
+        reinterpret_cast<cl_api_clSetProgramSpecializationConstant>(
+            loadProc("CL_SetProgramSpecializationConstant"));
+    cl_loader.clSetProgramReleaseCallback = reinterpret_cast<cl_api_clSetProgramReleaseCallback>(
+        loadProc("CL_SetProgramReleaseCallback"));
+    cl_loader.clSetContextDestructorCallback =
+        reinterpret_cast<cl_api_clSetContextDestructorCallback>(
+            loadProc("CL_SetContextDestructorCallback"));
+    cl_loader.clCreateBufferWithProperties = reinterpret_cast<cl_api_clCreateBufferWithProperties>(
+        loadProc("CL_CreateBufferWithProperties"));
+    cl_loader.clCreateImageWithProperties = reinterpret_cast<cl_api_clCreateImageWithProperties>(
+        loadProc("CL_CreateImageWithProperties"));
 }
 }  // namespace angle

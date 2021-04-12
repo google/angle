@@ -116,11 +116,8 @@ def gen_libcl_loader():
     source_path = registry_xml.path_to(path, "cl_loader_autogen.cpp")
 
     with open(source_path, "w") as out:
-        # TODO(jplate): use first setters after migration in http://anglebug.com/5759
-        # setter = "    cl_loader.%s = reinterpret_cast<cl_api_%s>(loadProc(\"CL_%s\"));"
-        # setters = [setter % (cmd, cmd, cmd[2:]) for cmd in all_cmds]
-        setter = "    cl_loader.%s = CL_%s;"
-        setters = [setter % (cmd, cmd[2:]) for cmd in all_cmds]
+        setter = "    cl_loader.%s = reinterpret_cast<cl_api_%s>(loadProc(\"CL_%s\"));"
+        setters = [setter % (cmd, cmd, cmd[2:]) for cmd in all_cmds]
 
         loader_source = template_cl_loader_cpp.format(
             script_name=os.path.basename(sys.argv[0]),
@@ -432,9 +429,6 @@ template_cl_loader_cpp = """// GENERATED FILE - DO NOT EDIT.
 //   Simple CL function loader.
 
 #include "cl_loader.h"
-
-// TODO(jplate): remove include after entry points moved to GLESV2 lib http://anglebug.com/5759
-#include "entry_points_cl_autogen.h"
 
 cl_icd_dispatch cl_loader;
 

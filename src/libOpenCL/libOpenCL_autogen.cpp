@@ -7,19 +7,18 @@
 //
 // libOpenCL_autogen.cpp: Implements the exported CL functions.
 
-//#include "anglebase/no_destructor.h"
-//#include "common/system_utils.h"
+#include "cl_loader.h"
+
+#include "anglebase/no_destructor.h"
+#include "common/system_utils.h"
 
 #include <iostream>
-//#include <memory>
-
-#include "cl_loader.h"
+#include <memory>
 
 namespace
 {
 bool gLoaded = false;
 
-/* TODO(jplate): uncomment after entry points moved to GLESV2 lib http://anglebug.com/5759
 std::unique_ptr<angle::Library> &EntryPointsLib()
 {
     static angle::base::NoDestructor<std::unique_ptr<angle::Library>> sEntryPointsLib;
@@ -30,7 +29,6 @@ angle::GenericProc CL_API_CALL GlobalLoad(const char *symbol)
 {
     return reinterpret_cast<angle::GenericProc>(EntryPointsLib()->getSymbol(symbol));
 }
-*/
 
 void EnsureCLLoaded()
 {
@@ -39,10 +37,9 @@ void EnsureCLLoaded()
         return;
     }
 
-    // EntryPointsLib().reset(
-    //    angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
-    // angle::LoadCL(GlobalLoad);
-    angle::LoadCL(nullptr);
+    EntryPointsLib().reset(
+        angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+    angle::LoadCL(GlobalLoad);
     if (!cl_loader.clGetDeviceIDs)
     {
         std::cerr << "Error loading CL entry points." << std::endl;

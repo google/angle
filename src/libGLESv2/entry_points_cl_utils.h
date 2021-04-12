@@ -6,8 +6,8 @@
 // entry_points_cl_utils.h:
 //   These helpers are used in CL entry point routines.
 
-#ifndef LIBOPENCL_ENTRY_POINTS_CL_UTILS_H_
-#define LIBOPENCL_ENTRY_POINTS_CL_UTILS_H_
+#ifndef LIBGLESV2_ENTRY_POINTS_CL_UTILS_H_
+#define LIBGLESV2_ENTRY_POINTS_CL_UTILS_H_
 
 #include <cinttypes>
 #include <cstdio>
@@ -20,4 +20,4 @@
 #    define CL_EVENT(entryPoint, ...) (void(0))
 #endif
 
-#endif  // LIBOPENCL_ENTRY_POINTS_CL_UTILS_H_
+#endif  // LIBGLESV2_ENTRY_POINTS_CL_UTILS_H_
