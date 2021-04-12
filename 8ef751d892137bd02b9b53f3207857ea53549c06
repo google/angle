@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e03951c7_5934c8a6",
+        "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
+        "patchSetId": 3
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-12T18:19:06Z",
+      "side": 1,
+      "message": "\u003e change that adds the formats from the change that exposes it as an extension?\n\nnot possible since the 2 go together. See next point for more details\n\n\u003e If it _is_ an extension we would want applications to use\n\nthe primary target of the extension is not apps but ANGLE itself. ANGLE follows a pattern of adding internalformats to the map based on GLES version or extension support. The addition of extension was to address that flow. I did not see another way of adding new non-standard internalformats to the table",
+      "parentUuid": "3e8880ec_b85757df",
+      "range": {
+        "startLine": 103,
+        "startChar": 8,
+        "endLine": 103,
+        "endChar": 20
+      },
+      "revId": "8ef751d892137bd02b9b53f3207857ea53549c06",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "05d66773_0cf57c4a",
         "filename": "extensions/ANGLE_texture_external_yuv_sampling.txt",
         "patchSetId": 3
