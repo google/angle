@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4fde4128_4fe19297",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T14:13:56Z",
+      "side": 1,
+      "message": "I\u0027m not sure but I think this is timing out the tests. Maybe try doing one pixel instead of the whole region? Or using an offscreen FBO with a smaller size.\n\nAlso seems to have a different issue on AMD.",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 325,
+        "endChar": 5
+      },
+      "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
