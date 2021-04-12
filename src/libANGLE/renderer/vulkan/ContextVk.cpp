@@ -1226,7 +1226,7 @@ angle::Result ContextVk::handleDirtyComputeEventLog()
 
 angle::Result ContextVk::handleDirtyEventLogImpl(vk::CommandBuffer *commandBuffer)
 {
-    if (mEventLog.empty())
+    if (mEventLog.empty() || !mRenderer->enableDebugUtils())
     {
         return angle::Result::Continue;
     }
@@ -2781,6 +2781,11 @@ void ContextVk::logEvent(const char *eventString)
 
 void ContextVk::endEventLog(angle::EntryPoint entryPoint)
 {
+    if (!mRenderer->enableDebugUtils())
+    {
+        return;
+    }
+
     ASSERT(mRenderPassCommands);
     mRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
 }
