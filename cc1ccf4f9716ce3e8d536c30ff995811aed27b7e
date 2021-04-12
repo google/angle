@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84beb330_7d310931",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-12T16:47:26Z",
+      "side": 1,
+      "message": "The same defines are also used in src/libOpenCL/BUILD.gn. It would be good to have them shared in one place. Do we have (or should we create) a place for that, e.g. in angle/gni/?",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
