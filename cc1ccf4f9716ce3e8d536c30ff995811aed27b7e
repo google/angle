@@ -89,6 +89,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "335c4971_aecffde8",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2449,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-12T19:28:00Z",
+      "side": 1,
+      "message": "Yes, I meant similar to the existing function get_api_entry_def. Done",
+      "parentUuid": "808d7d1f_d9f9ec7d",
+      "range": {
+        "startLine": 2449,
+        "startChar": 13,
+        "endLine": 2449,
+        "endChar": 34
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84beb330_7d310931",
@@ -174,6 +198,30 @@
       "side": 1,
       "message": "including all seems fine to me.",
       "parentUuid": "2e10ba0c_74415dfa",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41f51de7_e32b70ef",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-12T19:28:00Z",
+      "side": 1,
+      "message": "Ok, thanks, done.",
+      "parentUuid": "4fe698bc_420344b4",
       "range": {
         "startLine": 530,
         "startChar": 0,
