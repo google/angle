@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "933208d2_26c09415",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-12T16:53:12Z",
+      "side": 1,
+      "message": "nit: Given you\u0027re directly passing \"false\" as the last parameter, and \"compressed\" isn\u0027t needed elsewhere in this method, do we really need to declare \"compressed\" here?",
+      "range": {
+        "startLine": 765,
+        "startChar": 8,
+        "endLine": 765,
+        "endChar": 31
+      },
+      "revId": "d17fd558382f6d5e3a34e4ddb0135d99f92301a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
