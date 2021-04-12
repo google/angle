@@ -1489,7 +1489,7 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
             remainingShaderBits.reset(firstShader);
             remainingShaderBits.reset(lastShader);
 
-            if (image.hasRenderPassUseFlag(vk::RenderPassUsage::RenderTargetAttachment))
+            if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::RenderTargetAttachment))
             {
                 // Right now we set this flag only when RenderTargetAttachment is set since we do
                 // not track all textures in the renderpass.
@@ -1497,8 +1497,7 @@ ANGLE_INLINE angle::Result ContextVk::handleDirtyTexturesImpl(
 
                 if (image.isDepthOrStencil())
                 {
-                    if (mRenderPassCommands->started() &&
-                        mRenderPassCommands->isReadOnlyDepthMode())
+                    if (image.hasRenderPassUsageFlag(vk::RenderPassUsage::ReadOnlyAttachment))
                     {
                         textureLayout = vk::ImageLayout::DepthStencilReadOnly;
                     }
@@ -4579,7 +4578,8 @@ angle::Result ContextVk::updateActiveTextures(const gl::Context *context)
 
             if (hasStartedRenderPass())
             {
-                if (!mRenderPassCommands->isReadOnlyDepthMode())
+                if (!textureVk->getImage().hasRenderPassUsageFlag(
+                        vk::RenderPassUsage::ReadOnlyAttachment))
                 {
                     // To enter depth feedback loop, we must flush and start a new renderpass.
                     // Otherwise it will stick with writable layout and cause validation error.
