@@ -22,6 +22,30 @@
       },
       "revId": "a59eaf5e87dafc234b9d244b3940d0bd07e9de0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36d7b974_3c7f776f",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-12T17:51:19Z",
+      "side": 1,
+      "message": "I agree.   Clarifying what you mean by \"loose\" would be helpful.",
+      "parentUuid": "33806490_76fc3029",
+      "range": {
+        "startLine": 112,
+        "startChar": 5,
+        "endLine": 112,
+        "endChar": 19
+      },
+      "revId": "a59eaf5e87dafc234b9d244b3940d0bd07e9de0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
