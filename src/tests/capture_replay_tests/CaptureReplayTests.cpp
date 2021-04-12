@@ -141,6 +141,17 @@ class CaptureReplayTests
             swap();
             if (!isEqual)
             {
+                std::ostringstream replayName;
+                replayName << testTraceInfo.testName << "_ContextReplayed" << frame << ".json";
+                std::ofstream debugReplay(replayName.str());
+                debugReplay << reinterpret_cast<const char *>(bytes) << "\n";
+
+                std::ostringstream captureName;
+                captureName << testTraceInfo.testName << "_ContextCaptured" << frame << ".json";
+                std::ofstream debugCapture(captureName.str());
+
+                debugCapture << mTraceLibrary->getSerializedContextState(frame) << "\n";
+
                 cleanupTest();
                 return -1;
             }
