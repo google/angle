@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "161b4f2b_40bd4dab",
+        "filename": "scripts/cl.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 3520,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-12T20:00:24Z",
+      "side": 0,
+      "message": "Does this reflect an upstream change?",
+      "range": {
+        "startLine": 3520,
+        "startChar": 0,
+        "endLine": 3520,
+        "endChar": 80
+      },
+      "revId": "77600bcb3cdd9e8964736cde819ccc6ec25a96ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d66e4d9_10464d33",
+        "filename": "scripts/generate_entry_points.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 2393,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-12T20:00:24Z",
+      "side": 0,
+      "message": "Did this become redundant?",
+      "range": {
+        "startLine": 2393,
+        "startChar": 8,
+        "endLine": 2393,
+        "endChar": 46
+      },
+      "revId": "77600bcb3cdd9e8964736cde819ccc6ec25a96ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
