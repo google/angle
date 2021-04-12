@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac823d1e_9b237e64",
+        "filename": "src/libANGLE/renderer/gl/BlitGL.cpp",
+        "patchSetId": 21
+      },
+      "lineNbr": 1256,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-04-12T17:22:51Z",
+      "side": 1,
+      "message": "I\u0027m wondering why the definition in StateManagerGL defaults stride to 16 but here it\u0027s initialized to 8",
+      "range": {
+        "startLine": 1256,
+        "startChar": 31,
+        "endLine": 1256,
+        "endChar": 32
+      },
+      "revId": "7ae9a13ce8fffd691d4e01943a96961d3ffeef92",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
