@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34e1ac50_facf9cec",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T14:17:29Z",
+      "side": 0,
+      "message": "is this intentional? Or are you assuming the deleteShader below calls detach implicitly? Seems fine to leave it as it mirrors the spec.",
+      "range": {
+        "startLine": 866,
+        "startChar": 16,
+        "endLine": 866,
+        "endChar": 64
+      },
+      "revId": "c2075d81b4cf599ce47d45d306a370f7f6ae27d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
