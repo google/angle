@@ -254,6 +254,30 @@
       },
       "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8464b224_113569f8",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-12T21:02:56Z",
+      "side": 1,
+      "message": "I forget where UWP is still used, I think it\u0027s for the Microsoft Store (yes still a thing AFAIK) and some types of limited Windows devices. Maybe XBox platforms.\n\nOne option is to completely disable CL building on UWP. Is that hard to do? The other option would be to conditionally include stuff.",
+      "parentUuid": "0e512ac4_a2e29e06",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
