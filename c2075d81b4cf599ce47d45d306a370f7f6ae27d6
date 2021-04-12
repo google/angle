@@ -22,6 +22,30 @@
       },
       "revId": "c2075d81b4cf599ce47d45d306a370f7f6ae27d6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53035521_8a9adc60",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 866,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-12T16:04:40Z",
+      "side": 0,
+      "message": "Oops, good catch.   I deleted too much when \"reverting\" my initial change here, which is why my testing looked good with this version of the CL.\n\nIt turns out the initial version I had is still necessary due to the following block:\n\n    void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCapture \u0026call)\n    {\n    ...\n            case EntryPoint::GLCreateShaderProgramv:\n            {\n                // Refresh the cached shader sources.\n                // The command CreateShaderProgramv() creates a stand-alone program from an array of\n                // null-terminated source code strings for a single shader type, so we need update the\n                // Shader and Program sources, similar to GLCompileShader + GLLinkProgram handling.\n                gl::ShaderProgramID programID \u003d {call.params.getReturnValue().value.GLuintVal};\n                const ParamCapture \u0026paramCapture \u003d\n                    call.params.getParam(\"typePacked\", ParamType::TShaderType, 0);\n                gl::ShaderType shaderType \u003d paramCapture.value.ShaderTypeVal;\n                gl::Program *program      \u003d context-\u003egetProgramResolveLink(programID);\n                ASSERT(program);\n                const gl::Shader *shader \u003d program-\u003egetAttachedShader(shaderType);\n                ASSERT(shader);\n                FrameCaptureShared *frameCaptureShared \u003d\n                    context-\u003egetShareGroup()-\u003egetFrameCaptureShared();\n                frameCaptureShared-\u003esetShaderSource(shader-\u003egetHandle(), shader-\u003egetSourceString());\n                frameCaptureShared-\u003esetProgramSources(programID, GetAttachedProgramSources(program));\n                break;\n            }\n\nThe issue is that setShaderSource() needs the shader ID and source, which we can only get while the shader is still attached.   We need to capture this information so we can recreate the Shaders and Programs as part of MEC setup.",
+      "parentUuid": "34e1ac50_facf9cec",
+      "range": {
+        "startLine": 866,
+        "startChar": 16,
+        "endLine": 866,
+        "endChar": 64
+      },
+      "revId": "c2075d81b4cf599ce47d45d306a370f7f6ae27d6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
