@@ -1,0 +1,1121 @@
+//
+// Copyright 2021 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+//
+// cl_stubs.cpp: Stubs for CL entry points.
+//
+
+#include "libGLESv2/cl_stubs_autogen.h"
+
+namespace cl
+{
+cl_int GetPlatformIDs(Thread *thread,
+                      cl_uint num_entries,
+                      cl_platform_id *platforms,
+                      cl_uint *num_platforms)
+{
+    return 0;
+}
+
+cl_int GetPlatformInfo(Thread *thread,
+                       cl_platform_id platform,
+                       cl_platform_info param_name,
+                       size_t param_value_size,
+                       void *param_value,
+                       size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int GetDeviceIDs(Thread *thread,
+                    cl_platform_id platform,
+                    cl_device_type device_type,
+                    cl_uint num_entries,
+                    cl_device_id *devices,
+                    cl_uint *num_devices)
+{
+    return 0;
+}
+
+cl_int GetDeviceInfo(Thread *thread,
+                     cl_device_id device,
+                     cl_device_info param_name,
+                     size_t param_value_size,
+                     void *param_value,
+                     size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int CreateSubDevices(Thread *thread,
+                        cl_device_id in_device,
+                        const cl_device_partition_property *properties,
+                        cl_uint num_devices,
+                        cl_device_id *out_devices,
+                        cl_uint *num_devices_ret)
+{
+    return 0;
+}
+
+cl_int RetainDevice(Thread *thread, cl_device_id device)
+{
+    return 0;
+}
+
+cl_int ReleaseDevice(Thread *thread, cl_device_id device)
+{
+    return 0;
+}
+
+cl_int SetDefaultDeviceCommandQueue(Thread *thread,
+                                    cl_context context,
+                                    cl_device_id device,
+                                    cl_command_queue command_queue)
+{
+    return 0;
+}
+
+cl_int GetDeviceAndHostTimer(Thread *thread,
+                             cl_device_id device,
+                             cl_ulong *device_timestamp,
+                             cl_ulong *host_timestamp)
+{
+    return 0;
+}
+
+cl_int GetHostTimer(Thread *thread, cl_device_id device, cl_ulong *host_timestamp)
+{
+    return 0;
+}
+
+cl_context CreateContext(Thread *thread,
+                         const cl_context_properties *properties,
+                         cl_uint num_devices,
+                         const cl_device_id *devices,
+                         void(CL_CALLBACK *pfn_notify)(const char *errinfo,
+                                                       const void *private_info,
+                                                       size_t cb,
+                                                       void *user_data),
+                         void *user_data,
+                         cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_context CreateContextFromType(Thread *thread,
+                                 const cl_context_properties *properties,
+                                 cl_device_type device_type,
+                                 void(CL_CALLBACK *pfn_notify)(const char *errinfo,
+                                                               const void *private_info,
+                                                               size_t cb,
+                                                               void *user_data),
+                                 void *user_data,
+                                 cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int RetainContext(Thread *thread, cl_context context)
+{
+    return 0;
+}
+
+cl_int ReleaseContext(Thread *thread, cl_context context)
+{
+    return 0;
+}
+
+cl_int GetContextInfo(Thread *thread,
+                      cl_context context,
+                      cl_context_info param_name,
+                      size_t param_value_size,
+                      void *param_value,
+                      size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int SetContextDestructorCallback(Thread *thread,
+                                    cl_context context,
+                                    void(CL_CALLBACK *pfn_notify)(cl_context context,
+                                                                  void *user_data),
+                                    void *user_data)
+{
+    return 0;
+}
+
+cl_command_queue CreateCommandQueueWithProperties(Thread *thread,
+                                                  cl_context context,
+                                                  cl_device_id device,
+                                                  const cl_queue_properties *properties,
+                                                  cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int RetainCommandQueue(Thread *thread, cl_command_queue command_queue)
+{
+    return 0;
+}
+
+cl_int ReleaseCommandQueue(Thread *thread, cl_command_queue command_queue)
+{
+    return 0;
+}
+
+cl_int GetCommandQueueInfo(Thread *thread,
+                           cl_command_queue command_queue,
+                           cl_command_queue_info param_name,
+                           size_t param_value_size,
+                           void *param_value,
+                           size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_mem CreateBuffer(Thread *thread,
+                    cl_context context,
+                    cl_mem_flags flags,
+                    size_t size,
+                    void *host_ptr,
+                    cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_mem CreateBufferWithProperties(Thread *thread,
+                                  cl_context context,
+                                  const cl_mem_properties *properties,
+                                  cl_mem_flags flags,
+                                  size_t size,
+                                  void *host_ptr,
+                                  cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_mem CreateSubBuffer(Thread *thread,
+                       cl_mem buffer,
+                       cl_mem_flags flags,
+                       cl_buffer_create_type buffer_create_type,
+                       const void *buffer_create_info,
+                       cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_mem CreateImage(Thread *thread,
+                   cl_context context,
+                   cl_mem_flags flags,
+                   const cl_image_format *image_format,
+                   const cl_image_desc *image_desc,
+                   void *host_ptr,
+                   cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_mem CreateImageWithProperties(Thread *thread,
+                                 cl_context context,
+                                 const cl_mem_properties *properties,
+                                 cl_mem_flags flags,
+                                 const cl_image_format *image_format,
+                                 const cl_image_desc *image_desc,
+                                 void *host_ptr,
+                                 cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_mem CreatePipe(Thread *thread,
+                  cl_context context,
+                  cl_mem_flags flags,
+                  cl_uint pipe_packet_size,
+                  cl_uint pipe_max_packets,
+                  const cl_pipe_properties *properties,
+                  cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int RetainMemObject(Thread *thread, cl_mem memobj)
+{
+    return 0;
+}
+
+cl_int ReleaseMemObject(Thread *thread, cl_mem memobj)
+{
+    return 0;
+}
+
+cl_int GetSupportedImageFormats(Thread *thread,
+                                cl_context context,
+                                cl_mem_flags flags,
+                                cl_mem_object_type image_type,
+                                cl_uint num_entries,
+                                cl_image_format *image_formats,
+                                cl_uint *num_image_formats)
+{
+    return 0;
+}
+
+cl_int GetMemObjectInfo(Thread *thread,
+                        cl_mem memobj,
+                        cl_mem_info param_name,
+                        size_t param_value_size,
+                        void *param_value,
+                        size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int GetImageInfo(Thread *thread,
+                    cl_mem image,
+                    cl_image_info param_name,
+                    size_t param_value_size,
+                    void *param_value,
+                    size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int GetPipeInfo(Thread *thread,
+                   cl_mem pipe,
+                   cl_pipe_info param_name,
+                   size_t param_value_size,
+                   void *param_value,
+                   size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int SetMemObjectDestructorCallback(Thread *thread,
+                                      cl_mem memobj,
+                                      void(CL_CALLBACK *pfn_notify)(cl_mem memobj, void *user_data),
+                                      void *user_data)
+{
+    return 0;
+}
+
+void *SVMAlloc(Thread *thread,
+               cl_context context,
+               cl_svm_mem_flags flags,
+               size_t size,
+               cl_uint alignment)
+{
+    return 0;
+}
+
+void SVMFree(Thread *thread, cl_context context, void *svm_pointer) {}
+
+cl_sampler CreateSamplerWithProperties(Thread *thread,
+                                       cl_context context,
+                                       const cl_sampler_properties *sampler_properties,
+                                       cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int RetainSampler(Thread *thread, cl_sampler sampler)
+{
+    return 0;
+}
+
+cl_int ReleaseSampler(Thread *thread, cl_sampler sampler)
+{
+    return 0;
+}
+
+cl_int GetSamplerInfo(Thread *thread,
+                      cl_sampler sampler,
+                      cl_sampler_info param_name,
+                      size_t param_value_size,
+                      void *param_value,
+                      size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_program CreateProgramWithSource(Thread *thread,
+                                   cl_context context,
+                                   cl_uint count,
+                                   const char **strings,
+                                   const size_t *lengths,
+                                   cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_program CreateProgramWithBinary(Thread *thread,
+                                   cl_context context,
+                                   cl_uint num_devices,
+                                   const cl_device_id *device_list,
+                                   const size_t *lengths,
+                                   const unsigned char **binaries,
+                                   cl_int *binary_status,
+                                   cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_program CreateProgramWithBuiltInKernels(Thread *thread,
+                                           cl_context context,
+                                           cl_uint num_devices,
+                                           const cl_device_id *device_list,
+                                           const char *kernel_names,
+                                           cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_program CreateProgramWithIL(Thread *thread,
+                               cl_context context,
+                               const void *il,
+                               size_t length,
+                               cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int RetainProgram(Thread *thread, cl_program program)
+{
+    return 0;
+}
+
+cl_int ReleaseProgram(Thread *thread, cl_program program)
+{
+    return 0;
+}
+
+cl_int BuildProgram(Thread *thread,
+                    cl_program program,
+                    cl_uint num_devices,
+                    const cl_device_id *device_list,
+                    const char *options,
+                    void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
+                    void *user_data)
+{
+    return 0;
+}
+
+cl_int CompileProgram(Thread *thread,
+                      cl_program program,
+                      cl_uint num_devices,
+                      const cl_device_id *device_list,
+                      const char *options,
+                      cl_uint num_input_headers,
+                      const cl_program *input_headers,
+                      const char **header_include_names,
+                      void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
+                      void *user_data)
+{
+    return 0;
+}
+
+cl_program LinkProgram(Thread *thread,
+                       cl_context context,
+                       cl_uint num_devices,
+                       const cl_device_id *device_list,
+                       const char *options,
+                       cl_uint num_input_programs,
+                       const cl_program *input_programs,
+                       void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
+                       void *user_data,
+                       cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int SetProgramReleaseCallback(Thread *thread,
+                                 cl_program program,
+                                 void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
+                                 void *user_data)
+{
+    return 0;
+}
+
+cl_int SetProgramSpecializationConstant(Thread *thread,
+                                        cl_program program,
+                                        cl_uint spec_id,
+                                        size_t spec_size,
+                                        const void *spec_value)
+{
+    return 0;
+}
+
+cl_int UnloadPlatformCompiler(Thread *thread, cl_platform_id platform)
+{
+    return 0;
+}
+
+cl_int GetProgramInfo(Thread *thread,
+                      cl_program program,
+                      cl_program_info param_name,
+                      size_t param_value_size,
+                      void *param_value,
+                      size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int GetProgramBuildInfo(Thread *thread,
+                           cl_program program,
+                           cl_device_id device,
+                           cl_program_build_info param_name,
+                           size_t param_value_size,
+                           void *param_value,
+                           size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_kernel CreateKernel(Thread *thread,
+                       cl_program program,
+                       const char *kernel_name,
+                       cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int CreateKernelsInProgram(Thread *thread,
+                              cl_program program,
+                              cl_uint num_kernels,
+                              cl_kernel *kernels,
+                              cl_uint *num_kernels_ret)
+{
+    return 0;
+}
+
+cl_kernel CloneKernel(Thread *thread, cl_kernel source_kernel, cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int RetainKernel(Thread *thread, cl_kernel kernel)
+{
+    return 0;
+}
+
+cl_int ReleaseKernel(Thread *thread, cl_kernel kernel)
+{
+    return 0;
+}
+
+cl_int SetKernelArg(Thread *thread,
+                    cl_kernel kernel,
+                    cl_uint arg_index,
+                    size_t arg_size,
+                    const void *arg_value)
+{
+    return 0;
+}
+
+cl_int SetKernelArgSVMPointer(Thread *thread,
+                              cl_kernel kernel,
+                              cl_uint arg_index,
+                              const void *arg_value)
+{
+    return 0;
+}
+
+cl_int SetKernelExecInfo(Thread *thread,
+                         cl_kernel kernel,
+                         cl_kernel_exec_info param_name,
+                         size_t param_value_size,
+                         const void *param_value)
+{
+    return 0;
+}
+
+cl_int GetKernelInfo(Thread *thread,
+                     cl_kernel kernel,
+                     cl_kernel_info param_name,
+                     size_t param_value_size,
+                     void *param_value,
+                     size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int GetKernelArgInfo(Thread *thread,
+                        cl_kernel kernel,
+                        cl_uint arg_index,
+                        cl_kernel_arg_info param_name,
+                        size_t param_value_size,
+                        void *param_value,
+                        size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int GetKernelWorkGroupInfo(Thread *thread,
+                              cl_kernel kernel,
+                              cl_device_id device,
+                              cl_kernel_work_group_info param_name,
+                              size_t param_value_size,
+                              void *param_value,
+                              size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int GetKernelSubGroupInfo(Thread *thread,
+                             cl_kernel kernel,
+                             cl_device_id device,
+                             cl_kernel_sub_group_info param_name,
+                             size_t input_value_size,
+                             const void *input_value,
+                             size_t param_value_size,
+                             void *param_value,
+                             size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int WaitForEvents(Thread *thread, cl_uint num_events, const cl_event *event_list)
+{
+    return 0;
+}
+
+cl_int GetEventInfo(Thread *thread,
+                    cl_event event,
+                    cl_event_info param_name,
+                    size_t param_value_size,
+                    void *param_value,
+                    size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_event CreateUserEvent(Thread *thread, cl_context context, cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int RetainEvent(Thread *thread, cl_event event)
+{
+    return 0;
+}
+
+cl_int ReleaseEvent(Thread *thread, cl_event event)
+{
+    return 0;
+}
+
+cl_int SetUserEventStatus(Thread *thread, cl_event event, cl_int execution_status)
+{
+    return 0;
+}
+
+cl_int SetEventCallback(Thread *thread,
+                        cl_event event,
+                        cl_int command_exec_callback_type,
+                        void(CL_CALLBACK *pfn_notify)(cl_event event,
+                                                      cl_int event_command_status,
+                                                      void *user_data),
+                        void *user_data)
+{
+    return 0;
+}
+
+cl_int GetEventProfilingInfo(Thread *thread,
+                             cl_event event,
+                             cl_profiling_info param_name,
+                             size_t param_value_size,
+                             void *param_value,
+                             size_t *param_value_size_ret)
+{
+    return 0;
+}
+
+cl_int Flush(Thread *thread, cl_command_queue command_queue)
+{
+    return 0;
+}
+
+cl_int Finish(Thread *thread, cl_command_queue command_queue)
+{
+    return 0;
+}
+
+cl_int EnqueueReadBuffer(Thread *thread,
+                         cl_command_queue command_queue,
+                         cl_mem buffer,
+                         cl_bool blocking_read,
+                         size_t offset,
+                         size_t size,
+                         void *ptr,
+                         cl_uint num_events_in_wait_list,
+                         const cl_event *event_wait_list,
+                         cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueReadBufferRect(Thread *thread,
+                             cl_command_queue command_queue,
+                             cl_mem buffer,
+                             cl_bool blocking_read,
+                             const size_t *buffer_origin,
+                             const size_t *host_origin,
+                             const size_t *region,
+                             size_t buffer_row_pitch,
+                             size_t buffer_slice_pitch,
+                             size_t host_row_pitch,
+                             size_t host_slice_pitch,
+                             void *ptr,
+                             cl_uint num_events_in_wait_list,
+                             const cl_event *event_wait_list,
+                             cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueWriteBuffer(Thread *thread,
+                          cl_command_queue command_queue,
+                          cl_mem buffer,
+                          cl_bool blocking_write,
+                          size_t offset,
+                          size_t size,
+                          const void *ptr,
+                          cl_uint num_events_in_wait_list,
+                          const cl_event *event_wait_list,
+                          cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueWriteBufferRect(Thread *thread,
+                              cl_command_queue command_queue,
+                              cl_mem buffer,
+                              cl_bool blocking_write,
+                              const size_t *buffer_origin,
+                              const size_t *host_origin,
+                              const size_t *region,
+                              size_t buffer_row_pitch,
+                              size_t buffer_slice_pitch,
+                              size_t host_row_pitch,
+                              size_t host_slice_pitch,
+                              const void *ptr,
+                              cl_uint num_events_in_wait_list,
+                              const cl_event *event_wait_list,
+                              cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueFillBuffer(Thread *thread,
+                         cl_command_queue command_queue,
+                         cl_mem buffer,
+                         const void *pattern,
+                         size_t pattern_size,
+                         size_t offset,
+                         size_t size,
+                         cl_uint num_events_in_wait_list,
+                         const cl_event *event_wait_list,
+                         cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueCopyBuffer(Thread *thread,
+                         cl_command_queue command_queue,
+                         cl_mem src_buffer,
+                         cl_mem dst_buffer,
+                         size_t src_offset,
+                         size_t dst_offset,
+                         size_t size,
+                         cl_uint num_events_in_wait_list,
+                         const cl_event *event_wait_list,
+                         cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueCopyBufferRect(Thread *thread,
+                             cl_command_queue command_queue,
+                             cl_mem src_buffer,
+                             cl_mem dst_buffer,
+                             const size_t *src_origin,
+                             const size_t *dst_origin,
+                             const size_t *region,
+                             size_t src_row_pitch,
+                             size_t src_slice_pitch,
+                             size_t dst_row_pitch,
+                             size_t dst_slice_pitch,
+                             cl_uint num_events_in_wait_list,
+                             const cl_event *event_wait_list,
+                             cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueReadImage(Thread *thread,
+                        cl_command_queue command_queue,
+                        cl_mem image,
+                        cl_bool blocking_read,
+                        const size_t *origin,
+                        const size_t *region,
+                        size_t row_pitch,
+                        size_t slice_pitch,
+                        void *ptr,
+                        cl_uint num_events_in_wait_list,
+                        const cl_event *event_wait_list,
+                        cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueWriteImage(Thread *thread,
+                         cl_command_queue command_queue,
+                         cl_mem image,
+                         cl_bool blocking_write,
+                         const size_t *origin,
+                         const size_t *region,
+                         size_t input_row_pitch,
+                         size_t input_slice_pitch,
+                         const void *ptr,
+                         cl_uint num_events_in_wait_list,
+                         const cl_event *event_wait_list,
+                         cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueFillImage(Thread *thread,
+                        cl_command_queue command_queue,
+                        cl_mem image,
+                        const void *fill_color,
+                        const size_t *origin,
+                        const size_t *region,
+                        cl_uint num_events_in_wait_list,
+                        const cl_event *event_wait_list,
+                        cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueCopyImage(Thread *thread,
+                        cl_command_queue command_queue,
+                        cl_mem src_image,
+                        cl_mem dst_image,
+                        const size_t *src_origin,
+                        const size_t *dst_origin,
+                        const size_t *region,
+                        cl_uint num_events_in_wait_list,
+                        const cl_event *event_wait_list,
+                        cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueCopyImageToBuffer(Thread *thread,
+                                cl_command_queue command_queue,
+                                cl_mem src_image,
+                                cl_mem dst_buffer,
+                                const size_t *src_origin,
+                                const size_t *region,
+                                size_t dst_offset,
+                                cl_uint num_events_in_wait_list,
+                                const cl_event *event_wait_list,
+                                cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueCopyBufferToImage(Thread *thread,
+                                cl_command_queue command_queue,
+                                cl_mem src_buffer,
+                                cl_mem dst_image,
+                                size_t src_offset,
+                                const size_t *dst_origin,
+                                const size_t *region,
+                                cl_uint num_events_in_wait_list,
+                                const cl_event *event_wait_list,
+                                cl_event *event)
+{
+    return 0;
+}
+
+void *EnqueueMapBuffer(Thread *thread,
+                       cl_command_queue command_queue,
+                       cl_mem buffer,
+                       cl_bool blocking_map,
+                       cl_map_flags map_flags,
+                       size_t offset,
+                       size_t size,
+                       cl_uint num_events_in_wait_list,
+                       const cl_event *event_wait_list,
+                       cl_event *event,
+                       cl_int *errcode_ret)
+{
+    return 0;
+}
+
+void *EnqueueMapImage(Thread *thread,
+                      cl_command_queue command_queue,
+                      cl_mem image,
+                      cl_bool blocking_map,
+                      cl_map_flags map_flags,
+                      const size_t *origin,
+                      const size_t *region,
+                      size_t *image_row_pitch,
+                      size_t *image_slice_pitch,
+                      cl_uint num_events_in_wait_list,
+                      const cl_event *event_wait_list,
+                      cl_event *event,
+                      cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int EnqueueUnmapMemObject(Thread *thread,
+                             cl_command_queue command_queue,
+                             cl_mem memobj,
+                             void *mapped_ptr,
+                             cl_uint num_events_in_wait_list,
+                             const cl_event *event_wait_list,
+                             cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueMigrateMemObjects(Thread *thread,
+                                cl_command_queue command_queue,
+                                cl_uint num_mem_objects,
+                                const cl_mem *mem_objects,
+                                cl_mem_migration_flags flags,
+                                cl_uint num_events_in_wait_list,
+                                const cl_event *event_wait_list,
+                                cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueNDRangeKernel(Thread *thread,
+                            cl_command_queue command_queue,
+                            cl_kernel kernel,
+                            cl_uint work_dim,
+                            const size_t *global_work_offset,
+                            const size_t *global_work_size,
+                            const size_t *local_work_size,
+                            cl_uint num_events_in_wait_list,
+                            const cl_event *event_wait_list,
+                            cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueNativeKernel(Thread *thread,
+                           cl_command_queue command_queue,
+                           void(CL_CALLBACK *user_func)(void *),
+                           void *args,
+                           size_t cb_args,
+                           cl_uint num_mem_objects,
+                           const cl_mem *mem_list,
+                           const void **args_mem_loc,
+                           cl_uint num_events_in_wait_list,
+                           const cl_event *event_wait_list,
+                           cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueMarkerWithWaitList(Thread *thread,
+                                 cl_command_queue command_queue,
+                                 cl_uint num_events_in_wait_list,
+                                 const cl_event *event_wait_list,
+                                 cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueBarrierWithWaitList(Thread *thread,
+                                  cl_command_queue command_queue,
+                                  cl_uint num_events_in_wait_list,
+                                  const cl_event *event_wait_list,
+                                  cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueSVMFree(Thread *thread,
+                      cl_command_queue command_queue,
+                      cl_uint num_svm_pointers,
+                      void *svm_pointers[],
+                      void(CL_CALLBACK *pfn_free_func)(cl_command_queue queue,
+                                                       cl_uint num_svm_pointers,
+                                                       void *svm_pointers[],
+                                                       void *user_data),
+                      void *user_data,
+                      cl_uint num_events_in_wait_list,
+                      const cl_event *event_wait_list,
+                      cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueSVMMemcpy(Thread *thread,
+                        cl_command_queue command_queue,
+                        cl_bool blocking_copy,
+                        void *dst_ptr,
+                        const void *src_ptr,
+                        size_t size,
+                        cl_uint num_events_in_wait_list,
+                        const cl_event *event_wait_list,
+                        cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueSVMMemFill(Thread *thread,
+                         cl_command_queue command_queue,
+                         void *svm_ptr,
+                         const void *pattern,
+                         size_t pattern_size,
+                         size_t size,
+                         cl_uint num_events_in_wait_list,
+                         const cl_event *event_wait_list,
+                         cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueSVMMap(Thread *thread,
+                     cl_command_queue command_queue,
+                     cl_bool blocking_map,
+                     cl_map_flags flags,
+                     void *svm_ptr,
+                     size_t size,
+                     cl_uint num_events_in_wait_list,
+                     const cl_event *event_wait_list,
+                     cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueSVMUnmap(Thread *thread,
+                       cl_command_queue command_queue,
+                       void *svm_ptr,
+                       cl_uint num_events_in_wait_list,
+                       const cl_event *event_wait_list,
+                       cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueSVMMigrateMem(Thread *thread,
+                            cl_command_queue command_queue,
+                            cl_uint num_svm_pointers,
+                            const void **svm_pointers,
+                            const size_t *sizes,
+                            cl_mem_migration_flags flags,
+                            cl_uint num_events_in_wait_list,
+                            const cl_event *event_wait_list,
+                            cl_event *event)
+{
+    return 0;
+}
+
+void *GetExtensionFunctionAddressForPlatform(Thread *thread,
+                                             cl_platform_id platform,
+                                             const char *func_name)
+{
+    return 0;
+}
+
+cl_int SetCommandQueueProperty(Thread *thread,
+                               cl_command_queue command_queue,
+                               cl_command_queue_properties properties,
+                               cl_bool enable,
+                               cl_command_queue_properties *old_properties)
+{
+    return 0;
+}
+
+cl_mem CreateImage2D(Thread *thread,
+                     cl_context context,
+                     cl_mem_flags flags,
+                     const cl_image_format *image_format,
+                     size_t image_width,
+                     size_t image_height,
+                     size_t image_row_pitch,
+                     void *host_ptr,
+                     cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_mem CreateImage3D(Thread *thread,
+                     cl_context context,
+                     cl_mem_flags flags,
+                     const cl_image_format *image_format,
+                     size_t image_width,
+                     size_t image_height,
+                     size_t image_depth,
+                     size_t image_row_pitch,
+                     size_t image_slice_pitch,
+                     void *host_ptr,
+                     cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int EnqueueMarker(Thread *thread, cl_command_queue command_queue, cl_event *event)
+{
+    return 0;
+}
+
+cl_int EnqueueWaitForEvents(Thread *thread,
+                            cl_command_queue command_queue,
+                            cl_uint num_events,
+                            const cl_event *event_list)
+{
+    return 0;
+}
+
+cl_int EnqueueBarrier(Thread *thread, cl_command_queue command_queue)
+{
+    return 0;
+}
+
+cl_int UnloadCompiler(Thread *thread)
+{
+    return 0;
+}
+
+void *GetExtensionFunctionAddress(Thread *thread, const char *func_name)
+{
+    return 0;
+}
+
+cl_command_queue CreateCommandQueue(Thread *thread,
+                                    cl_context context,
+                                    cl_device_id device,
+                                    cl_command_queue_properties properties,
+                                    cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_sampler CreateSampler(Thread *thread,
+                         cl_context context,
+                         cl_bool normalized_coords,
+                         cl_addressing_mode addressing_mode,
+                         cl_filter_mode filter_mode,
+                         cl_int *errcode_ret)
+{
+    return 0;
+}
+
+cl_int EnqueueTask(Thread *thread,
+                   cl_command_queue command_queue,
+                   cl_kernel kernel,
+                   cl_uint num_events_in_wait_list,
+                   const cl_event *event_wait_list,
+                   cl_event *event)
+{
+    return 0;
+}
+}  // namespace cl

@@ -14,7 +14,10 @@
 #ifndef CL_API_ENTRY
 #    define CL_API_ENTRY ANGLE_EXPORT
 #endif
-#include <CL/cl_icd.h>
+#include "angle_cl.h"
+
+// 'angle_cl.h' has to be included before this to enable CL defines
+#include "CL/cl_icd.h"
 
 ANGLE_NO_EXPORT extern cl_icd_dispatch cl_loader;
 

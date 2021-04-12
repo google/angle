@@ -16,7 +16,7 @@
 #ifndef CL_API_ENTRY
 #    define CL_API_ENTRY ANGLE_EXPORT
 #endif
-#include <CL/cl.h>
+#include "angle_cl.h"
 
 extern "C" {
 

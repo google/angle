@@ -157,8 +157,26 @@ libangle_gpu_info_util_ios_sources = [
 ]
 
 libangle_includes = [
+  "include/angle_cl.h",
   "include/angle_gl.h",
   "include/export.h",
+  "include/CL/cl.h",
+  "include/CL/cl_d3d10.h",
+  "include/CL/cl_d3d11.h",
+  "include/CL/cl_dx9_media_sharing.h",
+  "include/CL/cl_dx9_media_sharing_intel.h",
+  "include/CL/cl_egl.h",
+  "include/CL/cl_ext.h",
+  "include/CL/cl_ext_intel.h",
+  "include/CL/cl_gl.h",
+  "include/CL/cl_gl_ext.h",
+  "include/CL/cl_half.h",
+  "include/CL/cl_icd.h",
+  "include/CL/cl_layer.h",
+  "include/CL/cl_platform.h",
+  "include/CL/cl_va_api_media_sharing_intel.h",
+  "include/CL/cl_version.h",
+  "include/CL/opencl.h",
   "include/EGL/egl.h",
   "include/EGL/eglext.h",
   "include/EGL/eglext_angle.h",
@@ -493,6 +511,8 @@ if (is_win) {
 }
 
 libglesv2_sources = [
+  "src/libGLESv2/cl_stubs.cpp",
+  "src/libGLESv2/cl_stubs_autogen.h",
   "src/libGLESv2/egl_ext_stubs.cpp",
   "src/libGLESv2/egl_ext_stubs_autogen.h",
   "src/libGLESv2/egl_stubs.cpp",

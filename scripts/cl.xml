@@ -3517,7 +3517,6 @@ server's OpenCL/api-docs repository.
         </command>
         <command prefix="CL_EXT_PREFIX__VERSION_1_1_DEPRECATED" suffix="CL_EXT_SUFFIX__VERSION_1_1_DEPRECATED">
             <proto><type>cl_int</type> <name>clUnloadCompiler</name></proto>
-            <param><type>void</type>                                    </param>
         </command>
         <command prefix="CL_EXT_PREFIX__VERSION_1_1_DEPRECATED" suffix="CL_EXT_SUFFIX__VERSION_1_1_DEPRECATED">
             <proto><type>void</type>*  <name>clGetExtensionFunctionAddress</name></proto>

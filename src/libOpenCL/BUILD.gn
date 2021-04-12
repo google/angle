@@ -25,21 +25,13 @@ angle_source_set("cl_includes") {
     "../../include/CL/cl_va_api_media_sharing_intel.h",
     "../../include/CL/cl_version.h",
     "../../include/CL/opencl.h",
+    "../../include/angle_cl.h",
     "../../include/export.h",
   ]
 }
 
 angle_shared_library("OpenCL") {
-  defines = [
-    "CL_TARGET_OPENCL_VERSION=300",
-    "CL_USE_DEPRECATED_OPENCL_2_2_APIS",
-    "CL_USE_DEPRECATED_OPENCL_2_1_APIS",
-    "CL_USE_DEPRECATED_OPENCL_2_0_APIS",
-    "CL_USE_DEPRECATED_OPENCL_1_2_APIS",
-    "CL_USE_DEPRECATED_OPENCL_1_1_APIS",
-    "CL_USE_DEPRECATED_OPENCL_1_0_APIS",
-    "LIBCL_IMPLEMENTATION",
-  ]
+  defines = [ "LIBCL_IMPLEMENTATION" ]
   sources = [
     "cl_loader.h",
     "cl_loader_autogen.cpp",
