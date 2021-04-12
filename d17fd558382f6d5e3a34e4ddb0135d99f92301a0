@@ -22,6 +22,30 @@
       },
       "revId": "d17fd558382f6d5e3a34e4ddb0135d99f92301a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f0109b2_8d3db84c",
+        "filename": "src/libANGLE/renderer/vulkan/VertexArrayVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 765,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-12T17:15:33Z",
+      "side": 1,
+      "message": "It\u0027s for Geoff\u0027s intervention. It\u0027s the same in the other function where compressed is declared as false.",
+      "parentUuid": "933208d2_26c09415",
+      "range": {
+        "startLine": 765,
+        "startChar": 8,
+        "endLine": 765,
+        "endChar": 31
+      },
+      "revId": "d17fd558382f6d5e3a34e4ddb0135d99f92301a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
