@@ -33,6 +33,24 @@
       "message": "Jonah, this probably also fixes the issue we were having with some desktops falling back to Vulkan",
       "revId": "1965afe3548396a73f44d57b353fb8082d29ff78",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "948f8484_102b4354",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-04-12T17:33:14Z",
+      "side": 1,
+      "message": "Hi,\n\nThanks for looking into this. It does seem that we should be checking devices with PCI_CLASS_DISPLAY_OTHER. Your fix looks reasonable to me. My guess is that we never had in-house testing on devices that reported DISPLAY_OTHER until now. I\u0027m adding Corentin as the original author of this code as another reviewer.",
+      "parentUuid": "b313da9a_d195f936",
+      "revId": "1965afe3548396a73f44d57b353fb8082d29ff78",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
