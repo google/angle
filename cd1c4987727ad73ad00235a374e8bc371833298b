@@ -46,6 +46,46 @@
       },
       "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a32116e1_1ce5cccf",
+        "filename": "src/compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-12T17:37:15Z",
+      "side": 1,
+      "message": "Why do we need a deepCopy() here?   The mVariableMap should only contain entries that are used for this purpose.",
+      "range": {
+        "startLine": 60,
+        "startChar": 29,
+        "endLine": 60,
+        "endChar": 63
+      },
+      "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e73dea22_a7c5d50a",
+        "filename": "src/compiler/translator/tree_ops/vulkan/NameEmbeddedUniformStructs.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-12T17:37:15Z",
+      "side": 1,
+      "message": "Unless it really is impossible and would be clutter (I\u0027m not enough of a translator expert), it may be good to add an assert that the map doesn\u0027t already contain an entry here so we don\u0027t leak memory.",
+      "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
