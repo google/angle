@@ -105,14 +105,9 @@ bool GetPCIDevicesWithLibPCI(std::vector<GPUDeviceInfo> *devices)
         pci.FillInfo(device, PCI_FILL_IDENT | PCI_FILL_CLASS);
 
         // Skip non-GPU devices
-        switch (device->device_class)
+        if (device->device_class >> 8 != PCI_BASE_CLASS_DISPLAY)
         {
-            case PCI_CLASS_DISPLAY_VGA:
-            case PCI_CLASS_DISPLAY_XGA:
-            case PCI_CLASS_DISPLAY_3D:
-                break;
-            default:
-                continue;
+            continue;
         }
 
         // Skip unknown devices
