@@ -246,7 +246,7 @@ void DisplayVk::generateExtensions(egl::DisplayExtensions *outExtensions) const
     outExtensions->swapWithFrameToken  = getRenderer()->getFeatures().supportsGGPFrameToken.enabled;
 #endif  // defined(ANGLE_PLATFORM_GGP)
 
-    outExtensions->bufferAgeEXT = getRenderer()->getFeatures().enableBufferAge.enabled;
+    outExtensions->bufferAgeEXT = true;
 }
 
 void DisplayVk::generateCaps(egl::Caps *outCaps) const
