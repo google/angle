@@ -230,6 +230,30 @@
       },
       "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e512ac4_a2e29e06",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-12T20:59:22Z",
+      "side": 1,
+      "message": "That didn\u0027t work, Windows UWP doesn\u0027t like it that OpenCL includes D3D9. This can be a major problem in the future. Any idea how to solve it? Isn\u0027t UWP dead anyway?",
+      "parentUuid": "41f51de7_e32b70ef",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
