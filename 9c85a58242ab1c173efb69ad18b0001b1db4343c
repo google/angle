@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d269a6b9_0ebcae3e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-13T23:20:32Z",
+      "side": 1,
+      "message": "This is the bulk of the code changes.\n1. isProtected - added almost everywhere. Is it in all thee right places?\n2. I encapsulated queue family index and all its properties in a vk::QueueFamily - it seemed to reduce redundancy and cleanup code a bit, and some convenience.\n3. CommandQueue and CommandPool for protected contexts/rendering\n4. Top level Context, Texture, Image, Surface have a isProtected member - so that it propagates as needed - ie protected Texture to protected Image.",
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
