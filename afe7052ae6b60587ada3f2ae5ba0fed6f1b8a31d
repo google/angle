@@ -158,6 +158,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3c6b20d8_84620f9e",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T18:29:34Z",
+      "side": 1,
+      "message": "I tried it and it doesn\u0027t compile, same problem with the FAR macro. This might work with the right combination of ANGLE flags (ANGLE_ENABLE_D3D11), but it should always work. I would also expect problems with the UWP includes combined with D3D9.\nlibOpenCL is only a shim, so IMO we should only include the bare minimum to avoid compilation problems.",
+      "parentUuid": "8bf2a8da_ffa76eb8",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
