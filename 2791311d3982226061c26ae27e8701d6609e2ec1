@@ -89,6 +89,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4b5743d_cb402229",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T21:43:11Z",
+      "side": 1,
+      "message": "\u003e My other idea was to add yet-another-class to encapsulates a BufferHelper and offset, with getters that automatically apply the offset. It didn\u0027t feel like a great improvement.\n\nYeah, yet another abstraction layer was the first thing that popped into my head too, but I\u0027m also not convinced that\u0027s the right thing.",
+      "parentUuid": "2fa372b0_34bb1fe0",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d31703e_8600ecae",
@@ -219,6 +237,47 @@
       "side": 1,
       "message": "Not sure if that ASSERT is valid. The application could provide an index offset that\u0027s out of bounds and robustness would handle it. Unless GL validation is supposed to catch that?",
       "parentUuid": "3f3d9339_e7f4b624",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "053e3405_e159289e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1610,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T21:43:11Z",
+      "side": 1,
+      "message": "I see.   I\u0027m not sure where the offset checking should be done or what GL\u0027s approach to this is.\n\nRobustness can be disabled (and likely will be due to performance), so I\u0027m not sure we should rely on that to prevent out of bounds accesses.   Maybe an assert isn\u0027t the right approach since that will also be disabled in release builds too, but instead generating an error and returning rather than submitting the work if we know the access is bad.   You might be right that it\u0027s caught before getting here though.",
+      "parentUuid": "0d2839db_e364529a",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "705e3170_4722effb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 3499,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T21:43:11Z",
+      "side": 1,
+      "message": "ref1",
+      "range": {
+        "startLine": 3496,
+        "startChar": 0,
+        "endLine": 3499,
+        "endChar": 5
+      },
       "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
