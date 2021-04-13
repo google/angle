@@ -3054,8 +3054,6 @@ TEST_P(FramebufferTest_ES3, ChangeAttachmentThenInvalidateAndDraw)
 // outside common intersection area are undefined.
 TEST_P(FramebufferTest_ES3, AttachmentsWithUnequalDimensions)
 {
-    // TODO: https://issuetracker.google.com/181800403
-    ANGLE_SKIP_TEST_IF(IsVulkan());
     // TODO: https://anglebug.com/5866
     ANGLE_SKIP_TEST_IF(IsD3D() || IsMetal());
 

@@ -81,6 +81,7 @@ class FramebufferState final : angle::NonCopyable
     }
     const DrawBufferMask getColorAttachmentsMask() const { return mColorAttachmentsMask; }
 
+    const Extents getAttachmentExtentsIntersection() const;
     bool attachmentsHaveSameDimensions() const;
     bool hasSeparateDepthAndStencilAttachments() const;
     bool colorAttachmentsAreUniqueImages() const;

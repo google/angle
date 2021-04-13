@@ -517,6 +517,34 @@ const FramebufferAttachment *FramebufferState::getDepthStencilAttachment() const
     return nullptr;
 }
 
+const Extents FramebufferState::getAttachmentExtentsIntersection() const
+{
+    int32_t width  = std::numeric_limits<int32_t>::max();
+    int32_t height = std::numeric_limits<int32_t>::max();
+    for (const FramebufferAttachment &attachment : mColorAttachments)
+    {
+        if (attachment.isAttached())
+        {
+            width  = std::min(width, attachment.getSize().width);
+            height = std::min(height, attachment.getSize().height);
+        }
+    }
+
+    if (mDepthAttachment.isAttached())
+    {
+        width  = std::min(width, mDepthAttachment.getSize().width);
+        height = std::min(height, mDepthAttachment.getSize().height);
+    }
+
+    if (mStencilAttachment.isAttached())
+    {
+        width  = std::min(width, mStencilAttachment.getSize().width);
+        height = std::min(height, mStencilAttachment.getSize().height);
+    }
+
+    return Extents(width, height, 0);
+}
+
 bool FramebufferState::attachmentsHaveSameDimensions() const
 {
     Optional<Extents> attachmentSize;
@@ -673,11 +701,12 @@ Box FramebufferState::getDimensions() const
 
 Extents FramebufferState::getExtents() const
 {
-    ASSERT(attachmentsHaveSameDimensions());
+    // OpenGLES3.0 (https://www.khronos.org/registry/OpenGL/specs/es/3.0/es_spec_3.0.pdf
+    // section 4.4.4.2) allows attachments have unequal size.
     const FramebufferAttachment *first = getFirstNonNullAttachment();
     if (first)
     {
-        return first->getSize();
+        return getAttachmentExtentsIntersection();
     }
     return Extents(getDefaultWidth(), getDefaultHeight(), 0);
 }
