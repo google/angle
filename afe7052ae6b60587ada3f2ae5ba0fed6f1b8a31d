@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ab5d5d86_93406c6b",
+        "filename": "src/libGLESv2/entry_points_cl_autogen.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T17:27:28Z",
+      "side": 1,
+      "message": "Actually no, I will remove it.",
+      "parentUuid": "bd581b94_ca370d0e",
+      "range": {
+        "startLine": 47,
+        "startChar": 8,
+        "endLine": 47,
+        "endChar": 14
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d1be1bf0_142a5f31",
         "filename": "src/libOpenCL/cl_loader.h",
         "patchSetId": 3
@@ -54,6 +78,30 @@
       "writtenOn": "2021-04-13T17:17:01Z",
       "side": 1,
       "message": "can you try replacing this with including common/platform.h?",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bf2a8da_ffa76eb8",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T17:27:28Z",
+      "side": 1,
+      "message": "I checked common/platform.h before and didn\u0027t use it on purpose as it includes a lot more unused headers which probably can cause more compilation problems.",
+      "parentUuid": "d1be1bf0_142a5f31",
       "range": {
         "startLine": 18,
         "startChar": 0,
