@@ -106,6 +106,24 @@
       "parentUuid": "49e1db8a_523bea74",
       "revId": "96e9ca192f190d2bee661af3f010f4ea2687d13b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4736b873_57109acd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T21:05:48Z",
+      "side": 1,
+      "message": "For further posterity, the issue was that ANGLE\u0027s build of dEQP didn\u0027t define `DE_ANDROID_API`.",
+      "parentUuid": "db85be1d_0f6b94bc",
+      "revId": "96e9ca192f190d2bee661af3f010f4ea2687d13b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
