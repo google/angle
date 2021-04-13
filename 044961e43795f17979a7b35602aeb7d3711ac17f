@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e810945e_718f3fb5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T17:08:25Z",
+      "side": 1,
+      "message": "Good point. I left out some of the presubmit testing to keep things simple. We can add these back if they\u0027re useful at any point.",
+      "parentUuid": "97bd1945_9b2894f5",
+      "revId": "044961e43795f17979a7b35602aeb7d3711ac17f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0dd694a9_f4c20170",
@@ -58,6 +76,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa680ef3_aad6e026",
+        "filename": "infra/specs/angle_mb_config.pyl",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T17:08:25Z",
+      "side": 1,
+      "message": "Done, thanks for catching.",
+      "parentUuid": "0dd694a9_f4c20170",
+      "range": {
+        "startLine": 50,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 63
+      },
+      "revId": "044961e43795f17979a7b35602aeb7d3711ac17f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "042eb551_48ec8ab0",
@@ -71,6 +113,30 @@
       "writtenOn": "2021-04-13T16:45:54Z",
       "side": 1,
       "message": "I\u0027m setting current ANGLE CQ bots using component build.\nTo avoid this problem (and probably many others) with libstdc++: anglebug.com/4396\n\nIt has the drawback that we are testing not what we ship, but since Chromium builds are non-component, I think we are covered via WebGL testing.",
+      "range": {
+        "startLine": 58,
+        "startChar": 108,
+        "endLine": 58,
+        "endChar": 113
+      },
+      "revId": "044961e43795f17979a7b35602aeb7d3711ac17f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87b48019_2befc35c",
+        "filename": "infra/specs/angle_mb_config.pyl",
+        "patchSetId": 10
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T17:08:25Z",
+      "side": 1,
+      "message": "two answers/questions:\n\n1. component_build\u003dfalse keeps the code the same as the angle.py recipe right now. don\u0027t want to introduce too many behaviour changes in this CL.\n2. is anglebug.com/4396 still an issue now that I\u0027ve added --bot-mode? I was under the impression it is fixed.",
+      "parentUuid": "042eb551_48ec8ab0",
       "range": {
         "startLine": 58,
         "startChar": 108,
