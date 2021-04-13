@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5be0b0a7_6324b705",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T16:39:39Z",
+      "side": 1,
+      "message": "I don\u0027t believe this check is very useful. It\u0027s only false for cosntexpr TTypes (i.e. baked in types in the symbol table).\n\nSo basically the ASSERT above is true everywhere.",
+      "range": {
+        "startLine": 212,
+        "startChar": 16,
+        "endLine": 212,
+        "endChar": 45
+      },
+      "revId": "666a3fa61f669535396a7ebb12f49d3772186d74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
