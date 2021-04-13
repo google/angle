@@ -22,6 +22,30 @@
       },
       "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d960b01_5765b24b",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-13T13:05:25Z",
+      "side": 1,
+      "message": "I fixed the timeout issue by just reading one pixel. Although the test is failing due to different expected values.\nI could reproduce this on AMD/Mesa GL vs Vulkan. The unused bit of uint32_t differed, where 24 bits matched. GL had the most significant byte in the unused byte, Vulkan had the least significant. My fix to write a 0 to the unused byte before comparision fixed it for me, but apparently not for many of the bots.\n\nCould it be an issue that I am fetching the pixel at (0, 0)? Maybe I should try the center.",
+      "parentUuid": "4fde4128_4fe19297",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 325,
+        "endChar": 5
+      },
+      "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
