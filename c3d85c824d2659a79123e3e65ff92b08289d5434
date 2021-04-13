@@ -22,6 +22,30 @@
       },
       "revId": "c3d85c824d2659a79123e3e65ff92b08289d5434",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "092bc4aa_f1d4d15a",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T19:24:54Z",
+      "side": 1,
+      "message": "Obsolete",
+      "parentUuid": "5314925f_fe214125",
+      "range": {
+        "startLine": 20,
+        "startChar": 7,
+        "endLine": 20,
+        "endChar": 13
+      },
+      "revId": "c3d85c824d2659a79123e3e65ff92b08289d5434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
