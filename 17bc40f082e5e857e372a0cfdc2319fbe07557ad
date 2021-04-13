@@ -16,6 +16,63 @@
       "message": "Filament also run into this exact same usage as well as black desert mobile.",
       "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4330f6f_9f81818d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T13:44:08Z",
+      "side": 1,
+      "message": "Comment mismatch. Should mirror the other one.",
+      "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7dadbd26_aea40130",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 202,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T13:44:08Z",
+      "side": 1,
+      "message": "Same with this.",
+      "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43cb0e6c_0f094dc1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1337,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T13:44:08Z",
+      "side": 1,
+      "message": "Read? Is that correct?\n\nIf the layout is DepthStencilAttachmentAndFragmentShaderRead or DepthStencilAttachmentAndAllShadersRead, shouldn\u0027t barrierRequired be unconditionally true? I think it works because isReadBarrierNecessary returns true if type \u003d\u003d ResourceAccess::Write (which is true), but it\u0027s more of a coincidence IMO.",
+      "range": {
+        "startLine": 1337,
+        "startChar": 48,
+        "endLine": 1337,
+        "endChar": 52
+      },
+      "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
