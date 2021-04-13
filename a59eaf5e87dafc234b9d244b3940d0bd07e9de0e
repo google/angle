@@ -46,6 +46,30 @@
       },
       "revId": "a59eaf5e87dafc234b9d244b3940d0bd07e9de0e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e12e4ca6_2a722d40",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T03:02:57Z",
+      "side": 1,
+      "message": "Did I say loose? I said loose. Why did I say loose?\n\nhttps://i.pinimg.com/736x/56/dd/65/56dd65413f4a0549a02fe715e641094f.jpg\n\n---\n\nI meant to say default.",
+      "parentUuid": "36d7b974_3c7f776f",
+      "range": {
+        "startLine": 112,
+        "startChar": 5,
+        "endLine": 112,
+        "endChar": 19
+      },
+      "revId": "a59eaf5e87dafc234b9d244b3940d0bd07e9de0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
