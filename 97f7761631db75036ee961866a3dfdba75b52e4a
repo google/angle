@@ -122,6 +122,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d2c1e2f7_b6fcf701",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-13T15:42:34Z",
+      "side": 1,
+      "message": "With ToT ANGLE it already generates compiler error for the usecase you mentioned. It seems that a new function was added (wasn\u0027t there when the CL was first created) that generates error. This is the execution log -\n\nTest case \u0027KHR-GLES32.core.tessellation_shader.compilation_and_linking_errors.te_non_arrayed_per_vertex_input_blocks\u0027..\n\nWARN: glslang_wrapper.cpp:157 (GlslangCompileToSpirv): Internal error parsing Vulkan shader corresponding to 36487:\nERROR: 0:9: \u0027in\u0027 : type must be an array: _utest_block\nERROR: 1 compilation errors. No code generated.\n\nWARN: glslang_wrapper.cpp:157 (GlslangCompileToSpirv): Internal error parsing Vulkan shader corresponding to 36487:\nERROR: 0:9: \u0027in\u0027 : type must be an array: _utest_block\nERROR: 1 compilation errors. No code generated.\n\nINFO:\n\nPass (Pass)",
+      "parentUuid": "aefd833a_c8ad99b7",
+      "range": {
+        "startLine": 10,
+        "startChar": 11,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "97f7761631db75036ee961866a3dfdba75b52e4a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "e5de0d76_50b3892b",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 4
