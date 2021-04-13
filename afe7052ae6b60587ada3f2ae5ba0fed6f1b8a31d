@@ -230,6 +230,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d368c1b_5cecf5ae",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T19:09:08Z",
+      "side": 1,
+      "message": "I found the culprit: common/platform.h, line 86. It\u0027s a bad idea to undefine Microsoft macros in common headers ... Do you know why this was done?",
+      "parentUuid": "6b45481f_28b9e952",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
