@@ -1028,23 +1028,16 @@ void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &program
 {
     json->addString("Label", programState.getLabel());
     SerializeWorkGroupSize(json, programState.getComputeShaderLocalSize());
-    for (gl::Shader *shader : programState.getAttachedShaders())
-    {
-        if (shader)
-        {
-            json->addScalar("Handle", shader->getHandle().value);
-        }
-        else
-        {
-            json->addScalar("Handle", 0);
-        }
-    }
+
+    auto attachedShaders = programState.getAttachedShaders();
+    std::vector<GLint> shaderHandles(attachedShaders.size());
+    std::transform(attachedShaders.begin(), attachedShaders.end(), shaderHandles.begin(),
+                   [](gl::Shader *shader) { return shader ? shader->getHandle().value : 0; });
+    json->addVector("Handle", shaderHandles);
     json->addScalar("LocationsUsedForXfbExtension", programState.getLocationsUsedForXfbExtension());
-    for (const std::string &transformFeedbackVaryingName :
-         programState.getTransformFeedbackVaryingNames())
-    {
-        json->addString("TransformFeedbackVaryingName", transformFeedbackVaryingName);
-    }
+
+    json->addVectorOfStrings("TransformFeedbackVaryingNames",
+                             programState.getTransformFeedbackVaryingNames());
     json->addScalar("ActiveUniformBlockBindingsMask",
                     programState.getActiveUniformBlockBindingsMask().to_ulong());
     SerializeVariableLocationsVector(json, "UniformLocations", programState.getUniformLocations());
@@ -1053,10 +1046,7 @@ void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &program
     SerializeVariableLocationsVector(json, "SecondaryOutputLocations",
                                      programState.getSecondaryOutputLocations());
     json->addScalar("ActiveOutputVariables", programState.getActiveOutputVariables().to_ulong());
-    for (GLenum outputVariableType : programState.getOutputVariableTypes())
-    {
-        json->addScalar("OutputVariableType", outputVariableType);
-    }
+    json->addVector("OutputVariableTypes", programState.getOutputVariableTypes());
     json->addScalar("DrawBufferTypeMask", programState.getDrawBufferTypeMask().to_ulong());
     json->addScalar("BinaryRetrieveableHint", programState.hasBinaryRetrieveableHint());
     json->addScalar("Separable", programState.isSeparable());
