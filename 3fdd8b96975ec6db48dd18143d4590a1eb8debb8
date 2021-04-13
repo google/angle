@@ -16,6 +16,24 @@
       "message": "This is the test try to simulate webgl regression. It passes all bots",
       "revId": "3fdd8b96975ec6db48dd18143d4590a1eb8debb8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc34375c_bd5629c3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T14:45:29Z",
+      "side": 1,
+      "message": "If the WebGL test fails but the end2end test passes... maybe the test is not accurately reproducing the webgl test?",
+      "parentUuid": "8a9be76f_5270bf3f",
+      "revId": "3fdd8b96975ec6db48dd18143d4590a1eb8debb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
