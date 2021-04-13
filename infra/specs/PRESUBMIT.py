@@ -14,6 +14,10 @@ def _CommonChecks(input_api, output_api):
     angle_root = d(d(input_api.PresubmitLocalPath()))
     gen_script = os.path.join(angle_root, 'testing', 'buildbot', 'generate_buildbot_json.py')
 
+    # Validate the format of the mb_config.pyl file.
+    mb_path = os.path.join(angle_root, 'tools', 'mb', 'mb.py')
+    config_path = os.path.join(input_api.PresubmitLocalPath(), 'angle_mb_config.pyl')
+
     commands = [
         input_api.Command(
             name='generate_buildbot_json',
@@ -22,6 +26,17 @@ def _CommonChecks(input_api, output_api):
                 input_api.PresubmitLocalPath()
             ],
             kwargs={},
+            message=output_api.PresubmitError),
+        input_api.Command(
+            name='mb_validate',
+            cmd=[
+                input_api.python_executable,
+                mb_path,
+                'validate',
+                '-f',
+                config_path,
+            ],
+            kwargs={'cwd': input_api.PresubmitLocalPath()},
             message=output_api.PresubmitError),
     ]
     messages = []
