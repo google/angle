@@ -302,6 +302,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d28db827_9cad4037",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T19:30:41Z",
+      "side": 1,
+      "message": "Good solution. I think including the windows headers before #undef far would be preferred. I think that undef is in there for a reason.",
+      "parentUuid": "69315dab_4c1fb1f2",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
