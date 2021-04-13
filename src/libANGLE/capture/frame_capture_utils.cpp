@@ -412,7 +412,7 @@ Result SerializeFramebufferState(const gl::Context *context,
 {
     GroupScope group(json, "Framebuffer");
     json->addScalar("ID", framebufferState.id().value);
-    json->addScalar("Label", framebufferState.getLabel());
+    json->addString("Label", framebufferState.getLabel());
     json->addVector("DrawStates", framebufferState.getDrawBufferStates());
     json->addScalar("ReadBufferState", framebufferState.getReadBufferState());
     json->addScalar("DefaultWidth", framebufferState.getDefaultWidth());
@@ -717,7 +717,7 @@ void SerializeContextState(JsonSerializer *json, const gl::State &state)
 
 void SerializeBufferState(JsonSerializer *json, const gl::BufferState &bufferState)
 {
-    json->addScalar("Label", bufferState.getLabel());
+    json->addString("Label", bufferState.getLabel());
     json->addCString("Usage", BufferUsageToString(bufferState.getUsage()));
     json->addScalar("Size", bufferState.getSize());
     json->addScalar("AccessFlags", bufferState.getAccessFlags());
@@ -786,7 +786,7 @@ void SerializeSamplerState(JsonSerializer *json,
 
 void SerializeSampler(JsonSerializer *json, gl::Sampler *sampler)
 {
-    json->addScalar("Label", sampler->getLabel());
+    json->addString("Label", sampler->getLabel());
     SerializeSamplerState(json, "Sampler", sampler->getSamplerState());
 }
 
@@ -833,7 +833,7 @@ Result SerializeRenderbuffer(const gl::Context *context,
 {
     GroupScope wg(json, "Renderbuffer");
     SerializeRenderbufferState(json, renderbuffer->getState());
-    json->addScalar("Label", renderbuffer->getLabel());
+    json->addString("Label", renderbuffer->getLabel());
     MemoryBuffer *pixelsPtr = nullptr;
     ANGLE_CHECK_GL_ALLOC(
         const_cast<gl::Context *>(context),
@@ -860,8 +860,8 @@ void SerializeShaderVariable(JsonSerializer *json, const sh::ShaderVariable &sha
     GroupScope wg(json, "ShaderVariable");
     json->addScalar("Type", shaderVariable.type);
     json->addScalar("Precision", shaderVariable.precision);
-    json->addScalar("Name", shaderVariable.name);
-    json->addScalar("MappedName", shaderVariable.mappedName);
+    json->addString("Name", shaderVariable.name);
+    json->addString("MappedName", shaderVariable.mappedName);
     json->addVector("ArraySizes", shaderVariable.arraySizes);
     json->addScalar("StaticUse", shaderVariable.staticUse);
     json->addScalar("Active", shaderVariable.active);
@@ -869,8 +869,8 @@ void SerializeShaderVariable(JsonSerializer *json, const sh::ShaderVariable &sha
     {
         SerializeShaderVariable(json, field);
     }
-    json->addScalar("StructOrBlockName", shaderVariable.structOrBlockName);
-    json->addScalar("MappedStructOrBlockName", shaderVariable.mappedStructOrBlockName);
+    json->addString("StructOrBlockName", shaderVariable.structOrBlockName);
+    json->addString("MappedStructOrBlockName", shaderVariable.mappedStructOrBlockName);
     json->addScalar("RowMajorLayout", shaderVariable.isRowMajorLayout);
     json->addScalar("Location", shaderVariable.location);
     json->addScalar("Binding", shaderVariable.binding);
@@ -900,9 +900,9 @@ void SerializeInterfaceBlocksVector(JsonSerializer *json,
     for (const sh::InterfaceBlock &interfaceBlock : interfaceBlocks)
     {
         GroupScope group(json, "Interface Block");
-        json->addScalar("Name", interfaceBlock.name);
-        json->addScalar("MappedName", interfaceBlock.mappedName);
-        json->addScalar("InstanceName", interfaceBlock.instanceName);
+        json->addString("Name", interfaceBlock.name);
+        json->addString("MappedName", interfaceBlock.mappedName);
+        json->addString("InstanceName", interfaceBlock.instanceName);
         json->addScalar("ArraySize", interfaceBlock.arraySize);
         json->addCString("Layout", BlockLayoutTypeToString(interfaceBlock.layout));
         json->addScalar("Binding", interfaceBlock.binding);
@@ -916,12 +916,12 @@ void SerializeInterfaceBlocksVector(JsonSerializer *json,
 void SerializeShaderState(JsonSerializer *json, const gl::ShaderState &shaderState)
 {
     GroupScope group(json, "ShaderState");
-    json->addScalar("Label", shaderState.getLabel());
+    json->addString("Label", shaderState.getLabel());
     json->addCString("Type", gl::ShaderTypeToString(shaderState.getShaderType()));
     json->addScalar("Version", shaderState.getShaderVersion());
-    json->addScalar("TranslatedSource", shaderState.getTranslatedSource());
+    json->addString("TranslatedSource", shaderState.getTranslatedSource());
     json->addVectorAsHash("CompiledBinary", shaderState.getCompiledBinary());
-    json->addScalar("Source", shaderState.getSource());
+    json->addString("Source", shaderState.getSource());
     SerializeWorkGroupSize(json, shaderState.getLocalSize());
     SerializeShaderVariablesVector(json, shaderState.getInputVaryings());
     SerializeShaderVariablesVector(json, shaderState.getOutputVaryings());
@@ -963,7 +963,7 @@ void SerializeShader(JsonSerializer *json, gl::Shader *shader)
     json->addScalar("RefCount", shader->getRefCount());
     json->addScalar("FlaggedForDeletion", shader->isFlaggedForDeletion());
     // Do not serialize mType because it is already serialized in SerializeShaderState.
-    json->addScalar("InfoLogString", shader->getInfoLogString());
+    json->addString("InfoLogString", shader->getInfoLogString());
     // Do not serialize compiler resources string because it can vary between test modes.
     json->addScalar("CurrentMaxComputeWorkGroupInvocations",
                     shader->getCurrentMaxComputeWorkGroupInvocations());
@@ -1026,7 +1026,7 @@ void SerializeProgramAliasedBindings(JsonSerializer *json,
 
 void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &programState)
 {
-    json->addScalar("Label", programState.getLabel());
+    json->addString("Label", programState.getLabel());
     SerializeWorkGroupSize(json, programState.getComputeShaderLocalSize());
     for (gl::Shader *shader : programState.getAttachedShaders())
     {
@@ -1043,7 +1043,7 @@ void SerializeProgramState(JsonSerializer *json, const gl::ProgramState &program
     for (const std::string &transformFeedbackVaryingName :
          programState.getTransformFeedbackVaryingNames())
     {
-        json->addScalar("TransformFeedbackVaryingName", transformFeedbackVaryingName);
+        json->addString("TransformFeedbackVaryingName", transformFeedbackVaryingName);
     }
     json->addScalar("ActiveUniformBlockBindingsMask",
                     programState.getActiveUniformBlockBindingsMask().to_ulong());
@@ -1180,7 +1180,7 @@ Result SerializeTexture(const gl::Context *context,
 {
     GroupScope group(json, "Texture ", texture->getId());
     SerializeTextureState(json, texture->getState());
-    json->addScalar("Label", texture->getLabel());
+    json->addString("Label", texture->getLabel());
     // FrameCapture can not serialize mBoundSurface and mBoundStream
     // because they are likely to change with each run
     ANGLE_TRY(SerializeTextureData(json, context, texture, scratchBuffer));
@@ -1222,7 +1222,7 @@ void SerializeVertexBindingsVector(JsonSerializer *json,
 
 void SerializeVertexArrayState(JsonSerializer *json, const gl::VertexArrayState &vertexArrayState)
 {
-    json->addScalar("Label", vertexArrayState.getLabel());
+    json->addString("Label", vertexArrayState.getLabel());
     SerializeVertexAttributeVector(json, vertexArrayState.getVertexAttributes());
     if (vertexArrayState.getElementArrayBuffer())
     {
