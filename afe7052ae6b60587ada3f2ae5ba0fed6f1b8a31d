@@ -134,6 +134,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b927d3a_72412b14",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T18:11:06Z",
+      "side": 1,
+      "message": "I see. If you include angle_common in this project you should be able to include platform.h. I\u0027d recommend using it. You\u0027re effectively duplicating it here.",
+      "parentUuid": "8bf2a8da_ffa76eb8",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
