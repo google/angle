@@ -48,7 +48,7 @@ def invoke_mb(args):
 
     if is_standalone:
         logging.info('Standalone mode detected.')
-        mb_args += ['-i', os.path.join('infra', 'gn_isolate_map.pyl')]
+        mb_args += ['-i', os.path.join('infra', 'specs', 'gn_isolate_map.pyl')]
 
     logging.info('Invoking mb: %s' % ' '.join(mb_args))
     return subprocess.check_output(mb_args)
