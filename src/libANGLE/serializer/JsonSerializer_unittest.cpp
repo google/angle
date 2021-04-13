@@ -6,7 +6,7 @@
 // JsonSerializer_unittests-cpp: Unit tests for the JSON based serializer
 //
 
-#if defined(ANGLE_HAVE_RAPIDJSON)
+#if defined(ANGLE_HAS_RAPIDJSON)
 #    include "JsonSerializer.h"
 
 #    include <gtest/gtest.h>

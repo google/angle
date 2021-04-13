@@ -13,7 +13,7 @@
 
 #if !defined(ANGLE_HAS_RAPIDJSON)
 #    error RapidJSON must be available to build this file.
-#endif  // !defined(ANGLE_HAVE_RAPIDJSON)
+#endif  // !defined(ANGLE_HAS_RAPIDJSON)
 
 #include <rapidjson/document.h>
 
