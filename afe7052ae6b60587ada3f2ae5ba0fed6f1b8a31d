@@ -206,6 +206,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b45481f_28b9e952",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T18:38:52Z",
+      "side": 1,
+      "message": "Right, you\u0027re duplicating a portion of it. Can you try putting the #undef FAR #define FAR block in platform.h at the end of #ifdef ANGLE_PLATFORM_WINDOWS? If that doesn\u0027t work SGTM on using this pattern.",
+      "parentUuid": "8e371e70_6a4e603c",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
