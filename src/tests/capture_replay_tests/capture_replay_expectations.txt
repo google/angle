@@ -14,7 +14,6 @@ CopyTextureTestWebGL.NPOT/*
 D3DImageFormatConversionTest.*
 DifferentStencilMasksTest.*
 FramebufferTest.MultiContextNoRenderingFeedbackLoops/*
-InstancingTest.LineLoop/*
 PbufferTest.BindTexImage/*
 PbufferTest.Clearing/*
 PbufferTest.TextureSizeReset/*
