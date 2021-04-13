@@ -22,6 +22,30 @@
       },
       "revId": "666a3fa61f669535396a7ebb12f49d3772186d74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a21fcbd8_b061d3ff",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-13T17:02:10Z",
+      "side": 1,
+      "message": "agreed, will remove this new function and the assert in the caller in next patch",
+      "parentUuid": "5be0b0a7_6324b705",
+      "range": {
+        "startLine": 212,
+        "startChar": 16,
+        "endLine": 212,
+        "endChar": 45
+      },
+      "revId": "666a3fa61f669535396a7ebb12f49d3772186d74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
