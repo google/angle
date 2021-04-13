@@ -14,7 +14,7 @@ cipd auth-login
 Add the following to ANGLE's .gclient file:
 ```
     "custom_vars": {
-      "checkout_angle_internal":"True"
+      "checkout_angle_restricted_traces": True
     },
 ```
 Then use gclient to pull down binary files from CIPD.

@@ -157,7 +157,7 @@ DEPS_TEMPLATE = """\
         }},
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   }},
 """
 

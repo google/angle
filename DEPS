@@ -19,6 +19,9 @@ vars = {
   # Only check out public sources by default. This can be overridden with custom_vars.
   'checkout_angle_internal': False,
 
+  # Controls if we check out the restricted traces.
+  'checkout_angle_restricted_traces': 'checkout_angle_internal',
+
   # Version of Chromium our Chromium-based DEPS are mirrored from.
   'chromium_revision': 'cb430282a0833b2c5c8408e6065f073487fb287a',
   # We never want to checkout chromium,
@@ -392,7 +395,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/among_us': {
       'packages': [
@@ -402,7 +405,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/angry_birds_2_1500': {
       'packages': [
@@ -412,7 +415,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/arena_of_valor': {
       'packages': [
@@ -422,7 +425,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/asphalt_8': {
       'packages': [
@@ -432,7 +435,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/avakin_life': {
       'packages': [
@@ -442,7 +445,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/aztec_ruins': {
       'packages': [
@@ -452,7 +455,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/brawl_stars': {
       'packages': [
@@ -462,7 +465,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/bubble_shooter': {
       'packages': [
@@ -472,7 +475,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/bus_simulator_indonesia': {
       'packages': [
@@ -482,7 +485,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/call_break_offline_card_game': {
       'packages': [
@@ -492,7 +495,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/candy_crush_500': {
       'packages': [
@@ -502,7 +505,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/car_parking_multiplayer': {
       'packages': [
@@ -512,7 +515,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/clash_of_clans': {
       'packages': [
@@ -522,7 +525,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/clash_royale': {
       'packages': [
@@ -532,7 +535,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/cod_mobile': {
       'packages': [
@@ -542,7 +545,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/coin_master': {
       'packages': [
@@ -552,7 +555,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/disney_tsum_tsum': {
       'packages': [
@@ -562,7 +565,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/dragon_ball_legends': {
       'packages': [
@@ -572,7 +575,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/dragon_raja': {
       'packages': [
@@ -582,7 +585,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/efootball_pes_2021': {
       'packages': [
@@ -592,7 +595,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/egypt_1500': {
       'packages': [
@@ -602,7 +605,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/eight_ball_pool': {
       'packages': [
@@ -612,7 +615,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/extreme_car_driving_simulator': {
       'packages': [
@@ -622,7 +625,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/fallout_shelter_online': {
       'packages': [
@@ -632,7 +635,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/fate_grand_order': {
       'packages': [
@@ -642,7 +645,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/fifa_mobile': {
       'packages': [
@@ -652,7 +655,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/free_fire': {
       'packages': [
@@ -662,7 +665,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/google_maps': {
       'packages': [
@@ -672,7 +675,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/happy_color': {
       'packages': [
@@ -682,7 +685,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/hay_day': {
       'packages': [
@@ -692,7 +695,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/hearthstone': {
       'packages': [
@@ -702,7 +705,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/hill_climb_racing': {
       'packages': [
@@ -712,7 +715,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/junes_journey': {
       'packages': [
@@ -722,7 +725,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/kartrider_rush': {
       'packages': [
@@ -732,7 +735,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/klondike_adventures': {
       'packages': [
@@ -742,7 +745,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/league_of_legends_wild_rift': {
       'packages': [
@@ -752,7 +755,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/lego_legacy': {
       'packages': [
@@ -762,7 +765,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/lineage_m': {
       'packages': [
@@ -772,7 +775,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/magic_tiles_3': {
       'packages': [
@@ -782,7 +785,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/manhattan_10': {
       'packages': [
@@ -792,7 +795,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/manhattan_31': {
       'packages': [
@@ -802,7 +805,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/marvel_contest_of_champions': {
       'packages': [
@@ -812,7 +815,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/messenger_lite': {
       'packages': [
@@ -822,7 +825,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/minecraft': {
       'packages': [
@@ -832,7 +835,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/mobile_legends': {
       'packages': [
@@ -842,7 +845,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/nba2k20_800': {
       'packages': [
@@ -852,7 +855,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/one_punch_man': {
       'packages': [
@@ -862,7 +865,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/plants_vs_zombies_2': {
       'packages': [
@@ -872,7 +875,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/professional_baseball_spirits': {
       'packages': [
@@ -882,7 +885,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/pubg_mobile_lite': {
       'packages': [
@@ -892,7 +895,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/ragnarok_m_eternal_love': {
       'packages': [
@@ -902,7 +905,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/raid_shadow_legends': {
       'packages': [
@@ -912,7 +915,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/real_commando_secret_mission': {
       'packages': [
@@ -922,7 +925,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/real_cricket_20': {
       'packages': [
@@ -932,7 +935,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/real_gangster_crime': {
       'packages': [
@@ -942,7 +945,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/rise_of_kingdoms': {
       'packages': [
@@ -952,7 +955,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/romancing_saga': {
       'packages': [
@@ -962,7 +965,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/rope_hero_vice_town': {
       'packages': [
@@ -972,7 +975,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/saint_seiya_awakening': {
       'packages': [
@@ -982,7 +985,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/shadow_fight_2': {
       'packages': [
@@ -992,7 +995,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/sniper_3d': {
       'packages': [
@@ -1002,7 +1005,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/standoff_2': {
       'packages': [
@@ -1012,7 +1015,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/subway_surfers': {
       'packages': [
@@ -1022,7 +1025,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/talking_tom_hero_dash': {
       'packages': [
@@ -1032,7 +1035,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/temple_run_2': {
       'packages': [
@@ -1042,7 +1045,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/temple_run_300': {
       'packages': [
@@ -1052,7 +1055,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/trex_200': {
       'packages': [
@@ -1062,7 +1065,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/whatsapp': {
       'packages': [
@@ -1072,7 +1075,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/world_of_tanks_blitz': {
       'packages': [
@@ -1082,7 +1085,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/world_war_doh': {
       'packages': [
@@ -1092,7 +1095,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   'src/tests/restricted_traces/worms_zone_io': {
       'packages': [
@@ -1102,7 +1105,7 @@ deps = {
         },
       ],
       'dep_type': 'cipd',
-      'condition': 'checkout_angle_internal',
+      'condition': 'checkout_angle_restricted_traces',
   },
   # === ANGLE Restricted Trace Generated Code End ===
 }
