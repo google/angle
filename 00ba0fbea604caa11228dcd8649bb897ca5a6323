@@ -35,6 +35,42 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2f3ee74_536077cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "Hi Shahbaz, I test it with T-rex (using gettid() function).\n\"\n04-12 03:23:42.938  9416  9438 I ANGLE   : syncPipelineCacheVk gettid() is:9438\n04-12 03:23:42.939  9416  9692 I ANGLE   : CompressAndStorePipelineCacheVk gettid() is:9692\n04-12 03:23:45.526  9416  9438 I ANGLE   : syncPipelineCacheVk gettid() is:9438\n04-12 03:23:45.526  9416  9694 I ANGLE   : CompressAndStorePipelineCacheVk gettid() is:9694\n04-12 03:23:47.879  9416  9438 I ANGLE   : syncPipelineCacheVk gettid() is:9438\n04-12 03:23:47.879  9416  9695 I ANGLE   : CompressAndStorePipelineCacheVk gettid() is:9695\n04-12 03:23:52.639  9416  9438 I ANGLE   : syncPipelineCacheVk gettid() is:9438\n04-12 03:23:52.640  9416  9697 I ANGLE   : CompressAndStorePipelineCacheVk gettid() is:9697\n04-12 03:23:54.992  9416  9438 I ANGLE   : syncPipelineCacheVk gettid() is:9438\n04-12 03:23:54.993  9416  9699 I ANGLE   : CompressAndStorePipelineCacheVk gettid() is:9699\n04-12 03:23:57.606  9416  9438 I ANGLE   : syncPipelineCacheVk gettid() is:9438\n04-12 03:23:57.607  9416  9700 I ANGLE   : CompressAndStorePipelineCacheVk gettid() is:9700\n04-12 03:24:02.541  9416  9438 I ANGLE   : syncPipelineCacheVk gettid() is:9438\n04-12 03:24:02.541  9416  9702 I ANGLE   : CompressAndStorePipelineCacheVk gettid() is:9702\n\"\nThe thread id of compression is different with the main thread. I think it does use threads to compress.",
+      "parentUuid": "4add919b_eb7884be",
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3ab2d15_83bc5145",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "Hi Jamie. Thanks a lot.\nI created mFeatures.enableCompressingPipelineCacheInThreadPool to control.\nIt\u0027s disabled by default, we can enable it to test performance when needed in the future.\nThere are two paths to sync pipeline cache now.",
+      "parentUuid": "94bdb578_7d43c196",
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "27ef5c22_f4162208",
@@ -48,6 +84,30 @@
       "writtenOn": "2021-04-09T21:13:30Z",
       "side": 1,
       "message": "nit: reference style - no non-const parameter refs.",
+      "range": {
+        "startLine": 511,
+        "startChar": 46,
+        "endLine": 511,
+        "endChar": 68
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "00c9d1ac_83352974",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "27ef5c22_f4162208",
       "range": {
         "startLine": 511,
         "startChar": 46,
@@ -81,6 +141,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "445cf1dc_8379d2a1",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 532,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "For getting the result of compress task, I have made some changes to create getResult() function in the event. Please point out if there is any problems.",
+      "parentUuid": "3ffb12b8_feb5a9c2",
+      "range": {
+        "startLine": 532,
+        "startChar": 4,
+        "endLine": 532,
+        "endChar": 18
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ea9918a8_f7bfb8bf",
@@ -94,6 +178,30 @@
       "writtenOn": "2021-04-09T21:13:30Z",
       "side": 1,
       "message": "thread safety concern here, similarly to the above. We might have to use a mutex here (are we already doing that?)",
+      "range": {
+        "startLine": 573,
+        "startChar": 19,
+        "endLine": 573,
+        "endChar": 31
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c912f46_d5bf87fc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 573,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "Hi Jamie. I add a mutex here. And the new task won\u0027t be created until the last task has been finished and mCompressEvent-\u003eisReady() is true，so it\u0027s actually doing compression in single worker thread. Besides, the finally set() and get() function in blob cache are thread safe.\nhttps://android.googlesource.com/platform/frameworks/native/+/f831132bb211612defca51fa7ef72cb879bc707c/include/utils/BlobCache.h#28\nIf you think there is no need to add such mutex, I\u0027ll delete it.",
+      "parentUuid": "ea9918a8_f7bfb8bf",
       "range": {
         "startLine": 573,
         "startChar": 19,
@@ -127,6 +235,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6b8b1929_18b96b3a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 579,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dd028a26_6969a088",
+      "range": {
+        "startLine": 579,
+        "startChar": 6,
+        "endLine": 579,
+        "endChar": 18
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "82cc5918_fdf745b6",
@@ -144,6 +276,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22b6d4a2_602694ee",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 593,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "82cc5918_fdf745b6",
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b8a8d72_a2b08f51",
@@ -157,6 +307,30 @@
       "writtenOn": "2021-04-09T21:13:30Z",
       "side": 1,
       "message": "nit: you can retrieve this from the ContextVk pointer.",
+      "range": {
+        "startLine": 604,
+        "startChar": 31,
+        "endLine": 604,
+        "endChar": 56
+      },
+      "revId": "00ba0fbea604caa11228dcd8649bb897ca5a6323",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d064413_fcddf075",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-13T15:16:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b8a8d72_a2b08f51",
       "range": {
         "startLine": 604,
         "startChar": 31,
