@@ -118,8 +118,6 @@ def get_os_from_name(name):
 # Adds both the CI and Try standalone builders.
 def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests = False):
     properties = {
-        "debug": debug,
-        "target_cpu": cpu,
         "builder_group": "angle",
     }
     os = get_os_from_name(name)
@@ -145,9 +143,6 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
 
     if not clang:
         properties["clang"] = False
-
-    if uwp:
-        properties["uwp"] = True
 
     if trace_tests:
         properties["trace_tests"] = True
