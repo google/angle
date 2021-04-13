@@ -920,7 +920,7 @@ void SerializeShaderState(JsonSerializer *json, const gl::ShaderState &shaderSta
     json->addCString("Type", gl::ShaderTypeToString(shaderState.getShaderType()));
     json->addScalar("Version", shaderState.getShaderVersion());
     json->addScalar("TranslatedSource", shaderState.getTranslatedSource());
-    json->addVector("CompiledBinary", shaderState.getCompiledBinary());
+    json->addVectorAsHash("CompiledBinary", shaderState.getCompiledBinary());
     json->addScalar("Source", shaderState.getSource());
     SerializeWorkGroupSize(json, shaderState.getLocalSize());
     SerializeShaderVariablesVector(json, shaderState.getInputVaryings());
