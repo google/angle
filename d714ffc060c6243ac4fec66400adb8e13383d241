@@ -16,6 +16,24 @@
       "message": "LGTM, although should also update the README.md:\nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/tests/restricted_traces/README.md;l\u003d17",
       "revId": "d714ffc060c6243ac4fec66400adb8e13383d241",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d0930d8_6fa92542",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T20:45:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f58e93f_513bed2e",
+      "revId": "d714ffc060c6243ac4fec66400adb8e13383d241",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
