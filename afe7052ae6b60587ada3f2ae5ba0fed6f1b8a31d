@@ -278,6 +278,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "69315dab_4c1fb1f2",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T19:23:23Z",
+      "side": 1,
+      "message": "Summary: I solved the problem for this CL by reordering includes. Most Windows headers will not compile if they are included after common/platform.h, because it undefines \u0027far\u0027. This will cause more problems in the future and should be fixed.",
+      "parentUuid": "3d368c1b_5cecf5ae",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
