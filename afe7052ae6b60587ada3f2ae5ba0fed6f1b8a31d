@@ -182,6 +182,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e371e70_6a4e603c",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T18:35:45Z",
+      "side": 1,
+      "message": "I wouldn\u0027t call it duplicating, because I only include windows.h, whereas platform.h includes up to about 20 headers, including UWP. In platform.h you can disable D3D9 if you use UWP, but I can\u0027t disable D3D9 in the CL header.",
+      "parentUuid": "3c6b20d8_84620f9e",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
