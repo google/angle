@@ -33,6 +33,23 @@
       "message": "Re-LGTM. Leaving to Jamie to +2",
       "revId": "9f18d84df36039496707fa0e3095da02f52379cb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d55091b8_f33fa418",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T18:12:30Z",
+      "side": 1,
+      "message": "LGTM, looks like the tests are cleared up.",
+      "revId": "9f18d84df36039496707fa0e3095da02f52379cb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
