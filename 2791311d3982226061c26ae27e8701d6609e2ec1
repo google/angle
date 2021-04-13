@@ -52,6 +52,97 @@
       "parentUuid": "f5476221_65d1e014",
       "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc873f2e_493c33ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T18:37:26Z",
+      "side": 1,
+      "message": "While this CL is showing a problem with our current buffer implementation, it also seems to be showing how fragile this code is, since it\u0027s still easy to miss adding the offset when doing something with a BufferVk.   I\u0027m not sure what the answer is, but it would be nicer if this was handled more automatically rather than all of the manual offset addition that\u0027s being done.   That may be unavoidable while BufferVk has both a BufferHelper and a DynamicBuffer without the caller knowing which is being used so they have to assume there are suballocations and an offset must be accounted for.\n\nIt also looks like there are several bug fixes in general in this CL, which none of the current testing has caught.   Besides Mohan\u0027s test that may be added later, is there anything else you can add now to show this CL is cleaning things up correctly?",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2d31703e_8600ecae",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 872,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T18:37:26Z",
+      "side": 1,
+      "message": "This should be moved into the else block, since \u0027indices\u0027 is only interpreted as an offset when a buffer is bound.   Otherwise, it\u0027s possible for this offset to be a pointer until it\u0027s later reset, which could lead to bad math later.",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63f43ccb_48f5d7b6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T18:37:26Z",
+      "side": 1,
+      "message": "Is this applying the offset twice?\n\nbufferVk-\u003emapImpl() calls BufferVk::mapRangeImpl() which applies the offset:\n\n    angle::Result BufferVk::mapRangeImpl(ContextVk *contextVk,\n                                         VkDeviceSize offset,\n                                         VkDeviceSize length,\n                                         GLbitfield access,\n                                         void **mapPtr)\n    {\n    ...\n            ANGLE_TRY(mBuffer-\u003emapWithOffset(contextVk, reinterpret_cast\u003cuint8_t **\u003e(mapPtr),\n                                             static_cast\u003csize_t\u003e(mBufferOffset + offset)));\n\nAnd then this applies the offset again based on what bufferVk-\u003egetBuffer() returned earlier.",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a76cbfc_8357648e",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T18:37:26Z",
+      "side": 1,
+      "message": "I think this pattern is showing it would be better to add getBufferAndOffset() rather than refactoring getBuffer() to add a parameter that\u0027s never used.",
+      "range": {
+        "startLine": 1108,
+        "startChar": 0,
+        "endLine": 1110,
+        "endChar": 84
+      },
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3f3d9339_e7f4b624",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1610,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T18:37:26Z",
+      "side": 1,
+      "message": "It would be good to add an assert like the following to a few of these:\n    ASSERT(offset \u003c elementArrayBuffer-\u003egetBuffer().getSize());",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
