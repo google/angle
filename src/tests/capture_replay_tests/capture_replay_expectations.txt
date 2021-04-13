@@ -9,8 +9,6 @@
 
 # Failed tests
 BindGeneratesResourceTest.*
-ClearTest.Depth16Scissored/*
-ClearTest.InceptionScissorClears/*
 ClientArraysTest.*
 CopyTextureTestWebGL.NPOT/*
 D3DImageFormatConversionTest.*

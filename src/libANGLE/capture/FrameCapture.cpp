@@ -318,6 +318,7 @@ void WriteGLFloatValue(std::ostream &out, GLfloat value)
     }
     else
     {
+        out << std::setprecision(16);
         out << value;
     }
 }
