@@ -278,6 +278,30 @@
       },
       "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9afcdfb_35b54478",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 538,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T10:20:22Z",
+      "side": 1,
+      "message": "I changed it so that angle_cl.h only includes opencl.h, which doesn\u0027t include D3D. We can deal with D3D if we ever want to actually support it. It was included by cl_icd.h, which is now only used by libOpenCL, where it obviously doesn\u0027t conflict with UWP.",
+      "parentUuid": "8464b224_113569f8",
+      "range": {
+        "startLine": 530,
+        "startChar": 0,
+        "endLine": 538,
+        "endChar": 1
+      },
+      "revId": "cc1ccf4f9716ce3e8d536c30ff995811aed27b7e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
