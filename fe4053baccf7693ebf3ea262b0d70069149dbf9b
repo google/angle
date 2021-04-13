@@ -22,6 +22,30 @@
       },
       "revId": "fe4053baccf7693ebf3ea262b0d70069149dbf9b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e358c2f_53ede3ec",
+        "filename": "infra/config/main.star",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-13T21:56:05Z",
+      "side": 0,
+      "message": "Probably. Thanks for the reminder. Will do it in a follow-up.",
+      "parentUuid": "dc0b4453_7917347e",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 0
+      },
+      "revId": "fe4053baccf7693ebf3ea262b0d70069149dbf9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
