@@ -3049,6 +3049,78 @@ TEST_P(FramebufferTest_ES3, ChangeAttachmentThenInvalidateAndDraw)
     EXPECT_PIXEL_RECT_EQ(0, 0, kSizeSmall, kSizeSmall, GLColor::blue);
 }
 
+// Test Framebuffer object with two attachments that have unequal size. In OpenGLES3.0, this is
+// a supported config. The common intersection area should be correctly rendered. The contents
+// outside common intersection area are undefined.
+TEST_P(FramebufferTest_ES3, AttachmentsWithUnequalDimensions)
+{
+    // TODO: https://issuetracker.google.com/181800403
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+    // TODO: https://anglebug.com/5866
+    ANGLE_SKIP_TEST_IF(IsD3D() || IsMetal());
+
+    constexpr GLsizei kSizeLarge = 32;
+    constexpr GLsizei kSizeSmall = 16;
+
+    GLTexture colorTexture;
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, kSizeLarge, kSizeSmall, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 nullptr);
+
+    GLRenderbuffer color;
+    glBindRenderbuffer(GL_RENDERBUFFER, color);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, kSizeSmall, kSizeLarge);
+
+    GLRenderbuffer depth;
+    glBindRenderbuffer(GL_RENDERBUFFER, depth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, kSizeSmall, kSizeLarge);
+
+    GLRenderbuffer stencil;
+    glBindRenderbuffer(GL_RENDERBUFFER, stencil);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, kSizeSmall, kSizeLarge);
+
+    struct
+    {
+        GLenum attachment;
+        GLuint renderbuffer;
+    } attachment2[4] = {{GL_COLOR_ATTACHMENT1, 0},
+                        {GL_COLOR_ATTACHMENT1, color},
+                        {GL_DEPTH_ATTACHMENT, depth},
+                        {GL_STENCIL_ATTACHMENT, stencil}};
+    for (int i = 0; i < 4; i++)
+    {
+        GLFramebuffer fbo;
+        glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture,
+                               0);
+        if (attachment2[i].renderbuffer)
+        {
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, attachment2[i].attachment, GL_RENDERBUFFER,
+                                      attachment2[i].renderbuffer);
+        }
+        ASSERT_GL_NO_ERROR();
+        ASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);
+
+        ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
+        glUseProgram(drawColor);
+        GLint colorUniformLocation =
+            glGetUniformLocation(drawColor, angle::essl1_shaders::ColorUniform());
+        ASSERT_NE(colorUniformLocation, -1);
+
+        glViewport(0, 0, kSizeLarge, kSizeLarge);
+        const GLenum discard[] = {GL_COLOR_ATTACHMENT0};
+        glInvalidateFramebuffer(GL_FRAMEBUFFER, 1, discard);
+
+        // Draw red into the framebuffer.
+        glUniform4f(colorUniformLocation, 1.0f, 0.0f, 0.0f, 1.0f);
+        drawQuad(drawColor, essl1_shaders::PositionAttrib(), 0.5f);
+        ASSERT_GL_NO_ERROR();
+
+        // Validate the result. The intersected common area should be red now
+        EXPECT_PIXEL_RECT_EQ(0, 0, kSizeSmall, kSizeSmall, GLColor::red);
+    }
+}
+
 class FramebufferTest : public ANGLETest
 {};
 
