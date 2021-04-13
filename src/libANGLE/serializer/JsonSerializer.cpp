@@ -33,24 +33,22 @@ void JsonSerializer::startDocument(const std::string &name)
 
 void JsonSerializer::startGroup(const std::string &name)
 {
-    auto group = std::make_unique<js::Value>(js::kObjectType);
-    mGroupValueStack.push(std::move(group));
+    mGroupValueStack.push(SortedValueGroup());
     mGroupNameStack.push(name);
 }
 
 void JsonSerializer::endGroup()
 {
-    ValuePointer group = std::move(mGroupValueStack.top());
-    std::string name   = std::move(mGroupNameStack.top());
+    SortedValueGroup group = std::move(mGroupValueStack.top());
+    std::string name       = std::move(mGroupNameStack.top());
     mGroupValueStack.pop();
     mGroupNameStack.pop();
-    rapidjson::Value name_value(name.c_str(), mAllocator);
-    mGroupValueStack.top()->AddMember(name_value, *group, mAllocator);
+
+    mGroupValueStack.top().insert(std::make_pair(name, makeValueGroup(group)));
 }
 
 void JsonSerializer::addBlob(const std::string &name, const uint8_t *blob, size_t length)
 {
-    rapidjson::Value tag(name.c_str(), mAllocator);
     unsigned char hash[angle::base::kSHA1Length];
     angle::base::SHA1HashBytes(blob, length, hash);
     std::ostringstream os;
@@ -70,12 +68,27 @@ void JsonSerializer::addCString(const std::string &name, const char *value)
 {
     rapidjson::Value tag(name.c_str(), mAllocator);
     rapidjson::Value val(value, mAllocator);
-    mGroupValueStack.top()->AddMember(tag, val, mAllocator);
+    mGroupValueStack.top().insert(std::make_pair(name, std::move(val)));
 }
 
 void JsonSerializer::addString(const std::string &name, const std::string &value)
 {
     addCString(name, value.c_str());
+}
+
+void JsonSerializer::addVectorOfStrings(const std::string &name,
+                                        const std::vector<std::string> &value)
+{
+    rapidjson::Value array(rapidjson::kArrayType);
+    array.SetArray();
+
+    for (const std::string &v : value)
+    {
+        rapidjson::Value str(v.c_str(), mAllocator);
+        array.PushBack(str, mAllocator);
+    }
+
+    mGroupValueStack.top().insert(std::make_pair(name, std::move(array)));
 }
 
 const char *JsonSerializer::data() const
@@ -95,7 +108,7 @@ void JsonSerializer::endDocument()
     ASSERT(!mGroupNameStack.empty());
 
     rapidjson::Value name_value(mGroupNameStack.top().c_str(), mAllocator);
-    mDoc.AddMember(name_value, *mGroupValueStack.top(), mAllocator);
+    mDoc.AddMember(name_value, makeValueGroup(mGroupValueStack.top()), mAllocator);
 
     mGroupValueStack.pop();
     mGroupNameStack.pop();
@@ -112,6 +125,17 @@ void JsonSerializer::endDocument()
 size_t JsonSerializer::length() const
 {
     return mResult.length();
+}
+
+rapidjson::Value JsonSerializer::makeValueGroup(SortedValueGroup &group)
+{
+    rapidjson::Value valueGroup(js::kObjectType);
+    for (auto &it : group)
+    {
+        rapidjson::Value tag(it.first.c_str(), mAllocator);
+        valueGroup.AddMember(tag, it.second, mAllocator);
+    }
+    return valueGroup;
 }
 
 }  // namespace angle
