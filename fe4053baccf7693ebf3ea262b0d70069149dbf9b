@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dc0b4453_7917347e",
+        "filename": "infra/config/main.star",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-13T20:59:41Z",
+      "side": 0,
+      "message": "Is it safe to remove this now?\nI\u0027d like us to use the version in https://source.chromium.org/chromium/chromium/src/+/master:build/mac_toolchain.py;l\u003d44\ninstead of updating here all the time.",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 145,
+        "endChar": 0
+      },
+      "revId": "fe4053baccf7693ebf3ea262b0d70069149dbf9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
