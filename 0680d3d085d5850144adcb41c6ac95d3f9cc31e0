@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50b72721_d2c42acb",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T03:03:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2452d194_67d35ac4",
+      "range": {
+        "startLine": 399,
+        "startChar": 11,
+        "endLine": 399,
+        "endChar": 22
+      },
+      "revId": "0680d3d085d5850144adcb41c6ac95d3f9cc31e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3ccbe83e_b74aec1a",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-04-12T18:00:16Z",
       "side": 1,
       "message": "Needs updating?\n\nThe commit message states:\n\n\u003e Fields of nameless interface blocks are stored as TVariables",
+      "range": {
+        "startLine": 400,
+        "startChar": 85,
+        "endLine": 401,
+        "endChar": 80
+      },
+      "revId": "0680d3d085d5850144adcb41c6ac95d3f9cc31e0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fec28799_d93cb768",
+        "filename": "src/compiler/translator/ValidateAST.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T03:03:02Z",
+      "side": 1,
+      "message": "Yes, thanks!",
+      "parentUuid": "3ccbe83e_b74aec1a",
       "range": {
         "startLine": 400,
         "startChar": 85,
