@@ -66,6 +66,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "68612ecd_c3ff0138",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2582,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-13T16:57:40Z",
+      "side": 1,
+      "message": "It is using textureLod to read specific mipmap levels (as what aztec ruins did), so should be defined behavior. But yes as alternative way, you can use base/max to restrict the range to achieve the same test result.",
+      "parentUuid": "fe49cbb5_fb9c23f0",
+      "range": {
+        "startLine": 2582,
+        "startChar": 39,
+        "endLine": 2582,
+        "endChar": 62
+      },
+      "revId": "2d5e5a5da6e55c53bb1b6f6f4b873089786cff60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7c675ed0_322c56bd",
         "filename": "src/tests/gl_tests/FramebufferTest.cpp",
         "patchSetId": 8
