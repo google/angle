@@ -3007,6 +3007,209 @@ TEST_P(Texture2DTest, NPOTSubImageParameters)
     EXPECT_GL_NO_ERROR();
 }
 
+void FillLevel(GLint level,
+               GLuint width,
+               GLuint height,
+               const GLColor &color,
+               bool opt_cubemap,
+               bool opt_subTex)
+{
+    GLsizei numPixels = width * height;
+    std::unique_ptr<uint8_t[]> pixels;
+    GLsizei largeDim = std::max(width, height);
+    GLsizei smallDim = std::min(width, height);
+
+    std::unique_ptr<uint8_t[]> pixelRow = std::make_unique<uint8_t[]>(largeDim * 4);
+    for (GLint jj = 0; jj < largeDim; ++jj)
+    {
+        GLsizei off       = jj * 4;
+        pixelRow[off + 0] = color[0];
+        pixelRow[off + 1] = color[1];
+        pixelRow[off + 2] = color[2];
+        pixelRow[off + 3] = color[3];
+    }
+
+    if (largeDim == numPixels)
+    {
+        pixels = std::move(pixelRow);
+    }
+    else
+    {
+        pixels = std::make_unique<uint8_t[]>(numPixels * 4);
+        for (GLint jj = 0; jj < smallDim; ++jj)
+        {
+            GLsizei off = jj * largeDim * 4;
+            memcpy(pixels.get() + off, pixelRow.get(), largeDim * 4);
+        }
+    }
+
+    if (opt_cubemap)
+    {
+        std::array<GLenum, 6> targets = {
+            GL_TEXTURE_CUBE_MAP_POSITIVE_X, GL_TEXTURE_CUBE_MAP_NEGATIVE_X,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_Y, GL_TEXTURE_CUBE_MAP_NEGATIVE_Y,
+            GL_TEXTURE_CUBE_MAP_POSITIVE_Z, GL_TEXTURE_CUBE_MAP_NEGATIVE_Z};
+        for (GLenum target : targets)
+        {
+            if (opt_subTex)
+            {
+                glTexSubImage2D(target, level, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
+                                pixels.get());
+            }
+            else
+            {
+                glTexImage2D(target, level, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                             pixels.get());
+            }
+        }
+    }
+    else
+    {
+        if (opt_subTex)
+        {
+            glTexSubImage2D(GL_TEXTURE_2D, level, 0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE,
+                            pixels.get());
+        }
+        else
+        {
+            glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                         pixels.get());
+        }
+    }
+}
+
+// This is part of tests that webgl_conformance_vulkan_passthrough_tests
+// conformance/textures/misc/texture-size.html does
+TEST_P(Texture2DTest, TextureSize)
+{
+    const GLColor kNewMipColors[] = {
+        GLColor::green,  GLColor::red,     GLColor::blue,
+        GLColor::yellow, GLColor::magenta, GLColor::cyan,
+    };
+    GLuint colorCount = 0;
+
+    setUpProgram();
+
+    constexpr char kVS[] =
+        R"(precision highp float;
+attribute vec4 position;
+varying vec3 texcoord;
+void main()
+{
+    gl_Position = position;
+    texcoord = (position.xyz * 0.5) + 0.5;
+}
+)";
+    constexpr char kFS[] =
+        R"(precision mediump float;
+uniform samplerCube tex;
+varying vec3 texcoord;
+void main()
+{
+    gl_FragColor = textureCube(tex, texcoord);
+})";
+    GLuint programCubeMap = CompileProgram(kVS, kFS);
+    ASSERT_NE(0u, programCubeMap);
+    ASSERT_GL_NO_ERROR();
+
+    GLint max2DSize, maxCubeMapSize;
+    glGetTexParameteriv(GL_TEXTURE_2D, GL_MAX_TEXTURE_SIZE, &max2DSize);
+    glGetTexParameteriv(GL_TEXTURE_CUBE_MAP, GL_MAX_CUBE_MAP_TEXTURE_SIZE, &maxCubeMapSize);
+    // Assuming 2048x2048xRGBA (22meg with mips) will run on all WebGL platforms
+    GLint max2DSquareSize = std::min(max2DSize, 2048);
+    // I'd prefer this to be 2048 but that's 16meg x 6 faces or 128meg (with mips)
+    // 1024 is 33.5 meg (with mips)
+    maxCubeMapSize = std::min(maxCubeMapSize, 1024);
+
+    GLint power = 0;
+    GLint size  = std::pow(2, power);
+    GLint texWidth, texHeight;
+
+    while (size <= max2DSize)
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            bool cubeMap     = i == 3 ? true : false;
+            GLenum texTarget = cubeMap ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
+
+            switch (i)
+            {
+                case 0:
+                    texWidth  = size;
+                    texHeight = 1;
+                    break;
+                case 1:
+                    texWidth  = 1;
+                    texHeight = size;
+                    break;
+                case 2:
+                case 3:
+                    texWidth  = size;
+                    texHeight = size;
+                    break;
+            }
+
+            if (texWidth == texHeight && size > max2DSquareSize)
+            {
+                continue;
+            }
+
+            if (cubeMap && size > maxCubeMapSize)
+            {
+                continue;
+            }
+
+            GLuint texture;
+            glGenTextures(1, &texture);
+
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(texTarget, texture);
+            glTexParameteri(texTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(texTarget, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(texTarget, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            FillLevel(0, texWidth, texHeight, kNewMipColors[colorCount], cubeMap, false);
+
+            if (cubeMap)
+            {
+                glUseProgram(programCubeMap);
+            }
+            else
+            {
+                glUseProgram(mProgram);
+            }
+            glUniform1i(mTexture2DUniformLocation, 0);
+
+            glClear(GL_COLOR_BUFFER_BIT);
+            drawQuad(mProgram, "position", 1.0f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColors[colorCount]);
+
+            colorCount = (colorCount + 1) % sizeof(kNewMipColors);
+            FillLevel(0, texWidth, texHeight, kNewMipColors[colorCount], cubeMap, false);
+            glGenerateMipmap(texTarget);
+            EXPECT_GL_NO_ERROR();
+
+            glTexParameteri(texTarget, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+            glClear(GL_COLOR_BUFFER_BIT);
+            drawQuad(mProgram, "position", 1.0f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColors[colorCount]);
+
+            colorCount = (colorCount + 1) % sizeof(kNewMipColors);
+            FillLevel(0, texWidth, texHeight, kNewMipColors[colorCount], cubeMap, true);
+            glGenerateMipmap(texTarget);
+
+            glClear(GL_COLOR_BUFFER_BIT);
+            drawQuad(mProgram, "position", 1.0f);
+            EXPECT_PIXEL_COLOR_EQ(0, 0, kNewMipColors[colorCount]);
+            EXPECT_GL_NO_ERROR();
+
+            glDeleteTextures(1, &texture);
+        }
+
+        ++power;
+        size = std::pow(2, power);
+    }
+}
+
 // Test that drawing works correctly RGBA 3D texture
 TEST_P(Texture3DTestES2, RGBA)
 {
