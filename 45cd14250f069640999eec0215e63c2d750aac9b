@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f121b635_5afe3a3e",
+        "filename": "src/libANGLE/capture/capture_gles_3_0_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-13T22:04:41Z",
+      "side": 1,
+      "message": "Since you\u0027re in here, can you update this to use \u0027GLuint\u0027:\n\n    paramCapture-\u003ereadBufferSizeBytes \u003d sizeof(GLuint);\n\nThey\u0027re the same size so things should keep working either way, but it\u0027d be good cleanup.",
+      "revId": "45cd14250f069640999eec0215e63c2d750aac9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
