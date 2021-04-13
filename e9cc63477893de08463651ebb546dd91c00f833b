@@ -16,6 +16,24 @@
       "message": "To match the spec, this can just be:\n\n        // When the type of internal state is boolean, zero integer or\n        // floating-point values are converted to FALSE and non-zero values\n        // are converted to TRUE.\n        case GL_FALSE:\n            os \u003c\u003c \"GL_FALSE\";\n            break;\n        case GL_TRUE:\n        default:\n            os \u003c\u003c \"GL_TRUE\";\n\nI think that makes the logcat output clearer, since everything is treating the values as GL_TRUE anyway and the actual hex values shouldn\u0027t be important.\n\nThe traces will have the app-specific values, so ANGLE will still be regression-tested correctly and if people are interested they can see what\u0027s in the source file.",
       "revId": "e9cc63477893de08463651ebb546dd91c00f833b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bee706be_c8e6a425",
+        "filename": "src/libANGLE/capture/gl_enum_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-13T23:02:45Z",
+      "side": 1,
+      "message": "That was my initial implementation, but I ended up preferring to see the hex value if the app is sending down something other than GL_TRUE or GL_FALSE.  I believe the logging should try to match what the app is doing.",
+      "parentUuid": "6695371e_bf7c7a24",
+      "revId": "e9cc63477893de08463651ebb546dd91c00f833b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
