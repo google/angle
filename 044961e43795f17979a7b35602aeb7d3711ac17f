@@ -145,6 +145,30 @@
       },
       "revId": "044961e43795f17979a7b35602aeb7d3711ac17f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21117304_2bfb7878",
+        "filename": "infra/specs/angle_mb_config.pyl",
+        "patchSetId": 10
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-13T18:00:41Z",
+      "side": 1,
+      "message": "1. sg, can leave it for later, like when we want to start running tests\n2. I haven\u0027t tried it, but I don\u0027t think this can be fixed, only mitigated. Yeah, probably if you start a new process for small batches of tests, this works. Still, per anglebug.com/4396#c40 \"libc++ does not support dlclose-ing the library\", who knows what other bugs hide under this assumption.",
+      "parentUuid": "87b48019_2befc35c",
+      "range": {
+        "startLine": 58,
+        "startChar": 108,
+        "endLine": 58,
+        "endChar": 113
+      },
+      "revId": "044961e43795f17979a7b35602aeb7d3711ac17f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
