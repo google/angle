@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2dc3ed93_82d23d66",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 893,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T03:02:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "30b3500b_a2bed8a0",
+      "range": {
+        "startLine": 893,
+        "startChar": 66,
+        "endLine": 893,
+        "endChar": 71
+      },
+      "revId": "cd1c4987727ad73ad00235a374e8bc371833298b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a32116e1_1ce5cccf",
