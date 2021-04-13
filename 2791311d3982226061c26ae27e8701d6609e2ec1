@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fa372b0_34bb1fe0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T19:12:59Z",
+      "side": 1,
+      "message": "I intentionally made the offset a mandatory argument of BufferVk::getBuffer so it won\u0027t be lost. My other idea was to add yet-another-class to encapsulates a BufferHelper and offset, with getters that automatically apply the offset. It didn\u0027t feel like a great improvement.\n\n\u003e It also looks like there are several bug fixes in general in this CL, which none of the current testing has caught.\n\nThere aren\u0027t actually any bugs. Many things have been \"fixed\" because they didn\u0027t work with a non-zero offset, but we didn\u0027t have non-zero offsets before this change.\n\n\u003e Besides Mohan\u0027s test that may be added later, is there anything else you can add now to show this CL is cleaning things up correctly?\n\nI landed a large number of tests I developed as part of this change, but I split off and landed them already. They were written specifically to test correct offset when suballocation produces non-zero offsets in various scenarios (and they did catch many issues with vertex arrays), but again none of them fail before this change because offset was always 0.",
+      "parentUuid": "bc873f2e_493c33ce",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2d31703e_8600ecae",
@@ -107,6 +125,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c23e108b_5f994a8a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 903,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T19:12:59Z",
+      "side": 1,
+      "message": "Good catch. I should write a test for it.",
+      "parentUuid": "63f43ccb_48f5d7b6",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6a76cbfc_8357648e",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 12
@@ -118,6 +154,30 @@
       "writtenOn": "2021-04-13T18:37:26Z",
       "side": 1,
       "message": "I think this pattern is showing it would be better to add getBufferAndOffset() rather than refactoring getBuffer() to add a parameter that\u0027s never used.",
+      "range": {
+        "startLine": 1108,
+        "startChar": 0,
+        "endLine": 1110,
+        "endChar": 84
+      },
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "299b5d1c_ee27649d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T19:12:59Z",
+      "side": 1,
+      "message": "The idea is to make sure there\u0027s no accidental caller to getBuffer() which may miss the fact there could be an offset.",
+      "parentUuid": "6a76cbfc_8357648e",
       "range": {
         "startLine": 1108,
         "startChar": 0,
@@ -141,6 +201,24 @@
       "writtenOn": "2021-04-13T18:37:26Z",
       "side": 1,
       "message": "It would be good to add an assert like the following to a few of these:\n    ASSERT(offset \u003c elementArrayBuffer-\u003egetBuffer().getSize());",
+      "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d2839db_e364529a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 12
+      },
+      "lineNbr": 1610,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-13T19:12:59Z",
+      "side": 1,
+      "message": "Not sure if that ASSERT is valid. The application could provide an index offset that\u0027s out of bounds and robustness would handle it. Unless GL validation is supposed to catch that?",
+      "parentUuid": "3f3d9339_e7f4b624",
       "revId": "2791311d3982226061c26ae27e8701d6609e2ec1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
