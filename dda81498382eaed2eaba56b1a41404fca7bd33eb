@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f1c58243_a2f73f43",
+        "filename": "src/libANGLE/TransformFeedback.cpp",
+        "patchSetId": 16
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-13T16:18:25Z",
+      "side": 1,
+      "message": "Shabi, this will need lots of code change. Since it is not directly related to the purpose if this CL i want to handle it in a follow up change, tracked by -\u003e http://anglebug.com/5486",
+      "parentUuid": "276deab6_545024bd",
+      "range": {
+        "startLine": 147,
+        "startChar": 8,
+        "endLine": 147,
+        "endChar": 17
+      },
+      "revId": "dda81498382eaed2eaba56b1a41404fca7bd33eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3de0d468_b9d654ce",
         "filename": "src/tests/gl_tests/ProgramPipelineTest.cpp",
         "patchSetId": 16
