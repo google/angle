@@ -326,6 +326,30 @@
       },
       "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "896f1747_ce0f063f",
+        "filename": "src/libOpenCL/cl_loader.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-13T19:40:38Z",
+      "side": 1,
+      "message": "The undef is there since Geoff created it 7 years ago, no documented reason:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/202133\nIf the \u0027#undef far\u0027 is required because of a name clash, \u0027FAR\u0027 should be cleared at the same time.",
+      "parentUuid": "d28db827_9cad4037",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 6
+      },
+      "revId": "afe7052ae6b60587ada3f2ae5ba0fed6f1b8a31d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
