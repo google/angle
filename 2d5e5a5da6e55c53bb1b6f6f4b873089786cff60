@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "26d02c2e_1e56eae1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-13T20:26:07Z",
+      "side": 1,
+      "message": "LGTM.  Please resolve Shabi\u0027s 2 comments.  Thanks for the new tests!",
+      "revId": "2d5e5a5da6e55c53bb1b6f6f4b873089786cff60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25ad9361_6cc4cdbe",
