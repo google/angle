@@ -133,6 +133,39 @@ TEST_F(JsonSerializerTest, IntVectorValue)
     check(expect);
 }
 
+// Test writing one vector of integer values
+TEST_F(JsonSerializerTest, IntVectorAsBlobValue)
+{
+    std::vector<int> v = {0, 1, -1};
+
+    js.addVectorAsHash("test2", v);
+
+    const std::string expect =
+        R"({
+    "context": {
+        "test2": "SHA1:6216A439C16A113E2F1E53AB63FB88877D3597F5"
+    }
+})";
+    check(expect);
+}
+
+// Test writing one vector of short integer values
+TEST_F(JsonSerializerTest, ShortVectorAsBlobValue)
+{
+    std::vector<short> v = {0, 1, -1};
+
+    js.addVectorAsHash("test2", v);
+
+    const std::string expect =
+        R"({
+    "context": {
+        "test2": "SHA1:0BA7C0DE700CE0F8018D084B8CF447B150A9465D"
+    }
+})";
+
+    check(expect);
+}
+
 // Test writing boolean values
 TEST_F(JsonSerializerTest, NamedBoolValues)
 {

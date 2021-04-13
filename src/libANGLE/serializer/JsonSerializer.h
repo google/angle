@@ -91,6 +91,12 @@ class JsonSerializer : public angle::NonCopyable
         mGroupValueStack.top()->AddMember(tag, array, mAllocator);
     }
 
+    template <typename T>
+    void addVectorAsHash(const std::string &name, const std::vector<T> &value)
+    {
+        addBlob(name, reinterpret_cast<const uint8_t *>(&value[0]), value.size() * sizeof(T));
+    }
+
   private:
     using ValuePointer = std::unique_ptr<rapidjson::Value>;
 
