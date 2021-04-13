@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a9be76f_5270bf3f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-13T03:38:35Z",
+      "side": 1,
+      "message": "This is the test try to simulate webgl regression. It passes all bots",
+      "revId": "3fdd8b96975ec6db48dd18143d4590a1eb8debb8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
