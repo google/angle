@@ -1,14 +1,14 @@
 {
   "src/tests/restricted_traces/.gitignore":
-    "5a29a6b17e7f5a63f1afd18cbcec054a",
+    "9e34de23403add0a73d889d998971292",
   "src/tests/restricted_traces/gen_restricted_traces.py":
     "7cc5d772c8e18a58224ab4436fc3a205",
   "src/tests/restricted_traces/restricted_traces.json":
-    "b24bd80ea020fee3b2d01672ac481b40",
+    "1ba9185b74b0c64bcbd98226219f0e3c",
   "src/tests/restricted_traces/restricted_traces_autogen.cpp":
-    "81c228a236870518deb64c26bc3da497",
+    "b6bee35644bdb5c6465f125f70869b2b",
   "src/tests/restricted_traces/restricted_traces_autogen.gni":
-    "dd145b799fb66ae72d69f450d428e89d",
+    "d2b29e25bb607b9638243c794acc2fd7",
   "src/tests/restricted_traces/restricted_traces_autogen.h":
-    "0a5c073dac41463bb844ee8ecc477ce0"
+    "8d1705e00a2c1957adaf429a0261867f"
 }

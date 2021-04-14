@@ -717,6 +717,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/idle_heroes': {
+      'packages': [
+        {
+            'package': 'angle/traces/idle_heroes',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/junes_journey': {
       'packages': [
         {
