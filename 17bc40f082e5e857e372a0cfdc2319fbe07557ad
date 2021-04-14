@@ -167,6 +167,30 @@
       },
       "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85a86f36_54adf78e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1337,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-14T18:25:32Z",
+      "side": 1,
+      "message": "Minor point, but if `imageLayout \u003d\u003d ImageLayout::DepthStencilReadOnly` you would still want to check `mDepthStencilImage-\u003eisReadBarrierNecessary(imageLayout)`.",
+      "parentUuid": "7b15c75c_b9fcb480",
+      "range": {
+        "startLine": 1337,
+        "startChar": 48,
+        "endLine": 1337,
+        "endChar": 52
+      },
+      "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
