@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb2f4b99_247e10b2",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T12:28:40Z",
+      "side": 1,
+      "message": "style nit: non-const \u0026 params (use *)",
+      "range": {
+        "startLine": 104,
+        "startChar": 36,
+        "endLine": 104,
+        "endChar": 52
+      },
+      "revId": "993d5b720f28bf502d9d9dce69d001c604a2cb87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
