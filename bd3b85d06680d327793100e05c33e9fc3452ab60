@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67fa7335_3b946b5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-04-14T09:45:15Z",
+      "side": 1,
+      "message": "Tested with local NV GPU on simulating failure GetPCIDevicesWithLibPCI() and GetSystemInfoVulkan() could work, let\u0027s land this?",
+      "revId": "bd3b85d06680d327793100e05c33e9fc3452ab60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
