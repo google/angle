@@ -22,6 +22,30 @@
       },
       "revId": "993d5b720f28bf502d9d9dce69d001c604a2cb87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e72ada0c_fec5a197",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-14T14:57:41Z",
+      "side": 1,
+      "message": "Hmm, logically it should be const, it is not const because GenricValue::AddMember doesn\u0027t accept a const as input. I think passing it as rvalue reference is better in this case than using a pointer that would require an assert in the function body to ensure to check that it is not nullptr.",
+      "parentUuid": "fb2f4b99_247e10b2",
+      "range": {
+        "startLine": 104,
+        "startChar": 36,
+        "endLine": 104,
+        "endChar": 52
+      },
+      "revId": "993d5b720f28bf502d9d9dce69d001c604a2cb87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
