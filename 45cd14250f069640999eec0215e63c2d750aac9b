@@ -16,6 +16,24 @@
       "message": "Since you\u0027re in here, can you update this to use \u0027GLuint\u0027:\n\n    paramCapture-\u003ereadBufferSizeBytes \u003d sizeof(GLuint);\n\nThey\u0027re the same size so things should keep working either way, but it\u0027d be good cleanup.",
       "revId": "45cd14250f069640999eec0215e63c2d750aac9b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f93ade83_b76ee89b",
+        "filename": "src/libANGLE/capture/capture_gles_3_0_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 434,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-14T04:16:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f121b635_5afe3a3e",
+      "revId": "45cd14250f069640999eec0215e63c2d750aac9b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
