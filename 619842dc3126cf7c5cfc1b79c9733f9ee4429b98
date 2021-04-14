@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a27d69c7_cdda0306",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-14T12:22:36Z",
+      "side": 1,
+      "message": "There are a few unrelated WS changes (removed newlines), I can move them to another commit if needed.",
+      "revId": "619842dc3126cf7c5cfc1b79c9733f9ee4429b98",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
