@@ -46,6 +46,30 @@
       },
       "revId": "993d5b720f28bf502d9d9dce69d001c604a2cb87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c99918dd_9dcd8879",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T15:02:00Z",
+      "side": 1,
+      "message": "Looks like the Google c++ style guide changed and now allows non-const \u0026. It was disallowed for a long time. You\u0027re in luck!",
+      "parentUuid": "e72ada0c_fec5a197",
+      "range": {
+        "startLine": 104,
+        "startChar": 36,
+        "endLine": 104,
+        "endChar": 52
+      },
+      "revId": "993d5b720f28bf502d9d9dce69d001c604a2cb87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
