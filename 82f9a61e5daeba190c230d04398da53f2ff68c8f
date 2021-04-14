@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e7e68112_8efaa0b9",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-14T16:01:29Z",
+      "side": 1,
+      "message": "Please add ASSERT_GL_NO_ERROR(); after this line to make sure there were no errors before you validate the pixel value. I suspect metal and d3d were failing this line because they don\u0027t support the necessary extension, which would make anglebug.com/5863 invalid.",
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "021ebec6_b4485f2c",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 10
