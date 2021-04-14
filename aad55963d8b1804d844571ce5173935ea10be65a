@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7f4d887_785a6e40",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-14T14:39:56Z",
+      "side": 1,
+      "message": "This should fix https://bugs.chromium.org/p/chromium/issues/detail?id\u003d1198908, but I was not able to test it, because compiling for arm64 doesn\u0027t work on my machine.",
+      "revId": "aad55963d8b1804d844571ce5173935ea10be65a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
