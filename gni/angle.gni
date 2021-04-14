@@ -33,8 +33,13 @@ if (angle_has_build) {
     import("//build/config/win/visual_studio_version.gni")
   }
 
+  if (is_chromecast) {
+    angle_vulkan_display_mode = "headless"
+  }
+
   angle_use_x11 = use_x11 && !is_ggp
-  angle_use_vulkan_display = is_linux && !use_x11 && !is_ggp && !use_ozone
+  angle_use_vulkan_display =
+      is_linux && !use_x11 && !is_ggp && (!use_ozone || is_chromecast)
 } else {
   declare_args() {
     is_ubsan = false
