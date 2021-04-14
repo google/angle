@@ -118,6 +118,30 @@
       },
       "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09717ee6_bf1d9b24",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-14T15:42:27Z",
+      "side": 1,
+      "message": "I\u0027m getting native driver errors on multiple Android devices when I run this CL on a debug build.\n\nOn ARM:\n\n    RendererGL.cpp:106 (LogGLDebugMessage):\n        Source: API\n        Type: Error\n        ID: 0x000000BF\n        Severity: High\n        Message: Error:glReadPixels::no GL_READ_BUFFER\n\nOn QCOM:\n\n    RendererGL.cpp:106 (LogGLDebugMessage):\n        Source: API\n        Type: Error\n        ID: 0x7FFFFFFF\n        Severity: High\n        Message: GL_READ_FRAMEBUFFER_BINDING is nonzero and the read buffer selects an attachment that has no image attached",
+      "parentUuid": "51dc9e66_faa43fbc",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 325,
+        "endChar": 5
+      },
+      "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
