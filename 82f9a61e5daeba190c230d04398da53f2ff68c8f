@@ -228,6 +228,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0dd6d828_cbc55c8c",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-14T17:12:07Z",
+      "side": 1,
+      "message": "@Shahbaz\n\nThanks for pointing out the spec. This explains the GL error on QC. I will try to make the patch work with UNSIGNED_INT_24_8_OES and mask the stencil bits.\n\nAlso angleproject:5863 is invalid, since I was not checking for the availability of the extensions correctly.\n\n@Jamie\n\nI will take a look at GetImageTest.cpp.",
+      "parentUuid": "e6f9169e_aeccd4a2",
+      "range": {
+        "startLine": 329,
+        "startChar": 28,
+        "endLine": 330,
+        "endChar": 61
+      },
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1eed401d_79ef641c",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 10
