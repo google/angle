@@ -133,14 +133,6 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
 
     properties["$build/goma"] = goma_props
 
-    caches = []
-    if os.category == os_category.MAC:
-        # Cache for mac_toolchain tool and XCode.app
-        caches += [swarming.cache(name = "osx_sdk", path = "osx_sdk")]
-        properties["$depot_tools/osx_sdk"] = {
-            "sdk_version": "12D4e"
-        }
-
     if not clang:
         properties["clang"] = False
 
@@ -155,7 +147,6 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
         service_account = "angle-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
         properties = properties,
         dimensions = dimensions,
-        caches = caches,
         build_numbers = True,
     )
 
@@ -166,7 +157,6 @@ def angle_standalone_builder(name, clang, debug, cpu, uwp = False, trace_tests =
         service_account = "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
         properties = properties,
         dimensions = dimensions,
-        caches = caches,
         build_numbers = True,
     )
 
