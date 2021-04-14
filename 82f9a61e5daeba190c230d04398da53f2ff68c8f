@@ -180,6 +180,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2b5426e7_66badf8e",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-14T16:52:32Z",
+      "side": 1,
+      "message": "I may have misread things. Looking again, the GL_NV_read_depth spec says:\n\n\u003e If the \u003cformat\u003e is DEPTH_COMPONENT, then values are obtained\n\u003e from the depth buffer. If there is no depth buffer, the error\n\u003e INVALID_OPERATION occurs. If the \u003ctype\u003e is not UNSIGNED_SHORT,\n\u003e FLOAT, or UNSIGNED_INT_24_8_OES then the error INVALID_ENUM\n\u003e occurs. If the \u003ctype\u003e is FLOAT and the depth buffer is not a\n\u003e float buffer, an INVALID_OPERATION error occurs. If the \u003ctype\u003e\n\u003e is UNSIGNED_SHORT or UNSIGNED_INT_24_8_OES and the depth buffer\n\u003e is a float buffer, an INVALID_OPERATION error occurs. When the\n\u003e \u003ctype\u003e is UNSIGNED_INT_24_8_OES the values read into the 8\n\u003e stencil bits are undefined.\n\nSo it looks like \"GL_DEPTH_COMPONENT, GL_UNSIGNED_INT\" is not a valid combination. It also says the stencil bit values are undefined, so I was definitely wrong about it scaling things.\n\nLooks like you might need to read with UNSIGNED_INT_24_8_OES, and then mask the stencil bits out before using EXPECT.",
+      "parentUuid": "5c9a162a_f3f3e93a",
+      "range": {
+        "startLine": 329,
+        "startChar": 28,
+        "endLine": 330,
+        "endChar": 61
+      },
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1eed401d_79ef641c",
         "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
         "patchSetId": 10
