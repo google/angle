@@ -94,6 +94,30 @@
       },
       "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51dc9e66_faa43fbc",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-14T15:13:07Z",
+      "side": 1,
+      "message": "I suppose I\u0027ve hit a bug on native GLES / Android where GL_INVALID_OPERATION is produced due to my depth attachment not being considered to have an attached image.\n\nhttps://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glReadPixels.xhtml\n\nI am calling:\nglFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);\n\nThis also works:\nASSERT_GL_FRAMEBUFFER_COMPLETE(GL_FRAMEBUFFER);\n\nDue to this I am skipping native GLES for Android, as it works fine on angle.",
+      "parentUuid": "9fdcfd03_7b665d32",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 325,
+        "endChar": 5
+      },
+      "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
