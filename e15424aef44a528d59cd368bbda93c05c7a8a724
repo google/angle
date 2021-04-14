@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34eb80f2_a5c698bf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002767
+      },
+      "writtenOn": "2021-04-14T20:14:46Z",
+      "side": 1,
+      "message": "You can ignore the cast_shell_linux failure. I was hoping it would work, but it\u0027s unable to apply a patch from ANGLE, apparently.",
+      "revId": "e15424aef44a528d59cd368bbda93c05c7a8a724",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
