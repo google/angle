@@ -16,6 +16,461 @@
       "message": "This is the bulk of the code changes.\n1. isProtected - added almost everywhere. Is it in all thee right places?\n2. I encapsulated queue family index and all its properties in a vk::QueueFamily - it seemed to reduce redundancy and cleanup code a bit, and some convenience.\n3. CommandQueue and CommandPool for protected contexts/rendering\n4. Top level Context, Texture, Image, Surface have a isProtected member - so that it propagates as needed - ie protected Texture to protected Image.",
       "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf6fefb7_05335397",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "1. hopefully the bots will confirm if it\u0027s correct. code wise it looks good to me.\n\n2. the class I have some suggestions on how to clean up the code.",
+      "parentUuid": "d269a6b9_0ebcae3e",
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3921cf2_0f134b83",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1020,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "nit: hasProtectedContent, same as the rest",
+      "range": {
+        "startLine": 1020,
+        "startChar": 14,
+        "endLine": 1020,
+        "endChar": 31
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f661c990_c37091e0",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "nit: please de-duplicate with the context one.",
+      "range": {
+        "startLine": 104,
+        "startChar": 15,
+        "endLine": 104,
+        "endChar": 32
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "589c0e13_83479483",
+        "filename": "src/libANGLE/Surface.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "nit: hasProtectedContent is more precise, can you update the relevant GL-isms? vulkan uses the protected memory terminology.",
+      "range": {
+        "startLine": 61,
+        "startChar": 9,
+        "endLine": 61,
+        "endChar": 26
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a30fe86d_6f61c348",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "maybe just make these anonymous to this file instead of scoping it to the class, just makes it easier to keep out of the header.",
+      "range": {
+        "startLine": 1229,
+        "startChar": 0,
+        "endLine": 1233,
+        "endChar": 58
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a505f08_51b7b989",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "nit: please follow the google c++ ordering rules, check the online style guide for reference.",
+      "range": {
+        "startLine": 188,
+        "startChar": 6,
+        "endLine": 188,
+        "endChar": 17
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "229f0e90_d46adb84",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "I\u0027d rather you store this by-value or otherwise de-duplicate it.",
+      "range": {
+        "startLine": 189,
+        "startChar": 1,
+        "endLine": 190,
+        "endChar": 47
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2fc269d5_8d6de96d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "how about instead you pass in the priority and use mPriorities to map on-demand.\n\nAlso please return the VkQueue instead of void.",
+      "range": {
+        "startLine": 206,
+        "startChar": 9,
+        "endLine": 206,
+        "endChar": 23
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b03590a2_3450976f",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "suggest you define this and the destructor in the cpp.",
+      "range": {
+        "startLine": 216,
+        "startChar": 20,
+        "endLine": 216,
+        "endChar": 31
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f957406e_85903d4b",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 226,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "nit: explicitly convert to bool",
+      "range": {
+        "startLine": 224,
+        "startChar": 0,
+        "endLine": 226,
+        "endChar": 91
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5225757e_87dfeaf0",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "same comment as below. avoid \u0027actual\u0027 as it\u0027s a vague term.",
+      "range": {
+        "startLine": 227,
+        "startChar": 13,
+        "endLine": 227,
+        "endChar": 32
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c831301_0b579fec",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "what exactly is it making? maybe initialize?",
+      "range": {
+        "startLine": 229,
+        "startChar": 9,
+        "endLine": 229,
+        "endChar": 19
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d7b47f9_996ce7a7",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "avoid actual as a term unless paired with intended. seems like \"Device\" is the term we use for consistentcy.",
+      "range": {
+        "startLine": 231,
+        "startChar": 25,
+        "endLine": 231,
+        "endChar": 42
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b510251_d0cec440",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "can you instead use the query method instead of returning the map?",
+      "range": {
+        "startLine": 235,
+        "startChar": 4,
+        "endLine": 235,
+        "endChar": 70
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a69bb63_b56458e0",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "would be better if we didn\u0027t need to pass this flag to the getDriverPriority method. conceptually the priority and protected-ness are indepenent.\n\nCan you author a follow-up (or preliminary) change to remove mContextPriority and make the renderer do the lookup on demand?",
+      "range": {
+        "startLine": 403,
+        "startChar": 44,
+        "endLine": 403,
+        "endChar": 61
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9c4a95a_218a3a30",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "please merge these into the families.",
+      "range": {
+        "startLine": 670,
+        "startChar": 0,
+        "endLine": 671,
+        "endChar": 71
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa405094_b9c84e96",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "you can omit these",
+      "range": {
+        "startLine": 672,
+        "startChar": 0,
+        "endLine": 673,
+        "endChar": 30
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c642469_20e8d4dd",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1739,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "just \"valid\" is acceptable and consistent with the other classes.",
+      "range": {
+        "startLine": 1739,
+        "startChar": 30,
+        "endLine": 1739,
+        "endChar": 37
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6123b9dd_34f297f6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "nit: return \u0026 since this is const.",
+      "range": {
+        "startLine": 404,
+        "startChar": 26,
+        "endLine": 404,
+        "endChar": 27
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d7c779f7_b0bf9bb2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T17:48:54Z",
+      "side": 1,
+      "message": "rather than using the pointer, I\u0027d rather you just check if the protected queue family is valid. I think it\u0027ll make the code easier to understand.",
+      "range": {
+        "startLine": 511,
+        "startChar": 21,
+        "endLine": 511,
+        "endChar": 45
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
