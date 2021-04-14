@@ -70,6 +70,30 @@
       },
       "revId": "993d5b720f28bf502d9d9dce69d001c604a2cb87",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "068dd766_2a5275fe",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T15:02:16Z",
+      "side": 1,
+      "message": "Link: https://google.github.io/styleguide/cppguide.html#Inputs_and_Outputs",
+      "parentUuid": "c99918dd_9dcd8879",
+      "range": {
+        "startLine": 104,
+        "startChar": 36,
+        "endLine": 104,
+        "endChar": 52
+      },
+      "revId": "993d5b720f28bf502d9d9dce69d001c604a2cb87",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
