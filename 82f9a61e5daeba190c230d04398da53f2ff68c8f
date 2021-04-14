@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18af39e5_433da244",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-14T16:51:50Z",
+      "side": 1,
+      "message": "Resolved.",
+      "parentUuid": "e7e68112_8efaa0b9",
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "021ebec6_b4485f2c",
@@ -55,6 +73,30 @@
       "side": 1,
       "message": "I see. I can take the value from GL as reference for the comparison. I am not aware of any GL spec language related to this, I would be happy if you can point me to something if it\u0027s defined.",
       "parentUuid": "021ebec6_b4485f2c",
+      "range": {
+        "startLine": 325,
+        "startChar": 7,
+        "endLine": 325,
+        "endChar": 70
+      },
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "550c0184_eef5d459",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-14T16:51:50Z",
+      "side": 1,
+      "message": "Resolved.",
+      "parentUuid": "843a489a_20bb5809",
       "range": {
         "startLine": 325,
         "startChar": 7,
@@ -112,6 +154,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "243cd66b_94352e07",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-14T16:51:50Z",
+      "side": 1,
+      "message": "Resolved.",
+      "parentUuid": "5c9a162a_f3f3e93a",
+      "range": {
+        "startLine": 329,
+        "startChar": 28,
+        "endLine": 330,
+        "endChar": 61
+      },
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1eed401d_79ef641c",
@@ -143,6 +209,24 @@
       "side": 1,
       "message": "Thanks for finding this! Yes this skip condition was entirely wrong. The condition did also not trigger on GLES3 this way. Unfortunately this does not fix the test on QC, as both extensions seem to be enabled here. This might resolve the issue I was facing on D3D11 and Metal though.",
       "parentUuid": "1eed401d_79ef641c",
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3202568_29082243",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 355,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-14T16:51:50Z",
+      "side": 1,
+      "message": "Resolved.",
+      "parentUuid": "cc754abc_5d1d660a",
       "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
