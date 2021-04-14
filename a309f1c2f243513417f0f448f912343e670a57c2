@@ -70,6 +70,30 @@
       },
       "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fdcfd03_7b665d32",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 325,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-14T13:48:15Z",
+      "side": 1,
+      "message": "The values seem to be a bit off between Mesa/Intel/Vulkan and Mesa/AMD/Vulkan, as well as previously mentioned between GL and Vk. The error threshold of 256 is enough to cover these cases, I explained them in a comment. I suppose the value is tolerable considering the range.\n\nThe remaining failures were on D3D11 and Metal, where the depth values don\u0027t seem to change at all when clearing or drawing. I reported a bug and skipped the test for these back ends.\nhttps://bugs.chromium.org/p/angleproject/issues/detail?id\u003d5863\n\nUnfortunately the test still fails on Android/Pixel 2 with a GL error:\nMessage: GL_READ_FRAMEBUFFER_BINDING is nonzero and the read buffer selects an attachment that has no image attached.\n\nI look into reproducing this locally, didn\u0027t run the test on Android yet.",
+      "parentUuid": "ad644215_aeacc4e3",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 325,
+        "endChar": 5
+      },
+      "revId": "a309f1c2f243513417f0f448f912343e670a57c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
