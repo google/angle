@@ -16,6 +16,24 @@
       "message": "Hi! I suspect this is the CL has broken Skia\u0027s Win-Clang-ARM64 (but not Win-MSVC-arm64) builders:\n\n  https://logs.chromium.org/logs/skia/52e7b53bb33c4811/+/steps/ninja/0/stdout\n\nTo see the various arm64-ANGLE builders:\n\n  https://status.skia.org/?filter\u003dSearch\u0026repo\u003dskia\u0026search\u003dWin.*arm64.*ANGLE\n\nFrom peeking at the headers, it\u0027s probably just some confusion about which defines are in use when cl_platform.h gets included, causing stdint.h to not be included.",
       "revId": "8994fc7be7a11a1d93709b65aa8a374e7a77da7f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1979d11b_3bbd7786",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-14T13:21:05Z",
+      "side": 1,
+      "message": "Thanks for the notice Brian. It\u0027s also reported in Chrome: http://crbug.com/1198908 . Seems like a gap in our testing, I filed http://anglebug.com/5862 to track closing this gap.",
+      "parentUuid": "b6476be7_f7575ca6",
+      "revId": "8994fc7be7a11a1d93709b65aa8a374e7a77da7f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
