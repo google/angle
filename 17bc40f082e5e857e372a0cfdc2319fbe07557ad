@@ -191,6 +191,30 @@
       },
       "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e87be304_2e9b13ea",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1337,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-15T16:51:11Z",
+      "side": 1,
+      "message": "This is what causing the test failure. I think isReadBarrierNecessary() should just renamed to isBarrierNecessary.",
+      "parentUuid": "85a86f36_54adf78e",
+      "range": {
+        "startLine": 1337,
+        "startChar": 48,
+        "endLine": 1337,
+        "endChar": 52
+      },
+      "revId": "17bc40f082e5e857e372a0cfdc2319fbe07557ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
