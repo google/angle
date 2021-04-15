@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fee22487_3cd2c9cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-15T15:26:44Z",
+      "side": 1,
+      "message": "Gonna land with an override file so we can finally roll the CTS, but the override can be removed whenever https://gerrit.khronos.org/c/vk-gl-cts/+/7296 lands. The override file has the contents of teglAndroidUtil.cpp from that change.",
+      "revId": "f5b2274576417d6b0e779862de62b1a9d9abfd13",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
