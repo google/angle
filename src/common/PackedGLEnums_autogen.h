@@ -12,8 +12,6 @@
 #ifndef COMMON_PACKEDGLENUMS_AUTOGEN_H_
 #define COMMON_PACKEDGLENUMS_AUTOGEN_H_
 
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
 #include <angle_gl.h>
 
 #include <cstdint>

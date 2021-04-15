@@ -18,14 +18,23 @@ Generators = [
     {
         'json': 'packed_gl_enums.json',
         'output': 'PackedGLEnums',
+        'includes': '#include <angle_gl.h>',
         'namespace': 'gl',
         'enum_type': 'GLenum',
     },
     {
         'json': 'packed_egl_enums.json',
         'output': 'PackedEGLEnums',
+        'includes': '#include <EGL/egl.h>\n#include <EGL/eglext.h>',
         'namespace': 'egl',
         'enum_type': 'EGLenum',
+    },
+    {
+        'json': 'packed_cl_enums.json',
+        'output': 'PackedCLEnums',
+        'includes': '#include <angle_cl.h>\ntypedef cl_uint CLenum;',
+        'namespace': 'cl',
+        'enum_type': 'CLenum',
     },
 ]
 
@@ -73,9 +82,7 @@ header_template = """// GENERATED FILE - DO NOT EDIT.
 #ifndef COMMON_{include_guard}_
 #define COMMON_{include_guard}_
 
-#include <angle_gl.h>
-#include <EGL/egl.h>
-#include <EGL/eglext.h>
+{includes}
 
 #include <cstdint>
 #include <ostream>
@@ -107,7 +114,8 @@ std::ostream &operator<<(std::ostream &os, {enum_name} value);
 """
 
 
-def write_header(enums, path_prefix, file_name, data_source_name, namespace, api_enum_name):
+def write_header(enums, path_prefix, file_name, data_source_name, includes, namespace,
+                 api_enum_name):
     content = ['']
 
     for enum in enums:
@@ -128,6 +136,7 @@ def write_header(enums, path_prefix, file_name, data_source_name, namespace, api
         script_name=sys.argv[0],
         file_name=file_name,
         include_guard=generate_include_guard(file_name),
+        includes=includes,
         namespace=namespace,
         api_enum_name=api_enum_name)
 
@@ -257,11 +266,12 @@ def main():
     for generator in Generators:
         json_file = generator['json']
         output_file = generator['output']
+        includes = generator['includes']
         namespace = generator['namespace']
         enum_type = generator['enum_type']
         enums = load_enums(path_prefix + json_file)
-        write_header(enums, path_prefix, output_file + '_autogen.h', json_file, namespace,
-                     enum_type)
+        write_header(enums, path_prefix, output_file + '_autogen.h', json_file, includes,
+                     namespace, enum_type)
         write_cpp(enums, path_prefix, output_file + '_autogen.cpp', json_file, namespace,
                   enum_type)
     return 0

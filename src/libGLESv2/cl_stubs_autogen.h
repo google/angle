@@ -12,11 +12,13 @@
 
 #include "angle_cl.h"
 
+#include "common/PackedCLEnums_autogen.h"
+
 namespace cl
 {
 cl_int GetPlatformIDs(cl_uint num_entries, cl_platform_id *platforms, cl_uint *num_platforms);
 cl_int GetPlatformInfo(cl_platform_id platform,
-                       cl_platform_info param_name,
+                       PlatformInfo param_namePacked,
                        size_t param_value_size,
                        void *param_value,
                        size_t *param_value_size_ret);
@@ -26,7 +28,7 @@ cl_int GetDeviceIDs(cl_platform_id platform,
                     cl_device_id *devices,
                     cl_uint *num_devices);
 cl_int GetDeviceInfo(cl_device_id device,
-                     cl_device_info param_name,
+                     DeviceInfo param_namePacked,
                      size_t param_value_size,
                      void *param_value,
                      size_t *param_value_size_ret);
@@ -64,7 +66,7 @@ cl_context CreateContextFromType(const cl_context_properties *properties,
 cl_int RetainContext(cl_context context);
 cl_int ReleaseContext(cl_context context);
 cl_int GetContextInfo(cl_context context,
-                      cl_context_info param_name,
+                      ContextInfo param_namePacked,
                       size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret);
@@ -79,7 +81,7 @@ cl_command_queue CreateCommandQueueWithProperties(cl_context context,
 cl_int RetainCommandQueue(cl_command_queue command_queue);
 cl_int ReleaseCommandQueue(cl_command_queue command_queue);
 cl_int GetCommandQueueInfo(cl_command_queue command_queue,
-                           cl_command_queue_info param_name,
+                           CommandQueueInfo param_namePacked,
                            size_t param_value_size,
                            void *param_value,
                            size_t *param_value_size_ret);
@@ -122,22 +124,22 @@ cl_int RetainMemObject(cl_mem memobj);
 cl_int ReleaseMemObject(cl_mem memobj);
 cl_int GetSupportedImageFormats(cl_context context,
                                 cl_mem_flags flags,
-                                cl_mem_object_type image_type,
+                                MemObjectType image_typePacked,
                                 cl_uint num_entries,
                                 cl_image_format *image_formats,
                                 cl_uint *num_image_formats);
 cl_int GetMemObjectInfo(cl_mem memobj,
-                        cl_mem_info param_name,
+                        MemInfo param_namePacked,
                         size_t param_value_size,
                         void *param_value,
                         size_t *param_value_size_ret);
 cl_int GetImageInfo(cl_mem image,
-                    cl_image_info param_name,
+                    ImageInfo param_namePacked,
                     size_t param_value_size,
                     void *param_value,
                     size_t *param_value_size_ret);
 cl_int GetPipeInfo(cl_mem pipe,
-                   cl_pipe_info param_name,
+                   PipeInfo param_namePacked,
                    size_t param_value_size,
                    void *param_value,
                    size_t *param_value_size_ret);
@@ -152,7 +154,7 @@ cl_sampler CreateSamplerWithProperties(cl_context context,
 cl_int RetainSampler(cl_sampler sampler);
 cl_int ReleaseSampler(cl_sampler sampler);
 cl_int GetSamplerInfo(cl_sampler sampler,
-                      cl_sampler_info param_name,
+                      SamplerInfo param_namePacked,
                       size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret);
@@ -212,13 +214,13 @@ cl_int SetProgramSpecializationConstant(cl_program program,
                                         const void *spec_value);
 cl_int UnloadPlatformCompiler(cl_platform_id platform);
 cl_int GetProgramInfo(cl_program program,
-                      cl_program_info param_name,
+                      ProgramInfo param_namePacked,
                       size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret);
 cl_int GetProgramBuildInfo(cl_program program,
                            cl_device_id device,
-                           cl_program_build_info param_name,
+                           ProgramBuildInfo param_namePacked,
                            size_t param_value_size,
                            void *param_value,
                            size_t *param_value_size_ret);
@@ -233,29 +235,29 @@ cl_int ReleaseKernel(cl_kernel kernel);
 cl_int SetKernelArg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value);
 cl_int SetKernelArgSVMPointer(cl_kernel kernel, cl_uint arg_index, const void *arg_value);
 cl_int SetKernelExecInfo(cl_kernel kernel,
-                         cl_kernel_exec_info param_name,
+                         KernelExecInfo param_namePacked,
                          size_t param_value_size,
                          const void *param_value);
 cl_int GetKernelInfo(cl_kernel kernel,
-                     cl_kernel_info param_name,
+                     KernelInfo param_namePacked,
                      size_t param_value_size,
                      void *param_value,
                      size_t *param_value_size_ret);
 cl_int GetKernelArgInfo(cl_kernel kernel,
                         cl_uint arg_index,
-                        cl_kernel_arg_info param_name,
+                        KernelArgInfo param_namePacked,
                         size_t param_value_size,
                         void *param_value,
                         size_t *param_value_size_ret);
 cl_int GetKernelWorkGroupInfo(cl_kernel kernel,
                               cl_device_id device,
-                              cl_kernel_work_group_info param_name,
+                              KernelWorkGroupInfo param_namePacked,
                               size_t param_value_size,
                               void *param_value,
                               size_t *param_value_size_ret);
 cl_int GetKernelSubGroupInfo(cl_kernel kernel,
                              cl_device_id device,
-                             cl_kernel_sub_group_info param_name,
+                             KernelSubGroupInfo param_namePacked,
                              size_t input_value_size,
                              const void *input_value,
                              size_t param_value_size,
@@ -263,7 +265,7 @@ cl_int GetKernelSubGroupInfo(cl_kernel kernel,
                              size_t *param_value_size_ret);
 cl_int WaitForEvents(cl_uint num_events, const cl_event *event_list);
 cl_int GetEventInfo(cl_event event,
-                    cl_event_info param_name,
+                    EventInfo param_namePacked,
                     size_t param_value_size,
                     void *param_value,
                     size_t *param_value_size_ret);
@@ -278,7 +280,7 @@ cl_int SetEventCallback(cl_event event,
                                                       void *user_data),
                         void *user_data);
 cl_int GetEventProfilingInfo(cl_event event,
-                             cl_profiling_info param_name,
+                             ProfilingInfo param_namePacked,
                              size_t param_value_size,
                              void *param_value,
                              size_t *param_value_size_ret);
@@ -564,8 +566,8 @@ cl_command_queue CreateCommandQueue(cl_context context,
                                     cl_int *errcode_ret);
 cl_sampler CreateSampler(cl_context context,
                          cl_bool normalized_coords,
-                         cl_addressing_mode addressing_mode,
-                         cl_filter_mode filter_mode,
+                         AddressingMode addressing_modePacked,
+                         FilterMode filter_modePacked,
                          cl_int *errcode_ret);
 cl_int EnqueueTask(cl_command_queue command_queue,
                    cl_kernel kernel,

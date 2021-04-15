@@ -251,7 +251,9 @@ void CL_API_CALL CL_{name}({params})
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
-    // TODO: {name}
+    {packed_gl_enum_conversions}
+
+    // TODO: validate
 
     cl::{name}({internal_params});
 }}
@@ -262,7 +264,9 @@ TEMPLATE_CL_ENTRY_POINT_WITH_RETURN = """\
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
-    // TODO: {name}
+    {packed_gl_enum_conversions}
+
+    // TODO: validate
 
     return cl::{name}({internal_params});
 }}
@@ -282,6 +286,8 @@ TEMPLATE_CL_STUBS_HEADER = """\
 #define LIBGLESV2_{annotation_upper}_STUBS_AUTOGEN_H_
 
 #include "angle_cl.h"
+
+#include "common/PackedCLEnums_autogen.h"
 
 namespace cl
 {{
@@ -970,6 +976,9 @@ LIBCL_SOURCE_INCLUDES = """\
 
 #include "cl_stubs_autogen.h"
 #include "entry_points_cl_utils.h"
+#include "validationCL.h"
+
+using namespace cl;
 """
 
 TEMPLATE_EVENT_COMMENT = """\
@@ -1184,7 +1193,28 @@ TEMPLATE_RESOURCE_ID_TYPE_NAME_CASE = """\
         case ResourceIDType::{resource_id_type}:
             return "{resource_id_type}";"""
 
-CL_PACKED_TYPES = {}
+CL_PACKED_TYPES = {
+    "cl_platform_info": "PlatformInfo",
+    "cl_device_info": "DeviceInfo",
+    "cl_context_info": "ContextInfo",
+    "cl_command_queue_info": "CommandQueueInfo",
+    "cl_mem_object_type": "MemObjectType",
+    "cl_mem_info": "MemInfo",
+    "cl_image_info": "ImageInfo",
+    "cl_pipe_info": "PipeInfo",
+    "cl_addressing_mode": "AddressingMode",
+    "cl_filter_mode": "FilterMode",
+    "cl_sampler_info": "SamplerInfo",
+    "cl_program_info": "ProgramInfo",
+    "cl_program_build_info": "ProgramBuildInfo",
+    "cl_kernel_info": "KernelInfo",
+    "cl_kernel_arg_info": "KernelArgInfo",
+    "cl_kernel_work_group_info": "KernelWorkGroupInfo",
+    "cl_kernel_sub_group_info": "KernelSubGroupInfo",
+    "cl_kernel_exec_info": "KernelExecInfo",
+    "cl_event_info": "EventInfo",
+    "cl_profiling_info": "ProfilingInfo",
+}
 
 EGL_PACKED_TYPES = {
     "EGLContext": "gl::Context *",
@@ -1831,7 +1861,8 @@ class CLEntryPoints(ANGLEEntryPoints):
             commands,
             CLEntryPoints.all_param_types,
             CLEntryPoints.get_packed_enums(),
-            export_template=TEMPLATE_CL_ENTRY_POINT_EXPORT)
+            export_template=TEMPLATE_CL_ENTRY_POINT_EXPORT,
+            packed_param_types=CL_PACKED_TYPES)
 
     @classmethod
     def get_packed_enums(cls):
