@@ -52,6 +52,24 @@
       "parentUuid": "fa588c69_2f221597",
       "revId": "fe790824af8007e187d53609c1460e04e801fb9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c9497bd_8996bf9f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1338159
+      },
+      "writtenOn": "2021-04-15T17:00:22Z",
+      "side": 1,
+      "message": "Oh, I thought roll_chromium_deps also rolls the \"3pp\" dirs. If it is not the case, deleting them would be an easy fix.\nI tried to upload a CL for this but failed at \"git cl upload\". Can you help delete them?\n  delete mode 100644 third_party/jdk/3pp/3pp.pb\n  delete mode 100644 third_party/jdk/extras/3pp/3pp.pb\n  delete mode 100755 third_party/jdk/extras/3pp/install.sh",
+      "parentUuid": "5f85f147_37807f7a",
+      "revId": "fe790824af8007e187d53609c1460e04e801fb9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
