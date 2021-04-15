@@ -16,6 +16,92 @@
       "message": "Hi Jamie, Shahbaz. Please help to review if you have the time. :)",
       "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6965886a_3ceb2a5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T14:47:33Z",
+      "side": 1,
+      "message": "Thanks Amy. Some follow-up comments, let me know if it makes sense.",
+      "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a377d25d_6f736445",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 560,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T14:47:33Z",
+      "side": 1,
+      "message": "nit: try to avoid using Incomplete, it\u0027s a bit of a bad design legacy we have left in ANGLE. Maybe use a boolean or other error code to indicate the result instead.",
+      "range": {
+        "startLine": 560,
+        "startChar": 34,
+        "endLine": 560,
+        "endChar": 44
+      },
+      "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6edb865_f66ea96b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 574,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T14:47:33Z",
+      "side": 1,
+      "message": "can\u0027t you just put the mutex inside putApplication? That way you don\u0027t have to expose it.",
+      "range": {
+        "startLine": 574,
+        "startChar": 35,
+        "endLine": 574,
+        "endChar": 49
+      },
+      "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "031cae34_7600940a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2593,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T14:47:33Z",
+      "side": 1,
+      "message": "In my earlier comment I suggested you make this a frontend-feature. That way you can enable the async thread pool when the feature is enabled. Right now by default we only enable multi-threading when parallel shader compile is enabled.",
+      "range": {
+        "startLine": 2593,
+        "startChar": 8,
+        "endLine": 2593,
+        "endChar": 17
+      },
+      "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
