@@ -34,6 +34,24 @@
       "parentUuid": "c140d924_8f33a45d",
       "revId": "fe790824af8007e187d53609c1460e04e801fb9d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f85f147_37807f7a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T16:53:30Z",
+      "side": 1,
+      "message": "Possibly the fix is just to delete all instances of 3pp/3pp.pb from ANGLE code, and then the infra scripts will not be confused?",
+      "parentUuid": "fa588c69_2f221597",
+      "revId": "fe790824af8007e187d53609c1460e04e801fb9d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
