@@ -665,6 +665,15 @@ TracePerfTest::TracePerfTest()
         }
     }
 
+    if (param.testID == RestrictedTraceID::idle_heroes)
+    {
+        // TODO: http://anglebug.com/5591 Trace crashes on Pixel 2
+        if (IsPixel2())
+        {
+            mSkipTest = true;
+        }
+    }
+
     if (param.testID == RestrictedTraceID::shadow_fight_2)
     {
         addExtensionPrerequisite("GL_OES_EGL_image_external");
