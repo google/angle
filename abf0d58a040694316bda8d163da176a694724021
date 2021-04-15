@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3270d76_e5399bc5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T23:54:29Z",
+      "side": 1,
+      "message": "First off, thanks for approving this CL despite your reservations.\n\nThe main driving reason for standalone Android is to lower friction for Android developers. For non-Chrome devs, a full Chrome checkout is a huge barrier. Devs also run into snags with the checkout-inside-a-checkout workflow. Two \u0027sync twice in two folders\u0027 step is a common source of head-scratching.\n\nThere\u0027s also a benefit for standalone perf testing. We get a straight-forward integration with pinpoint and the perf dashboard. Continuous perf testing on ANGLE CLs is easy to conceptualize.\n\nThe pinned chromium is still valuable for angle-in-chromium testing for WebGL and other test suites. It also will be re-purposable to Dawn/WebGPU and other components once they define a more stable API between Chrome. So thank you for your impactful contributions there.\n\nFor this CL, an admin was kind enough to mirror third_party/android_deps, so this patch set removes the 1000+ added files.\n\nNote that \"limit_android_deps \u003d true\" means we only use a few dozen of the numerous Android dependencies. I included them all for simplicity of implementation via copying WebRTC\u0027s roll script.",
+      "parentUuid": "2486714e_f5781bf5",
+      "revId": "abf0d58a040694316bda8d163da176a694724021",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ebe9616_9972efa7",
@@ -58,6 +76,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "611f14bd_08c31b29",
+        "filename": "scripts/roll_chromium_deps.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 460,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T23:54:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ebe9616_9972efa7",
+      "range": {
+        "startLine": 460,
+        "startChar": 0,
+        "endLine": 460,
+        "endChar": 54
+      },
+      "revId": "abf0d58a040694316bda8d163da176a694724021",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "49f99d3f_9ae47b51",
@@ -71,6 +113,30 @@
       "writtenOn": "2021-04-15T17:02:16Z",
       "side": 1,
       "message": "rely?",
+      "range": {
+        "startLine": 469,
+        "startChar": 51,
+        "endLine": 469,
+        "endChar": 56
+      },
+      "revId": "abf0d58a040694316bda8d163da176a694724021",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4aa96c27_823065ad",
+        "filename": "scripts/roll_chromium_deps.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 469,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-15T23:54:29Z",
+      "side": 1,
+      "message": "Done. Cloned from upstream ^^\n\nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/webrtc/tools_webrtc/autoroller/roll_deps.py?q\u003d%22we%20on%20the%20fact%20that%22\u0026ss\u003dchromium",
+      "parentUuid": "49f99d3f_9ae47b51",
       "range": {
         "startLine": 469,
         "startChar": 51,
