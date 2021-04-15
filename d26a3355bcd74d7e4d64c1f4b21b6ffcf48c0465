@@ -33,6 +33,46 @@
       "message": "Nice, GN changes look good. Assuming all added files are copies from Chromium.",
       "revId": "d26a3355bcd74d7e4d64c1f4b21b6ffcf48c0465",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18428670_596cc919",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-15T17:13:25Z",
+      "side": 1,
+      "message": "The 2 CLs in this chain add 6.5 GB to the current 9GB ANGLE checkout.\nIs it worth it?\nWhy is pinning Chromium insufficient?",
+      "revId": "d26a3355bcd74d7e4d64c1f4b21b6ffcf48c0465",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "991cd764_0a573c83",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 425,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-15T17:13:25Z",
+      "side": 1,
+      "message": "Why move this outside is_android?\nI\u0027m worried that because of build id we\u0027ll not be able to take advantage of Swarming\u0027s deduping tasks.",
+      "range": {
+        "startLine": 425,
+        "startChar": 0,
+        "endLine": 425,
+        "endChar": 57
+      },
+      "revId": "d26a3355bcd74d7e4d64c1f4b21b6ffcf48c0465",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
