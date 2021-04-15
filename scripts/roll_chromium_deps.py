@@ -41,6 +41,7 @@ ANGLE_CHROMIUM_DEPS = [
     'buildtools/win',
     'testing',
     'third_party/abseil-cpp',
+    'third_party/android_deps',
     'third_party/catapult',
     'third_party/depot_tools',
     'third_party/jdk',
@@ -457,14 +458,31 @@ def GenerateCommitMessage(
 def UpdateDepsFile(deps_filename, rev_update, changed_deps, new_cr_content, autoroll):
     """Update the DEPS file with the new revision."""
 
-    # Autoroll take care of updating chromium_revision
-    if not autoroll:
-        with open(deps_filename, 'rb') as deps_file:
-            deps_content = deps_file.read()
+    with open(deps_filename, 'rb') as deps_file:
+        deps_content = deps_file.read()
+        # Autoroll takes care of updating 'chromium_revision', thus we don't need to.
+        if not autoroll:
+            # Update the chromium_revision variable.
+            deps_content = deps_content.replace(rev_update.current_chromium_rev,
+                                                rev_update.new_chromium_rev)
 
-        # Update the chromium_revision variable.
-        deps_content = deps_content.replace(rev_update.current_chromium_rev,
-                                            rev_update.new_chromium_rev)
+        # Add and remove dependencies. For now: only generated android deps.
+        # Since gclient cannot add or remove deps, we rely on the fact that
+        # these android deps are located in one place to copy/paste.
+        deps_re = re.compile(ANDROID_DEPS_START + '.*' + ANDROID_DEPS_END, re.DOTALL)
+        new_deps = deps_re.search(new_cr_content)
+        old_deps = deps_re.search(deps_content)
+        if not new_deps or not old_deps:
+            faulty = 'Chromium' if not new_deps else 'ANGLE'
+            raise RollError('Was expecting to find "%s" and "%s"\n'
+                            'in %s DEPS' % (ANDROID_DEPS_START, ANDROID_DEPS_END, faulty))
+
+        replacement = new_deps.group(0).replace('src/third_party/android_deps',
+                                                'third_party/android_deps')
+        replacement = replacement.replace('checkout_android',
+                                          'checkout_android and not build_with_chromium')
+
+        deps_content = deps_re.sub(replacement, deps_content)
 
         with open(deps_filename, 'wb') as deps_file:
             deps_file.write(deps_content)
