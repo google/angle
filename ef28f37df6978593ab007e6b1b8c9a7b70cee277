@@ -33,6 +33,24 @@
       "message": "Cool stuff, John.",
       "revId": "ef28f37df6978593ab007e6b1b8c9a7b70cee277",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91034996_efc5e79d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-15T20:02:59Z",
+      "side": 1,
+      "message": "Thank you!",
+      "parentUuid": "bbb58153_ad736f88",
+      "revId": "ef28f37df6978593ab007e6b1b8c9a7b70cee277",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
