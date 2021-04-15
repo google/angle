@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "145fa398_9ae30ac1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-15T22:48:35Z",
+      "side": 1,
+      "message": "CC Chris who helped me with a couple of these.\n\nI might be able to tidy up one or two sections, but wanted to get this CL out for initial review.\n\nThe re-ordered tables in generated code are most likely due to `iteritems` being replaced by `items`.  Might be able to add a sort() somewhere to get it solid moving forward.",
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
