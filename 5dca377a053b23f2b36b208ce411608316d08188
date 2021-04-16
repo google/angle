@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3abd947e_687ce5d1",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:38:36Z",
+      "side": 1,
+      "message": "Based on this code, I\u0027d suggest extending the test you have written to cover these cases:\n\n- Multiple color attachments (already done)\n- Multiple color + depth\n- Multiple color + stencil\n- Multiple color + depth/stencil\n- Single color + depth\n- Single color + stencil\n- Single color + depth/stencil\n- Depth only\n- Stencil only\n- Depth/stencil\n\nTwo for loops should take care of it.",
+      "revId": "5dca377a053b23f2b36b208ce411608316d08188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

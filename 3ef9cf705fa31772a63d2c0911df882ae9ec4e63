@@ -16,6 +16,24 @@
       "message": "It would be cleaner to initialize this to the max value so the first attachment size is always smaller.\n\n    Extents intersectExtent(std::numeric_limits\u003cint\u003e::max(), std::numeric_limits\u003cint\u003e::max(), 0);",
       "revId": "3ef9cf705fa31772a63d2c0911df882ae9ec4e63",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a1e8eec_2582d894",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:38:36Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "c248092b_e2fe66ae",
+      "revId": "3ef9cf705fa31772a63d2c0911df882ae9ec4e63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
