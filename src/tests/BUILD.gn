@@ -16,7 +16,7 @@ declare_args() {
       is_win || is_linux || is_chromeos || is_android || is_apple || is_fuchsia
 }
 
-if (is_android && build_with_chromium) {
+if (is_android) {
   android_library("native_test_java") {
     testonly = true
     sources = [
@@ -414,9 +414,7 @@ if (build_angle_perftests) {
       "${angle_root}:libGLESv2",
     ]
 
-    if (build_with_chromium) {
-      data_deps += [ "//testing:run_perf_test" ]
-    }
+    data_deps += [ "//testing:run_perf_test" ]
 
     if (is_win || is_linux || is_chromeos) {
       data_deps += [ "${angle_root}/third_party/glmark2:glmark2_angle" ]

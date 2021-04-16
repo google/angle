@@ -1,0 +1,15 @@
+Name: ijar
+URL: https://github.com/bazelbuild/bazel
+Version: b786db0994a4c4c65e3f93a4f6fa268780caff9c
+License: Apache 2.0
+License File: NOT_SHIPPED
+Security Critical: No
+
+Description:
+A tool for generating interface .jars from normal .jars.
+
+Local Modifications:
+- Removed test directory
+- Removed code from platform_utils.cc that referenced "blaze_util".
+- Removed mapped_file_windows.cc since it caused checkdeps to fail.
+- Added BUILD.gn

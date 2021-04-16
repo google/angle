@@ -424,17 +424,14 @@ if (angle_standalone || build_with_chromium) {
 
       if (is_android) {
         public_configs += [ "$angle_root:build_id_config" ]
-        if (build_with_chromium) {
-          configs -= [ "//build/config/android:hide_all_but_jni" ]
-          use_default_launcher = false
-          android_manifest_template = "$angle_root/src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2"
-          deps += [
-            "$angle_root/src/tests:native_test_java",
-            "$angle_root/src/tests:native_test_support_android",
-          ]
-        } else {
-          use_raw_android_executable = true
-        }
+        configs -= [ "//build/config/android:hide_all_but_jni" ]
+        use_default_launcher = false
+        generate_final_jni = false
+        android_manifest_template = "$angle_root/src/tests/test_utils/runner/android/java/AndroidManifest.xml.jinja2"
+        deps += [
+          "$angle_root/src/tests:native_test_java",
+          "$angle_root/src/tests:native_test_support_android",
+        ]
       }
       if (is_ios) {
         # We use a special main function on iOS to initialize UIKit before the normal main runs.
