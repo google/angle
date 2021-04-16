@@ -116,6 +116,7 @@ enum class RestrictedTraceID
     rope_hero_vice_town,
     saint_seiya_awakening,
     shadow_fight_2,
+    slingshot_test1,
     sniper_3d,
     standoff_2,
     subway_surfers,

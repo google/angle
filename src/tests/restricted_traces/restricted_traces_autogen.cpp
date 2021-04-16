@@ -74,6 +74,7 @@
 #include "rope_hero_vice_town/rope_hero_vice_town_capture_context1.h"
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context1.h"
 #include "shadow_fight_2/shadow_fight_2_capture_context1.h"
+#include "slingshot_test1/slingshot_test1_capture_context2.h"
 #include "sniper_3d/sniper_3d_capture_context1.h"
 #include "standoff_2/standoff_2_capture_context1.h"
 #include "subway_surfers/subway_surfers_capture_context1.h"
@@ -395,6 +396,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       shadow_fight_2::kReplayContextClientMinorVersion, shadow_fight_2::kReplayFrameStart,
       shadow_fight_2::kReplayFrameEnd, shadow_fight_2::kReplayDrawSurfaceWidth,
       shadow_fight_2::kReplayDrawSurfaceHeight, "shadow_fight_2"}},
+    {RestrictedTraceID::slingshot_test1,
+     {slingshot_test1::kReplayContextClientMajorVersion,
+      slingshot_test1::kReplayContextClientMinorVersion, slingshot_test1::kReplayFrameStart,
+      slingshot_test1::kReplayFrameEnd, slingshot_test1::kReplayDrawSurfaceWidth,
+      slingshot_test1::kReplayDrawSurfaceHeight, "slingshot_test1"}},
     {RestrictedTraceID::sniper_3d,
      {sniper_3d::kReplayContextClientMajorVersion, sniper_3d::kReplayContextClientMinorVersion,
       sniper_3d::kReplayFrameStart, sniper_3d::kReplayFrameEnd, sniper_3d::kReplayDrawSurfaceWidth,
