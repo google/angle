@@ -55,14 +55,10 @@
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.single.max_patch_vertices = FAIL
 // Bug in front-end where builtins are not correctly marked active in every stage
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_control_to_tessellation_evaluation.data_pass_through = FAIL
-// Translation bugs
-5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_tc_barriers.barrier_guarded_read_calls = FAIL
-5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_tc_barriers.barrier_guarded_read_write_calls = FAIL
 // Test failures
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_quads_tessellation.* = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_triangles_tessellation.identical_triangles = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_triangles_tessellation.inner_tessellation_level_rounding = FAIL
-5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_tc_barriers.barrier_guarded_write_calls = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_invariance.invariance_rule* = SKIP
 // Crash on assert in libcpp. CTS passes to a function '&vector[0], size', where vector is empty.
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_shader_point_mode.points_verification = SKIP

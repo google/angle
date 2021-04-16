@@ -864,13 +864,19 @@ bool VaryingPacking::collectAndPackUserVaryings(gl::InfoLog &infoLog,
         bool matchedInputOutputStaticUse = (input && output && output->staticUse);
         bool activeBuiltIn               = (isActiveBuiltInInput || isActiveBuiltInOutput);
 
+        // Output variable in TCS can be read as input in another invocation by barrier.
+        // See section 11.2.1.2.4 Tessellation Control Shader Execution Order in OpenGL ES 3.2.
+        bool staticUseInTCS =
+            (input && input->staticUse && ref.frontShaderStage == ShaderType::TessControl);
+
         // Separable program requirements
         bool separableActiveInput  = (input && (input->active || !output));
         bool separableActiveOutput = (output && (output->active || !input));
         bool separableActiveVarying =
             (isSeparableProgram && (separableActiveInput || separableActiveOutput));
 
-        if (matchedInputOutputStaticUse || activeBuiltIn || separableActiveVarying)
+        if (matchedInputOutputStaticUse || activeBuiltIn || separableActiveVarying ||
+            staticUseInTCS)
         {
             const sh::ShaderVariable *varying = output ? output : input;
 
