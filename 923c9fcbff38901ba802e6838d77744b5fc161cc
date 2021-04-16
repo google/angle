@@ -312,6 +312,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "312050e3_ca3a7a26",
+        "filename": "src/libANGLE/renderer/metal/shaders/gen_mtl_internal_shaders.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T17:37:14Z",
+      "side": 1,
+      "message": "Ack. I also misread that the encode in line 125 is on the parameter of replace(), not the result.",
+      "parentUuid": "4ccf5573_37690cd2",
+      "range": {
+        "startLine": 133,
+        "startChar": 49,
+        "endLine": 133,
+        "endChar": 55
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3895e2c6_4f541211",
