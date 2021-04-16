@@ -789,6 +789,16 @@ EXPORTS
     ; GL_EXT_tessellation_shader
     glPatchParameteriEXT
 
+    ; GL_EXT_texture_border_clamp
+    glGetSamplerParameterIivEXT
+    glGetSamplerParameterIuivEXT
+    glGetTexParameterIivEXT
+    glGetTexParameterIuivEXT
+    glSamplerParameterIivEXT
+    glSamplerParameterIuivEXT
+    glTexParameterIivEXT
+    glTexParameterIuivEXT
+
     ; GL_EXT_texture_buffer
     glTexBufferEXT
     glTexBufferRangeEXT
@@ -1313,9 +1323,11 @@ EXPORTS
     glGetRenderbufferParameterivOESContextANGLE
     glGetRenderbufferParameterivRobustANGLEContextANGLE
     glGetSamplerParameterIivContextANGLE
+    glGetSamplerParameterIivEXTContextANGLE
     glGetSamplerParameterIivOESContextANGLE
     glGetSamplerParameterIivRobustANGLEContextANGLE
     glGetSamplerParameterIuivContextANGLE
+    glGetSamplerParameterIuivEXTContextANGLE
     glGetSamplerParameterIuivOESContextANGLE
     glGetSamplerParameterIuivRobustANGLEContextANGLE
     glGetSamplerParameterfvContextANGLE
@@ -1345,9 +1357,11 @@ EXPORTS
     glGetTexLevelParameterivANGLEContextANGLE
     glGetTexLevelParameterivRobustANGLEContextANGLE
     glGetTexParameterIivContextANGLE
+    glGetTexParameterIivEXTContextANGLE
     glGetTexParameterIivOESContextANGLE
     glGetTexParameterIivRobustANGLEContextANGLE
     glGetTexParameterIuivContextANGLE
+    glGetTexParameterIuivEXTContextANGLE
     glGetTexParameterIuivOESContextANGLE
     glGetTexParameterIuivRobustANGLEContextANGLE
     glGetTexParameterfvContextANGLE
@@ -1589,9 +1603,11 @@ EXPORTS
     glSampleMaskiContextANGLE
     glSampleMaskiANGLEContextANGLE
     glSamplerParameterIivContextANGLE
+    glSamplerParameterIivEXTContextANGLE
     glSamplerParameterIivOESContextANGLE
     glSamplerParameterIivRobustANGLEContextANGLE
     glSamplerParameterIuivContextANGLE
+    glSamplerParameterIuivEXTContextANGLE
     glSamplerParameterIuivOESContextANGLE
     glSamplerParameterIuivRobustANGLEContextANGLE
     glSamplerParameterfContextANGLE
@@ -1642,9 +1658,11 @@ EXPORTS
     glTexImage3DOESContextANGLE
     glTexImage3DRobustANGLEContextANGLE
     glTexParameterIivContextANGLE
+    glTexParameterIivEXTContextANGLE
     glTexParameterIivOESContextANGLE
     glTexParameterIivRobustANGLEContextANGLE
     glTexParameterIuivContextANGLE
+    glTexParameterIuivEXTContextANGLE
     glTexParameterIuivOESContextANGLE
     glTexParameterIuivRobustANGLEContextANGLE
     glTexParameterfContextANGLE

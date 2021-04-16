@@ -249,7 +249,7 @@ bool ValidateTextureWrapModeValue(const Context *context,
             break;
 
         case GL_CLAMP_TO_BORDER:
-            if (!context->getExtensions().textureBorderClampOES &&
+            if (!context->getExtensions().textureBorderClampAny() &&
                 context->getClientVersion() < ES_3_2)
             {
                 context->validationError(GL_INVALID_ENUM, kExtensionNotEnabled);

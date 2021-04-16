@@ -97,6 +97,7 @@ gles_extensions = [
     "GL_EXT_shader_io_blocks",
     "GL_EXT_sRGB",
     "GL_EXT_tessellation_shader",
+    "GL_EXT_texture_border_clamp",
     "GL_EXT_texture_buffer",
     "GL_EXT_texture_compression_bptc",
     "GL_EXT_texture_compression_dxt1",

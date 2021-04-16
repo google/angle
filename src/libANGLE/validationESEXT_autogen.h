@@ -1327,6 +1327,40 @@ bool ValidateFramebufferFetchBarrierEXT(const Context *context);
 // GL_EXT_tessellation_shader
 bool ValidatePatchParameteriEXT(const Context *context, GLenum pname, GLint value);
 
+// GL_EXT_texture_border_clamp
+bool ValidateGetSamplerParameterIivEXT(const Context *context,
+                                       SamplerID samplerPacked,
+                                       GLenum pname,
+                                       const GLint *params);
+bool ValidateGetSamplerParameterIuivEXT(const Context *context,
+                                        SamplerID samplerPacked,
+                                        GLenum pname,
+                                        const GLuint *params);
+bool ValidateGetTexParameterIivEXT(const Context *context,
+                                   TextureType targetPacked,
+                                   GLenum pname,
+                                   const GLint *params);
+bool ValidateGetTexParameterIuivEXT(const Context *context,
+                                    TextureType targetPacked,
+                                    GLenum pname,
+                                    const GLuint *params);
+bool ValidateSamplerParameterIivEXT(const Context *context,
+                                    SamplerID samplerPacked,
+                                    GLenum pname,
+                                    const GLint *param);
+bool ValidateSamplerParameterIuivEXT(const Context *context,
+                                     SamplerID samplerPacked,
+                                     GLenum pname,
+                                     const GLuint *param);
+bool ValidateTexParameterIivEXT(const Context *context,
+                                TextureType targetPacked,
+                                GLenum pname,
+                                const GLint *params);
+bool ValidateTexParameterIuivEXT(const Context *context,
+                                 TextureType targetPacked,
+                                 GLenum pname,
+                                 const GLuint *params);
+
 // GL_EXT_texture_buffer
 bool ValidateTexBufferEXT(const Context *context,
                           TextureType targetPacked,

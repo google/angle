@@ -2668,6 +2668,86 @@ void CaptureWaitSemaphoreEXT_srcLayouts(const State &glState,
     UNIMPLEMENTED();
 }
 
+void CaptureGetSamplerParameterIivEXT_params(const State &glState,
+                                             bool isCallValid,
+                                             SamplerID samplerPacked,
+                                             GLenum pname,
+                                             GLint *params,
+                                             angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetSamplerParameterIuivEXT_params(const State &glState,
+                                              bool isCallValid,
+                                              SamplerID samplerPacked,
+                                              GLenum pname,
+                                              GLuint *params,
+                                              angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetTexParameterIivEXT_params(const State &glState,
+                                         bool isCallValid,
+                                         TextureType targetPacked,
+                                         GLenum pname,
+                                         GLint *params,
+                                         angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureGetTexParameterIuivEXT_params(const State &glState,
+                                          bool isCallValid,
+                                          TextureType targetPacked,
+                                          GLenum pname,
+                                          GLuint *params,
+                                          angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureSamplerParameterIivEXT_param(const State &glState,
+                                         bool isCallValid,
+                                         SamplerID samplerPacked,
+                                         GLenum pname,
+                                         const GLint *param,
+                                         angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureSamplerParameterIuivEXT_param(const State &glState,
+                                          bool isCallValid,
+                                          SamplerID samplerPacked,
+                                          GLenum pname,
+                                          const GLuint *param,
+                                          angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureTexParameterIivEXT_params(const State &glState,
+                                      bool isCallValid,
+                                      TextureType targetPacked,
+                                      GLenum pname,
+                                      const GLint *params,
+                                      angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
+void CaptureTexParameterIuivEXT_params(const State &glState,
+                                       bool isCallValid,
+                                       TextureType targetPacked,
+                                       GLenum pname,
+                                       const GLuint *params,
+                                       angle::ParamCapture *paramCapture)
+{
+    // Skipped
+}
+
 void CaptureDebugMessageCallbackKHR_userParam(const State &glState,
                                               bool isCallValid,
                                               GLDEBUGPROCKHR callback,
