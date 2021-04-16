@@ -4522,7 +4522,7 @@ void main()
 TEST_P(SimpleStateChangeTestES31, TransformFeedbackThenReadWithCompute)
 {
     // http://anglebug.com/5687
-    ANGLE_SKIP_TEST_IF(IsWindows() && IsAMD() && IsVulkan());
+    ANGLE_SKIP_TEST_IF(IsAMD() && IsVulkan());
 
     constexpr GLsizei kBufferSize = sizeof(float) * 4 * 6;
     GLBuffer buffer;
