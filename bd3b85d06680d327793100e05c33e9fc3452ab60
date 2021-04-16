@@ -33,6 +33,24 @@
       "message": "Thanks for the reland, I\u0027ve been meaning to do it. I think the original failure was on devices that didn\u0027t support Vulkan, so your local testing is probably not applicable.\n\nWhat might have fixed this for the affected users [1] landed 2 days ago. I\u0027d like to give it a few more days before landing this, just so we can be sure the other change itself was good, if that\u0027s ok with you.\n\nHow about I try to land this over the weekend?\n\n[1]: https://chromium-review.googlesource.com/c/angle/angle/+/2817973",
       "revId": "bd3b85d06680d327793100e05c33e9fc3452ab60",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42d29dc5_b6495c06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1382541
+      },
+      "writtenOn": "2021-04-16T03:15:12Z",
+      "side": 1,
+      "message": "Hi Shahbaz,\n\nThanks for the input!\n\nI\u0027m ok to land later, as long as this CL could land.",
+      "parentUuid": "08566817_28cb2f1a",
+      "revId": "bd3b85d06680d327793100e05c33e9fc3452ab60",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
