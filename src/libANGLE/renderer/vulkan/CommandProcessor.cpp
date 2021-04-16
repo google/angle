@@ -122,7 +122,7 @@ void CommandProcessorTask::initProcessCommands(CommandBufferHelper *commandBuffe
 
 void CommandProcessorTask::copyPresentInfo(const VkPresentInfoKHR &other)
 {
-    if (other.sType == VK_NULL_HANDLE)
+    if (other.sType == 0)
     {
         return;
     }
