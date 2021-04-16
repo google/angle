@@ -52,6 +52,24 @@
       "parentUuid": "7e5000cb_4bcdeffc",
       "revId": "5dca377a053b23f2b36b208ce411608316d08188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c49ff0db_c24fecf0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-16T18:44:15Z",
+      "side": 1,
+      "message": "Added to the previous CL https://chromium-review.googlesource.com/c/angle/angle/+/2824366",
+      "parentUuid": "ce5d0484_5e2ea48e",
+      "revId": "5dca377a053b23f2b36b208ce411608316d08188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
