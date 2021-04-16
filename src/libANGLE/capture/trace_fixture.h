@@ -100,8 +100,11 @@ extern ResourceMap gShaderProgramMap;
 extern ResourceMap gTextureMap;
 extern ResourceMap gTransformFeedbackMap;
 extern ResourceMap gVertexArrayMap;
+// TODO(http://www.anglebug.com/5878): avoid std::unordered_map, it's slow
 using SyncResourceMap = std::unordered_map<uintptr_t, GLsync>;
 extern SyncResourceMap gSyncMap;
+using ContextMap = std::unordered_map<uint32_t, EGLContext>;
+extern ContextMap gContextMap;
 
 void UpdateClientArrayPointer(int arrayIndex, const void *data, uint64_t size);
 using BufferHandleMap = std::unordered_map<GLuint, void *>;

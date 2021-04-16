@@ -94,6 +94,8 @@ class ShareGroup final : angle::NonCopyable
     const ContextSet &getContexts() const { return mContexts; }
     void addSharedContext(gl::Context *context);
 
+    size_t getShareGroupContextCount() const { return mContexts.size(); }
+
   protected:
     ~ShareGroup();
 
