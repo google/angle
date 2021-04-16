@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "727019d7_09b8971c",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-16T17:16:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8898aa7d_09f3b4a7",
+      "range": {
+        "startLine": 522,
+        "startChar": 21,
+        "endLine": 522,
+        "endChar": 28
+      },
+      "revId": "b0e76609098d4e6662c8872a2ce104c15025ba39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0e612011_b2662f2f",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4de7d69_39ff5cb0",
+        "filename": "src/libANGLE/Framebuffer.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 524,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-16T17:16:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0e612011_b2662f2f",
+      "range": {
+        "startLine": 524,
+        "startChar": 15,
+        "endLine": 524,
+        "endChar": 19
+      },
+      "revId": "b0e76609098d4e6662c8872a2ce104c15025ba39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "910f022c_9ad97bbc",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-04-16T17:08:07Z",
       "side": 1,
       "message": "nit: getAttachmentExtentsIntersection is what I\u0027d call this method",
+      "range": {
+        "startLine": 84,
+        "startChar": 18,
+        "endLine": 84,
+        "endChar": 42
+      },
+      "revId": "b0e76609098d4e6662c8872a2ce104c15025ba39",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73b6930d_e7fa2926",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-16T17:16:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "910f022c_9ad97bbc",
       "range": {
         "startLine": 84,
         "startChar": 18,
