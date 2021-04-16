@@ -126,6 +126,30 @@
       },
       "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e0de8b1_a6f58198",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2593,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-16T12:56:00Z",
+      "side": 1,
+      "message": "Hey Amy,\n\nYour code is correct. The problem is that the Context.cpp class only initializes the async pool \"multithreaded\" if parallel shader compile is enabled:\n\nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/libANGLE/Context.cpp;l\u003d3933?q\u003dcontext.cpp\u0026ss\u003dchromium\n\nI suggest you make your new feature a front-end feature so you can initialize the worker pool multithreaded when you have your feature turned on.",
+      "parentUuid": "a20cf3ed_5524dc6f",
+      "range": {
+        "startLine": 2593,
+        "startChar": 8,
+        "endLine": 2593,
+        "endChar": 17
+      },
+      "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
