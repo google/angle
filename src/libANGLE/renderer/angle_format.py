@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2016 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -53,7 +53,7 @@ def load_with_override(override_path):
     results = load_without_override()
     overrides = load_json(override_path)
 
-    for k, v in overrides.iteritems():
+    for k, v in sorted(overrides.items()):
         results[k] = v
 
     return results
@@ -95,7 +95,7 @@ def get_component_type(format_id):
 
 def get_channel_tokens(format_id):
     r = re.compile(r'([' + kChannels + '][\d]+)')
-    return filter(r.match, r.split(format_id))
+    return list(filter(r.match, r.split(format_id)))
 
 
 def get_channels(format_id):

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2015 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -112,7 +112,7 @@ def get_load_func(func_name, type_functions):
     snippet += "{\n"
     snippet += "    switch (type)\n"
     snippet += "    {\n"
-    for gl_type, load_function in sorted(type_functions.iteritems()):
+    for gl_type, load_function in sorted(type_functions.items()):
         snippet += "        case " + gl_type + ":\n"
         requiresConversion = str('LoadToNative<' not in load_function).lower()
         snippet += "            return LoadImageFunctionInfo(" + load_function + ", " + requiresConversion + ");\n"
@@ -135,14 +135,14 @@ def get_unknown_load_func(angle_to_type_map, internal_format):
 def parse_json(json_data):
     table_data = ''
     load_functions_data = ''
-    for internal_format, angle_to_type_map in sorted(json_data.iteritems()):
+    for internal_format, angle_to_type_map in sorted(json_data.items()):
 
         s = '        '
 
         table_data += s + 'case ' + internal_format + ':\n'
 
-        do_switch = len(
-            angle_to_type_map) > 1 or angle_to_type_map.keys()[0] != angle_format_unknown
+        do_switch = len(angle_to_type_map) > 1 or list(
+            angle_to_type_map)[0] != angle_format_unknown
 
         if do_switch:
             table_data += s + '{\n'
@@ -151,7 +151,7 @@ def parse_json(json_data):
             table_data += s + '{\n'
             s += '    '
 
-        for angle_format, type_functions in sorted(angle_to_type_map.iteritems()):
+        for angle_format, type_functions in sorted(angle_to_type_map.items()):
 
             if angle_format == angle_format_unknown:
                 continue
@@ -163,7 +163,8 @@ def parse_json(json_data):
             table_data += s + '    return ' + func_name + ';\n'
 
             if angle_format_unknown in angle_to_type_map:
-                for gl_type, load_function in angle_to_type_map[angle_format_unknown].iteritems():
+                for gl_type, load_function in sorted(
+                        angle_to_type_map[angle_format_unknown].items()):
                     if gl_type not in type_functions:
                         type_functions[gl_type] = load_function
 
@@ -201,9 +202,9 @@ def main():
         outputs = ['load_functions_table_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1

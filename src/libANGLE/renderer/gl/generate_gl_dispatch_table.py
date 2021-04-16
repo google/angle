@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2017 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -261,9 +261,9 @@ def main():
         ]
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
@@ -331,7 +331,7 @@ def main():
     # Used later in the NULL bindings.
     all_entry_points = []
 
-    for comment, entry_points in json_data.iteritems():
+    for comment, entry_points in sorted(json_data.items()):
         for entry_point_no_prefix in entry_points:
             entry_point = "gl" + entry_point_no_prefix
 
@@ -398,7 +398,7 @@ def main():
                 raise Exception('Entry point ' + entry_point + ' not found in the xml.')
 
     table_data = []
-    for comment, entry_points in sorted(json_data.iteritems()):
+    for comment, entry_points in sorted(json_data.items()):
         formatted = ["    // " + comment]
         formatted += [format_ep_decl(entry_point) for entry_point in sorted(entry_points)]
 
@@ -414,25 +414,25 @@ def main():
         out.write(dispatch_table_header)
 
     gl_data = []
-    for gl_required, entry_points in sorted(gl_requirements.iteritems()):
+    for gl_required, entry_points in sorted(gl_requirements.items()):
         gl_data.append(format_requirements_lines(gl_required, entry_points))
 
     gl_extensions_data = []
-    for extension, entry_points in sorted(gl_extension_requirements.iteritems()):
+    for extension, entry_points in sorted(gl_extension_requirements.items()):
         gl_extensions_data.append(
             format_extension_requirements_lines(extension, entry_points, "gl"))
 
     gles2_data = []
-    for gles2_required, entry_points in sorted(gles2_requirements.iteritems()):
+    for gles2_required, entry_points in sorted(gles2_requirements.items()):
         gles2_data.append(format_requirements_lines(gles2_required, entry_points))
 
     gles2_extensions_data = []
-    for extension, entry_points in sorted(gles2_extension_requirements.iteritems()):
+    for extension, entry_points in sorted(gles2_extension_requirements.items()):
         gles2_extensions_data.append(
             format_extension_requirements_lines(extension, entry_points, "gles2"))
 
     both_extensions_data = []
-    for extension, entry_points in sorted(both_extension_requirements.iteritems()):
+    for extension, entry_points in sorted(both_extension_requirements.items()):
         both_extensions_data.append(
             format_extension_requirements_lines(extension, entry_points, "gles2|gl"))
 

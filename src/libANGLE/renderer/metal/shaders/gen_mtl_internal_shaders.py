@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2019 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -81,9 +81,9 @@ def main():
         outputs = ['format_autogen.h', 'mtl_default_shaders_src_autogen.inc']
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
@@ -111,7 +111,8 @@ def main():
     temp_fname = 'temp_master_source.metal'
     with open(temp_fname, 'wb') as temp_file:
         for src_file in src_files:
-            temp_file.write('#include "%s"\n' % src_file)
+            include_str = '#include "' + src_file + '" \n'
+            temp_file.write(include_str.encode('utf-8'))
 
     args = [clang]
     if not os.name == 'nt':
@@ -121,7 +122,7 @@ def main():
     combined_source = subprocess.check_output(args)
 
     # Remove '@@' tokens
-    final_combined_src_string = combined_source.replace('@@', '')
+    final_combined_src_string = combined_source.replace('@@'.encode('utf-8'), ''.encode('utf-8'))
 
     # Generate final file:
     with open('mtl_default_shaders_src_autogen.inc', 'wt') as out_file:
@@ -129,7 +130,7 @@ def main():
         out_file.write('\n')
         out_file.write('// C++ string version of combined Metal default shaders.\n\n')
         out_file.write('\n\nstatic char gDefaultMetallibSrc[] = R"(\n')
-        out_file.write(final_combined_src_string)
+        out_file.write(final_combined_src_string.decode("utf-8"))
         out_file.write('\n')
         out_file.write(')";\n')
         out_file.close()

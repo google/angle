@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2015 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -84,9 +84,10 @@ def get_swizzle_format_id(internal_format, angle_format):
                          internal_format)
 
     bits = angle_format['bits']
-    max_component_bits = max(bits.itervalues())
+    max_component_bits = max(bits.values())
+    bits_iter = iter(list(sorted(bits.values())))
     channels_different = not all(
-        [component_bits == bits.itervalues().next() for component_bits in bits.itervalues()])
+        [component_bits == next(bits_iter) for component_bits in bits.values()])
 
     # The format itself can be used for swizzles if it can be accessed as a render target and
     # sampled and the bit count for all 4 channels is the same.
@@ -196,7 +197,7 @@ def json_to_table_data(internal_format, format_name, prefix, json):
         "condition": prefix,
     }
 
-    for k, v in json.iteritems():
+    for k, v in sorted(json.items()):
         parsed[k] = v
 
     # Derived values.
@@ -217,15 +218,15 @@ def parse_json_angle_format_case(format_name, angle_format, json_data):
     support_test = None
     fallback = None
 
-    for k, v in angle_format.iteritems():
+    for k, v in sorted(angle_format.items()):
         if k == "FL10Plus":
             assert support_test is None
             support_test = "OnlyFL10Plus(deviceCaps)"
-            for k2, v2 in v.iteritems():
+            for k2, v2 in sorted(v.items()):
                 supported_case[k2] = v2
         elif k == "FL9_3":
             split = True
-            for k2, v2 in v.iteritems():
+            for k2, v2 in sorted(v.items()):
                 unsupported_case[k2] = v2
         elif k == "supportTest":
             assert support_test is None
@@ -250,7 +251,7 @@ def parse_json_angle_format_case(format_name, angle_format, json_data):
 def parse_json_into_switch_angle_format_string(json_map, json_data):
     table_data = ''
 
-    for internal_format, format_name in sorted(json_map.iteritems()):
+    for internal_format, format_name in sorted(json_map.items()):
 
         if format_name not in json_data:
             continue
@@ -289,9 +290,9 @@ def main():
         outputs = ['texture_format_table_autogen.cpp']
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1

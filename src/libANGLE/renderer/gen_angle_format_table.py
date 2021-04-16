@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2016 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -93,7 +93,7 @@ const Format *GetFormatInfoTable()
 
 def ceil_int(value, mod):
     assert mod > 0 and value > 0, 'integer modulation should be larger than 0'
-    return (value + mod - 1) / mod
+    return (value + mod - 1) // mod
 
 
 def is_depth_stencil(angle_format):
@@ -287,7 +287,7 @@ def json_to_table_data(format_id, json, angle_to_gl):
         "fastCopyFunctions": "NoCopyFunctions",
     }
 
-    for k, v in json.iteritems():
+    for k, v in sorted(json.items()):
         parsed[k] = v
 
     if "glInternalFormat" not in parsed:
@@ -407,9 +407,9 @@ def main():
         outputs = ['Format_table_autogen.cpp', 'FormatID_autogen.h']
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1

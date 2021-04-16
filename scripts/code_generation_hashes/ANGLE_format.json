@@ -4,11 +4,11 @@
   "src/libANGLE/renderer/Format_table_autogen.cpp":
     "969f821f7241fbc3df16864daeafa68e",
   "src/libANGLE/renderer/angle_format.py":
-    "e5ac2fcfbc930ac2e3f3d54effeafed9",
+    "35b819b32d3259961da75f5c971baba4",
   "src/libANGLE/renderer/angle_format_data.json":
     "4b3b5d4beef95c282ba4f20fdc2b20ed",
   "src/libANGLE/renderer/angle_format_map.json":
     "46b589fc0fc306b2f7c97ee7bb08baee",
   "src/libANGLE/renderer/gen_angle_format_table.py":
-    "428255701f3a3a9630593ab110ca98c1"
+    "70bdbceee30506d4b14bf52f2bbd8f2b"
 }

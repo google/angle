@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2016 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -77,9 +77,9 @@ def main():
         outputs = [out_file_name]
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
@@ -89,7 +89,7 @@ def main():
 
     format_map = {}
 
-    for description, data in json_data.iteritems():
+    for description, data in sorted(json_data.items()):
         for texture_format, framebuffer_format in data:
             if texture_format not in format_map:
                 format_map[texture_format] = []
@@ -97,7 +97,7 @@ def main():
 
     texture_format_cases = ""
 
-    for texture_format, framebuffer_formats in sorted(format_map.iteritems()):
+    for texture_format, framebuffer_formats in sorted(format_map.items()):
         texture_format_cases += parse_texture_format_case(texture_format, framebuffer_formats)
 
     with open(out_file_name, 'wt') as out_file:

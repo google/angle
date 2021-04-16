@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2016 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -122,7 +122,7 @@ def verify_vk_map_keys(angle_to_gl, vk_json_data):
     for table in ["map", "fallbacks"]:
         for angle_format in vk_json_data[table].keys():
             if not angle_format in angle_to_gl.keys():
-                print "Invalid format " + angle_format + " in vk_format_map.json in " + table
+                print("Invalid format " + angle_format + " in vk_format_map.json in " + table)
                 no_error = False
 
     return no_error
@@ -242,9 +242,9 @@ def main():
         outputs = [out_file_name]
 
         if sys.argv[1] == 'inputs':
-            print ','.join(inputs)
+            print(','.join(inputs))
         elif sys.argv[1] == 'outputs':
-            print ','.join(outputs)
+            print(','.join(outputs))
         else:
             print('Invalid script parameters')
             return 1
@@ -258,23 +258,23 @@ def main():
 
     format_id_cases = [
         get_format_id_case(format_id, vk_format)
-        for format_id, vk_format in vk_json_data["map"].iteritems()
+        for format_id, vk_format in sorted(vk_json_data["map"].items())
     ]
 
     vk_format_cases = [
         get_vk_format_case(format_id, vk_format)
-        for format_id, vk_format in vk_json_data["map"].iteritems()
+        for format_id, vk_format in sorted(vk_json_data["map"].items())
     ]
 
     vk_cases = [
-        gen_format_case(angle, gl, vk_json_data) for angle, gl in sorted(angle_to_gl.iteritems())
+        gen_format_case(angle, gl, vk_json_data) for angle, gl in sorted(angle_to_gl.items())
     ]
 
     output_cpp = template_table_autogen_cpp.format(
         format_case_data="\n".join(vk_cases),
         format_id_cases=",\n".join(format_id_cases),
         vk_format_cases="".join(vk_format_cases),
-        script_name=__file__,
+        script_name=os.path.basename(__file__),
         out_file_name=out_file_name,
         input_file_name=input_file_name)
 
