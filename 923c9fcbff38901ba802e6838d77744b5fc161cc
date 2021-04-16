@@ -89,6 +89,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "977d0067_fe9fff2b",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:10:38Z",
+      "side": 1,
+      "message": "Note: functional change that\u0027s probably the cause of failure on the windows bots",
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3895e2c6_4f541211",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
         "patchSetId": 2
