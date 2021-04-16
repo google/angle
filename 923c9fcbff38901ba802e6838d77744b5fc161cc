@@ -112,6 +112,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f96490a_b844aa4d",
+        "filename": "src/libANGLE/format_map_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-16T17:03:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2d53e359_4d8cf272",
+      "range": {
+        "startLine": 655,
+        "startChar": 13,
+        "endLine": 655,
+        "endChar": 20
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8cc21cae_2cf91e0b",
