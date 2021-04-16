@@ -33,6 +33,23 @@
       "message": "shabi, any other comments here?",
       "revId": "7730e592c337aff2ad5716abbbe4f67a6515512f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f0a51f9_ac78fd4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T15:02:01Z",
+      "side": 1,
+      "message": "Perfect!",
+      "revId": "7730e592c337aff2ad5716abbbe4f67a6515512f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
