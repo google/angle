@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "415bc72a_cd0622be",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7830fbc_0d6f373c",
+      "range": {
+        "startLine": 10,
+        "startChar": 18,
+        "endLine": 10,
+        "endChar": 22
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "145fa398_9ae30ac1",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
@@ -66,6 +90,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "2d53e359_4d8cf272",
+        "filename": "src/libANGLE/format_map_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 655,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "I went ahead and applied a sorted() to (almost) every iterator change in this CL.\nLMKWYT.",
+      "parentUuid": "eb80e81d_f4965977",
+      "range": {
+        "startLine": 655,
+        "startChar": 13,
+        "endLine": 655,
+        "endChar": 20
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8cc21cae_2cf91e0b",
         "filename": "src/libANGLE/format_map_autogen.cpp",
         "patchSetId": 2
@@ -77,6 +125,30 @@
       "writtenOn": "2021-04-15T23:36:48Z",
       "side": 1,
       "message": "same with the types",
+      "range": {
+        "startLine": 658,
+        "startChar": 21,
+        "endLine": 658,
+        "endChar": 37
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7d2f75a_b6801482",
+        "filename": "src/libANGLE/format_map_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 658,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cc21cae_2cf91e0b",
       "range": {
         "startLine": 658,
         "startChar": 21,
@@ -104,6 +176,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e4815d1_6333225d",
+        "filename": "src/libANGLE/renderer/d3d/d3d11/texture_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "It looked like a bug fix on first inspection, but applying sorts to the iterator changes restored the original format.",
+      "parentUuid": "977d0067_fe9fff2b",
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c0231d69_90df78d3",
@@ -117,6 +207,30 @@
       "writtenOn": "2021-04-16T14:17:10Z",
       "side": 1,
       "message": "nit: pointless; \u0027,\u0027.join(x) is already a string.",
+      "range": {
+        "startLine": 204,
+        "startChar": 18,
+        "endLine": 204,
+        "endChar": 25
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30a6a2c7_94b421bc",
+        "filename": "src/libANGLE/renderer/gen_load_functions_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c0231d69_90df78d3",
       "range": {
         "startLine": 204,
         "startChar": 18,
@@ -152,6 +266,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4ccf5573_37690cd2",
+        "filename": "src/libANGLE/renderer/metal/shaders/gen_mtl_internal_shaders.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "There may be other ways to fix this but:\n- `temp_file` is opened as a binary (wb) and has strings written to it. That was okay in python2, but in python3 you must convert them to binary before writing.\n- Same for `combined_source`, it is a binary and strings are being written to it, which is then assigned to `final_combined_src_string`.\n- `out_file` is opened in text mode (wt) and is writing a binary to it, so it had to be decoded.\n\nI did try just opening `temp_file` in text mode but that triggers other problems with `subprocess.check_output` returning bytes.",
+      "parentUuid": "593f175a_9306583f",
+      "range": {
+        "startLine": 133,
+        "startChar": 49,
+        "endLine": 133,
+        "endChar": 55
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3895e2c6_4f541211",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
         "patchSetId": 2
@@ -163,6 +301,30 @@
       "writtenOn": "2021-04-15T23:36:48Z",
       "side": 1,
       "message": "needs a fix",
+      "range": {
+        "startLine": 3,
+        "startChar": 9,
+        "endLine": 3,
+        "endChar": 18
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "599fb3e8_6ab83428",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3895e2c6_4f541211",
       "range": {
         "startLine": 3,
         "startChar": 9,
@@ -186,6 +348,30 @@
       "writtenOn": "2021-04-16T14:17:10Z",
       "side": 1,
       "message": "Would be good to sort this so it would stay stable.",
+      "range": {
+        "startLine": 2378,
+        "startChar": 26,
+        "endLine": 2378,
+        "endChar": 40
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "093d011e_fee4ae1a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2378,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-16T16:46:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ac59f981_bd04bd79",
       "range": {
         "startLine": 2378,
         "startChar": 26,
