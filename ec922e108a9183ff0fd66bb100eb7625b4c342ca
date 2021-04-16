@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cae2fe25_e548b46e",
+        "filename": "src/tests/gl_tests/FramebufferTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3067,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:33:04Z",
+      "side": 1,
+      "message": "Suggest non-square texture sizes to catch copy-paste mistakes with width and height.",
+      "revId": "ec922e108a9183ff0fd66bb100eb7625b4c342ca",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
