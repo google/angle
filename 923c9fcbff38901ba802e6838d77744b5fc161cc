@@ -106,6 +106,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c0231d69_90df78d3",
+        "filename": "src/libANGLE/renderer/gen_load_functions_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:17:10Z",
+      "side": 1,
+      "message": "nit: pointless; \u0027,\u0027.join(x) is already a string.",
+      "range": {
+        "startLine": 204,
+        "startChar": 18,
+        "endLine": 204,
+        "endChar": 25
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "593f175a_9306583f",
+        "filename": "src/libANGLE/renderer/metal/shaders/gen_mtl_internal_shaders.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:17:10Z",
+      "side": 1,
+      "message": "Why does temp_file.write above take encoded string, but the write here takes decoded? And what\u0027s the point of final_combined_src_string using encode() and then get decoded here?",
+      "range": {
+        "startLine": 133,
+        "startChar": 49,
+        "endLine": 133,
+        "endChar": 55
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3895e2c6_4f541211",
         "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
         "patchSetId": 2
@@ -122,6 +168,29 @@
         "startChar": 9,
         "endLine": 3,
         "endChar": 18
+      },
+      "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac59f981_bd04bd79",
+        "filename": "src/libANGLE/renderer/vulkan/vk_format_table_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2378,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:17:10Z",
+      "side": 1,
+      "message": "Would be good to sort this so it would stay stable.",
+      "range": {
+        "startLine": 2378,
+        "startChar": 26,
+        "endLine": 2378,
+        "endChar": 40
       },
       "revId": "923c9fcbff38901ba802e6838d77744b5fc161cc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
