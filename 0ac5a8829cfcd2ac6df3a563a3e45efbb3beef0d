@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60018516_f0a870f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-16T14:18:44Z",
+      "side": 1,
+      "message": "nit: please separate out the autogen parts from the implementation to keep the review simpler.",
+      "revId": "0ac5a8829cfcd2ac6df3a563a3e45efbb3beef0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
