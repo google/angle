@@ -102,6 +102,30 @@
       },
       "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a20cf3ed_5524dc6f",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 2593,
+      "author": {
+        "id": 1393148
+      },
+      "writtenOn": "2021-04-16T09:26:30Z",
+      "side": 1,
+      "message": "Hi Jamie, in the current codes, blob cache\u0027s compression and shader compile are using the same thread pool to execute tasks. If I create a feature to enable the async thread pool to do compression, I need to create a new thread pool to control.\nIs it needed to use two different thread pool?",
+      "parentUuid": "031cae34_7600940a",
+      "range": {
+        "startLine": 2593,
+        "startChar": 8,
+        "endLine": 2593,
+        "endChar": 17
+      },
+      "revId": "7e6ecebc69eeae339a3cac121c6cb5c318917042",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
