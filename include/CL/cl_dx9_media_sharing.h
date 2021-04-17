@@ -159,7 +159,7 @@ clGetDeviceIDsFromDX9INTEL(
     cl_dx9_device_set_intel     dx9_device_set,
     cl_uint                     num_entries,
     cl_device_id*               devices,
-    cl_uint*                    num_devices) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_uint*                    num_devices) CL_API_SUFFIX__VERSION_1_1;
 
 typedef cl_int (CL_API_CALL* clGetDeviceIDsFromDX9INTEL_fn)(
     cl_platform_id              platform,
@@ -168,7 +168,7 @@ typedef cl_int (CL_API_CALL* clGetDeviceIDsFromDX9INTEL_fn)(
     cl_dx9_device_set_intel     dx9_device_set,
     cl_uint                     num_entries,
     cl_device_id*               devices,
-    cl_uint*                    num_devices) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_uint*                    num_devices) CL_API_SUFFIX__VERSION_1_1;
 
 extern CL_API_ENTRY cl_mem CL_API_CALL
 clCreateFromDX9MediaSurfaceINTEL(
@@ -177,7 +177,7 @@ clCreateFromDX9MediaSurfaceINTEL(
     IDirect3DSurface9*          resource,
     HANDLE                      sharedHandle,
     UINT                        plane,
-    cl_int*                     errcode_ret) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_int*                     errcode_ret) CL_API_SUFFIX__VERSION_1_1;
 
 typedef cl_mem (CL_API_CALL *clCreateFromDX9MediaSurfaceINTEL_fn)(
     cl_context                  context,
@@ -185,7 +185,7 @@ typedef cl_mem (CL_API_CALL *clCreateFromDX9MediaSurfaceINTEL_fn)(
     IDirect3DSurface9*          resource,
     HANDLE                      sharedHandle,
     UINT                        plane,
-    cl_int*                     errcode_ret) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_int*                     errcode_ret) CL_API_SUFFIX__VERSION_1_1;
 
 extern CL_API_ENTRY cl_int CL_API_CALL
 clEnqueueAcquireDX9ObjectsINTEL(
@@ -194,7 +194,7 @@ clEnqueueAcquireDX9ObjectsINTEL(
     const cl_mem*               mem_objects,
     cl_uint                     num_events_in_wait_list,
     const cl_event*             event_wait_list,
-    cl_event*                   event) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_event*                   event) CL_API_SUFFIX__VERSION_1_1;
 
 typedef cl_int (CL_API_CALL *clEnqueueAcquireDX9ObjectsINTEL_fn)(
     cl_command_queue            command_queue,
@@ -202,7 +202,7 @@ typedef cl_int (CL_API_CALL *clEnqueueAcquireDX9ObjectsINTEL_fn)(
     const cl_mem*               mem_objects,
     cl_uint                     num_events_in_wait_list,
     const cl_event*             event_wait_list,
-    cl_event*                   event) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_event*                   event) CL_API_SUFFIX__VERSION_1_1;
 
 extern CL_API_ENTRY cl_int CL_API_CALL
 clEnqueueReleaseDX9ObjectsINTEL(
@@ -211,7 +211,7 @@ clEnqueueReleaseDX9ObjectsINTEL(
     cl_mem*                     mem_objects,
     cl_uint                     num_events_in_wait_list,
     const cl_event*             event_wait_list,
-    cl_event*                   event) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_event*                   event) CL_API_SUFFIX__VERSION_1_1;
 
 typedef cl_int (CL_API_CALL *clEnqueueReleaseDX9ObjectsINTEL_fn)(
     cl_command_queue            command_queue,
@@ -219,7 +219,7 @@ typedef cl_int (CL_API_CALL *clEnqueueReleaseDX9ObjectsINTEL_fn)(
     cl_mem*                     mem_objects,
     cl_uint                     num_events_in_wait_list,
     const cl_event*             event_wait_list,
-    cl_event*                   event) CL_EXT_SUFFIX__VERSION_1_1;
+    cl_event*                   event) CL_API_SUFFIX__VERSION_1_1;
 
 #ifdef __cplusplus
 }

@@ -102,21 +102,21 @@ clEnqueueReleaseGLObjects(cl_command_queue      command_queue,
 
 
 /* Deprecated OpenCL 1.1 APIs */
-extern CL_API_ENTRY CL_EXT_PREFIX__VERSION_1_1_DEPRECATED cl_mem CL_API_CALL
+extern CL_API_ENTRY CL_API_PREFIX__VERSION_1_1_DEPRECATED cl_mem CL_API_CALL
 clCreateFromGLTexture2D(cl_context      context,
                         cl_mem_flags    flags,
                         cl_GLenum       target,
                         cl_GLint        miplevel,
                         cl_GLuint       texture,
-                        cl_int *        errcode_ret) CL_EXT_SUFFIX__VERSION_1_1_DEPRECATED;
+                        cl_int *        errcode_ret) CL_API_SUFFIX__VERSION_1_1_DEPRECATED;
 
-extern CL_API_ENTRY CL_EXT_PREFIX__VERSION_1_1_DEPRECATED cl_mem CL_API_CALL
+extern CL_API_ENTRY CL_API_PREFIX__VERSION_1_1_DEPRECATED cl_mem CL_API_CALL
 clCreateFromGLTexture3D(cl_context      context,
                         cl_mem_flags    flags,
                         cl_GLenum       target,
                         cl_GLint        miplevel,
                         cl_GLuint       texture,
-                        cl_int *        errcode_ret) CL_EXT_SUFFIX__VERSION_1_1_DEPRECATED;
+                        cl_int *        errcode_ret) CL_API_SUFFIX__VERSION_1_1_DEPRECATED;
 
 /* cl_khr_gl_sharing extension  */
 
@@ -160,7 +160,7 @@ typedef cl_int (CL_API_CALL *clGetGLContextInfoKHR_fn)(
 extern CL_API_ENTRY cl_event CL_API_CALL
 clCreateEventFromGLsyncKHR(cl_context context,
                            cl_GLsync  sync,
-                           cl_int *   errcode_ret) CL_EXT_SUFFIX__VERSION_1_1;
+                           cl_int *   errcode_ret) CL_API_SUFFIX__VERSION_1_1;
 
 #ifdef __cplusplus
 }

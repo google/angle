@@ -10,10 +10,6 @@
 #ifndef ANGLECL_H_
 #define ANGLECL_H_
 
-// Workaround: The OpenCL headers use 'intptr_t' but don't include 'stdint.h' on Windows.
-// TODO(jplate): Remove after the CL headers are fixed.
-#include <stdint.h>
-
 #define CL_TARGET_OPENCL_VERSION 300
 #define CL_USE_DEPRECATED_OPENCL_1_0_APIS
 #define CL_USE_DEPRECATED_OPENCL_1_1_APIS
