@@ -1022,6 +1022,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/slingshot_test2': {
+      'packages': [
+        {
+            'package': 'angle/traces/slingshot_test2',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/sniper_3d': {
       'packages': [
         {

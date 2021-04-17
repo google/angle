@@ -864,7 +864,8 @@ TracePerfTest::TracePerfTest()
         }
     }
 
-    if (param.testID == RestrictedTraceID::slingshot_test1)
+    if (param.testID == RestrictedTraceID::slingshot_test1 ||
+        param.testID == RestrictedTraceID::slingshot_test2)
     {
         // TODO: http://anglebug.com/5877 Trace crashes on Pixel 2 in vulkan driver
         if (IsPixel2() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
