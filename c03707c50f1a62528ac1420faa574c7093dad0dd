@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a76fe477_276f974c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-17T19:58:47Z",
+      "side": 1,
+      "message": "After the fixes for CL_API_ENTRY (https://github.com/KhronosGroup/OpenCL-Headers/pull/162) and stdint.h (https://github.com/KhronosGroup/OpenCL-Headers/pull/164) have been merged, I have updated the OpenCL headers in ANGLE to the latest original version. I have also removed the workaround in angle_cl.h, updated the readme, and successfully (locally) compiled the arm64 target, which initially had the problem with the missing stdint.h.\n",
+      "revId": "c03707c50f1a62528ac1420faa574c7093dad0dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
