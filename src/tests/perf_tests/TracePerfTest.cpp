@@ -734,6 +734,15 @@ TracePerfTest::TracePerfTest()
         }
     }
 
+    if (param.testID == RestrictedTraceID::fifa_mobile)
+    {
+        // TODO: http://anglebug.com/5875 Intel Windows Vulkan flakily renders entirely black
+        if (IsWindows() && IsIntel() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        {
+            mSkipTest = true;
+        }
+    }
+
     if (param.testID == RestrictedTraceID::rope_hero_vice_town)
     {
         // TODO: http://anglebug.com/5716 Trace crashes on Pixel 2 in vulkan driver
