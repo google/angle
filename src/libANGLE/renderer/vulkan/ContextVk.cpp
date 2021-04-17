@@ -1956,13 +1956,18 @@ angle::Result ContextVk::handleDirtyGraphicsTransformFeedbackBuffersExtension(
 
     // Issue necessary barriers for the transform feedback counter buffer.  Note that the barrier is
     // issued only on the first buffer (which uses a global memory barrier), as all the counter
-    // buffers of the transform feedback object are used together.
+    // buffers of the transform feedback object are used together.  The rest of the buffers are
+    // simply retained so they don't get deleted too early.
     ASSERT(counterBuffers[0].valid());
     mRenderPassCommands->bufferWrite(this,
                                      VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_WRITE_BIT_EXT |
                                          VK_ACCESS_TRANSFORM_FEEDBACK_COUNTER_READ_BIT_EXT,
                                      vk::PipelineStage::TransformFeedback,
                                      vk::AliasingMode::Disallowed, &counterBuffers[0]);
+    for (size_t bufferIndex = 1; bufferIndex < bufferCount; ++bufferIndex)
+    {
+        counterBuffers[bufferIndex].retainReadWrite(&getResourceUseList());
+    }
 
     const gl::TransformFeedbackBuffersArray<VkBuffer> &bufferHandles =
         transformFeedbackVk->getBufferHandles();
