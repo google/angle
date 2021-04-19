@@ -242,7 +242,7 @@ luci.builder(
         "os": os.LINUX.dimension,
     },
     properties = {
-        "repo_name": "angle_2",
+        "repo_name": "angle",
         "runhooks": True,
     },
 )
