@@ -33,6 +33,23 @@
       "message": "looking but might need to disable extension for nvidia bots",
       "revId": "c0ee86ffc9aa1a13c99623473a13fc4ece5f8d1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f597347_fbf18ddb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-19T13:59:37Z",
+      "side": 1,
+      "message": "I worry that \"ConvertToColor\" is rounding somehow. From the bot:\n\n#beginTestCaseResult KHR-GLES31.core.texture_border_clamp.Texture2DDC16Linear\n\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\n\u003cTestCaseResult Version\u003d\"0.3.4\" CasePath\u003d\"KHR-GLES31.core.texture_border_clamp.Texture2DDC16Linear\" CaseType\u003d\"SelfValidate\"\u003e\n \u003cText\u003eFor layer (0) when moving from center point  (x, y)  \u003d (128,128) to the top\nat point (x, y)  \u003d (128,128)- texel values stopped to be monotonically increasing\n\u003c/Text\u003e\n \u003cResult StatusCode\u003d\"Fail\"\u003eFail\u003c/Result\u003e\n\u003c/TestCaseResult\u003e\n",
+      "revId": "c0ee86ffc9aa1a13c99623473a13fc4ece5f8d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
