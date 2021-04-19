@@ -29,6 +29,7 @@
 #include "clash_royale/clash_royale_capture_context1.h"
 #include "cod_mobile/cod_mobile_capture_context1.h"
 #include "coin_master/coin_master_capture_context1.h"
+#include "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2.h"
 #include "disney_tsum_tsum/disney_tsum_tsum_capture_context3.h"
 #include "dragon_ball_legends/dragon_ball_legends_capture_context1.h"
 #include "dragon_raja/dragon_raja_capture_context1.h"
@@ -174,6 +175,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {coin_master::kReplayContextClientMajorVersion, coin_master::kReplayContextClientMinorVersion,
       coin_master::kReplayFrameStart, coin_master::kReplayFrameEnd,
       coin_master::kReplayDrawSurfaceWidth, coin_master::kReplayDrawSurfaceHeight, "coin_master"}},
+    {RestrictedTraceID::command_and_conquer_rivals,
+     {command_and_conquer_rivals::kReplayContextClientMajorVersion,
+      command_and_conquer_rivals::kReplayContextClientMinorVersion,
+      command_and_conquer_rivals::kReplayFrameStart, command_and_conquer_rivals::kReplayFrameEnd,
+      command_and_conquer_rivals::kReplayDrawSurfaceWidth,
+      command_and_conquer_rivals::kReplayDrawSurfaceHeight, "command_and_conquer_rivals"}},
     {RestrictedTraceID::disney_tsum_tsum,
      {disney_tsum_tsum::kReplayContextClientMajorVersion,
       disney_tsum_tsum::kReplayContextClientMinorVersion, disney_tsum_tsum::kReplayFrameStart,

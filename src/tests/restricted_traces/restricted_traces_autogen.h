@@ -71,6 +71,7 @@ enum class RestrictedTraceID
     clash_royale,
     cod_mobile,
     coin_master,
+    command_and_conquer_rivals,
     disney_tsum_tsum,
     dragon_ball_legends,
     dragon_raja,

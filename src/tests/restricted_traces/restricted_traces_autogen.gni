@@ -464,6 +464,22 @@ angle_restricted_traces = [
     ],
   ],
   [
+    "command_and_conquer_rivals",
+    2,
+    [
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame001.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame002.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame003.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame004.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame005.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame006.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame007.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame008.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame009.cpp",
+      "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2_frame010.cpp",
+    ],
+  ],
+  [
     "disney_tsum_tsum",
     3,
     [
