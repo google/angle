@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "a717aaeebc67d51c99d38408ecdeabaa8b5401ab",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7ee7209_d1a13172",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-19T14:07:09Z",
+      "side": 1,
+      "message": "shabi, good to land?",
+      "revId": "a717aaeebc67d51c99d38408ecdeabaa8b5401ab",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
