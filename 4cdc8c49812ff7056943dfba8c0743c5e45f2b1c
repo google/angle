@@ -16,6 +16,23 @@
       "message": "Would prefer ANGLE Metal to Metal ANGLE",
       "revId": "4cdc8c49812ff7056943dfba8c0743c5e45f2b1c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f930089_0afa49e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-04-19T15:07:25Z",
+      "side": 1,
+      "message": "I\u0027ll update the Chrome side when this lands: https://source.chromium.org/chromium/chromium/src/+/master:ui/gl/gl_version_info.cc;l\u003d256?q\u003dgl_version_info.cc\u0026ss\u003dchromium",
+      "revId": "4cdc8c49812ff7056943dfba8c0743c5e45f2b1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
