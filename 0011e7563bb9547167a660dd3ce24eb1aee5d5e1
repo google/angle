@@ -34,6 +34,24 @@
       "parentUuid": "7b7e9dbe_ac98b6e5",
       "revId": "0011e7563bb9547167a660dd3ce24eb1aee5d5e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a526b96f_a9cd9f1e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-19T20:48:27Z",
+      "side": 1,
+      "message": "We don\u0027t have Mac ARM on CQ, it only fails on CI bot.",
+      "parentUuid": "900f8ff9_173b1fec",
+      "revId": "0011e7563bb9547167a660dd3ce24eb1aee5d5e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
