@@ -97,6 +97,7 @@ test_trace_info_init_template = """\
         {namespace}::kDefaultFramebufferStencilBits,
         {namespace}::kIsBinaryDataCompressed,
         {namespace}::kAreClientArraysEnabled,
+        {namespace}::kbindGeneratesResources,
     }},
 """
 
@@ -125,6 +126,7 @@ struct TestTraceInfo {{
     EGLint defaultFramebufferStencilBits;
     bool isBinaryDataCompressed;
     bool areClientArraysEnabled;
+    bool bindGeneratesResources;
 }};
 
 extern std::vector<TestTraceInfo> testTraceInfos;

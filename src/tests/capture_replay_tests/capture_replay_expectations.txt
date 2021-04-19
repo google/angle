@@ -8,7 +8,6 @@
 #
 
 # Failed tests
-BindGeneratesResourceTest.*
 CopyTextureTestWebGL.NPOT/*
 D3DImageFormatConversionTest.*
 DifferentStencilMasksTest.*

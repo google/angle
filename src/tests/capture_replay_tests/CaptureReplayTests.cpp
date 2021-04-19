@@ -76,7 +76,8 @@ class CaptureReplayTests
         configParams.depthBits   = testTraceInfo.defaultFramebufferDepthBits;
         configParams.stencilBits = testTraceInfo.defaultFramebufferStencilBits;
 
-        configParams.clientArraysEnabled = testTraceInfo.areClientArraysEnabled;
+        configParams.clientArraysEnabled   = testTraceInfo.areClientArraysEnabled;
+        configParams.bindGeneratesResource = testTraceInfo.bindGeneratesResources;
 
         mPlatformParams.renderer   = testTraceInfo.replayPlatformType;
         mPlatformParams.deviceType = testTraceInfo.replayDeviceType;

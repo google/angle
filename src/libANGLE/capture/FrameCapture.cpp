@@ -1190,6 +1190,8 @@ void WriteCppReplayIndexFiles(bool compression,
            << ";\n";
     header << "constexpr bool kAreClientArraysEnabled = "
            << (context->getState().areClientArraysEnabled() ? "true" : "false") << ";\n";
+    header << "constexpr bool kbindGeneratesResources = "
+           << (context->getState().isBindGeneratesResourceEnabled() ? "true" : "false") << ";\n";
 
     header << "// End Trace Metadata\n";
     header << "\n";
