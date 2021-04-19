@@ -46,6 +46,30 @@
       },
       "revId": "666a3fa61f669535396a7ebb12f49d3772186d74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8aa8899c_932d0b21",
+        "filename": "src/compiler/translator/Types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-19T23:42:53Z",
+      "side": 1,
+      "message": "Done, modified the code a bit",
+      "parentUuid": "a21fcbd8_b061d3ff",
+      "range": {
+        "startLine": 212,
+        "startChar": 16,
+        "endLine": 212,
+        "endChar": 45
+      },
+      "revId": "666a3fa61f669535396a7ebb12f49d3772186d74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
