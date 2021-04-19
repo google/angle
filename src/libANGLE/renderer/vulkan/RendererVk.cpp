@@ -180,6 +180,14 @@ constexpr const char *kSkippedMessages[] = {
     "VUID-vkCmdDrawIndirectCount-None-04584",
     "VUID-vkCmdDrawIndexedIndirect-None-04584",
     "VUID-vkCmdDrawIndexedIndirectCount-None-04584",
+    // http://anglebug.com/5821
+    "VUID-vkCmdDraw-None-02698",
+    "VUID-vkCmdDrawIndexed-None-02698",
+    "VUID-vkCmdDrawIndirect-None-02698",
+    "VUID-vkCmdDrawIndirectCount-None-02698",
+    "VUID-vkCmdDrawIndexedIndirect-None-02698",
+    "VUID-vkCmdDrawIndexedIndirectCount-None-02698",
+    "VUID-vkCmdDispatch-None-02698",
 };
 
 // Suppress validation errors that are known
