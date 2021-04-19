@@ -33,6 +33,23 @@
       "message": "Need +2 to land the patch.",
       "revId": "8a102ab0f2465c8287528cdbc54b27cbf403f4ef",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e5df078d_1557ce4d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-19T17:55:59Z",
+      "side": 1,
+      "message": "LGTM! Thanks for your patience.",
+      "revId": "8a102ab0f2465c8287528cdbc54b27cbf403f4ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
