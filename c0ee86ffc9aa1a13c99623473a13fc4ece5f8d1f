@@ -50,6 +50,75 @@
       "message": "I worry that \"ConvertToColor\" is rounding somehow. From the bot:\n\n#beginTestCaseResult KHR-GLES31.core.texture_border_clamp.Texture2DDC16Linear\n\u003c?xml version\u003d\"1.0\" encoding\u003d\"UTF-8\"?\u003e\n\u003cTestCaseResult Version\u003d\"0.3.4\" CasePath\u003d\"KHR-GLES31.core.texture_border_clamp.Texture2DDC16Linear\" CaseType\u003d\"SelfValidate\"\u003e\n \u003cText\u003eFor layer (0) when moving from center point  (x, y)  \u003d (128,128) to the top\nat point (x, y)  \u003d (128,128)- texel values stopped to be monotonically increasing\n\u003c/Text\u003e\n \u003cResult StatusCode\u003d\"Fail\"\u003eFail\u003c/Result\u003e\n\u003c/TestCaseResult\u003e\n",
       "revId": "c0ee86ffc9aa1a13c99623473a13fc4ece5f8d1f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58612803_5b2afa60",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2248,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-19T18:18:26Z",
+      "side": 1,
+      "message": "Please open a bug and add a TODO to drop dependency to this. There is a mobile vendor that cannot support this.\n\nDown the line, we should be able to deal with this by recreating the sampler based on its binding to texture.\n\nContext: https://gitlab.khronos.org/vulkan/vulkan/-/merge_requests/3488#note_238734",
+      "range": {
+        "startLine": 2248,
+        "startChar": 56,
+        "endLine": 2248,
+        "endChar": 86
+      },
+      "revId": "c0ee86ffc9aa1a13c99623473a13fc4ece5f8d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "615c55ff_30bdd3e8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 928,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-19T18:18:26Z",
+      "side": 1,
+      "message": "This is too much. You need 12 bytes for color. The type should be obvious from the image format, but if really necessary could be put in the mPadding above.",
+      "range": {
+        "startLine": 928,
+        "startChar": 7,
+        "endLine": 928,
+        "endChar": 9
+      },
+      "revId": "c0ee86ffc9aa1a13c99623473a13fc4ece5f8d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40d256e6_ac4aeefe",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 932,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-19T18:18:26Z",
+      "side": 1,
+      "message": "Just remove this!",
+      "range": {
+        "startLine": 930,
+        "startChar": 0,
+        "endLine": 932,
+        "endChar": 26
+      },
+      "revId": "c0ee86ffc9aa1a13c99623473a13fc4ece5f8d1f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
