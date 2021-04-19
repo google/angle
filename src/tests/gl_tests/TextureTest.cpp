@@ -3614,18 +3614,24 @@ TEST_P(Texture2DBaseMaxTestES3, RedefineEveryLevelToAnotherFormat)
 // Test that generating mipmaps after change base level.
 TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRebase)
 {
+    // http://anglebug.com/5880
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
+
     testGenerateMipmapAfterRebase(false);
 }
+
 TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRebaseImmutable)
 {
     // http://anglebug.com/4710
     ANGLE_SKIP_TEST_IF(IsD3D());
-
     // http://anglebug.com/5798
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsNVIDIA());
+    // http://anglebug.com/5880
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsDesktopOpenGL());
 
     testGenerateMipmapAfterRebase(true);
 }
+
 void Texture2DBaseMaxTestES3::testGenerateMipmapAfterRebase(bool immutable)
 {
     initTest(immutable);
