@@ -95,7 +95,8 @@ test_trace_info_init_template = """\
         {namespace}::kDefaultFramebufferAlphaBits,
         {namespace}::kDefaultFramebufferDepthBits,
         {namespace}::kDefaultFramebufferStencilBits,
-        {namespace}::kIsBinaryDataCompressed
+        {namespace}::kIsBinaryDataCompressed,
+        {namespace}::kAreClientArraysEnabled,
     }},
 """
 
@@ -123,6 +124,7 @@ struct TestTraceInfo {{
     EGLint defaultFramebufferDepthBits;
     EGLint defaultFramebufferStencilBits;
     bool isBinaryDataCompressed;
+    bool areClientArraysEnabled;
 }};
 
 extern std::vector<TestTraceInfo> testTraceInfos;

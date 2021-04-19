@@ -1188,6 +1188,9 @@ void WriteCppReplayIndexFiles(bool compression,
            << (config ? std::to_string(config->stencilSize) : "EGL_DONT_CARE") << ";\n";
     header << "constexpr bool kIsBinaryDataCompressed = " << (compression ? "true" : "false")
            << ";\n";
+    header << "constexpr bool kAreClientArraysEnabled = "
+           << (context->getState().areClientArraysEnabled() ? "true" : "false") << ";\n";
+
     header << "// End Trace Metadata\n";
     header << "\n";
     for (uint32_t frameIndex = 1; frameIndex <= frameCount; ++frameIndex)
