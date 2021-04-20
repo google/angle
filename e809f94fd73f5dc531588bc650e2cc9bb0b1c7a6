@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54901bae_b626f5b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-20T13:36:04Z",
+      "side": 1,
+      "message": "I requested mirrors for ijar and errorprone_plugin, they unfortunately had errors in CopyBara so didn\u0027t complete. I can update this and remove some of the excess sources if we get those successfully. It\u0027s already much smaller now with some of the mirrors that did success so I\u0027ll go ahead and land this CL.",
+      "revId": "e809f94fd73f5dc531588bc650e2cc9bb0b1c7a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
