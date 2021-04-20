@@ -16,6 +16,23 @@
       "message": "Hi Geoff, PTAL. Thanks.",
       "revId": "decfed0c9a557f9bc8e626c36cec993380c85816",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3c451de_0c6de9ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-04-20T21:15:32Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "decfed0c9a557f9bc8e626c36cec993380c85816",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
