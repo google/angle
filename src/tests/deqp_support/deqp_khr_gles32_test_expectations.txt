@@ -34,8 +34,6 @@
 5579 VULKAN WIN NVIDIA : KHR-GLES32.core.tessellation_shader.single.primitive_coverage = FAIL
 
 // Tessellation shader support
-// Failure in translator validation regarding varying arrayness
-5557 VULKAN WIN : KHR-GLES32.core.texture_cube_map_array.texture_size_tesselation_con_sh = FAIL
 // API validation bugs
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.vertex.vertex_ordering = FAIL
 5557 VULKAN WIN : KHR-GLES32.core.tessellation_shader.tessellation_control_to_tessellation_evaluation.gl_tessLevel = FAIL
