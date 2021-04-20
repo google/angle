@@ -16,6 +16,23 @@
       "message": "While we are waiting for the autoroller to be fixed.",
       "revId": "48fd09512e039427e6d507f50b7b2e76225db032",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cc6047a_69c4a40d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-20T15:28:54Z",
+      "side": 1,
+      "message": "Is the autoroller broked still?",
+      "revId": "48fd09512e039427e6d507f50b7b2e76225db032",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
