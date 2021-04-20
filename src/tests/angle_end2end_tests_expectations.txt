@@ -44,9 +44,9 @@
 5981 PIXEL4ORXL GLES : MipmapTest.RenderOntoLevelZeroAfterGenerateMipmap/* = SKIP
 5981 PIXEL4ORXL GLES : MipmapTest.TextureCubeGeneralLevelZero/* = SKIP
 5981 PIXEL4ORXL GLES : MipmapTest.TextureCubeRenderToLevelZero/* = SKIP
-5995 PIXEL4ORXL GLES : MultisampledRenderToTextureES3Test.BlitFramebufferTest/* = FAIL
-5995 PIXEL4ORXL GLES : MultisampledRenderToTextureES3Test.ClearThenMaskedClearFramebufferTest/* = FAIL
-5995 PIXEL4ORXL GLES : MultisampledRenderToTextureES3Test.RenderbufferBlitFramebufferTest/* = FAIL
+2894 PIXEL4ORXL GLES : MultisampledRenderToTextureES3Test.BlitFramebufferTest/* = SKIP
+2894 PIXEL4ORXL GLES : MultisampledRenderToTextureES3Test.ClearThenMaskedClearFramebufferTest/* = SKIP
+2894 PIXEL4ORXL GLES : MultisampledRenderToTextureES3Test.RenderbufferBlitFramebufferTest/* = SKIP
 5981 PIXEL4ORXL GLES : MultithreadingTestES3.MultithreadFenceTexImage/* = SKIP
 5981 PIXEL4ORXL GLES : PbufferTest.ClearAndBindTexImageSrgb/* = SKIP
 5981 PIXEL4ORXL GLES : ReadPixelsPBOTest.ExistingDataPreserved/* = SKIP

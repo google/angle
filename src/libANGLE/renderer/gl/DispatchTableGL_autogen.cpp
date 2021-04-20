@@ -994,6 +994,7 @@ void DispatchTableGL::initProcsDesktopGL(const gl::Version &version,
     if (extensions.count("GL_EXT_framebuffer_multisample") != 0)
     {
         ASSIGN("glRenderbufferStorageMultisampleEXT", renderbufferStorageMultisample);
+        ASSIGN("glRenderbufferStorageMultisampleEXT", renderbufferStorageMultisampleEXT);
     }
 
     if (extensions.count("GL_EXT_framebuffer_object") != 0)
@@ -2037,7 +2038,9 @@ void DispatchTableGL::initProcsGLES(const gl::Version &version,
 
     if (extensions.count("GL_EXT_multisampled_render_to_texture") != 0)
     {
+        ASSIGN("glFramebufferTexture2DMultisampleEXT", framebufferTexture2DMultisampleEXT);
         ASSIGN("glRenderbufferStorageMultisampleEXT", renderbufferStorageMultisample);
+        ASSIGN("glRenderbufferStorageMultisampleEXT", renderbufferStorageMultisampleEXT);
     }
 
     if (extensions.count("GL_EXT_multiview_draw_buffers") != 0)
@@ -2107,6 +2110,12 @@ void DispatchTableGL::initProcsGLES(const gl::Version &version,
     if (extensions.count("GL_EXT_texture_view") != 0)
     {
         ASSIGN("glTextureViewEXT", textureView);
+    }
+
+    if (extensions.count("GL_IMG_multisampled_render_to_texture") != 0)
+    {
+        ASSIGN("glFramebufferTexture2DMultisampleIMG", framebufferTexture2DMultisampleIMG);
+        ASSIGN("glRenderbufferStorageMultisampleIMG", renderbufferStorageMultisampleIMG);
     }
 
     if (extensions.count("GL_KHR_debug") != 0)
@@ -3771,7 +3780,8 @@ void DispatchTableGL::initProcsDesktopGLNULL(const gl::Version &version,
 
     if (extensions.count("GL_EXT_framebuffer_multisample") != 0)
     {
-        renderbufferStorageMultisample = &glRenderbufferStorageMultisampleNULL;
+        renderbufferStorageMultisample    = &glRenderbufferStorageMultisampleNULL;
+        renderbufferStorageMultisampleEXT = &glRenderbufferStorageMultisampleEXTNULL;
     }
 
     if (extensions.count("GL_EXT_framebuffer_object") != 0)
@@ -4814,7 +4824,9 @@ void DispatchTableGL::initProcsGLESNULL(const gl::Version &version,
 
     if (extensions.count("GL_EXT_multisampled_render_to_texture") != 0)
     {
-        renderbufferStorageMultisample = &glRenderbufferStorageMultisampleNULL;
+        framebufferTexture2DMultisampleEXT = &glFramebufferTexture2DMultisampleEXTNULL;
+        renderbufferStorageMultisample     = &glRenderbufferStorageMultisampleNULL;
+        renderbufferStorageMultisampleEXT  = &glRenderbufferStorageMultisampleEXTNULL;
     }
 
     if (extensions.count("GL_EXT_multiview_draw_buffers") != 0)
@@ -4884,6 +4896,12 @@ void DispatchTableGL::initProcsGLESNULL(const gl::Version &version,
     if (extensions.count("GL_EXT_texture_view") != 0)
     {
         textureView = &glTextureViewNULL;
+    }
+
+    if (extensions.count("GL_IMG_multisampled_render_to_texture") != 0)
+    {
+        framebufferTexture2DMultisampleIMG = &glFramebufferTexture2DMultisampleIMGNULL;
+        renderbufferStorageMultisampleIMG  = &glRenderbufferStorageMultisampleIMGNULL;
     }
 
     if (extensions.count("GL_KHR_debug") != 0)

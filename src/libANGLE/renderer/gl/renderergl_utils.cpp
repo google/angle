@@ -118,10 +118,22 @@ bool IsAdreno42xOr3xx(const FunctionsGL *functions)
     return number != 0 && getAdrenoNumber(functions) < 430;
 }
 
+bool IsAdreno4xx(const FunctionsGL *functions)
+{
+    int number = getAdrenoNumber(functions);
+    return number != 0 && number >= 400 && number < 500;
+}
+
 bool IsAdreno5xxOrOlder(const FunctionsGL *functions)
 {
     int number = getAdrenoNumber(functions);
     return number != 0 && number < 600;
+}
+
+bool IsAdreno5xx(const FunctionsGL *functions)
+{
+    int number = getAdrenoNumber(functions);
+    return number != 0 && number >= 500 && number < 600;
 }
 
 bool IsMaliT8xxOrOlder(const FunctionsGL *functions)
@@ -1383,6 +1395,14 @@ void GenerateCaps(const FunctionsGL *functions,
     extensions->framebufferBlitANGLE =
         extensions->framebufferBlitNV || functions->hasGLESExtension("GL_ANGLE_framebuffer_blit");
     extensions->framebufferMultisample = extensions->framebufferBlitANGLE && caps->maxSamples > 0;
+    extensions->multisampledRenderToTexture =
+        !features.disableMultisampledRenderToTexture.enabled &&
+        (functions->hasGLESExtension("GL_EXT_multisampled_render_to_texture") ||
+         functions->hasGLESExtension("GL_IMG_multisampled_render_to_texture"));
+    extensions->multisampledRenderToTexture2 =
+        !features.disableMultisampledRenderToTexture.enabled &&
+        extensions->multisampledRenderToTexture &&
+        functions->hasGLESExtension("GL_EXT_multisampled_render_to_texture2");
     extensions->standardDerivativesOES = functions->isAtLeastGL(gl::Version(2, 0)) ||
                                          functions->hasGLExtension("GL_ARB_fragment_shader") ||
                                          functions->hasGLESExtension("GL_OES_standard_derivatives");
@@ -2114,6 +2134,31 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // http://crbug.com/1181068 and http://crbug.com/783979
     ANGLE_FEATURE_CONDITION(features, flushOnFramebufferChange,
                             IsApple() && Has9thGenIntelGPU(systemInfo));
+
+    // Disable GL_EXT_multisampled_render_to_texture on a bunch of different configurations:
+
+    // http://crbug.com/490379
+    // http://crbug.com/767913
+    bool isAdreno4xxOnAndroidLessThan51 =
+        IsAndroid() && IsAdreno4xx(functions) && GetAndroidSdkLevel() < 22;
+
+    // http://crbug.com/612474
+    bool isAdreno4xxOnAndroid70 =
+        IsAndroid() && IsAdreno4xx(functions) && GetAndroidSdkLevel() == 24;
+    bool isAdreno5xxOnAndroidLessThan70 =
+        IsAndroid() && IsAdreno5xx(functions) && GetAndroidSdkLevel() < 24;
+
+    // http://crbug.com/663811
+    bool isAdreno5xxOnAndroid71 =
+        IsAndroid() && IsAdreno5xx(functions) && GetAndroidSdkLevel() == 25;
+
+    // http://crbug.com/594016
+    bool isLinuxVivante = IsLinux() && IsVivante(device);
+
+    ANGLE_FEATURE_CONDITION(features, disableMultisampledRenderToTexture,
+                            isAdreno4xxOnAndroidLessThan51 || isAdreno4xxOnAndroid70 ||
+                                isAdreno5xxOnAndroidLessThan70 || isAdreno5xxOnAndroid71 ||
+                                isLinuxVivante);
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

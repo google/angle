@@ -549,6 +549,11 @@ struct FeaturesGL : FeatureSetBase
                                         "Switching framebuffers without a flush can lead to "
                                         "crashes on Intel 9th Generation GPU Macs.",
                                         &members, "http://crbug.com/1181068"};
+
+    Feature disableMultisampledRenderToTexture = {
+        "disable_mutlisampled_render_to_texture", FeatureCategory::OpenGLWorkarounds,
+        "Many drivers have bugs when using GL_EXT_multisampled_render_to_texture", &members,
+        "http://anglebug.com/2894"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

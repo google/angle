@@ -1957,6 +1957,34 @@ typedef void(INTERNAL_GL_APIENTRY *PFNGLBLITFRAMEBUFFERNVPROC)(GLint srcX0,
                                                                GLbitfield mask,
                                                                GLenum filter);
 
+// GL_EXT_multisampled_render_to_texture
+typedef void(INTERNAL_GL_APIENTRY *PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC)(
+    GLenum target,
+    GLsizei samples,
+    GLenum internalformat,
+    GLsizei width,
+    GLsizei height);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC)(GLenum target,
+                                                                                GLenum attachment,
+                                                                                GLenum textarget,
+                                                                                GLuint texture,
+                                                                                GLint level,
+                                                                                GLsizei samples);
+
+// GL_IMG_multisampled_render_to_texture
+typedef void(INTERNAL_GL_APIENTRY *PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC)(
+    GLenum target,
+    GLsizei samples,
+    GLenum internalformat,
+    GLsizei width,
+    GLsizei height);
+typedef void(INTERNAL_GL_APIENTRY *PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC)(GLenum target,
+                                                                                GLenum attachment,
+                                                                                GLenum textarget,
+                                                                                GLuint texture,
+                                                                                GLint level,
+                                                                                GLsizei samples);
+
 }  // namespace rx
 
 #endif  // LIBANGLE_RENDERER_GL_FUNCTIONSGLTYPEDEFS_H_

@@ -838,6 +838,22 @@ void INTERNAL_GL_APIENTRY glFramebufferTexture2DNULL(GLenum target,
                                                      GLint level)
 {}
 
+void INTERNAL_GL_APIENTRY glFramebufferTexture2DMultisampleEXTNULL(GLenum target,
+                                                                   GLenum attachment,
+                                                                   GLenum textarget,
+                                                                   GLuint texture,
+                                                                   GLint level,
+                                                                   GLsizei samples)
+{}
+
+void INTERNAL_GL_APIENTRY glFramebufferTexture2DMultisampleIMGNULL(GLenum target,
+                                                                   GLenum attachment,
+                                                                   GLenum textarget,
+                                                                   GLuint texture,
+                                                                   GLint level,
+                                                                   GLsizei samples)
+{}
+
 void INTERNAL_GL_APIENTRY glFramebufferTexture3DNULL(GLenum target,
                                                      GLenum attachment,
                                                      GLenum textarget,
@@ -2246,6 +2262,20 @@ void INTERNAL_GL_APIENTRY glRenderbufferStorageMultisampleNULL(GLenum target,
                                                                GLenum internalformat,
                                                                GLsizei width,
                                                                GLsizei height)
+{}
+
+void INTERNAL_GL_APIENTRY glRenderbufferStorageMultisampleEXTNULL(GLenum target,
+                                                                  GLsizei samples,
+                                                                  GLenum internalformat,
+                                                                  GLsizei width,
+                                                                  GLsizei height)
+{}
+
+void INTERNAL_GL_APIENTRY glRenderbufferStorageMultisampleIMGNULL(GLenum target,
+                                                                  GLsizei samples,
+                                                                  GLenum internalformat,
+                                                                  GLsizei width,
+                                                                  GLsizei height)
 {}
 
 void INTERNAL_GL_APIENTRY glResumeTransformFeedbackNULL() {}
