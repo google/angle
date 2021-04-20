@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "396480bc_434c9bb9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-20T13:54:29Z",
+      "side": 1,
+      "message": "This test fails on native GL and GLES due to not being able to find a suitable EGL config.\nIt works on Vulkan/SwS where it reproduces the capture/replay issue fixed by the formatutils patch.\n\nI am not able to skip the test on native GL before it fails, as skipping cannot be done before initializing the config. Therefore I am abandoning this patch for upstreaming.",
+      "revId": "ce66700779ff724ce6b2cd949e264fd1f30fad86",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
