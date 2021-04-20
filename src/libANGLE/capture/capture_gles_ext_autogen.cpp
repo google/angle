@@ -7889,6 +7889,13 @@ CallCapture CaptureTexStorage3DEXT(const State &glState,
     return CallCapture(angle::EntryPoint::GLTexStorage3DEXT, std::move(paramBuffer));
 }
 
+CallCapture CaptureBlendBarrierKHR(const State &glState, bool isCallValid)
+{
+    ParamBuffer paramBuffer;
+
+    return CallCapture(angle::EntryPoint::GLBlendBarrierKHR, std::move(paramBuffer));
+}
+
 CallCapture CaptureDebugMessageCallbackKHR(const State &glState,
                                            bool isCallValid,
                                            GLDEBUGPROCKHR callback,

@@ -1037,6 +1037,7 @@ const ExtensionInfoMap &GetExtensionInfoMap()
         map["GL_EXT_separate_shader_objects"] = enableableExtension(&Extensions::separateShaderObjects);
         map["GL_OES_texture_storage_multisample_2d_array"] = enableableExtension(&Extensions::textureStorageMultisample2DArrayOES);
         map["GL_ANGLE_multiview_multisample"] = enableableExtension(&Extensions::multiviewMultisample);
+        map["GL_KHR_blend_equation_advanced"] = esOnlyExtension(&Extensions::blendEquationAdvancedKHR);
         map["GL_EXT_blend_func_extended"] = enableableExtension(&Extensions::blendFuncExtended);
         map["GL_EXT_float_blend"] = enableableExtension(&Extensions::floatBlend);
         map["GL_ANGLE_texture_multisample"] = enableableExtension(&Extensions::textureMultisample);

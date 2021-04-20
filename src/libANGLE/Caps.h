@@ -602,6 +602,9 @@ struct Extensions
     // GL_ANGLE_multiview_multisample
     bool multiviewMultisample = false;
 
+    // GL_KHR_blend_equation_advanced
+    bool blendEquationAdvancedKHR = false;
+
     // GL_EXT_blend_func_extended
     bool blendFuncExtended          = false;
     GLuint maxDualSourceDrawBuffers = 0;

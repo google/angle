@@ -67,6 +67,7 @@ gles_extensions = [
     "GL_ANGLE_semaphore_fuchsia",
     "GL_ANGLE_texture_multisample",
     "GL_ANGLE_translated_shader_source",
+    "GL_KHR_blend_equation_advanced",
     "GL_EXT_blend_func_extended",
     "GL_EXT_buffer_storage",
     "GL_EXT_copy_image",

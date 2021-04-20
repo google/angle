@@ -1155,6 +1155,9 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
                                                  GLsizei height,
                                                  GLsizei depth);
 
+// GL_KHR_blend_equation_advanced
+ANGLE_EXPORT void GL_APIENTRY GL_BlendBarrierKHR();
+
 // GL_KHR_debug
 ANGLE_EXPORT void GL_APIENTRY GL_DebugMessageCallbackKHR(GLDEBUGPROCKHR callback,
                                                          const void *userParam);
@@ -1591,6 +1594,7 @@ ANGLE_EXPORT void GL_APIENTRY GL_BindVertexBufferContextANGLE(GLeglContext ctx,
                                                               GLintptr offset,
                                                               GLsizei stride);
 ANGLE_EXPORT void GL_APIENTRY GL_BlendBarrierContextANGLE(GLeglContext ctx);
+ANGLE_EXPORT void GL_APIENTRY GL_BlendBarrierKHRContextANGLE(GLeglContext ctx);
 ANGLE_EXPORT void GL_APIENTRY GL_BlendColorContextANGLE(GLeglContext ctx,
                                                         GLfloat red,
                                                         GLfloat green,

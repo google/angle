@@ -190,6 +190,8 @@ const ProcEntry g_procTable[] = {
     {"glBindVertexBufferContextANGLE", P(GL_BindVertexBufferContextANGLE)},
     {"glBlendBarrier", P(GL_BlendBarrier)},
     {"glBlendBarrierContextANGLE", P(GL_BlendBarrierContextANGLE)},
+    {"glBlendBarrierKHR", P(GL_BlendBarrierKHR)},
+    {"glBlendBarrierKHRContextANGLE", P(GL_BlendBarrierKHRContextANGLE)},
     {"glBlendColor", P(GL_BlendColor)},
     {"glBlendColorContextANGLE", P(GL_BlendColorContextANGLE)},
     {"glBlendEquation", P(GL_BlendEquation)},
@@ -1757,5 +1759,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(GL_WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(GL_WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1659;
+const size_t g_numProcs = 1661;
 }  // namespace egl

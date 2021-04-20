@@ -1711,6 +1711,9 @@ angle::CallCapture CaptureTexStorage3DEXT(const State &glState,
                                           GLsizei height,
                                           GLsizei depth);
 
+// GL_KHR_blend_equation_advanced
+angle::CallCapture CaptureBlendBarrierKHR(const State &glState, bool isCallValid);
+
 // GL_KHR_debug
 angle::CallCapture CaptureDebugMessageCallbackKHR(const State &glState,
                                                   bool isCallValid,

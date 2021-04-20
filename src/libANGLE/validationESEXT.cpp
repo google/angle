@@ -468,6 +468,13 @@ bool ValidateDrawRangeElementsBaseVertexOES(const Context *context,
     return true;
 }
 
+// GL_KHR_blend_equation_advanced
+bool ValidateBlendBarrierKHR(const Context *context)
+{
+    context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+    return false;
+}
+
 bool ValidateBlendEquationSeparateiEXT(const Context *context,
                                        GLuint buf,
                                        GLenum modeRGB,

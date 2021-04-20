@@ -7571,6 +7571,28 @@ void GL_APIENTRY GL_TexStorage3DEXT(GLenum target,
     }
 }
 
+// GL_KHR_blend_equation_advanced
+void GL_APIENTRY GL_BlendBarrierKHR()
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLBlendBarrierKHR, "context = %d", CID(context));
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateBlendBarrierKHR(context));
+        if (isCallValid)
+        {
+            context->blendBarrier();
+        }
+        ANGLE_CAPTURE(BlendBarrierKHR, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_KHR_debug
 void GL_APIENTRY GL_DebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *userParam)
 {
@@ -11197,6 +11219,28 @@ void GL_APIENTRY GL_BlendBarrierContextANGLE(GLeglContext ctx)
             context->blendBarrier();
         }
         ANGLE_CAPTURE(BlendBarrier, isCallValid, context);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY GL_BlendBarrierKHRContextANGLE(GLeglContext ctx)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLBlendBarrierKHR, "context = %d", CID(context));
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid = (context->skipValidation() || ValidateBlendBarrierKHR(context));
+        if (isCallValid)
+        {
+            context->blendBarrier();
+        }
+        ANGLE_CAPTURE(BlendBarrierKHR, isCallValid, context);
     }
     else
     {

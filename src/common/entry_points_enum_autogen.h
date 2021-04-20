@@ -160,6 +160,7 @@ enum class EntryPoint
     GLBindVertexBuffers,
     GLBitmap,
     GLBlendBarrier,
+    GLBlendBarrierKHR,
     GLBlendColor,
     GLBlendEquation,
     GLBlendEquationSeparate,

@@ -4726,6 +4726,12 @@ void GL_APIENTRY glTexStorage3DEXT(GLenum target,
     return GL_TexStorage3DEXT(target, levels, internalformat, width, height, depth);
 }
 
+// GL_KHR_blend_equation_advanced
+void GL_APIENTRY glBlendBarrierKHR()
+{
+    return GL_BlendBarrierKHR();
+}
+
 // GL_KHR_debug
 void GL_APIENTRY glDebugMessageCallbackKHR(GLDEBUGPROCKHR callback, const void *userParam)
 {
@@ -5612,6 +5618,11 @@ void GL_APIENTRY glBindVertexBufferContextANGLE(GLeglContext ctx,
 void GL_APIENTRY glBlendBarrierContextANGLE(GLeglContext ctx)
 {
     return GL_BlendBarrierContextANGLE(ctx);
+}
+
+void GL_APIENTRY glBlendBarrierKHRContextANGLE(GLeglContext ctx)
+{
+    return GL_BlendBarrierKHRContextANGLE(ctx);
 }
 
 void GL_APIENTRY

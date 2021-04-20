@@ -308,6 +308,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glBitmap";
         case EntryPoint::GLBlendBarrier:
             return "glBlendBarrier";
+        case EntryPoint::GLBlendBarrierKHR:
+            return "glBlendBarrierKHR";
         case EntryPoint::GLBlendColor:
             return "glBlendColor";
         case EntryPoint::GLBlendEquation:

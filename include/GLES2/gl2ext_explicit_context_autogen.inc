@@ -156,6 +156,7 @@ typedef void (GL_APIENTRYP PFNGLBINDFRAGDATALOCATIONEXTCONTEXTANGLEPROC)(GLeglCo
 typedef void (GL_APIENTRYP PFNGLBINDFRAGDATALOCATIONINDEXEDEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLuint colorNumber, GLuint index, const GLchar *name);
 typedef void (GL_APIENTRYP PFNGLBINDPROGRAMPIPELINEEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint pipeline);
 typedef void (GL_APIENTRYP PFNGLBINDVERTEXARRAYOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint array);
+typedef void (GL_APIENTRYP PFNGLBLENDBARRIERKHRCONTEXTANGLEPROC)(GLeglContext ctx);
 typedef void (GL_APIENTRYP PFNGLBLENDEQUATIONSEPARATEIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buf, GLenum modeRGB, GLenum modeAlpha);
 typedef void (GL_APIENTRYP PFNGLBLENDEQUATIONSEPARATEIOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buf, GLenum modeRGB, GLenum modeAlpha);
 typedef void (GL_APIENTRYP PFNGLBLENDEQUATIONIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint buf, GLenum mode);
@@ -597,6 +598,7 @@ GL_APICALL void GL_APIENTRY glBindFragDataLocationEXTContextANGLE(GLeglContext c
 GL_APICALL void GL_APIENTRY glBindFragDataLocationIndexedEXTContextANGLE(GLeglContext ctx, GLuint program, GLuint colorNumber, GLuint index, const GLchar *name);
 GL_APICALL void GL_APIENTRY glBindProgramPipelineEXTContextANGLE(GLeglContext ctx, GLuint pipeline);
 GL_APICALL void GL_APIENTRY glBindVertexArrayOESContextANGLE(GLeglContext ctx, GLuint array);
+GL_APICALL void GL_APIENTRY glBlendBarrierKHRContextANGLE(GLeglContext ctx);
 GL_APICALL void GL_APIENTRY glBlendEquationSeparateiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum modeRGB, GLenum modeAlpha);
 GL_APICALL void GL_APIENTRY glBlendEquationSeparateiOESContextANGLE(GLeglContext ctx, GLuint buf, GLenum modeRGB, GLenum modeAlpha);
 GL_APICALL void GL_APIENTRY glBlendEquationiEXTContextANGLE(GLeglContext ctx, GLuint buf, GLenum mode);
