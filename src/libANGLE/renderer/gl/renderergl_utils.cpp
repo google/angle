@@ -2094,6 +2094,11 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // On desktop Linux/AMD when using the amdgpu drivers, the precise kernel and DRM version are
     // leaked via GL_RENDERER. We workaround this too improve user security.
     ANGLE_FEATURE_CONDITION(features, sanitizeAmdGpuRendererString, IsLinux() && hasAMD);
+
+    // http://crbug.com/1187513
+    // Imagination drivers are buggy with context switching. It needs to unbind fbo before context
+    // switching to workadround the driver issues.
+    ANGLE_FEATURE_CONDITION(features, unbindFBOOnContextSwitch, IsPowerVR(vendor));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

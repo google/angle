@@ -542,6 +542,13 @@ struct FeaturesGL : FeatureSetBase
         "sanitize_amdgpu_renderer_string", FeatureCategory::OpenGLWorkarounds,
         "Strip precise kernel and DRM version information from amdgpu renderer strings.", &members,
         "http://crbug.com/1181193"};
+
+    // Imagination GL drivers are buggy with context switching. We need to ubind fbo to workaround a
+    // crash in the driver.
+    Feature unbindFBOOnContextSwitch = {"unbind_fbo_before_switching_context",
+                                        FeatureCategory::OpenGLWorkarounds,
+                                        "Imagination GL drivers are buggy with context switching.",
+                                        &members, "http://crbug.com/1181193"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

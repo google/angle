@@ -845,6 +845,15 @@ angle::Result ContextGL::onMakeCurrent(const gl::Context *context)
     return mRenderer->getStateManager()->onMakeCurrent(context);
 }
 
+angle::Result ContextGL::onUnMakeCurrent(const gl::Context *context)
+{
+    if (getFeaturesGL().unbindFBOOnContextSwitch.enabled)
+    {
+        mRenderer->getStateManager()->bindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+    return ContextImpl::onUnMakeCurrent(context);
+}
+
 gl::Caps ContextGL::getNativeCaps() const
 {
     return mRenderer->getNativeCaps();
