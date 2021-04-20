@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e36e8c60_e049bcab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 13
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-20T13:25:53Z",
+      "side": 1,
+      "message": "Unfortunately using GL_UNSIGNED_INT_24_8 did not get me any further on QC.\nIt did not have impact on the error:\n\"GL_READ_FRAMEBUFFER_BINDING is nonzero and the read buffer selects an attachment that has no image attached.\"\nI was to resolve the above error though by attaching a color attachment to the frame buffer.\nTrying to read pixels with the GL_DEPTH_COMPONENT/GL_UNSIGNED_INT_24_8 type/format combination\nresulted in the following new error:\n\nReading pixels now results in this error:\nC    9.812s Main  RendererGL.cpp:106 (LogGLDebugMessage):\nC    9.812s Main  \tSource: API\nC    9.812s Main  \tType: Error\nC    9.812s Main  \tID: 0x7FFFFFFF\nC    9.812s Main  \tSeverity: High\nC    9.812s Main  \tMessage: the combination of format 6402 and type 34042 is unsupported\n\nWhich are:\nGL_DEPTH_COMPONENT   0x1902 (6402)\nGL_UNSIGNED_INT_24_8 0x84FA (34042)\n\nThe type/format combination of GL_DEPTH_COMPONENT / GL_UNSIGNED_INT\nwhich I was originally using also produces the above error.\n\nI suppose it would be possible to make this work on QC, since both extension are implemented,\nbut after consultation with Jamie I decided to not put more effort into it for now\nand skip this test on native GLES / Android.\n\nEspecially since this test does not reproduce the capture/replay issue I was trying to reproduce.\n\nFor the pixel value comparison I now have the most elegant solution of only comparing\n24 depth bits, by doing a right shift on the acquired uint32_t and having just 24 bits as expected values.\n\nI was also not able to reproduce the original issue from the capture/replay\nby adding a GL_DEPTH_COMPONENT24 test in GetImageTest.",
+      "revId": "d8290f92bda82757470a36cee182be89c89c004c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
