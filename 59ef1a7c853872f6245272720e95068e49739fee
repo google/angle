@@ -16,6 +16,29 @@
       "message": "PTAL\n\nThis fixes the test for me locally, but I\u0027ve also asked Jason to double check it works for him also, but I wanted to get some feedback while he\u0027s working on that.",
       "revId": "59ef1a7c853872f6245272720e95068e49739fee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ddd9d60_5593679d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3858,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-20T20:03:44Z",
+      "side": 1,
+      "message": "seems okay, I wonder if we could centralize this somehow to make it a bit more general instead of for this super specific test.",
+      "range": {
+        "startLine": 3858,
+        "startChar": 20,
+        "endLine": 3858,
+        "endChar": 40
+      },
+      "revId": "59ef1a7c853872f6245272720e95068e49739fee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
