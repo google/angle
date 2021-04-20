@@ -3349,6 +3349,46 @@ void main(void){
     EXPECT_GL_NO_ERROR();
 }
 
+// Tests rendering with a bound, unreferenced UBO that has no data. Covers a paticular back-end bug.
+TEST_P(UniformBufferTest, EmptyUnusedUniformBuffer)
+{
+    constexpr GLuint kBasicUBOIndex = 0;
+    constexpr GLuint kEmptyUBOIndex = 1;
+
+    // Create two UBOs. One is empty and the other is used.
+    constexpr GLfloat basicUBOData[4] = {1.0, 2.0, 3.0, 4.0};
+    GLBuffer basicUBO;
+    glBindBuffer(GL_UNIFORM_BUFFER, basicUBO);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(basicUBOData), basicUBOData, GL_STATIC_READ);
+    glBindBufferBase(GL_UNIFORM_BUFFER, kBasicUBOIndex, basicUBO);
+
+    GLBuffer emptyUBO;
+    glBindBufferBase(GL_UNIFORM_BUFFER, kEmptyUBOIndex, emptyUBO);
+
+    // Create a simple UBO program.
+    constexpr char kFS[] = R"(#version 300 es
+precision mediump float;
+uniform basicBlock {
+    vec4 basicVec4;
+};
+
+out vec4 outColor;
+
+void main() {
+   if (basicVec4 == vec4(1, 2, 3, 4)) {
+       outColor = vec4(0, 1, 0, 1);
+   } else {
+       outColor = vec4(1, 0, 0, 1);
+   }
+})";
+
+    // Draw and check result. Should not crash.
+    ANGLE_GL_PROGRAM(uboProgram, essl3_shaders::vs::Simple(), kFS);
+    drawQuad(uboProgram, essl1_shaders::PositionAttrib(), 0.5f, 1.0f);
+    EXPECT_GL_NO_ERROR();
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::green);
+}
+
 GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(UniformBufferTest);
 ANGLE_INSTANTIATE_TEST_ES3(UniformBufferTest);
 

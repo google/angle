@@ -292,27 +292,48 @@ egl::ContextPriority GetContextPriority(const gl::State &state)
 template <typename MaskT>
 void AppendBufferVectorToDesc(vk::ShaderBuffersDescriptorDesc *desc,
                               const gl::BufferVector &buffers,
-                              const MaskT &mask,
+                              const MaskT &buffersMask,
                               bool appendOffset)
 {
-    for (size_t bufferIndex : mask)
+    if (buffersMask.any())
     {
-        const gl::OffsetBindingPointer<gl::Buffer> &binding = buffers[bufferIndex];
-        const gl::Buffer *bufferGL                          = binding.get();
-        BufferVk *bufferVk                                  = vk::GetImpl(bufferGL);
-        vk::BufferSerial bufferSerial = bufferVk->getBuffer().getBufferSerial();
-
-        desc->appendBufferSerial(bufferSerial);
-        ASSERT(static_cast<uint64_t>(binding.getSize()) <=
-               static_cast<uint64_t>(std::numeric_limits<uint32_t>::max()));
-        desc->append32BitValue(static_cast<uint32_t>(binding.getSize()));
-        if (appendOffset)
+        typename MaskT::param_type lastBufferIndex = buffersMask.last();
+        for (typename MaskT::param_type bufferIndex = 0; bufferIndex <= lastBufferIndex;
+             ++bufferIndex)
         {
-            ASSERT(static_cast<uint64_t>(binding.getOffset()) <
+            const gl::OffsetBindingPointer<gl::Buffer> &binding = buffers[bufferIndex];
+            const gl::Buffer *bufferGL                          = binding.get();
+
+            if (!bufferGL)
+            {
+                desc->append32BitValue(0);
+                continue;
+            }
+
+            BufferVk *bufferVk = vk::GetImpl(bufferGL);
+
+            if (!bufferVk->isBufferValid())
+            {
+                desc->append32BitValue(0);
+                continue;
+            }
+
+            vk::BufferSerial bufferSerial = bufferVk->getBuffer().getBufferSerial();
+
+            desc->appendBufferSerial(bufferSerial);
+            ASSERT(static_cast<uint64_t>(binding.getSize()) <=
                    static_cast<uint64_t>(std::numeric_limits<uint32_t>::max()));
-            desc->append32BitValue(static_cast<uint32_t>(binding.getOffset()));
+            desc->append32BitValue(static_cast<uint32_t>(binding.getSize()));
+            if (appendOffset)
+            {
+                ASSERT(static_cast<uint64_t>(binding.getOffset()) <
+                       static_cast<uint64_t>(std::numeric_limits<uint32_t>::max()));
+                desc->append32BitValue(static_cast<uint32_t>(binding.getOffset()));
+            }
         }
     }
+
+    desc->append32BitValue(std::numeric_limits<uint32_t>::max());
 }
 }  // anonymous namespace
 
@@ -3938,20 +3959,6 @@ angle::Result ContextVk::invalidateCurrentShaderResources()
     if (hasUniformBuffers || hasStorageBuffers)
     {
         mShaderBuffersDescriptorDesc.reset();
-
-#if defined(ANGLE_IS_64_BIT_CPU)
-        mShaderBuffersDescriptorDesc.append64BitValue(mState.getUniformBuffersMask().bits(0));
-        mShaderBuffersDescriptorDesc.append64BitValue(mState.getUniformBuffersMask().bits(1));
-        mShaderBuffersDescriptorDesc.append64BitValue(mState.getShaderStorageBuffersMask().bits());
-        mShaderBuffersDescriptorDesc.append64BitValue(mState.getAtomicCounterBuffersMask().bits());
-#else
-        mShaderBuffersDescriptorDesc.append32BitValue(mState.getUniformBuffersMask().bits(0));
-        mShaderBuffersDescriptorDesc.append32BitValue(mState.getUniformBuffersMask().bits(1));
-        mShaderBuffersDescriptorDesc.append32BitValue(mState.getUniformBuffersMask().bits(2));
-        mShaderBuffersDescriptorDesc.append32BitValue(mState.getShaderStorageBuffersMask().bits(0));
-        mShaderBuffersDescriptorDesc.append32BitValue(mState.getShaderStorageBuffersMask().bits(1));
-        mShaderBuffersDescriptorDesc.append32BitValue(mState.getAtomicCounterBuffersMask().bits());
-#endif  // defined(ANGLE_IS_64_BIT_CPU)
 
         ProgramExecutableVk *executableVk = nullptr;
         if (mState.getProgram())
