@@ -689,9 +689,6 @@ TEST_P(ProgramPipelineTest31, VaryingLocationMismatch)
     // Only the Vulkan backend supports PPOs
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
-    // http://anglebug.com/5506
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     // Create a fragment shader using the varying location "5".
     const char *kFS = R"(#version 310 es
 precision mediump float;

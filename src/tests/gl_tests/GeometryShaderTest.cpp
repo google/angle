@@ -1494,9 +1494,6 @@ TEST_P(GeometryShaderTest, RecompileSeparableVSWithVaryings)
     // Errors in D3D11/GL. No plans to fix this.
     ANGLE_SKIP_TEST_IF(!IsVulkan());
 
-    // http://anglebug.com/5506
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     const char *kVS = R"(#version 310 es
 precision mediump float;
 in vec4 position;

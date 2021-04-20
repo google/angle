@@ -22,10 +22,10 @@
 
 namespace gl
 {
-class HasAttachedShaders;
 class InfoLog;
 class ProgramExecutable;
 struct Caps;
+struct LinkingVariables;
 struct ProgramVaryingRef;
 
 using ProgramMergedVaryings = std::vector<ProgramVaryingRef>;
@@ -322,9 +322,8 @@ class ProgramVaryingPacking final : angle::NonCopyable
     ShaderMap<ShaderType> mBackToFrontStageMap;
 };
 
-// Takes an abstract handle to a program or pipeline.
-ProgramMergedVaryings GetMergedVaryingsFromShaders(const HasAttachedShaders &programOrPipeline,
-                                                   const ProgramExecutable &programExecutable);
+ProgramMergedVaryings GetMergedVaryingsFromLinkingVariables(
+    const LinkingVariables &linkingVariables);
 }  // namespace gl
 
 #endif  // LIBANGLE_VARYINGPACKING_H_

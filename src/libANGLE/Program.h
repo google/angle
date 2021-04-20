@@ -111,6 +111,9 @@ void LoadShaderVar(BinaryInputStream *stream, sh::ShaderVariable *var);
 void WriteInterfaceBlock(BinaryOutputStream *stream, const InterfaceBlock &block);
 void LoadInterfaceBlock(BinaryInputStream *stream, InterfaceBlock *block);
 
+void WriteShInterfaceBlock(BinaryOutputStream *stream, const sh::InterfaceBlock &block);
+void LoadShInterfaceBlock(BinaryInputStream *stream, sh::InterfaceBlock *block);
+
 void WriteShaderVariableBuffer(BinaryOutputStream *stream, const ShaderVariableBuffer &var);
 void LoadShaderVariableBuffer(BinaryInputStream *stream, ShaderVariableBuffer *var);
 
@@ -445,19 +448,7 @@ struct ProgramVaryingRef
 
 using ProgramMergedVaryings = std::vector<ProgramVaryingRef>;
 
-// TODO: Copy necessary shader state into Program. http://anglebug.com/5506
-class HasAttachedShaders
-{
-  public:
-    virtual Shader *getAttachedShader(ShaderType shaderType) const = 0;
-
-    ShaderType getTransformFeedbackStage() const;
-
-  protected:
-    virtual ~HasAttachedShaders() {}
-};
-
-class Program final : public LabeledObject, public angle::Subject, public HasAttachedShaders
+class Program final : public LabeledObject, public angle::Subject
 {
   public:
     Program(rx::GLImplFactory *factory, ShaderProgramManager *manager, ShaderProgramID handle);
@@ -478,8 +469,7 @@ class Program final : public LabeledObject, public angle::Subject, public HasAtt
     void detachShader(const Context *context, Shader *shader);
     int getAttachedShadersCount() const;
 
-    // HasAttachedShaders implementation
-    Shader *getAttachedShader(ShaderType shaderType) const override;
+    Shader *getAttachedShader(ShaderType shaderType) const;
 
     void bindAttributeLocation(GLuint index, const char *name);
     void bindUniformLocation(UniformLocation location, const char *name);

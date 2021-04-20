@@ -888,6 +888,51 @@ TEST_P(ProgramBinaryES31Test, ProgramBinaryWithComputeShader)
     ASSERT_GL_NO_ERROR();
 }
 
+// Tests saving and loading a separable program that has a computer shader using a uniform and a
+// uniform block.
+TEST_P(ProgramBinaryES31Test, SeparableProgramLinkedUniforms)
+{
+    // We can't run the test if no program binary formats are supported.
+    GLint binaryFormatCount = 0;
+    glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, &binaryFormatCount);
+    ANGLE_SKIP_TEST_IF(binaryFormatCount == 0);
+
+    constexpr char kComputeShader[] = R"(#version 310 es
+layout(local_size_x=4, local_size_y=3, local_size_z=1) in;
+uniform float testUint;
+uniform TestBlock
+{
+    mat4 testMatrix;
+};
+layout(rgba32ui) uniform highp writeonly uimage2D imageOut;
+void main() {
+    imageStore(imageOut, ivec2(gl_LocalInvocationIndex, 0), uvec4(testMatrix[0][0] + testUint, 0, 0, 0));
+})";
+
+    ANGLE_GL_COMPUTE_PROGRAM(program, kComputeShader);
+    glProgramParameteri(program, GL_PROGRAM_SEPARABLE, GL_TRUE);
+
+    // Read back the binary.
+    GLint programLength = 0;
+    glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, &programLength);
+    ASSERT_GL_NO_ERROR();
+
+    GLsizei readLength  = 0;
+    GLenum binaryFormat = GL_NONE;
+    std::vector<uint8_t> binary(programLength);
+    glGetProgramBinary(program, programLength, &readLength, &binaryFormat, binary.data());
+    ASSERT_GL_NO_ERROR();
+
+    EXPECT_EQ(static_cast<GLsizei>(programLength), readLength);
+
+    // Load a new program with the binary.
+    ANGLE_GL_BINARY_ES3_PROGRAM(binaryProgram, binary, binaryFormat);
+    ASSERT_GL_NO_ERROR();
+
+    glUseProgram(binaryProgram);
+    ASSERT_GL_NO_ERROR();
+}
+
 // Tests that saving and loading a program attached with computer shader.
 TEST_P(ProgramBinaryES31Test, ProgramBinaryWithAtomicCounterComputeShader)
 {
