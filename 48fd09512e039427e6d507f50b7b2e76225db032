@@ -33,6 +33,24 @@
       "message": "Is the autoroller broked still?",
       "revId": "48fd09512e039427e6d507f50b7b2e76225db032",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9003ded4_6a1c51ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-20T15:45:46Z",
+      "side": 1,
+      "message": "See the Manual rolls tab: https://autoroll.skia.org/r/vulkan-deps-angle-autoroll\n\nI suspect it\u0027s the same issue as VK-GL-CTS: https://bugs.chromium.org/p/skia/issues/detail?id\u003d11866",
+      "parentUuid": "5cc6047a_69c4a40d",
+      "revId": "48fd09512e039427e6d507f50b7b2e76225db032",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
