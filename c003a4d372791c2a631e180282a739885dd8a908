@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5111ff10_4d8b0d11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-21T20:38:54Z",
+      "side": 1,
+      "message": "This is really confusing and needs some tests (will probably break again soon), but let\u0027s land this to get AGI fixed.",
+      "revId": "c003a4d372791c2a631e180282a739885dd8a908",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd02230b_45fcc29b",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-21T20:38:54Z",
+      "side": 1,
+      "message": "This might be better named as `mAngleDebugLogging` or `mAngleDebuggerMode` or something to better separate it from `mEnableDebugUtils` and make its intent clear.",
+      "range": {
+        "startLine": 429,
+        "startChar": 9,
+        "endLine": 429,
+        "endChar": 33
+      },
+      "revId": "c003a4d372791c2a631e180282a739885dd8a908",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
