@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f9b2114_9500d56a",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-21T21:58:05Z",
+      "side": 1,
+      "message": "Why is this step necessary every call?",
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
