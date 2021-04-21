@@ -1315,8 +1315,7 @@ if (is_android && symbol_level != 0) {
   }
 }
 
-if (build_with_chromium && is_android &&
-    current_toolchain == default_toolchain) {
+if (is_android && current_toolchain == default_toolchain) {
   apk_version_code = "0"
   if (angle_enable_commit_id) {
     apk_version_code =
