@@ -6,29 +6,7 @@
 
 import("../../gni/angle.gni")
 
-angle_source_set("cl_includes") {
-  sources = [
-    "../../include/CL/cl.h",
-    "../../include/CL/cl_d3d10.h",
-    "../../include/CL/cl_d3d11.h",
-    "../../include/CL/cl_dx9_media_sharing.h",
-    "../../include/CL/cl_dx9_media_sharing_intel.h",
-    "../../include/CL/cl_egl.h",
-    "../../include/CL/cl_ext.h",
-    "../../include/CL/cl_ext_intel.h",
-    "../../include/CL/cl_gl.h",
-    "../../include/CL/cl_gl_ext.h",
-    "../../include/CL/cl_half.h",
-    "../../include/CL/cl_icd.h",
-    "../../include/CL/cl_layer.h",
-    "../../include/CL/cl_platform.h",
-    "../../include/CL/cl_va_api_media_sharing_intel.h",
-    "../../include/CL/cl_version.h",
-    "../../include/CL/opencl.h",
-    "../../include/angle_cl.h",
-    "../../include/export.h",
-  ]
-}
+assert(angle_enable_cl)
 
 angle_shared_library("OpenCL") {
   defines = [ "LIBCL_IMPLEMENTATION" ]
@@ -45,8 +23,8 @@ angle_shared_library("OpenCL") {
   ]
 
   deps = [
-    ":cl_includes",
     "$angle_root:angle_common",
+    "$angle_root:cl_includes",
   ]
 }
 

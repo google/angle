@@ -27,9 +27,11 @@ cl_int CL_API_CALL CL_GetPlatformIDs(cl_uint num_entries,
              "num_entries = %u, platforms = 0x%016" PRIxPTR ", num_platforms = 0x%016" PRIxPTR "",
              num_entries, (uintptr_t)platforms, (uintptr_t)num_platforms);
 
+    Platform **platformsPacked = PackParam<Platform **>(platforms);
+
     // TODO: validate
 
-    return cl::GetPlatformIDs(num_entries, platforms, num_platforms);
+    return (cl::GetPlatformIDs(num_entries, platformsPacked, num_platforms));
 }
 
 cl_int CL_API_CALL CL_GetPlatformInfo(cl_platform_id platform,
@@ -45,12 +47,13 @@ cl_int CL_API_CALL CL_GetPlatformInfo(cl_platform_id platform,
              (uintptr_t)platform, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Platform *platformPacked      = PackParam<Platform *>(platform);
     PlatformInfo param_namePacked = PackParam<PlatformInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetPlatformInfo(platform, param_namePacked, param_value_size, param_value,
-                               param_value_size_ret);
+    return (cl::GetPlatformInfo(platformPacked, param_namePacked, param_value_size, param_value,
+                                param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_GetDeviceIDs(cl_platform_id platform,
@@ -66,9 +69,12 @@ cl_int CL_API_CALL CL_GetDeviceIDs(cl_platform_id platform,
              (uintptr_t)platform, device_type, num_entries, (uintptr_t)devices,
              (uintptr_t)num_devices);
 
+    Platform *platformPacked = PackParam<Platform *>(platform);
+    Device **devicesPacked   = PackParam<Device **>(devices);
+
     // TODO: validate
 
-    return cl::GetDeviceIDs(platform, device_type, num_entries, devices, num_devices);
+    return (cl::GetDeviceIDs(platformPacked, device_type, num_entries, devicesPacked, num_devices));
 }
 
 cl_int CL_API_CALL CL_GetDeviceInfo(cl_device_id device,
@@ -84,12 +90,13 @@ cl_int CL_API_CALL CL_GetDeviceInfo(cl_device_id device,
              (uintptr_t)device, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Device *devicePacked        = PackParam<Device *>(device);
     DeviceInfo param_namePacked = PackParam<DeviceInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetDeviceInfo(device, param_namePacked, param_value_size, param_value,
-                             param_value_size_ret);
+    return (cl::GetDeviceInfo(devicePacked, param_namePacked, param_value_size, param_value,
+                              param_value_size_ret));
 }
 
 cl_context CL_API_CALL CL_CreateContext(const cl_context_properties *properties,
@@ -109,9 +116,12 @@ cl_context CL_API_CALL CL_CreateContext(const cl_context_properties *properties,
              (uintptr_t)properties, num_devices, (uintptr_t)devices, (uintptr_t)pfn_notify,
              (uintptr_t)user_data, (uintptr_t)errcode_ret);
 
+    Device *const *devicesPacked = PackParam<Device *const *>(devices);
+
     // TODO: validate
 
-    return cl::CreateContext(properties, num_devices, devices, pfn_notify, user_data, errcode_ret);
+    return UnpackParam<cl_context>(cl::CreateContext(properties, num_devices, devicesPacked,
+                                                     pfn_notify, user_data, errcode_ret));
 }
 
 cl_context CL_API_CALL
@@ -132,25 +142,30 @@ CL_CreateContextFromType(const cl_context_properties *properties,
 
     // TODO: validate
 
-    return cl::CreateContextFromType(properties, device_type, pfn_notify, user_data, errcode_ret);
+    return UnpackParam<cl_context>(
+        cl::CreateContextFromType(properties, device_type, pfn_notify, user_data, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_RetainContext(cl_context context)
 {
     CL_EVENT(RetainContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::RetainContext(context);
+    return (cl::RetainContext(contextPacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseContext(cl_context context)
 {
     CL_EVENT(ReleaseContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::ReleaseContext(context);
+    return (cl::ReleaseContext(contextPacked));
 }
 
 cl_int CL_API_CALL CL_GetContextInfo(cl_context context,
@@ -166,30 +181,35 @@ cl_int CL_API_CALL CL_GetContextInfo(cl_context context,
              (uintptr_t)context, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Context *contextPacked       = PackParam<Context *>(context);
     ContextInfo param_namePacked = PackParam<ContextInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetContextInfo(context, param_namePacked, param_value_size, param_value,
-                              param_value_size_ret);
+    return (cl::GetContextInfo(contextPacked, param_namePacked, param_value_size, param_value,
+                               param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_RetainCommandQueue(cl_command_queue command_queue)
 {
     CL_EVENT(RetainCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+
     // TODO: validate
 
-    return cl::RetainCommandQueue(command_queue);
+    return (cl::RetainCommandQueue(command_queuePacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseCommandQueue(cl_command_queue command_queue)
 {
     CL_EVENT(ReleaseCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+
     // TODO: validate
 
-    return cl::ReleaseCommandQueue(command_queue);
+    return (cl::ReleaseCommandQueue(command_queuePacked));
 }
 
 cl_int CL_API_CALL CL_GetCommandQueueInfo(cl_command_queue command_queue,
@@ -205,12 +225,13 @@ cl_int CL_API_CALL CL_GetCommandQueueInfo(cl_command_queue command_queue,
              (uintptr_t)command_queue, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
     CommandQueueInfo param_namePacked = PackParam<CommandQueueInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetCommandQueueInfo(command_queue, param_namePacked, param_value_size, param_value,
-                                   param_value_size_ret);
+    return (cl::GetCommandQueueInfo(command_queuePacked, param_namePacked, param_value_size,
+                                    param_value, param_value_size_ret));
 }
 
 cl_mem CL_API_CALL CL_CreateBuffer(cl_context context,
@@ -224,27 +245,33 @@ cl_mem CL_API_CALL CL_CreateBuffer(cl_context context,
              ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, flags, size, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateBuffer(context, flags, size, host_ptr, errcode_ret);
+    return UnpackParam<cl_mem>(cl::CreateBuffer(contextPacked, flags, size, host_ptr, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_RetainMemObject(cl_mem memobj)
 {
     CL_EVENT(RetainMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
 
+    Memory *memobjPacked = PackParam<Memory *>(memobj);
+
     // TODO: validate
 
-    return cl::RetainMemObject(memobj);
+    return (cl::RetainMemObject(memobjPacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseMemObject(cl_mem memobj)
 {
     CL_EVENT(ReleaseMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
 
+    Memory *memobjPacked = PackParam<Memory *>(memobj);
+
     // TODO: validate
 
-    return cl::ReleaseMemObject(memobj);
+    return (cl::ReleaseMemObject(memobjPacked));
 }
 
 cl_int CL_API_CALL CL_GetSupportedImageFormats(cl_context context,
@@ -261,12 +288,13 @@ cl_int CL_API_CALL CL_GetSupportedImageFormats(cl_context context,
              (uintptr_t)context, flags, image_type, num_entries, (uintptr_t)image_formats,
              (uintptr_t)num_image_formats);
 
+    Context *contextPacked         = PackParam<Context *>(context);
     MemObjectType image_typePacked = PackParam<MemObjectType>(image_type);
 
     // TODO: validate
 
-    return cl::GetSupportedImageFormats(context, flags, image_typePacked, num_entries,
-                                        image_formats, num_image_formats);
+    return (cl::GetSupportedImageFormats(contextPacked, flags, image_typePacked, num_entries,
+                                         image_formats, num_image_formats));
 }
 
 cl_int CL_API_CALL CL_GetMemObjectInfo(cl_mem memobj,
@@ -282,12 +310,13 @@ cl_int CL_API_CALL CL_GetMemObjectInfo(cl_mem memobj,
              (uintptr_t)memobj, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Memory *memobjPacked     = PackParam<Memory *>(memobj);
     MemInfo param_namePacked = PackParam<MemInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetMemObjectInfo(memobj, param_namePacked, param_value_size, param_value,
-                                param_value_size_ret);
+    return (cl::GetMemObjectInfo(memobjPacked, param_namePacked, param_value_size, param_value,
+                                 param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_GetImageInfo(cl_mem image,
@@ -303,30 +332,35 @@ cl_int CL_API_CALL CL_GetImageInfo(cl_mem image,
              (uintptr_t)image, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Memory *imagePacked        = PackParam<Memory *>(image);
     ImageInfo param_namePacked = PackParam<ImageInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetImageInfo(image, param_namePacked, param_value_size, param_value,
-                            param_value_size_ret);
+    return (cl::GetImageInfo(imagePacked, param_namePacked, param_value_size, param_value,
+                             param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_RetainSampler(cl_sampler sampler)
 {
     CL_EVENT(RetainSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
 
+    Sampler *samplerPacked = PackParam<Sampler *>(sampler);
+
     // TODO: validate
 
-    return cl::RetainSampler(sampler);
+    return (cl::RetainSampler(samplerPacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseSampler(cl_sampler sampler)
 {
     CL_EVENT(ReleaseSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
 
+    Sampler *samplerPacked = PackParam<Sampler *>(sampler);
+
     // TODO: validate
 
-    return cl::ReleaseSampler(sampler);
+    return (cl::ReleaseSampler(samplerPacked));
 }
 
 cl_int CL_API_CALL CL_GetSamplerInfo(cl_sampler sampler,
@@ -342,12 +376,13 @@ cl_int CL_API_CALL CL_GetSamplerInfo(cl_sampler sampler,
              (uintptr_t)sampler, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Sampler *samplerPacked       = PackParam<Sampler *>(sampler);
     SamplerInfo param_namePacked = PackParam<SamplerInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetSamplerInfo(sampler, param_namePacked, param_value_size, param_value,
-                              param_value_size_ret);
+    return (cl::GetSamplerInfo(samplerPacked, param_namePacked, param_value_size, param_value,
+                               param_value_size_ret));
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithSource(cl_context context,
@@ -362,9 +397,12 @@ cl_program CL_API_CALL CL_CreateProgramWithSource(cl_context context,
              (uintptr_t)context, count, (uintptr_t)strings, (uintptr_t)lengths,
              (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateProgramWithSource(context, count, strings, lengths, errcode_ret);
+    return UnpackParam<cl_program>(
+        cl::CreateProgramWithSource(contextPacked, count, strings, lengths, errcode_ret));
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithBinary(cl_context context,
@@ -382,28 +420,36 @@ cl_program CL_API_CALL CL_CreateProgramWithBinary(cl_context context,
              (uintptr_t)context, num_devices, (uintptr_t)device_list, (uintptr_t)lengths,
              (uintptr_t)binaries, (uintptr_t)binary_status, (uintptr_t)errcode_ret);
 
+    Context *contextPacked           = PackParam<Context *>(context);
+    Device *const *device_listPacked = PackParam<Device *const *>(device_list);
+
     // TODO: validate
 
-    return cl::CreateProgramWithBinary(context, num_devices, device_list, lengths, binaries,
-                                       binary_status, errcode_ret);
+    return UnpackParam<cl_program>(cl::CreateProgramWithBinary(contextPacked, num_devices,
+                                                               device_listPacked, lengths, binaries,
+                                                               binary_status, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_RetainProgram(cl_program program)
 {
     CL_EVENT(RetainProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
 
+    Program *programPacked = PackParam<Program *>(program);
+
     // TODO: validate
 
-    return cl::RetainProgram(program);
+    return (cl::RetainProgram(programPacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseProgram(cl_program program)
 {
     CL_EVENT(ReleaseProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
 
+    Program *programPacked = PackParam<Program *>(program);
+
     // TODO: validate
 
-    return cl::ReleaseProgram(program);
+    return (cl::ReleaseProgram(programPacked));
 }
 
 cl_int CL_API_CALL CL_BuildProgram(cl_program program,
@@ -421,9 +467,13 @@ cl_int CL_API_CALL CL_BuildProgram(cl_program program,
              (uintptr_t)program, num_devices, (uintptr_t)device_list, (uintptr_t)options,
              (uintptr_t)pfn_notify, (uintptr_t)user_data);
 
+    Program *programPacked           = PackParam<Program *>(program);
+    Device *const *device_listPacked = PackParam<Device *const *>(device_list);
+
     // TODO: validate
 
-    return cl::BuildProgram(program, num_devices, device_list, options, pfn_notify, user_data);
+    return (cl::BuildProgram(programPacked, num_devices, device_listPacked, options, pfn_notify,
+                             user_data));
 }
 
 cl_int CL_API_CALL CL_GetProgramInfo(cl_program program,
@@ -439,12 +489,13 @@ cl_int CL_API_CALL CL_GetProgramInfo(cl_program program,
              (uintptr_t)program, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Program *programPacked       = PackParam<Program *>(program);
     ProgramInfo param_namePacked = PackParam<ProgramInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetProgramInfo(program, param_namePacked, param_value_size, param_value,
-                              param_value_size_ret);
+    return (cl::GetProgramInfo(programPacked, param_namePacked, param_value_size, param_value,
+                               param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_GetProgramBuildInfo(cl_program program,
@@ -461,12 +512,14 @@ cl_int CL_API_CALL CL_GetProgramBuildInfo(cl_program program,
              (uintptr_t)program, (uintptr_t)device, param_name, param_value_size,
              (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
 
+    Program *programPacked            = PackParam<Program *>(program);
+    Device *devicePacked              = PackParam<Device *>(device);
     ProgramBuildInfo param_namePacked = PackParam<ProgramBuildInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetProgramBuildInfo(program, device, param_namePacked, param_value_size, param_value,
-                                   param_value_size_ret);
+    return (cl::GetProgramBuildInfo(programPacked, devicePacked, param_namePacked, param_value_size,
+                                    param_value, param_value_size_ret));
 }
 
 cl_kernel CL_API_CALL CL_CreateKernel(cl_program program,
@@ -478,9 +531,11 @@ cl_kernel CL_API_CALL CL_CreateKernel(cl_program program,
              ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)program, (uintptr_t)kernel_name, (uintptr_t)errcode_ret);
 
+    Program *programPacked = PackParam<Program *>(program);
+
     // TODO: validate
 
-    return cl::CreateKernel(program, kernel_name, errcode_ret);
+    return UnpackParam<cl_kernel>(cl::CreateKernel(programPacked, kernel_name, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_CreateKernelsInProgram(cl_program program,
@@ -493,27 +548,34 @@ cl_int CL_API_CALL CL_CreateKernelsInProgram(cl_program program,
              ", num_kernels_ret = 0x%016" PRIxPTR "",
              (uintptr_t)program, num_kernels, (uintptr_t)kernels, (uintptr_t)num_kernels_ret);
 
+    Program *programPacked = PackParam<Program *>(program);
+    Kernel **kernelsPacked = PackParam<Kernel **>(kernels);
+
     // TODO: validate
 
-    return cl::CreateKernelsInProgram(program, num_kernels, kernels, num_kernels_ret);
+    return (cl::CreateKernelsInProgram(programPacked, num_kernels, kernelsPacked, num_kernels_ret));
 }
 
 cl_int CL_API_CALL CL_RetainKernel(cl_kernel kernel)
 {
     CL_EVENT(RetainKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
 
+    Kernel *kernelPacked = PackParam<Kernel *>(kernel);
+
     // TODO: validate
 
-    return cl::RetainKernel(kernel);
+    return (cl::RetainKernel(kernelPacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseKernel(cl_kernel kernel)
 {
     CL_EVENT(ReleaseKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
 
+    Kernel *kernelPacked = PackParam<Kernel *>(kernel);
+
     // TODO: validate
 
-    return cl::ReleaseKernel(kernel);
+    return (cl::ReleaseKernel(kernelPacked));
 }
 
 cl_int CL_API_CALL CL_SetKernelArg(cl_kernel kernel,
@@ -526,9 +588,11 @@ cl_int CL_API_CALL CL_SetKernelArg(cl_kernel kernel,
              ", arg_index = %u, arg_size = %zu, arg_value = 0x%016" PRIxPTR "",
              (uintptr_t)kernel, arg_index, arg_size, (uintptr_t)arg_value);
 
+    Kernel *kernelPacked = PackParam<Kernel *>(kernel);
+
     // TODO: validate
 
-    return cl::SetKernelArg(kernel, arg_index, arg_size, arg_value);
+    return (cl::SetKernelArg(kernelPacked, arg_index, arg_size, arg_value));
 }
 
 cl_int CL_API_CALL CL_GetKernelInfo(cl_kernel kernel,
@@ -544,12 +608,13 @@ cl_int CL_API_CALL CL_GetKernelInfo(cl_kernel kernel,
              (uintptr_t)kernel, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Kernel *kernelPacked        = PackParam<Kernel *>(kernel);
     KernelInfo param_namePacked = PackParam<KernelInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetKernelInfo(kernel, param_namePacked, param_value_size, param_value,
-                             param_value_size_ret);
+    return (cl::GetKernelInfo(kernelPacked, param_namePacked, param_value_size, param_value,
+                              param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_GetKernelWorkGroupInfo(cl_kernel kernel,
@@ -566,12 +631,14 @@ cl_int CL_API_CALL CL_GetKernelWorkGroupInfo(cl_kernel kernel,
              (uintptr_t)kernel, (uintptr_t)device, param_name, param_value_size,
              (uintptr_t)param_value, (uintptr_t)param_value_size_ret);
 
+    Kernel *kernelPacked                 = PackParam<Kernel *>(kernel);
+    Device *devicePacked                 = PackParam<Device *>(device);
     KernelWorkGroupInfo param_namePacked = PackParam<KernelWorkGroupInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetKernelWorkGroupInfo(kernel, device, param_namePacked, param_value_size,
-                                      param_value, param_value_size_ret);
+    return (cl::GetKernelWorkGroupInfo(kernelPacked, devicePacked, param_namePacked,
+                                       param_value_size, param_value, param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_WaitForEvents(cl_uint num_events, const cl_event *event_list)
@@ -579,9 +646,11 @@ cl_int CL_API_CALL CL_WaitForEvents(cl_uint num_events, const cl_event *event_li
     CL_EVENT(WaitForEvents, "num_events = %u, event_list = 0x%016" PRIxPTR "", num_events,
              (uintptr_t)event_list);
 
+    Event *const *event_listPacked = PackParam<Event *const *>(event_list);
+
     // TODO: validate
 
-    return cl::WaitForEvents(num_events, event_list);
+    return (cl::WaitForEvents(num_events, event_listPacked));
 }
 
 cl_int CL_API_CALL CL_GetEventInfo(cl_event event,
@@ -597,30 +666,35 @@ cl_int CL_API_CALL CL_GetEventInfo(cl_event event,
              (uintptr_t)event, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Event *eventPacked         = PackParam<Event *>(event);
     EventInfo param_namePacked = PackParam<EventInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetEventInfo(event, param_namePacked, param_value_size, param_value,
-                            param_value_size_ret);
+    return (cl::GetEventInfo(eventPacked, param_namePacked, param_value_size, param_value,
+                             param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_RetainEvent(cl_event event)
 {
     CL_EVENT(RetainEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
 
+    Event *eventPacked = PackParam<Event *>(event);
+
     // TODO: validate
 
-    return cl::RetainEvent(event);
+    return (cl::RetainEvent(eventPacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseEvent(cl_event event)
 {
     CL_EVENT(ReleaseEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
 
+    Event *eventPacked = PackParam<Event *>(event);
+
     // TODO: validate
 
-    return cl::ReleaseEvent(event);
+    return (cl::ReleaseEvent(eventPacked));
 }
 
 cl_int CL_API_CALL CL_GetEventProfilingInfo(cl_event event,
@@ -636,30 +710,35 @@ cl_int CL_API_CALL CL_GetEventProfilingInfo(cl_event event,
              (uintptr_t)event, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Event *eventPacked             = PackParam<Event *>(event);
     ProfilingInfo param_namePacked = PackParam<ProfilingInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetEventProfilingInfo(event, param_namePacked, param_value_size, param_value,
-                                     param_value_size_ret);
+    return (cl::GetEventProfilingInfo(eventPacked, param_namePacked, param_value_size, param_value,
+                                      param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_Flush(cl_command_queue command_queue)
 {
     CL_EVENT(Flush, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+
     // TODO: validate
 
-    return cl::Flush(command_queue);
+    return (cl::Flush(command_queuePacked));
 }
 
 cl_int CL_API_CALL CL_Finish(cl_command_queue command_queue)
 {
     CL_EVENT(Finish, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+
     // TODO: validate
 
-    return cl::Finish(command_queue);
+    return (cl::Finish(command_queuePacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueReadBuffer(cl_command_queue command_queue,
@@ -680,10 +759,16 @@ cl_int CL_API_CALL CL_EnqueueReadBuffer(cl_command_queue command_queue,
              (uintptr_t)command_queue, (uintptr_t)buffer, blocking_read, offset, size,
              (uintptr_t)ptr, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *bufferPacked                = PackParam<Memory *>(buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueReadBuffer(command_queue, buffer, blocking_read, offset, size, ptr,
-                                 num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueReadBuffer(command_queuePacked, bufferPacked, blocking_read, offset, size,
+                                  ptr, num_events_in_wait_list, event_wait_listPacked,
+                                  eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueWriteBuffer(cl_command_queue command_queue,
@@ -704,10 +789,16 @@ cl_int CL_API_CALL CL_EnqueueWriteBuffer(cl_command_queue command_queue,
              (uintptr_t)command_queue, (uintptr_t)buffer, blocking_write, offset, size,
              (uintptr_t)ptr, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *bufferPacked                = PackParam<Memory *>(buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueWriteBuffer(command_queue, buffer, blocking_write, offset, size, ptr,
-                                  num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueWriteBuffer(command_queuePacked, bufferPacked, blocking_write, offset, size,
+                                   ptr, num_events_in_wait_list, event_wait_listPacked,
+                                   eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyBuffer(cl_command_queue command_queue,
@@ -729,10 +820,17 @@ cl_int CL_API_CALL CL_EnqueueCopyBuffer(cl_command_queue command_queue,
              dst_offset, size, num_events_in_wait_list, (uintptr_t)event_wait_list,
              (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *src_bufferPacked            = PackParam<Memory *>(src_buffer);
+    Memory *dst_bufferPacked            = PackParam<Memory *>(dst_buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueCopyBuffer(command_queue, src_buffer, dst_buffer, src_offset, dst_offset,
-                                 size, num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueCopyBuffer(command_queuePacked, src_bufferPacked, dst_bufferPacked,
+                                  src_offset, dst_offset, size, num_events_in_wait_list,
+                                  event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueReadImage(cl_command_queue command_queue,
@@ -757,10 +855,16 @@ cl_int CL_API_CALL CL_EnqueueReadImage(cl_command_queue command_queue,
              (uintptr_t)region, row_pitch, slice_pitch, (uintptr_t)ptr, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *imagePacked                 = PackParam<Memory *>(image);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueReadImage(command_queue, image, blocking_read, origin, region, row_pitch,
-                                slice_pitch, ptr, num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueReadImage(command_queuePacked, imagePacked, blocking_read, origin, region,
+                                 row_pitch, slice_pitch, ptr, num_events_in_wait_list,
+                                 event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueWriteImage(cl_command_queue command_queue,
@@ -785,11 +889,16 @@ cl_int CL_API_CALL CL_EnqueueWriteImage(cl_command_queue command_queue,
              (uintptr_t)region, input_row_pitch, input_slice_pitch, (uintptr_t)ptr,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *imagePacked                 = PackParam<Memory *>(image);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueWriteImage(command_queue, image, blocking_write, origin, region,
-                                 input_row_pitch, input_slice_pitch, ptr, num_events_in_wait_list,
-                                 event_wait_list, event);
+    return (cl::EnqueueWriteImage(command_queuePacked, imagePacked, blocking_write, origin, region,
+                                  input_row_pitch, input_slice_pitch, ptr, num_events_in_wait_list,
+                                  event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyImage(cl_command_queue command_queue,
@@ -812,10 +921,17 @@ cl_int CL_API_CALL CL_EnqueueCopyImage(cl_command_queue command_queue,
              (uintptr_t)src_origin, (uintptr_t)dst_origin, (uintptr_t)region,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *src_imagePacked             = PackParam<Memory *>(src_image);
+    Memory *dst_imagePacked             = PackParam<Memory *>(dst_image);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueCopyImage(command_queue, src_image, dst_image, src_origin, dst_origin, region,
-                                num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueCopyImage(command_queuePacked, src_imagePacked, dst_imagePacked, src_origin,
+                                 dst_origin, region, num_events_in_wait_list, event_wait_listPacked,
+                                 eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyImageToBuffer(cl_command_queue command_queue,
@@ -838,11 +954,17 @@ cl_int CL_API_CALL CL_EnqueueCopyImageToBuffer(cl_command_queue command_queue,
              (uintptr_t)src_origin, (uintptr_t)region, dst_offset, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *src_imagePacked             = PackParam<Memory *>(src_image);
+    Memory *dst_bufferPacked            = PackParam<Memory *>(dst_buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueCopyImageToBuffer(command_queue, src_image, dst_buffer, src_origin, region,
-                                        dst_offset, num_events_in_wait_list, event_wait_list,
-                                        event);
+    return (cl::EnqueueCopyImageToBuffer(command_queuePacked, src_imagePacked, dst_bufferPacked,
+                                         src_origin, region, dst_offset, num_events_in_wait_list,
+                                         event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyBufferToImage(cl_command_queue command_queue,
@@ -865,11 +987,17 @@ cl_int CL_API_CALL CL_EnqueueCopyBufferToImage(cl_command_queue command_queue,
              (uintptr_t)dst_origin, (uintptr_t)region, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *src_bufferPacked            = PackParam<Memory *>(src_buffer);
+    Memory *dst_imagePacked             = PackParam<Memory *>(dst_image);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueCopyBufferToImage(command_queue, src_buffer, dst_image, src_offset,
-                                        dst_origin, region, num_events_in_wait_list,
-                                        event_wait_list, event);
+    return (cl::EnqueueCopyBufferToImage(command_queuePacked, src_bufferPacked, dst_imagePacked,
+                                         src_offset, dst_origin, region, num_events_in_wait_list,
+                                         event_wait_listPacked, eventPacked));
 }
 
 void *CL_API_CALL CL_EnqueueMapBuffer(cl_command_queue command_queue,
@@ -892,10 +1020,16 @@ void *CL_API_CALL CL_EnqueueMapBuffer(cl_command_queue command_queue,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event,
              (uintptr_t)errcode_ret);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *bufferPacked                = PackParam<Memory *>(buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueMapBuffer(command_queue, buffer, blocking_map, map_flags, offset, size,
-                                num_events_in_wait_list, event_wait_list, event, errcode_ret);
+    return (cl::EnqueueMapBuffer(command_queuePacked, bufferPacked, blocking_map, map_flags, offset,
+                                 size, num_events_in_wait_list, event_wait_listPacked, eventPacked,
+                                 errcode_ret));
 }
 
 void *CL_API_CALL CL_EnqueueMapImage(cl_command_queue command_queue,
@@ -923,11 +1057,16 @@ void *CL_API_CALL CL_EnqueueMapImage(cl_command_queue command_queue,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event,
              (uintptr_t)errcode_ret);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *imagePacked                 = PackParam<Memory *>(image);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueMapImage(command_queue, image, blocking_map, map_flags, origin, region,
-                               image_row_pitch, image_slice_pitch, num_events_in_wait_list,
-                               event_wait_list, event, errcode_ret);
+    return (cl::EnqueueMapImage(command_queuePacked, imagePacked, blocking_map, map_flags, origin,
+                                region, image_row_pitch, image_slice_pitch, num_events_in_wait_list,
+                                event_wait_listPacked, eventPacked, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_EnqueueUnmapMemObject(cl_command_queue command_queue,
@@ -945,10 +1084,15 @@ cl_int CL_API_CALL CL_EnqueueUnmapMemObject(cl_command_queue command_queue,
              (uintptr_t)command_queue, (uintptr_t)memobj, (uintptr_t)mapped_ptr,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *memobjPacked                = PackParam<Memory *>(memobj);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueUnmapMemObject(command_queue, memobj, mapped_ptr, num_events_in_wait_list,
-                                     event_wait_list, event);
+    return (cl::EnqueueUnmapMemObject(command_queuePacked, memobjPacked, mapped_ptr,
+                                      num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueNDRangeKernel(cl_command_queue command_queue,
@@ -971,11 +1115,16 @@ cl_int CL_API_CALL CL_EnqueueNDRangeKernel(cl_command_queue command_queue,
              (uintptr_t)global_work_size, (uintptr_t)local_work_size, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Kernel *kernelPacked                = PackParam<Kernel *>(kernel);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueNDRangeKernel(command_queue, kernel, work_dim, global_work_offset,
-                                    global_work_size, local_work_size, num_events_in_wait_list,
-                                    event_wait_list, event);
+    return (cl::EnqueueNDRangeKernel(command_queuePacked, kernelPacked, work_dim,
+                                     global_work_offset, global_work_size, local_work_size,
+                                     num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueNativeKernel(cl_command_queue command_queue,
@@ -1000,11 +1149,16 @@ cl_int CL_API_CALL CL_EnqueueNativeKernel(cl_command_queue command_queue,
              num_mem_objects, (uintptr_t)mem_list, (uintptr_t)args_mem_loc, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *const *mem_listPacked       = PackParam<Memory *const *>(mem_list);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueNativeKernel(command_queue, user_func, args, cb_args, num_mem_objects,
-                                   mem_list, args_mem_loc, num_events_in_wait_list, event_wait_list,
-                                   event);
+    return (cl::EnqueueNativeKernel(command_queuePacked, user_func, args, cb_args, num_mem_objects,
+                                    mem_listPacked, args_mem_loc, num_events_in_wait_list,
+                                    event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_SetCommandQueueProperty(cl_command_queue command_queue,
@@ -1017,9 +1171,11 @@ cl_int CL_API_CALL CL_SetCommandQueueProperty(cl_command_queue command_queue,
              ", properties = %lu, enable = %u, old_properties = 0x%016" PRIxPTR "",
              (uintptr_t)command_queue, properties, enable, (uintptr_t)old_properties);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+
     // TODO: validate
 
-    return cl::SetCommandQueueProperty(command_queue, properties, enable, old_properties);
+    return (cl::SetCommandQueueProperty(command_queuePacked, properties, enable, old_properties));
 }
 
 cl_mem CL_API_CALL CL_CreateImage2D(cl_context context,
@@ -1039,10 +1195,13 @@ cl_mem CL_API_CALL CL_CreateImage2D(cl_context context,
         (uintptr_t)context, flags, (uintptr_t)image_format, image_width, image_height,
         image_row_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateImage2D(context, flags, image_format, image_width, image_height,
-                             image_row_pitch, host_ptr, errcode_ret);
+    return UnpackParam<cl_mem>(cl::CreateImage2D(contextPacked, flags, image_format, image_width,
+                                                 image_height, image_row_pitch, host_ptr,
+                                                 errcode_ret));
 }
 
 cl_mem CL_API_CALL CL_CreateImage3D(cl_context context,
@@ -1064,10 +1223,13 @@ cl_mem CL_API_CALL CL_CreateImage3D(cl_context context,
         (uintptr_t)context, flags, (uintptr_t)image_format, image_width, image_height, image_depth,
         image_row_pitch, image_slice_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateImage3D(context, flags, image_format, image_width, image_height, image_depth,
-                             image_row_pitch, image_slice_pitch, host_ptr, errcode_ret);
+    return UnpackParam<cl_mem>(cl::CreateImage3D(contextPacked, flags, image_format, image_width,
+                                                 image_height, image_depth, image_row_pitch,
+                                                 image_slice_pitch, host_ptr, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_EnqueueMarker(cl_command_queue command_queue, cl_event *event)
@@ -1075,9 +1237,12 @@ cl_int CL_API_CALL CL_EnqueueMarker(cl_command_queue command_queue, cl_event *ev
     CL_EVENT(EnqueueMarker, "command_queue = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "",
              (uintptr_t)command_queue, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+    Event **eventPacked               = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueMarker(command_queue, event);
+    return (cl::EnqueueMarker(command_queuePacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueWaitForEvents(cl_command_queue command_queue,
@@ -1088,18 +1253,23 @@ cl_int CL_API_CALL CL_EnqueueWaitForEvents(cl_command_queue command_queue,
              "command_queue = 0x%016" PRIxPTR ", num_events = %u, event_list = 0x%016" PRIxPTR "",
              (uintptr_t)command_queue, num_events, (uintptr_t)event_list);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_listPacked    = PackParam<Event *const *>(event_list);
+
     // TODO: validate
 
-    return cl::EnqueueWaitForEvents(command_queue, num_events, event_list);
+    return (cl::EnqueueWaitForEvents(command_queuePacked, num_events, event_listPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueBarrier(cl_command_queue command_queue)
 {
     CL_EVENT(EnqueueBarrier, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+
     // TODO: validate
 
-    return cl::EnqueueBarrier(command_queue);
+    return (cl::EnqueueBarrier(command_queuePacked));
 }
 
 cl_int CL_API_CALL CL_UnloadCompiler()
@@ -1108,7 +1278,7 @@ cl_int CL_API_CALL CL_UnloadCompiler()
 
     // TODO: validate
 
-    return cl::UnloadCompiler();
+    return (cl::UnloadCompiler());
 }
 
 void *CL_API_CALL CL_GetExtensionFunctionAddress(const char *func_name)
@@ -1117,7 +1287,7 @@ void *CL_API_CALL CL_GetExtensionFunctionAddress(const char *func_name)
 
     // TODO: validate
 
-    return cl::GetExtensionFunctionAddress(func_name);
+    return (cl::GetExtensionFunctionAddress(func_name));
 }
 
 cl_command_queue CL_API_CALL CL_CreateCommandQueue(cl_context context,
@@ -1130,9 +1300,13 @@ cl_command_queue CL_API_CALL CL_CreateCommandQueue(cl_context context,
              ", properties = %lu, errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)device, properties, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+    Device *devicePacked   = PackParam<Device *>(device);
+
     // TODO: validate
 
-    return cl::CreateCommandQueue(context, device, properties, errcode_ret);
+    return UnpackParam<cl_command_queue>(
+        cl::CreateCommandQueue(contextPacked, devicePacked, properties, errcode_ret));
 }
 
 cl_sampler CL_API_CALL CL_CreateSampler(cl_context context,
@@ -1148,13 +1322,14 @@ cl_sampler CL_API_CALL CL_CreateSampler(cl_context context,
              (uintptr_t)context, normalized_coords, addressing_mode, filter_mode,
              (uintptr_t)errcode_ret);
 
+    Context *contextPacked               = PackParam<Context *>(context);
     AddressingMode addressing_modePacked = PackParam<AddressingMode>(addressing_mode);
     FilterMode filter_modePacked         = PackParam<FilterMode>(filter_mode);
 
     // TODO: validate
 
-    return cl::CreateSampler(context, normalized_coords, addressing_modePacked, filter_modePacked,
-                             errcode_ret);
+    return UnpackParam<cl_sampler>(cl::CreateSampler(
+        contextPacked, normalized_coords, addressing_modePacked, filter_modePacked, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_EnqueueTask(cl_command_queue command_queue,
@@ -1170,9 +1345,15 @@ cl_int CL_API_CALL CL_EnqueueTask(cl_command_queue command_queue,
              (uintptr_t)command_queue, (uintptr_t)kernel, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Kernel *kernelPacked                = PackParam<Kernel *>(kernel);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueTask(command_queue, kernel, num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueTask(command_queuePacked, kernelPacked, num_events_in_wait_list,
+                            event_wait_listPacked, eventPacked));
 }
 
 // CL 1.1
@@ -1189,9 +1370,12 @@ cl_mem CL_API_CALL CL_CreateSubBuffer(cl_mem buffer,
              (uintptr_t)buffer, flags, buffer_create_type, (uintptr_t)buffer_create_info,
              (uintptr_t)errcode_ret);
 
+    Memory *bufferPacked = PackParam<Memory *>(buffer);
+
     // TODO: validate
 
-    return cl::CreateSubBuffer(buffer, flags, buffer_create_type, buffer_create_info, errcode_ret);
+    return UnpackParam<cl_mem>(cl::CreateSubBuffer(bufferPacked, flags, buffer_create_type,
+                                                   buffer_create_info, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_SetMemObjectDestructorCallback(cl_mem memobj,
@@ -1204,9 +1388,11 @@ cl_int CL_API_CALL CL_SetMemObjectDestructorCallback(cl_mem memobj,
              ", user_data = 0x%016" PRIxPTR "",
              (uintptr_t)memobj, (uintptr_t)pfn_notify, (uintptr_t)user_data);
 
+    Memory *memobjPacked = PackParam<Memory *>(memobj);
+
     // TODO: validate
 
-    return cl::SetMemObjectDestructorCallback(memobj, pfn_notify, user_data);
+    return (cl::SetMemObjectDestructorCallback(memobjPacked, pfn_notify, user_data));
 }
 
 cl_event CL_API_CALL CL_CreateUserEvent(cl_context context, cl_int *errcode_ret)
@@ -1214,9 +1400,11 @@ cl_event CL_API_CALL CL_CreateUserEvent(cl_context context, cl_int *errcode_ret)
     CL_EVENT(CreateUserEvent, "context = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateUserEvent(context, errcode_ret);
+    return UnpackParam<cl_event>(cl::CreateUserEvent(contextPacked, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_SetUserEventStatus(cl_event event, cl_int execution_status)
@@ -1224,9 +1412,11 @@ cl_int CL_API_CALL CL_SetUserEventStatus(cl_event event, cl_int execution_status
     CL_EVENT(SetUserEventStatus, "event = 0x%016" PRIxPTR ", execution_status = %d",
              (uintptr_t)event, execution_status);
 
+    Event *eventPacked = PackParam<Event *>(event);
+
     // TODO: validate
 
-    return cl::SetUserEventStatus(event, execution_status);
+    return (cl::SetUserEventStatus(eventPacked, execution_status));
 }
 
 cl_int CL_API_CALL CL_SetEventCallback(cl_event event,
@@ -1242,9 +1432,11 @@ cl_int CL_API_CALL CL_SetEventCallback(cl_event event,
         ", user_data = 0x%016" PRIxPTR "",
         (uintptr_t)event, command_exec_callback_type, (uintptr_t)pfn_notify, (uintptr_t)user_data);
 
+    Event *eventPacked = PackParam<Event *>(event);
+
     // TODO: validate
 
-    return cl::SetEventCallback(event, command_exec_callback_type, pfn_notify, user_data);
+    return (cl::SetEventCallback(eventPacked, command_exec_callback_type, pfn_notify, user_data));
 }
 
 cl_int CL_API_CALL CL_EnqueueReadBufferRect(cl_command_queue command_queue,
@@ -1275,12 +1467,17 @@ cl_int CL_API_CALL CL_EnqueueReadBufferRect(cl_command_queue command_queue,
              host_row_pitch, host_slice_pitch, (uintptr_t)ptr, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *bufferPacked                = PackParam<Memory *>(buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueReadBufferRect(command_queue, buffer, blocking_read, buffer_origin,
-                                     host_origin, region, buffer_row_pitch, buffer_slice_pitch,
-                                     host_row_pitch, host_slice_pitch, ptr, num_events_in_wait_list,
-                                     event_wait_list, event);
+    return (cl::EnqueueReadBufferRect(command_queuePacked, bufferPacked, blocking_read,
+                                      buffer_origin, host_origin, region, buffer_row_pitch,
+                                      buffer_slice_pitch, host_row_pitch, host_slice_pitch, ptr,
+                                      num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueWriteBufferRect(cl_command_queue command_queue,
@@ -1311,12 +1508,17 @@ cl_int CL_API_CALL CL_EnqueueWriteBufferRect(cl_command_queue command_queue,
              host_row_pitch, host_slice_pitch, (uintptr_t)ptr, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *bufferPacked                = PackParam<Memory *>(buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueWriteBufferRect(command_queue, buffer, blocking_write, buffer_origin,
-                                      host_origin, region, buffer_row_pitch, buffer_slice_pitch,
-                                      host_row_pitch, host_slice_pitch, ptr,
-                                      num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueWriteBufferRect(
+        command_queuePacked, bufferPacked, blocking_write, buffer_origin, host_origin, region,
+        buffer_row_pitch, buffer_slice_pitch, host_row_pitch, host_slice_pitch, ptr,
+        num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueCopyBufferRect(cl_command_queue command_queue,
@@ -1345,12 +1547,18 @@ cl_int CL_API_CALL CL_EnqueueCopyBufferRect(cl_command_queue command_queue,
              src_slice_pitch, dst_row_pitch, dst_slice_pitch, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *src_bufferPacked            = PackParam<Memory *>(src_buffer);
+    Memory *dst_bufferPacked            = PackParam<Memory *>(dst_buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueCopyBufferRect(command_queue, src_buffer, dst_buffer, src_origin, dst_origin,
-                                     region, src_row_pitch, src_slice_pitch, dst_row_pitch,
-                                     dst_slice_pitch, num_events_in_wait_list, event_wait_list,
-                                     event);
+    return (cl::EnqueueCopyBufferRect(command_queuePacked, src_bufferPacked, dst_bufferPacked,
+                                      src_origin, dst_origin, region, src_row_pitch,
+                                      src_slice_pitch, dst_row_pitch, dst_slice_pitch,
+                                      num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 // CL 1.2
@@ -1367,27 +1575,35 @@ cl_int CL_API_CALL CL_CreateSubDevices(cl_device_id in_device,
              (uintptr_t)in_device, (uintptr_t)properties, num_devices, (uintptr_t)out_devices,
              (uintptr_t)num_devices_ret);
 
+    Device *in_devicePacked    = PackParam<Device *>(in_device);
+    Device **out_devicesPacked = PackParam<Device **>(out_devices);
+
     // TODO: validate
 
-    return cl::CreateSubDevices(in_device, properties, num_devices, out_devices, num_devices_ret);
+    return (cl::CreateSubDevices(in_devicePacked, properties, num_devices, out_devicesPacked,
+                                 num_devices_ret));
 }
 
 cl_int CL_API_CALL CL_RetainDevice(cl_device_id device)
 {
     CL_EVENT(RetainDevice, "device = 0x%016" PRIxPTR "", (uintptr_t)device);
 
+    Device *devicePacked = PackParam<Device *>(device);
+
     // TODO: validate
 
-    return cl::RetainDevice(device);
+    return (cl::RetainDevice(devicePacked));
 }
 
 cl_int CL_API_CALL CL_ReleaseDevice(cl_device_id device)
 {
     CL_EVENT(ReleaseDevice, "device = 0x%016" PRIxPTR "", (uintptr_t)device);
 
+    Device *devicePacked = PackParam<Device *>(device);
+
     // TODO: validate
 
-    return cl::ReleaseDevice(device);
+    return (cl::ReleaseDevice(devicePacked));
 }
 
 cl_mem CL_API_CALL CL_CreateImage(cl_context context,
@@ -1404,9 +1620,12 @@ cl_mem CL_API_CALL CL_CreateImage(cl_context context,
              (uintptr_t)context, flags, (uintptr_t)image_format, (uintptr_t)image_desc,
              (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateImage(context, flags, image_format, image_desc, host_ptr, errcode_ret);
+    return UnpackParam<cl_mem>(
+        cl::CreateImage(contextPacked, flags, image_format, image_desc, host_ptr, errcode_ret));
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithBuiltInKernels(cl_context context,
@@ -1421,10 +1640,13 @@ cl_program CL_API_CALL CL_CreateProgramWithBuiltInKernels(cl_context context,
              (uintptr_t)context, num_devices, (uintptr_t)device_list, (uintptr_t)kernel_names,
              (uintptr_t)errcode_ret);
 
+    Context *contextPacked           = PackParam<Context *>(context);
+    Device *const *device_listPacked = PackParam<Device *const *>(device_list);
+
     // TODO: validate
 
-    return cl::CreateProgramWithBuiltInKernels(context, num_devices, device_list, kernel_names,
-                                               errcode_ret);
+    return UnpackParam<cl_program>(cl::CreateProgramWithBuiltInKernels(
+        contextPacked, num_devices, device_listPacked, kernel_names, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_CompileProgram(cl_program program,
@@ -1447,10 +1669,15 @@ cl_int CL_API_CALL CL_CompileProgram(cl_program program,
              num_input_headers, (uintptr_t)input_headers, (uintptr_t)header_include_names,
              (uintptr_t)pfn_notify, (uintptr_t)user_data);
 
+    Program *programPacked              = PackParam<Program *>(program);
+    Device *const *device_listPacked    = PackParam<Device *const *>(device_list);
+    Program *const *input_headersPacked = PackParam<Program *const *>(input_headers);
+
     // TODO: validate
 
-    return cl::CompileProgram(program, num_devices, device_list, options, num_input_headers,
-                              input_headers, header_include_names, pfn_notify, user_data);
+    return (cl::CompileProgram(programPacked, num_devices, device_listPacked, options,
+                               num_input_headers, input_headersPacked, header_include_names,
+                               pfn_notify, user_data));
 }
 
 cl_program CL_API_CALL CL_LinkProgram(cl_context context,
@@ -1474,19 +1701,26 @@ cl_program CL_API_CALL CL_LinkProgram(cl_context context,
              num_input_programs, (uintptr_t)input_programs, (uintptr_t)pfn_notify,
              (uintptr_t)user_data, (uintptr_t)errcode_ret);
 
+    Context *contextPacked               = PackParam<Context *>(context);
+    Device *const *device_listPacked     = PackParam<Device *const *>(device_list);
+    Program *const *input_programsPacked = PackParam<Program *const *>(input_programs);
+
     // TODO: validate
 
-    return cl::LinkProgram(context, num_devices, device_list, options, num_input_programs,
-                           input_programs, pfn_notify, user_data, errcode_ret);
+    return UnpackParam<cl_program>(
+        cl::LinkProgram(contextPacked, num_devices, device_listPacked, options, num_input_programs,
+                        input_programsPacked, pfn_notify, user_data, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_UnloadPlatformCompiler(cl_platform_id platform)
 {
     CL_EVENT(UnloadPlatformCompiler, "platform = 0x%016" PRIxPTR "", (uintptr_t)platform);
 
+    Platform *platformPacked = PackParam<Platform *>(platform);
+
     // TODO: validate
 
-    return cl::UnloadPlatformCompiler(platform);
+    return (cl::UnloadPlatformCompiler(platformPacked));
 }
 
 cl_int CL_API_CALL CL_GetKernelArgInfo(cl_kernel kernel,
@@ -1504,12 +1738,13 @@ cl_int CL_API_CALL CL_GetKernelArgInfo(cl_kernel kernel,
         (uintptr_t)kernel, arg_index, param_name, param_value_size, (uintptr_t)param_value,
         (uintptr_t)param_value_size_ret);
 
+    Kernel *kernelPacked           = PackParam<Kernel *>(kernel);
     KernelArgInfo param_namePacked = PackParam<KernelArgInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetKernelArgInfo(kernel, arg_index, param_namePacked, param_value_size, param_value,
-                                param_value_size_ret);
+    return (cl::GetKernelArgInfo(kernelPacked, arg_index, param_namePacked, param_value_size,
+                                 param_value, param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_EnqueueFillBuffer(cl_command_queue command_queue,
@@ -1530,10 +1765,16 @@ cl_int CL_API_CALL CL_EnqueueFillBuffer(cl_command_queue command_queue,
              (uintptr_t)command_queue, (uintptr_t)buffer, (uintptr_t)pattern, pattern_size, offset,
              size, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *bufferPacked                = PackParam<Memory *>(buffer);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueFillBuffer(command_queue, buffer, pattern, pattern_size, offset, size,
-                                 num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueFillBuffer(command_queuePacked, bufferPacked, pattern, pattern_size, offset,
+                                  size, num_events_in_wait_list, event_wait_listPacked,
+                                  eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueFillImage(cl_command_queue command_queue,
@@ -1554,10 +1795,15 @@ cl_int CL_API_CALL CL_EnqueueFillImage(cl_command_queue command_queue,
              (uintptr_t)region, num_events_in_wait_list, (uintptr_t)event_wait_list,
              (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *imagePacked                 = PackParam<Memory *>(image);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueFillImage(command_queue, image, fill_color, origin, region,
-                                num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueFillImage(command_queuePacked, imagePacked, fill_color, origin, region,
+                                 num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueMigrateMemObjects(cl_command_queue command_queue,
@@ -1575,10 +1821,16 @@ cl_int CL_API_CALL CL_EnqueueMigrateMemObjects(cl_command_queue command_queue,
              (uintptr_t)command_queue, num_mem_objects, (uintptr_t)mem_objects, flags,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Memory *const *mem_objectsPacked    = PackParam<Memory *const *>(mem_objects);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueMigrateMemObjects(command_queue, num_mem_objects, mem_objects, flags,
-                                        num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueMigrateMemObjects(command_queuePacked, num_mem_objects, mem_objectsPacked,
+                                         flags, num_events_in_wait_list, event_wait_listPacked,
+                                         eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueMarkerWithWaitList(cl_command_queue command_queue,
@@ -1593,10 +1845,14 @@ cl_int CL_API_CALL CL_EnqueueMarkerWithWaitList(cl_command_queue command_queue,
              (uintptr_t)command_queue, num_events_in_wait_list, (uintptr_t)event_wait_list,
              (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueMarkerWithWaitList(command_queue, num_events_in_wait_list, event_wait_list,
-                                         event);
+    return (cl::EnqueueMarkerWithWaitList(command_queuePacked, num_events_in_wait_list,
+                                          event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueBarrierWithWaitList(cl_command_queue command_queue,
@@ -1611,10 +1867,14 @@ cl_int CL_API_CALL CL_EnqueueBarrierWithWaitList(cl_command_queue command_queue,
              (uintptr_t)command_queue, num_events_in_wait_list, (uintptr_t)event_wait_list,
              (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueBarrierWithWaitList(command_queue, num_events_in_wait_list, event_wait_list,
-                                          event);
+    return (cl::EnqueueBarrierWithWaitList(command_queuePacked, num_events_in_wait_list,
+                                           event_wait_listPacked, eventPacked));
 }
 
 void *CL_API_CALL CL_GetExtensionFunctionAddressForPlatform(cl_platform_id platform,
@@ -1624,9 +1884,11 @@ void *CL_API_CALL CL_GetExtensionFunctionAddressForPlatform(cl_platform_id platf
              "platform = 0x%016" PRIxPTR ", func_name = 0x%016" PRIxPTR "", (uintptr_t)platform,
              (uintptr_t)func_name);
 
+    Platform *platformPacked = PackParam<Platform *>(platform);
+
     // TODO: validate
 
-    return cl::GetExtensionFunctionAddressForPlatform(platform, func_name);
+    return (cl::GetExtensionFunctionAddressForPlatform(platformPacked, func_name));
 }
 
 // CL 2.0
@@ -1641,9 +1903,13 @@ CL_CreateCommandQueueWithProperties(cl_context context,
              ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)device, (uintptr_t)properties, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+    Device *devicePacked   = PackParam<Device *>(device);
+
     // TODO: validate
 
-    return cl::CreateCommandQueueWithProperties(context, device, properties, errcode_ret);
+    return UnpackParam<cl_command_queue>(
+        cl::CreateCommandQueueWithProperties(contextPacked, devicePacked, properties, errcode_ret));
 }
 
 cl_mem CL_API_CALL CL_CreatePipe(cl_context context,
@@ -1661,10 +1927,12 @@ cl_mem CL_API_CALL CL_CreatePipe(cl_context context,
         (uintptr_t)context, flags, pipe_packet_size, pipe_max_packets, (uintptr_t)properties,
         (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreatePipe(context, flags, pipe_packet_size, pipe_max_packets, properties,
-                          errcode_ret);
+    return UnpackParam<cl_mem>(cl::CreatePipe(contextPacked, flags, pipe_packet_size,
+                                              pipe_max_packets, properties, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_GetPipeInfo(cl_mem pipe,
@@ -1680,12 +1948,13 @@ cl_int CL_API_CALL CL_GetPipeInfo(cl_mem pipe,
              (uintptr_t)pipe, param_name, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Memory *pipePacked        = PackParam<Memory *>(pipe);
     PipeInfo param_namePacked = PackParam<PipeInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetPipeInfo(pipe, param_namePacked, param_value_size, param_value,
-                           param_value_size_ret);
+    return (cl::GetPipeInfo(pipePacked, param_namePacked, param_value_size, param_value,
+                            param_value_size_ret));
 }
 
 void *CL_API_CALL CL_SVMAlloc(cl_context context,
@@ -1696,9 +1965,11 @@ void *CL_API_CALL CL_SVMAlloc(cl_context context,
     CL_EVENT(SVMAlloc, "context = 0x%016" PRIxPTR ", flags = %lu, size = %zu, alignment = %u",
              (uintptr_t)context, flags, size, alignment);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::SVMAlloc(context, flags, size, alignment);
+    return (cl::SVMAlloc(contextPacked, flags, size, alignment));
 }
 
 void CL_API_CALL CL_SVMFree(cl_context context, void *svm_pointer)
@@ -1706,9 +1977,11 @@ void CL_API_CALL CL_SVMFree(cl_context context, void *svm_pointer)
     CL_EVENT(SVMFree, "context = 0x%016" PRIxPTR ", svm_pointer = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)svm_pointer);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    cl::SVMFree(context, svm_pointer);
+    cl::SVMFree(contextPacked, svm_pointer);
 }
 
 cl_sampler CL_API_CALL
@@ -1721,9 +1994,12 @@ CL_CreateSamplerWithProperties(cl_context context,
              ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)sampler_properties, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateSamplerWithProperties(context, sampler_properties, errcode_ret);
+    return UnpackParam<cl_sampler>(
+        cl::CreateSamplerWithProperties(contextPacked, sampler_properties, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_SetKernelArgSVMPointer(cl_kernel kernel,
@@ -1734,9 +2010,11 @@ cl_int CL_API_CALL CL_SetKernelArgSVMPointer(cl_kernel kernel,
              "kernel = 0x%016" PRIxPTR ", arg_index = %u, arg_value = 0x%016" PRIxPTR "",
              (uintptr_t)kernel, arg_index, (uintptr_t)arg_value);
 
+    Kernel *kernelPacked = PackParam<Kernel *>(kernel);
+
     // TODO: validate
 
-    return cl::SetKernelArgSVMPointer(kernel, arg_index, arg_value);
+    return (cl::SetKernelArgSVMPointer(kernelPacked, arg_index, arg_value));
 }
 
 cl_int CL_API_CALL CL_SetKernelExecInfo(cl_kernel kernel,
@@ -1749,11 +2027,12 @@ cl_int CL_API_CALL CL_SetKernelExecInfo(cl_kernel kernel,
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR "",
              (uintptr_t)kernel, param_name, param_value_size, (uintptr_t)param_value);
 
+    Kernel *kernelPacked            = PackParam<Kernel *>(kernel);
     KernelExecInfo param_namePacked = PackParam<KernelExecInfo>(param_name);
 
     // TODO: validate
 
-    return cl::SetKernelExecInfo(kernel, param_namePacked, param_value_size, param_value);
+    return (cl::SetKernelExecInfo(kernelPacked, param_namePacked, param_value_size, param_value));
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMFree(cl_command_queue command_queue,
@@ -1778,10 +2057,15 @@ cl_int CL_API_CALL CL_EnqueueSVMFree(cl_command_queue command_queue,
              (uintptr_t)pfn_free_func, (uintptr_t)user_data, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueSVMFree(command_queue, num_svm_pointers, svm_pointers, pfn_free_func,
-                              user_data, num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueSVMFree(command_queuePacked, num_svm_pointers, svm_pointers, pfn_free_func,
+                               user_data, num_events_in_wait_list, event_wait_listPacked,
+                               eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMemcpy(cl_command_queue command_queue,
@@ -1801,10 +2085,14 @@ cl_int CL_API_CALL CL_EnqueueSVMMemcpy(cl_command_queue command_queue,
              (uintptr_t)command_queue, blocking_copy, (uintptr_t)dst_ptr, (uintptr_t)src_ptr, size,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueSVMMemcpy(command_queue, blocking_copy, dst_ptr, src_ptr, size,
-                                num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueSVMMemcpy(command_queuePacked, blocking_copy, dst_ptr, src_ptr, size,
+                                 num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMemFill(cl_command_queue command_queue,
@@ -1824,10 +2112,14 @@ cl_int CL_API_CALL CL_EnqueueSVMMemFill(cl_command_queue command_queue,
              (uintptr_t)command_queue, (uintptr_t)svm_ptr, (uintptr_t)pattern, pattern_size, size,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueSVMMemFill(command_queue, svm_ptr, pattern, pattern_size, size,
-                                 num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueSVMMemFill(command_queuePacked, svm_ptr, pattern, pattern_size, size,
+                                  num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMap(cl_command_queue command_queue,
@@ -1847,10 +2139,14 @@ cl_int CL_API_CALL CL_EnqueueSVMMap(cl_command_queue command_queue,
              (uintptr_t)command_queue, blocking_map, flags, (uintptr_t)svm_ptr, size,
              num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueSVMMap(command_queue, blocking_map, flags, svm_ptr, size,
-                             num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueSVMMap(command_queuePacked, blocking_map, flags, svm_ptr, size,
+                              num_events_in_wait_list, event_wait_listPacked, eventPacked));
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMUnmap(cl_command_queue command_queue,
@@ -1866,10 +2162,14 @@ cl_int CL_API_CALL CL_EnqueueSVMUnmap(cl_command_queue command_queue,
              (uintptr_t)command_queue, (uintptr_t)svm_ptr, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueSVMUnmap(command_queue, svm_ptr, num_events_in_wait_list, event_wait_list,
-                               event);
+    return (cl::EnqueueSVMUnmap(command_queuePacked, svm_ptr, num_events_in_wait_list,
+                                event_wait_listPacked, eventPacked));
 }
 
 // CL 2.1
@@ -1882,9 +2182,13 @@ cl_int CL_API_CALL CL_SetDefaultDeviceCommandQueue(cl_context context,
              ", command_queue = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)device, (uintptr_t)command_queue);
 
+    Context *contextPacked            = PackParam<Context *>(context);
+    Device *devicePacked              = PackParam<Device *>(device);
+    CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
+
     // TODO: validate
 
-    return cl::SetDefaultDeviceCommandQueue(context, device, command_queue);
+    return (cl::SetDefaultDeviceCommandQueue(contextPacked, devicePacked, command_queuePacked));
 }
 
 cl_int CL_API_CALL CL_GetDeviceAndHostTimer(cl_device_id device,
@@ -1896,9 +2200,11 @@ cl_int CL_API_CALL CL_GetDeviceAndHostTimer(cl_device_id device,
              ", host_timestamp = 0x%016" PRIxPTR "",
              (uintptr_t)device, (uintptr_t)device_timestamp, (uintptr_t)host_timestamp);
 
+    Device *devicePacked = PackParam<Device *>(device);
+
     // TODO: validate
 
-    return cl::GetDeviceAndHostTimer(device, device_timestamp, host_timestamp);
+    return (cl::GetDeviceAndHostTimer(devicePacked, device_timestamp, host_timestamp));
 }
 
 cl_int CL_API_CALL CL_GetHostTimer(cl_device_id device, cl_ulong *host_timestamp)
@@ -1906,9 +2212,11 @@ cl_int CL_API_CALL CL_GetHostTimer(cl_device_id device, cl_ulong *host_timestamp
     CL_EVENT(GetHostTimer, "device = 0x%016" PRIxPTR ", host_timestamp = 0x%016" PRIxPTR "",
              (uintptr_t)device, (uintptr_t)host_timestamp);
 
+    Device *devicePacked = PackParam<Device *>(device);
+
     // TODO: validate
 
-    return cl::GetHostTimer(device, host_timestamp);
+    return (cl::GetHostTimer(devicePacked, host_timestamp));
 }
 
 cl_program CL_API_CALL CL_CreateProgramWithIL(cl_context context,
@@ -1921,9 +2229,11 @@ cl_program CL_API_CALL CL_CreateProgramWithIL(cl_context context,
              ", length = %zu, errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)il, length, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateProgramWithIL(context, il, length, errcode_ret);
+    return UnpackParam<cl_program>(cl::CreateProgramWithIL(contextPacked, il, length, errcode_ret));
 }
 
 cl_kernel CL_API_CALL CL_CloneKernel(cl_kernel source_kernel, cl_int *errcode_ret)
@@ -1931,9 +2241,11 @@ cl_kernel CL_API_CALL CL_CloneKernel(cl_kernel source_kernel, cl_int *errcode_re
     CL_EVENT(CloneKernel, "source_kernel = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)source_kernel, (uintptr_t)errcode_ret);
 
+    Kernel *source_kernelPacked = PackParam<Kernel *>(source_kernel);
+
     // TODO: validate
 
-    return cl::CloneKernel(source_kernel, errcode_ret);
+    return UnpackParam<cl_kernel>(cl::CloneKernel(source_kernelPacked, errcode_ret));
 }
 
 cl_int CL_API_CALL CL_GetKernelSubGroupInfo(cl_kernel kernel,
@@ -1954,13 +2266,15 @@ cl_int CL_API_CALL CL_GetKernelSubGroupInfo(cl_kernel kernel,
              (uintptr_t)input_value, param_value_size, (uintptr_t)param_value,
              (uintptr_t)param_value_size_ret);
 
+    Kernel *kernelPacked                = PackParam<Kernel *>(kernel);
+    Device *devicePacked                = PackParam<Device *>(device);
     KernelSubGroupInfo param_namePacked = PackParam<KernelSubGroupInfo>(param_name);
 
     // TODO: validate
 
-    return cl::GetKernelSubGroupInfo(kernel, device, param_namePacked, input_value_size,
-                                     input_value, param_value_size, param_value,
-                                     param_value_size_ret);
+    return (cl::GetKernelSubGroupInfo(kernelPacked, devicePacked, param_namePacked,
+                                      input_value_size, input_value, param_value_size, param_value,
+                                      param_value_size_ret));
 }
 
 cl_int CL_API_CALL CL_EnqueueSVMMigrateMem(cl_command_queue command_queue,
@@ -1980,10 +2294,15 @@ cl_int CL_API_CALL CL_EnqueueSVMMigrateMem(cl_command_queue command_queue,
              (uintptr_t)command_queue, num_svm_pointers, (uintptr_t)svm_pointers, (uintptr_t)sizes,
              flags, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
 
+    CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
+    Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
+    Event **eventPacked                 = PackParam<Event **>(event);
+
     // TODO: validate
 
-    return cl::EnqueueSVMMigrateMem(command_queue, num_svm_pointers, svm_pointers, sizes, flags,
-                                    num_events_in_wait_list, event_wait_list, event);
+    return (cl::EnqueueSVMMigrateMem(command_queuePacked, num_svm_pointers, svm_pointers, sizes,
+                                     flags, num_events_in_wait_list, event_wait_listPacked,
+                                     eventPacked));
 }
 
 // CL 2.2
@@ -1997,9 +2316,11 @@ cl_int CL_API_CALL CL_SetProgramReleaseCallback(cl_program program,
              ", user_data = 0x%016" PRIxPTR "",
              (uintptr_t)program, (uintptr_t)pfn_notify, (uintptr_t)user_data);
 
+    Program *programPacked = PackParam<Program *>(program);
+
     // TODO: validate
 
-    return cl::SetProgramReleaseCallback(program, pfn_notify, user_data);
+    return (cl::SetProgramReleaseCallback(programPacked, pfn_notify, user_data));
 }
 
 cl_int CL_API_CALL CL_SetProgramSpecializationConstant(cl_program program,
@@ -2012,9 +2333,11 @@ cl_int CL_API_CALL CL_SetProgramSpecializationConstant(cl_program program,
              ", spec_id = %u, spec_size = %zu, spec_value = 0x%016" PRIxPTR "",
              (uintptr_t)program, spec_id, spec_size, (uintptr_t)spec_value);
 
+    Program *programPacked = PackParam<Program *>(program);
+
     // TODO: validate
 
-    return cl::SetProgramSpecializationConstant(program, spec_id, spec_size, spec_value);
+    return (cl::SetProgramSpecializationConstant(programPacked, spec_id, spec_size, spec_value));
 }
 
 // CL 3.0
@@ -2028,9 +2351,11 @@ cl_int CL_API_CALL CL_SetContextDestructorCallback(cl_context context,
              ", user_data = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)pfn_notify, (uintptr_t)user_data);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::SetContextDestructorCallback(context, pfn_notify, user_data);
+    return (cl::SetContextDestructorCallback(contextPacked, pfn_notify, user_data));
 }
 
 cl_mem CL_API_CALL CL_CreateBufferWithProperties(cl_context context,
@@ -2047,9 +2372,12 @@ cl_mem CL_API_CALL CL_CreateBufferWithProperties(cl_context context,
              (uintptr_t)context, (uintptr_t)properties, flags, size, (uintptr_t)host_ptr,
              (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateBufferWithProperties(context, properties, flags, size, host_ptr, errcode_ret);
+    return UnpackParam<cl_mem>(cl::CreateBufferWithProperties(contextPacked, properties, flags,
+                                                              size, host_ptr, errcode_ret));
 }
 
 cl_mem CL_API_CALL CL_CreateImageWithProperties(cl_context context,
@@ -2067,10 +2395,12 @@ cl_mem CL_API_CALL CL_CreateImageWithProperties(cl_context context,
              (uintptr_t)context, (uintptr_t)properties, flags, (uintptr_t)image_format,
              (uintptr_t)image_desc, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
+    Context *contextPacked = PackParam<Context *>(context);
+
     // TODO: validate
 
-    return cl::CreateImageWithProperties(context, properties, flags, image_format, image_desc,
-                                         host_ptr, errcode_ret);
+    return UnpackParam<cl_mem>(cl::CreateImageWithProperties(
+        contextPacked, properties, flags, image_format, image_desc, host_ptr, errcode_ret));
 }
 
 }  // extern "C"

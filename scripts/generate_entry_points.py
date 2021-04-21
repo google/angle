@@ -159,7 +159,7 @@ extern "C" {{
 }} // extern "C"
 """
 
-TEMPLATE_ENTRY_POINT_DECL = """ANGLE_EXPORT {return_type}{export_def} {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
+TEMPLATE_ENTRY_POINT_DECL = """ANGLE_EXPORT {return_type} {export_def} {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
 
 TEMPLATE_GLES_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY GL_{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
@@ -185,7 +185,7 @@ void GL_APIENTRY GL_{name}{explicit_context_suffix}({explicit_context_param}{exp
 """
 
 TEMPLATE_GLES_ENTRY_POINT_WITH_RETURN = """\
-{return_type}GL_APIENTRY GL_{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
+{return_type} GL_APIENTRY GL_{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     Context *context = {context_getter};
     {event_comment}EVENT(context, GL{name}, "context = %d{comma_if_needed}{format_params}", CID(context){comma_if_needed}{pass_params});
@@ -231,7 +231,7 @@ void EGLAPIENTRY EGL_{name}({params})
 """
 
 TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
-{return_type}EGLAPIENTRY EGL_{name}({params})
+{return_type} EGLAPIENTRY EGL_{name}({params})
 {{
     ANGLE_SCOPED_GLOBAL_LOCK();
     EGL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
@@ -260,7 +260,7 @@ void CL_API_CALL CL_{name}({params})
 """
 
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN = """\
-{return_type}CL_API_CALL CL_{name}({params})
+{return_type} CL_API_CALL CL_{name}({params})
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
@@ -268,7 +268,7 @@ TEMPLATE_CL_ENTRY_POINT_WITH_RETURN = """\
 
     // TODO: validate
 
-    return cl::{name}({internal_params});
+    return {return_cast}(cl::{name}({internal_params}));
 }}
 """
 
@@ -291,6 +291,16 @@ TEMPLATE_CL_STUBS_HEADER = """\
 
 namespace cl
 {{
+class CommandQueue;
+class Context;
+class Device;
+class Event;
+class Kernel;
+class Memory;
+class Platform;
+class Program;
+class Sampler;
+
 {stubs}
 }}  // namespace cl
 #endif  // LIBGLESV2_{annotation_upper}_STUBS_AUTOGEN_H_
@@ -366,14 +376,14 @@ TEMPLATE_CL_ENTRY_POINT_EXPORT = """\
 """
 
 TEMPLATE_GL_ENTRY_POINT_EXPORT = """\
-{return_type}GL_APIENTRY gl{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
+{return_type} GL_APIENTRY gl{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
 {{
     return GL_{name}{explicit_context_suffix}({explicit_context_internal_param}{explicit_context_comma}{internal_params});
 }}
 """
 
 TEMPLATE_EGL_ENTRY_POINT_EXPORT = """\
-{return_type}EGLAPIENTRY egl{name}({params})
+{return_type} EGLAPIENTRY egl{name}({params})
 {{
     EnsureEGLLoaded();
     return EGL_{name}({internal_params});
@@ -1194,6 +1204,7 @@ TEMPLATE_RESOURCE_ID_TYPE_NAME_CASE = """\
             return "{resource_id_type}";"""
 
 CL_PACKED_TYPES = {
+    # Enums
     "cl_platform_info": "PlatformInfo",
     "cl_device_info": "DeviceInfo",
     "cl_context_info": "ContextInfo",
@@ -1214,6 +1225,24 @@ CL_PACKED_TYPES = {
     "cl_kernel_exec_info": "KernelExecInfo",
     "cl_event_info": "EventInfo",
     "cl_profiling_info": "ProfilingInfo",
+    # Objects
+    "cl_platform_id": "Platform *",
+    "cl_platform_id*": "Platform **",
+    "cl_device_id": "Device *",
+    "cl_device_id*": "Device **",
+    "const cl_device_id*": "Device *const *",
+    "cl_context": "Context *",
+    "cl_command_queue": "CommandQueue *",
+    "cl_mem": "Memory *",
+    "const cl_mem*": "Memory *const *",
+    "cl_program": "Program *",
+    "const cl_program*": "Program *const *",
+    "cl_kernel": "Kernel *",
+    "cl_kernel*": "Kernel **",
+    "cl_event": "Event *",
+    "cl_event*": "Event **",
+    "const cl_event*": "Event *const *",
+    "cl_sampler": "Sampler *",
 }
 
 EGL_PACKED_TYPES = {
@@ -1265,7 +1294,7 @@ def format_entry_point_decl(api, cmd_name, proto, params, is_explicit_context):
     return TEMPLATE_ENTRY_POINT_DECL.format(
         export_def=get_api_entry_def(api),
         name="%s_%s" % (entry_point_prefix(api), stripped),
-        return_type=proto[:-len(cmd_name)],
+        return_type=proto[:-len(cmd_name)].strip(),
         params=", ".join(params),
         comma_if_needed=comma_if_needed,
         explicit_context_suffix="ContextANGLE" if is_explicit_context else "",
@@ -1511,8 +1540,9 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
 
     pass_params = [param_print_argument(command_node, param) for param in params]
     format_params = [param_format_string(param) for param in params]
-    return_type = proto[:-len(cmd_name)]
-    default_return = default_return_value(cmd_name, return_type.strip())
+    return_type = proto[:-len(cmd_name)].strip()
+    return_cast = "UnpackParam<" + return_type + ">" if return_type in packed_param_types else ""
+    default_return = default_return_value(cmd_name, return_type)
     event_comment = TEMPLATE_EVENT_COMMENT if cmd_name in NO_EVENT_MARKER_EXCEPTIONS_LIST else ""
     name_lower_no_suffix = strip_suffix(api, cmd_name[2:3].lower() + cmd_name[3:])
 
@@ -1523,6 +1553,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
             name_lower_no_suffix,
         "return_type":
             return_type,
+        "return_cast":
+            return_cast,
         "params":
             ", ".join(params),
         "internal_params":
@@ -1676,7 +1708,7 @@ def format_context_decl(api, cmd_name, proto, params, template, cmd_packed_gl_en
     internal_params = get_internal_params(api, cmd_name, params, cmd_packed_gl_enums,
                                           packed_param_types)
 
-    return_type = proto[:-len(cmd_name)]
+    return_type = proto[:-len(cmd_name)].strip()
     name_lower_no_suffix = cmd_name[2:3].lower() + cmd_name[3:]
     name_lower_no_suffix = strip_suffix(api, name_lower_no_suffix)
     maybe_const = " const" if name_lower_no_suffix.startswith(
@@ -1691,7 +1723,7 @@ def format_context_decl(api, cmd_name, proto, params, template, cmd_packed_gl_en
 
 def format_entry_point_export(cmd_name, proto, params, is_explicit_context, template):
     internal_params = [just_the_name(param) for param in params]
-    return_type = proto[:-len(cmd_name)]
+    return_type = proto[:-len(cmd_name)].strip()
 
     return template.format(
         name=strip_api_prefix(cmd_name),
@@ -2471,6 +2503,8 @@ def write_stubs_header(api, annotation, title, data_source, out_file, all_comman
         params = [] if api == apis.CL else ["Thread *thread"]
         params += ["".join(param.itertext()) for param in command.findall('param')]
         return_type = proto_text[:-len(cmd_name)].strip()
+        if api == apis.CL and return_type in packed_param_types:
+            return_type = packed_param_types[return_type]
 
         internal_params = get_internal_params(api, cmd_name, params, cmd_packed_egl_enums,
                                               packed_param_types)

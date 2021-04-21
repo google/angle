@@ -56,9 +56,11 @@ if (angle_build_all) {
       ":translator_fuzzer",
       ":xxhash_fuzzer",
       "$angle_root/samples:angle_samples",
-      "$angle_root/src/libOpenCL:angle_cl",
       "$angle_root/src/tests:angle_tests",
     ]
+    if (angle_enable_cl) {
+      deps += [ "$angle_root/src/libOpenCL:angle_cl" ]
+    }
   }
 }
 
@@ -265,9 +267,16 @@ config("angle_uwp_env") {
   }
 }
 
+angle_source_set("cl_includes") {
+  sources = cl_includes
+}
+
 angle_source_set("includes") {
   sources = libangle_includes
   public_configs = [ ":includes_config" ]
+  if (angle_enable_cl) {
+    public_deps = [ ":cl_includes" ]
+  }
 }
 
 angle_static_library("preprocessor") {
@@ -725,6 +734,9 @@ config("libANGLE_config") {
 
 angle_source_set("libANGLE_headers") {
   sources = libangle_headers
+  if (angle_enable_cl) {
+    sources += libangle_cl_headers
+  }
   public_deps = [
     ":angle_common",
     ":angle_translator_headers",
@@ -772,6 +784,9 @@ if (is_win) {
 
 angle_source_set("libANGLE_base") {
   sources = libangle_sources
+  if (angle_enable_cl) {
+    sources += libangle_cl_sources
+  }
 
   include_dirs = []
   libs = []
@@ -1027,6 +1042,9 @@ set_defaults("angle_libGLESv2") {
 template("angle_libGLESv2") {
   angle_shared_library(target_name) {
     sources = libglesv2_sources + invoker.sources
+    if (angle_enable_cl) {
+      sources += libglesv2_cl_sources
+    }
 
     if (is_win) {
       sources += [ "src/libGLESv2/${invoker.output_name}_autogen.def" ]
@@ -1096,6 +1114,9 @@ if (is_win && !angle_is_winuwp) {
 
 angle_static_library("libGLESv2_static") {
   sources = libglesv2_sources
+  if (angle_enable_cl) {
+    sources += libglesv2_cl_sources
+  }
   configs += [ ":debug_annotations_config" ]
 
   public_configs += [ ":angle_static" ]

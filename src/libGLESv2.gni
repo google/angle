@@ -159,26 +159,8 @@ libangle_gpu_info_util_ios_sources = [
 ]
 
 libangle_includes = [
-  "include/angle_cl.h",
   "include/angle_gl.h",
   "include/export.h",
-  "include/CL/cl.h",
-  "include/CL/cl_d3d10.h",
-  "include/CL/cl_d3d11.h",
-  "include/CL/cl_dx9_media_sharing.h",
-  "include/CL/cl_dx9_media_sharing_intel.h",
-  "include/CL/cl_egl.h",
-  "include/CL/cl_ext.h",
-  "include/CL/cl_ext_intel.h",
-  "include/CL/cl_gl.h",
-  "include/CL/cl_gl_ext.h",
-  "include/CL/cl_half.h",
-  "include/CL/cl_icd.h",
-  "include/CL/cl_layer.h",
-  "include/CL/cl_platform.h",
-  "include/CL/cl_va_api_media_sharing_intel.h",
-  "include/CL/cl_version.h",
-  "include/CL/opencl.h",
   "include/EGL/egl.h",
   "include/EGL/eglext.h",
   "include/EGL/eglext_angle.h",
@@ -445,6 +427,52 @@ libangle_sources = [
   "src/libANGLE/validationGL4.cpp",
 ]
 
+cl_includes = [
+  "include/angle_cl.h",
+  "include/export.h",
+  "include/CL/cl.h",
+  "include/CL/cl_d3d10.h",
+  "include/CL/cl_d3d11.h",
+  "include/CL/cl_dx9_media_sharing.h",
+  "include/CL/cl_dx9_media_sharing_intel.h",
+  "include/CL/cl_egl.h",
+  "include/CL/cl_ext.h",
+  "include/CL/cl_ext_intel.h",
+  "include/CL/cl_gl.h",
+  "include/CL/cl_gl_ext.h",
+  "include/CL/cl_half.h",
+  "include/CL/cl_icd.h",
+  "include/CL/cl_layer.h",
+  "include/CL/cl_platform.h",
+  "include/CL/cl_va_api_media_sharing_intel.h",
+  "include/CL/cl_version.h",
+  "include/CL/opencl.h",
+]
+
+libangle_cl_headers = [
+  "src/libANGLE/CLCommandQueue.h",
+  "src/libANGLE/CLContext.h",
+  "src/libANGLE/CLDevice.h",
+  "src/libANGLE/CLEvent.h",
+  "src/libANGLE/CLKernel.h",
+  "src/libANGLE/CLMemory.h",
+  "src/libANGLE/CLPlatform.h",
+  "src/libANGLE/CLProgram.h",
+  "src/libANGLE/CLSampler.h",
+]
+
+libangle_cl_sources = [
+  "src/libANGLE/CLCommandQueue.cpp",
+  "src/libANGLE/CLContext.cpp",
+  "src/libANGLE/CLDevice.cpp",
+  "src/libANGLE/CLEvent.cpp",
+  "src/libANGLE/CLKernel.cpp",
+  "src/libANGLE/CLMemory.cpp",
+  "src/libANGLE/CLPlatform.cpp",
+  "src/libANGLE/CLProgram.cpp",
+  "src/libANGLE/CLSampler.cpp",
+]
+
 libangle_mac_sources = [
   "src/libANGLE/renderer/driver_utils_mac.mm",
   "src/libANGLE/renderer/gl/apple/DisplayApple_api.cpp",
@@ -513,15 +541,10 @@ if (is_win) {
 }
 
 libglesv2_sources = [
-  "src/libGLESv2/cl_stubs.cpp",
-  "src/libGLESv2/cl_stubs_autogen.h",
   "src/libGLESv2/egl_ext_stubs.cpp",
   "src/libGLESv2/egl_ext_stubs_autogen.h",
   "src/libGLESv2/egl_stubs.cpp",
   "src/libGLESv2/egl_stubs_autogen.h",
-  "src/libGLESv2/entry_points_cl_autogen.cpp",
-  "src/libGLESv2/entry_points_cl_autogen.h",
-  "src/libGLESv2/entry_points_cl_utils.h",
   "src/libGLESv2/entry_points_egl_autogen.cpp",
   "src/libGLESv2/entry_points_egl_autogen.h",
   "src/libGLESv2/entry_points_egl_ext_autogen.cpp",
@@ -544,6 +567,14 @@ libglesv2_sources = [
   "src/libGLESv2/proc_table_egl.h",
   "src/libGLESv2/proc_table_egl_autogen.cpp",
   "src/libGLESv2/resource.h",
+]
+
+libglesv2_cl_sources = [
+  "src/libGLESv2/cl_stubs.cpp",
+  "src/libGLESv2/cl_stubs_autogen.h",
+  "src/libGLESv2/entry_points_cl_autogen.cpp",
+  "src/libGLESv2/entry_points_cl_autogen.h",
+  "src/libGLESv2/entry_points_cl_utils.h",
   "src/libGLESv2/validationCL.h",
 ]
 

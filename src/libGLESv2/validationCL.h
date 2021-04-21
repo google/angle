@@ -27,7 +27,20 @@ inline typename std::enable_if<!std::is_enum<PackedT>::value,
                                typename std::remove_reference<PackedT>::type>::type
 PackParam(FromT from)
 {
-    return static_cast<PackedT>(from);
+    return reinterpret_cast<PackedT>(from);
+}
+
+// First case: handling packed enums.
+template <typename UnpackedT, typename FromT>
+typename std::enable_if<std::is_enum<FromT>::value, UnpackedT>::type UnpackParam(FromT from)
+{
+    return ToCLenum(from);
+}
+
+template <typename UnpackedT, typename FromT>
+inline typename std::enable_if<!std::is_enum<FromT>::value, UnpackedT>::type UnpackParam(FromT from)
+{
+    return reinterpret_cast<UnpackedT>(from);
 }
 }  // namespace cl
 
