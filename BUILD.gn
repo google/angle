@@ -1125,16 +1125,6 @@ angle_shared_library("libGLESv1_CM") {
   }
 }
 
-angle_static_library("libGLESv1_CM_static") {
-  sources = libglesv1_cm_sources
-  configs += [ ":debug_annotations_config" ]
-  public_configs += [ ":angle_static" ]
-  deps = [
-    ":includes",
-    ":libGLESv2_static",
-  ]
-}
-
 config("libEGL_egl_loader_config") {
   defines = [ "ANGLE_USE_EGL_LOADER" ]
 }

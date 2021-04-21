@@ -525,7 +525,6 @@ if (build_angle_gles1_conform_tests) {
     public_deps = [
       "$angle_root:angle_common",
       "$angle_root:libEGL_static",
-      "$angle_root:libGLESv1_CM_static",
       "$angle_root:libGLESv2_static",
       "$angle_root:preprocessor",
       "$angle_root:translator",
@@ -679,7 +678,6 @@ if (build_angle_gles1_conform_tests) {
       public_deps = [
         "$angle_root:angle_common",
         "$angle_root:libEGL_static",
-        "$angle_root:libGLESv1_CM_static",
         "$angle_root:libGLESv2_static",
         "$angle_root:preprocessor",
         "$angle_root:translator",
@@ -757,7 +755,6 @@ if (build_angle_gles1_conform_tests) {
     public_deps = [
       "$angle_root:angle_common",
       "$angle_root:libEGL_static",
-      "$angle_root:libGLESv1_CM_static",
       "$angle_root:libGLESv2_static",
       "$angle_root:preprocessor",
       "$angle_root:translator",
@@ -827,7 +824,6 @@ if (build_angle_gles1_conform_tests) {
     public_deps = [
       "$angle_root:angle_common",
       "$angle_root:libEGL_static",
-      "$angle_root:libGLESv1_CM_static",
       "$angle_root:libGLESv2_static",
       "$angle_root:preprocessor",
       "$angle_root:translator",
