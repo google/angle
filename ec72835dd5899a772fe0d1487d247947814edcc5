@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30cbbbf4_3974f27e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:17:38Z",
+      "side": 1,
+      "message": "Two reviews, landing. Thanks!",
+      "revId": "ec72835dd5899a772fe0d1487d247947814edcc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7e85e50_f4973354",
@@ -77,6 +94,30 @@
       "writtenOn": "2021-04-21T20:51:27Z",
       "side": 1,
       "message": "shouldn\u0027t this be returning 1? a bit unsure about off-by-one error here, is it an error or is it expected?",
+      "range": {
+        "startLine": 528,
+        "startChar": 4,
+        "endLine": 528,
+        "endChar": 39
+      },
+      "revId": "ec72835dd5899a772fe0d1487d247947814edcc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0dcf65b1_28908130",
+        "filename": "src/common/bitset_utils_unittest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:17:38Z",
+      "side": 1,
+      "message": "Ack, bits are zero-indexed. One of the reasons the call is only valid if there are bits set.",
+      "parentUuid": "47962197_59060756",
       "range": {
         "startLine": 528,
         "startChar": 4,
