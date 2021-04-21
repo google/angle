@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "566a17c0_fe4dc661",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1006,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-21T15:09:31Z",
+      "side": 1,
+      "message": "+1. `return baseBitSet.first() + offset;` here should do the trick.",
+      "parentUuid": "d570916f_191461f6",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6201585b_ceeed630",
         "filename": "src/common/bitset_utils.h",
         "patchSetId": 2
@@ -65,6 +83,41 @@
       "writtenOn": "2021-04-21T15:01:46Z",
       "side": 1,
       "message": "if we for loop from end, we can early return when \"lastValue\" is set for the first time (of course, after modifying \"offset\" to be a monotonically decreasing value)",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c63e39d6_7116657b",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-21T15:09:31Z",
+      "side": 1,
+      "message": "+1, same as above: `return baseBitSet.last() + offset;` with backwards loop",
+      "parentUuid": "bad2b5f7_b1452ec3",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9be2ed23_c5c69151",
+        "filename": "src/common/bitset_utils_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-21T15:09:31Z",
+      "side": 1,
+      "message": "Please add a few tests that exercise the bit being set in the first, middle or last element in the array.",
       "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
