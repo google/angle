@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e741dee1_b406d66e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:31:26Z",
+      "side": 1,
+      "message": "Nice!",
+      "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4e72c93_e0107456",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:31:26Z",
+      "side": 1,
+      "message": "as a general principle. avoid inheritance, use composition. it\u0027s useful at times for saving a few lines. hopefully not in this case.",
+      "range": {
+        "startLine": 16,
+        "startChar": 12,
+        "endLine": 16,
+        "endChar": 28
+      },
+      "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80ce1c69_0549418f",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:31:26Z",
+      "side": 1,
+      "message": "I wonder if we should make CL support optional to start with. so we don\u0027t run into issues down the line with binary size from some downstream users. how hard would it be to set up now?",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 232,
+        "endChar": 29
+      },
+      "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
