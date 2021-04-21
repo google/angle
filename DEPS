@@ -347,6 +347,11 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'third_party/ijar': {
+    'url': '{chromium_git}/chromium/src/third_party/ijar@174c5004785b456f247a6535694dec16e0ef1e2b',
+    'condition': 'checkout_android and not build_with_chromium',
+  },
+
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
     'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@7b4981b6500ccba10733c352b9ed2dad14ce3c73',

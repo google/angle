@@ -45,6 +45,7 @@
 /third_party/gles1_conform
 /third_party/glmark2/src
 /third_party/googletest
+/third_party/ijar
 /third_party/jdk/current
 /third_party/jdk/extras/java_8
 /third_party/jinja2
