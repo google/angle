@@ -16,6 +16,23 @@
       "message": "PTAL Yuly.",
       "revId": "c62147735d43e30cf0124baaa4e39ce3b0645cde",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98bb8b4c_ea2091d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T14:01:58Z",
+      "side": 1,
+      "message": "Yuly approved in chat. Landing.\n",
+      "revId": "c62147735d43e30cf0124baaa4e39ce3b0645cde",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
