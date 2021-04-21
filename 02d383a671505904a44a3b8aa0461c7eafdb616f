@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90382501_caaf06fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T01:38:17Z",
+      "side": 1,
+      "message": "Thanks for catching some of the errors. I also added a few missing things and ensured these new configs are disabled on the CQ (although available for manual try and on CI)",
+      "revId": "02d383a671505904a44a3b8aa0461c7eafdb616f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

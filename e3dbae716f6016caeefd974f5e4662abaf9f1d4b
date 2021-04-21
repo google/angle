@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "06251a7d_4a368cc0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T01:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9e208691_61b1a638",
+      "range": {
+        "startLine": 10,
+        "startChar": 12,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e7c27937_0f693e51",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-04-21T00:28:58Z",
       "side": 1,
       "message": "Need to set \"platform\" property for Android, I think.",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 14
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7c6ebb5_4a3a4a54",
+        "filename": "infra/config/main.star",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T01:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e7c27937_0f693e51",
       "range": {
         "startLine": 140,
         "startChar": 4,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d2cc2ae_4fbd6d52",
+        "filename": "infra/config/main.star",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T01:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ab4da22_7224bd81",
+      "range": {
+        "startLine": 263,
+        "startChar": 65,
+        "endLine": 263,
+        "endChar": 68
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "caef4b29_281a3a75",
@@ -93,6 +165,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0ce4610a_87f86ed9",
+        "filename": "infra/config/main.star",
+        "patchSetId": 3
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T01:38:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "caef4b29_281a3a75",
+      "range": {
+        "startLine": 278,
+        "startChar": 90,
+        "endLine": 278,
+        "endChar": 92
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "deca4033_d1cc1088",
@@ -106,6 +202,30 @@
       "writtenOn": "2021-04-21T00:28:58Z",
       "side": 1,
       "message": "should be arm/arm64 instead\n\nAlso, I\u0027m not sure if debug non-component build is supported",
+      "range": {
+        "startLine": 48,
+        "startChar": 24,
+        "endLine": 48,
+        "endChar": 27
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f03d860c_387e0e2c",
+        "filename": "infra/specs/angle_mb_config.pyl",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T01:38:17Z",
+      "side": 1,
+      "message": "Done, confirmed it builds in Debug non-component. Debug will be compile-only.",
+      "parentUuid": "deca4033_d1cc1088",
       "range": {
         "startLine": 48,
         "startChar": 24,
