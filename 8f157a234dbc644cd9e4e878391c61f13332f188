@@ -39,6 +39,52 @@
       },
       "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f43c2a1d_b66f2520",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-21T21:32:29Z",
+      "side": 1,
+      "message": "is this talking about restricted trace samples?",
+      "range": {
+        "startLine": 39,
+        "startChar": 40,
+        "endLine": 40,
+        "endChar": 17
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f3cdd23_68517237",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-21T21:32:29Z",
+      "side": 1,
+      "message": "this by definition also builds the lib*.so files as well right? is there a default clean up step that removes these file after the APK is created or will it stay around?",
+      "range": {
+        "startLine": 82,
+        "startChar": 28,
+        "endLine": 82,
+        "endChar": 55
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
