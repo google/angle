@@ -16,6 +16,86 @@
       "message": "A previous change broke debug utils going for AGI.  This fixes that.",
       "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d01bed0e_4880519f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-21T16:30:54Z",
+      "side": 1,
+      "message": "It seems reasonable, but I haven\u0027t followed these changes closely enough to know the subtleties that should be tested with this CL.",
+      "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b427892_da776be2",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-21T16:30:54Z",
+      "side": 1,
+      "message": "Why isn\u0027t this updated also?\n\nLooking at the call stack, ContextVk::insertEventMarker() is only called by WarnOnVertexFormatConversion(), so it may rarely be output, but it seems like something AGI would want to display.",
+      "range": {
+        "startLine": 2844,
+        "startChar": 0,
+        "endLine": 2845,
+        "endChar": 39
+      },
+      "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eef70152_d95d5980",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2827,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-21T16:30:54Z",
+      "side": 1,
+      "message": "Why doesn\u0027t mEnableLogAPIEvents need to be enabled here also?\n\nIf it does, then it looks like enableDebugAnnotatorVk can be removed, since mEnableLogAPIEvents has the same value.",
+      "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6cb88da_3c02f7f0",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-21T16:30:54Z",
+      "side": 1,
+      "message": "It might be good to add some comments describing the differences between these two and why they can have different values.",
+      "range": {
+        "startLine": 423,
+        "startChar": 0,
+        "endLine": 424,
+        "endChar": 29
+      },
+      "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
