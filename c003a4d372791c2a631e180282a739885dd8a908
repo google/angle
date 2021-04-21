@@ -56,6 +56,30 @@
       },
       "revId": "c003a4d372791c2a631e180282a739885dd8a908",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78f45dfd_bd3d2e60",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 429,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-21T23:35:14Z",
+      "side": 1,
+      "message": "Thanks, I went with `mAngleDebuggerMode`.",
+      "parentUuid": "bd02230b_45fcc29b",
+      "range": {
+        "startLine": 429,
+        "startChar": 9,
+        "endLine": 429,
+        "endChar": 33
+      },
+      "revId": "c003a4d372791c2a631e180282a739885dd8a908",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

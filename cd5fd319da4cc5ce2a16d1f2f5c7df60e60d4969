@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4479956c_08fdde2c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-21T23:35:14Z",
+      "side": 1,
+      "message": "Thanks for the feedback Tim and Cody!  I agree that it would be nice to simplify this part of ANGLE, but this will help AGI in the near term.",
+      "revId": "cd5fd319da4cc5ce2a16d1f2f5c7df60e60d4969",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
