@@ -1,6 +1,46 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0839e15_aea80a5a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-21T22:06:48Z",
+      "side": 1,
+      "message": "Tim, great to see our first addition to the resource tracking scheme.",
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03453327_f651e298",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 934,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-21T22:06:48Z",
+      "side": 1,
+      "message": "The intent is for more types to be added to MaybeResetResources if this can be added there instead?",
+      "range": {
+        "startLine": 934,
+        "startChar": 5,
+        "endLine": 934,
+        "endChar": 26
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b09c97dd_3e6d216e",
@@ -42,6 +82,29 @@
         "startChar": 18,
         "endLine": 264,
         "endChar": 44
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ee93e6c0_84efdc59",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-21T22:06:48Z",
+      "side": 1,
+      "message": "Same as Jamie\u0027s comments above, no need to mention MEC in variable names.  How about mStartingFenceSyncs?",
+      "range": {
+        "startLine": 300,
+        "startChar": 17,
+        "endLine": 300,
+        "endChar": 41
       },
       "revId": "a296415aac63843fd708fc2d3199008587ac3689",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
