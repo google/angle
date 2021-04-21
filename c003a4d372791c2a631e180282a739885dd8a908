@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "12aa00d5_d9ebcda0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-21T22:06:06Z",
+      "side": 1,
+      "message": "re-LGTM with Cody\u0027s naming update suggestion.\n\nThanks for the comments, those help.",
+      "revId": "c003a4d372791c2a631e180282a739885dd8a908",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd02230b_45fcc29b",
