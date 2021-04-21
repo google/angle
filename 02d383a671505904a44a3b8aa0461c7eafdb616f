@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4ce53a7_682a0e8b",
+        "filename": ".gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T02:18:25Z",
+      "side": 1,
+      "message": "Done, for AHardwareBuffer tests.",
+      "parentUuid": "ddf01d82_ec11ee64",
+      "range": {
+        "startLine": 46,
+        "startChar": 29,
+        "endLine": 46,
+        "endChar": 32
+      },
+      "revId": "02d383a671505904a44a3b8aa0461c7eafdb616f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26172b6f_f70f042d",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-04-21T02:06:23Z",
       "side": 1,
       "message": "nit: here, too.",
+      "range": {
+        "startLine": 10,
+        "startChar": 12,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "02d383a671505904a44a3b8aa0461c7eafdb616f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f1c6ceb_cce5b94e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T02:18:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26172b6f_f70f042d",
       "range": {
         "startLine": 10,
         "startChar": 12,
