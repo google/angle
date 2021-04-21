@@ -250,6 +250,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6fd91f3_075953eb",
+        "filename": "src/tests/gl_tests/DepthStencilTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 330,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-21T07:45:56Z",
+      "side": 1,
+      "message": "Resolved.",
+      "parentUuid": "0dd6d828_cbc55c8c",
+      "range": {
+        "startLine": 329,
+        "startChar": 28,
+        "endLine": 330,
+        "endChar": 61
+      },
+      "revId": "82f9a61e5daeba190c230d04398da53f2ff68c8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1eed401d_79ef641c",
