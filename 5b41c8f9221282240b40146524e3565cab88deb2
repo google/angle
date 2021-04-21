@@ -70,6 +70,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "21c53c63_685e4592",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1006,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T20:43:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "566a17c0_fe4dc661",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6201585b_ceeed630",
@@ -122,6 +140,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "97c75cc4_170e6c54",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T20:43:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c63e39d6_7116657b",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9be2ed23_c5c69151",
@@ -135,6 +171,24 @@
       "writtenOn": "2021-04-21T15:09:31Z",
       "side": 1,
       "message": "Please add a few tests that exercise the bit being set in the first, middle or last element in the array.",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "34a2567b_9ad2496a",
+        "filename": "src/common/bitset_utils_unittest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T20:43:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9be2ed23_c5c69151",
       "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
