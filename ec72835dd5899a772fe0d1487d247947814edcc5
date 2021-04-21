@@ -16,6 +16,52 @@
       "message": "PTAL Shabi/Mohan.",
       "revId": "ec72835dd5899a772fe0d1487d247947814edcc5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7e85e50_f4973354",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 998,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-21T20:49:53Z",
+      "side": 1,
+      "message": "nothing stopping anyone from calling first() on an empty bitset",
+      "range": {
+        "startLine": 998,
+        "startChar": 4,
+        "endLine": 998,
+        "endChar": 18
+      },
+      "revId": "ec72835dd5899a772fe0d1487d247947814edcc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0cd21bc_9c2023bc",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 1014,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-21T20:49:53Z",
+      "side": 1,
+      "message": "nothing stopping anyone from calling last() on an empty bitset",
+      "range": {
+        "startLine": 1014,
+        "startChar": 4,
+        "endLine": 1014,
+        "endChar": 18
+      },
+      "revId": "ec72835dd5899a772fe0d1487d247947814edcc5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
