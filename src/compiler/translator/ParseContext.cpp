@@ -4430,8 +4430,13 @@ TIntermDeclaration *TParseContext::addInterfaceBlock(
             case EvqFlat:
             case EvqNoPerspective:
             case EvqCentroid:
+            case EvqGeometryIn:
+            case EvqGeometryOut:
                 if (!IsShaderIoBlock(typeQualifier.qualifier) &&
-                    typeQualifier.qualifier != EvqPatchIn && typeQualifier.qualifier != EvqPatchOut)
+                    typeQualifier.qualifier != EvqPatchIn &&
+                    typeQualifier.qualifier != EvqPatchOut &&
+                    typeQualifier.qualifier != EvqGeometryIn &&
+                    typeQualifier.qualifier != EvqGeometryOut)
                 {
                     error(field->line(), "invalid qualifier on interface block member",
                           getQualifierString(qualifier));
