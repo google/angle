@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "150aa666_b9d3d00a",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:38:01Z",
+      "side": 1,
+      "message": "Thanks Yuly, an important omission. Fixed",
+      "parentUuid": "7299a6b9_e1f007c3",
+      "range": {
+        "startLine": 3,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 59
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f43c2a1d_b66f2520",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "65849507_d6d50331",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:38:01Z",
+      "side": 1,
+      "message": "The ANGLE samples in the samples/ folder do not work. The traces themselves build as part of the perf tests.",
+      "parentUuid": "f43c2a1d_b66f2520",
+      "range": {
+        "startLine": 39,
+        "startChar": 40,
+        "endLine": 40,
+        "endChar": 17
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7f3cdd23_68517237",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-04-21T21:32:29Z",
       "side": 1,
       "message": "this by definition also builds the lib*.so files as well right? is there a default clean up step that removes these file after the APK is created or will it stay around?",
+      "range": {
+        "startLine": 82,
+        "startChar": 28,
+        "endLine": 82,
+        "endChar": 55
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0cddc5ad_57c370ac",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T21:38:01Z",
+      "side": 1,
+      "message": "It will build all required dependencies. I believe the lib files are a part of that. You can clean up with ninja -t clean. We do not run clean automatically as part of ninja compilation.",
+      "parentUuid": "7f3cdd23_68517237",
       "range": {
         "startLine": 82,
         "startChar": 28,
