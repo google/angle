@@ -16,6 +16,57 @@
       "message": "Charlie/Tim PTAL. Mohan FYI",
       "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d570916f_191461f6",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1006,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-21T15:01:46Z",
+      "side": 1,
+      "message": "can\u0027t we early return when \"firstValue\" is set for the first time given \"offset\" is a monotonically increasing value?",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6201585b_ceeed630",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1020,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-21T15:01:46Z",
+      "side": 1,
+      "message": "might be a micro-opt but for looping from the end might be more optimal?",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bad2b5f7_b1452ec3",
+        "filename": "src/common/bitset_utils.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 1024,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-21T15:01:46Z",
+      "side": 1,
+      "message": "if we for loop from end, we can early return when \"lastValue\" is set for the first time (of course, after modifying \"offset\" to be a monotonically decreasing value)",
+      "revId": "5b41c8f9221282240b40146524e3565cab88deb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
