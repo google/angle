@@ -20,6 +20,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4aa678a5_61a27aeb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-21T22:11:57Z",
+      "side": 1,
+      "message": "Is each slot supposedly to be equal sized regardless if there is a buffer or not? If yes, then here you only write 64 bit value. When there is a buffer, you will write one 64 bit bufferSerial plus 32 bit size, plus 32 bit offset. How can we ensure they are unique?",
+      "range": {
+        "startLine": 310,
+        "startChar": 16,
+        "endLine": 310,
+        "endChar": 24
+      },
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71edf88a_f4063a0c",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 317,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-21T22:11:57Z",
+      "side": 1,
+      "message": "Is this and append64BitValue(0) at line 309 have to append twice or only one 0 is enough?",
+      "range": {
+        "startLine": 317,
+        "startChar": 23,
+        "endLine": 317,
+        "endChar": 40
+      },
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "9f9b2114_9500d56a",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 13
@@ -31,6 +77,29 @@
       "writtenOn": "2021-04-21T21:58:05Z",
       "side": 1,
       "message": "Why is this step necessary every call?",
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7750eaf4_b5a947ba",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3360,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-21T22:11:57Z",
+      "side": 1,
+      "message": "avoid hard coded value here?",
+      "range": {
+        "startLine": 3360,
+        "startChar": 40,
+        "endLine": 3360,
+        "endChar": 41
+      },
       "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
