@@ -38,6 +38,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c59e72dd_5a59c4e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-21T07:53:34Z",
+      "side": 1,
+      "message": "I was not able to reproduce the issue with end2end tests in GetImageTest and DepthStencilTest. \nThe issue can be reproduced though with a capture/replay test seen here:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2817766\nI currently don\u0027t propose this test for merging, as it requires to run a config that is illegal on native GL / GLES and it fails before it can be skipped easily.",
+      "parentUuid": "0557156f_5538299a",
+      "revId": "1f81055e20b1f998c02778a923c9071323d4ca4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "b4f1029c_fe2d0701",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 2
