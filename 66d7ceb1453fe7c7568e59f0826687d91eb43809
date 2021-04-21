@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "82f9aac8_52ea4248",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2845,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-21T20:23:12Z",
+      "side": 1,
+      "message": "Done\n\nThis method was originally created to support GLES applications inserting event markers (part of a GLES extension).  I used it for WarnOnVertexFormatConversion(), and so we do want this to be exposed to AGI.\n\nThinking of something that Fran told me, we actually want all of the application-provided markers to also go to AGI as well.  I\u0027ll plumb them all.",
+      "parentUuid": "5b427892_da776be2",
+      "range": {
+        "startLine": 2844,
+        "startChar": 0,
+        "endLine": 2845,
+        "endChar": 39
+      },
+      "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eef70152_d95d5980",
@@ -75,6 +99,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b73bfb7c_1e318ff7",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2827,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-21T20:23:12Z",
+      "side": 1,
+      "message": "Addressed with new comments added in Patchset 2.",
+      "parentUuid": "eef70152_d95d5980",
+      "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c6cb88da_3c02f7f0",
@@ -88,6 +130,30 @@
       "writtenOn": "2021-04-21T16:30:54Z",
       "side": 1,
       "message": "It might be good to add some comments describing the differences between these two and why they can have different values.",
+      "range": {
+        "startLine": 423,
+        "startChar": 0,
+        "endLine": 424,
+        "endChar": 29
+      },
+      "revId": "66d7ceb1453fe7c7568e59f0826687d91eb43809",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57de9d2c_4d9fd0d2",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 424,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-21T20:23:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c6cb88da_3c02f7f0",
       "range": {
         "startLine": 423,
         "startChar": 0,
