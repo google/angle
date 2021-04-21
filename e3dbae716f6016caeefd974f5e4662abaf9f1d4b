@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e208691_61b1a638",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-21T00:28:58Z",
+      "side": 1,
+      "message": "arm/arm64 (x86/x64 are probably also valid if you want to build for the emulator)",
+      "range": {
+        "startLine": 10,
+        "startChar": 12,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7c27937_0f693e51",
+        "filename": "infra/config/main.star",
+        "patchSetId": 3
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-21T00:28:58Z",
+      "side": 1,
+      "message": "Need to set \"platform\" property for Android, I think.",
+      "range": {
+        "startLine": 140,
+        "startChar": 4,
+        "endLine": 140,
+        "endChar": 14
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ab4da22_7224bd81",
+        "filename": "infra/config/main.star",
+        "patchSetId": 3
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-21T00:28:58Z",
+      "side": 1,
+      "message": "arm",
+      "range": {
+        "startLine": 263,
+        "startChar": 65,
+        "endLine": 263,
+        "endChar": 68
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "caef4b29_281a3a75",
+        "filename": "infra/config/main.star",
+        "patchSetId": 3
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-21T00:28:58Z",
+      "side": 1,
+      "message": "nit: inconsistent",
+      "range": {
+        "startLine": 278,
+        "startChar": 90,
+        "endLine": 278,
+        "endChar": 92
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deca4033_d1cc1088",
+        "filename": "infra/specs/angle_mb_config.pyl",
+        "patchSetId": 3
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-21T00:28:58Z",
+      "side": 1,
+      "message": "should be arm/arm64 instead\n\nAlso, I\u0027m not sure if debug non-component build is supported",
+      "range": {
+        "startLine": 48,
+        "startChar": 24,
+        "endLine": 48,
+        "endChar": 27
+      },
+      "revId": "e3dbae716f6016caeefd974f5e4662abaf9f1d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
