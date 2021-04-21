@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "956324de_e602e66e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-04-21T08:59:52Z",
+      "side": 1,
+      "message": "There is one gold triage but i don\u0027t think this CL is related.",
+      "revId": "119b4d5c444e61ef0377835cd34d938de3f8ae05",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
