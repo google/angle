@@ -22,6 +22,30 @@
       },
       "revId": "5354603c5bd4216d7742eb53b387034274bf0a1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4068fa6b_35a8d59c",
+        "filename": "android/angle_apk.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-21T17:12:14Z",
+      "side": 1,
+      "message": "Done. Thanks Yuly, I had forgotten about shlib_extension.",
+      "parentUuid": "101f7b4a_cf78e814",
+      "range": {
+        "startLine": 82,
+        "startChar": 115,
+        "endLine": 82,
+        "endChar": 133
+      },
+      "revId": "5354603c5bd4216d7742eb53b387034274bf0a1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
