@@ -696,6 +696,7 @@ RendererVk::RendererVk()
       mInstance(VK_NULL_HANDLE),
       mEnableValidationLayers(false),
       mEnableDebugUtils(false),
+      mAngleDebuggerMode(false),
       mEnabledICD(angle::vk::ICD::Default),
       mDebugUtilsMessenger(VK_NULL_HANDLE),
       mDebugReportCallback(VK_NULL_HANDLE),
@@ -2798,34 +2799,44 @@ uint64_t RendererVk::getMaxFenceWaitTimeNs() const
 
 void RendererVk::setGlobalDebugAnnotator()
 {
-    // If the vkCmd*DebugUtilsLabelEXT functions exist, and if the kEnableDebugMarkersVarName
-    // environment variable is set, initialize DebugAnnotatorVk to log the OpenGL ES commands that
-    // are used, for debuggers (e.g. AGI).  Otherwise, uninitialize the global  DebugAnnotator
-    // pointer so that applications run full speed.
-    bool enableDebugAnnotatorVk = false;
+    // Install one of two DebugAnnotator classes:
+    //
+    // 1) The global class enables basic ANGLE debug functionality (e.g. Vulkan validation errors
+    //    will cause dEQP tests to fail).
+    //
+    // 2) The DebugAnnotatorVk class processes OpenGL ES commands that the application uses.  It is
+    //    installed for the following purposes:
+    //
+    //    1) To enable calling the vkCmd*DebugUtilsLabelEXT functions in order to communicate to
+    //       debuggers (e.g. AGI) the OpenGL ES commands that the application uses.  In addition to
+    //       simply installing DebugAnnotatorVk, also enable calling vkCmd*DebugUtilsLabelEXT.
+    //
+    //    2) To enable logging to Android logcat the OpenGL ES commands that the application uses.
+    bool installDebugAnnotatorVk = false;
+
+    // Enable calling the vkCmd*DebugUtilsLabelEXT functions if the vkCmd*DebugUtilsLabelEXT
+    // functions exist, and if the kEnableDebugMarkersVarName environment variable is set.
     if (vkCmdBeginDebugUtilsLabelEXT)
     {
         std::string enabled = angle::GetEnvironmentVarOrAndroidProperty(
             kEnableDebugMarkersVarName, kEnableDebugMarkersPropertyName);
         if (!enabled.empty() && enabled.compare("0") != 0)
         {
-            enableDebugAnnotatorVk = true;
+            mAngleDebuggerMode      = true;
+            installDebugAnnotatorVk = true;
         }
     }
 #if defined(ANGLE_ENABLE_TRACE_ANDROID_LOGCAT)
-    // This will log all API commands to Android's logcat as well as create Vulkan debug markers.
-    enableDebugAnnotatorVk = true;
+    // Only install DebugAnnotatorVk to log all API commands to Android's logcat.
+    installDebugAnnotatorVk = true;
 #endif
 
-    if (enableDebugAnnotatorVk)
+    if (installDebugAnnotatorVk)
     {
-        // Install DebugAnnotatorVk so that GLES API commands will generate Vulkan debug markers
         gl::InitializeDebugAnnotations(&mAnnotator);
     }
     else
     {
-        // Install LoggingAnnotator so that other debug functionality will still work (e.g. Vulkan
-        // validation errors will cause dEQP tests to fail).
         mDisplay->setGlobalDebugAnnotator();
     }
 }

@@ -321,6 +321,7 @@ class RendererVk : angle::NonCopyable
     }
 
     bool enableDebugUtils() const { return mEnableDebugUtils; }
+    bool angleDebuggerMode() const { return mAngleDebuggerMode; }
 
     SamplerCache &getSamplerCache() { return mSamplerCache; }
     SamplerYcbcrConversionCache &getYuvConversionCache() { return mYuvConversionCache; }
@@ -419,7 +420,13 @@ class RendererVk : angle::NonCopyable
 
     VkInstance mInstance;
     bool mEnableValidationLayers;
+    // True if ANGLE is enabling the VK_EXT_debug_utils extension.
     bool mEnableDebugUtils;
+    // True if ANGLE should call the vkCmd*DebugUtilsLabelEXT functions in order to communicate to
+    // debuggers (e.g. AGI) the OpenGL ES commands that the application uses.  This is independent
+    // of mEnableDebugUtils, as an external graphics debugger can enable the VK_EXT_debug_utils
+    // extension and cause this to be set true.
+    bool mAngleDebuggerMode;
     angle::vk::ICD mEnabledICD;
     VkDebugUtilsMessengerEXT mDebugUtilsMessenger;
     VkDebugReportCallbackEXT mDebugReportCallback;

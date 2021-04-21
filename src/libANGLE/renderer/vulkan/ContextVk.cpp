@@ -1252,7 +1252,13 @@ angle::Result ContextVk::handleDirtyComputeEventLog()
 
 angle::Result ContextVk::handleDirtyEventLogImpl(vk::CommandBuffer *commandBuffer)
 {
-    if (mEventLog.empty() || !mRenderer->enableDebugUtils())
+    // This method is called when a draw or dispatch command is being processed.  It's purpose is
+    // to call the vkCmd*DebugUtilsLabelEXT functions in order to communicate to debuggers
+    // (e.g. AGI) the OpenGL ES commands that the application uses.
+
+    // Exit early if no OpenGL ES commands have been logged or if calling the
+    // vkCmd*DebugUtilsLabelEXT functions is not enabled.
+    if (mEventLog.empty() || !mRenderer->angleDebuggerMode())
     {
         return angle::Result::Continue;
     }
@@ -2841,8 +2847,10 @@ gl::GraphicsResetStatus ContextVk::getResetStatus()
 
 angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 {
-    if (!mRenderer->enableDebugUtils())
+    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    {
         return angle::Result::Continue;
+    }
 
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
@@ -2853,8 +2861,10 @@ angle::Result ContextVk::insertEventMarker(GLsizei length, const char *marker)
 
 angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 {
-    if (!mRenderer->enableDebugUtils())
+    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    {
         return angle::Result::Continue;
+    }
 
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(GL_DEBUG_SOURCE_APPLICATION, marker, &label);
@@ -2865,8 +2875,10 @@ angle::Result ContextVk::pushGroupMarker(GLsizei length, const char *marker)
 
 angle::Result ContextVk::popGroupMarker()
 {
-    if (!mRenderer->enableDebugUtils())
+    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    {
         return angle::Result::Continue;
+    }
 
     mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
 
@@ -2878,8 +2890,10 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
                                         GLuint id,
                                         const std::string &message)
 {
-    if (!mRenderer->enableDebugUtils())
+    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    {
         return angle::Result::Continue;
+    }
 
     VkDebugUtilsLabelEXT label;
     vk::MakeDebugUtilsLabel(source, message.c_str(), &label);
@@ -2890,8 +2904,10 @@ angle::Result ContextVk::pushDebugGroup(const gl::Context *context,
 
 angle::Result ContextVk::popDebugGroup(const gl::Context *context)
 {
-    if (!mRenderer->enableDebugUtils())
+    if (!mRenderer->enableDebugUtils() && !mRenderer->angleDebuggerMode())
+    {
         return angle::Result::Continue;
+    }
 
     mOutsideRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
 
@@ -2900,6 +2916,11 @@ angle::Result ContextVk::popDebugGroup(const gl::Context *context)
 
 void ContextVk::logEvent(const char *eventString)
 {
+    if (!mRenderer->angleDebuggerMode())
+    {
+        return;
+    }
+
     // Save this event (about an OpenGL ES command being called).
     mEventLog.push_back(eventString);
 
@@ -2910,7 +2931,7 @@ void ContextVk::logEvent(const char *eventString)
 
 void ContextVk::endEventLog(angle::EntryPoint entryPoint)
 {
-    if (!mRenderer->enableDebugUtils())
+    if (!mRenderer->angleDebuggerMode())
     {
         return;
     }
