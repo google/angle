@@ -200,8 +200,7 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
     )
 
     # Include all bots in the CQ by default except GCC and Android configs.
-    # TODO(jmadill): Add Android to CQ by default. http://anglebug.com/2344
-    if toolchain != "gcc" and config_os.category != os_category.ANDROID:
+    if toolchain != "gcc":
         luci.cq_tryjob_verifier(
             cq_group = 'master',
             builder = "angle:try/" + name,
