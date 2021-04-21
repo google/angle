@@ -294,9 +294,13 @@ TEST(MathUtilTest, ScanForward)
 // Test ScanReverse, which scans for the most significant 1 bit from a non-zero integer.
 TEST(MathUtilTest, ScanReverse)
 {
-    EXPECT_EQ(0ul, gl::ScanReverse(1ul));
-    EXPECT_EQ(16ul, gl::ScanReverse(0x00010030ul));
-    EXPECT_EQ(31ul, gl::ScanReverse(0x80000000ul));
+    EXPECT_EQ(0ul, gl::ScanReverse(1u));
+    EXPECT_EQ(16ul, gl::ScanReverse(static_cast<uint64_t>(0x00010030ull)));
+    EXPECT_EQ(31ul, gl::ScanReverse(static_cast<uint64_t>(0x80000000ull)));
+
+    EXPECT_EQ(32ul, gl::ScanReverse(static_cast<uint64_t>(0x100000000ull)));
+    EXPECT_EQ(48ul, gl::ScanReverse(static_cast<uint64_t>(0x0001080000000000ull)));
+    EXPECT_EQ(63ul, gl::ScanReverse(static_cast<uint64_t>(0x8000000000000000ull)));
 }
 
 // Test FindLSB, which finds the least significant 1 bit.

@@ -411,6 +411,10 @@ TYPED_TEST(BitSetArrayTest, BasicTest)
     {
         EXPECT_EQ(bit, 45u);
     }
+
+    EXPECT_EQ(mBits.first(), 45u);
+    EXPECT_EQ(mBits.last(), 45u);
+
     mBits.reset(45);
 
     // Set every bit to 1.
@@ -520,6 +524,12 @@ TYPED_TEST(BitSetArrayTest, BasicTest)
     {
         testBitSet2.set(bit);
     }
+
+    EXPECT_EQ(testBitSet1.first(), 0u);
+    EXPECT_EQ(testBitSet1.last(), 60u);
+
+    EXPECT_EQ(testBitSet2.first(), 5u);
+    EXPECT_EQ(testBitSet2.last(), 63u);
 
     actualValues.clear();
     for (auto bit : (testBitSet1 & testBitSet2))
