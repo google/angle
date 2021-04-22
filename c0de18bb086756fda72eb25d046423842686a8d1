@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e6482d7_5f7390c2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-22T16:53:53Z",
+      "side": 1,
+      "message": "Can you also tag: http://anglebug.com/4599",
+      "revId": "c0de18bb086756fda72eb25d046423842686a8d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92342651_ba9be517",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-22T16:53:53Z",
+      "side": 1,
+      "message": "LGTM, with one naming nit.",
+      "revId": "c0de18bb086756fda72eb25d046423842686a8d1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
