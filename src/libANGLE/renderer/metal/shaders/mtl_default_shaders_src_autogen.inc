@@ -14,7 +14,7 @@ static char gDefaultMetallibSrc[] = R"(
 # 1 "temp_master_source.metal"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 384 "<built-in>" 3
+# 369 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "temp_master_source.metal" 2
@@ -1222,10 +1222,10 @@ enum
     BC4_RED_UNORM_BLOCK,
     BC5_RG_SNORM_BLOCK,
     BC5_RG_UNORM_BLOCK,
-    BPTC_RGBA_UNORM_BLOCK,
-    BPTC_RGB_SIGNED_FLOAT_BLOCK,
-    BPTC_RGB_UNSIGNED_FLOAT_BLOCK,
-    BPTC_SRGB_ALPHA_UNORM_BLOCK,
+    BC6H_RGB_SFLOAT_BLOCK,
+    BC6H_RGB_UFLOAT_BLOCK,
+    BC7_RGBA_UNORM_BLOCK,
+    BC7_RGBA_UNORM_SRGB_BLOCK,
     EAC_R11G11_SNORM_BLOCK,
     EAC_R11G11_UNORM_BLOCK,
     EAC_R11_SNORM_BLOCK,

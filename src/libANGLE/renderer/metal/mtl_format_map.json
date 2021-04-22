@@ -145,10 +145,10 @@
             "BC4_RED_SNORM_BLOCK": "MTLPixelFormatBC4_RSnorm",
             "BC5_RG_UNORM_BLOCK": "MTLPixelFormatBC5_RGUnorm",
             "BC5_RG_SNORM_BLOCK": "MTLPixelFormatBC5_RGSnorm",
-            "BPTC_RGB_UNSIGNED_FLOAT_BLOCK": "MTLPixelFormatBC6H_RGBUfloat",
-            "BPTC_RGB_SIGNED_FLOAT_BLOCK": "MTLPixelFormatBC6H_RGBFloat",
-            "BPTC_RGBA_UNORM_BLOCK": "MTLPixelFormatBC7_RGBAUnorm",
-            "BPTC_SRGB_ALPHA_UNORM_BLOCK": "MTLPixelFormatBC7_RGBAUnorm_sRGB"
+            "BC6H_RGB_UFLOAT_BLOCK": "MTLPixelFormatBC6H_RGBUfloat",
+            "BC6H_RGB_SFLOAT_BLOCK": "MTLPixelFormatBC6H_RGBFloat",
+            "BC7_RGBA_UNORM_BLOCK": "MTLPixelFormatBC7_RGBAUnorm",
+            "BC7_RGBA_UNORM_SRGB_BLOCK": "MTLPixelFormatBC7_RGBAUnorm_sRGB"
         },
         "override": {
             "L8_UNORM": "R8G8B8A8_UNORM",

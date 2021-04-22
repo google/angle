@@ -674,41 +674,41 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vertexLoadRequiresConversion = false;
             break;
 
-        case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
-            intendedGLFormat             = GL_COMPRESSED_RGBA_BPTC_UNORM_EXT;
-            actualImageFormatID          = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
-            imageInitializerFunction     = nullptr;
-            actualBufferFormatID         = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
-            vkBufferFormatIsPacked       = false;
-            vertexLoadFunction           = nullptr;
-            vertexLoadRequiresConversion = false;
-            break;
-
-        case angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK:
+        case angle::FormatID::BC6H_RGB_SFLOAT_BLOCK:
             intendedGLFormat             = GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT;
-            actualImageFormatID          = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            actualImageFormatID          = angle::FormatID::BC6H_RGB_SFLOAT_BLOCK;
             imageInitializerFunction     = nullptr;
-            actualBufferFormatID         = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            actualBufferFormatID         = angle::FormatID::BC6H_RGB_SFLOAT_BLOCK;
             vkBufferFormatIsPacked       = false;
             vertexLoadFunction           = nullptr;
             vertexLoadRequiresConversion = false;
             break;
 
-        case angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK:
+        case angle::FormatID::BC6H_RGB_UFLOAT_BLOCK:
             intendedGLFormat             = GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT;
-            actualImageFormatID          = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            actualImageFormatID          = angle::FormatID::BC6H_RGB_UFLOAT_BLOCK;
             imageInitializerFunction     = nullptr;
-            actualBufferFormatID         = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            actualBufferFormatID         = angle::FormatID::BC6H_RGB_UFLOAT_BLOCK;
             vkBufferFormatIsPacked       = false;
             vertexLoadFunction           = nullptr;
             vertexLoadRequiresConversion = false;
             break;
 
-        case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
-            intendedGLFormat             = GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT;
-            actualImageFormatID          = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+        case angle::FormatID::BC7_RGBA_UNORM_BLOCK:
+            intendedGLFormat             = GL_COMPRESSED_RGBA_BPTC_UNORM_EXT;
+            actualImageFormatID          = angle::FormatID::BC7_RGBA_UNORM_BLOCK;
             imageInitializerFunction     = nullptr;
-            actualBufferFormatID         = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            actualBufferFormatID         = angle::FormatID::BC7_RGBA_UNORM_BLOCK;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = nullptr;
+            vertexLoadRequiresConversion = false;
+            break;
+
+        case angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK:
+            intendedGLFormat             = GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT;
+            actualImageFormatID          = angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
             vkBufferFormatIsPacked       = false;
             vertexLoadFunction           = nullptr;
             vertexLoadRequiresConversion = false;
@@ -2419,10 +2419,10 @@ VkFormat GetVkFormatFromFormatID(angle::FormatID formatID)
         {angle::FormatID::BC4_RED_UNORM_BLOCK, VK_FORMAT_BC4_UNORM_BLOCK},
         {angle::FormatID::BC5_RG_SNORM_BLOCK, VK_FORMAT_BC5_SNORM_BLOCK},
         {angle::FormatID::BC5_RG_UNORM_BLOCK, VK_FORMAT_BC5_UNORM_BLOCK},
-        {angle::FormatID::BPTC_RGBA_UNORM_BLOCK, VK_FORMAT_BC7_UNORM_BLOCK},
-        {angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK, VK_FORMAT_BC6H_SFLOAT_BLOCK},
-        {angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK, VK_FORMAT_BC6H_UFLOAT_BLOCK},
-        {angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK, VK_FORMAT_BC7_SRGB_BLOCK},
+        {angle::FormatID::BC6H_RGB_SFLOAT_BLOCK, VK_FORMAT_BC6H_SFLOAT_BLOCK},
+        {angle::FormatID::BC6H_RGB_UFLOAT_BLOCK, VK_FORMAT_BC6H_UFLOAT_BLOCK},
+        {angle::FormatID::BC7_RGBA_UNORM_BLOCK, VK_FORMAT_BC7_UNORM_BLOCK},
+        {angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK, VK_FORMAT_BC7_SRGB_BLOCK},
         {angle::FormatID::D16_UNORM, VK_FORMAT_D16_UNORM},
         {angle::FormatID::D24_UNORM_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
         {angle::FormatID::D24_UNORM_X8_UINT, VK_FORMAT_X8_D24_UNORM_PACK32},
@@ -2621,14 +2621,14 @@ angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat)
             return angle::FormatID::BC5_RG_SNORM_BLOCK;
         case VK_FORMAT_BC5_UNORM_BLOCK:
             return angle::FormatID::BC5_RG_UNORM_BLOCK;
-        case VK_FORMAT_BC7_UNORM_BLOCK:
-            return angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
         case VK_FORMAT_BC6H_SFLOAT_BLOCK:
-            return angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            return angle::FormatID::BC6H_RGB_SFLOAT_BLOCK;
         case VK_FORMAT_BC6H_UFLOAT_BLOCK:
-            return angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            return angle::FormatID::BC6H_RGB_UFLOAT_BLOCK;
+        case VK_FORMAT_BC7_UNORM_BLOCK:
+            return angle::FormatID::BC7_RGBA_UNORM_BLOCK;
         case VK_FORMAT_BC7_SRGB_BLOCK:
-            return angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            return angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
         case VK_FORMAT_D16_UNORM:
             return angle::FormatID::D16_UNORM;
         case VK_FORMAT_D24_UNORM_S8_UINT:

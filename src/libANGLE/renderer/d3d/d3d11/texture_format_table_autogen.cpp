@@ -689,7 +689,7 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_RGBA_BPTC_UNORM_EXT:
         {
             static constexpr Format info(GL_COMPRESSED_RGBA_BPTC_UNORM_EXT,
-                                         angle::FormatID::BPTC_RGBA_UNORM_BLOCK,
+                                         angle::FormatID::BC7_RGBA_UNORM_BLOCK,
                                          DXGI_FORMAT_BC7_UNORM,
                                          DXGI_FORMAT_BC7_UNORM,
                                          DXGI_FORMAT_UNKNOWN,
@@ -773,7 +773,7 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT:
         {
             static constexpr Format info(GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT,
-                                         angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK,
+                                         angle::FormatID::BC6H_RGB_SFLOAT_BLOCK,
                                          DXGI_FORMAT_BC6H_SF16,
                                          DXGI_FORMAT_BC6H_SF16,
                                          DXGI_FORMAT_UNKNOWN,
@@ -787,7 +787,7 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
         {
             static constexpr Format info(GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT,
-                                         angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK,
+                                         angle::FormatID::BC6H_RGB_UFLOAT_BLOCK,
                                          DXGI_FORMAT_BC6H_UF16,
                                          DXGI_FORMAT_BC6H_UF16,
                                          DXGI_FORMAT_UNKNOWN,
@@ -1305,7 +1305,7 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
         case GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT:
         {
             static constexpr Format info(GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT,
-                                         angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK,
+                                         angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK,
                                          DXGI_FORMAT_BC7_UNORM_SRGB,
                                          DXGI_FORMAT_BC7_UNORM_SRGB,
                                          DXGI_FORMAT_UNKNOWN,

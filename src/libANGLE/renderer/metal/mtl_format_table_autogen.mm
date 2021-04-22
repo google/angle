@@ -149,14 +149,14 @@ angle::FormatID Format::MetalToAngleFormatID(MTLPixelFormat formatMtl)
             return angle::FormatID::BC5_RG_SNORM_BLOCK;
         case MTLPixelFormatBC5_RGUnorm:
             return angle::FormatID::BC5_RG_UNORM_BLOCK;
-        case MTLPixelFormatBC7_RGBAUnorm:
-            return angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
         case MTLPixelFormatBC6H_RGBFloat:
-            return angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            return angle::FormatID::BC6H_RGB_SFLOAT_BLOCK;
         case MTLPixelFormatBC6H_RGBUfloat:
-            return angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            return angle::FormatID::BC6H_RGB_UFLOAT_BLOCK;
+        case MTLPixelFormatBC7_RGBAUnorm:
+            return angle::FormatID::BC7_RGBA_UNORM_BLOCK;
         case MTLPixelFormatBC7_RGBAUnorm_sRGB:
-            return angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            return angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
         case MTLPixelFormatDepth16Unorm:
             return angle::FormatID::D16_UNORM;
         case MTLPixelFormatDepth24Unorm_Stencil8:
@@ -1021,37 +1021,37 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->swizzled = false;
             break;
 
-        case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
-
-            this->metalFormat    = MTLPixelFormatBC7_RGBAUnorm;
-            this->actualFormatId = angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
-            this->initFunction   = nullptr;
-
-            this->swizzled = false;
-            break;
-
-        case angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK:
+        case angle::FormatID::BC6H_RGB_SFLOAT_BLOCK:
 
             this->metalFormat    = MTLPixelFormatBC6H_RGBFloat;
-            this->actualFormatId = angle::FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            this->actualFormatId = angle::FormatID::BC6H_RGB_SFLOAT_BLOCK;
             this->initFunction   = nullptr;
 
             this->swizzled = false;
             break;
 
-        case angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK:
+        case angle::FormatID::BC6H_RGB_UFLOAT_BLOCK:
 
             this->metalFormat    = MTLPixelFormatBC6H_RGBUfloat;
-            this->actualFormatId = angle::FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            this->actualFormatId = angle::FormatID::BC6H_RGB_UFLOAT_BLOCK;
             this->initFunction   = nullptr;
 
             this->swizzled = false;
             break;
 
-        case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
+        case angle::FormatID::BC7_RGBA_UNORM_BLOCK:
+
+            this->metalFormat    = MTLPixelFormatBC7_RGBAUnorm;
+            this->actualFormatId = angle::FormatID::BC7_RGBA_UNORM_BLOCK;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK:
 
             this->metalFormat    = MTLPixelFormatBC7_RGBAUnorm_sRGB;
-            this->actualFormatId = angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            this->actualFormatId = angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
             this->initFunction   = nullptr;
 
             this->swizzled = false;

@@ -111,10 +111,10 @@ const Format gFormatInfoTable[] = {
     { FormatID::BC4_RED_UNORM_BLOCK, GL_COMPRESSED_RED_RGTC1_EXT, GL_COMPRESSED_RED_RGTC1_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 8, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::BC5_RG_SNORM_BLOCK, GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT, GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_SIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::BC5_RG_UNORM_BLOCK, GL_COMPRESSED_RED_GREEN_RGTC2_EXT, GL_COMPRESSED_RED_GREEN_RGTC2_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
-    { FormatID::BPTC_RGBA_UNORM_BLOCK, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
-    { FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::Float },
-    { FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::Float },
-    { FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, true, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::BC6H_RGB_SFLOAT_BLOCK, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::BC6H_RGB_UFLOAT_BLOCK, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT, GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_FLOAT, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::BC7_RGBA_UNORM_BLOCK, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, GL_COMPRESSED_RGBA_BPTC_UNORM_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
+    { FormatID::BC7_RGBA_UNORM_SRGB_BLOCK, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT, GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 0, 0, 0, 0, 0, 0, 0, 16, std::numeric_limits<GLuint>::max(), true, false, false, true, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::EAC_R11G11_SNORM_BLOCK, GL_COMPRESSED_SIGNED_RG11_EAC, GL_COMPRESSED_SIGNED_RG11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_SIGNED_NORMALIZED, 11, 11, 0, 0, 0, 0, 0, 16, 0, true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::EAC_R11G11_UNORM_BLOCK, GL_COMPRESSED_RG11_EAC, GL_COMPRESSED_RG11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_UNSIGNED_NORMALIZED, 11, 11, 0, 0, 0, 0, 0, 16, 0, true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
     { FormatID::EAC_R11_SNORM_BLOCK, GL_COMPRESSED_SIGNED_R11_EAC, GL_COMPRESSED_SIGNED_R11_EAC, nullptr, NoCopyFunctions, nullptr, nullptr, GL_SIGNED_NORMALIZED, 11, 0, 0, 0, 0, 0, 0, 8, 0, true, false, false, false, false, gl::VertexAttribType::InvalidEnum },
@@ -355,7 +355,7 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
         case GL_COMPRESSED_RGBA_ASTC_8x8_KHR:
             return FormatID::ASTC_8x8_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_BPTC_UNORM_EXT:
-            return FormatID::BPTC_RGBA_UNORM_BLOCK;
+            return FormatID::BC7_RGBA_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_PVRTC_2BPPV1_IMG:
             return FormatID::PVRTC1_RGBA_2BPP_UNORM_BLOCK;
         case GL_COMPRESSED_RGBA_PVRTC_4BPPV1_IMG:
@@ -367,9 +367,9 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
         case GL_COMPRESSED_RGBA_S3TC_DXT5_ANGLE:
             return FormatID::BC3_RGBA_UNORM_BLOCK;
         case GL_COMPRESSED_RGB_BPTC_SIGNED_FLOAT_EXT:
-            return FormatID::BPTC_RGB_SIGNED_FLOAT_BLOCK;
+            return FormatID::BC6H_RGB_SFLOAT_BLOCK;
         case GL_COMPRESSED_RGB_BPTC_UNSIGNED_FLOAT_EXT:
-            return FormatID::BPTC_RGB_UNSIGNED_FLOAT_BLOCK;
+            return FormatID::BC6H_RGB_UFLOAT_BLOCK;
         case GL_COMPRESSED_RGB_PVRTC_2BPPV1_IMG:
             return FormatID::PVRTC1_RGB_2BPP_UNORM_BLOCK;
         case GL_COMPRESSED_RGB_PVRTC_4BPPV1_IMG:
@@ -439,7 +439,7 @@ FormatID Format::InternalFormatToID(GLenum internalFormat)
         case GL_COMPRESSED_SRGB8_PUNCHTHROUGH_ALPHA1_ETC2:
             return FormatID::ETC2_R8G8B8A1_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB_ALPHA_BPTC_UNORM_EXT:
-            return FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+            return FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB_ALPHA_PVRTC_2BPPV1_EXT:
             return FormatID::PVRTC1_RGBA_2BPP_UNORM_SRGB_BLOCK;
         case GL_COMPRESSED_SRGB_ALPHA_PVRTC_4BPPV1_EXT:

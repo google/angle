@@ -1293,8 +1293,8 @@ angle::FormatID ConvertToSRGB(angle::FormatID formatID)
             return angle::FormatID::BC2_RGBA_UNORM_SRGB_BLOCK;
         case angle::FormatID::BC3_RGBA_UNORM_BLOCK:
             return angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK;
-        case angle::FormatID::BPTC_RGBA_UNORM_BLOCK:
-            return angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK;
+        case angle::FormatID::BC7_RGBA_UNORM_BLOCK:
+            return angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK;
         case angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK:
             return angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK;
         case angle::FormatID::ETC2_R8G8B8A1_UNORM_BLOCK:
@@ -1354,8 +1354,8 @@ angle::FormatID ConvertToLinear(angle::FormatID formatID)
             return angle::FormatID::BC2_RGBA_UNORM_BLOCK;
         case angle::FormatID::BC3_RGBA_UNORM_SRGB_BLOCK:
             return angle::FormatID::BC3_RGBA_UNORM_BLOCK;
-        case angle::FormatID::BPTC_SRGB_ALPHA_UNORM_BLOCK:
-            return angle::FormatID::BPTC_RGBA_UNORM_BLOCK;
+        case angle::FormatID::BC7_RGBA_UNORM_SRGB_BLOCK:
+            return angle::FormatID::BC7_RGBA_UNORM_BLOCK;
         case angle::FormatID::ETC2_R8G8B8_SRGB_BLOCK:
             return angle::FormatID::ETC2_R8G8B8_UNORM_BLOCK;
         case angle::FormatID::ETC2_R8G8B8A1_SRGB_BLOCK:
