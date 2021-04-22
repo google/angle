@@ -39,6 +39,30 @@
       },
       "revId": "8e404f3feb921035f83a4852cf2339a1243a667c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d663e79a_ae32ecd8",
+        "filename": "src/libGLESv2/entry_points_cl_autogen.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 476,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-22T13:50:50Z",
+      "side": 1,
+      "message": "The closing paren would require a separate template parameter. I think it is better to keep the generator script more readable than remove the extra parens.",
+      "parentUuid": "4055adb1_5f31f971",
+      "range": {
+        "startLine": 475,
+        "startChar": 4,
+        "endLine": 476,
+        "endChar": 41
+      },
+      "revId": "8e404f3feb921035f83a4852cf2339a1243a667c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
