@@ -22,6 +22,30 @@
       },
       "revId": "f78927b056c77c98a239b5322760d24e413bcdce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd4b0e59_8c4a93e3",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T00:10:34Z",
+      "side": 0,
+      "message": "Ack, yes.",
+      "parentUuid": "62cf429f_7175fa6f",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 23,
+        "endChar": 28
+      },
+      "revId": "f78927b056c77c98a239b5322760d24e413bcdce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

@@ -111,6 +111,54 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "016872d5_790c41cb",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T00:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4632ecc3_b1367c75",
+      "range": {
+        "startLine": 7,
+        "startChar": 89,
+        "endLine": 7,
+        "endChar": 94
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb273fde_7abe92e3",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T00:10:34Z",
+      "side": 1,
+      "message": "As best I can tell Release is the supported workflow. Since we don\u0027t use GDB/etc. I\u0027ve always had issues with Debug. What\u0027s your experience?",
+      "parentUuid": "582e0053_24aa61e5",
+      "range": {
+        "startLine": 7,
+        "startChar": 81,
+        "endLine": 7,
+        "endChar": 88
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f43c2a1d_b66f2520",
@@ -181,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0144793f_bbefee19",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T00:10:34Z",
+      "side": 1,
+      "message": "Done, typo",
+      "parentUuid": "a2a21273_2ca4475a",
+      "range": {
+        "startLine": 61,
+        "startChar": 15,
+        "endLine": 61,
+        "endChar": 63
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48d09622_6148f34e",
@@ -204,6 +276,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b338b5d_f886d9b9",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T00:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "48d09622_6148f34e",
+      "range": {
+        "startLine": 65,
+        "startChar": 57,
+        "endLine": 65,
+        "endChar": 64
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "649843e5_c96d2a34",
@@ -217,6 +313,30 @@
       "writtenOn": "2021-04-21T21:39:13Z",
       "side": 1,
       "message": "usedebug or eng builds provide root.",
+      "range": {
+        "startLine": 69,
+        "startChar": 13,
+        "endLine": 69,
+        "endChar": 22
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "402a45b2_7fd7f6a6",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T00:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "649843e5_c96d2a34",
       "range": {
         "startLine": 69,
         "startChar": 13,
@@ -287,6 +407,30 @@
       "writtenOn": "2021-04-21T21:39:13Z",
       "side": 1,
       "message": "Can we just keep these included in each block so they can be copied and pasted?  Folks have enough trouble trying to build, these blocks down here are meant to be quick references.\n\nOr if they are the defaults, I think you can just leave them out, or mark them as defaults that are omitted for brevity, but can be tweaked.",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1c43320_b9f02e1d",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T00:10:34Z",
+      "side": 1,
+      "message": "Done, just took them out. They\u0027re defaults now. The only interesting ones are the api levels.",
+      "parentUuid": "d42a70ff_a921f7ee",
       "range": {
         "startLine": 217,
         "startChar": 0,
