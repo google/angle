@@ -161,6 +161,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba17113d_e0f31b42",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T16:06:34Z",
+      "side": 1,
+      "message": "OK thanks. I wasn\u0027t sure from looking at the spec what made sense. LGTM.",
+      "parentUuid": "12d4de65_40963478",
+      "range": {
+        "startLine": 16,
+        "startChar": 12,
+        "endLine": 16,
+        "endChar": 28
+      },
+      "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "80ce1c69_0549418f",
