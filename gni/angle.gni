@@ -156,6 +156,11 @@ declare_args() {
       (is_debug || dcheck_always_on) && !is_mac &&
       (!is_android || ndk_api_level_at_least_26)
 
+  # ISpriteVisual windows cannot be validated and can lead to crashes if an invalid window is
+  # provided to ANGLE. Disable them for non-standalone ANGLE builds. crbug.com/1176118
+  angle_enable_d3d11_compositor_native_window =
+      angle_enable_d3d11 && angle_standalone
+
   # Disable overlay by default
   angle_enable_overlay = false
 

@@ -256,8 +256,6 @@ if (angle_enable_d3d11) {
 
   if (angle_is_winuwp) {
     _d3d11_backend_sources += [
-      "d3d11/converged/CompositorNativeWindow11.cpp",
-      "d3d11/converged/CompositorNativeWindow11.h",
       "d3d11/winrt/CoreWindowNativeWindow.cpp",
       "d3d11/winrt/CoreWindowNativeWindow.h",
       "d3d11/winrt/InspectableNativeWindow.cpp",
@@ -269,10 +267,14 @@ if (angle_enable_d3d11) {
     ]
   } else {
     _d3d11_backend_sources += [
-      "d3d11/converged/CompositorNativeWindow11.cpp",
-      "d3d11/converged/CompositorNativeWindow11.h",
       "d3d11/win32/NativeWindow11Win32.cpp",
       "d3d11/win32/NativeWindow11Win32.h",
+    ]
+  }
+  if (angle_enable_d3d11_compositor_native_window) {
+    _d3d11_backend_sources += [
+      "d3d11/converged/CompositorNativeWindow11.cpp",
+      "d3d11/converged/CompositorNativeWindow11.h",
     ]
   }
 
@@ -315,6 +317,9 @@ if (angle_enable_d3d9) {
 if (angle_enable_d3d11) {
   config("angle_d3d11_backend_config") {
     defines = [ "ANGLE_ENABLE_D3D11" ]
+    if (angle_enable_d3d11_compositor_native_window) {
+      defines += [ "ANGLE_ENABLE_D3D11_COMPOSITOR_NATIVE_WINDOW" ]
+    }
   }
 
   angle_source_set("angle_d3d11_backend") {
