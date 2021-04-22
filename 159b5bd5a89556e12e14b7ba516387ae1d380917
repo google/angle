@@ -110,6 +110,30 @@
       },
       "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "add56f24_c2ef0137",
+        "filename": "src/libGLESv2.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-22T12:48:25Z",
+      "side": 1,
+      "message": "I tested the build with `angle_enable_cl \u003d false` locally, as it is not in the CI.",
+      "parentUuid": "499cbb99_3cca441b",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 232,
+        "endChar": 29
+      },
+      "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
