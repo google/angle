@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9cc5815_5f9f900a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T14:53:04Z",
+      "side": 1,
+      "message": "Is this a refactor-only CL? LGTM if so.",
+      "revId": "a2fa9ab69d669c045de7da20ab2ddd8af612efd7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
