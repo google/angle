@@ -303,6 +303,15 @@ void KHRONOS_APIENTRY BufferSubDataMinimizedProc(GLenum target,
 #endif
 }
 
+void *KHRONOS_APIENTRY MapBufferRangeMinimizedProc(GLenum target,
+                                                   GLintptr offset,
+                                                   GLsizeiptr length,
+                                                   GLbitfield access)
+{
+    access |= GL_MAP_UNSYNCHRONIZED_BIT;
+    return glMapBufferRange(target, offset, length, access);
+}
+
 void KHRONOS_APIENTRY TexImage2DMinimizedProc(GLenum target,
                                               GLint level,
                                               GLint internalformat,
@@ -521,6 +530,11 @@ angle::GenericProc KHRONOS_APIENTRY TraceLoadProc(const char *procName)
         if (strcmp(procName, "glBufferSubData") == 0)
         {
             return reinterpret_cast<angle::GenericProc>(BufferSubDataMinimizedProc);
+        }
+        if (strcmp(procName, "glMapBufferRange") == 0 ||
+            strcmp(procName, "glMapBufferRangeEXT") == 0)
+        {
+            return reinterpret_cast<angle::GenericProc>(MapBufferRangeMinimizedProc);
         }
         if (strcmp(procName, "glTexImage2D") == 0)
         {
