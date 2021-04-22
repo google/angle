@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3aeab5ab_e105ef7a",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-22T13:11:53Z",
+      "side": 1,
+      "message": "I see. In that case I recommend we start off by mirroring the CL API exactly and omitting CLBuffer/CLImage etc if there aren\u0027t CL types for these.",
+      "parentUuid": "049ec66f_d7e951a1",
+      "range": {
+        "startLine": 16,
+        "startChar": 12,
+        "endLine": 16,
+        "endChar": 28
+      },
+      "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "80ce1c69_0549418f",
         "filename": "src/libGLESv2.gni",
         "patchSetId": 1
