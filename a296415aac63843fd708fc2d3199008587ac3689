@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17131679_b9b25cc9",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 934,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-22T16:34:41Z",
+      "side": 1,
+      "message": "MaybeResetResources() resets ResourceIDTypes, and GLsync is not one of those.   Instead, GLsync is a pointer to an opaque type rather than an int (ID), so it can\u0027t be included as part of an enum.",
+      "parentUuid": "03453327_f651e298",
+      "range": {
+        "startLine": 934,
+        "startChar": 5,
+        "endLine": 934,
+        "endChar": 26
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b09c97dd_3e6d216e",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-04-20T19:30:12Z",
       "side": 1,
       "message": "nit: instead of adding this new function, please add a general reset writer function as a place for reset calls that don\u0027t fit in MaybeResetResources.",
+      "range": {
+        "startLine": 1084,
+        "startChar": 8,
+        "endLine": 1084,
+        "endChar": 29
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eab03d63_29185c24",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-22T16:34:41Z",
+      "side": 1,
+      "message": "Done.\n\nI went with ResetOpaqueTypeObjects(), but let me know if there\u0027s a better name for it.",
+      "parentUuid": "b09c97dd_3e6d216e",
       "range": {
         "startLine": 1084,
         "startChar": 8,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b98a8585_393f4085",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-22T16:34:41Z",
+      "side": 1,
+      "message": "Done.\n\n\"Starting\" is more appropriate here, so I went with that since it better matches how it\u0027s used while also matching mStartingBuffers.",
+      "parentUuid": "2df63539_a3970243",
+      "range": {
+        "startLine": 264,
+        "startChar": 18,
+        "endLine": 264,
+        "endChar": 44
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ee93e6c0_84efdc59",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-04-21T22:06:48Z",
       "side": 1,
       "message": "Same as Jamie\u0027s comments above, no need to mention MEC in variable names.  How about mStartingFenceSyncs?",
+      "range": {
+        "startLine": 300,
+        "startChar": 17,
+        "endLine": 300,
+        "endChar": 41
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f0307c1_36584bd5",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-22T16:34:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ee93e6c0_84efdc59",
       "range": {
         "startLine": 300,
         "startChar": 17,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "be6134ab_14f731a6",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-22T16:34:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2f365aed_bdcb4d25",
+      "range": {
+        "startLine": 355,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 57
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e0409e3c_1b19fabe",
@@ -146,6 +266,30 @@
       "writtenOn": "2021-04-20T19:30:12Z",
       "side": 1,
       "message": "does this even need to be public?",
+      "range": {
+        "startLine": 358,
+        "startChar": 9,
+        "endLine": 358,
+        "endChar": 24
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa5b18f0_a30a6f65",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-22T16:34:41Z",
+      "side": 1,
+      "message": "Not yet, though that may change when more functionality is moved from FrameCapture to FrameCaptureShared as part of the multi-context stuff.   It\u0027s easy enough to move if that\u0027s the case though.",
+      "parentUuid": "e0409e3c_1b19fabe",
       "range": {
         "startLine": 358,
         "startChar": 9,
