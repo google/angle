@@ -136,6 +136,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c0df84e_3216c94b",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1084,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-22T17:35:49Z",
+      "side": 1,
+      "message": "Done, to follow conventions.\n\nHowever, I disagree with the \"Maybe\" naming in general.   We are always doing the work, and the \"maybe\" qualification doesn\u0027t add anything useful for the reader.   Rather, it adds unnecessary ambiguity since all of the \"maybe\" functions will always do all of the required work (often without returning any status that indicates if it did it or not, again making the \"maybe\" useless).   In my opinion, just because there isn\u0027t any work to do (i.e., the list is empty) doesn\u0027t justify the \"maybe\" since the caller doesn\u0027t care - they still have to make the call in the first place and always expect that all of the work will be done, including no work.\n\nTaking the \"maybe\" naming to its logical conclusion, most functions should be prefixed with \"maybe\", since they can all return without doing anything: glMaybeDrawArrays (scissor is 0, nothing to draw), MaybeReset (all of the lists are empty, nothing to clear()), etc.",
+      "parentUuid": "1345df28_1883d95d",
+      "range": {
+        "startLine": 1084,
+        "startChar": 8,
+        "endLine": 1084,
+        "endChar": 29
+      },
+      "revId": "a296415aac63843fd708fc2d3199008587ac3689",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2df63539_a3970243",
