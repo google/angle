@@ -137,6 +137,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "12d4de65_40963478",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-22T15:57:27Z",
+      "side": 1,
+      "message": "I have checked the differences between the different memory objects, and they are indeed so small that it makes more sense here to use a flag instead of separate classes, though the spec indicates different object types. So I have remove the classes inherited from cl::Memory.",
+      "parentUuid": "0e53ece6_377401bc",
+      "range": {
+        "startLine": 16,
+        "startChar": 12,
+        "endLine": 16,
+        "endChar": 28
+      },
+      "revId": "159b5bd5a89556e12e14b7ba516387ae1d380917",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "80ce1c69_0549418f",
