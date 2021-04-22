@@ -24,6 +24,19 @@
 #include <functional>
 #include <sstream>
 
+// When --minimize-gpu-work is specified, we want to reduce GPU work to minimum and lift up the CPU
+// overhead to surface so that we can see how much CPU overhead each driver has for each app trace.
+// On some driver(s) the bufferSubData/texSubImage calls end up dominating the frame time when the
+// actual GPU work is minimized. Even reducing the texSubImage calls to only update 1x1 area is not
+// enough. The driver may be implementing copy on write by cloning the entire texture to another
+// memory storage for texSubImage call. While this information is also important for performance,
+// they should be evaluated separately in real app usage scenario, or write stand alone tests for
+// these. For the purpose of CPU overhead and avoid data copy to dominate the trace, I am using this
+// flag to noop the texSubImage and bufferSubData call when --minimize-gpu-work is specified. Feel
+// free to disable this when you have other needs. Or it can be turned to another run time option
+// when desired.
+#define NOOP_SUBDATA_SUBIMAGE_FOR_MINIMIZE_GPU_WORK
+
 using namespace angle;
 using namespace egl_platform;
 
@@ -285,7 +298,9 @@ void KHRONOS_APIENTRY BufferSubDataMinimizedProc(GLenum target,
                                                  GLsizeiptr size,
                                                  const void *data)
 {
+#if !defined(NOOP_SUBDATA_SUBIMAGE_FOR_MINIMIZE_GPU_WORK)
     glBufferSubData(target, offset, 1, data);
+#endif
 }
 
 void KHRONOS_APIENTRY TexImage2DMinimizedProc(GLenum target,
@@ -298,7 +313,17 @@ void KHRONOS_APIENTRY TexImage2DMinimizedProc(GLenum target,
                                               GLenum type,
                                               const void *pixels)
 {
+    GLint unpackBuffer = 0;
+    glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &unpackBuffer);
+    if (unpackBuffer)
+    {
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    }
     glTexImage2D(target, level, internalformat, width, height, border, format, type, nullptr);
+    if (unpackBuffer)
+    {
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
+    }
 }
 
 void KHRONOS_APIENTRY TexSubImage2DMinimizedProc(GLenum target,
@@ -311,7 +336,9 @@ void KHRONOS_APIENTRY TexSubImage2DMinimizedProc(GLenum target,
                                                  GLenum type,
                                                  const void *pixels)
 {
+#if !defined(NOOP_SUBDATA_SUBIMAGE_FOR_MINIMIZE_GPU_WORK)
     glTexSubImage2D(target, level, xoffset, yoffset, 1, 1, format, type, pixels);
+#endif
 }
 
 void KHRONOS_APIENTRY TexImage3DMinimizedProc(GLenum target,
@@ -325,8 +352,18 @@ void KHRONOS_APIENTRY TexImage3DMinimizedProc(GLenum target,
                                               GLenum type,
                                               const void *pixels)
 {
+    GLint unpackBuffer = 0;
+    glGetIntegerv(GL_PIXEL_UNPACK_BUFFER_BINDING, &unpackBuffer);
+    if (unpackBuffer)
+    {
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+    }
     glTexImage3D(target, level, internalformat, width, height, depth, border, format, type,
                  nullptr);
+    if (unpackBuffer)
+    {
+        glBindBuffer(GL_PIXEL_UNPACK_BUFFER, unpackBuffer);
+    }
 }
 
 void KHRONOS_APIENTRY TexSubImage3DMinimizedProc(GLenum target,
@@ -341,7 +378,9 @@ void KHRONOS_APIENTRY TexSubImage3DMinimizedProc(GLenum target,
                                                  GLenum type,
                                                  const void *pixels)
 {
+#if !defined(NOOP_SUBDATA_SUBIMAGE_FOR_MINIMIZE_GPU_WORK)
     glTexSubImage3D(target, level, xoffset, yoffset, zoffset, 1, 1, 1, format, type, pixels);
+#endif
 }
 
 void KHRONOS_APIENTRY GenerateMipmapMinimizedProc(GLenum target)
