@@ -1194,10 +1194,15 @@ inline unsigned long ScanReverse(uint64_t bits)
 #    if defined(ANGLE_IS_64_BIT_CPU)
     return static_cast<unsigned long>(sizeof(uint64_t) * CHAR_BIT - 1 - __builtin_clzll(bits));
 #    else
-    int tempResult = static_cast<uint32_t>(bits >> 32) == 0
-                         ? __builtin_clzll(static_cast<int32_t>(bits))
-                         : (__builtin_clzll(static_cast<int32_t>(bits >> 32)) + 32);
-    return static_cast<unsigned long>(sizeof(uint64_t) * CHAR_BIT - 1 - tempResult);
+    if (static_cast<uint32_t>(bits >> 32) == 0)
+    {
+        return sizeof(uint32_t) * CHAR_BIT - 1 - __builtin_clz(static_cast<uint32_t>(bits));
+    }
+    else
+    {
+        return sizeof(uint32_t) * CHAR_BIT - 1 - __builtin_clz(static_cast<uint32_t>(bits >> 32)) +
+               32;
+    }
 #    endif  // defined(ANGLE_IS_64_BIT_CPU)
 }
 #endif  // defined(ANGLE_PLATFORM_POSIX)
