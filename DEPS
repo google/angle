@@ -1012,6 +1012,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/ludo_king': {
+      'packages': [
+        {
+            'package': 'angle/traces/ludo_king',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/magic_tiles_3': {
       'packages': [
         {

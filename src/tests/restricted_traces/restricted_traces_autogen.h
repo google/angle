@@ -95,6 +95,7 @@ enum class RestrictedTraceID
     league_of_legends_wild_rift,
     lego_legacy,
     lineage_m,
+    ludo_king,
     magic_tiles_3,
     manhattan_10,
     manhattan_31,

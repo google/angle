@@ -53,6 +53,7 @@
 #include "league_of_legends_wild_rift/league_of_legends_wild_rift_capture_context1.h"
 #include "lego_legacy/lego_legacy_capture_context1.h"
 #include "lineage_m/lineage_m_capture_context1.h"
+#include "ludo_king/ludo_king_capture_context1.h"
 #include "magic_tiles_3/magic_tiles_3_capture_context1.h"
 #include "manhattan_10/manhattan_10_capture_context1.h"
 #include "manhattan_31/manhattan_31_capture_context1.h"
@@ -289,6 +290,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {lineage_m::kReplayContextClientMajorVersion, lineage_m::kReplayContextClientMinorVersion,
       lineage_m::kReplayFrameStart, lineage_m::kReplayFrameEnd, lineage_m::kReplayDrawSurfaceWidth,
       lineage_m::kReplayDrawSurfaceHeight, "lineage_m"}},
+    {RestrictedTraceID::ludo_king,
+     {ludo_king::kReplayContextClientMajorVersion, ludo_king::kReplayContextClientMinorVersion,
+      ludo_king::kReplayFrameStart, ludo_king::kReplayFrameEnd, ludo_king::kReplayDrawSurfaceWidth,
+      ludo_king::kReplayDrawSurfaceHeight, "ludo_king"}},
     {RestrictedTraceID::magic_tiles_3,
      {magic_tiles_3::kReplayContextClientMajorVersion,
       magic_tiles_3::kReplayContextClientMinorVersion, magic_tiles_3::kReplayFrameStart,
