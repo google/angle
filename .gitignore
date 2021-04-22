@@ -69,6 +69,7 @@
 /third_party/vulkan-deps
 /third_party/vulkan_memory_allocator
 /third_party/zlib
+/tools/android/errorprone_plugin
 /tools/clang
 /tools/flex-bison/linux/bison
 /tools/flex-bison/linux/flex
@@ -84,6 +85,7 @@
 /tools/memory
 /tools/protoc_wrapper
 /tools/skia_goldctl
+/tools/swarming_client
 angle_debug.txt
 build
 buildtools/

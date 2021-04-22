@@ -70,6 +70,7 @@ ANGLE_CHROMIUM_DEPS = [
     'third_party/r8',
     'third_party/turbine',
     'third_party/zlib',
+    'tools/android/errorprone_plugin',
     'tools/clang',
     'tools/clang/dsymutil',
     'tools/luci-go',
@@ -80,6 +81,7 @@ ANGLE_CHROMIUM_DEPS = [
     'tools/skia_goldctl/linux',
     'tools/skia_goldctl/mac',
     'tools/skia_goldctl/win',
+    'tools/swarming_client',
 ]
 
 ANGLE_URL = 'https://chromium.googlesource.com/angle/angle'

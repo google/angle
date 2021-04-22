@@ -503,6 +503,11 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'tools/android/errorprone_plugin': {
+    'url': '{chromium_git}/chromium/src/tools/android/errorprone_plugin@e81dcab66095e6eec2cde2f76720b9a82c96d793',
+    'condition': 'checkout_android and not build_with_chromium',
+  },
+
   'tools/clang': {
     'url': '{chromium_git}/chromium/src/tools/clang.git@7a6a1f2ea2593e9308910f58bb82a54dac351b71',
     'condition': 'not build_with_chromium',
@@ -589,6 +594,11 @@ deps = {
       ],
       'dep_type': 'cipd',
       'condition': 'checkout_mac and not build_with_chromium',
+  },
+
+  'tools/swarming_client': {
+    'url': '{chromium_git}/infra/luci/client-py.git@a32a1607f6093d338f756c7e7c7b4333b0c50c9c',
+    'condition': 'checkout_android and not build_with_chromium',
   },
 
   # === ANGLE Restricted Trace Generated Code Start ===
