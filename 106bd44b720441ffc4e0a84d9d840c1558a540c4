@@ -102,6 +102,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "684c7e93_81d7d789",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1222,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-22T01:41:05Z",
+      "side": 1,
+      "message": "Ok the commit message seems inaccurate then.\n\nAlso, checkIsNotUnsizedArray first produces a compile error, then sizes the array I presume to ensure some degree of sanity. It should be fine to use it, but I\u0027ll leave the judgement to Jamie.",
+      "parentUuid": "8e40da62_e7127da5",
+      "revId": "106bd44b720441ffc4e0a84d9d840c1558a540c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bcb40e54_ae7d3de6",
         "filename": "src/compiler/translator/ParseContext.cpp",
         "patchSetId": 3
