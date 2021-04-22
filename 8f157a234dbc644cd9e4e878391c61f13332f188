@@ -159,6 +159,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b1ccf3ea_139095ae",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-22T14:08:02Z",
+      "side": 1,
+      "message": "I don\u0027t believe I\u0027ve had any issues with default Debug build.\n\nMy typical setup is Debug++, which I know has some redundancy, but I don\u0027t want defaults changing out from under me:\n\n    target_os \u003d \"android\"\n    target_cpu \u003d \"arm64\"\n    android32_ndk_api_level \u003d 26\n    android64_ndk_api_level \u003d 26\n    angle_libs_suffix \u003d \"_angle\"\n    ffmpeg_branding \u003d \"Chrome\"\n    is_component_build \u003d false\n    symbol_level \u003d 1\n    is_debug \u003d true\n    dcheck_always_on \u003d true\n    angle_enable_vulkan \u003d true\n    angle_enable_vulkan_validation_layers \u003d true\n    build_angle_trace_perf_tests \u003d true\n    angle_with_capture_by_default \u003d true\n    use_goma \u003d true\n    angle_enable_trace \u003d true\n    angle_enable_trace_android_logcat \u003d true\n    angle_expose_non_conformant_extensions_and_versions \u003d true\n\nOtherwise, I use Performance args for frametime measurement.  I only use Release with asserts when I want to mimic the bots.\n\nI don\u0027t think it matters that much which is the default up here.  Probably best to default to something that gives reasonable performance.",
+      "parentUuid": "fb273fde_7abe92e3",
+      "range": {
+        "startLine": 7,
+        "startChar": 81,
+        "endLine": 7,
+        "endChar": 88
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f43c2a1d_b66f2520",
@@ -431,6 +455,30 @@
       "side": 1,
       "message": "Done, just took them out. They\u0027re defaults now. The only interesting ones are the api levels.",
       "parentUuid": "d42a70ff_a921f7ee",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 219,
+        "endChar": 28
+      },
+      "revId": "8f157a234dbc644cd9e4e878391c61f13332f188",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f73a4b93_9c0d164f",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-22T14:08:02Z",
+      "side": 1,
+      "message": "Tempting to keep them in for reference so it is clear what API level we are compiling for, and how to change it, would just need to make it clear they are not required.  Fine to drop though, we can always dig them up.",
+      "parentUuid": "c1c43320_b9f02e1d",
       "range": {
         "startLine": 217,
         "startChar": 0,

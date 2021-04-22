@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca6dbe73_84405aea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-22T14:08:02Z",
+      "side": 1,
+      "message": "Thanks Jamie for incorporating changes.  I know updating documentation is tedious.\n\nLGTM with one suggestion.",
+      "revId": "4a3f1246442b4a18ab7c4c58702dd28ba2873d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d58d03fe_9a6a678e",
+        "filename": "doc/DevSetupAndroid.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-22T14:08:02Z",
+      "side": 1,
+      "message": "Suggest:\n\"For root access, see [Android documentation] for how to build from source.\"\n\nNot clear why building from source is mentioned, otherwise.",
+      "range": {
+        "startLine": 73,
+        "startChar": 41,
+        "endLine": 73,
+        "endChar": 77
+      },
+      "revId": "4a3f1246442b4a18ab7c4c58702dd28ba2873d4b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
