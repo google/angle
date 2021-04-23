@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fabb8e24_e67b86cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2021-04-23T13:59:48Z",
+      "side": 1,
+      "message": "(removing it unconditionally works for me too of course if jmadill is happy with that :))",
+      "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d3239c10_15ca2596",
