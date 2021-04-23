@@ -16,6 +16,29 @@
       "message": "I didn\u0027t see a way to avoid the reinterpret_cast in a simple way, so I added checks to ensure that both types have the same size, and that the ID type has a value member, which is of the same type as the source ID.\nThis makes sure that the risky cast is only applied to the targeted compatible types.",
       "revId": "f6aad8eb0104d5a59635bd9965fa64606bdc08fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d51acad9_552859ba",
+        "filename": "src/common/PackedEnums.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 767,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-23T17:31:50Z",
+      "side": 1,
+      "message": "static_assert might be a bit more legible, otherwise LGTM.",
+      "range": {
+        "startLine": 763,
+        "startChar": 13,
+        "endLine": 767,
+        "endChar": 36
+      },
+      "revId": "f6aad8eb0104d5a59635bd9965fa64606bdc08fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
