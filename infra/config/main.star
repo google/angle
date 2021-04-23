@@ -143,7 +143,7 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
         properties["test_mode"] = "trace_tests"
     elif toolchain == "gcc":
         properties["test_mode"] = "checkout_only"
-    elif debug:
+    elif debug or toolchain == "msvc":
         properties["test_mode"] = "compile_only"
     else:
         properties["test_mode"] = "compile_and_test"
