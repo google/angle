@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74be73a0_f0472b48",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-23T13:14:33Z",
+      "side": 1,
+      "message": "I didn\u0027t see a way to avoid the reinterpret_cast in a simple way, so I added checks to ensure that both types have the same size, and that the ID type has a value member, which is of the same type as the source ID.\nThis makes sure that the risky cast is only applied to the targeted compatible types.",
+      "revId": "f6aad8eb0104d5a59635bd9965fa64606bdc08fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
