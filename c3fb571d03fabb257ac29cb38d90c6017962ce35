@@ -33,6 +33,23 @@
       "message": "I think we need it the way it was before, otherwise it\u0027ll block rolls of build into ANGLE.",
       "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3239c10_15ca2596",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2021-04-23T13:40:43Z",
+      "side": 1,
+      "message": "Maybe add a \"When rolling that in, either fix what it flags, or add Wno-deprecated-copy-user-provided-copy/dtor to disable just the new warnings\" to the comment to make this more actionable.",
+      "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
