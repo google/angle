@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8190870e_051f3a89",
+        "filename": "gni/angle.gni",
+        "patchSetId": 1
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-23T21:04:07Z",
+      "side": 1,
+      "message": "nit: we should probably just merge this block with another declare_args block. there\u0027s already too many in this file.",
+      "range": {
+        "startLine": 191,
+        "startChar": 0,
+        "endLine": 196,
+        "endChar": 0
+      },
+      "revId": "fc84a4e4e0a4b97f9f04fd5661021e5d40a6e35c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
