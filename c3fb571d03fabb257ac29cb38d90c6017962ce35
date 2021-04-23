@@ -138,6 +138,24 @@
       "parentUuid": "dff67aa3_d5c0d7d4",
       "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c854e5f2_8ea8e955",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1002927
+      },
+      "writtenOn": "2021-04-23T14:07:19Z",
+      "side": 1,
+      "message": "Turned it off now. I\u0027ve poked Abseil in b/186211046.",
+      "parentUuid": "65374848_27def039",
+      "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
