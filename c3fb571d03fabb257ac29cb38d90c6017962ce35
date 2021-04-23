@@ -103,6 +103,24 @@
       "parentUuid": "b241b8c0_1e35a833",
       "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65374848_27def039",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-23T13:54:30Z",
+      "side": 1,
+      "message": "I see. Please turn it off unconditionally, and if you can, poke Abseil. It\u0027s not a very important warning.",
+      "parentUuid": "dff67aa3_d5c0d7d4",
+      "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
