@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86b63023_891ada83",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-23T16:49:43Z",
+      "side": 1,
+      "message": "Without this, I do see quite some non-frag activity with AGI + manhattan, with this total GPU time is less than 1ms now. ",
+      "revId": "0237c6c327464527c302bd5bd2b9d7cd850408f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
