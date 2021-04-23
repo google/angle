@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db39a6a6_3728c22f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002927
+      },
+      "writtenOn": "2021-04-23T13:24:52Z",
+      "side": 1,
+      "message": "The warning is firing with newer versions of Clang (see bug). This blocks updating Clang in Chromium.\n\nFAILED: obj/third_party/angle/preprocessor/Lexer.o \n[...]\nIn file included from ../../third_party/angle/src/compiler/preprocessor/Lexer.cpp:7:\nIn file included from ../../third_party/angle/src/compiler/preprocessor/Lexer.h:10:\nIn file included from ../../third_party/angle/src/common/angleutils.h:15:\nIn file included from ../../third_party/abseil-cpp/absl/container/flat_hash_map.h:40:\nIn file included from ../../third_party/abseil-cpp/absl/container/internal/hash_function_defaults.h:56:\nIn file included from ../../third_party/abseil-cpp/absl/strings/cord.h:78:\n../../third_party/abseil-cpp/absl/functional/function_ref.h:124:16: error: definition of implicit copy constructor for \u0027FunctionRef\u003cvoid (absl::string_view)\u003e\u0027 is deprecated because it has a user-declared copy assignment operator [-Werror,-Wdeprecated-copy]\n  FunctionRef\u0026 operator\u003d(const FunctionRef\u0026 rhs) \u003d delete;\n               ^\n../../third_party/abseil-cpp/absl/strings/cord.h:1324:33: note: in implicit copy constructor for \u0027absl::FunctionRef\u003cvoid (absl::string_view)\u003e\u0027 first required here\n    return ForEachChunkAux(rep, callback);\n                                ^\n1 error generated.",
+      "revId": "4c3fed5f9a2d1bb3dca5cb4ef7ee24d5b582f80d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
