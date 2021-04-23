@@ -52,7 +52,7 @@ namespace vk
 {
 struct Format;
 
-static constexpr size_t kMaxExtensionNames = 200;
+static constexpr size_t kMaxExtensionNames = 400;
 using ExtensionNameList                    = angle::FixedVector<const char *, kMaxExtensionNames>;
 
 // Process GPU memory reports
