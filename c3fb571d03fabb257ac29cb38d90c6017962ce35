@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6d658a3d_08af6d88",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-23T13:49:09Z",
+      "side": 1,
+      "message": "OK, LGTM if the comment is clear about what action to take. I\u0027d still prefer if we don\u0027t conditionalize this behind build_with_chromium.",
+      "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d3239c10_15ca2596",
@@ -48,6 +65,24 @@
       "writtenOn": "2021-04-23T13:40:43Z",
       "side": 1,
       "message": "Maybe add a \"When rolling that in, either fix what it flags, or add Wno-deprecated-copy-user-provided-copy/dtor to disable just the new warnings\" to the comment to make this more actionable.",
+      "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b241b8c0_1e35a833",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-23T13:49:09Z",
+      "side": 1,
+      "message": "I don\u0027t think we can fix the warning. It seems to be in abseil and not something that\u0027s related to a particular usage of a class, just a general warning from including the header. Saying to switch to disable just the new warnings seems good.",
+      "parentUuid": "d3239c10_15ca2596",
       "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
