@@ -209,7 +209,6 @@ config("extra_warnings") {
     if (!use_xcode_clang) {
       # Mac catalyst uses a clang version that doesn't have these.
       cflags += [
-        "-Wdeprecated-copy",
         "-Wsuggest-destructor-override",
         "-Wsuggest-override",
       ]
