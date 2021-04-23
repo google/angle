@@ -892,6 +892,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/gardenscapes': {
+      'packages': [
+        {
+            'package': 'angle/traces/gardenscapes',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/google_maps': {
       'packages': [
         {

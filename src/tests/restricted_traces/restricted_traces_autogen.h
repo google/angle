@@ -83,6 +83,7 @@ enum class RestrictedTraceID
     fate_grand_order,
     fifa_mobile,
     free_fire,
+    gardenscapes,
     google_maps,
     happy_color,
     hay_day,
