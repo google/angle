@@ -16,6 +16,69 @@
       "message": "PTAL",
       "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed65c45c_50f44258",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-23T21:30:45Z",
+      "side": 1,
+      "message": "Sigh, one more place to remember to change mixins when upgrading drivers.\n\nCan you also copy https://source.chromium.org/chromium/chromium/src/+/master:testing/buildbot/PRESUBMIT.py to ANGLE and make sure it passes?\n\nI think you\u0027d also want test_suite_exceptions.pyl, which restricts Win Intel to 1 process (though it doesn\u0027t seem to help, bots still get killed by end2end tests).\n\nI also didn\u0027t check if the test sets match, we can do it later.",
+      "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6707305c_06eddfab",
+        "filename": "infra/specs/test_suites.pyl",
+        "patchSetId": 18
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-23T21:30:45Z",
+      "side": 1,
+      "message": "Probably need to remove this.",
+      "range": {
+        "startLine": 23,
+        "startChar": 21,
+        "endLine": 23,
+        "endChar": 41
+      },
+      "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13a3fd64_32573f9d",
+        "filename": "infra/specs/waterfalls.pyl",
+        "patchSetId": 18
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-23T21:30:45Z",
+      "side": 1,
+      "message": "These don\u0027t match the existing builders, e.g. mac-rel.\nSo there is no mb_config for these builders.",
+      "range": {
+        "startLine": 52,
+        "startChar": 7,
+        "endLine": 52,
+        "endChar": 18
+      },
+      "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
