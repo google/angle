@@ -46,6 +46,7 @@
 #include "hay_day/hay_day_capture_context1.h"
 #include "hearthstone/hearthstone_capture_context1.h"
 #include "hill_climb_racing/hill_climb_racing_capture_context1.h"
+#include "homescapes/homescapes_capture_context1.h"
 #include "idle_heroes/idle_heroes_capture_context2.h"
 #include "junes_journey/junes_journey_capture_context1.h"
 #include "kartrider_rush/kartrider_rush_capture_context1.h"
@@ -257,6 +258,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       hill_climb_racing::kReplayContextClientMinorVersion, hill_climb_racing::kReplayFrameStart,
       hill_climb_racing::kReplayFrameEnd, hill_climb_racing::kReplayDrawSurfaceWidth,
       hill_climb_racing::kReplayDrawSurfaceHeight, "hill_climb_racing"}},
+    {RestrictedTraceID::homescapes,
+     {homescapes::kReplayContextClientMajorVersion, homescapes::kReplayContextClientMinorVersion,
+      homescapes::kReplayFrameStart, homescapes::kReplayFrameEnd,
+      homescapes::kReplayDrawSurfaceWidth, homescapes::kReplayDrawSurfaceHeight, "homescapes"}},
     {RestrictedTraceID::idle_heroes,
      {idle_heroes::kReplayContextClientMajorVersion, idle_heroes::kReplayContextClientMinorVersion,
       idle_heroes::kReplayFrameStart, idle_heroes::kReplayFrameEnd,

@@ -1118,6 +1118,22 @@ angle_restricted_traces = [
     ],
   ],
   [
+    "homescapes",
+    1,
+    [
+      "homescapes/homescapes_capture_context1_frame001.cpp",
+      "homescapes/homescapes_capture_context1_frame002.cpp",
+      "homescapes/homescapes_capture_context1_frame003.cpp",
+      "homescapes/homescapes_capture_context1_frame004.cpp",
+      "homescapes/homescapes_capture_context1_frame005.cpp",
+      "homescapes/homescapes_capture_context1_frame006.cpp",
+      "homescapes/homescapes_capture_context1_frame007.cpp",
+      "homescapes/homescapes_capture_context1_frame008.cpp",
+      "homescapes/homescapes_capture_context1_frame009.cpp",
+      "homescapes/homescapes_capture_context1_frame010.cpp",
+    ],
+  ],
+  [
     "idle_heroes",
     2,
     [

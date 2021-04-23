@@ -88,6 +88,7 @@ enum class RestrictedTraceID
     hay_day,
     hearthstone,
     hill_climb_racing,
+    homescapes,
     idle_heroes,
     junes_journey,
     kartrider_rush,
