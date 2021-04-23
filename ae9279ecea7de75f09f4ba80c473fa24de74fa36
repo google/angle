@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa44d669_1bbc2048",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-23T20:28:41Z",
+      "side": 1,
+      "message": "This CL includes mainly the validation stubs for OpenCL. It also includes a type check for the PackParam template, to make sure that the potentially risky reinterpret_cast is only applied for the intended object types.",
+      "revId": "ae9279ecea7de75f09f4ba80c473fa24de74fa36",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
