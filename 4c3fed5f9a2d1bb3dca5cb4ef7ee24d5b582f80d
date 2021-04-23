@@ -16,6 +16,23 @@
       "message": "The warning is firing with newer versions of Clang (see bug). This blocks updating Clang in Chromium.\n\nFAILED: obj/third_party/angle/preprocessor/Lexer.o \n[...]\nIn file included from ../../third_party/angle/src/compiler/preprocessor/Lexer.cpp:7:\nIn file included from ../../third_party/angle/src/compiler/preprocessor/Lexer.h:10:\nIn file included from ../../third_party/angle/src/common/angleutils.h:15:\nIn file included from ../../third_party/abseil-cpp/absl/container/flat_hash_map.h:40:\nIn file included from ../../third_party/abseil-cpp/absl/container/internal/hash_function_defaults.h:56:\nIn file included from ../../third_party/abseil-cpp/absl/strings/cord.h:78:\n../../third_party/abseil-cpp/absl/functional/function_ref.h:124:16: error: definition of implicit copy constructor for \u0027FunctionRef\u003cvoid (absl::string_view)\u003e\u0027 is deprecated because it has a user-declared copy assignment operator [-Werror,-Wdeprecated-copy]\n  FunctionRef\u0026 operator\u003d(const FunctionRef\u0026 rhs) \u003d delete;\n               ^\n../../third_party/abseil-cpp/absl/strings/cord.h:1324:33: note: in implicit copy constructor for \u0027absl::FunctionRef\u003cvoid (absl::string_view)\u003e\u0027 first required here\n    return ForEachChunkAux(rep, callback);\n                                ^\n1 error generated.",
       "revId": "4c3fed5f9a2d1bb3dca5cb4ef7ee24d5b582f80d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8bc01cfc_6377b58f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001629
+      },
+      "writtenOn": "2021-04-23T13:29:15Z",
+      "side": 1,
+      "message": "Hm, this turns it off in upstream angle builds, and removes the protection.\n\njmadill, as background, upstream clang adds a new warning to this warning group and the clang tot bots are broken for this.\n\nOptions:\n1. Turn off the flag here. Not ideal since it removes the flag upstream.\n2. Turn off just the new behavior, but the new flag is only understood at trunk clang, so we\u0027d have to add it if (llvm_force_head_revision) and then promote it on the next clang roll. That makes the next clang roll multi-repo, which makes this a non-option\n3. add this flag only if !build_with_chromium and then you can sort it out when you roll in new clang\n\n(3) seems best to me. Maybe we should add all the extra warnings in this block here only if !build_with_chromium since each of them potentially has the same problem?",
+      "revId": "4c3fed5f9a2d1bb3dca5cb4ef7ee24d5b582f80d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
