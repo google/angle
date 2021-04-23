@@ -85,6 +85,24 @@
       "parentUuid": "d3239c10_15ca2596",
       "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dff67aa3_d5c0d7d4",
+        "filename": "BUILD.gn",
+        "patchSetId": 2
+      },
+      "lineNbr": 217,
+      "author": {
+        "id": 1002927
+      },
+      "writtenOn": "2021-04-23T13:52:26Z",
+      "side": 1,
+      "message": "Right, the warning is in Abseil, so that\u0027s annoying.\n\nAlso, it\u0027s not under the new flags, it\u0027s under the old -Wdeprecated-copy flag.\n\nSo the action is really to turn off -Wdeprecated-copy, or poke Abseil.\n\nPersonally I\u0027d just turn it off unconditionally, as it doesn\u0027t appear to be very helpful.",
+      "parentUuid": "b241b8c0_1e35a833",
+      "revId": "c3fb571d03fabb257ac29cb38d90c6017962ce35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
