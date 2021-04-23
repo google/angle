@@ -942,6 +942,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/higgs_domino_island': {
+      'packages': [
+        {
+            'package': 'angle/traces/higgs_domino_island',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/hill_climb_racing': {
       'packages': [
         {

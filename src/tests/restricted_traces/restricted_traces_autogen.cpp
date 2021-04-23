@@ -46,6 +46,7 @@
 #include "happy_color/happy_color_capture_context1.h"
 #include "hay_day/hay_day_capture_context1.h"
 #include "hearthstone/hearthstone_capture_context1.h"
+#include "higgs_domino_island/higgs_domino_island_capture_context2.h"
 #include "hill_climb_racing/hill_climb_racing_capture_context1.h"
 #include "homescapes/homescapes_capture_context1.h"
 #include "idle_heroes/idle_heroes_capture_context2.h"
@@ -259,6 +260,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
      {hearthstone::kReplayContextClientMajorVersion, hearthstone::kReplayContextClientMinorVersion,
       hearthstone::kReplayFrameStart, hearthstone::kReplayFrameEnd,
       hearthstone::kReplayDrawSurfaceWidth, hearthstone::kReplayDrawSurfaceHeight, "hearthstone"}},
+    {RestrictedTraceID::higgs_domino_island,
+     {higgs_domino_island::kReplayContextClientMajorVersion,
+      higgs_domino_island::kReplayContextClientMinorVersion, higgs_domino_island::kReplayFrameStart,
+      higgs_domino_island::kReplayFrameEnd, higgs_domino_island::kReplayDrawSurfaceWidth,
+      higgs_domino_island::kReplayDrawSurfaceHeight, "higgs_domino_island"}},
     {RestrictedTraceID::hill_climb_racing,
      {hill_climb_racing::kReplayContextClientMajorVersion,
       hill_climb_racing::kReplayContextClientMinorVersion, hill_climb_racing::kReplayFrameStart,

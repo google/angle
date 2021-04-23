@@ -88,6 +88,7 @@ enum class RestrictedTraceID
     happy_color,
     hay_day,
     hearthstone,
+    higgs_domino_island,
     hill_climb_racing,
     homescapes,
     idle_heroes,
