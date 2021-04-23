@@ -761,6 +761,14 @@ template <typename EnumT, typename FromT>
 typename std::enable_if<std::is_pointer<FromT>::value && !std::is_enum<EnumT>::value, EnumT>::type
 PackParam(FromT from)
 {
+    static_assert(sizeof(typename std::remove_pointer<EnumT>::type) ==
+                      sizeof(typename std::remove_pointer<FromT>::type),
+                  "Types have different sizes");
+    static_assert(
+        std::is_same<
+            decltype(std::remove_pointer<EnumT>::type::value),
+            typename std::remove_const<typename std::remove_pointer<FromT>::type>::type>::value,
+        "Data types are different");
     return reinterpret_cast<EnumT>(from);
 }
 
