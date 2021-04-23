@@ -16,6 +16,29 @@
       "message": "This is a draft commit for reviewing the direction I went to implement Mid-Execution-Capture\nfor GLES1.\nFor easier review I did not yet factor out common code to helper functions,\nbut duplicated the CaptureMidExecutionSetup function and removed unavailable\ncapture calls by validating execution and Android ES1 of Summoners War and Dr. Driving,\nand in addition checking the GLES1 spec.\n\nKnow places where I removed capture calls that have potential replacements\nin GLES1 but were not ported yet are marked with `TODO(Lubosz)`.\n\nThe patch was tested with Summoners War and Dr. Driving, where it resolves\ncrashes on Android Native GLES1 that were caused by unavailable calls when\ncapturing with MEC.",
       "revId": "629c11929d295bf859df0a8505e16eabe6bd8b1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d555dac_e3695547",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5234,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-23T14:40:27Z",
+      "side": 1,
+      "message": "Generally I think forking here and calling an ES1 version of Capture* is a good approach.  Then move any common portions to helpers they can both call.",
+      "range": {
+        "startLine": 5234,
+        "startChar": 0,
+        "endLine": 5234,
+        "endChar": 31
+      },
+      "revId": "629c11929d295bf859df0a8505e16eabe6bd8b1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
