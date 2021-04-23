@@ -10,11 +10,14 @@
 #ifndef LIBANGLE_CLCOMMANDQUEUE_H_
 #define LIBANGLE_CLCOMMANDQUEUE_H_
 
+#include "libANGLE/CLtypes.h"
+
 namespace cl
 {
 class CommandQueue final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl

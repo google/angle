@@ -10,11 +10,14 @@
 #ifndef LIBANGLE_CLPLATFORM_H_
 #define LIBANGLE_CLPLATFORM_H_
 
+#include "libANGLE/CLtypes.h"
+
 namespace cl
 {
 class Platform final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl

@@ -9,11 +9,14 @@
 #ifndef LIBANGLE_CLPROGRAM_H_
 #define LIBANGLE_CLPROGRAM_H_
 
+#include "libANGLE/CLtypes.h"
+
 namespace cl
 {
 class Program final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl

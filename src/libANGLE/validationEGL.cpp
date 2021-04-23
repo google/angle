@@ -6,7 +6,7 @@
 
 // validationEGL.cpp: Validation functions for generic EGL entry point parameters
 
-#include "libANGLE/validationEGL.h"
+#include "libANGLE/validationEGL_autogen.h"
 
 #include "common/utilities.h"
 #include "libANGLE/Config.h"

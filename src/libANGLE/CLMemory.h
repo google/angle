@@ -4,17 +4,20 @@
 // found in the LICENSE file.
 //
 
-// CLMemory.h: Defines the cl::Memory class, which is a memory object and the base class for OpenCL
-// objects such as Buffer, Image and Pipe.
+// CLMemory.h: Defines the cl::Memory class, which is a memory object and represents OpenCL objects
+// such as buffers, images and pipes.
 
 #ifndef LIBANGLE_CLMEMORY_H_
 #define LIBANGLE_CLMEMORY_H_
+
+#include "libANGLE/CLtypes.h"
 
 namespace cl
 {
 class Memory final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl

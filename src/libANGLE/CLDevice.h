@@ -10,11 +10,14 @@
 #ifndef LIBANGLE_CLDEVICE_H_
 #define LIBANGLE_CLDEVICE_H_
 
+#include "libANGLE/CLtypes.h"
+
 namespace cl
 {
 class Device final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl

@@ -10,22 +10,12 @@
 #ifndef LIBGLESV2_CL_STUBS_AUTOGEN_H_
 #define LIBGLESV2_CL_STUBS_AUTOGEN_H_
 
-#include "angle_cl.h"
+#include "libANGLE/CLtypes.h"
 
 #include "common/PackedCLEnums_autogen.h"
 
 namespace cl
 {
-class CommandQueue;
-class Context;
-class Device;
-class Event;
-class Kernel;
-class Memory;
-class Platform;
-class Program;
-class Sampler;
-
 cl_int GetPlatformIDs(cl_uint num_entries, Platform **platformsPacked, cl_uint *num_platforms);
 cl_int GetPlatformInfo(Platform *platformPacked,
                        PlatformInfo param_namePacked,

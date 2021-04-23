@@ -10,11 +10,14 @@
 #ifndef LIBANGLE_CLCONTEXT_H_
 #define LIBANGLE_CLCONTEXT_H_
 
+#include "libANGLE/CLtypes.h"
+
 namespace cl
 {
 class Context final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl

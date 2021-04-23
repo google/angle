@@ -10,11 +10,14 @@
 #ifndef LIBANGLE_CLEVENT_H_
 #define LIBANGLE_CLEVENT_H_
 
+#include "libANGLE/CLtypes.h"
+
 namespace cl
 {
 class Event final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl

@@ -9,11 +9,14 @@
 #ifndef LIBANGLE_CLSAMPLER_H_
 #define LIBANGLE_CLSAMPLER_H_
 
+#include "libANGLE/CLtypes.h"
+
 namespace cl
 {
 class Sampler final
 {
   public:
+    using IsCLObjectType = std::true_type;
 };
 
 }  // namespace cl
