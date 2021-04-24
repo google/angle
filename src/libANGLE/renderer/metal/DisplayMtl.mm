@@ -770,6 +770,12 @@ void DisplayMtl::initializeTextureCaps() const
         mNativeExtensions.textureCompressionSliced3dASTCKHR = true;
     }
 
+    // Enable ASTC HDR, requires MTLGPUFamilyApple6
+    if (supportsAppleGPUFamily(6) && mNativeExtensions.textureCompressionASTCLDRKHR)
+    {
+        mNativeExtensions.textureCompressionASTCHDRKHR = true;
+    }
+
     // Disable all depth buffer and stencil buffer readback extensions until we need them
     mNativeExtensions.readDepthNV         = false;
     mNativeExtensions.readStencilNV       = false;

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # Copyright 2019 The ANGLE Project Authors. All rights reserved.
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
@@ -338,15 +338,36 @@ def gen_image_map_switch_es3_case(angle_format, actual_angle_format_info, angle_
                                      gen_format_assign_code)
 
 
+# Generate format conversion switch case (ASTC LDR/HDR case)
+def gen_image_map_switch_astc_case(angle_format, angle_to_gl, angle_to_mtl_map):
+    gl_format = angle_to_gl[angle_format]
+
+    def gen_format_assign_code(actual_angle_format, angle_to_mtl_map):
+        return image_format_assign_template2.format(
+            actual_angle_format=actual_angle_format,
+            mtl_format=angle_to_mtl_map[actual_angle_format] + "HDR",
+            init_function=angle_format_utils.get_internal_format_initializer(
+                gl_format, actual_angle_format),
+            actual_angle_format_fallback=actual_angle_format,
+            mtl_format_fallback=angle_to_mtl_map[actual_angle_format] + "LDR",
+            init_function_fallback=angle_format_utils.get_internal_format_initializer(
+                gl_format, actual_angle_format),
+            fallback_condition="display->supportsAppleGPUFamily(6)")
+
+    return gen_image_map_switch_case(angle_format, angle_format, angle_to_mtl_map,
+                                     gen_format_assign_code)
+
+
 def gen_image_map_switch_string(image_table, angle_to_gl):
     angle_override = image_table["override"]
     mac_override_es3 = image_table["override_mac_es3"]
     mac_override_bc1 = image_table["override_mac_bc1"]
     ios_override = image_table["override_ios"]
-    mac_fallbacks = image_table["d24s8_fallbacks_mac"]
+    mac_d24s8_fallbacks = image_table["d24s8_fallbacks_mac"]
     angle_to_mtl = image_table["map"]
     mac_specific_map = image_table["map_mac"]
     ios_specific_map = image_table["map_ios"]
+    astc_tpl_map = image_table["map_astc_tpl"]
 
     # mac_specific_map + angle_to_mtl:
     mac_angle_to_mtl = mac_specific_map.copy()
@@ -371,18 +392,20 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     switch_data += "#if TARGET_OS_OSX || TARGET_OS_MACCATALYST\n"
     for angle_format in sorted(mac_specific_map.keys()):
         switch_data += gen_image_map_switch_mac_case(angle_format, angle_format, angle_to_gl,
-                                                     mac_angle_to_mtl, mac_fallbacks)
+                                                     mac_angle_to_mtl, mac_d24s8_fallbacks)
     for angle_format in sorted(mac_override_bc1.keys()):
-        switch_data += gen_image_map_switch_mac_case(angle_format, mac_override_bc1[angle_format],
-                                                     angle_to_gl, mac_angle_to_mtl, mac_fallbacks)
+        switch_data += gen_image_map_switch_simple_case(angle_format,
+                                                        mac_override_bc1[angle_format],
+                                                        angle_to_gl, mac_angle_to_mtl)
     switch_data += "#endif\n"
 
     # Override missing ES 3.0 formats for older macOS SDK or Catalyst
     switch_data += "#if (TARGET_OS_OSX && (__MAC_OS_X_VERSION_MAX_ALLOWED < 101600)) || \\\n"
     switch_data += "TARGET_OS_MACCATALYST\n"
     for angle_format in sorted(mac_override_es3.keys()):
-        switch_data += gen_image_map_switch_mac_case(angle_format, mac_override_es3[angle_format],
-                                                     angle_to_gl, mac_angle_to_mtl, mac_fallbacks)
+        switch_data += gen_image_map_switch_simple_case(angle_format,
+                                                        mac_override_es3[angle_format],
+                                                        angle_to_gl, mac_angle_to_mtl)
     switch_data += "#endif\n"
 
     # iOS specific
@@ -393,6 +416,8 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
     for angle_format in sorted(ios_override.keys()):
         switch_data += gen_image_map_switch_simple_case(angle_format, ios_override[angle_format],
                                                         angle_to_gl, ios_angle_to_mtl)
+    for angle_format in sorted(astc_tpl_map.keys()):
+        switch_data += gen_image_map_switch_astc_case(angle_format, angle_to_gl, astc_tpl_map)
     switch_data += "#endif\n"
 
     # Try to support all iOS formats on newer macOS with Apple GPU.
@@ -403,9 +428,12 @@ def gen_image_map_switch_string(image_table, angle_to_gl):
             switch_data += gen_image_map_switch_es3_case(angle_format, angle_format, angle_to_gl,
                                                          ios_angle_to_mtl, mac_override_es3)
         else:
-            # ASTC or PVRTC1
+            # ASTC sRGB or PVRTC1
             switch_data += gen_image_map_switch_simple_case(angle_format, angle_format,
                                                             angle_to_gl, ios_specific_map)
+    # ASTC LDR or HDR
+    for angle_format in sorted(astc_tpl_map.keys()):
+        switch_data += gen_image_map_switch_astc_case(angle_format, angle_to_gl, astc_tpl_map)
     switch_data += "#endif\n"
 
     switch_data += "        default:\n"
@@ -418,6 +446,7 @@ def gen_image_mtl_to_angle_switch_string(image_table):
     angle_to_mtl = image_table["map"]
     mac_specific_map = image_table["map_mac"]
     ios_specific_map = image_table["map_ios"]
+    astc_tpl_map = image_table["map_astc_tpl"]
 
     switch_data = ''
 
@@ -441,6 +470,11 @@ def gen_image_mtl_to_angle_switch_string(image_table):
             continue
         switch_data += case_image_mtl_to_angle_template.format(
             mtl_format=ios_specific_map[angle_format], angle_format=angle_format)
+    for angle_format in sorted(astc_tpl_map.keys()):
+        switch_data += case_image_mtl_to_angle_template.format(
+            mtl_format=astc_tpl_map[angle_format] + "LDR", angle_format=angle_format)
+        switch_data += case_image_mtl_to_angle_template.format(
+            mtl_format=astc_tpl_map[angle_format] + "HDR", angle_format=angle_format)
     switch_data += "#endif  // TARGET_OS_IOS || TARGET_OS_TV || mac 11.0+\n"
 
     switch_data += "        default:\n"
