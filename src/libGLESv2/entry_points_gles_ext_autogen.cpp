@@ -5448,6 +5448,41 @@ void GL_APIENTRY GL_RenderbufferStorageMultisampleEXT(GLenum target,
 
 // IsQueryEXT is already defined.
 
+// GL_EXT_primitive_bounding_box
+void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
+                                            GLfloat minY,
+                                            GLfloat minZ,
+                                            GLfloat minW,
+                                            GLfloat maxX,
+                                            GLfloat maxY,
+                                            GLfloat maxZ,
+                                            GLfloat maxW)
+{
+    Context *context = GetValidGlobalContext();
+    EVENT(context, GLPrimitiveBoundingBoxEXT,
+          "context = %d, minX = %f, minY = %f, minZ = %f, minW = %f, maxX = %f, maxY = %f, maxZ = "
+          "%f, maxW = %f",
+          CID(context), minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+
+    if (context)
+    {
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidatePrimitiveBoundingBoxEXT(context, minX, minY, minZ, minW, maxX,
+                                                            maxY, maxZ, maxW));
+        if (isCallValid)
+        {
+            context->primitiveBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+        }
+        ANGLE_CAPTURE(PrimitiveBoundingBoxEXT, isCallValid, context, minX, minY, minZ, minW, maxX,
+                      maxY, maxZ, maxW);
+    }
+    else
+    {
+        GenerateContextLostErrorOnCurrentGlobalContext();
+    }
+}
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness
@@ -23492,6 +23527,42 @@ void GL_APIENTRY GL_PrimitiveBoundingBoxContextANGLE(GLeglContext ctx,
             context->primitiveBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
         }
         ANGLE_CAPTURE(PrimitiveBoundingBox, isCallValid, context, minX, minY, minZ, minW, maxX,
+                      maxY, maxZ, maxW);
+    }
+    else
+    {
+        GenerateContextLostErrorOnContext(context);
+    }
+}
+
+void GL_APIENTRY GL_PrimitiveBoundingBoxEXTContextANGLE(GLeglContext ctx,
+                                                        GLfloat minX,
+                                                        GLfloat minY,
+                                                        GLfloat minZ,
+                                                        GLfloat minW,
+                                                        GLfloat maxX,
+                                                        GLfloat maxY,
+                                                        GLfloat maxZ,
+                                                        GLfloat maxW)
+{
+    Context *context = static_cast<gl::Context *>(ctx);
+    EVENT(context, GLPrimitiveBoundingBoxEXT,
+          "context = %d, minX = %f, minY = %f, minZ = %f, minW = %f, maxX = %f, maxY = %f, maxZ = "
+          "%f, maxW = %f",
+          CID(context), minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+
+    if (context && !context->isContextLost())
+    {
+        ASSERT(context == GetValidGlobalContext());
+        std::unique_lock<angle::GlobalMutex> shareContextLock = GetContextLock(context);
+        bool isCallValid                                      = (context->skipValidation() ||
+                            ValidatePrimitiveBoundingBoxEXT(context, minX, minY, minZ, minW, maxX,
+                                                            maxY, maxZ, maxW));
+        if (isCallValid)
+        {
+            context->primitiveBoundingBox(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+        }
+        ANGLE_CAPTURE(PrimitiveBoundingBoxEXT, isCallValid, context, minX, minY, minZ, minW, maxX,
                       maxY, maxZ, maxW);
     }
     else

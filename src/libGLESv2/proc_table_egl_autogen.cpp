@@ -1225,6 +1225,8 @@ const ProcEntry g_procTable[] = {
     {"glPopMatrixContextANGLE", P(GL_PopMatrixContextANGLE)},
     {"glPrimitiveBoundingBox", P(GL_PrimitiveBoundingBox)},
     {"glPrimitiveBoundingBoxContextANGLE", P(GL_PrimitiveBoundingBoxContextANGLE)},
+    {"glPrimitiveBoundingBoxEXT", P(GL_PrimitiveBoundingBoxEXT)},
+    {"glPrimitiveBoundingBoxEXTContextANGLE", P(GL_PrimitiveBoundingBoxEXTContextANGLE)},
     {"glProgramBinary", P(GL_ProgramBinary)},
     {"glProgramBinaryContextANGLE", P(GL_ProgramBinaryContextANGLE)},
     {"glProgramBinaryOES", P(GL_ProgramBinaryOES)},
@@ -1759,5 +1761,5 @@ const ProcEntry g_procTable[] = {
     {"glWeightPointerOES", P(GL_WeightPointerOES)},
     {"glWeightPointerOESContextANGLE", P(GL_WeightPointerOESContextANGLE)}};
 
-const size_t g_numProcs = 1661;
+const size_t g_numProcs = 1663;
 }  // namespace egl

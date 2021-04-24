@@ -713,6 +713,9 @@ EXPORTS
 
     ; GL_EXT_occlusion_query_boolean
 
+    ; GL_EXT_primitive_bounding_box
+    glPrimitiveBoundingBoxEXT
+
     ; GL_EXT_read_format_bgra
 
     ; GL_EXT_robustness
@@ -1509,6 +1512,7 @@ EXPORTS
     glPopGroupMarkerEXTContextANGLE
     glPopMatrixContextANGLE
     glPrimitiveBoundingBoxContextANGLE
+    glPrimitiveBoundingBoxEXTContextANGLE
     glProgramBinaryContextANGLE
     glProgramBinaryOESContextANGLE
     glProgramParameteriContextANGLE

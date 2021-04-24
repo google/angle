@@ -1968,6 +1968,8 @@ const char *GetEntryPointName(EntryPoint ep)
             return "glPopName";
         case EntryPoint::GLPrimitiveBoundingBox:
             return "glPrimitiveBoundingBox";
+        case EntryPoint::GLPrimitiveBoundingBoxEXT:
+            return "glPrimitiveBoundingBoxEXT";
         case EntryPoint::GLPrimitiveRestartIndex:
             return "glPrimitiveRestartIndex";
         case EntryPoint::GLPrioritizeTextures:

@@ -5959,6 +5959,31 @@ CallCapture CaptureRenderbufferStorageMultisampleEXT(const State &glState,
                        std::move(paramBuffer));
 }
 
+CallCapture CapturePrimitiveBoundingBoxEXT(const State &glState,
+                                           bool isCallValid,
+                                           GLfloat minX,
+                                           GLfloat minY,
+                                           GLfloat minZ,
+                                           GLfloat minW,
+                                           GLfloat maxX,
+                                           GLfloat maxY,
+                                           GLfloat maxZ,
+                                           GLfloat maxW)
+{
+    ParamBuffer paramBuffer;
+
+    paramBuffer.addValueParam("minX", ParamType::TGLfloat, minX);
+    paramBuffer.addValueParam("minY", ParamType::TGLfloat, minY);
+    paramBuffer.addValueParam("minZ", ParamType::TGLfloat, minZ);
+    paramBuffer.addValueParam("minW", ParamType::TGLfloat, minW);
+    paramBuffer.addValueParam("maxX", ParamType::TGLfloat, maxX);
+    paramBuffer.addValueParam("maxY", ParamType::TGLfloat, maxY);
+    paramBuffer.addValueParam("maxZ", ParamType::TGLfloat, maxZ);
+    paramBuffer.addValueParam("maxW", ParamType::TGLfloat, maxW);
+
+    return CallCapture(angle::EntryPoint::GLPrimitiveBoundingBoxEXT, std::move(paramBuffer));
+}
+
 CallCapture CaptureGetGraphicsResetStatusEXT(const State &glState,
                                              bool isCallValid,
                                              GLenum returnValue)

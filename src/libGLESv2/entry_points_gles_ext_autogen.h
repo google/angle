@@ -883,6 +883,16 @@ ANGLE_EXPORT void GL_APIENTRY GL_RenderbufferStorageMultisampleEXT(GLenum target
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_primitive_bounding_box
+ANGLE_EXPORT void GL_APIENTRY GL_PrimitiveBoundingBoxEXT(GLfloat minX,
+                                                         GLfloat minY,
+                                                         GLfloat minZ,
+                                                         GLfloat minW,
+                                                         GLfloat maxX,
+                                                         GLfloat maxY,
+                                                         GLfloat maxZ,
+                                                         GLfloat maxW);
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness
@@ -3222,6 +3232,15 @@ ANGLE_EXPORT void GL_APIENTRY GL_PrimitiveBoundingBoxContextANGLE(GLeglContext c
                                                                   GLfloat maxY,
                                                                   GLfloat maxZ,
                                                                   GLfloat maxW);
+ANGLE_EXPORT void GL_APIENTRY GL_PrimitiveBoundingBoxEXTContextANGLE(GLeglContext ctx,
+                                                                     GLfloat minX,
+                                                                     GLfloat minY,
+                                                                     GLfloat minZ,
+                                                                     GLfloat minW,
+                                                                     GLfloat maxX,
+                                                                     GLfloat maxY,
+                                                                     GLfloat maxZ,
+                                                                     GLfloat maxW);
 ANGLE_EXPORT void GL_APIENTRY GL_ProgramBinaryContextANGLE(GLeglContext ctx,
                                                            GLuint program,
                                                            GLenum binaryFormat,

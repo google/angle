@@ -1503,6 +1503,21 @@ bool ValidateNamedBufferStorageExternalEXT(const Context *context,
     return false;
 }
 
+// GL_EXT_primitive_bounding_box
+bool ValidatePrimitiveBoundingBoxEXT(const Context *context,
+                                     GLfloat minX,
+                                     GLfloat minY,
+                                     GLfloat minZ,
+                                     GLfloat minW,
+                                     GLfloat maxX,
+                                     GLfloat maxY,
+                                     GLfloat maxZ,
+                                     GLfloat maxW)
+{
+    context->validationError(GL_INVALID_OPERATION, kExtensionNotEnabled);
+    return false;
+}
+
 // GL_EXT_separate_shader_objects
 bool ValidateActiveShaderProgramEXT(const Context *context,
                                     ProgramPipelineID pipelinePacked,

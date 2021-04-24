@@ -278,6 +278,7 @@ typedef void (GL_APIENTRYP PFNGLOBJECTPTRLABELKHRCONTEXTANGLEPROC)(GLeglContext 
 typedef void (GL_APIENTRYP PFNGLPATCHPARAMETERIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLenum pname, GLint value);
 typedef void (GL_APIENTRYP PFNGLPOPDEBUGGROUPKHRCONTEXTANGLEPROC)(GLeglContext ctx);
 typedef void (GL_APIENTRYP PFNGLPOPGROUPMARKEREXTCONTEXTANGLEPROC)(GLeglContext ctx);
+typedef void (GL_APIENTRYP PFNGLPRIMITIVEBOUNDINGBOXEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLfloat minX, GLfloat minY, GLfloat minZ, GLfloat minW, GLfloat maxX, GLfloat maxY, GLfloat maxZ, GLfloat maxW);
 typedef void (GL_APIENTRYP PFNGLPROGRAMBINARYOESCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLenum binaryFormat, const void *binary, GLint length);
 typedef void (GL_APIENTRYP PFNGLPROGRAMPARAMETERIEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLenum pname, GLint value);
 typedef void (GL_APIENTRYP PFNGLPROGRAMUNIFORM1FEXTCONTEXTANGLEPROC)(GLeglContext ctx, GLuint program, GLint location, GLfloat v0);
@@ -720,6 +721,7 @@ GL_APICALL void GL_APIENTRY glObjectPtrLabelKHRContextANGLE(GLeglContext ctx, co
 GL_APICALL void GL_APIENTRY glPatchParameteriEXTContextANGLE(GLeglContext ctx, GLenum pname, GLint value);
 GL_APICALL void GL_APIENTRY glPopDebugGroupKHRContextANGLE(GLeglContext ctx);
 GL_APICALL void GL_APIENTRY glPopGroupMarkerEXTContextANGLE(GLeglContext ctx);
+GL_APICALL void GL_APIENTRY glPrimitiveBoundingBoxEXTContextANGLE(GLeglContext ctx, GLfloat minX, GLfloat minY, GLfloat minZ, GLfloat minW, GLfloat maxX, GLfloat maxY, GLfloat maxZ, GLfloat maxW);
 GL_APICALL void GL_APIENTRY glProgramBinaryOESContextANGLE(GLeglContext ctx, GLuint program, GLenum binaryFormat, const void *binary, GLint length);
 GL_APICALL void GL_APIENTRY glProgramParameteriEXTContextANGLE(GLeglContext ctx, GLuint program, GLenum pname, GLint value);
 GL_APICALL void GL_APIENTRY glProgramUniform1fEXTContextANGLE(GLeglContext ctx, GLuint program, GLint location, GLfloat v0);

@@ -4214,6 +4214,19 @@ void GL_APIENTRY glRenderbufferStorageMultisampleEXT(GLenum target,
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_primitive_bounding_box
+void GL_APIENTRY glPrimitiveBoundingBoxEXT(GLfloat minX,
+                                           GLfloat minY,
+                                           GLfloat minZ,
+                                           GLfloat minW,
+                                           GLfloat maxX,
+                                           GLfloat maxY,
+                                           GLfloat maxZ,
+                                           GLfloat maxW)
+{
+    return GL_PrimitiveBoundingBoxEXT(minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+}
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness
@@ -8762,6 +8775,20 @@ void GL_APIENTRY glPrimitiveBoundingBoxContextANGLE(GLeglContext ctx,
                                                     GLfloat maxW)
 {
     return GL_PrimitiveBoundingBoxContextANGLE(ctx, minX, minY, minZ, minW, maxX, maxY, maxZ, maxW);
+}
+
+void GL_APIENTRY glPrimitiveBoundingBoxEXTContextANGLE(GLeglContext ctx,
+                                                       GLfloat minX,
+                                                       GLfloat minY,
+                                                       GLfloat minZ,
+                                                       GLfloat minW,
+                                                       GLfloat maxX,
+                                                       GLfloat maxY,
+                                                       GLfloat maxZ,
+                                                       GLfloat maxW)
+{
+    return GL_PrimitiveBoundingBoxEXTContextANGLE(ctx, minX, minY, minZ, minW, maxX, maxY, maxZ,
+                                                  maxW);
 }
 
 void GL_APIENTRY glProgramBinaryContextANGLE(GLeglContext ctx,

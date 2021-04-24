@@ -731,6 +731,9 @@ struct Extensions
 
     // GL_ANGLE_get_serialized_context_string
     bool getSerializedContextStringANGLE = false;
+
+    // GL_EXT_primitive_bounding_box
+    bool primitiveBoundingBoxEXT = false;
 };
 
 // Pointer to a boolean memeber of the Extensions struct

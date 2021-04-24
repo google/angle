@@ -990,6 +990,7 @@ enum class EntryPoint
     GLPopMatrix,
     GLPopName,
     GLPrimitiveBoundingBox,
+    GLPrimitiveBoundingBoxEXT,
     GLPrimitiveRestartIndex,
     GLPrioritizeTextures,
     GLProgramBinary,

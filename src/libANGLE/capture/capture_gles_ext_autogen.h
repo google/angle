@@ -1261,6 +1261,18 @@ angle::CallCapture CaptureRenderbufferStorageMultisampleEXT(const State &glState
 
 // GL_EXT_occlusion_query_boolean
 
+// GL_EXT_primitive_bounding_box
+angle::CallCapture CapturePrimitiveBoundingBoxEXT(const State &glState,
+                                                  bool isCallValid,
+                                                  GLfloat minX,
+                                                  GLfloat minY,
+                                                  GLfloat minZ,
+                                                  GLfloat minW,
+                                                  GLfloat maxX,
+                                                  GLfloat maxY,
+                                                  GLfloat maxZ,
+                                                  GLfloat maxW);
+
 // GL_EXT_read_format_bgra
 
 // GL_EXT_robustness

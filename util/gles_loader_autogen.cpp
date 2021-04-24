@@ -637,6 +637,7 @@ ANGLE_UTIL_EXPORT PFNGLIMPORTMEMORYFDEXTPROC l_glImportMemoryFdEXT;
 ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTPROC
     l_glFramebufferTexture2DMultisampleEXT;
 ANGLE_UTIL_EXPORT PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC l_glRenderbufferStorageMultisampleEXT;
+ANGLE_UTIL_EXPORT PFNGLPRIMITIVEBOUNDINGBOXEXTPROC l_glPrimitiveBoundingBoxEXT;
 ANGLE_UTIL_EXPORT PFNGLGETGRAPHICSRESETSTATUSEXTPROC l_glGetGraphicsResetStatusEXT;
 ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMFVEXTPROC l_glGetnUniformfvEXT;
 ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMIVEXTPROC l_glGetnUniformivEXT;
@@ -1581,6 +1582,8 @@ ANGLE_UTIL_EXPORT PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEEXTCONTEXTANGLEPROC
     l_glFramebufferTexture2DMultisampleEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTCONTEXTANGLEPROC
     l_glRenderbufferStorageMultisampleEXTContextANGLE;
+ANGLE_UTIL_EXPORT PFNGLPRIMITIVEBOUNDINGBOXEXTCONTEXTANGLEPROC
+    l_glPrimitiveBoundingBoxEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETGRAPHICSRESETSTATUSEXTCONTEXTANGLEPROC
     l_glGetGraphicsResetStatusEXTContextANGLE;
 ANGLE_UTIL_EXPORT PFNGLGETNUNIFORMFVEXTCONTEXTANGLEPROC l_glGetnUniformfvEXTContextANGLE;
@@ -2793,6 +2796,8 @@ void LoadGLES(LoadProc loadProc)
     l_glRenderbufferStorageMultisampleEXT =
         reinterpret_cast<PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTPROC>(
             loadProc("glRenderbufferStorageMultisampleEXT"));
+    l_glPrimitiveBoundingBoxEXT =
+        reinterpret_cast<PFNGLPRIMITIVEBOUNDINGBOXEXTPROC>(loadProc("glPrimitiveBoundingBoxEXT"));
     l_glGetGraphicsResetStatusEXT = reinterpret_cast<PFNGLGETGRAPHICSRESETSTATUSEXTPROC>(
         loadProc("glGetGraphicsResetStatusEXT"));
     l_glGetnUniformfvEXT =
@@ -4549,6 +4554,9 @@ void LoadGLES(LoadProc loadProc)
     l_glRenderbufferStorageMultisampleEXTContextANGLE =
         reinterpret_cast<PFNGLRENDERBUFFERSTORAGEMULTISAMPLEEXTCONTEXTANGLEPROC>(
             loadProc("glRenderbufferStorageMultisampleEXTContextANGLE"));
+    l_glPrimitiveBoundingBoxEXTContextANGLE =
+        reinterpret_cast<PFNGLPRIMITIVEBOUNDINGBOXEXTCONTEXTANGLEPROC>(
+            loadProc("glPrimitiveBoundingBoxEXTContextANGLE"));
     l_glGetGraphicsResetStatusEXTContextANGLE =
         reinterpret_cast<PFNGLGETGRAPHICSRESETSTATUSEXTCONTEXTANGLEPROC>(
             loadProc("glGetGraphicsResetStatusEXTContextANGLE"));
