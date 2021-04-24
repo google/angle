@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f21e8b9e_14c95545",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-04-24T10:59:37Z",
+      "side": 1,
+      "message": "Also simplified the script in couple places and switched to Python 3.",
+      "revId": "ee38b5c6e5ad20cc28f138069f69e234035396a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
