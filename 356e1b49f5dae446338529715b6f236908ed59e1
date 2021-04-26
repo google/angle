@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba6fc945_3217f68d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T14:40:02Z",
+      "side": 1,
+      "message": "I\u0027m confused because the next CL doesn\u0027t use this state that I can see.",
+      "parentUuid": "c6d3e42a_474c6e5b",
+      "range": {
+        "startLine": 9,
+        "startChar": 10,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4600b071_57e025ec",
