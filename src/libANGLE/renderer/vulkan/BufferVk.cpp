@@ -293,7 +293,16 @@ angle::Result BufferVk::setDataWithUsageFlags(const gl::Context *context,
 
     if (isExternalBuffer)
     {
-        return setExternalBufferData(context, target, clientBuffer, size, memoryPropertyFlags);
+        ANGLE_TRY(setExternalBufferData(context, target, clientBuffer, size, memoryPropertyFlags));
+        if (!mBuffer->isHostVisible())
+        {
+            // If external buffer's memory does not support host visible memory property, we cannot
+            // support a persistent map request.
+            ANGLE_VK_CHECK(vk::GetImpl(context), !persistentMapRequired,
+                           VK_ERROR_MEMORY_MAP_FAILED);
+        }
+
+        return angle::Result::Continue;
     }
     return setDataWithMemoryType(context, target, data, size, memoryPropertyFlags,
                                  persistentMapRequired);
