@@ -46,6 +46,23 @@
       },
       "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4600b071_57e025ec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-26T13:47:48Z",
+      "side": 1,
+      "message": "i dont have a mac repro env, can some help provide a more useful backtrace? it says the test failed while doing the teardown but not able to figure out where in terminate/releaseThread it could be going wrong",
+      "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
