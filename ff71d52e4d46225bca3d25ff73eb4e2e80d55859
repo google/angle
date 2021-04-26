@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f66131fb_9d461f8e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-04-26T16:30:01Z",
+      "side": 1,
+      "message": "PTAL.\n\nI think this is fixed as of https://chromium-review.googlesource.com/c/angle/angle/+/2773401 and https://chromium-review.googlesource.com/c/angle/angle/+/2762655, but I\u0027m not 100% sure.",
+      "revId": "ff71d52e4d46225bca3d25ff73eb4e2e80d55859",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
