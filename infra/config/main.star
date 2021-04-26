@@ -41,6 +41,19 @@ luci.project(
     ]
 )
 
+def _generate_project_pyl(ctx):
+    ctx.output["project.pyl"] = "\n".join([
+        "# This is a non-LUCI generated file",
+        "# This is consumed by presubmit checks that need to validate the config",
+        repr(dict(
+            # We don't validate matching source-side configs for simplicity.
+            validate_source_side_specs_have_builder = False,
+        )),
+        "",
+    ])
+
+lucicfg.generator(_generate_project_pyl)
+
 luci.milo(
     logo = "https://storage.googleapis.com/chrome-infra/OpenGL%20ES_RGB_June16.svg",
     monorail_project = "angleproject",

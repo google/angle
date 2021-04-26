@@ -10,4 +10,35 @@
 #
 # For more info see Chromium's test_suite_exceptions.pyl in testing/buildbot.
 
-{}
+{
+  'angle_end2end_tests': {
+    'modifications': {
+      # anglebug.com/5328 suspecting blue screen caused by multiprocess
+      'linux-intel': {
+        'args': [
+          '--max-processes=1',
+        ],
+      },
+      'win10-x64-intel': {
+        'args': [
+          '--max-processes=1',
+        ],
+      },
+    },
+  },
+  'angle_white_box_tests': {
+    'modifications': {
+      # anglebug.com/5328 suspecting blue screen caused by multiprocess
+      'linux-intel': {
+        'args': [
+          '--max-processes=1',
+        ],
+      },
+      'win10-x64-intel': {
+        'args': [
+          '--max-processes=1',
+        ],
+      },
+    },
+  },
+}

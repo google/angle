@@ -10,4 +10,105 @@
 #
 # For more info see Chromium's waterfalls.pyl in testing/buildbot.
 
-[]
+[
+  {
+    'name': 'angle',
+    'forbid_script_tests': True,
+    'mixins': [
+      'chromium-tester-service-account',
+      'swarming_containment_auto',
+    ],
+    'machines': {
+      'android-arm-builder': {},
+      'android-arm64-builder': {},
+      'linux-builder': {},
+      'linux-intel': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_intel_hd_630_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'linux_intel_gtests',
+        },
+      },
+      'linux-nvidia': {
+        'os_type': 'linux',
+        'mixins': [
+          'linux_nvidia_quadro_p400_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'linux_nvidia_gtests',
+        },
+      },
+      'mac-amd': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_retina_amd_gpu_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'mac_amd_and_intel_gtests',
+        },
+      },
+      'mac-builder': {},
+      'mac-intel': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_mini_intel_gpu_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'mac_amd_and_intel_gtests',
+        },
+      },
+      'mac-nvidia': {
+        'os_type': 'mac',
+        'mixins': [
+          'mac_retina_nvidia_gpu_stable',
+        ],
+        'test_suites': {
+          # Fewer tests enabled on this config because of limited capacity.
+          'gtest_tests': 'mac_nvidia_gtests',
+        },
+      },
+      'win-x64-builder': {},
+      'win-x86-builder': {},
+      'win10-x64-intel': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_intel_hd_630_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'win10_intel_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
+        },
+      },
+      'win10-x64-nvidia': {
+        'os_type': 'win',
+        'mixins': [
+          'win10_nvidia_quadro_p400_stable',
+        ],
+        'test_suites': {
+          'gtest_tests': 'win10_nvidia_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
+        },
+      },
+      'win7-x64-nvidia': {
+        'os_type': 'win',
+        'mixins': [
+          'win7_nvidia_quadro_p400',
+        ],
+        'test_suites': {
+          'gtest_tests': 'win7_nvidia_gtests',
+        },
+      },
+      'win7-x86-amd': {
+        'os_type': 'win',
+        'mixins': [
+          'win7_amd_r7_240',
+        ],
+        'test_suites': {
+          'gtest_tests': 'win7_amd_gtests',
+        },
+      },
+    },
+  },
+]
