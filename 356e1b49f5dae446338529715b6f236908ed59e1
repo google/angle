@@ -22,6 +22,30 @@
       },
       "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c6d3e42a_474c6e5b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-26T13:40:11Z",
+      "side": 1,
+      "message": "eglWaitClient, eglWaitGL and eglWaitNative for starters (the next change in the chain)",
+      "parentUuid": "83e138f0_b16968df",
+      "range": {
+        "startLine": 9,
+        "startChar": 10,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
