@@ -16,6 +16,24 @@
       "message": "Good fix.\n\nObligatory: Can you add a test for this?",
       "revId": "356c6829cc299ea6f593d8e03ad01671ddb27b4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6caf3d22_d18966e5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-04-26T18:00:55Z",
+      "side": 1,
+      "message": "Next week when I get back to work. Path is not exercised by the bots nevertheless.",
+      "parentUuid": "1b1597f9_6cb45b91",
+      "revId": "356c6829cc299ea6f593d8e03ad01671ddb27b4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
