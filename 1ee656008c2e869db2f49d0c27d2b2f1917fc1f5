@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6def110b_bed3d238",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 18
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T17:33:10Z",
+      "side": 1,
+      "message": "\u003e Sigh, one more place to remember to change mixins when upgrading drivers.\n\nI had an idea that I could have the ANGLE generate wrapper script automatically generate this file by parsing the ANGLE waterfalls.pyl file and pulling out the required mixins from the Chromium mixins.pyl file. Sounds like that would be valuable so I\u0027ll try that as a follow-up.\n\n\u003e Can you also copy https://source.chromium.org/chromium/chromium/src/+/master:testing/buildbot/PRESUBMIT.py to ANGLE and make sure it passes?\n\nAlready done. The ones I didn\u0027t copy out of there are not easily repurposed (manage.py) or not useful (generate_buildbot_json.py self-checks).\n\n\u003e I think you\u0027d also want test_suite_exceptions.pyl, which restricts Win Intel to 1 process (though it doesn\u0027t seem to help, bots still get killed by end2end tests).\n\nDone, thanks for the reminder. That\u0027s unfortunate, didn\u0027t realize the problem was still happening.\n\n\u003e I also didn\u0027t check if the test sets match, we can do it later.\n\nAck",
+      "parentUuid": "ed65c45c_50f44258",
+      "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6707305c_06eddfab",
@@ -58,6 +76,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e10c2ad_25d3e581",
+        "filename": "infra/specs/test_suites.pyl",
+        "patchSetId": 18
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T17:33:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6707305c_06eddfab",
+      "range": {
+        "startLine": 23,
+        "startChar": 21,
+        "endLine": 23,
+        "endChar": 41
+      },
+      "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "13a3fd64_32573f9d",
@@ -71,6 +113,30 @@
       "writtenOn": "2021-04-23T21:30:45Z",
       "side": 1,
       "message": "These don\u0027t match the existing builders, e.g. mac-rel.\nSo there is no mb_config for these builders.",
+      "range": {
+        "startLine": 52,
+        "startChar": 7,
+        "endLine": 52,
+        "endChar": 18
+      },
+      "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16df39fc_8b1b9a53",
+        "filename": "infra/specs/waterfalls.pyl",
+        "patchSetId": 18
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T17:33:10Z",
+      "side": 1,
+      "message": "Ack\n\nI looked in to this a fair bit. For the split builder/testing configuration we would need to define mb configs for the buiders. For the very simple configuration I\u0027m setting up with a combined builder/tester even for CI I don\u0027t *think* we would need it. Was meaning to ask you what the main advantages of the split builders situation are. Seems like for very fast compile steps there\u0027s not as much advantage? Feel free to follow up via email or chat.\n\nFor now will land this as I\u0027ve tested a bunch of LED builds up to isolate_tests and they all seem to work like this. I haven\u0027t yet tested triggering. Will follow-up if we need to add these in a later patch.",
+      "parentUuid": "13a3fd64_32573f9d",
       "range": {
         "startLine": 52,
         "startChar": 7,
