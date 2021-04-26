@@ -17,7 +17,6 @@ PbufferTest.Clearing/*
 PbufferTest.TextureSizeReset/*
 SimpleStateChangeTest.DrawAndClearTextureRepeatedly/*
 SimpleStateChangeTest.RebindTranslatedAttribute/*
-StateChangeTest.DrawAfterFlushWithNoStateChange/*
 WebGL2ReadOutsideFramebufferTest.CopyTexSubImage3D/*
 WebGLDrawElementsTest.DrawElementsTypeAlignment/*
 WebGLGLSLTest.*

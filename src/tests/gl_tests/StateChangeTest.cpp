@@ -968,7 +968,7 @@ TEST_P(StateChangeTest, VertexBufferUpdatedAfterDraw)
 }
 
 // Tests that drawing after flush without any state change works.
-TEST_P(StateChangeTest, DrawAfterFlushWithNoStateChange)
+TEST_P(StateChangeTestES3, DrawAfterFlushWithNoStateChange)
 {
     // Draw (0.125, 0.25, 0.5, 0.5) once, using additive blend
     ANGLE_GL_PROGRAM(drawColor, essl1_shaders::vs::Simple(), essl1_shaders::fs::UniformColor());
