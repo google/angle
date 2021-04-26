@@ -51,6 +51,24 @@
       "parentUuid": "330f2563_8256736c",
       "revId": "0237c6c327464527c302bd5bd2b9d7cd850408f0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51fc6867_db3722ff",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-26T16:25:44Z",
+      "side": 1,
+      "message": "Sorry for the late reply (was trying to reply after I finish the doc).  Yes, the problem is that one driver implements texsubimage call by make a shadow copy of the full texture. Even though we reduced texsubimage to 1x1, gles driver is making the copy of original sized texture and CPU time will be dominated by that. That itself of course is something interesting enough that worth performance comparison, but it does dwarf all other state management calls that make comparison harder. By skip it (and the other follow on CLs that also get rid of data copies), now I am able to completely get rid of utility thread activity and we can do apple to apple comparison on render thread between native and gles. The data copy performance can be easily evaluated by writing a standalone test. For this specific purpose, we better just leave data copy out of picture, that is the reason for this and next CL.",
+      "parentUuid": "c0a05266_2005877e",
+      "revId": "0237c6c327464527c302bd5bd2b9d7cd850408f0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
