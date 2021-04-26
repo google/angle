@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "186acf20_5435256d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T16:45:10Z",
+      "side": 1,
+      "message": "Also please add a note or static flag around the blanked calls.",
+      "revId": "1670586ff5890614cd2d0711a461d2bc20a33a46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b1b094e_5792b909",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T16:45:10Z",
+      "side": 1,
+      "message": "try to avoid using globals with initializers or destructors as it\u0027s banned on some environments. instead of using a vector, use a member variable in the test harness, or use a pointer that you allocate lazily.\n\nnote: we should probably explicitly ban this in the style guide",
+      "range": {
+        "startLine": 300,
+        "startChar": 16,
+        "endLine": 300,
+        "endChar": 22
+      },
+      "revId": "1670586ff5890614cd2d0711a461d2bc20a33a46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
