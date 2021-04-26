@@ -51,6 +51,24 @@
       "message": "../../third_party/angle/src/tests/test_utils/ANGLETest.cpp(63): error: RendererVk.cpp:362 (DebugUtilsMessenger): [ UNASSIGNED-Threading-Info ] Validation Error: [ UNASSIGNED-Threading-Info ] Object 0: handle \u003d 0x3a9b770, type \u003d VK_OBJECT_TYPE_UNKNOWN; | MessageID \u003d 0x5d6b67e2 | Couldn\u0027t find VkNonDispatchableHandle Object 0x3a9b770. This should not happen and may indicate a bug in the application.\n\n                            Object: 0x3a9b770 (type \u003d Unknown(0))\n\n\nnot sure if related, let\u0027s retry.",
       "revId": "d4965ce74ba44b1ab9e7a5b23cd9de46e8c7692a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c68a4ae9_62a8ba63",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002767
+      },
+      "writtenOn": "2021-04-26T19:53:17Z",
+      "side": 1,
+      "message": "There are also validation errors on Linux, so it looks like disabling the unique handles validation is broken.",
+      "parentUuid": "495145ac_6e76c8be",
+      "revId": "d4965ce74ba44b1ab9e7a5b23cd9de46e8c7692a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
