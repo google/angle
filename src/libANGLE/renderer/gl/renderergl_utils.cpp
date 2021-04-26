@@ -1925,9 +1925,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // anglebug.com/3031
     // crbug.com/922936
     // crbug.com/1184692
+    // crbug.com/1202928
     ANGLE_FEATURE_CONDITION(features, disableWorkerContexts,
                             (IsWindows() && (isIntel || isAMD)) || (IsLinux() && isNvidia) ||
-                                IsIOS() || IsAndroidEmulator(functions));
+                                IsIOS() || IsAndroid() || IsAndroidEmulator(functions));
 
     bool limitMaxTextureSize = isIntel && IsLinux() && GetLinuxOSVersion() < OSVersion(5, 0, 0);
     ANGLE_FEATURE_CONDITION(features, limitMaxTextureSizeTo4096,
