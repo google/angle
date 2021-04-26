@@ -14,32 +14,12 @@
 #include "libANGLE/renderer/ProgramImpl.h"
 #include "libANGLE/renderer/glslang_wrapper_utils.h"
 #include "libANGLE/renderer/metal/mtl_common.h"
+#include "libANGLE/renderer/metal/mtl_glslang_mtl_utils.h"
 
 namespace rx
 {
 namespace mtl
 {
-
-struct SamplerBinding
-{
-    uint32_t textureBinding = 0;
-    uint32_t samplerBinding = 0;
-};
-
-struct TranslatedShaderInfo
-{
-    void reset();
-
-    // Translated Metal source code
-    std::string metalShaderSource;
-    // Metal library compiled from source code above. Used by ProgramMtl.
-    AutoObjCPtr<id<MTLLibrary>> metalLibrary;
-
-    std::array<SamplerBinding, kMaxGLSamplerBindings> actualSamplerBindings;
-    std::array<uint32_t, kMaxGLUBOBindings> actualUBOBindings;
-    std::array<uint32_t, kMaxShaderXFBs> actualXFBBindings;
-    bool hasUBOArgumentBuffer;
-};
 
 // spirvBlobsOut is the SPIR-V code per shader stage.
 void GlslangGetShaderSpirvCode(const gl::ProgramState &programState,

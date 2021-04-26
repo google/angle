@@ -15,9 +15,9 @@ namespace angle
 
 void GetOperatingSystemVersionNumbers(int32_t *majorVersion, int32_t *minorVersion)
 {
-    // TODO(jdarpinian): Implement this. http://anglebug.com/5485
-    *majorVersion = 0;
-    *minorVersion = 0;
+    NSOperatingSystemVersion version = [[NSProcessInfo processInfo] operatingSystemVersion];
+    *majorVersion                    = static_cast<int32_t>(version.majorVersion);
+    *minorVersion                    = static_cast<int32_t>(version.minorVersion);
 }
 
 }  // namespace angle

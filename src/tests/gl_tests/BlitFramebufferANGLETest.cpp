@@ -1247,6 +1247,9 @@ class BlitFramebufferTest : public ANGLETest
 // Tests resolving a multisample depth buffer.
 TEST_P(BlitFramebufferTest, MultisampleDepth)
 {
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsAMD());
+
     // TODO(oetuaho@nvidia.com): http://crbug.com/837717
     ANGLE_SKIP_TEST_IF(IsOpenGL() && IsOSX());
 

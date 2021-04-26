@@ -14,7 +14,7 @@ static char gDefaultMetallibSrc[] = R"(
 # 1 "temp_master_source.metal"
 # 1 "<built-in>" 1
 # 1 "<built-in>" 3
-# 386 "<built-in>" 3
+# 369 "<built-in>" 3
 # 1 "<command line>" 1
 # 1 "<built-in>" 2
 # 1 "temp_master_source.metal" 2
@@ -319,10 +319,10 @@ struct BlitParams
     float2 srcTexCoords[3];
     int srcLevel;
     int srcLayer;
-
     bool dstFlipViewportX;
     bool dstFlipViewportY;
     bool dstLuminance;
+    uint8_t padding[13];
 };
 
 struct BlitVSOut
@@ -759,10 +759,10 @@ inline uint getIndexUnalignedU32(constant uchar *input, uint offset, uint idx)
     return input0 | (input1 << 8) | (input2 << 16) | (input3 << 24);
 }
 
-kernel void convertIndexU8ToU16(uint idx[[thread_position_in_grid]],
-                                constant IndexConversionParams &options[[buffer(0)]],
-                                constant uchar *input[[buffer(1)]],
-                                device ushort *output[[buffer(2)]])
+kernel void convertIndexU8ToU16(uint idx [[thread_position_in_grid]],
+                                constant IndexConversionParams &options [[buffer(0)]],
+                                constant uchar *input [[buffer(1)]],
+                                device ushort *output [[buffer(2)]])
 {
     if (idx >= options.indexCount) { return; };
 
@@ -778,12 +778,13 @@ kernel void convertIndexU8ToU16(uint idx[[thread_position_in_grid]],
     }
 }
 
-kernel void convertIndexU16(
-    uint idx[[thread_position_in_grid]],
-    constant IndexConversionParams &options[[buffer(0)]],
-    constant uchar *input[[ buffer(1), function_constant(kSourceBufferUnaligned) ]],
-    constant ushort *inputAligned[[ buffer(1), function_constant(kSourceBufferAligned) ]],
-    device ushort *output[[buffer(2)]])
+kernel void convertIndexU16(uint idx [[thread_position_in_grid]],
+                            constant IndexConversionParams &options [[buffer(0)]],
+                            constant uchar *input
+                            [[buffer(1), function_constant(kSourceBufferUnaligned)]],
+                            constant ushort *inputAligned
+                            [[buffer(1), function_constant(kSourceBufferAligned)]],
+                            device ushort *output [[buffer(2)]])
 {
     if (idx >= options.indexCount) { return; };
 
@@ -799,12 +800,13 @@ kernel void convertIndexU16(
     output[idx] = value;
 }
 
-kernel void convertIndexU32(
-    uint idx[[thread_position_in_grid]],
-    constant IndexConversionParams &options[[buffer(0)]],
-    constant uchar *input[[ buffer(1), function_constant(kSourceBufferUnaligned) ]],
-    constant uint *inputAligned[[ buffer(1), function_constant(kSourceBufferAligned) ]],
-    device uint *output[[buffer(2)]])
+kernel void convertIndexU32(uint idx [[thread_position_in_grid]],
+                            constant IndexConversionParams &options [[buffer(0)]],
+                            constant uchar *input
+                            [[buffer(1), function_constant(kSourceBufferUnaligned)]],
+                            constant uint *inputAligned
+                            [[buffer(1), function_constant(kSourceBufferAligned)]],
+                            device uint *output [[buffer(2)]])
 {
     if (idx >= options.indexCount) { return; };
 
@@ -843,9 +845,9 @@ kernel void genTriFanIndicesFromArray(uint idx [[thread_position_in_grid]],
 
 inline uint getIndexU32(uint offset,
                         uint idx,
-                        constant uchar *inputU8[[function_constant(kUseSourceBufferU8)]],
-                        constant ushort *inputU16[[function_constant(kUseSourceBufferU16)]],
-                        constant uint *inputU32[[function_constant(kUseSourceBufferU32)]])
+                        constant uchar *inputU8 [[function_constant(kUseSourceBufferU8)]],
+                        constant ushort *inputU16 [[function_constant(kUseSourceBufferU16)]],
+                        constant uint *inputU32 [[function_constant(kUseSourceBufferU32)]])
 {
     if (kUseSourceBufferU8)
     {
@@ -873,13 +875,15 @@ inline uint getIndexU32(uint offset,
 
 
 
-kernel void genTriFanIndicesFromElements(
-    uint idx[[thread_position_in_grid]],
-    constant IndexConversionParams &options[[buffer(0)]],
-    constant uchar *inputU8[[ buffer(1), function_constant(kUseSourceBufferU8) ]],
-    constant ushort *inputU16[[ buffer(1), function_constant(kUseSourceBufferU16) ]],
-    constant uint *inputU32[[ buffer(1), function_constant(kUseSourceBufferU32) ]],
-    device uint *output[[buffer(2)]])
+kernel void genTriFanIndicesFromElements(uint idx [[thread_position_in_grid]],
+                                         constant IndexConversionParams &options [[buffer(0)]],
+                                         constant uchar *inputU8
+                                         [[buffer(1), function_constant(kUseSourceBufferU8)]],
+                                         constant ushort *inputU16
+                                         [[buffer(1), function_constant(kUseSourceBufferU16)]],
+                                         constant uint *inputU32
+                                         [[buffer(1), function_constant(kUseSourceBufferU32)]],
+                                         device uint *output [[buffer(2)]])
 {
     if (idx >= options.indexCount) { return; };
 
@@ -1116,6 +1120,348 @@ kernel void generate3DMipmaps(uint lIndex [[thread_index_in_threadgroup]],
 
         dstMip4.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices >> 3);
     }
+}
+
+kernel void generate2DMipmaps(uint lIndex [[thread_index_in_threadgroup]],
+                              ushort2 gIndices [[thread_position_in_grid]],
+                              texture2d<float> srcTexture [[texture(0)]],
+                              texture2d<float, access::write> dstMip1 [[texture(1)]],
+                              texture2d<float, access::write> dstMip2 [[texture(2)]],
+                              texture2d<float, access::write> dstMip3 [[texture(3)]],
+                              texture2d<float, access::write> dstMip4 [[texture(4)]],
+                              constant GenMipParams &options [[buffer(0)]])
+{
+    uint firstMipLevel = options.srcLevel + 1;
+    ushort2 mipSize =
+        ushort2(srcTexture.get_width(firstMipLevel), srcTexture.get_height(firstMipLevel));
+    bool validThread = gIndices.x < mipSize.x && gIndices.y < mipSize.y;
+
+    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear, mip_filter::linear);
+
+
+
+
+    threadgroup float sR[(8 * 8)];
+    threadgroup float sG[(8 * 8)];
+    threadgroup float sB[(8 * 8)];
+    threadgroup float sA[(8 * 8)];
+
+
+    float4 texel1;
+    if (validThread)
+    {
+        float2 texCoords = (float2(gIndices) + float2(0.5, 0.5)) / float2(mipSize);
+        texel1 = srcTexture.sample(textureSampler, texCoords, level(options.srcLevel));
+
+
+        dstMip1.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices);
+    }
+    else
+    {
+
+        lIndex = 0xffffffff;
+    }
+
+    if (options.numMipLevelsToGen == 1)
+    {
+        return;
+    }
+
+
+
+
+    sR[lIndex] = texel1.r; sG[lIndex] = texel1.g; sB[lIndex] = texel1.b; sA[lIndex] = texel1.a;;
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+
+    if ((lIndex & 0x09) == 0)
+    {
+        bool2 atEdge = gIndices == (mipSize - ushort2(1));
+
+
+
+        float4 texel2 = (atEdge.x) ? (texel1) : (float4(sR[lIndex + 1], sG[lIndex + 1], sB[lIndex + 1], sA[lIndex + 1]));
+
+        float4 texel3 = (atEdge.y) ? (texel1) : (float4(sR[lIndex + 8], sG[lIndex + 8], sB[lIndex + 8], sA[lIndex + 8]));
+
+        float4 texel4 = (atEdge.x | atEdge.y) ? (texel2) : (float4(sR[lIndex + (8 + 1)], sG[lIndex + (8 + 1)], sB[lIndex + (8 + 1)], sA[lIndex + (8 + 1)]));
+
+
+        texel1 = (texel1 + texel2 + texel3 + texel4) / 4.0;
+
+        dstMip2.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices >> 1);
+
+
+        sR[lIndex] = texel1.r; sG[lIndex] = texel1.g; sB[lIndex] = texel1.b; sA[lIndex] = texel1.a;;
+    }
+
+    if (options.numMipLevelsToGen == 2)
+    {
+        return;
+    }
+
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+
+    if ((lIndex & 0x1b) == 0)
+    {
+        mipSize = max(mipSize >> 1, ushort2(1));
+        bool2 atEdge = (gIndices >> 1) == (mipSize - ushort2(1));
+
+
+
+        float4 texel2 = (atEdge.x) ? (texel1) : (float4(sR[lIndex + 2], sG[lIndex + 2], sB[lIndex + 2], sA[lIndex + 2]));
+
+        float4 texel3 =
+            (atEdge.y) ? (texel1) : (float4(sR[lIndex + 2 * 8], sG[lIndex + 2 * 8], sB[lIndex + 2 * 8], sA[lIndex + 2 * 8]));
+
+        float4 texel4 = (atEdge.x | atEdge.y) ? (texel2) : (float4(sR[lIndex + (2 * 8 + 2)], sG[lIndex + (2 * 8 + 2)], sB[lIndex + (2 * 8 + 2)], sA[lIndex + (2 * 8 + 2)]));
+
+
+        texel1 = (texel1 + texel2 + texel3 + texel4) / 4.0;
+
+        dstMip3.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices >> 2);
+
+
+        sR[lIndex] = texel1.r; sG[lIndex] = texel1.g; sB[lIndex] = texel1.b; sA[lIndex] = texel1.a;;
+    }
+
+    if (options.numMipLevelsToGen == 3)
+    {
+        return;
+    }
+
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+
+    if ((lIndex & 0x3f) == 0)
+    {
+        mipSize = max(mipSize >> 1, ushort2(1));
+        bool2 atEdge = (gIndices >> 2) == (mipSize - ushort2(1));
+
+
+
+        float4 texel2 = (atEdge.x) ? (texel1) : (float4(sR[lIndex + 4], sG[lIndex + 4], sB[lIndex + 4], sA[lIndex + 4]));
+
+        float4 texel3 =
+            (atEdge.y) ? (texel1) : (float4(sR[lIndex + 4 * 8], sG[lIndex + 4 * 8], sB[lIndex + 4 * 8], sA[lIndex + 4 * 8]));
+
+        float4 texel4 = (atEdge.x | atEdge.y) ? (texel2) : (float4(sR[lIndex + (4 * 8 + 4)], sG[lIndex + (4 * 8 + 4)], sB[lIndex + (4 * 8 + 4)], sA[lIndex + (4 * 8 + 4)]));
+
+
+        texel1 = (texel1 + texel2 + texel3 + texel4) / 4.0;
+
+        dstMip4.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices >> 3);
+    }
+}
+
+template <typename TextureTypeR, typename TextureTypeW>
+static __attribute__((always_inline)) void generateCubeOr2DArray2ndAndMoreMipmaps(
+    uint lIndex,
+    ushort3 gIndices,
+    TextureTypeR srcTexture,
+    TextureTypeW dstMip2,
+    TextureTypeW dstMip3,
+    TextureTypeW dstMip4,
+    ushort2 mip1Size,
+    float4 mip1Texel,
+    threadgroup float *sR,
+    threadgroup float *sG,
+    threadgroup float *sB,
+    threadgroup float *sA,
+    constant GenMipParams &options)
+{
+    ushort2 mipSize = mip1Size;
+    float4 texel1 = mip1Texel;
+
+
+
+
+    sR[lIndex] = texel1.r; sG[lIndex] = texel1.g; sB[lIndex] = texel1.b; sA[lIndex] = texel1.a;;
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+
+    if ((lIndex & 0x09) == 0)
+    {
+        bool2 atEdge = gIndices.xy == (mipSize - ushort2(1));
+
+
+
+        float4 texel2 = (atEdge.x) ? (texel1) : (float4(sR[lIndex + 1], sG[lIndex + 1], sB[lIndex + 1], sA[lIndex + 1]));
+
+        float4 texel3 = (atEdge.y) ? (texel1) : (float4(sR[lIndex + 8], sG[lIndex + 8], sB[lIndex + 8], sA[lIndex + 8]));
+
+        float4 texel4 = (atEdge.x | atEdge.y) ? (texel2) : (float4(sR[lIndex + (8 + 1)], sG[lIndex + (8 + 1)], sB[lIndex + (8 + 1)], sA[lIndex + (8 + 1)]));
+
+
+        texel1 = (texel1 + texel2 + texel3 + texel4) / 4.0;
+
+        dstMip2.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices.xy >> 1, gIndices.z);
+
+
+        sR[lIndex] = texel1.r; sG[lIndex] = texel1.g; sB[lIndex] = texel1.b; sA[lIndex] = texel1.a;;
+    }
+
+    if (options.numMipLevelsToGen == 2)
+    {
+        return;
+    }
+
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+
+    if ((lIndex & 0x1b) == 0)
+    {
+        mipSize = max(mipSize >> 1, ushort2(1));
+        bool2 atEdge = (gIndices.xy >> 1) == (mipSize - ushort2(1));
+
+
+
+        float4 texel2 = (atEdge.x) ? (texel1) : (float4(sR[lIndex + 2], sG[lIndex + 2], sB[lIndex + 2], sA[lIndex + 2]));
+
+        float4 texel3 =
+            (atEdge.y) ? (texel1) : (float4(sR[lIndex + 2 * 8], sG[lIndex + 2 * 8], sB[lIndex + 2 * 8], sA[lIndex + 2 * 8]));
+
+        float4 texel4 = (atEdge.x | atEdge.y) ? (texel2) : (float4(sR[lIndex + (2 * 8 + 2)], sG[lIndex + (2 * 8 + 2)], sB[lIndex + (2 * 8 + 2)], sA[lIndex + (2 * 8 + 2)]));
+
+
+        texel1 = (texel1 + texel2 + texel3 + texel4) / 4.0;
+
+        dstMip3.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices.xy >> 2, gIndices.z);
+
+
+        sR[lIndex] = texel1.r; sG[lIndex] = texel1.g; sB[lIndex] = texel1.b; sA[lIndex] = texel1.a;;
+    }
+
+    if (options.numMipLevelsToGen == 3)
+    {
+        return;
+    }
+
+
+    threadgroup_barrier(mem_flags::mem_threadgroup);
+
+
+    if ((lIndex & 0x3f) == 0)
+    {
+        mipSize = max(mipSize >> 1, ushort2(1));
+        bool2 atEdge = (gIndices.xy >> 2) == (mipSize - ushort2(1));
+
+
+
+        float4 texel2 = (atEdge.x) ? (texel1) : (float4(sR[lIndex + 4], sG[lIndex + 4], sB[lIndex + 4], sA[lIndex + 4]));
+
+        float4 texel3 =
+            (atEdge.y) ? (texel1) : (float4(sR[lIndex + 4 * 8], sG[lIndex + 4 * 8], sB[lIndex + 4 * 8], sA[lIndex + 4 * 8]));
+
+        float4 texel4 = (atEdge.x | atEdge.y) ? (texel2) : (float4(sR[lIndex + (4 * 8 + 4)], sG[lIndex + (4 * 8 + 4)], sB[lIndex + (4 * 8 + 4)], sA[lIndex + (4 * 8 + 4)]));
+
+
+        texel1 = (texel1 + texel2 + texel3 + texel4) / 4.0;
+
+        dstMip4.write((options.sRGB ? sRGBtoLinear(texel1) : texel1), gIndices.xy >> 3, gIndices.z);
+    }
+}
+
+kernel void generateCubeMipmaps(uint lIndex [[thread_index_in_threadgroup]],
+                                ushort3 gIndices [[thread_position_in_grid]],
+                                texturecube<float> srcTexture [[texture(0)]],
+                                texturecube<float, access::write> dstMip1 [[texture(1)]],
+                                texturecube<float, access::write> dstMip2 [[texture(2)]],
+                                texturecube<float, access::write> dstMip3 [[texture(3)]],
+                                texturecube<float, access::write> dstMip4 [[texture(4)]],
+                                constant GenMipParams &options [[buffer(0)]])
+{
+    uint firstMipLevel = options.srcLevel + 1;
+    ushort2 mip1Size =
+        ushort2(srcTexture.get_width(firstMipLevel), srcTexture.get_height(firstMipLevel));
+    bool validThread = gIndices.x < mip1Size.x && gIndices.y < mip1Size.y;
+
+    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear, mip_filter::linear);
+
+
+    float4 mip1Texel;
+    if (validThread)
+    {
+        float2 texCoords = (float2(gIndices.xy) + float2(0.5, 0.5)) / float2(mip1Size);
+        mip1Texel = srcTexture.sample(textureSampler, cubeTexcoords(texCoords, int(gIndices.z)),
+                                      level(options.srcLevel));
+
+
+        dstMip1.write((options.sRGB ? sRGBtoLinear(mip1Texel) : mip1Texel), gIndices.xy, gIndices.z);
+    }
+    else
+    {
+
+        lIndex = 0xffffffff;
+    }
+
+    if (options.numMipLevelsToGen == 1)
+    {
+        return;
+    }
+
+
+    threadgroup float sR[(8 * 8)];
+    threadgroup float sG[(8 * 8)];
+    threadgroup float sB[(8 * 8)];
+    threadgroup float sA[(8 * 8)];
+
+    generateCubeOr2DArray2ndAndMoreMipmaps(lIndex, gIndices, srcTexture, dstMip2, dstMip3, dstMip4,
+                                           mip1Size, mip1Texel, sR, sG, sB, sA, options);
+}
+
+kernel void generate2DArrayMipmaps(uint lIndex [[thread_index_in_threadgroup]],
+                                   ushort3 gIndices [[thread_position_in_grid]],
+                                   texture2d_array<float> srcTexture [[texture(0)]],
+                                   texture2d_array<float, access::write> dstMip1 [[texture(1)]],
+                                   texture2d_array<float, access::write> dstMip2 [[texture(2)]],
+                                   texture2d_array<float, access::write> dstMip3 [[texture(3)]],
+                                   texture2d_array<float, access::write> dstMip4 [[texture(4)]],
+                                   constant GenMipParams &options [[buffer(0)]])
+{
+    uint firstMipLevel = options.srcLevel + 1;
+    ushort2 mip1Size =
+        ushort2(srcTexture.get_width(firstMipLevel), srcTexture.get_height(firstMipLevel));
+    bool validThread = gIndices.x < mip1Size.x && gIndices.y < mip1Size.y;
+
+    constexpr sampler textureSampler(mag_filter::linear, min_filter::linear, mip_filter::linear);
+
+
+    float4 mip1Texel;
+    if (validThread)
+    {
+        float2 texCoords = (float2(gIndices.xy) + float2(0.5, 0.5)) / float2(mip1Size);
+        mip1Texel =
+            srcTexture.sample(textureSampler, texCoords, gIndices.z, level(options.srcLevel));
+
+
+        dstMip1.write((options.sRGB ? sRGBtoLinear(mip1Texel) : mip1Texel), gIndices.xy, gIndices.z);
+    }
+    else
+    {
+
+        lIndex = 0xffffffff;
+    }
+
+    if (options.numMipLevelsToGen == 1)
+    {
+        return;
+    }
+
+
+    threadgroup float sR[(8 * 8)];
+    threadgroup float sG[(8 * 8)];
+    threadgroup float sB[(8 * 8)];
+    threadgroup float sA[(8 * 8)];
+
+    generateCubeOr2DArray2ndAndMoreMipmaps(lIndex, gIndices, srcTexture, dstMip2, dstMip3, dstMip4,
+                                           mip1Size, mip1Texel, sR, sG, sB, sA, options);
 }
 # 5 "temp_master_source.metal" 2
 # 1 "./copy_buffer.metal" 1

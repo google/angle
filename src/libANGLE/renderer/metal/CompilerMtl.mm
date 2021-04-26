@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/metal/CompilerMtl.h"
 
 #include "common/debug.h"
+#include "common/system_utils.h"
 
 namespace rx
 {

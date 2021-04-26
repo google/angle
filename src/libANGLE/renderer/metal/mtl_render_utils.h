@@ -313,21 +313,17 @@ class IndexGeneratorUtils final : angle::NonCopyable
   public:
     void onDestroy();
 
-    // Convert index buffer.
     angle::Result convertIndexBufferGPU(ContextMtl *contextMtl,
                                         const IndexConversionParams &params);
-    // Generate triangle fan index buffer for glDrawArrays().
     angle::Result generateTriFanBufferFromArrays(ContextMtl *contextMtl,
                                                  const TriFanOrLineLoopFromArrayParams &params);
     // Generate triangle fan index buffer for glDrawElements().
     angle::Result generateTriFanBufferFromElementsArray(ContextMtl *contextMtl,
-                                                        const IndexGenerationParams &params);
+                                                        const IndexGenerationParams &params,
+                                                        uint32_t *indicesGenerated);
 
-    // Generate line loop index buffer for glDrawArrays().
     angle::Result generateLineLoopBufferFromArrays(ContextMtl *contextMtl,
                                                    const TriFanOrLineLoopFromArrayParams &params);
-    // Generate line loop's last segment index buffer for glDrawArrays().
-    // This is used when primitive restart is not enabled.
     angle::Result generateLineLoopLastSegment(ContextMtl *contextMtl,
                                               uint32_t firstVertex,
                                               uint32_t lastVertex,
@@ -344,6 +340,18 @@ class IndexGeneratorUtils final : angle::NonCopyable
     angle::Result generateLineLoopLastSegmentFromElementsArray(ContextMtl *contextMtl,
                                                                const IndexGenerationParams &params);
 
+    angle::Result generatePrimitiveRestartPointsBuffer(ContextMtl *contextMtl,
+                                                       const IndexGenerationParams &params,
+                                                       size_t *indicesGenerated);
+
+    angle::Result generatePrimitiveRestartLinesBuffer(ContextMtl *contextMtl,
+                                                      const IndexGenerationParams &params,
+                                                      size_t *indicesGenerated);
+
+    angle::Result generatePrimitiveRestartTrianglesBuffer(ContextMtl *contextMtl,
+                                                          const IndexGenerationParams &params,
+                                                          size_t *indicesGenerated);
+
   private:
     // Index generator compute pipelines:
     //  - First dimension: index type.
@@ -352,7 +360,6 @@ class IndexGeneratorUtils final : angle::NonCopyable
         std::array<std::array<AutoObjCPtr<id<MTLComputePipelineState>>, 2>,
                    angle::EnumSize<gl::DrawElementsType>()>;
 
-    // Get compute pipeline to convert index between buffers.
     AutoObjCPtr<id<MTLComputePipelineState>> getIndexConversionPipeline(
         ContextMtl *contextMtl,
         gl::DrawElementsType srcType,
@@ -379,7 +386,8 @@ class IndexGeneratorUtils final : angle::NonCopyable
         // Must be multiples of kIndexBufferOffsetAlignment
         uint32_t dstOffset);
     angle::Result generateTriFanBufferFromElementsArrayCPU(ContextMtl *contextMtl,
-                                                           const IndexGenerationParams &params);
+                                                           const IndexGenerationParams &params,
+                                                           uint32_t *indicesGenerated);
 
     angle::Result generateLineLoopBufferFromElementsArrayGPU(
         ContextMtl *contextMtl,
@@ -396,6 +404,11 @@ class IndexGeneratorUtils final : angle::NonCopyable
     angle::Result generateLineLoopLastSegmentFromElementsArrayCPU(
         ContextMtl *contextMtl,
         const IndexGenerationParams &params);
+
+    angle::Result generatePrimitiveRestartBuffer(ContextMtl *contextMtl,
+                                                 unsigned numVerticesPerPrimitive,
+                                                 const IndexGenerationParams &params,
+                                                 size_t *indicesGenerated);
 
     IndexConversionPipelineArray mIndexConversionPipelineCaches;
 
@@ -433,7 +446,7 @@ class MipmapUtils final : angle::NonCopyable
   public:
     void onDestroy();
 
-    // Compute based mipmap generation. Only possible for 3D texture for now.
+    // Compute based mipmap generation.
     angle::Result generateMipmapCS(ContextMtl *contextMtl,
                                    const TextureRef &srcTexture,
                                    bool sRGBMipmap,
@@ -441,9 +454,15 @@ class MipmapUtils final : angle::NonCopyable
 
   private:
     void ensure3DMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
+    void ensure2DMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
+    void ensure2DArrayMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
+    void ensureCubeMipGeneratorPipelineInitialized(ContextMtl *contextMtl);
 
     // Mipmaps generating compute pipeline:
     AutoObjCPtr<id<MTLComputePipelineState>> m3DMipGeneratorPipeline;
+    AutoObjCPtr<id<MTLComputePipelineState>> m2DMipGeneratorPipeline;
+    AutoObjCPtr<id<MTLComputePipelineState>> m2DArrayMipGeneratorPipeline;
+    AutoObjCPtr<id<MTLComputePipelineState>> mCubeMipGeneratorPipeline;
 };
 
 // Util class for handling pixels copy between buffers and textures
@@ -547,6 +566,21 @@ class VertexFormatConversionUtils final : angle::NonCopyable
     RenderPipelineCache mComponentsExpandRenderPipelineCache;
 };
 
+// Util class for handling transform feedback
+class TransformFeedbackUtils
+{
+  public:
+    void onDestroy();
+    AutoObjCPtr<id<MTLRenderPipelineState>> getTransformFeedbackRenderPipeline(
+        ContextMtl *contextMtl,
+        RenderCommandEncoder *cmdEncoder,
+        mtl::RenderPipelineDesc &pipelineDesc);
+
+  private:
+    AutoObjCPtr<id<MTLLibrary>> createMslXfbLibrary(ContextMtl *contextMtl,
+                                                    const std::string &translatedMsl);
+};
+
 // RenderUtils: container class of various util classes above
 class RenderUtils : public Context, angle::NonCopyable
 {
@@ -591,7 +625,8 @@ class RenderUtils : public Context, angle::NonCopyable
     angle::Result generateTriFanBufferFromArrays(ContextMtl *contextMtl,
                                                  const TriFanOrLineLoopFromArrayParams &params);
     angle::Result generateTriFanBufferFromElementsArray(ContextMtl *contextMtl,
-                                                        const IndexGenerationParams &params);
+                                                        const IndexGenerationParams &params,
+                                                        uint32_t *indicesGenerated);
 
     angle::Result generateLineLoopBufferFromArrays(ContextMtl *contextMtl,
                                                    const TriFanOrLineLoopFromArrayParams &params);
@@ -643,6 +678,19 @@ class RenderUtils : public Context, angle::NonCopyable
                                                  RenderCommandEncoder *renderEncoder,
                                                  const angle::Format &srcAngleFormat,
                                                  const VertexFormatConvertParams &params);
+    angle::Result createTransformFeedbackPSO(const gl::Context *context,
+                                             RenderCommandEncoder *renderEncoder,
+                                             mtl::RenderPipelineDesc &pipelineDesc);
+
+    angle::Result generatePrimitiveRestartPointsBuffer(ContextMtl *contextMtl,
+                                                       const IndexGenerationParams &params,
+                                                       size_t *indicesGenerated);
+    angle::Result generatePrimitiveRestartLinesBuffer(ContextMtl *contextMtl,
+                                                      const IndexGenerationParams &params,
+                                                      size_t *indicesGenerated);
+    angle::Result generatePrimitiveRestartTrianglesBuffer(ContextMtl *contextMtl,
+                                                          const IndexGenerationParams &params,
+                                                          size_t *indicesGenerated);
 
   private:
     // override ErrorHandler
@@ -650,7 +698,7 @@ class RenderUtils : public Context, angle::NonCopyable
                      const char *file,
                      const char *function,
                      unsigned int line) override;
-    void handleError(NSError *_Nullable error,
+    void handleError(NSError *error,
                      const char *file,
                      const char *function,
                      unsigned int line) override;
@@ -666,6 +714,7 @@ class RenderUtils : public Context, angle::NonCopyable
     MipmapUtils mMipmapUtils;
     std::array<CopyPixelsUtils, angle::EnumSize<PixelType>()> mCopyPixelsUtils;
     VertexFormatConversionUtils mVertexFormatUtils;
+    TransformFeedbackUtils mTransformFeedbackUtils;
 };
 
 }  // namespace mtl

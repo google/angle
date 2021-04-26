@@ -376,27 +376,6 @@ angle::Result ConvertSpirvToMsl(Context *context,
 
 }  // namespace
 
-void TranslatedShaderInfo::reset()
-{
-    metalShaderSource.clear();
-    metalLibrary         = nil;
-    hasUBOArgumentBuffer = false;
-    for (mtl::SamplerBinding &binding : actualSamplerBindings)
-    {
-        binding.textureBinding = mtl::kMaxShaderSamplers;
-    }
-
-    for (uint32_t &binding : actualUBOBindings)
-    {
-        binding = mtl::kMaxShaderBuffers;
-    }
-
-    for (uint32_t &binding : actualXFBBindings)
-    {
-        binding = mtl::kMaxShaderBuffers;
-    }
-}
-
 void GlslangGetShaderSpirvCode(const gl::ProgramState &programState,
                                const gl::ProgramLinkedResources &resources,
                                gl::ShaderMap<const angle::spirv::Blob *> *spirvBlobsOut,

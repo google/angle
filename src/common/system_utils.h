@@ -27,6 +27,7 @@ Optional<std::string> GetCWD();
 bool SetCWD(const char *dirName);
 bool SetEnvironmentVar(const char *variableName, const char *value);
 bool UnsetEnvironmentVar(const char *variableName);
+bool GetBoolEnvironmentVar(const char *variableName);
 std::string GetEnvironmentVar(const char *variableName);
 std::string GetEnvironmentVarOrUnCachedAndroidProperty(const char *variableName,
                                                        const char *propertyName);

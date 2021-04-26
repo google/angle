@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// EAGLFunctions.cpp: Exposing the soft-linked EAGL interface.
+// FunctionsEAGL.cpp: Exposing the soft-linked EAGL interface.
 
 #include "common/platform.h"
 

@@ -609,6 +609,9 @@ TEST_P(TriangleFanDrawTest, DrawTriangleFanPrimitiveRestartAtBegin)
 {
     ANGLE_SKIP_TEST_IF(getClientMajorVersion() < 3);
 
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
     // Primitive restart index is at middle, but we will use draw call which index offset=4.
     std::vector<GLubyte> indices = {0, 1, 2, 3, 0xff, 0, 4, 3};
 

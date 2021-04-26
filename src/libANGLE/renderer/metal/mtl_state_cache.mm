@@ -17,6 +17,7 @@
 #include "libANGLE/renderer/metal/ContextMtl.h"
 #include "libANGLE/renderer/metal/mtl_resources.h"
 #include "libANGLE/renderer/metal/mtl_utils.h"
+#include "platform/FeaturesMtl.h"
 
 #define ANGLE_OBJC_CP_PROPERTY(DST, SRC, PROPERTY) \
     (DST).PROPERTY = static_cast<__typeof__((DST).PROPERTY)>(ToObjC((SRC).PROPERTY))
@@ -1059,7 +1060,7 @@ void RenderPipelineCache::clearPipelineStates()
 }
 
 // StateCache implementation
-StateCache::StateCache() {}
+StateCache::StateCache(const angle::FeaturesMtl &features) : mFeatures(features) {}
 
 StateCache::~StateCache() {}
 
@@ -1110,6 +1111,11 @@ AutoObjCPtr<id<MTLSamplerState>> StateCache::getSamplerState(id<MTLDevice> metal
         if (ite == mSamplerStates.end())
         {
             AutoObjCObj<MTLSamplerDescriptor> objCDesc = ToObjC(desc);
+            if (!mFeatures.allowRuntimeSamplerCompareMode.enabled)
+            {
+                // Runtime sampler compare mode is not supported, fallback to never.
+                objCDesc.get().compareFunction = MTLCompareFunctionNever;
+            }
             AutoObjCPtr<id<MTLSamplerState>> newState =
                 [[metalDevice newSamplerStateWithDescriptor:objCDesc] ANGLE_MTL_AUTORELEASE];
 

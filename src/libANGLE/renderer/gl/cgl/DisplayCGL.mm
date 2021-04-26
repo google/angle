@@ -441,7 +441,7 @@ egl::Error DisplayCGL::restoreLostDevice(const egl::Display *display)
 
 bool DisplayCGL::isValidNativeWindow(EGLNativeWindowType window) const
 {
-    NSObject *layer = (__bridge NSObject *)window;
+    NSObject *layer = reinterpret_cast<NSObject *>(window);
     return [layer isKindOfClass:[CALayer class]];
 }
 

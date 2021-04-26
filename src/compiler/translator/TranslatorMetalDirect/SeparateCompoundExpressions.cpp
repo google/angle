@@ -630,10 +630,7 @@ bool sh::SeparateCompoundExpressions(TCompiler &compiler,
                                      IdGen &idGen,
                                      TIntermBlock &root)
 {
-    std::string disableSeparateString =
-        angle::GetEnvironmentVar("GMT_DISABLE_SEPARATE_COMPOUND_EXPRESSIONS");
-    bool disableSeparateBool = !disableSeparateString.empty() && (disableSeparateString == "1");
-    if (disableSeparateBool)
+    if (angle::GetBoolEnvironmentVar("GMT_DISABLE_SEPARATE_COMPOUND_EXPRESSIONS"))
     {
         return true;
     }

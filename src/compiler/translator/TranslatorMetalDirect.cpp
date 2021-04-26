@@ -14,7 +14,6 @@
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/ConstantNames.h"
 #include "compiler/translator/TranslatorMetalDirect/EmitMetal.h"
 #include "compiler/translator/TranslatorMetalDirect/FixTypeConstructors.h"
 #include "compiler/translator/TranslatorMetalDirect/HoistConstants.h"
@@ -483,18 +482,6 @@ TranslatorMetalDirect::TranslatorMetalDirect(sh::GLenum type,
     : TCompiler(type, spec, output)
 {}
 
-// static
-const char *TranslatorMetalDirect::GetCoverageMaskEnabledConstName()
-{
-    return constant_names::kCoverageMaskEnabled.rawName().data();
-}
-
-// static
-const char *TranslatorMetalDirect::GetRasterizationDiscardEnabledConstName()
-{
-    return constant_names::kRasterizationDiscardEnabled.rawName().data();
-}
-
 // Add sample_mask writing to main, guarded by the function constant
 // kCoverageMaskEnabledName
 ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
@@ -507,8 +494,8 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
     TType *boolType = new TType(EbtBool);
     boolType->setQualifier(EvqConst);
     TVariable *coverageMaskEnabledVar =
-        new TVariable(symbolTable, constant_names::kCoverageMaskEnabled.rawName(), boolType,
-                      SymbolType::AngleInternal);
+        new TVariable(symbolTable, sh::ImmutableString(sh::mtl::kCoverageMaskEnabledConstName),
+                      boolType, SymbolType::AngleInternal);
 
     TFunction *sampleMaskWriteFunc = new TFunction(symbolTable, kSampleMaskWriteFuncName.rawName(),
                                                    kSampleMaskWriteFuncName.symbolType(),
@@ -524,7 +511,7 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
     sampleMaskWriteFunc->addParameter(gl_SampleMaskArg);
 
     // Insert this MSL code to the end of main() in the shader
-    // if (ANGLE_CoverageMaskEnabled)
+    // if (ANGLECoverageMaskEnabled)
     // {
     //      ANGLE_writeSampleMask(ANGLE_angleUniforms.coverageMask,
     //      ANGLE_fragmentOut.gl_SampleMask);
@@ -542,7 +529,6 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertSampleMaskWritingLogic(
 
     TIntermSymbol *coverageMaskEnabled = new TIntermSymbol(coverageMaskEnabledVar);
     TIntermIfElse *ifCall              = new TIntermIfElse(coverageMaskEnabled, callBlock, nullptr);
-
     return RunAtTheEndOfShader(this, &root, ifCall, symbolTable);
 }
 
@@ -553,8 +539,8 @@ ANGLE_NO_DISCARD bool TranslatorMetalDirect::insertRasterizationDiscardLogic(TIn
     TType *boolType = new TType(EbtBool);
     boolType->setQualifier(EvqConst);
     TVariable *discardEnabledVar =
-        new TVariable(symbolTable, constant_names::kRasterizationDiscardEnabled.rawName(), boolType,
-                      constant_names::kRasterizationDiscardEnabled.symbolType());
+        new TVariable(symbolTable, sh::ImmutableString(sh::mtl::kRasterizerDiscardEnabledConstName),
+                      boolType, SymbolType::AngleInternal);
 
     const TVariable *position  = BuiltInVariable::gl_Position();
     TIntermSymbol *positionRef = new TIntermSymbol(position);

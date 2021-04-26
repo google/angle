@@ -75,6 +75,12 @@ std::string GetEnvironmentVarOrUnCachedAndroidProperty(const char *variableName,
     return GetEnvironmentVar(variableName);
 }
 
+bool GetBoolEnvironmentVar(const char *variableName)
+{
+    std::string envVarString = GetEnvironmentVar(variableName);
+    return (!envVarString.empty() && envVarString == "1");
+}
+
 bool PrependPathToEnvironmentVar(const char *variableName, const char *path)
 {
     std::string oldValue = GetEnvironmentVar(variableName);

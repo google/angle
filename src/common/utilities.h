@@ -37,7 +37,6 @@ size_t VariableInternalSize(GLenum type);
 size_t VariableExternalSize(GLenum type);
 int VariableRowCount(GLenum type);
 int VariableColumnCount(GLenum type);
-int VariableAttributeCount(GLenum type);
 bool IsSamplerType(GLenum type);
 bool IsSamplerCubeType(GLenum type);
 bool IsSamplerYUVType(GLenum type);

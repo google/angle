@@ -4,7 +4,7 @@
 // found in the LICENSE file.
 //
 
-// EAGLFunctions.h: Exposing the soft-linked EAGL interface.
+// FunctionsEAGL.h: Exposing the soft-linked EAGL interface.
 
 #ifndef EAGL_FUNCTIONS_H_
 #define EAGL_FUNCTIONS_H_

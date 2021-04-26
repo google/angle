@@ -145,6 +145,9 @@ TEST_P(TextureUploadFormatTest, All)
 {
     ANGLE_SKIP_TEST_IF(IsD3D9() || IsD3D11_FL93());
 
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsMetal());
+
     constexpr char kVertShaderES2[]     = R"(
         void main()
         {

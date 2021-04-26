@@ -6,7 +6,7 @@
 
 import("../../../../gni/angle.gni")
 
-assert(is_mac)
+assert(is_mac || is_ios)
 assert(angle_enable_metal)
 
 _metal_backend_sources = [
@@ -23,6 +23,8 @@ _metal_backend_sources = [
   "DisplayMtl_api.h",
   "FrameBufferMtl.h",
   "FrameBufferMtl.mm",
+  "IOSurfaceSurfaceMtl.h",
+  "IOSurfaceSurfaceMtl.mm",
   "ImageMtl.h",
   "ImageMtl.mm",
   "ProgramMtl.h",
@@ -56,6 +58,8 @@ _metal_backend_sources = [
   "mtl_format_table_autogen.mm",
   "mtl_format_utils.h",
   "mtl_format_utils.mm",
+  "mtl_glslang_mtl_utils.h",
+  "mtl_glslang_mtl_utils.mm",
   "mtl_glslang_utils.h",
   "mtl_glslang_utils.mm",
   "mtl_occlusion_query_pool.h",
@@ -74,7 +78,10 @@ _metal_backend_sources = [
 ]
 
 config("angle_metal_backend_config") {
-  defines = [ "ANGLE_ENABLE_METAL" ]
+  defines = [
+    "ANGLE_ENABLE_METAL",
+    "ANGLE_ENABLE_METAL_SPIRV",
+  ]
   ldflags = [
     "-weak_framework",
     "Metal",
@@ -94,10 +101,12 @@ angle_source_set("angle_metal_backend") {
   libs = []
 
   public_deps = [
+    "${angle_root}:angle_common",
     "${angle_root}:angle_glslang_wrapper",
     "${angle_root}:angle_gpu_info_util",
     "${angle_root}:angle_image_util",
     "${angle_root}:libANGLE_headers",
+    "${angle_root}:translator",
   ]
 
   deps = [ "${angle_spirv_cross_dir}/gn:spirv_cross_sources" ]

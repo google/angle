@@ -612,7 +612,7 @@ TEST_F(MSLOutputTest, DoWhileSymbol)
     compile(shaderString, SH_VARIABLES);
 }
 
-+ TEST_F(MSLOutputTest, AnonymousStruct)
+TEST_F(MSLOutputTest, AnonymousStruct)
 {
     const std::string &shaderString =
         "#version 300 es\n"

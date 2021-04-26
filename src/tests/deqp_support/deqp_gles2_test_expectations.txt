@@ -470,6 +470,19 @@
 // Line loop emulation bug, suspected to be caused by wrong segment order
 4853 METAL AMD : dEQP-GLES2.functional.draw.draw_arrays.line_loop.multiple_attributes = FAIL
 
+// Test failures introduced by Apple's changes (anglebug.com/5505)
+5505 METAL AMD : dEQP-GLES2.functional.fragment_ops.scissor.outside_render_* = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.conversions.vector_to_scalar.vec3_to_float_vertex = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.invariance.*.common_subexpression_0 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.invariance.*.common_subexpression_1 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.invariance.*.common_subexpression_3 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.random.conditionals.combined.17 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.10 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.26 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.40 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.random.trigonometric.vertex.94 = FAIL
+5505 METAL AMD : dEQP-GLES2.functional.shaders.swizzles.vector_swizzles.mediump_vec3_*_vertex = FAIL
+
 // Globally disable Metal testing on Intel & NVIDIA for now
 4235 METAL INTEL : dEQP-GLES2.* = SKIP
 4235 METAL NVIDIA : dEQP-GLES2.* = SKIP

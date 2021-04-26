@@ -56,14 +56,22 @@ ConversionBufferMtl::~ConversionBufferMtl() = default;
 IndexConversionBufferMtl::IndexConversionBufferMtl(ContextMtl *context,
                                                    gl::DrawElementsType elemTypeIn,
                                                    bool primitiveRestartEnabledIn,
-                                                   size_t offsetIn)
+                                                   size_t offsetIn,
+                                                   std::vector<IndexRange> restartRangesIn)
     : ConversionBufferMtl(context,
                           kConvertedElementArrayBufferInitialSize,
                           mtl::kIndexBufferOffsetAlignment),
       elemType(elemTypeIn),
       offset(offsetIn),
-      primitiveRestartEnabled(primitiveRestartEnabledIn)
+      primitiveRestartEnabled(primitiveRestartEnabledIn),
+      restartRanges(restartRangesIn)
+
 {}
+
+IndexRange IndexConversionBufferMtl::getRangeForConvertedBuffer(size_t count)
+{
+    return IndexRange{0, count};
+}
 
 // UniformConversionBufferMtl implementation
 UniformConversionBufferMtl::UniformConversionBufferMtl(ContextMtl *context, size_t offsetIn)
@@ -105,7 +113,7 @@ angle::Result BufferMtl::setData(const gl::Context *context,
                                  size_t intendedSize,
                                  gl::BufferUsage usage)
 {
-    return setDataImpl(context, data, intendedSize, usage);
+    return setDataImpl(context, target, data, intendedSize, usage);
 }
 
 angle::Result BufferMtl::setSubData(const gl::Context *context,
@@ -164,7 +172,8 @@ angle::Result BufferMtl::mapRange(const gl::Context *context,
 {
     if (access & GL_MAP_INVALIDATE_BUFFER_BIT)
     {
-        ANGLE_TRY(setDataImpl(context, nullptr, size(), mState.getUsage()));
+        ANGLE_TRY(setDataImpl(context, gl::BufferBinding::InvalidEnum, nullptr, size(),
+                              mState.getUsage()));
     }
 
     if (mapPtr)
@@ -224,6 +233,11 @@ angle::Result BufferMtl::unmap(const gl::Context *context, GLboolean *result)
             // commit shadow copy data to GPU synchronously
             ANGLE_TRY(commitShadowCopy(context));
         }
+    }
+
+    if (result)
+    {
+        *result = true;
     }
 
     return angle::Result::Continue;
@@ -395,6 +409,7 @@ void BufferMtl::clearConversionBuffers()
 }
 
 angle::Result BufferMtl::setDataImpl(const gl::Context *context,
+                                     gl::BufferBinding target,
                                      const void *data,
                                      size_t intendedSize,
                                      gl::BufferUsage usage)
@@ -412,6 +427,13 @@ angle::Result BufferMtl::setDataImpl(const gl::Context *context,
     }
 
     size_t adjustedSize = std::max<size_t>(1, intendedSize);
+
+    // Ensures no validation layer issues in std140 with data types like vec3 being 12 bytes vs 16
+    // in MSL.
+    if (target == gl::BufferBinding::Uniform)
+    {
+        adjustedSize = roundUpPow2(adjustedSize, (size_t)16);
+    }
 
     size_t maxBuffers;
     switch (usage)

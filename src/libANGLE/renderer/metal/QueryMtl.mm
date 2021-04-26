@@ -1,5 +1,5 @@
 //
-// Copyright 2020 The ANGLE Project Authors. All rights reserved.
+// Copyright (c) 2020 The ANGLE Project Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
@@ -13,7 +13,7 @@
 
 namespace rx
 {
-QueryMtl::QueryMtl(gl::QueryType type) : QueryImpl(type) {}
+QueryMtl::QueryMtl(gl::QueryType type) : QueryImpl(type), mTransformFeedbackPrimitivesDrawn(0) {}
 
 QueryMtl::~QueryMtl() {}
 
@@ -69,9 +69,8 @@ angle::Result QueryMtl::end(const gl::Context *context)
             contextMtl->onOcclusionQueryEnd(context, this);
             break;
         case gl::QueryType::TransformFeedbackPrimitivesWritten:
-            // There could be transform feedback in progress, so add the primitives drawn so far
-            // from the current transform feedback object.
             onTransformFeedbackEnd(context);
+            break;
             break;
         default:
             UNIMPLEMENTED();

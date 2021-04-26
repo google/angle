@@ -901,6 +901,10 @@ angle_source_set("libANGLE_base") {
     sources += libangle_mac_sources
   }
 
+  if (is_ios) {
+    sources += [ "src/libANGLE/renderer/driver_utils_ios.mm" ]
+  }
+
   if (is_debug) {
     defines += [ "ANGLE_GENERATE_SHADER_DEBUG_INFO" ]
   }

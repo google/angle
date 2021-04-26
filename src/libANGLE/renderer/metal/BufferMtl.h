@@ -24,7 +24,11 @@
 
 namespace rx
 {
-
+struct IndexRange
+{
+    size_t restartBegin;
+    size_t restartEnd;
+};
 // Conversion buffers hold translated index and vertex data.
 struct ConversionBufferMtl
 {
@@ -36,7 +40,6 @@ struct ConversionBufferMtl
 
     // The conversion is stored in a dynamic buffer.
     mtl::BufferPool data;
-
     // These properties are to be filled by user of this buffer conversion
     mtl::BufferRef convertedBuffer;
     size_t convertedOffset;
@@ -60,11 +63,13 @@ struct IndexConversionBufferMtl : public ConversionBufferMtl
     IndexConversionBufferMtl(ContextMtl *context,
                              gl::DrawElementsType elemType,
                              bool primitiveRestartEnabled,
-                             size_t offsetIn);
-
+                             size_t offsetIn,
+                             std::vector<IndexRange> restartRangesIn = std::vector<IndexRange>());
     const gl::DrawElementsType elemType;
     const size_t offset;
     bool primitiveRestartEnabled;
+    std::vector<IndexRange> restartRanges;
+    IndexRange getRangeForConvertedBuffer(size_t count);
 };
 
 struct UniformConversionBufferMtl : public ConversionBufferMtl
@@ -156,6 +161,7 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
 
   private:
     angle::Result setDataImpl(const gl::Context *context,
+                              gl::BufferBinding target,
                               const void *data,
                               size_t size,
                               gl::BufferUsage usage);
@@ -174,13 +180,18 @@ class BufferMtl : public BufferImpl, public BufferHolderMtl
     void ensureShadowCopySyncedFromGPU(ContextMtl *contextMtl);
     uint8_t *syncAndObtainShadowCopy(ContextMtl *contextMtl);
 
+    // Convenient method
+    const uint8_t *getClientShadowCopyData(const gl::Context *context)
+    {
+        return getClientShadowCopyData(mtl::GetImpl(context));
+    }
     // Client side shadow buffer
     angle::MemoryBuffer mShadowCopy;
 
     // GPU side buffers pool
     mtl::BufferPool mBufferPool;
 
-    // A cache of converted buffer data.
+    // A cache of converted vertex data.
     std::vector<VertexConversionBufferMtl> mVertexConversionBuffers;
 
     std::vector<IndexConversionBufferMtl> mIndexConversionBuffers;

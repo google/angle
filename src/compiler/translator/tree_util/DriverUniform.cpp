@@ -32,14 +32,14 @@ constexpr const char kXfbBufferOffsets[]       = "xfbBufferOffsets";
 constexpr const char kAcbBufferOffsets[]       = "acbBufferOffsets";
 constexpr const char kDepthRange[]             = "depthRange";
 constexpr const char kNumSamples[]             = "numSamples";
+constexpr const char kHalfRenderArea[]         = "halfRenderArea";
+constexpr const char kFlipXY[]                 = "flipXY";
+constexpr const char kNegFlipXY[]              = "negFlipXY";
+constexpr const char kPreRotation[]            = "preRotation";
+constexpr const char kFragRotation[]           = "fragRotation";
+constexpr const char kEmulatedInstanceId[]     = "emulatedInstanceID";
+constexpr const char kCoverageMask[]           = "coverageMask";
 
-constexpr const char kHalfRenderArea[]     = "halfRenderArea";
-constexpr const char kFlipXY[]             = "flipXY";
-constexpr const char kNegFlipXY[]          = "negFlipXY";
-constexpr const char kPreRotation[]        = "preRotation";
-constexpr const char kFragRotation[]       = "fragRotation";
-constexpr const char kEmulatedInstanceId[] = "emulatedInstanceID";
-constexpr const char kCoverageMask[]       = "coverageMask";
 }  // anonymous namespace
 
 // Class DriverUniform
@@ -237,15 +237,19 @@ TFieldList *DriverUniformExtended::createUniformFields(TSymbolTable *symbolTable
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 
-    constexpr size_t kNumGraphicsDriverUniformsExt = 4;
+    constexpr size_t kNumGraphicsDriverUniformsExt = 7;
     constexpr std::array<const char *, kNumGraphicsDriverUniformsExt>
-        kGraphicsDriverUniformNamesExt = {{kHalfRenderArea, kFlipXY, kNegFlipXY, kFragRotation}};
+        kGraphicsDriverUniformNamesExt = {{kHalfRenderArea, kFlipXY, kNegFlipXY,
+                                           kEmulatedInstanceId, kCoverageMask, kFragRotation,
+                                           kPreRotation}};
 
     const std::array<TType *, kNumGraphicsDriverUniformsExt> kDriverUniformTypesExt = {{
         new TType(EbtFloat, 2),
         new TType(EbtFloat, 2),
         new TType(EbtFloat, 2),
-        // NOTE: There's a vec2 gap here that can be used in the future
+        new TType(EbtUInt),
+        new TType(EbtUInt),
+        new TType(EbtFloat, 2, 2),
         new TType(EbtFloat, 2, 2),
     }};
 

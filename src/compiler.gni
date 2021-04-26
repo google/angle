@@ -371,7 +371,6 @@ angle_translator_lib_metal_sources = [
   "src/compiler/translator/TranslatorMetalDirect/AddExplicitTypeCasts.h",
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.cpp",
   "src/compiler/translator/TranslatorMetalDirect/AstHelpers.h",
-  "src/compiler/translator/TranslatorMetalDirect/ConstantNames.h",
   "src/compiler/translator/TranslatorMetalDirect/DebugSink.h",
   "src/compiler/translator/TranslatorMetalDirect/DiscoverDependentFunctions.cpp",
   "src/compiler/translator/TranslatorMetalDirect/DiscoverDependentFunctions.h",

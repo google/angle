@@ -9,7 +9,6 @@
 #include "compiler/translator/InfoSink.h"
 #include "compiler/translator/Symbol.h"
 #include "compiler/translator/TranslatorMetalDirect/AstHelpers.h"
-#include "compiler/translator/TranslatorMetalDirect/ConstantNames.h"
 #include "compiler/translator/TranslatorMetalDirect/Name.h"
 #include "compiler/translator/TranslatorMetalDirect/ProgramPrelude.h"
 #include "compiler/translator/tree_util/IntermTraverse.h"
@@ -1441,7 +1440,7 @@ PROGRAM_PRELUDE_DECLARE(writeSampleMask,
 ANGLE_ALWAYS_INLINE void ANGLE_writeSampleMask(const uint mask,
                                                thread uint& gl_SampleMask)
 {
-    if (ANGLE_CoverageMaskEnabled)
+    if (ANGLECoverageMaskEnabled)
     {
         gl_SampleMask = as_type<int>(mask);
     }
@@ -1466,10 +1465,10 @@ PROGRAM_PRELUDE_DECLARE(functionConstants,
 #define ANGLE_RASTERIZATION_DISCARD_INDEX   2
 #define ANGLE_COVERAGE_MASK_ENABLED_INDEX   3
 
-constant bool ANGLE_UseSampleCompareGradient [[function_constant(ANGLE_SAMPLE_COMPARE_GRADIENT_INDEX)]];
-constant bool ANGLE_UseSampleCompareLod      [[function_constant(ANGLE_SAMPLE_COMPARE_LOD_INDEX)]];
-constant bool ANGLE_RasterizationDiscard     [[function_constant(ANGLE_RASTERIZATION_DISCARD_INDEX)]];
-constant bool ANGLE_CoverageMaskEnabled      [[function_constant(ANGLE_COVERAGE_MASK_ENABLED_INDEX)]];
+constant bool ANGLEUseSampleCompareGradient [[function_constant(ANGLE_SAMPLE_COMPARE_GRADIENT_INDEX)]];
+constant bool ANGLEUseSampleCompareLod      [[function_constant(ANGLE_SAMPLE_COMPARE_LOD_INDEX)]];
+constant bool ANGLERasterizationDiscard     [[function_constant(ANGLE_RASTERIZATION_DISCARD_INDEX)]];
+constant bool ANGLECoverageMaskEnabled      [[function_constant(ANGLE_COVERAGE_MASK_ENABLED_INDEX)]];
 )")
 
 PROGRAM_PRELUDE_DECLARE(texelFetch,
@@ -2136,7 +2135,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad_impl(
     metal::float2 const dPdx,
     metal::float2 const dPdy)
 {
-    if (ANGLE_UseSampleCompareGradient)
+    if (ANGLEUseSampleCompareGradient)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy, coord.z, metal::gradient2d(dPdx, dPdy)));
     }
@@ -2159,7 +2158,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad_impl(
     metal::float2 const dPdx,
     metal::float2 const dPdy)
 {
-    if (ANGLE_UseSampleCompareGradient)
+    if (ANGLEUseSampleCompareGradient)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy, uint(metal::round(coord.z)), coord.w, metal::gradient2d(dPdx, dPdy)));
     }
@@ -2182,7 +2181,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGrad_impl(
     metal::float3 const dPdx,
     metal::float3 const dPdy)
 {
-    if (ANGLE_UseSampleCompareGradient)
+    if (ANGLEUseSampleCompareGradient)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xyz, coord.w, metal::gradientcube(dPdx, dPdy)));
     }
@@ -2276,7 +2275,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
     metal::float2 const dPdy,
     metal::int2 const offset)
 {
-    if (ANGLE_UseSampleCompareGradient)
+    if (ANGLEUseSampleCompareGradient)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy, coord.z, metal::gradient2d(dPdx, dPdy), offset));
     }
@@ -2300,7 +2299,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureGradOffset_impl(
     metal::float2 const dPdy,
     metal::int2 const offset)
 {
-    if (ANGLE_UseSampleCompareGradient)
+    if (ANGLEUseSampleCompareGradient)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy, uint(metal::round(coord.z)), coord.w, metal::gradient2d(dPdx, dPdy), offset));
     }
@@ -2388,7 +2387,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLod_impl(
     metal::float3 const coord,
     float level)
 {
-    if (ANGLE_UseSampleCompareLod)
+    if (ANGLEUseSampleCompareLod)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy, coord.z, metal::level(level)));
     }
@@ -2463,7 +2462,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureLodOffset_impl(
     float level,
     int2 const offset)
 {
-    if (ANGLE_UseSampleCompareLod)
+    if (ANGLEUseSampleCompareLod)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy, coord.z, metal::level(level), offset));
     }
@@ -2670,7 +2669,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGrad_impl(
     metal::float2 const dPdx,
     metal::float2 const dPdy)
 {
-    if (ANGLE_UseSampleCompareGradient)
+    if (ANGLEUseSampleCompareGradient)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy/coord.w, coord.z/coord.w, metal::gradient2d(dPdx, dPdy)));
     }
@@ -2747,7 +2746,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjGradOffset_impl(
     metal::float2 const dPdy,
     int2 const offset)
 {
-    if (ANGLE_UseSampleCompareGradient)
+    if (ANGLEUseSampleCompareGradient)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy/coord.w, coord.z/coord.w, metal::gradient2d(dPdx, dPdy), offset));
     }
@@ -2819,7 +2818,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLod_impl(
     metal::float4 const coord,
     float level)
 {
-    if (ANGLE_UseSampleCompareLod)
+    if (ANGLEUseSampleCompareLod)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(level)));
     }
@@ -2880,7 +2879,7 @@ ANGLE_ALWAYS_INLINE auto ANGLE_textureProjLodOffset_impl(
     float level,
     int2 const offset)
 {
-    if (ANGLE_UseSampleCompareLod)
+    if (ANGLEUseSampleCompareLod)
     {
         return static_cast<T>(texture.sample_compare(sampler, coord.xy/coord.w, coord.z/coord.w, metal::level(level), offset));
     }
@@ -3806,7 +3805,7 @@ void ProgramPrelude::visitVariable(const Name &name, const TType &type)
     }
     else
     {
-        if (name == constant_names::kRasterizationDiscardEnabled)
+        if (name.rawName() == sh::mtl::kRasterizerDiscardEnabledConstName)
         {
             functionConstants();
         }

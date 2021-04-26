@@ -26,6 +26,10 @@ namespace rx
 
 class ContextMtl;
 
+void StartFrameCapture(id<MTLDevice> metalDevice, id<MTLCommandQueue> metalCmdQueue);
+void StartFrameCapture(ContextMtl *context);
+void StopFrameCapture();
+
 namespace mtl
 {
 
@@ -84,19 +88,33 @@ MTLScissorRect GetScissorRect(const gl::Rectangle &rect,
 
 uint32_t GetDeviceVendorId(id<MTLDevice> metalDevice);
 
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+    id<MTLDevice> metalDevice,
+    const std::string &source,
+    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    AutoObjCPtr<NSError *> *error);
+
 AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
                                                 const std::string &source,
                                                 AutoObjCPtr<NSError *> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(id<MTLDevice> metalDevice,
-                                                const char *source,
-                                                size_t sourceLen,
-                                                AutoObjCPtr<NSError *> *error);
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibrary(
+    id<MTLDevice> metalDevice,
+    const char *source,
+    size_t sourceLen,
+    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    AutoObjCPtr<NSError *> *error);
 
-AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(id<MTLDevice> metalDevice,
-                                                          const uint8_t *binarySource,
-                                                          size_t binarySourceLen,
-                                                          AutoObjCPtr<NSError *> *error);
+AutoObjCPtr<id<MTLLibrary>> CreateShaderLibraryFromBinary(
+    id<MTLDevice> metalDevice,
+    const uint8_t *binarySource,
+    size_t binarySourceLen,
+    NSDictionary<NSString *, NSObject *> *substitutionDictionary,
+    AutoObjCPtr<NSError *> *error);
+
+bool supportsAppleGPUFamily(id<MTLDevice> device, uint8_t appleFamily);
+
+bool SupportsMacGPUFamily(id<MTLDevice> device, uint8_t macFamily);
 
 // Need to define invalid enum value since Metal doesn't define it
 constexpr MTLTextureType MTLTextureTypeInvalid = static_cast<MTLTextureType>(NSUIntegerMax);
@@ -135,14 +153,28 @@ MTLTextureSwizzle GetTextureSwizzle(GLenum swizzle);
 
 // Get color write mask for a specified format. Some formats such as RGB565 doesn't have alpha
 // channel but is emulated by a RGBA8 format, we need to disable alpha write for this format.
-// - isFormatEmulated: if the format is emulated, this pointer will store a true value.
-MTLColorWriteMask GetEmulatedColorWriteMask(const mtl::Format &mtlFormat, bool *isFormatEmulated);
+// - emulatedChannelsOut: if the format is emulated, this pointer will store a true value.
+MTLColorWriteMask GetEmulatedColorWriteMask(const mtl::Format &mtlFormat,
+                                            bool *emulatedChannelsOut);
 MTLColorWriteMask GetEmulatedColorWriteMask(const mtl::Format &mtlFormat);
 bool IsFormatEmulated(const mtl::Format &mtlFormat);
+
+NSUInteger GetMaxRenderTargetSizeForDeviceInBytes(id<MTLDevice> device);
+NSUInteger GetMaxNumberOfRenderTargetsForDevice(id<MTLDevice> device);
+bool DeviceHasMaximumRenderTargetSize(id<MTLDevice> device);
 
 // Useful to set clear color for texture originally having no alpha in GL, but backend's format
 // has alpha channel.
 MTLClearColor EmulatedAlphaClearColor(MTLClearColor color, MTLColorWriteMask colorMask);
+
+NSUInteger ComputeTotalSizeUsedForMTLRenderPassDescriptor(const MTLRenderPassDescriptor *descriptor,
+                                                          const Context *context,
+                                                          id<MTLDevice> device);
+
+NSUInteger ComputeTotalSizeUsedForMTLRenderPipelineDescriptor(
+    const MTLRenderPipelineDescriptor *descriptor,
+    const Context *context,
+    id<MTLDevice> device);
 
 gl::Box MTLRegionToGLBox(const MTLRegion &mtlRegion);
 

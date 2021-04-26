@@ -245,6 +245,7 @@ enum
     X2R10G10B10_UNORM_VERTEX,
     X2R10G10B10_USCALED_VERTEX
 };
+
 }
 
 }  // namespace mtl_shader

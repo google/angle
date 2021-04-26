@@ -157,9 +157,6 @@ class TranslatorMetalDirect : public TCompiler
     TranslatorMetalDirect *getAsTranslatorMetalDirect() override { return this; }
 #endif
 
-    static const char *GetCoverageMaskEnabledConstName();
-    static const char *GetRasterizationDiscardEnabledConstName();
-
     void enableEmulatedInstanceID(bool e) { mEmulatedInstanceID = e; }
     TranslatorMetalReflection *getTranslatorMetalReflection() { return &translatorMetalReflection; }
 

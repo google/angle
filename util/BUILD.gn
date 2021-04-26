@@ -233,7 +233,7 @@ foreach(is_shared_library,
 
       public_deps += [ ":angle_util_loader" ]
 
-      if (is_mac && !is_component_build) {
+      if ((is_mac || is_ios) && !is_component_build) {
         ldflags = [
           "-install_name",
           "@rpath/libangle_util.dylib",

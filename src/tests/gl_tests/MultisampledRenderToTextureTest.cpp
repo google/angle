@@ -405,6 +405,9 @@ TEST_P(MultisampledRenderToTextureTest, FramebufferCompleteness)
 {
     ANGLE_SKIP_TEST_IF(!EnsureGLExtensionEnabled("GL_EXT_multisampled_render_to_texture"));
 
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsAMD());
+
     // Checking that Renderbuffer and texture2d having different number of samples results
     // in a FRAMEBUFFER_INCOMPLETE_MULTISAMPLE
     GLTexture texture;
@@ -1211,6 +1214,9 @@ TEST_P(MultisampledRenderToTextureTest, DrawCopyThenBlend)
 // following draw should retain the data written by the first draw command.  Uses renderbuffer.
 TEST_P(MultisampledRenderToTextureTest, RenderbufferDrawCopyThenBlend)
 {
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     drawCopyThenBlendCommon(true);
 }
 
@@ -1308,6 +1314,9 @@ TEST_P(MultisampledRenderToTextureTest, ClearDrawCopyThenBlendSameProgram)
 // Same as ClearDrawCopyThenBlendSameProgram but with renderbuffers
 TEST_P(MultisampledRenderToTextureTest, RenderbufferClearDrawCopyThenBlendSameProgram)
 {
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     clearDrawCopyThenBlendSameProgramCommon(true);
 }
 
@@ -1320,6 +1329,9 @@ TEST_P(MultisampledRenderToTextureES3Test,
 
     // http://anglebug.com/5380
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     constexpr GLsizei kSize = 64;
 
@@ -1711,6 +1723,12 @@ void MultisampledRenderToTextureES3Test::drawCopyDrawAttachDepthStencilClearThen
 // and render pass will result in an ASSERT.
 TEST_P(MultisampledRenderToTextureES3Test, DrawCopyDrawAttachDepthStencilClearThenDraw)
 {
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsMetal() && IsAMD());
+
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     drawCopyDrawAttachDepthStencilClearThenDrawCommon(false);
 }
 
@@ -2032,6 +2050,9 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilClearDrawCopy
     // http://anglebug.com/5380
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
 
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     constexpr GLsizei kSize = 64;
 
     setupCopyTexProgram();
@@ -2126,6 +2147,9 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDepthStencilDrawCopyClear
 
     // http://anglebug.com/5380
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     constexpr GLsizei kSize = 64;
 
@@ -2474,6 +2498,9 @@ TEST_P(MultisampledRenderToTextureES3Test, RenderbufferDrawThenBlitDepthStencilO
     // http://anglebug.com/5110
     ANGLE_SKIP_TEST_IF(IsD3D());
 
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     constexpr GLsizei kSize = 64;
 
     GLFramebuffer fboMS;
@@ -2625,6 +2652,9 @@ TEST_P(MultisampledRenderToTextureTest, DepthReadWriteToggleWithStartedRenderPas
 
     // http://anglebug.com/5380
     ANGLE_SKIP_TEST_IF(IsLinux() && IsAMD() && IsVulkan());
+
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
 
     constexpr GLsizei kSize = 64;
 
@@ -2918,6 +2948,9 @@ TEST_P(MultisampledRenderToTextureES3Test, ColorAttachments0And3)
 // Uses color attachments 0 and 3.  Uses renderbuffer.
 TEST_P(MultisampledRenderToTextureES3Test, RenderbufferColorAttachments0And3)
 {
+    // Test failure introduced by Apple's changes (anglebug.com/5505)
+    ANGLE_SKIP_TEST_IF(IsOSX() && IsARM64() && IsMetal());
+
     colorAttachments0And3Common(true);
 }
 

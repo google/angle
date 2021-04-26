@@ -59,6 +59,12 @@ if (is_mac) {
     "test_expectations/GPUTestConfig_mac.h",
   ]
 }
+if (is_ios) {
+  test_expectation_sources_ios = [
+    "test_expectations/GPUTestConfig_ios.mm",
+    "test_expectations/GPUTestConfig_ios.h",
+  ]
+}
 
 angle_static_library("angle_test_expectations") {
   public_deps = [
@@ -71,10 +77,8 @@ angle_static_library("angle_test_expectations") {
     frameworks = [ "Cocoa.framework" ]
   }
   if (is_ios) {
-    sources += [
-      "test_expectations/GPUTestConfig_ios.h",
-      "test_expectations/GPUTestConfig_ios.mm",
-    ]
+    sources += test_expectation_sources_ios
+    libs = [ "Foundation.framework" ]
   }
 }
 
@@ -1267,6 +1271,13 @@ if (build_angle_deqp_tests && !is_fuchsia) {
         "deqp_support/tcuANGLEPlatform.cpp",
         "deqp_support/tcuANGLEPlatform.h",
       ]
+
+      if ((is_mac || is_ios) && !is_component_build) {
+        ldflags = [
+          "-install_name",
+          "@rpath/lib${shared_library_name}.dylib",
+        ]
+      }
     }
 
     if (!build_with_chromium) {

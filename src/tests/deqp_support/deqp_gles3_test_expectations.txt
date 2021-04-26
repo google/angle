@@ -949,6 +949,47 @@
 4235 METAL INTEL : dEQP-GLES3.* = SKIP
 4235 METAL NVIDIA : dEQP-GLES3.* = SKIP
 
+// Test failures introduced by Apple's changes (anglebug.com/5505)
+5505 METAL AMD : dEQP-GLES3.functional.fbo.invalidate.sub.unbind_blit_msaa_color = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.fbo.invalidate.sub.unbind_blit_msaa_stencil = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.fbo.invalidate.whole.unbind_blit_msaa_color = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.fbo.invalidate.whole.unbind_blit_msaa_stencil = FAIL
+
+5505 METAL AMD : dEQP-GLES3.functional.fbo.msaa.*_samples.depth* = FAIL
+
+5505 METAL AMD : dEQP-GLES3.functional.fragment_ops.scissor.outside_render_* = FAIL
+
+5505 METAL AMD : dEQP-GLES3.functional.shaders.builtin_functions.precision.normalize.*vec* = FAIL
+
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest.less_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest.greater_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest.less_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest.greater_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear.less_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear.greater_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear.less_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear.greater_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest_mipmap_linear.less_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest_mipmap_linear.greater_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest_mipmap_linear.less_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.nearest_mipmap_linear.greater_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear_mipmap_linear.less_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear_mipmap_linear.greater_or_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear_mipmap_linear.less_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.2d.linear_mipmap_linear.greater_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.nearest.equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.nearest.not_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.linear.equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.linear.not_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.nearest_mipmap_nearest.equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.nearest_mipmap_nearest.not_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.linear_mipmap_nearest.equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.linear_mipmap_nearest.not_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.nearest_mipmap_linear.equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.nearest_mipmap_linear.not_equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.linear_mipmap_linear.equal_depth24_stencil8 = FAIL
+5505 METAL AMD : dEQP-GLES3.functional.texture.shadow.cube.linear_mipmap_linear.not_equal_depth24_stencil8 = FAIL
+
 /////////////////////////////////////
 
 // Pixel 4 expectations.

@@ -23,12 +23,14 @@ namespace mtl
 class RenderCommandEncoder;
 }  // namespace mtl
 class ContextMtl;
-class WindowSurfaceMtl;
+class SurfaceMtl;
 
 class FramebufferMtl : public FramebufferImpl
 {
   public:
-    FramebufferMtl(const gl::FramebufferState &state, bool flipY, WindowSurfaceMtl *backbuffer);
+    explicit FramebufferMtl(const gl::FramebufferState &state,
+                            bool flipY,
+                            WindowSurfaceMtl *backbuffer);
     ~FramebufferMtl() override;
     void destroy(const gl::Context *context) override;
 
@@ -152,7 +154,8 @@ class FramebufferMtl : public FramebufferImpl
 
     // Initialize load store options for a render pass's first start (i.e. not render pass resuming
     // from interruptions such as those caused by a conversion compute pass)
-    void setLoadStoreActionOnRenderPassFirstStart(mtl::RenderPassAttachmentDesc *attachmentOut);
+    void setLoadStoreActionOnRenderPassFirstStart(mtl::RenderPassAttachmentDesc *attachmentOut,
+                                                  const bool forceDepthStencilMultisampleLoad);
 
     // Fill RenderPassDesc with relevant attachment's info from GL front end.
     angle::Result prepareRenderPass(const gl::Context *context, mtl::RenderPassDesc *descOut);
@@ -169,10 +172,38 @@ class FramebufferMtl : public FramebufferImpl
                                            const gl::FramebufferAttachment *attachment,
                                            RenderTargetMtl **cachedRenderTarget);
 
+    // This function either returns the render target's texture itself if the texture is readable
+    // or create a copy of that texture that is readable if not. This function is typically used
+    // for packed depth stencil where reading stencil requires a stencil view. However if a texture
+    // has both render target, pixel format view & shader readable usage flags, there will be
+    // some glitches happen in Metal framework.
+    // So the solution is creating a depth stencil texture without pixel format view flag but has
+    // render target flag, then during blitting process, this texture is copied to another
+    // intermidiate texture having pixel format view flag, but not render target flag.
+    angle::Result getReadableViewForRenderTarget(const gl::Context *context,
+                                                 const RenderTargetMtl &rtt,
+                                                 const gl::Rectangle &readArea,
+                                                 mtl::TextureRef *readableDepthView,
+                                                 mtl::TextureRef *readableStencilView,
+                                                 uint32_t *readableViewLevel,
+                                                 uint32_t *readableViewLayer,
+                                                 gl::Rectangle *readableViewArea);
+
     angle::Result readPixelsToPBO(const gl::Context *context,
                                   const gl::Rectangle &area,
                                   const PackPixelsParams &packPixelsParams,
                                   const RenderTargetMtl *renderTarget) const;
+
+    angle::Result readPixelsToBuffer(const gl::Context *context,
+                                     const gl::Rectangle &area,
+                                     const RenderTargetMtl *renderTarget,
+                                     bool reverseRowOrder,
+                                     const angle::Format &dstAngleFormat,
+                                     uint32_t dstBufferOffset,
+                                     uint32_t dstBufferRowPitch,
+                                     const mtl::BufferRef *dstBuffer) const;
+
+    RenderTargetMtl *getColorReadRenderTargetNoCache(const gl::Context *context) const;
 
     // NOTE: we cannot use RenderTargetCache here because it doesn't support separate
     // depth & stencil attachments as of now. Separate depth & stencil could be useful to
@@ -191,6 +222,8 @@ class FramebufferMtl : public FramebufferImpl
 
     WindowSurfaceMtl *mBackbuffer = nullptr;
     const bool mFlipY             = false;
+
+    mtl::BufferRef mReadPixelBuffer;
 };
 }  // namespace rx
 

@@ -24,6 +24,15 @@ namespace rx
 
 class DisplayMtl;
 
+#define ANGLE_TO_EGL_TRY(EXPR)                                 \
+    do                                                         \
+    {                                                          \
+        if (ANGLE_UNLIKELY((EXPR) != angle::Result::Continue)) \
+        {                                                      \
+            return egl::EglBadSurface();                       \
+        }                                                      \
+    } while (0)
+
 class SurfaceMtl : public SurfaceImpl
 {
   public:
@@ -144,12 +153,14 @@ class WindowSurfaceMtl : public SurfaceMtl
                                             GLsizei samples,
                                             FramebufferAttachmentRenderTarget **rtOut) override;
 
+    angle::Result ensureCurrentDrawableObtained(const gl::Context *context);
     angle::Result ensureCurrentDrawableObtained(const gl::Context *context,
                                                 bool *newDrawableOut /** nullable */);
 
     // Ensure the the texture returned from getColorTexture() is ready for glReadPixels(). This
     // implicitly calls ensureCurrentDrawableObtained().
     angle::Result ensureColorTextureReadyForReadPixels(const gl::Context *context);
+    bool preserveBuffer() const { return mRetainBuffer; }
 
   private:
     angle::Result swapImpl(const gl::Context *context);
@@ -168,9 +179,11 @@ class WindowSurfaceMtl : public SurfaceMtl
     // event. We don't use mMetalLayer.drawableSize directly since it might be changed internally by
     // metal runtime.
     CGSize mCurrentKnownDrawableSize;
+
+    bool mRetainBuffer = false;
 };
 
-// Offscreen surface, base class of PBuffer, IOSurface.
+// Offscreen surface, base class of PBuffer.
 class OffscreenSurfaceMtl : public SurfaceMtl
 {
   public:
@@ -212,37 +225,5 @@ class PBufferSurfaceMtl : public OffscreenSurfaceMtl
     void setFixedHeight(EGLint height) override;
 };
 
-// Offscreen created from IOSurface
-class IOSurfaceSurfaceMtl : public OffscreenSurfaceMtl
-{
-  public:
-    IOSurfaceSurfaceMtl(DisplayMtl *display,
-                        const egl::SurfaceState &state,
-                        EGLClientBuffer buffer,
-                        const egl::AttributeMap &attribs);
-    ~IOSurfaceSurfaceMtl() override;
-
-    egl::Error bindTexImage(const gl::Context *context,
-                            gl::Texture *texture,
-                            EGLint buffer) override;
-    egl::Error releaseTexImage(const gl::Context *context, EGLint buffer) override;
-
-    angle::Result getAttachmentRenderTarget(const gl::Context *context,
-                                            GLenum binding,
-                                            const gl::ImageIndex &imageIndex,
-                                            GLsizei samples,
-                                            FramebufferAttachmentRenderTarget **rtOut) override;
-
-    static bool ValidateAttributes(EGLClientBuffer buffer, const egl::AttributeMap &attribs);
-
-  private:
-    angle::Result ensureColorTextureCreated(const gl::Context *context);
-
-    IOSurfaceRef mIOSurface;
-    NSUInteger mIOSurfacePlane;
-    int mIOSurfaceFormatIdx;
-};
-
 }  // namespace rx
-
 #endif /* LIBANGLE_RENDERER_METAL_SURFACEMTL_H_ */
