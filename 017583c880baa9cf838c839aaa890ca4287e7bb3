@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdd9d5f1_18dfb952",
+        "filename": "src/libANGLE/CLCommandQueue.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-26T14:57:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ece6a722_19099908",
+      "range": {
+        "startLine": 20,
+        "startChar": 10,
+        "endLine": 20,
+        "endChar": 27
+      },
+      "revId": "017583c880baa9cf838c839aaa890ca4287e7bb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f39034c5_d089f85a",
