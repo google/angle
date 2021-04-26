@@ -39,6 +39,30 @@
       },
       "revId": "629c11929d295bf859df0a8505e16eabe6bd8b1e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "505abffe_0e34c72f",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 5234,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T20:03:09Z",
+      "side": 1,
+      "message": "Also, if you omit capture for states that are default, you might not need to duplicate much code.",
+      "parentUuid": "3d555dac_e3695547",
+      "range": {
+        "startLine": 5234,
+        "startChar": 0,
+        "endLine": 5234,
+        "endChar": 31
+      },
+      "revId": "629c11929d295bf859df0a8505e16eabe6bd8b1e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
