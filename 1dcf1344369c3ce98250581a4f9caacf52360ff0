@@ -46,6 +46,30 @@
       },
       "revId": "1dcf1344369c3ce98250581a4f9caacf52360ff0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b4c3810_956a5ad3",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T21:03:21Z",
+      "side": 1,
+      "message": "Right. That function needs to go away once we finish the command processor refactor, so that\u0027s why I suggested making a new method.",
+      "parentUuid": "29be9e71_74c46820",
+      "range": {
+        "startLine": 53,
+        "startChar": 47,
+        "endLine": 53,
+        "endChar": 55
+      },
+      "revId": "1dcf1344369c3ce98250581a4f9caacf52360ff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
