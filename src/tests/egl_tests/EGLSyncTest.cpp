@@ -235,6 +235,42 @@ TEST_P(EGLSyncTest, BasicOperations)
     EXPECT_EGL_TRUE(eglDestroySyncKHR(display, sync));
 }
 
+// Test eglWaitClient api
+TEST_P(EGLSyncTest, WaitClient)
+{
+    // Clear to red color
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_EGL_TRUE(eglWaitClient());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    EGLContext context = getEGLWindow()->getContext();
+    EGLSurface surface = getEGLWindow()->getSurface();
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    EXPECT_EGL_TRUE(eglWaitClient());
+    eglMakeCurrent(display, surface, surface, context);
+}
+
+// Test eglWaitGL api
+TEST_P(EGLSyncTest, WaitGL)
+{
+    // Clear to red color
+    glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    EXPECT_EGL_TRUE(eglWaitGL());
+    EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    EGLContext context = getEGLWindow()->getContext();
+    EGLSurface surface = getEGLWindow()->getSurface();
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    EXPECT_EGL_TRUE(eglWaitGL());
+    eglMakeCurrent(display, surface, surface, context);
+}
+
 // Test eglWaitNative api
 TEST_P(EGLSyncTest, WaitNative)
 {
@@ -244,6 +280,13 @@ TEST_P(EGLSyncTest, WaitNative)
     glClear(GL_COLOR_BUFFER_BIT);
     EXPECT_EGL_TRUE(eglWaitNative(EGL_CORE_NATIVE_ENGINE));
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 2, getWindowHeight() / 2, GLColor::red);
+
+    EGLDisplay display = getEGLWindow()->getDisplay();
+    EGLContext context = getEGLWindow()->getContext();
+    EGLSurface surface = getEGLWindow()->getSurface();
+    eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT);
+    EXPECT_EGL_TRUE(eglWaitNative(EGL_CORE_NATIVE_ENGINE));
+    eglMakeCurrent(display, surface, surface, context);
 }
 
 // Verify eglDupNativeFence for EGL_ANDROID_native_fence_sync

@@ -692,7 +692,15 @@ EGLBoolean Terminate(Thread *thread, Display *display)
 
 EGLBoolean WaitClient(Thread *thread)
 {
-    Display *display     = thread->getDisplay();
+    Display *display = thread->getDisplay();
+    if (display == nullptr)
+    {
+        // EGL spec says this about eglWaitClient -
+        //    If there is no current context for the current rendering API,
+        //    the function has no effect but still returns EGL_TRUE.
+        return EGL_TRUE;
+    }
+
     gl::Context *context = thread->getContext();
 
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglWaitClient",
@@ -707,6 +715,12 @@ EGLBoolean WaitClient(Thread *thread)
 EGLBoolean WaitGL(Thread *thread)
 {
     Display *display = thread->getDisplay();
+    if (display == nullptr)
+    {
+        // EGL spec says this about eglWaitGL -
+        //    eglWaitGL is ignored if there is no current EGL rendering context for OpenGL ES.
+        return EGL_TRUE;
+    }
 
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglWaitGL", GetDisplayIfValid(display),
                          EGL_FALSE);
@@ -723,6 +737,13 @@ EGLBoolean WaitGL(Thread *thread)
 EGLBoolean WaitNative(Thread *thread, EGLint engine)
 {
     Display *display = thread->getDisplay();
+    if (display == nullptr)
+    {
+        // EGL spec says this about eglWaitNative -
+        //    eglWaitNative is ignored if there is no current EGL rendering context.
+        return EGL_TRUE;
+    }
+
     ANGLE_EGL_TRY_RETURN(thread, display->prepareForCall(), "eglWaitNative",
                          GetDisplayIfValid(display), EGL_FALSE);
     ANGLE_EGL_TRY_RETURN(thread, display->waitNative(thread->getContext(), engine), "eglWaitNative",
