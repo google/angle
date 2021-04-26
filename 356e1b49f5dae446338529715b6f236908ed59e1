@@ -168,6 +168,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4b791bd_dfc9e0e3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T20:01:14Z",
+      "side": 1,
+      "message": "Yeah, prepareforcall isn\u0027t something necessary. You can early exit the API before you call that. The functions in this file don\u0027t need to follow a strict pattern.",
+      "parentUuid": "e448d8c3_4f03ac6c",
+      "range": {
+        "startLine": 9,
+        "startChar": 10,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4600b071_57e025ec",
