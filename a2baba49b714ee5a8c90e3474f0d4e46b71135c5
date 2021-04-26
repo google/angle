@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70558dc8_734b57dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T13:16:44Z",
+      "side": 1,
+      "message": "Actually, check out this Python wheel: \"multiprocessing-logging\"\n\nWe can use that if we switch to vpython. If you\u0027re not familiar with vpython, it\u0027s a Chromium tool that lets us use Python packages in any Python script. See \n\nhttps://chromium.googlesource.com/infra/infra/+/master/doc/users/vpython.md\n",
+      "revId": "a2baba49b714ee5a8c90e3474f0d4e46b71135c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e6dcb17_f690af19",
