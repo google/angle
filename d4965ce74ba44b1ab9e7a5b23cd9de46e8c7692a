@@ -69,6 +69,24 @@
       "parentUuid": "495145ac_6e76c8be",
       "revId": "d4965ce74ba44b1ab9e7a5b23cd9de46e8c7692a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6a201ff_74d609cb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-26T20:49:51Z",
+      "side": 1,
+      "message": "The other layers are dependent on unique handles, so you can\u0027t disable it.",
+      "parentUuid": "c68a4ae9_62a8ba63",
+      "revId": "d4965ce74ba44b1ab9e7a5b23cd9de46e8c7692a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
