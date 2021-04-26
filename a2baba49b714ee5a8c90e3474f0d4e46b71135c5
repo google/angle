@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ac94baee_e8889a39",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T13:11:43Z",
+      "side": 1,
+      "message": "or logging.debug potentially if it\u0027s too spammy for info",
+      "revId": "a2baba49b714ee5a8c90e3474f0d4e46b71135c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e6dcb17_f690af19",
