@@ -93,6 +93,30 @@
       },
       "revId": "017583c880baa9cf838c839aaa890ca4287e7bb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94ba234c_7c2c8adc",
+        "filename": "src/libANGLE/validationCL_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-26T15:03:19Z",
+      "side": 1,
+      "message": "If all functions would return cl_int, it would be less obvious to see which functions will actually forward the returned error code. So it is more readable to return bool for the functions where you have to set the error code in the parameter.",
+      "parentUuid": "8e63ce46_a2767c1b",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 6
+      },
+      "revId": "017583c880baa9cf838c839aaa890ca4287e7bb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
