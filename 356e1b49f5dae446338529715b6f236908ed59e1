@@ -120,6 +120,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "49bbcfeb_a90bf312",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-26T15:32:20Z",
+      "side": 1,
+      "message": "Don\u0027t think that is the right approach. i can very easily add a test for an API like \"eglGetSyncAttrib\" with no current context and end up with a crash there. Modifying stubs for all such functions is just going to cause code bloat unnecessarily.\n\nThe right thing to do, IMO, is to decouple thread\u0027s display and context",
+      "parentUuid": "3d012660_091b4d11",
+      "range": {
+        "startLine": 9,
+        "startChar": 10,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4600b071_57e025ec",
