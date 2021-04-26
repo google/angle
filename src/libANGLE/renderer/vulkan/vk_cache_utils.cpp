@@ -752,8 +752,12 @@ angle::Result CreateRenderPass2(Context *context,
     }
     else
     {
+        RendererVk *renderer = context->getRenderer();
+
         ASSERT(isRenderToTexture);
+        ASSERT(renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled);
         ASSERT(subpassDescriptions.size() == 1);
+
         subpassDescriptions.back().pNext = &renderToTextureInfo;
     }
 
@@ -1197,13 +1201,10 @@ angle::Result InitializeRenderPassFromDesc(ContextVk *contextVk,
         createInfo.pDependencies   = subpassDependencies.data();
     }
 
-    const bool hasRenderToTextureEXT =
-        renderer->getFeatures().supportsMultisampledRenderToSingleSampled.enabled;
-
     // If depth/stencil resolve is used, we need to create the render pass with
     // vkCreateRenderPass2KHR.  Same when using the VK_EXT_multisampled_render_to_single_sampled
     // extension.
-    if (depthStencilResolve.pDepthStencilResolveAttachment != nullptr || hasRenderToTextureEXT)
+    if (depthStencilResolve.pDepthStencilResolveAttachment != nullptr || desc.isRenderToTexture())
     {
         ANGLE_TRY(CreateRenderPass2(contextVk, createInfo, depthStencilResolve,
                                     desc.hasDepthUnresolveAttachment(),
