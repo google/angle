@@ -145,6 +145,30 @@
       },
       "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7ac77d9_11fc2cbb",
+        "filename": "infra/specs/waterfalls.pyl",
+        "patchSetId": 18
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-26T20:15:30Z",
+      "side": 1,
+      "message": "There are several advantages for the split:\n1. If builds are separate from tests, they can run in parallel, so testers don\u0027t need to wait for build results.\n2. We used 8-core GCEs for builders and 2-core GCEs for testers. So, with 2 testers we save 4 cores and with 3 testers we save 10 cores. On Mac we are also able to use Macs only for builders but Linux GCEs for testers.",
+      "parentUuid": "16df39fc_8b1b9a53",
+      "range": {
+        "startLine": 52,
+        "startChar": 7,
+        "endLine": 52,
+        "endChar": 18
+      },
+      "revId": "1ee656008c2e869db2f49d0c27d2b2f1917fc1f5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
