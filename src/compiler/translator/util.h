@@ -81,6 +81,7 @@ bool IsOutputGLSL(ShShaderOutput output);
 bool IsOutputHLSL(ShShaderOutput output);
 bool IsOutputVulkan(ShShaderOutput output);
 bool IsOutputMetal(ShShaderOutput output);
+bool IsOutputMetalDirect(ShShaderOutput output);
 
 bool IsInShaderStorageBlock(TIntermTyped *node);
 

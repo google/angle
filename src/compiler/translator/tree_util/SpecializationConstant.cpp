@@ -35,6 +35,16 @@ using Mat2x2 = std::array<float, 4>;
 using Mat2x2EnumMap =
     angle::PackedEnumMap<vk::SurfaceRotation, Mat2x2, angle::EnumSize<vk::SurfaceRotation>()>;
 
+constexpr Mat2x2EnumMap kPreRotationMatrices = {
+    {{vk::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 1.0f}}},
+     {vk::SurfaceRotation::Rotated90Degrees, {{0.0f, -1.0f, 1.0f, 0.0f}}},
+     {vk::SurfaceRotation::Rotated180Degrees, {{-1.0f, 0.0f, 0.0f, -1.0f}}},
+     {vk::SurfaceRotation::Rotated270Degrees, {{0.0f, 1.0f, -1.0f, 0.0f}}},
+     {vk::SurfaceRotation::FlippedIdentity, {{1.0f, 0.0f, 0.0f, 1.0f}}},
+     {vk::SurfaceRotation::FlippedRotated90Degrees, {{0.0f, -1.0f, 1.0f, 0.0f}}},
+     {vk::SurfaceRotation::FlippedRotated180Degrees, {{-1.0f, 0.0f, 0.0f, -1.0f}}},
+     {vk::SurfaceRotation::FlippedRotated270Degrees, {{0.0f, 1.0f, -1.0f, 0.0f}}}}};
+
 constexpr Mat2x2EnumMap kFragRotationMatrices = {
     {{vk::SurfaceRotation::Identity, {{1.0f, 0.0f, 0.0f, 1.0f}}},
      {vk::SurfaceRotation::Rotated90Degrees, {{0.0f, 1.0f, 1.0f, 0.0f}}},
@@ -334,6 +344,16 @@ TIntermTyped *SpecConst::getMultiplierYForDFdy()
     mUsageBits.set(vk::SpecConstUsage::YFlip);
     mUsageBits.set(vk::SpecConstUsage::Rotation);
     return CreateFloatArrayWithRotationIndex(kRotatedFlipXYForDFdy, 1, 1, getFlipRotation());
+}
+
+TIntermTyped *SpecConst::getPreRotationMatrix()
+{
+    if (!(mCompileOptions & SH_USE_SPECIALIZATION_CONSTANT))
+    {
+        return nullptr;
+    }
+    mUsageBits.set(vk::SpecConstUsage::Rotation);
+    return GenerateMat2x2ArrayWithIndex(kPreRotationMatrices, getFlipRotation());
 }
 
 TIntermTyped *SpecConst::getFragRotationMatrix()

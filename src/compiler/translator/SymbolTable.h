@@ -297,6 +297,13 @@ class TSymbolTable : angle::NonCopyable, TSymbolTableBase
                             const ShBuiltInResources &resources);
     void clearCompilationResults();
 
+    int getDefaultUniformsBindingIndex() const { return mResources.DriverUniformsBindingIndex; }
+    int getDriverUniformsBindingIndex() const { return mResources.DefaultUniformsBindingIndex; }
+    int getUBOArgumentBufferBindingIndex() const
+    {
+        return mResources.UBOArgumentBufferBindingIndex;
+    }
+
   private:
     friend class TSymbolUniqueId;
 

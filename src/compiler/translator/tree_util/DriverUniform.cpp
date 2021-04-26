@@ -33,10 +33,13 @@ constexpr const char kAcbBufferOffsets[]       = "acbBufferOffsets";
 constexpr const char kDepthRange[]             = "depthRange";
 constexpr const char kNumSamples[]             = "numSamples";
 
-constexpr const char kHalfRenderArea[] = "halfRenderArea";
-constexpr const char kFlipXY[]         = "flipXY";
-constexpr const char kNegFlipXY[]      = "negFlipXY";
-constexpr const char kFragRotation[]   = "fragRotation";
+constexpr const char kHalfRenderArea[]     = "halfRenderArea";
+constexpr const char kFlipXY[]             = "flipXY";
+constexpr const char kNegFlipXY[]          = "negFlipXY";
+constexpr const char kPreRotation[]        = "preRotation";
+constexpr const char kFragRotation[]       = "fragRotation";
+constexpr const char kEmulatedInstanceId[] = "emulatedInstanceID";
+constexpr const char kCoverageMask[]       = "coverageMask";
 }  // anonymous namespace
 
 // Class DriverUniform
@@ -277,6 +280,11 @@ TIntermSwizzle *DriverUniformExtended::getNegFlipYRef() const
     return negFlipY;
 }
 
+TIntermBinary *DriverUniformExtended::getPreRotationMatrixRef() const
+{
+    return createDriverUniformRef(kPreRotation);
+}
+
 TIntermBinary *DriverUniformExtended::getFragRotationMatrixRef() const
 {
     return createDriverUniformRef(kFragRotation);
@@ -285,6 +293,16 @@ TIntermBinary *DriverUniformExtended::getFragRotationMatrixRef() const
 TIntermBinary *DriverUniformExtended::getHalfRenderAreaRef() const
 {
     return createDriverUniformRef(kHalfRenderArea);
+}
+
+TIntermBinary *DriverUniformExtended::getEmulatedInstanceId() const
+{
+    return createDriverUniformRef(kEmulatedInstanceId);
+}
+
+TIntermBinary *DriverUniformExtended::getCoverageMask() const
+{
+    return createDriverUniformRef(kCoverageMask);
 }
 
 }  // namespace sh

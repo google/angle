@@ -6,7 +6,7 @@
 // RewriteAtomicCounters: Emulate atomic counter buffers with storage buffers.
 //
 
-#include "compiler/translator/tree_ops/vulkan/RewriteAtomicCounters.h"
+#include "compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.h"
 
 #include "compiler/translator/Compiler.h"
 #include "compiler/translator/ImmutableStringBuilder.h"

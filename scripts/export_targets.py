@@ -185,6 +185,7 @@ IGNORED_INCLUDES = {
     b'compiler/translator/TranslatorGLSL.h',
     b'compiler/translator/TranslatorHLSL.h',
     b'compiler/translator/TranslatorMetal.h',
+    b'compiler/translator/TranslatorMetalDirect.h',
     b'compiler/translator/TranslatorVulkan.h',
     b'contrib/optimizations/slide_hash_neon.h',
     b'dirent_on_windows.h',

@@ -794,6 +794,7 @@ bool IsBuiltinOutputVariable(TQualifier qualifier)
         case EvqSecondaryFragDataEXT:
         case EvqClipDistance:
         case EvqLastFragData:
+        case EvqSampleMask:
             return true;
         default:
             break;
@@ -868,6 +869,10 @@ bool IsOutputVulkan(ShShaderOutput output)
 bool IsOutputMetal(ShShaderOutput output)
 {
     return output == SH_SPIRV_METAL_OUTPUT;
+}
+bool IsOutputMetalDirect(ShShaderOutput output)
+{
+    return output == SH_MSL_METAL_OUTPUT;
 }
 
 bool IsInShaderStorageBlock(TIntermTyped *node)

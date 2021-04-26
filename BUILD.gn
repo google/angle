@@ -560,7 +560,10 @@ template("translator_lib") {
 
       if (angle_enable_metal) {
         sources += angle_translator_lib_metal_sources
-        defines += [ "ANGLE_ENABLE_METAL" ]
+        defines += [
+          "ANGLE_ENABLE_METAL",
+          "ANGLE_ENABLE_METAL_SPIRV",
+        ]
       }
     }
 

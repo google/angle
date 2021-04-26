@@ -26,7 +26,7 @@
 
 // Version number for shader translation API.
 // It is incremented every time the API changes.
-#define ANGLE_SH_VERSION 258
+#define ANGLE_SH_VERSION 259
 
 enum ShShaderSpec
 {
@@ -74,6 +74,9 @@ enum ShShaderOutput
 
     // Output SPIR-V to be cross compiled to Metal.
     SH_SPIRV_METAL_OUTPUT = 0x8B4C,
+
+    // Output for MSL
+    SH_MSL_METAL_OUTPUT = 0x8B4D,
 };
 
 // Compile options.
@@ -587,6 +590,15 @@ struct ShBuiltInResources
     int MaxClipDistances;
     int MaxCullDistances;
     int MaxCombinedClipAndCullDistances;
+
+    // Direct-to-metal backend constants:
+
+    // Binding index for driver uniforms:
+    int DriverUniformsBindingIndex;
+    // Binding index for default uniforms:
+    int DefaultUniformsBindingIndex;
+    // Binding index for UBO's argument buffer
+    int UBOArgumentBufferBindingIndex;
 };
 
 //
