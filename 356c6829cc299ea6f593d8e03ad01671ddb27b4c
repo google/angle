@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b1597f9_6cb45b91",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-26T16:29:14Z",
+      "side": 1,
+      "message": "Good fix.\n\nObligatory: Can you add a test for this?",
+      "revId": "356c6829cc299ea6f593d8e03ad01671ddb27b4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
