@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b89b8e68_b69dc157",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-26T15:00:46Z",
+      "side": 1,
+      "message": "yes, not directly.\n\nWhen the new test code i added calls \"eglWaitClient\" after it does an eglMakeCurrent(display, EGL_NO_SURFACE, EGL_NO_SURFACE, EGL_NO_CONTEXT).\n\nSince there is no active context, the \"Thread::getDisplay()\" method would return a nullptr since \"Thread::mContext\" was a nullptr. This  causes crashes in \"display-\u003eprepareForCall()\"",
+      "parentUuid": "ba6fc945_3217f68d",
+      "range": {
+        "startLine": 9,
+        "startChar": 10,
+        "endLine": 9,
+        "endChar": 36
+      },
+      "revId": "356e1b49f5dae446338529715b6f236908ed59e1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "4600b071_57e025ec",
