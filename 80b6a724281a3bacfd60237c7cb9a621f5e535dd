@@ -63,6 +63,30 @@
       },
       "revId": "80b6a724281a3bacfd60237c7cb9a621f5e535dd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "934b0c48_03f6d5b6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2422,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T17:25:42Z",
+      "side": 1,
+      "message": "Just to say there\u0027s no hardware reason why debug info should be present based on identifying samsung in the vendor ID. Better to restrict our control of defaults to use what we can determine from the Vulkan API if possible.",
+      "parentUuid": "169665b8_d450fb8d",
+      "range": {
+        "startLine": 2422,
+        "startChar": 62,
+        "endLine": 2422,
+        "endChar": 71
+      },
+      "revId": "80b6a724281a3bacfd60237c7cb9a621f5e535dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
