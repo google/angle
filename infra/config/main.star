@@ -30,7 +30,7 @@ luci.project(
             roles = [
                 acl.SCHEDULER_OWNER,
             ],
-            groups = "project-angle-admins"
+            groups = "project-angle-admins",
         ),
         acl.entry(
             roles = [
@@ -38,7 +38,7 @@ luci.project(
             ],
             groups = "luci-logdog-angle-writers",
         ),
-    ]
+    ],
 )
 
 def _generate_project_pyl(ctx):
@@ -118,7 +118,7 @@ build_recipe(
 )
 
 build_recipe(
-    name = "recipe:run_presubmit"
+    name = "recipe:run_presubmit",
 )
 
 def get_os_from_name(name):
@@ -215,11 +215,10 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
     # Include all bots in the CQ by default except GCC and Android configs.
     if toolchain != "gcc":
         luci.cq_tryjob_verifier(
-            cq_group = 'master',
+            cq_group = "master",
             builder = "angle:try/" + name,
             location_regexp = location_regexp,
         )
-
 
 luci.bucket(
     name = "ci",
@@ -318,74 +317,76 @@ luci.list_view_entry(
 # CQ
 
 luci.cq(
-    status_host = 'chromium-cq-status.appspot.com',
+    status_host = "chromium-cq-status.appspot.com",
     submit_max_burst = 4,
     submit_burst_delay = 480 * time.second,
 )
 
 luci.cq_group(
-    name = 'master',
-    watch = cq.refset('https://chromium.googlesource.com/angle/angle'),
+    name = "master",
+    watch = cq.refset(
+        "https://chromium.googlesource.com/angle/angle",
+        refs = [r"refs/heads/master", r"refs/heads/main"],
+    ),
     acls = [
         acl.entry(
-                acl.CQ_COMMITTER,
-            groups = 'project-angle-committers',
+            acl.CQ_COMMITTER,
+            groups = "project-angle-committers",
         ),
         acl.entry(
             acl.CQ_DRY_RUNNER,
-            groups = 'project-angle-tryjob-access',
+            groups = "project-angle-tryjob-access",
         ),
     ],
     verifiers = [
         luci.cq_tryjob_verifier(
-            builder = 'angle:try/presubmit',
+            builder = "angle:try/presubmit",
             disable_reuse = True,
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/android_angle_deqp_rel_ng',
+            builder = "chromium:try/android_angle_deqp_rel_ng",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/android_angle_rel_ng',
+            builder = "chromium:try/android_angle_rel_ng",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/android_angle_vk64_deqp_rel_ng',
+            builder = "chromium:try/android_angle_vk64_deqp_rel_ng",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/android_angle_vk64_rel_ng',
+            builder = "chromium:try/android_angle_vk64_rel_ng",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/fuchsia-angle-try',
+            builder = "chromium:try/fuchsia-angle-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/linux-angle-chromium-try',
+            builder = "chromium:try/linux-angle-chromium-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/linux-angle-try',
+            builder = "chromium:try/linux-angle-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/linux-swangle-try-tot-angle-x64',
+            builder = "chromium:try/linux-swangle-try-tot-angle-x64",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/mac-angle-chromium-try',
+            builder = "chromium:try/mac-angle-chromium-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/mac-angle-try',
+            builder = "chromium:try/mac-angle-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/win-angle-chromium-x64-try',
+            builder = "chromium:try/win-angle-chromium-x64-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/win-angle-chromium-x86-try',
+            builder = "chromium:try/win-angle-chromium-x86-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/win-angle-x64-try',
+            builder = "chromium:try/win-angle-x64-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/win-angle-x86-try',
+            builder = "chromium:try/win-angle-x86-try",
         ),
         luci.cq_tryjob_verifier(
-            builder = 'chromium:try/win-swangle-try-tot-angle-x86',
+            builder = "chromium:try/win-swangle-try-tot-angle-x86",
         ),
     ],
 )
-
