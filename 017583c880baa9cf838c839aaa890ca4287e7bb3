@@ -45,6 +45,30 @@
       },
       "revId": "017583c880baa9cf838c839aaa890ca4287e7bb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e63ce46_a2767c1b",
+        "filename": "src/libANGLE/validationCL_autogen.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-26T14:50:23Z",
+      "side": 1,
+      "message": "OpenCL functions return error codes directly and not over the context like glGetError, so the validation layer needs a way to return these. The functions which return pointers have to be handled differently, so we need another macro for those, and returning bool makes more sense for those.",
+      "parentUuid": "f39034c5_d089f85a",
+      "range": {
+        "startLine": 20,
+        "startChar": 0,
+        "endLine": 20,
+        "endChar": 6
+      },
+      "revId": "017583c880baa9cf838c839aaa890ca4287e7bb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
