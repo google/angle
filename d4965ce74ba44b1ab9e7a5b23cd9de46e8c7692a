@@ -16,6 +16,24 @@
       "message": "What\u0027s the current status of the LunarG responses Alexis? Did you have a chance to follow up with them to help them diagnose this issue?",
       "revId": "d4965ce74ba44b1ab9e7a5b23cd9de46e8c7692a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6acd1bef_f806d566",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002767
+      },
+      "writtenOn": "2021-04-26T19:35:07Z",
+      "side": 1,
+      "message": "I have the same information you have from Cody\u0027s thread with people from LunarG. I\u0027ve looked into the issue on my side and tried other tests, but I haven\u0027t pinpointed exactly where the error comes from. There wasn\u0027t anything obvious from the traces I got, but the errors were happening consistently across different runs.\n\nLanding this CL at this point would allow us to switch all Web Tests over to SwANGLE, which would allow us to then use these same tests to verify any fix to the unique handles validation using these same tests. Since switching Web Tests over to a new renderer is a long and arduous process involving thousands of tests, I propose we proceed in this order to accelerate the whole process.",
+      "parentUuid": "5a3ebc3e_ed66faa1",
+      "revId": "d4965ce74ba44b1ab9e7a5b23cd9de46e8c7692a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
