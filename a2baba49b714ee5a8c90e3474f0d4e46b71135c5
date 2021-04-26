@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e6dcb17_f690af19",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T13:11:19Z",
+      "side": 1,
+      "message": "Is this printing in the child process? Can you make it somehow pass a message to the parent and have the parent call logging.info?",
+      "range": {
+        "startLine": 522,
+        "startChar": 12,
+        "endLine": 522,
+        "endChar": 17
+      },
+      "revId": "a2baba49b714ee5a8c90e3474f0d4e46b71135c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "638df730_395be966",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-26T13:11:19Z",
+      "side": 1,
+      "message": "same here",
+      "range": {
+        "startLine": 583,
+        "startChar": 12,
+        "endLine": 583,
+        "endChar": 17
+      },
+      "revId": "a2baba49b714ee5a8c90e3474f0d4e46b71135c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
