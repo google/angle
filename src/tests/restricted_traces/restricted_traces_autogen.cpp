@@ -24,6 +24,7 @@
 #include "bus_simulator_indonesia/bus_simulator_indonesia_capture_context1.h"
 #include "call_break_offline_card_game/call_break_offline_card_game_capture_context2.h"
 #include "candy_crush_500/candy_crush_500_capture_context1.h"
+#include "candy_crush_soda_saga/candy_crush_soda_saga_capture_context2.h"
 #include "car_parking_multiplayer/car_parking_multiplayer_capture_context1.h"
 #include "clash_of_clans/clash_of_clans_capture_context1.h"
 #include "clash_royale/clash_royale_capture_context1.h"
@@ -155,6 +156,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       candy_crush_500::kReplayContextClientMinorVersion, candy_crush_500::kReplayFrameStart,
       candy_crush_500::kReplayFrameEnd, candy_crush_500::kReplayDrawSurfaceWidth,
       candy_crush_500::kReplayDrawSurfaceHeight, "candy_crush_500"}},
+    {RestrictedTraceID::candy_crush_soda_saga,
+     {candy_crush_soda_saga::kReplayContextClientMajorVersion,
+      candy_crush_soda_saga::kReplayContextClientMinorVersion,
+      candy_crush_soda_saga::kReplayFrameStart, candy_crush_soda_saga::kReplayFrameEnd,
+      candy_crush_soda_saga::kReplayDrawSurfaceWidth,
+      candy_crush_soda_saga::kReplayDrawSurfaceHeight, "candy_crush_soda_saga"}},
     {RestrictedTraceID::car_parking_multiplayer,
      {car_parking_multiplayer::kReplayContextClientMajorVersion,
       car_parking_multiplayer::kReplayContextClientMinorVersion,

@@ -66,6 +66,7 @@ enum class RestrictedTraceID
     bus_simulator_indonesia,
     call_break_offline_card_game,
     candy_crush_500,
+    candy_crush_soda_saga,
     car_parking_multiplayer,
     clash_of_clans,
     clash_royale,

@@ -722,6 +722,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/candy_crush_soda_saga': {
+      'packages': [
+        {
+            'package': 'angle/traces/candy_crush_soda_saga',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/car_parking_multiplayer': {
       'packages': [
         {
