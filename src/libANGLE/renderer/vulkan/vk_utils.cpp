@@ -89,9 +89,9 @@ angle::Result FindAndAllocateCompatibleMemory(vk::Context *context,
     VkDevice device = context->getDevice();
 
     uint32_t memoryTypeIndex = 0;
-    ANGLE_TRY(memoryProperties.findCompatibleMemoryIndex(context, memoryRequirements,
-                                                         requestedMemoryPropertyFlags,
-                                                         memoryPropertyFlagsOut, &memoryTypeIndex));
+    ANGLE_TRY(memoryProperties.findCompatibleMemoryIndex(
+        context, memoryRequirements, requestedMemoryPropertyFlags, (extraAllocationInfo != nullptr),
+        memoryPropertyFlagsOut, &memoryTypeIndex));
 
     VkMemoryAllocateInfo allocInfo = {};
     allocInfo.sType                = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
@@ -373,6 +373,7 @@ angle::Result MemoryProperties::findCompatibleMemoryIndex(
     Context *context,
     const VkMemoryRequirements &memoryRequirements,
     VkMemoryPropertyFlags requestedMemoryPropertyFlags,
+    bool isExternalMemory,
     VkMemoryPropertyFlags *memoryPropertyFlagsOut,
     uint32_t *typeIndexOut) const
 {
@@ -401,6 +402,21 @@ angle::Result MemoryProperties::findCompatibleMemoryIndex(
 
         if (FindCompatibleMemory(mMemoryProperties, memoryRequirements, fallbackMemoryPropertyFlags,
                                  memoryPropertyFlagsOut, typeIndexOut))
+        {
+            return angle::Result::Continue;
+        }
+    }
+
+    // We did not find a compatible memory type. When importing external memory, there may be
+    // additional restrictions on memoryType. Fallback to requesting device local memory.
+    if (isExternalMemory)
+    {
+        // The Vulkan spec says the following -
+        //     There must be at least one memory type with the VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+        //     bit set in its propertyFlags
+        if (FindCompatibleMemory(mMemoryProperties, memoryRequirements,
+                                 VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, memoryPropertyFlagsOut,
+                                 typeIndexOut))
         {
             return angle::Result::Continue;
         }
