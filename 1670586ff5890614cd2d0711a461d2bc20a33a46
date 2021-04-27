@@ -39,6 +39,30 @@
       },
       "revId": "1670586ff5890614cd2d0711a461d2bc20a33a46",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07515304_cc295ad2",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T22:33:07Z",
+      "side": 1,
+      "message": "I have done it differently now. The new method is basically always add GL_MAP_UNSYNCHRONIZED_BIT to access bit. This should prevent driver to do any synchronization or COW.",
+      "parentUuid": "4b1b094e_5792b909",
+      "range": {
+        "startLine": 300,
+        "startChar": 16,
+        "endLine": 300,
+        "endChar": 22
+      },
+      "revId": "1670586ff5890614cd2d0711a461d2bc20a33a46",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
