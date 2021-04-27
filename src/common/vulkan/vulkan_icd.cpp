@@ -223,6 +223,12 @@ bool ScopedVkLoaderEnvironment::setCustomExtensionsEnvironment()
 
         {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT,
          sizeof(VkPhysicalDeviceProvokingVertexFeaturesEXT)},
+
+        {VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_PROPERTIES_EXT,
+         sizeof(VkPhysicalDeviceProvokingVertexPropertiesEXT)},
+
+        {VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_PROVOKING_VERTEX_STATE_CREATE_INFO_EXT,
+         sizeof(VkPipelineRasterizationProvokingVertexStateCreateInfoEXT)},
     };
 
     mPreviousCustomExtensionsEnv = angle::GetEnvironmentVar(kValidationLayersCustomSTypeListEnv);
