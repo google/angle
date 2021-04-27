@@ -119,9 +119,10 @@ declare_args() {
 
   angle_enable_d3d9 = is_win && !angle_is_winuwp
   angle_enable_d3d11 = is_win
-  angle_enable_gl = (ozone_platform_gbm || (!is_linux && !is_chromeos) ||
-                     (angle_use_x11 && !is_chromeos)) && !is_fuchsia &&
-                    !angle_is_winuwp && !is_ggp && !is_win_arm64
+  angle_enable_gl =
+      (ozone_platform_gbm || is_chromeos_lacros ||
+       (!is_linux && !is_chromeos) || (angle_use_x11 && !is_chromeos)) &&
+      !is_fuchsia && !angle_is_winuwp && !is_ggp && !is_win_arm64
 
   angle_enable_vulkan =
       angle_has_build &&
