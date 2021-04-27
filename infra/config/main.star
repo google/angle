@@ -134,9 +134,7 @@ def get_os_from_name(name):
 
 # Adds both the CI and Try standalone builders.
 def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False, trace_tests = False):
-    properties = {
-        "builder_group": "angle",
-    }
+    properties = {}
     config_os = get_os_from_name(name)
     dimensions = {}
     dimensions["os"] = config_os.dimension
@@ -161,23 +159,29 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
     else:
         properties["test_mode"] = "compile_and_test"
 
+    ci_properties = dict(properties)
+    ci_properties["builder_group"] = "client.angle"
+
     luci.builder(
         name = name,
         bucket = "ci",
         triggered_by = ["master-poller"],
         executable = "recipe:angle",
         service_account = "angle-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
-        properties = properties,
+        properties = ci_properties,
         dimensions = dimensions,
         build_numbers = True,
     )
+
+    try_properties = dict(properties)
+    try_properties["builder_group"] = "tryserver.angle"
 
     luci.builder(
         name = name,
         bucket = "try",
         executable = "recipe:angle",
         service_account = "angle-try-builder@chops-service-accounts.iam.gserviceaccount.com",
-        properties = properties,
+        properties = try_properties,
         dimensions = dimensions,
         build_numbers = True,
     )
