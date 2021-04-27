@@ -156,7 +156,7 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
         properties["test_mode"] = "trace_tests"
     elif toolchain == "gcc":
         properties["test_mode"] = "checkout_only"
-    elif debug or toolchain == "msvc":
+    elif debug or toolchain == "msvc" or config_os.category == os_category.ANDROID:
         properties["test_mode"] = "compile_only"
     else:
         properties["test_mode"] = "compile_and_test"
