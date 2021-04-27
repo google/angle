@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "67b7cacb_bc7bc645",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T03:42:32Z",
+      "side": 1,
+      "message": "Thanks for explanation. If you loop all buffer index, ignore buffersMask, I am convinced this is unique. Basically it works like variable length encoding. But if you only encode based on bufferMask, then how do you tell the difference between the cases that only buffersMask are different? They will result in the same desc stream, but the buffer might map to different index. For example\ncase 1: {{noBufferBound}, buffer} \ncase 2: {buffer, {noBufferBound}}\nwill result in the same desc, but buffer are actually bound to different binding point. Is this actually a valid usage case?",
+      "parentUuid": "19f49604_2e47edd1",
+      "range": {
+        "startLine": 310,
+        "startChar": 16,
+        "endLine": 310,
+        "endChar": 24
+      },
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71edf88a_f4063a0c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 13
