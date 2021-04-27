@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7226a426_82d811e9",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T16:58:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "409c816a_19162cef",
+      "range": {
+        "startLine": 28,
+        "startChar": 76,
+        "endLine": 28,
+        "endChar": 80
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "25fdc794_a9c2976e",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-04-27T15:22:39Z",
       "side": 1,
       "message": "I think the key here is you have data showing they *do* dominate the frame time, regardless of the subdata dimensions.  Suggestion:\n\n// On some driver(s) the bufferSubData/texSubImage calls end up dominating the frame time when the actual GPU work is minimized.  Even reducing the texSubImage calls to only update 1x1 area is not enough.  The driver may be implementing copy on write by cloning the entire texture to another memory storage for texSubImage call.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f9a654c_9c997a76",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T16:58:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25fdc794_a9c2976e",
       "range": {
         "startLine": 29,
         "startChar": 0,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c84607ce_ed41970f",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T16:58:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "09bdc28f_937b36c7",
+      "range": {
+        "startLine": 301,
+        "startChar": 5,
+        "endLine": 301,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8ec522fc_72fb0426",
@@ -110,6 +182,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "128c595c_91d7aa99",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T16:58:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8ec522fc_72fb0426",
+      "range": {
+        "startLine": 339,
+        "startChar": 5,
+        "endLine": 339,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23149bb0_7a4ba9f6",
@@ -123,6 +219,30 @@
       "writtenOn": "2021-04-27T15:22:39Z",
       "side": 1,
       "message": "same",
+      "range": {
+        "startLine": 381,
+        "startChar": 5,
+        "endLine": 381,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "982355ca_b6a660b8",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T16:58:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "23149bb0_7a4ba9f6",
       "range": {
         "startLine": 381,
         "startChar": 5,
