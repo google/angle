@@ -113,6 +113,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9d52d5a_ddca0ce4",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T16:14:49Z",
+      "side": 1,
+      "message": "Got. I think this should work.",
+      "parentUuid": "81338ec5_3c245adf",
+      "range": {
+        "startLine": 310,
+        "startChar": 16,
+        "endLine": 310,
+        "endChar": 24
+      },
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "71edf88a_f4063a0c",
