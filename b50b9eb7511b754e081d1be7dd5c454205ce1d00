@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd13865f_896f652f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1302660
+      },
+      "writtenOn": "2021-04-27T07:37:46Z",
+      "side": 1,
+      "message": "Please review this CL. Thanks!\n\n(A discussion might be need which ANGLE platform should be used in Lacros.)",
+      "revId": "b50b9eb7511b754e081d1be7dd5c454205ce1d00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
