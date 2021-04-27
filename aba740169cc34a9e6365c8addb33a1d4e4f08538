@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9caf2db_fcdb1805",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-27T15:22:39Z",
+      "side": 1,
+      "message": "Some verbiage suggestions, but LGTM otherwise with the added color.",
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "409c816a_19162cef",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-27T15:22:39Z",
+      "side": 1,
+      "message": "has",
+      "range": {
+        "startLine": 28,
+        "startChar": 76,
+        "endLine": 28,
+        "endChar": 80
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25fdc794_a9c2976e",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-27T15:22:39Z",
+      "side": 1,
+      "message": "I think the key here is you have data showing they *do* dominate the frame time, regardless of the subdata dimensions.  Suggestion:\n\n// On some driver(s) the bufferSubData/texSubImage calls end up dominating the frame time when the actual GPU work is minimized.  Even reducing the texSubImage calls to only update 1x1 area is not enough.  The driver may be implementing copy on write by cloning the entire texture to another memory storage for texSubImage call.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09bdc28f_937b36c7",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-27T15:22:39Z",
+      "side": 1,
+      "message": "#if !defined(NOOP_SUBDATA_SUBIMAGE_FOR_MINIMIZE_GPU_WORK)",
+      "range": {
+        "startLine": 301,
+        "startChar": 5,
+        "endLine": 301,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ec522fc_72fb0426",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 339,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-27T15:22:39Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 339,
+        "startChar": 5,
+        "endLine": 339,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23149bb0_7a4ba9f6",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-27T15:22:39Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 381,
+        "startChar": 5,
+        "endLine": 381,
+        "endChar": 48
+      },
+      "revId": "aba740169cc34a9e6365c8addb33a1d4e4f08538",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
