@@ -16,6 +16,23 @@
       "message": "PTAL. Thanks!\n\nConsider this a \"trial balloon\": while rewriting the HLSL SSBO stuff, I realized it could \nnow be merged into OutputHLSL. I leave it to the ANGLE team to decide if this is a good \nidea, or if it would be better to leave it in its own file.",
       "revId": "85afe4ac2316fa8d3f8891beee4d8d4c6b4ff17d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2f9fd54_8a5cfdc7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-27T19:19:24Z",
+      "side": 1,
+      "message": "How come? Splitting into smaller files can be helpful for organization.",
+      "revId": "85afe4ac2316fa8d3f8891beee4d8d4c6b4ff17d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
