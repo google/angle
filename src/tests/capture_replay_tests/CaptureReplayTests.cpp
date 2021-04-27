@@ -78,6 +78,7 @@ class CaptureReplayTests
 
         configParams.clientArraysEnabled   = testTraceInfo.areClientArraysEnabled;
         configParams.bindGeneratesResource = testTraceInfo.bindGeneratesResources;
+        configParams.webGLCompatibility    = testTraceInfo.webGLCompatibility;
 
         mPlatformParams.renderer   = testTraceInfo.replayPlatformType;
         mPlatformParams.deviceType = testTraceInfo.replayDeviceType;

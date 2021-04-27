@@ -98,6 +98,7 @@ test_trace_info_init_template = """\
         {namespace}::kIsBinaryDataCompressed,
         {namespace}::kAreClientArraysEnabled,
         {namespace}::kbindGeneratesResources,
+        {namespace}::kWebGLCompatibility,
     }},
 """
 
@@ -127,6 +128,7 @@ struct TestTraceInfo {{
     bool isBinaryDataCompressed;
     bool areClientArraysEnabled;
     bool bindGeneratesResources;
+    bool webGLCompatibility;
 }};
 
 extern std::vector<TestTraceInfo> testTraceInfos;

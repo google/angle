@@ -10,7 +10,6 @@
 # Failed tests
 CopyTextureTestWebGL.NPOT/*
 D3DImageFormatConversionTest.*
-DifferentStencilMasksTest.*
 FramebufferTest.MultiContextNoRenderingFeedbackLoops/*
 PbufferTest.BindTexImage/*
 PbufferTest.Clearing/*
