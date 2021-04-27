@@ -16,6 +16,23 @@
       "message": "Please review this CL. Thanks!\n\n(A discussion might be need which ANGLE platform should be used in Lacros.)",
       "revId": "b50b9eb7511b754e081d1be7dd5c454205ce1d00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a849e9d9_cddb7a6f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1179631
+      },
+      "writtenOn": "2021-04-27T07:44:35Z",
+      "side": 1,
+      "message": "Some extra context:\n\nRob, recently we found that ozone_platform_gbm was enabled on lacros builders. After turning it off, looks like it defaulted to a NULL angle platform except on official builds which is how we noticed.\n\nIIUC we should use ANGLE in lacros to deal with driver weirdness so let\u0027s enable ANGLE with gl backend.",
+      "revId": "b50b9eb7511b754e081d1be7dd5c454205ce1d00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
