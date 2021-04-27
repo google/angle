@@ -69,6 +69,24 @@
       "parentUuid": "6cf49c31_124f1b41",
       "revId": "ee38b5c6e5ad20cc28f138069f69e234035396a0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7ded4aa_e1d79c7d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-04-27T20:44:25Z",
+      "side": 1,
+      "message": "dEQP has needed tests and they all pass on M1 locally:\n\n ./angle_deqp_gles3_tests --gtest_filter\u003d\"*GLES3/functional_texture_compressed_astc*\" --deqp-egl-display-type\u003dangle-metal",
+      "parentUuid": "ad8a65d3_db0f0e32",
+      "revId": "ee38b5c6e5ad20cc28f138069f69e234035396a0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
