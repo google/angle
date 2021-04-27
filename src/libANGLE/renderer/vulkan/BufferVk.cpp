@@ -400,18 +400,15 @@ angle::Result BufferVk::copySubData(const gl::Context *context,
     // all recorded and in-flight commands involving the source buffer.
     if (mShadowBuffer.valid())
     {
-        ANGLE_TRY(sourceBuffer.waitForIdle(
-            contextVk,
-            "GPU stall due to copy from buffer in use by the GPU to a pixel unpack buffer"));
+        // Map the source buffer.
+        void *mapPtr;
+        ANGLE_TRY(sourceVk->mapRangeImpl(contextVk, sourceOffset, size, 0, &mapPtr));
 
-        // Update the shadow buffer
-        uint8_t *srcPtr;
-        ANGLE_TRY(sourceBuffer.mapWithOffset(contextVk, &srcPtr, sourceOffset));
-
-        updateShadowBuffer(srcPtr, size, destOffset);
+        // Update the shadow buffer with data from source buffer
+        updateShadowBuffer(static_cast<uint8_t *>(mapPtr), size, destOffset);
 
         // Unmap the source buffer
-        sourceBuffer.unmap(contextVk->getRenderer());
+        ANGLE_TRY(sourceVk->unmapImpl(contextVk));
     }
 
     // Check for self-dependency.
@@ -560,20 +557,10 @@ angle::Result BufferVk::getSubData(const gl::Context *context,
     {
         ASSERT(mBuffer && mBuffer->valid());
         ContextVk *contextVk = vk::GetImpl(context);
-        // Note: This function is used for ANGLE's capture/replay tool, so no performance warnings
-        // is generated.
-        ANGLE_TRY(mBuffer->waitForIdle(contextVk, nullptr));
-        if (mBuffer->isMapped())
-        {
-            memcpy(outData, mBuffer->getMappedMemory() + offset, size);
-        }
-        else
-        {
-            uint8_t *mappedPtr = nullptr;
-            ANGLE_TRY(mBuffer->mapWithOffset(contextVk, &mappedPtr, offset));
-            memcpy(outData, mappedPtr, size);
-            mBuffer->unmap(contextVk->getRenderer());
-        }
+        void *mapPtr;
+        ANGLE_TRY(mapRangeImpl(contextVk, offset, size, 0, &mapPtr));
+        memcpy(outData, mapPtr, size);
+        ANGLE_TRY(unmapImpl(contextVk));
     }
     else
     {
@@ -603,28 +590,11 @@ angle::Result BufferVk::getIndexRange(const gl::Context *context,
 
     ANGLE_TRACE_EVENT0("gpu.angle", "BufferVk::getIndexRange");
 
-    uint8_t *mapPointer;
+    void *mapPtr;
+    ANGLE_TRY(mapRangeImpl(contextVk, offset, getSize(), 0, &mapPtr));
+    *outRange = gl::ComputeIndexRange(type, mapPtr, count, primitiveRestartEnabled);
+    ANGLE_TRY(unmapImpl(contextVk));
 
-    if (!mShadowBuffer.valid())
-    {
-        ANGLE_PERF_WARNING(contextVk->getDebug(), GL_DEBUG_SEVERITY_HIGH,
-                           "GPU stall due to index range validation");
-
-        // Needed before reading buffer or we could get stale data.
-        ANGLE_TRY(mBuffer->finishRunningCommands(contextVk));
-
-        ASSERT(mBuffer && mBuffer->valid());
-
-        ANGLE_TRY(mBuffer->mapWithOffset(contextVk, &mapPointer, offset));
-    }
-    else
-    {
-        mapPointer = getShadowBuffer(offset);
-    }
-
-    *outRange = gl::ComputeIndexRange(type, mapPointer, count, primitiveRestartEnabled);
-
-    mBuffer->unmap(renderer);
     return angle::Result::Continue;
 }
 
