@@ -545,7 +545,10 @@ angle::Result ProgramPipeline::link(const Context *context)
             gl::GetLastPreFragmentStage(getExecutable().getLinkedShaderStages());
         if (lastVertexProcessingStage == ShaderType::InvalidEnum)
         {
-            return angle::Result::Stop;
+            //  If there is no active program for the vertex or fragment shader stages, the results
+            //  of vertex and fragment shader execution will respectively be undefined. However,
+            //  this is not an error.
+            return angle::Result::Continue;
         }
 
         Program *tfProgram = getShaderProgram(lastVertexProcessingStage);
@@ -609,7 +612,7 @@ bool ProgramPipeline::linkVaryings(InfoLog &infoLog) const
     Program *fragmentProgram = mState.mPrograms[ShaderType::Fragment];
     if (!vertexProgram || !fragmentProgram)
     {
-        return false;
+        return true;
     }
     ProgramExecutable &vertexExecutable   = vertexProgram->getExecutable();
     ProgramExecutable &fragmentExecutable = fragmentProgram->getExecutable();
@@ -649,6 +652,15 @@ void ProgramPipeline::validate(const gl::Context *context)
                 return;
             }
         }
+    }
+
+    intptr_t drawStatesError = context->getStateCache().getBasicDrawStatesError(context);
+    if (drawStatesError)
+    {
+        mState.mValid            = false;
+        const char *errorMessage = reinterpret_cast<const char *>(drawStatesError);
+        infoLog << errorMessage << "\n";
+        return;
     }
 
     if (!linkVaryings(infoLog))

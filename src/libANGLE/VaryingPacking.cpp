@@ -1016,8 +1016,6 @@ bool ProgramVaryingPacking::collectAndPackUserVaryings(InfoLog &infoLog,
     // Special case for start-after-vertex.
     if (frontShaderStage != ShaderType::Vertex)
     {
-        ASSERT(isSeparableProgram);
-
         ShaderType emulatedFrontShaderStage = ShaderType::Vertex;
         ShaderType backShaderStage          = frontShaderStage;
 
@@ -1062,8 +1060,6 @@ bool ProgramVaryingPacking::collectAndPackUserVaryings(InfoLog &infoLog,
     // Special case for stop-before-fragment.
     if (frontShaderStage != ShaderType::Fragment)
     {
-        ASSERT(isSeparableProgram);
-
         if (!mVaryingPackings[frontShaderStage].collectAndPackUserVaryings(
                 infoLog, GetMaxShaderOutputVectors(caps, frontShaderStage), packMode,
                 frontShaderStage, ShaderType::InvalidEnum, mergedVaryings, tfVaryings,

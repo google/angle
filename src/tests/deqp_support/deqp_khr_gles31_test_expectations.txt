@@ -35,8 +35,6 @@
 // tests)
 // Translator's lack of support for redefining gl_PerVertex
 5579 VULKAN : KHR-GLES31.core.geometry_shader.api.getProgramiv3 = FAIL
-// Crash gathering transform feedback varyings on GS-only separable program
-5579 VULKAN : KHR-GLES31.core.geometry_shader.api.program_pipeline_vs_gs_capture = SKIP
 // Wrong results
 5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_indiced_triangle_strip = FAIL
 5579 VULKAN : KHR-GLES31.core.geometry_shader.adjacency.adjacency_non_indiced_triangle_strip = FAIL

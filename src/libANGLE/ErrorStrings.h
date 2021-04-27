@@ -566,6 +566,7 @@ MSG kUnrecognizedShaderStageBit = "Unrecognized shader stage bit.";
 MSG kProgramNotSeparable = "Program object was not linked with its PROGRAM_SEPARABLE status set.";
 MSG kProgramPipelineDoesNotExist = "Program pipeline does not exist.";
 MSG kNotAllStagesOfSeparableProgramUsed = "A program object is active for at least one, but not all of the shader stages that were present when the program was linked.";
+MSG kNoExecutableCodeInstalled = "There is no current program object specified by UseProgram, there is a current program pipeline object, and that object is empty (no executable code is installed for any stage).";
 MSG kProgramPipelineLinkFailed = "Program pipeline link failed";
 
 // clang-format on

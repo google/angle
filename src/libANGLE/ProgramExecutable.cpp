@@ -845,8 +845,7 @@ void ProgramExecutable::setSamplerUniformTextureTypeAndFormat(
 
 void ProgramExecutable::updateCanDrawWith()
 {
-    mCanDrawWith =
-        (hasLinkedShaderStage(ShaderType::Vertex) && hasLinkedShaderStage(ShaderType::Fragment));
+    mCanDrawWith = hasLinkedShaderStage(ShaderType::Vertex);
 }
 
 void ProgramExecutable::saveLinkedStateInfo(const ProgramState &state)

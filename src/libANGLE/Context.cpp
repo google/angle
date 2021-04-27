@@ -7290,6 +7290,24 @@ void Context::validateProgram(ShaderProgramID program)
 
 void Context::validateProgramPipeline(ProgramPipelineID pipeline)
 {
+    // GLES spec 3.2, Section 7.4 "Program Pipeline Objects"
+    // If pipeline is a name that has been generated (without subsequent deletion) by
+    // GenProgramPipelines, but refers to a program pipeline object that has not been
+    // previously bound, the GL first creates a new state vector in the same manner as
+    // when BindProgramPipeline creates a new program pipeline object.
+    //
+    // void BindProgramPipeline( uint pipeline );
+    // pipeline is the program pipeline object name. The resulting program pipeline
+    // object is a new state vector, comprising all the state and with the same initial values
+    // listed in table 21.20.
+    //
+    // If we do not have a pipeline object that's been created with glBindProgramPipeline, we leave
+    // VALIDATE_STATUS at it's default false value without generating a pipeline object.
+    if (!getProgramPipeline(pipeline))
+    {
+        return;
+    }
+
     ProgramPipeline *programPipeline =
         mState.mProgramPipelineManager->checkProgramPipelineAllocation(mImplementation.get(),
                                                                        pipeline);
@@ -9585,8 +9603,8 @@ void StateCache::updateActiveImageUnitIndices(Context *context)
 
 void StateCache::updateCanDraw(Context *context)
 {
-    mCachedCanDraw = (context->isGLES1() ||
-                      (context->getState().getProgramExecutable() &&
-                       context->getState().getProgramExecutable()->hasVertexAndFragmentShader()));
+    mCachedCanDraw =
+        (context->isGLES1() || (context->getState().getProgramExecutable() &&
+                                context->getState().getProgramExecutable()->hasVertexShader()));
 }
 }  // namespace gl

@@ -10,9 +10,6 @@
 // tests)
 // Translator's lack of support for redefining gl_PerVertex
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.getProgramiv3 = FAIL
-// Crash gathering transform feedback varyings on GS-only separable program
-5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.program_pipeline_vs_gs_capture = SKIP
-5579 VULKAN WIN : KHR-GLES32.core.separable_programs_tf.geometry_active = SKIP
 // API validation bugs
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.qualifiers.flat_interpolation = FAIL
 // Wrong results

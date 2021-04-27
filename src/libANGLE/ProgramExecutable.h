@@ -229,7 +229,7 @@ class ProgramExecutable final : public angle::Subject
     size_t getTransformFeedbackBufferCount() const { return mTransformFeedbackStrides.size(); }
 
     void updateCanDrawWith();
-    bool hasVertexAndFragmentShader() const { return mCanDrawWith; }
+    bool hasVertexShader() const { return mCanDrawWith; }
 
     const std::vector<sh::ShaderVariable> &getProgramInputs() const { return mProgramInputs; }
     const std::vector<sh::ShaderVariable> &getOutputVariables() const { return mOutputVariables; }
