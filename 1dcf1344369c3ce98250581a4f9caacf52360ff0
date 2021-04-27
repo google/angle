@@ -70,6 +70,30 @@
       },
       "revId": "1dcf1344369c3ce98250581a4f9caacf52360ff0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0de22ba9_134f6bff",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-27T01:25:20Z",
+      "side": 1,
+      "message": "I moved the call to getCurrentQueueSerial() into cleanupCompletedCommandsGarbage(), so it can be removed without affecting ImageVk.\n\nI\u0027m stuck on the naming of the new function though.   I wanted to stick with something like the current \"cleanupGarbage\", but what I\u0027ve got now feels awkward.   Some other ideas:\n    destroyCompletedObjects()\n    cleanupGarbageForCompletedCommands()\n\nLet me know what you think.",
+      "parentUuid": "5b4c3810_956a5ad3",
+      "range": {
+        "startLine": 53,
+        "startChar": 47,
+        "endLine": 53,
+        "endChar": 55
+      },
+      "revId": "1dcf1344369c3ce98250581a4f9caacf52360ff0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
