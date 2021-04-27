@@ -16,6 +16,40 @@
       "message": "syoussefi@: I added you as an owner. Could you review this CL? Thanks!",
       "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fb06960_5124fe74",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115919
+      },
+      "writtenOn": "2021-04-27T08:59:36Z",
+      "side": 1,
+      "message": "Eriko-san, thank you for working on the fix.",
+      "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "231995dc_c4b1e823",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1115919
+      },
+      "writtenOn": "2021-04-27T08:59:36Z",
+      "side": 1,
+      "message": "Question to Rob and Shahbaz:\n\nShould we enable this for chromeos always, or at least for devices?\nIf so, maybe we should use is_chromeos and simplify some conditions here?",
+      "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
