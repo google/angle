@@ -16,6 +16,29 @@
       "message": "PTAL Yuly. This was prompted from Garrett\u0027s suggestion. I *think* this won\u0027t break the bots.",
       "revId": "042e839277db35aede90d39056b8e7ef07404b1d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3165b351_66f9eb22",
+        "filename": "infra/config/main.star",
+        "patchSetId": 2
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1289180
+      },
+      "writtenOn": "2021-04-27T18:14:21Z",
+      "side": 1,
+      "message": "ci_properties and try_properties need to be passed instead of properties to luci.builder. As is, this CL is just removing the builder_group property from the builders.",
+      "range": {
+        "startLine": 162,
+        "startChar": 0,
+        "endLine": 162,
+        "endChar": 36
+      },
+      "revId": "042e839277db35aede90d39056b8e7ef07404b1d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
