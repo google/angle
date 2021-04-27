@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "81338ec5_3c245adf",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-27T14:17:35Z",
+      "side": 1,
+      "message": "I insert spacer zeros. So one would be {1, 0} 0 and the other would be 0, {1, 0}.",
+      "parentUuid": "67b7cacb_bc7bc645",
+      "range": {
+        "startLine": 310,
+        "startChar": 16,
+        "endLine": 310,
+        "endChar": 24
+      },
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "71edf88a_f4063a0c",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 13
@@ -149,6 +173,24 @@
       "writtenOn": "2021-04-21T21:58:05Z",
       "side": 1,
       "message": "Why is this step necessary every call?",
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4aeb42de_5a61f2cd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-27T14:17:35Z",
+      "side": 1,
+      "message": "This step ensures we insert markers between the different types of buffer. If uniforms and SSBOs with packed without a marker, you could get duplicates.\n\ne.g. ubo 1 is bound then ssbo 2 would give {1, 0}, {2, 0} and uniform 1 then 2 would give the same thing. Inserting this marker would give {1, 0}, -1, {2, 0}, -1 or {1, 0}, {2, 0}, -1, -1.",
+      "parentUuid": "9f9b2114_9500d56a",
       "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
