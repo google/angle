@@ -51,6 +51,24 @@
       "parentUuid": "a2f9fd54_8a5cfdc7",
       "revId": "85afe4ac2316fa8d3f8891beee4d8d4c6b4ff17d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "577658e0_5699903b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-27T20:12:54Z",
+      "side": 1,
+      "message": "I\u0027d be in favor of it if OutputHLSL wasn\u0027t already 4k lines. As it stands the extra header/comment/class code is worth splitting out and encapsulating some functionality.",
+      "parentUuid": "0f139af2_41415da8",
+      "revId": "85afe4ac2316fa8d3f8891beee4d8d4c6b4ff17d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
