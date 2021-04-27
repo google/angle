@@ -460,6 +460,9 @@ libangle_cl_headers = [
   "src/libANGLE/CLProgram.h",
   "src/libANGLE/CLSampler.h",
   "src/libANGLE/CLtypes.h",
+  "src/libANGLE/renderer/CLContextImpl.h",
+  "src/libANGLE/renderer/CLDeviceImpl.h",
+  "src/libANGLE/renderer/CLPlatformImpl.h",
   "src/libANGLE/validationCL.h",
   "src/libANGLE/validationCL_autogen.h",
 ]

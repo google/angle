@@ -135,6 +135,13 @@ declare_args() {
 
   # http://anglebug.com/2634
   angle_enable_metal = is_mac
+
+  # Enables the OpenCL pass-through back end
+  angle_enable_cl_passthrough = angle_enable_cl
+}
+
+if (!angle_enable_cl) {
+  angle_enable_cl_passthrough = false
 }
 
 declare_args() {

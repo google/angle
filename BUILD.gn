@@ -692,6 +692,10 @@ config("angle_backend_config") {
     configs += [ "src/libANGLE/renderer/vulkan:angle_vulkan_backend_config" ]
   }
 
+  if (angle_enable_cl_passthrough) {
+    configs += [ "src/libANGLE/renderer/cl:angle_cl_backend_config" ]
+  }
+
   if (angle_is_winuwp) {
     configs += [ "src/libANGLE/renderer/d3d:angle_enable_winuwp_config" ]
   }
@@ -844,6 +848,10 @@ angle_source_set("libANGLE_base") {
 
   if (angle_enable_metal) {
     public_deps += [ "src/libANGLE/renderer/metal:angle_metal_backend" ]
+  }
+
+  if (angle_enable_cl_passthrough) {
+    public_deps += [ "src/libANGLE/renderer/cl:angle_cl_backend" ]
   }
 
   # Enable extra Chromium style warnings for libANGLE.
