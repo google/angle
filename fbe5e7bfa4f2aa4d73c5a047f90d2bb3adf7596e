@@ -16,6 +16,23 @@
       "message": "Added stubs for CL platform layer (platform, device and context object) to CL pass-through and Vulkan back end.",
       "revId": "fbe5e7bfa4f2aa4d73c5a047f90d2bb3adf7596e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "daa3cd41_4c08f0fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-27T16:21:12Z",
+      "side": 1,
+      "message": "Looks good, thanks John!",
+      "revId": "fbe5e7bfa4f2aa4d73c5a047f90d2bb3adf7596e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
