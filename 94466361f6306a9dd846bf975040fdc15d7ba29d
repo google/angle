@@ -219,6 +219,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1bd34970_059dcd88",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 336,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-27T17:10:11Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "4aeb42de_5a61f2cd",
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7750eaf4_b5a947ba",
@@ -232,6 +250,30 @@
       "writtenOn": "2021-04-21T22:11:57Z",
       "side": 1,
       "message": "avoid hard coded value here?",
+      "range": {
+        "startLine": 3360,
+        "startChar": 40,
+        "endLine": 3360,
+        "endChar": 41
+      },
+      "revId": "94466361f6306a9dd846bf975040fdc15d7ba29d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0129083d_c3266aef",
+        "filename": "src/tests/gl_tests/UniformBufferTest.cpp",
+        "patchSetId": 13
+      },
+      "lineNbr": 3360,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-27T17:10:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7750eaf4_b5a947ba",
       "range": {
         "startLine": 3360,
         "startChar": 40,
