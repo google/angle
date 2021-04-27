@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "be191a11_7ee9c8bc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116015
+      },
+      "writtenOn": "2021-04-27T18:50:26Z",
+      "side": 1,
+      "message": "PTAL. Thanks!\n\nConsider this a \"trial balloon\": while rewriting the HLSL SSBO stuff, I realized it could \nnow be merged into OutputHLSL. I leave it to the ANGLE team to decide if this is a good \nidea, or if it would be better to leave it in its own file.",
+      "revId": "85afe4ac2316fa8d3f8891beee4d8d4c6b4ff17d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
