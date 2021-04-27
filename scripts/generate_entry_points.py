@@ -58,9 +58,7 @@ TEMPLATE_ENTRY_POINT_HEADER = """\
 
 {includes}
 
-extern "C" {{
 {entry_points}
-}} // extern "C"
 
 #endif  // {lib}_ENTRY_POINTS_{annotation_upper}_AUTOGEN_H_
 """
@@ -78,9 +76,7 @@ TEMPLATE_ENTRY_POINT_SOURCE = """\
 
 {includes}
 
-extern "C" {{
 {entry_points}
-}} // extern "C"
 """
 
 TEMPLATE_ENTRY_POINTS_ENUM_HEADER = """\
@@ -159,7 +155,7 @@ extern "C" {{
 }} // extern "C"
 """
 
-TEMPLATE_ENTRY_POINT_DECL = """ANGLE_EXPORT {return_type} {export_def} {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
+TEMPLATE_ENTRY_POINT_DECL = """{angle_export}{return_type} {export_def} {name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params});"""
 
 TEMPLATE_GLES_ENTRY_POINT_NO_RETURN = """\
 void GL_APIENTRY GL_{name}{explicit_context_suffix}({explicit_context_param}{explicit_context_comma}{params})
@@ -247,7 +243,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 """
 
 TEMPLATE_CL_ENTRY_POINT_NO_RETURN = """\
-void CL_API_CALL CL_{name}({params})
+void CL_API_CALL cl{name}({params})
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
@@ -260,7 +256,7 @@ void CL_API_CALL CL_{name}({params})
 """
 
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR = """\
-cl_int CL_API_CALL CL_{name}({params})
+cl_int CL_API_CALL cl{name}({params})
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
@@ -268,12 +264,12 @@ cl_int CL_API_CALL CL_{name}({params})
 
     ANGLE_CL_VALIDATE_ERROR({name}{comma_if_needed}{internal_params});
 
-    return {return_cast}({name}({internal_params}));
+    return {name}({internal_params});
 }}
 """
 
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER = """\
-{return_type} CL_API_CALL CL_{name}({params})
+{return_type} CL_API_CALL cl{name}({params})
 {{
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
@@ -281,7 +277,7 @@ TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER = """\
 
     ANGLE_CL_VALIDATE_POINTER({name}{comma_if_needed}{internal_params});
 
-    return {return_cast}({name}({internal_params}));
+    return {name}({internal_params});
 }}
 """
 
@@ -373,8 +369,7 @@ CONTEXT_DECL_FORMAT = """    {return_type} {name_lower_no_suffix}({internal_para
 TEMPLATE_CL_ENTRY_POINT_EXPORT = """\
 {return_type} CL_API_CALL cl{name}({params})
 {{
-    EnsureCLLoaded();
-    return cl_loader.cl{name}({internal_params});
+    return cl::GetDispatch().cl{name}({internal_params});
 }}
 """
 
@@ -875,50 +870,8 @@ EGL_EXT_SOURCE_INCLUDES = """\
 using namespace egl;
 """
 
-LIBCL_EXPORT_INCLUDES_AND_PREAMBLE = """
-#include "cl_loader.h"
-
-#include "anglebase/no_destructor.h"
-#include "common/system_utils.h"
-
-#include <iostream>
-#include <memory>
-
-namespace
-{
-bool gLoaded = false;
-
-std::unique_ptr<angle::Library> &EntryPointsLib()
-{
-    static angle::base::NoDestructor<std::unique_ptr<angle::Library>> sEntryPointsLib;
-    return *sEntryPointsLib;
-}
-
-angle::GenericProc CL_API_CALL GlobalLoad(const char *symbol)
-{
-    return reinterpret_cast<angle::GenericProc>(EntryPointsLib()->getSymbol(symbol));
-}
-
-void EnsureCLLoaded()
-{
-    if (gLoaded)
-    {
-        return;
-    }
-
-    EntryPointsLib().reset(
-        angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
-    angle::LoadCL(GlobalLoad);
-    if (!cl_loader.clGetDeviceIDs)
-    {
-        std::cerr << "Error loading CL entry points." << std::endl;
-    }
-    else
-    {
-        gLoaded = true;
-    }
-}
-}  // anonymous namespace
+LIBCL_EXPORT_INCLUDES = """
+#include "libOpenCL/dispatch.h"
 """
 
 LIBGLESV2_EXPORT_INCLUDES = """
@@ -1000,23 +953,15 @@ void EnsureEGLLoaded() {}
 """
 
 LIBCL_HEADER_INCLUDES = """\
-#include "export.h"
-
-#ifndef CL_API_ENTRY
-#    define CL_API_ENTRY ANGLE_EXPORT
-#endif
 #include "angle_cl.h"
 """
 
 LIBCL_SOURCE_INCLUDES = """\
-#include "entry_points_cl_autogen.h"
-
-#include "cl_stubs_autogen.h"
-#include "entry_points_cl_utils.h"
+#include "libGLESv2/entry_points_cl_autogen.h"
 
 #include "libANGLE/validationCL_autogen.h"
-
-using namespace cl;
+#include "libGLESv2/cl_stubs_autogen.h"
+#include "libGLESv2/entry_points_cl_utils.h"
 """
 
 TEMPLATE_EVENT_COMMENT = """\
@@ -1292,10 +1237,18 @@ def is_aliasing_excepted(api, cmd_name):
     return api == apis.GLES and cmd_name in ALIASING_EXCEPTIONS
 
 
+def entry_point_export(api):
+    if api == apis.CL:
+        return ""
+    return "ANGLE_EXPORT "
+
+
 def entry_point_prefix(api):
+    if api == apis.CL:
+        return "cl"
     if api == apis.GLES:
-        return "GL"
-    return api
+        return "GL_"
+    return api + "_"
 
 
 def get_api_entry_def(api):
@@ -1320,8 +1273,9 @@ def format_entry_point_decl(api, cmd_name, proto, params, is_explicit_context):
     comma_if_needed = ", " if len(params) > 0 else ""
     stripped = strip_api_prefix(cmd_name)
     return TEMPLATE_ENTRY_POINT_DECL.format(
+        angle_export=entry_point_export(api),
         export_def=get_api_entry_def(api),
-        name="%s_%s" % (entry_point_prefix(api), stripped),
+        name="%s%s" % (entry_point_prefix(api), stripped),
         return_type=proto[:-len(cmd_name)].strip(),
         params=", ".join(params),
         comma_if_needed=comma_if_needed,
@@ -1571,7 +1525,6 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
     pass_params = [param_print_argument(command_node, param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)].strip()
-    return_cast = "UnpackParam<" + return_type + ">" if return_type in packed_param_types else ""
     default_return = default_return_value(cmd_name, return_type)
     event_comment = TEMPLATE_EVENT_COMMENT if cmd_name in NO_EVENT_MARKER_EXCEPTIONS_LIST else ""
     name_lower_no_suffix = strip_suffix(api, cmd_name[2:3].lower() + cmd_name[3:])
@@ -1583,8 +1536,6 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
             name_lower_no_suffix,
         "return_type":
             return_type,
-        "return_cast":
-            return_cast,
         "params":
             ", ".join(params),
         "internal_params":
@@ -2696,6 +2647,10 @@ def main():
         all_commands_with_suffix.extend(xml.commands[version])
 
         eps = GLEntryPoints(apis.GLES, xml, version_commands)
+        eps.decls.insert(0, "extern \"C\" {")
+        eps.decls.append("} // extern \"C\"")
+        eps.defs.insert(0, "extern \"C\" {")
+        eps.defs.append("} // extern \"C\"")
 
         # Write the version as a comment before the first EP.
         libgles_ep_exports.append("\n    ; OpenGL ES %s" % comment)
@@ -2735,8 +2690,8 @@ def main():
         write_capture_source(version, validation_annotation, comment, eps.capture_methods)
 
     # After we finish with the main entry points, we process the extensions.
-    extension_defs = []
-    extension_decls = []
+    extension_decls = ["extern \"C\" {"]
+    extension_defs = ["extern \"C\" {"]
     extension_commands = []
 
     # Accumulated validation prototypes.
@@ -2862,8 +2817,8 @@ def main():
             set([major for (major, minor) in registry_xml.DESKTOP_GL_VERSIONS])):
         is_major = lambda ver: ver[0] == major_version
 
-        ver_decls = []
-        ver_defs = []
+        ver_decls = ["extern \"C\" {"]
+        ver_defs = ["extern \"C\" {"]
         validation_protos = []
 
         for _, minor_version in filter(is_major, registry_xml.DESKTOP_GL_VERSIONS):
@@ -2905,6 +2860,8 @@ def main():
             ver_decls += [cpp_comment] + eps.decls
             ver_defs += [cpp_comment] + eps.defs
 
+        ver_decls.append("} // extern \"C\"")
+        ver_defs.append("} // extern \"C\"")
         annotation = "GL_%d" % major_version
         name = "Desktop GL %s.x" % major_version
 
@@ -2924,8 +2881,8 @@ def main():
     clxml = registry_xml.RegistryXML('cl.xml')
 
     cl_validation_protos = []
-    cl_decls = []
-    cl_defs = []
+    cl_decls = ["namespace cl\n{"]
+    cl_defs = ["namespace cl\n{"]
     libcl_ep_defs = []
     libcl_windows_def_exports = []
     cl_commands = []
@@ -2958,6 +2915,9 @@ def main():
         cl_validation_protos += [comment] + eps.validation_protos
         libcl_windows_def_exports += [win_def_comment] + get_exports(clxml.commands[version])
 
+    cl_decls.append("}  // namespace cl")
+    cl_defs.append("}  // namespace cl")
+
     write_file("cl", "CL", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(cl_decls), "h",
                LIBCL_HEADER_INCLUDES, "libGLESv2", "cl.xml")
     write_file("cl", "CL", TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(cl_defs), "cpp",
@@ -2971,8 +2931,8 @@ def main():
     eglxml = registry_xml.RegistryXML('egl.xml', 'egl_angle_ext.xml')
 
     egl_validation_protos = []
-    egl_decls = []
-    egl_defs = []
+    egl_decls = ["extern \"C\" {"]
+    egl_defs = ["extern \"C\" {"]
     libegl_ep_defs = []
     libegl_windows_def_exports = []
     egl_commands = []
@@ -3005,6 +2965,9 @@ def main():
         egl_validation_protos += [comment] + eps.validation_protos
         libegl_windows_def_exports += [win_def_comment] + get_exports(eglxml.commands[version])
 
+    egl_decls.append("} // extern \"C\"")
+    egl_defs.append("} // extern \"C\"")
+
     write_file("egl", "EGL", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_decls), "h",
                EGL_HEADER_INCLUDES, "libGLESv2", "egl.xml")
     write_file("egl", "EGL", TEMPLATE_ENTRY_POINT_SOURCE, "\n".join(egl_defs), "cpp",
@@ -3013,8 +2976,8 @@ def main():
                        egl_commands, EGLEntryPoints.get_packed_enums(), EGL_PACKED_TYPES)
 
     eglxml.AddExtensionCommands(registry_xml.supported_egl_extensions, ['egl'])
-    egl_ext_decls = []
-    egl_ext_defs = []
+    egl_ext_decls = ["extern \"C\" {"]
+    egl_ext_defs = ["extern \"C\" {"]
     egl_ext_commands = []
 
     for extension_name, ext_cmd_names in sorted(eglxml.ext_data.items()):
@@ -3041,6 +3004,9 @@ def main():
         for dupe in eglxml.ext_dupes[extension_name]:
             msg = "// %s is already defined.\n" % strip_api_prefix(dupe)
             egl_ext_defs.append(msg)
+
+    egl_ext_decls.append("} // extern \"C\"")
+    egl_ext_defs.append("} // extern \"C\"")
 
     write_file("egl_ext", "EGL Extension", TEMPLATE_ENTRY_POINT_HEADER, "\n".join(egl_ext_decls),
                "h", EGL_EXT_HEADER_INCLUDES, "libGLESv2", "egl.xml and egl_angle_ext.xml")
@@ -3072,6 +3038,8 @@ def main():
     wgl_commands.remove("wglUseFontOutlines")
 
     libgl_ep_exports += get_exports(wgl_commands)
+    extension_decls.append("} // extern \"C\"")
+    extension_defs.append("} // extern \"C\"")
 
     write_file("gles_ext", "GLES extension", TEMPLATE_ENTRY_POINT_HEADER,
                "\n".join([item for item in extension_decls]), "h", GLES_EXT_HEADER_INCLUDES,
@@ -3133,8 +3101,8 @@ def main():
     write_export_files("\n".join([item for item in libegl_ep_defs]),
                        LIBEGL_EXPORT_INCLUDES_AND_PREAMBLE, "egl.xml and egl_angle_ext.xml",
                        "libEGL", "EGL")
-    write_export_files("\n".join([item for item in libcl_ep_defs]),
-                       LIBCL_EXPORT_INCLUDES_AND_PREAMBLE, "cl.xml", "libOpenCL", "CL")
+    write_export_files("\n".join([item for item in libcl_ep_defs]), LIBCL_EXPORT_INCLUDES,
+                       "cl.xml", "libOpenCL", "CL")
 
     libgles_ep_exports += get_egl_exports()
 

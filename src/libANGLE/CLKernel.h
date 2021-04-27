@@ -3,20 +3,21 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 // CLKernel.h: Defines the cl::Kernel class, which is a function declared in an OpenCL program.
 
 #ifndef LIBANGLE_CLKERNEL_H_
 #define LIBANGLE_CLKERNEL_H_
 
-#include "libANGLE/CLtypes.h"
+#include "libANGLE/CLObject.h"
 
 namespace cl
 {
-class Kernel final
+
+class Kernel final : public _cl_kernel, public Object
 {
   public:
-    using IsCLObjectType = std::true_type;
+    Kernel(const cl_icd_dispatch &dispatch);
+    ~Kernel() = default;
 };
 
 }  // namespace cl

@@ -3,12 +3,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 // CLPlatform.cpp: Implements the cl::Platform class.
 
 #include "libANGLE/CLPlatform.h"
 
 namespace cl
 {
-// TODO
+
+Platform::Platform(const cl_icd_dispatch &dispatch) : _cl_platform_id(dispatch) {}
+
 }  // namespace cl

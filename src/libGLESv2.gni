@@ -11,8 +11,6 @@ libangle_common_sources = [
   "src/common/MemoryBuffer.cpp",
   "src/common/MemoryBuffer.h",
   "src/common/Optional.h",
-  "src/common/PackedCLEnums_autogen.cpp",
-  "src/common/PackedCLEnums_autogen.h",
   "src/common/PackedEGLEnums_autogen.cpp",
   "src/common/PackedEGLEnums_autogen.h",
   "src/common/PackedEnums.cpp",
@@ -65,6 +63,11 @@ libangle_common_sources = [
   "src/common/utilities.cpp",
   "src/common/utilities.h",
   "src/common/vector_utils.h",
+]
+
+libangle_common_cl_sources = [
+  "src/common/PackedCLEnums_autogen.cpp",
+  "src/common/PackedCLEnums_autogen.h",
 ]
 
 xxhash_sources = [
@@ -456,6 +459,7 @@ libangle_cl_headers = [
   "src/libANGLE/CLEvent.h",
   "src/libANGLE/CLKernel.h",
   "src/libANGLE/CLMemory.h",
+  "src/libANGLE/CLObject.h",
   "src/libANGLE/CLPlatform.h",
   "src/libANGLE/CLProgram.h",
   "src/libANGLE/CLSampler.h",
@@ -577,6 +581,8 @@ libglesv2_sources = [
 ]
 
 libglesv2_cl_sources = [
+  "src/libGLESv2/cl_dispatch_table.cpp",
+  "src/libGLESv2/cl_dispatch_table.h",
   "src/libGLESv2/cl_stubs.cpp",
   "src/libGLESv2/cl_stubs_autogen.h",
   "src/libGLESv2/entry_points_cl_autogen.cpp",

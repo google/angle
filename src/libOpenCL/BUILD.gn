@@ -8,12 +8,12 @@ import("../../gni/angle.gni")
 
 assert(angle_enable_cl)
 
-angle_shared_library("OpenCL") {
+angle_shared_library("OpenCL_ANGLE") {
   defines = [ "LIBCL_IMPLEMENTATION" ]
 
   sources = [
-    "cl_loader.h",
-    "cl_loader_autogen.cpp",
+    "dispatch.cpp",
+    "dispatch.h",
     "libOpenCL_autogen.cpp",
   ]
 
@@ -28,6 +28,29 @@ angle_shared_library("OpenCL") {
   ]
 }
 
+angle_shared_library("OpenCL_ICD_ANGLE") {
+  defines = [ "LIBCL_IMPLEMENTATION" ]
+
+  sources = [
+    "dispatch.cpp",
+    "dispatch.h",
+    "libOpenCL_ICD.cpp",
+  ]
+
+  configs += [
+    "$angle_root:debug_annotations_config",
+    "$angle_root:library_name_config",
+  ]
+
+  deps = [
+    "$angle_root:angle_common",
+    "$angle_root:cl_includes",
+  ]
+}
+
 group("angle_cl") {
-  data_deps = [ ":OpenCL" ]
+  data_deps = [
+    ":OpenCL_ANGLE",
+    ":OpenCL_ICD_ANGLE",
+  ]
 }

@@ -3,20 +3,21 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 // CLSampler.h: Defines the cl::Sampler class, which describes how to sample an OpenCL Image.
 
 #ifndef LIBANGLE_CLSAMPLER_H_
 #define LIBANGLE_CLSAMPLER_H_
 
-#include "libANGLE/CLtypes.h"
+#include "libANGLE/CLObject.h"
 
 namespace cl
 {
-class Sampler final
+
+class Sampler final : public _cl_sampler, public Object
 {
   public:
-    using IsCLObjectType = std::true_type;
+    Sampler(const cl_icd_dispatch &dispatch);
+    ~Sampler() = default;
 };
 
 }  // namespace cl

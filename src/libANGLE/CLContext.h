@@ -3,21 +3,22 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 // CLContext.h: Defines the cl::Context class, which manages OpenCL objects such as command-queues,
 // memory, program and kernel objects and for executing kernels on one or more devices.
 
 #ifndef LIBANGLE_CLCONTEXT_H_
 #define LIBANGLE_CLCONTEXT_H_
 
-#include "libANGLE/CLtypes.h"
+#include "libANGLE/CLObject.h"
 
 namespace cl
 {
-class Context final
+
+class Context final : public _cl_context, public Object
 {
   public:
-    using IsCLObjectType = std::true_type;
+    Context(const cl_icd_dispatch &dispatch);
+    ~Context() = default;
 };
 
 }  // namespace cl

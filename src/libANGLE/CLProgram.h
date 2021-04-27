@@ -3,20 +3,21 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 // CLProgram.h: Defines the cl::Program class, which consists of a set of OpenCL kernels.
 
 #ifndef LIBANGLE_CLPROGRAM_H_
 #define LIBANGLE_CLPROGRAM_H_
 
-#include "libANGLE/CLtypes.h"
+#include "libANGLE/CLObject.h"
 
 namespace cl
 {
-class Program final
+
+class Program final : public _cl_program, public Object
 {
   public:
-    using IsCLObjectType = std::true_type;
+    Program(const cl_icd_dispatch &dispatch);
+    ~Program() = default;
 };
 
 }  // namespace cl
