@@ -50,6 +50,29 @@
       "message": "Verified on Cuttlefish",
       "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3083585e_7e5f88f3",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-27T16:48:29Z",
+      "side": 1,
+      "message": "One potential improvement we can do here is that cleanupGarbage will always walk the entire garbage list, there is no early out there. Since now this get called more often, there is a chance that we are keep walking the list over and over again while we know there is nothing can be freed (i.e, getLastCompletedQueueSerial() returns same value, GPU has not made much progress since last time garbage collected). I guess that could be a general optimization that not directly related to this change. Or, I am wondering if you should check mUse here so that only call cleanupCompletedCommandsGarbage if mUse is not zero?",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 54,
+        "endChar": 49
+      },
+      "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
