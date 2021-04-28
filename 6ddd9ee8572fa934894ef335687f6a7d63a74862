@@ -226,6 +226,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "61b5a8df_3ae96844",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-28T19:38:30Z",
+      "side": 1,
+      "message": "Fine with me.",
+      "parentUuid": "23493602_72bc51c2",
+      "range": {
+        "startLine": 3907,
+        "startChar": 4,
+        "endLine": 3907,
+        "endChar": 24
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "79d5fb05_01095839",
