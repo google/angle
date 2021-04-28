@@ -138,6 +138,30 @@
       },
       "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09b000f7_44b0937b",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-28T19:34:05Z",
+      "side": 1,
+      "message": "That is totally fine with me. But if you do it in ImageHelper::releaseImage(), you don\u0027t need this though, that is why I want to bring it up here.\nRe +2 and leaving for Tim to decide.",
+      "parentUuid": "a90db1e5_fe0acf97",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 54,
+        "endChar": 49
+      },
+      "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
