@@ -87,6 +87,30 @@
       },
       "revId": "0ecad3dc414c9c2e872b54251048cf947661ea5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "13bd9827_f6c02953",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T17:52:53Z",
+      "side": 1,
+      "message": "Whoops, I misread that. The one there is 5 years out of date and obsolete. Filed http://crbug.com/1203769 . Looks like the proper mirror is missing right now.",
+      "parentUuid": "4a297f02_35310088",
+      "range": {
+        "startLine": 562,
+        "startChar": 12,
+        "endLine": 562,
+        "endChar": 50
+      },
+      "revId": "0ecad3dc414c9c2e872b54251048cf947661ea5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
