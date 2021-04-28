@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a272473e_d9ff0fa4",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-28T03:15:00Z",
+      "side": 1,
+      "message": "Won\u0027t this swap be skipped in Onscreen and Vsync versions?",
+      "range": {
+        "startLine": 1205,
+        "startChar": 0,
+        "endLine": 1205,
+        "endChar": 15
+      },
+      "revId": "41bd0c6ea9f3b89d11160a7ba3a38306c2207036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
