@@ -63,6 +63,30 @@
       },
       "revId": "0ecad3dc414c9c2e872b54251048cf947661ea5f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d1c359e_867e1949",
+        "filename": "DEPS",
+        "patchSetId": 1
+      },
+      "lineNbr": 562,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-28T17:45:12Z",
+      "side": 1,
+      "message": "Though, that repo is 5 years old, so maybe not.",
+      "parentUuid": "4a297f02_35310088",
+      "range": {
+        "startLine": 562,
+        "startChar": 12,
+        "endLine": 562,
+        "endChar": 50
+      },
+      "revId": "0ecad3dc414c9c2e872b54251048cf947661ea5f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
