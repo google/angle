@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "74294b1c_2fe41a5b",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:27:37Z",
+      "side": 1,
+      "message": "Great!",
+      "parentUuid": "8ef14ab9_190bedd7",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 23
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59a18fff_5624fc3a",
@@ -85,6 +109,30 @@
       "side": 1,
       "message": "That\u0027s an OpenCL requirement, not possible to change. The ICD dispatch table has to be stored at a specific offset in each CL object:\nhttps://www.khronos.org/registry/OpenCL/specs/3.0-unified/html/OpenCL_Ext.html#cl_khr_icd-opencl",
       "parentUuid": "59a18fff_5624fc3a",
+      "range": {
+        "startLine": 23,
+        "startChar": 56,
+        "endLine": 23,
+        "endChar": 65
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39e03073_253eea0c",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:27:37Z",
+      "side": 1,
+      "message": "OK - more and more reason to do exactly what Mesa did and implement both a Mesa (ANGLE) and CL (ICD struct) object. For now this is OK. If we introduce any virtual functions I think this would break. We should end up with the same solution as Mesa eventually.",
+      "parentUuid": "bcd57bb3_a0d68093",
       "range": {
         "startLine": 23,
         "startChar": 56,
@@ -144,6 +192,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6d80ea6a_45a018f2",
+        "filename": "src/libGLESv2/cl_dispatch_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:27:37Z",
+      "side": 1,
+      "message": "OK. Technically we could generate it by scanning cl_icd.h. Maybe amend the comment to indicate where the ordering is specified.",
+      "parentUuid": "c70b2df4_1fea798e",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 14,
+        "endChar": 32
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f55c5f63_30d7c0b6",
         "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
         "patchSetId": 4
@@ -179,6 +251,30 @@
       "side": 1,
       "message": "libOpenCL is not supposed to provide the ICD extension. It is on purpose only in the CL implementation lib (libGLESv2). The official libOpenCL in Windows and Linux and also the Khronos ICD loader also don\u0027t export this specific entry point for the same reason. Apps are not supposed to use the ICD extension to load OpenCL. If we find apps on Android which don\u0027t follow that standard, we can consider to change it.",
       "parentUuid": "f55c5f63_30d7c0b6",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b406f21e_ea1dc392",
+        "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:27:37Z",
+      "side": 1,
+      "message": "Totally confused. What\u0027s the purpose of this CL if we\u0027re not allowed to expose it?",
+      "parentUuid": "26c65ba6_18c57602",
       "range": {
         "startLine": 13,
         "startChar": 19,
