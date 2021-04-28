@@ -96,6 +96,7 @@ enum class EntryPoint
     CLGetProgramInfo,
     CLGetSamplerInfo,
     CLGetSupportedImageFormats,
+    CLIcdGetPlatformIDsKHR,
     CLLinkProgram,
     CLReleaseCommandQueue,
     CLReleaseContext,

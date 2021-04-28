@@ -6,17 +6,19 @@
   "scripts/egl_angle_ext.xml":
     "5bcc01462b355d933cf3ada15198fb68",
   "scripts/gen_proc_table.py":
-    "e4b824a2f13d8b00745158b95b000dde",
+    "1d92e72e9b98865366d1e56f5e31954c",
   "scripts/gl.xml":
     "2a73a58a7e26d8676a2c0af6d528cae6",
   "scripts/gl_angle_ext.xml":
     "08f74b35d908b7c02b45fdf45572c434",
   "scripts/registry_xml.py":
-    "47013d2963204bdbb5097f077f452f0c",
+    "a5e473c991c18c71b07ae7b7c7509f4e",
   "scripts/wgl.xml":
     "c36001431919e1c435f1215a85f7e1db",
   "src/libGL/proc_table_wgl_autogen.cpp":
     "2174a66447df2d577184fbe4b96c77e9",
+  "src/libGLESv2/proc_table_cl_autogen.cpp":
+    "ed003b0f041aaaa35b67d3fe07e61f91",
   "src/libGLESv2/proc_table_egl_autogen.cpp":
     "53d085f3f46ea5d841d93e7063925ae4"
 }

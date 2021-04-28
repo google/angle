@@ -1824,6 +1824,8 @@ PlatformInfo FromCLenum<PlatformInfo>(CLenum from)
             return PlatformInfo::NumericVersion;
         case CL_PLATFORM_EXTENSIONS_WITH_VERSION:
             return PlatformInfo::ExtensionsWithVersion;
+        case CL_PLATFORM_ICD_SUFFIX_KHR:
+            return PlatformInfo::IcdSuffix;
         default:
             return PlatformInfo::InvalidEnum;
     }
@@ -1849,6 +1851,8 @@ CLenum ToCLenum(PlatformInfo from)
             return CL_PLATFORM_NUMERIC_VERSION;
         case PlatformInfo::ExtensionsWithVersion:
             return CL_PLATFORM_EXTENSIONS_WITH_VERSION;
+        case PlatformInfo::IcdSuffix:
+            return CL_PLATFORM_ICD_SUFFIX_KHR;
         default:
             UNREACHABLE();
             return 0;
@@ -1882,6 +1886,9 @@ std::ostream &operator<<(std::ostream &os, PlatformInfo value)
             break;
         case PlatformInfo::ExtensionsWithVersion:
             os << "CL_PLATFORM_EXTENSIONS_WITH_VERSION";
+            break;
+        case PlatformInfo::IcdSuffix:
+            os << "CL_PLATFORM_ICD_SUFFIX_KHR";
             break;
         default:
             os << "GL_INVALID_ENUM";

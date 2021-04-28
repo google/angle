@@ -8,7 +8,7 @@
 #ifndef LIBANGLE_CLOBJECT_H_
 #define LIBANGLE_CLOBJECT_H_
 
-#include "libANGLE/CLtypes.h"
+#include "libANGLE/renderer/CLtypes.h"
 
 namespace cl
 {

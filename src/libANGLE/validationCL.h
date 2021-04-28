@@ -19,8 +19,6 @@
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
 
-#include "common/PackedCLEnums_autogen.h"
-
 #define ANGLE_CL_VALIDATE_VOID(EP, ...) \
     do                                  \
     {                                   \

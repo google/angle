@@ -10,6 +10,18 @@
 namespace cl
 {
 
-Platform::Platform(const cl_icd_dispatch &dispatch) : _cl_platform_id(dispatch) {}
+Platform::~Platform() = default;
+
+void Platform::CreatePlatform(const cl_icd_dispatch &dispatch, rx::CLPlatformImpl::Ptr &&impl)
+{
+    GetList().emplace_back(new Platform(dispatch, std::move(impl)));
+}
+
+Platform::Platform(const cl_icd_dispatch &dispatch, rx::CLPlatformImpl::Ptr &&impl)
+    : _cl_platform_id(dispatch), mImpl(std::move(impl))
+{}
+
+constexpr char Platform::kVendor[];
+constexpr char Platform::kIcdSuffix[];
 
 }  // namespace cl

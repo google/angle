@@ -405,6 +405,11 @@ deps = {
     'condition': 'not build_with_chromium',
   },
 
+  'third_party/OpenCL-ICD-Loader/src': {
+    'url': '{chromium_git}/external/github.com/KhronosGroup/OpenCL-ICD-Loader@9b5e3849b49a1448996c8b96ba086cd774d987db',
+    'condition': 'not build_with_chromium',
+  },
+
   'third_party/proguard': {
       'packages': [
           {

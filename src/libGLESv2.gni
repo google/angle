@@ -467,6 +467,7 @@ libangle_cl_headers = [
   "src/libANGLE/renderer/CLContextImpl.h",
   "src/libANGLE/renderer/CLDeviceImpl.h",
   "src/libANGLE/renderer/CLPlatformImpl.h",
+  "src/libANGLE/renderer/CLtypes.h",
   "src/libANGLE/validationCL.h",
   "src/libANGLE/validationCL_autogen.h",
 ]
@@ -481,6 +482,7 @@ libangle_cl_sources = [
   "src/libANGLE/CLPlatform.cpp",
   "src/libANGLE/CLProgram.cpp",
   "src/libANGLE/CLSampler.cpp",
+  "src/libANGLE/renderer/CLPlatformImpl.cpp",
   "src/libANGLE/validationCL.cpp",
 ]
 
@@ -588,6 +590,8 @@ libglesv2_cl_sources = [
   "src/libGLESv2/entry_points_cl_autogen.cpp",
   "src/libGLESv2/entry_points_cl_autogen.h",
   "src/libGLESv2/entry_points_cl_utils.h",
+  "src/libGLESv2/proc_table_cl.h",
+  "src/libGLESv2/proc_table_cl_autogen.cpp",
 ]
 
 if (is_win) {

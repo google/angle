@@ -23,6 +23,10 @@ config("angle_cl_backend_config") {
 
 angle_source_set("angle_cl_backend") {
   sources = _cl_backend_sources
+  configs += [ "$angle_root/src/libOpenCL:opencl_icd_library_name" ]
 
-  public_deps = [ "$angle_root:libANGLE_headers" ]
+  public_deps = [
+    "$angle_root:libANGLE_headers",
+    "$angle_root/third_party/OpenCL-ICD-Loader:opencl_icd_loader",
+  ]
 }

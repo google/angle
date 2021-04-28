@@ -12,10 +12,11 @@
 
 #include "libANGLE/CLtypes.h"
 
-#include "common/PackedCLEnums_autogen.h"
-
 namespace cl
 {
+cl_int IcdGetPlatformIDsKHR(cl_uint num_entries,
+                            Platform **platformsPacked,
+                            cl_uint *num_platforms);
 cl_int GetPlatformIDs(cl_uint num_entries, Platform **platformsPacked, cl_uint *num_platforms);
 cl_int GetPlatformInfo(Platform *platformPacked,
                        PlatformInfo param_namePacked,

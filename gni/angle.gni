@@ -140,7 +140,7 @@ declare_args() {
   angle_enable_cl_passthrough = angle_enable_cl
 }
 
-# OpenCL is not supported on Windows UWP, because the CL headers include DXD9, which is not
+# OpenCL is not supported on Windows UWP, because the CL headers include DX9, which is not
 # supported by UWP. A workaround might be possible if CL support on UWP is required.
 assert(!angle_is_winuwp || !angle_enable_cl,
        "OpenCL is not supported on Windows UWP")

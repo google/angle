@@ -403,9 +403,10 @@ enum class PlatformInfo : uint8_t
     HostTimerResolution   = 5,
     NumericVersion        = 6,
     ExtensionsWithVersion = 7,
+    IcdSuffix             = 8,
 
-    InvalidEnum = 8,
-    EnumCount   = 8,
+    InvalidEnum = 9,
+    EnumCount   = 9,
 };
 
 template <>

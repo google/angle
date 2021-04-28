@@ -245,6 +245,7 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 TEMPLATE_CL_ENTRY_POINT_NO_RETURN = """\
 void CL_API_CALL cl{name}({params})
 {{
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -258,6 +259,7 @@ void CL_API_CALL cl{name}({params})
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR = """\
 cl_int CL_API_CALL cl{name}({params})
 {{
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -271,6 +273,7 @@ cl_int CL_API_CALL cl{name}({params})
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER = """\
 {return_type} CL_API_CALL cl{name}({params})
 {{
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -295,8 +298,6 @@ TEMPLATE_CL_STUBS_HEADER = """\
 #define LIBGLESV2_{annotation_upper}_STUBS_AUTOGEN_H_
 
 #include "libANGLE/CLtypes.h"
-
-#include "common/PackedCLEnums_autogen.h"
 
 namespace cl
 {{
@@ -962,6 +963,7 @@ LIBCL_SOURCE_INCLUDES = """\
 #include "libANGLE/validationCL_autogen.h"
 #include "libGLESv2/cl_stubs_autogen.h"
 #include "libGLESv2/entry_points_cl_utils.h"
+#include "libGLESv2/global_state.h"
 """
 
 TEMPLATE_EVENT_COMMENT = """\
@@ -2914,6 +2916,32 @@ def main():
         libcl_ep_defs += [comment] + eps.export_defs
         cl_validation_protos += [comment] + eps.validation_protos
         libcl_windows_def_exports += [win_def_comment] + get_exports(clxml.commands[version])
+
+    clxml.AddExtensionCommands(registry_xml.supported_cl_extensions, ['cl'])
+    for extension_name, ext_cmd_names in sorted(clxml.ext_data.items()):
+
+        # Extensions may have no new commands.
+        if not ext_cmd_names:
+            continue
+
+        # Detect and filter duplicate extensions.
+        eps = CLEntryPoints(clxml, ext_cmd_names)
+
+        comment = "\n// %s" % extension_name
+        win_def_comment = "\n    ; %s" % (extension_name)
+
+        cl_commands += ext_cmd_names
+
+        cl_decls += [comment] + eps.decls
+        cl_defs += [comment] + eps.defs
+        libcl_ep_defs += [comment] + eps.export_defs
+        cl_validation_protos += [comment] + eps.validation_protos
+        libcl_windows_def_exports += [win_def_comment] + get_exports(ext_cmd_names)
+
+        # Avoid writing out entry points defined by a prior extension.
+        for dupe in clxml.ext_dupes[extension_name]:
+            msg = "// %s is already defined.\n" % strip_api_prefix(dupe)
+            cl_defs.append(msg)
 
     cl_decls.append("}  // namespace cl")
     cl_defs.append("}  // namespace cl")

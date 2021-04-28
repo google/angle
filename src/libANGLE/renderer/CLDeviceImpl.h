@@ -9,7 +9,7 @@
 #ifndef LIBANGLE_RENDERER_CLDEVICEIMPL_H_
 #define LIBANGLE_RENDERER_CLDEVICEIMPL_H_
 
-#include "common/angleutils.h"
+#include "libANGLE/renderer/CLtypes.h"
 
 namespace rx
 {

@@ -602,6 +602,11 @@ bool ValidateCreateImageWithProperties(const Context *contextPacked,
                                        const cl_image_desc *image_desc,
                                        const void *host_ptr,
                                        cl_int *errcode_ret);
+
+// cl_khr_icd
+cl_int ValidateIcdGetPlatformIDsKHR(cl_uint num_entries,
+                                    Platform *const *platformsPacked,
+                                    const cl_uint *num_platforms);
 }  // namespace cl
 
 #endif  // LIBANGLE_VALIDATION_CL_AUTOGEN_H_

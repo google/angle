@@ -192,6 +192,11 @@ supported_egl_extensions = [
     "EGL_NV_stream_consumer_gltexture_yuv",
 ]
 
+supported_cl_extensions = [
+    "cl_khr_extended_versioning",
+    "cl_khr_icd",
+]
+
 # Strip these suffixes from Context entry point names. NV is excluded (for now).
 strip_suffixes = ["ANGLE", "EXT", "KHR", "OES", "CHROMIUM"]
 
@@ -326,6 +331,8 @@ class RegistryXML:
             return 'eglext'
         elif 'wgl' in supported:
             return 'wglext'
+        elif 'cl' in supported:
+            return 'clext'
         else:
             assert False
             return 'unknown'

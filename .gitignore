@@ -55,6 +55,7 @@
 /third_party/llvm-build
 /third_party/markupsafe
 /third_party/nasm
+/third_party/OpenCL-ICD-Loader/src
 /third_party/proguard/lib
 /third_party/protobuf
 /third_party/Python-Markdown

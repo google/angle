@@ -12,15 +12,28 @@
 
 #include "libANGLE/renderer/CLPlatformImpl.h"
 
+#include <string>
+
 namespace rx
 {
 
 class CLPlatformVk : public CLPlatformImpl
 {
   public:
-    CLPlatformVk();
     ~CLPlatformVk() override;
+
+    static ImplList GetPlatforms();
+    static constexpr cl_version GetVersion();
+    static const std::string &GetVersionString();
+
+  private:
+    explicit CLPlatformVk(Info &&info);
 };
+
+constexpr cl_version CLPlatformVk::GetVersion()
+{
+    return CL_MAKE_VERSION(1, 2, 0);
+}
 
 }  // namespace rx
 

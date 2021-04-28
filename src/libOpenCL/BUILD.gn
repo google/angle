@@ -28,7 +28,17 @@ angle_shared_library("OpenCL_ANGLE") {
   ]
 }
 
-angle_shared_library("OpenCL_ICD_ANGLE") {
+icd_library_name = "OpenCL_ICD_ANGLE"
+
+config("opencl_icd_library_name") {
+  if (is_win) {
+    defines = [ "ANGLE_OPENCL_ICD_LIB_NAME=\"" + icd_library_name + "\"" ]
+  } else {
+    defines = [ "ANGLE_OPENCL_ICD_LIB_NAME=\"lib" + icd_library_name + ".so\"" ]
+  }
+}
+
+angle_shared_library(icd_library_name) {
   defines = [ "LIBCL_IMPLEMENTATION" ]
 
   sources = [

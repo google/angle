@@ -608,6 +608,11 @@ cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
                                                const cl_image_desc *image_desc,
                                                void *host_ptr,
                                                cl_int *errcode_ret);
+
+// cl_khr_icd
+cl_int CL_API_CALL clIcdGetPlatformIDsKHR(cl_uint num_entries,
+                                          cl_platform_id *platforms,
+                                          cl_uint *num_platforms);
 }  // namespace cl
 
 #endif  // LIBGLESV2_ENTRY_POINTS_CL_AUTOGEN_H_

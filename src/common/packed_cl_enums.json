@@ -7,7 +7,8 @@
         "Extensions": "CL_PLATFORM_EXTENSIONS",
         "HostTimerResolution": "CL_PLATFORM_HOST_TIMER_RESOLUTION",
         "NumericVersion": "CL_PLATFORM_NUMERIC_VERSION",
-        "ExtensionsWithVersion": "CL_PLATFORM_EXTENSIONS_WITH_VERSION"
+        "ExtensionsWithVersion": "CL_PLATFORM_EXTENSIONS_WITH_VERSION",
+        "IcdSuffix": "CL_PLATFORM_ICD_SUFFIX_KHR"
     },
     "DeviceInfo": {
         "Type": "CL_DEVICE_TYPE",

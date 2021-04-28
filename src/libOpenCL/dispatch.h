@@ -18,7 +18,12 @@
 namespace cl
 {
 
-cl_icd_dispatch &GetDispatch();
+struct IcdDispatch : public _cl_icd_dispatch
+{
+    clIcdGetPlatformIDsKHR_fn clIcdGetPlatformIDsKHR;
+};
+
+const IcdDispatch &GetDispatch();
 
 }  // namespace cl
 

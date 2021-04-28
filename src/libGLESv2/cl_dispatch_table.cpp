@@ -12,7 +12,7 @@
 // clang-format off
 
 // The correct order is required as defined in 'include/CL/cl_icd.h'.
-cl_icd_dispatch gCLIcdDispatchTable = {
+const cl_icd_dispatch gCLIcdDispatchTable = {
 
     // OpenCL 1.0
     cl::clGetPlatformIDs,

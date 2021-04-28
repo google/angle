@@ -18,37 +18,48 @@ namespace cl
 
 namespace
 {
+
 std::unique_ptr<angle::Library> &EntryPointsLib()
 {
     static angle::base::NoDestructor<std::unique_ptr<angle::Library>> sEntryPointsLib;
     return *sEntryPointsLib;
 }
-}  // anonymous namespace
 
-cl_icd_dispatch &GetDispatch()
+IcdDispatch CreateDispatch()
 {
-    static cl_icd_dispatch *sDispatch = nullptr;
+    IcdDispatch dispatch;
 
-    if (sDispatch == nullptr)
+    EntryPointsLib().reset(
+        angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
+    if (EntryPointsLib())
     {
-        EntryPointsLib().reset(
-            angle::OpenSharedLibrary(ANGLE_GLESV2_LIBRARY_NAME, angle::SearchType::ApplicationDir));
-        if (EntryPointsLib())
+        auto clIcdDispatch = reinterpret_cast<const cl_icd_dispatch *>(
+            EntryPointsLib()->getSymbol("gCLIcdDispatchTable"));
+        if (clIcdDispatch != nullptr)
         {
-            sDispatch = reinterpret_cast<cl_icd_dispatch *>(
-                EntryPointsLib()->getSymbol("gCLIcdDispatchTable"));
-            if (sDispatch == nullptr)
-            {
-                std::cerr << "Error loading CL dispatch table." << std::endl;
-            }
+            static_cast<cl_icd_dispatch &>(dispatch) = *clIcdDispatch;
+            dispatch.clIcdGetPlatformIDsKHR          = reinterpret_cast<clIcdGetPlatformIDsKHR_fn>(
+                clIcdDispatch->clGetExtensionFunctionAddress("clIcdGetPlatformIDsKHR"));
         }
         else
         {
-            std::cerr << "Error opening GLESv2 library." << std::endl;
+            std::cerr << "Error loading CL dispatch table." << std::endl;
         }
     }
+    else
+    {
+        std::cerr << "Error opening GLESv2 library." << std::endl;
+    }
 
-    return *sDispatch;
+    return dispatch;
+}
+
+}  // anonymous namespace
+
+const IcdDispatch &GetDispatch()
+{
+    static const IcdDispatch sDispatch(CreateDispatch());
+    return sDispatch;
 }
 
 }  // namespace cl

@@ -1150,4 +1150,12 @@ cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
                                                          image_desc, host_ptr, errcode_ret);
 }
 
+// cl_khr_icd
+cl_int CL_API_CALL clIcdGetPlatformIDsKHR(cl_uint num_entries,
+                                          cl_platform_id *platforms,
+                                          cl_uint *num_platforms)
+{
+    return cl::GetDispatch().clIcdGetPlatformIDsKHR(num_entries, platforms, num_platforms);
+}
+
 }  // extern "C"

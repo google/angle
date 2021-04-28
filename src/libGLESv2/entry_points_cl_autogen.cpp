@@ -13,6 +13,7 @@
 #include "libANGLE/validationCL_autogen.h"
 #include "libGLESv2/cl_stubs_autogen.h"
 #include "libGLESv2/entry_points_cl_utils.h"
+#include "libGLESv2/global_state.h"
 
 namespace cl
 {
@@ -22,6 +23,7 @@ cl_int CL_API_CALL clGetPlatformIDs(cl_uint num_entries,
                                     cl_platform_id *platforms,
                                     cl_uint *num_platforms)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetPlatformIDs,
              "num_entries = %u, platforms = 0x%016" PRIxPTR ", num_platforms = 0x%016" PRIxPTR "",
              num_entries, (uintptr_t)platforms, (uintptr_t)num_platforms);
@@ -39,6 +41,7 @@ cl_int CL_API_CALL clGetPlatformInfo(cl_platform_id platform,
                                      void *param_value,
                                      size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetPlatformInfo,
              "platform = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -62,6 +65,7 @@ cl_int CL_API_CALL clGetDeviceIDs(cl_platform_id platform,
                                   cl_device_id *devices,
                                   cl_uint *num_devices)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetDeviceIDs,
              "platform = 0x%016" PRIxPTR
              ", device_type = %lu, num_entries = %u, devices = 0x%016" PRIxPTR
@@ -84,6 +88,7 @@ cl_int CL_API_CALL clGetDeviceInfo(cl_device_id device,
                                    void *param_value,
                                    size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetDeviceInfo,
              "device = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -111,6 +116,7 @@ cl_context CL_API_CALL clCreateContext(const cl_context_properties *properties,
                                        void *user_data,
                                        cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateContext,
              "properties = 0x%016" PRIxPTR ", num_devices = %u, devices = 0x%016" PRIxPTR
              ", pfn_notify = 0x%016" PRIxPTR ", user_data = 0x%016" PRIxPTR
@@ -137,6 +143,7 @@ clCreateContextFromType(const cl_context_properties *properties,
                         void *user_data,
                         cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateContextFromType,
              "properties = 0x%016" PRIxPTR ", device_type = %lu, pfn_notify = 0x%016" PRIxPTR
              ", user_data = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
@@ -151,6 +158,7 @@ clCreateContextFromType(const cl_context_properties *properties,
 
 cl_int CL_API_CALL clRetainContext(cl_context context)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
 
     Context *contextPacked = PackParam<Context *>(context);
@@ -162,6 +170,7 @@ cl_int CL_API_CALL clRetainContext(cl_context context)
 
 cl_int CL_API_CALL clReleaseContext(cl_context context)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseContext, "context = 0x%016" PRIxPTR "", (uintptr_t)context);
 
     Context *contextPacked = PackParam<Context *>(context);
@@ -177,6 +186,7 @@ cl_int CL_API_CALL clGetContextInfo(cl_context context,
                                     void *param_value,
                                     size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetContextInfo,
              "context = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -196,6 +206,7 @@ cl_int CL_API_CALL clGetContextInfo(cl_context context,
 
 cl_int CL_API_CALL clRetainCommandQueue(cl_command_queue command_queue)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
@@ -207,6 +218,7 @@ cl_int CL_API_CALL clRetainCommandQueue(cl_command_queue command_queue)
 
 cl_int CL_API_CALL clReleaseCommandQueue(cl_command_queue command_queue)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseCommandQueue, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
@@ -222,6 +234,7 @@ cl_int CL_API_CALL clGetCommandQueueInfo(cl_command_queue command_queue,
                                          void *param_value,
                                          size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetCommandQueueInfo,
              "command_queue = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -245,6 +258,7 @@ cl_mem CL_API_CALL clCreateBuffer(cl_context context,
                                   void *host_ptr,
                                   cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateBuffer,
              "context = 0x%016" PRIxPTR ", flags = %lu, size = %zu, host_ptr = 0x%016" PRIxPTR
              ", errcode_ret = 0x%016" PRIxPTR "",
@@ -259,6 +273,7 @@ cl_mem CL_API_CALL clCreateBuffer(cl_context context,
 
 cl_int CL_API_CALL clRetainMemObject(cl_mem memobj)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
 
     Memory *memobjPacked = PackParam<Memory *>(memobj);
@@ -270,6 +285,7 @@ cl_int CL_API_CALL clRetainMemObject(cl_mem memobj)
 
 cl_int CL_API_CALL clReleaseMemObject(cl_mem memobj)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseMemObject, "memobj = 0x%016" PRIxPTR "", (uintptr_t)memobj);
 
     Memory *memobjPacked = PackParam<Memory *>(memobj);
@@ -286,6 +302,7 @@ cl_int CL_API_CALL clGetSupportedImageFormats(cl_context context,
                                               cl_image_format *image_formats,
                                               cl_uint *num_image_formats)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetSupportedImageFormats,
              "context = 0x%016" PRIxPTR
              ", flags = %lu, image_type = %u, num_entries = %u, image_formats = 0x%016" PRIxPTR
@@ -309,6 +326,7 @@ cl_int CL_API_CALL clGetMemObjectInfo(cl_mem memobj,
                                       void *param_value,
                                       size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetMemObjectInfo,
              "memobj = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -332,6 +350,7 @@ cl_int CL_API_CALL clGetImageInfo(cl_mem image,
                                   void *param_value,
                                   size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetImageInfo,
              "image = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -351,6 +370,7 @@ cl_int CL_API_CALL clGetImageInfo(cl_mem image,
 
 cl_int CL_API_CALL clRetainSampler(cl_sampler sampler)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
 
     Sampler *samplerPacked = PackParam<Sampler *>(sampler);
@@ -362,6 +382,7 @@ cl_int CL_API_CALL clRetainSampler(cl_sampler sampler)
 
 cl_int CL_API_CALL clReleaseSampler(cl_sampler sampler)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseSampler, "sampler = 0x%016" PRIxPTR "", (uintptr_t)sampler);
 
     Sampler *samplerPacked = PackParam<Sampler *>(sampler);
@@ -377,6 +398,7 @@ cl_int CL_API_CALL clGetSamplerInfo(cl_sampler sampler,
                                     void *param_value,
                                     size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetSamplerInfo,
              "sampler = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -400,6 +422,7 @@ cl_program CL_API_CALL clCreateProgramWithSource(cl_context context,
                                                  const size_t *lengths,
                                                  cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateProgramWithSource,
              "context = 0x%016" PRIxPTR ", count = %u, strings = 0x%016" PRIxPTR
              ", lengths = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
@@ -422,6 +445,7 @@ cl_program CL_API_CALL clCreateProgramWithBinary(cl_context context,
                                                  cl_int *binary_status,
                                                  cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateProgramWithBinary,
              "context = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016" PRIxPTR
              ", lengths = 0x%016" PRIxPTR ", binaries = 0x%016" PRIxPTR
@@ -441,6 +465,7 @@ cl_program CL_API_CALL clCreateProgramWithBinary(cl_context context,
 
 cl_int CL_API_CALL clRetainProgram(cl_program program)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
 
     Program *programPacked = PackParam<Program *>(program);
@@ -452,6 +477,7 @@ cl_int CL_API_CALL clRetainProgram(cl_program program)
 
 cl_int CL_API_CALL clReleaseProgram(cl_program program)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseProgram, "program = 0x%016" PRIxPTR "", (uintptr_t)program);
 
     Program *programPacked = PackParam<Program *>(program);
@@ -469,6 +495,7 @@ cl_int CL_API_CALL clBuildProgram(cl_program program,
                                                                 void *user_data),
                                   void *user_data)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(BuildProgram,
              "program = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016" PRIxPTR
              ", options = 0x%016" PRIxPTR ", pfn_notify = 0x%016" PRIxPTR
@@ -492,6 +519,7 @@ cl_int CL_API_CALL clGetProgramInfo(cl_program program,
                                     void *param_value,
                                     size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetProgramInfo,
              "program = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -516,6 +544,7 @@ cl_int CL_API_CALL clGetProgramBuildInfo(cl_program program,
                                          void *param_value,
                                          size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetProgramBuildInfo,
              "program = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -538,6 +567,7 @@ cl_kernel CL_API_CALL clCreateKernel(cl_program program,
                                      const char *kernel_name,
                                      cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateKernel,
              "program = 0x%016" PRIxPTR ", kernel_name = 0x%016" PRIxPTR
              ", errcode_ret = 0x%016" PRIxPTR "",
@@ -555,6 +585,7 @@ cl_int CL_API_CALL clCreateKernelsInProgram(cl_program program,
                                             cl_kernel *kernels,
                                             cl_uint *num_kernels_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateKernelsInProgram,
              "program = 0x%016" PRIxPTR ", num_kernels = %u, kernels = 0x%016" PRIxPTR
              ", num_kernels_ret = 0x%016" PRIxPTR "",
@@ -571,6 +602,7 @@ cl_int CL_API_CALL clCreateKernelsInProgram(cl_program program,
 
 cl_int CL_API_CALL clRetainKernel(cl_kernel kernel)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
 
     Kernel *kernelPacked = PackParam<Kernel *>(kernel);
@@ -582,6 +614,7 @@ cl_int CL_API_CALL clRetainKernel(cl_kernel kernel)
 
 cl_int CL_API_CALL clReleaseKernel(cl_kernel kernel)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseKernel, "kernel = 0x%016" PRIxPTR "", (uintptr_t)kernel);
 
     Kernel *kernelPacked = PackParam<Kernel *>(kernel);
@@ -596,6 +629,7 @@ cl_int CL_API_CALL clSetKernelArg(cl_kernel kernel,
                                   size_t arg_size,
                                   const void *arg_value)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetKernelArg,
              "kernel = 0x%016" PRIxPTR
              ", arg_index = %u, arg_size = %zu, arg_value = 0x%016" PRIxPTR "",
@@ -614,6 +648,7 @@ cl_int CL_API_CALL clGetKernelInfo(cl_kernel kernel,
                                    void *param_value,
                                    size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetKernelInfo,
              "kernel = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -638,6 +673,7 @@ cl_int CL_API_CALL clGetKernelWorkGroupInfo(cl_kernel kernel,
                                             void *param_value,
                                             size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetKernelWorkGroupInfo,
              "kernel = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -658,6 +694,7 @@ cl_int CL_API_CALL clGetKernelWorkGroupInfo(cl_kernel kernel,
 
 cl_int CL_API_CALL clWaitForEvents(cl_uint num_events, const cl_event *event_list)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(WaitForEvents, "num_events = %u, event_list = 0x%016" PRIxPTR "", num_events,
              (uintptr_t)event_list);
 
@@ -674,6 +711,7 @@ cl_int CL_API_CALL clGetEventInfo(cl_event event,
                                   void *param_value,
                                   size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetEventInfo,
              "event = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -693,6 +731,7 @@ cl_int CL_API_CALL clGetEventInfo(cl_event event,
 
 cl_int CL_API_CALL clRetainEvent(cl_event event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
 
     Event *eventPacked = PackParam<Event *>(event);
@@ -704,6 +743,7 @@ cl_int CL_API_CALL clRetainEvent(cl_event event)
 
 cl_int CL_API_CALL clReleaseEvent(cl_event event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseEvent, "event = 0x%016" PRIxPTR "", (uintptr_t)event);
 
     Event *eventPacked = PackParam<Event *>(event);
@@ -719,6 +759,7 @@ cl_int CL_API_CALL clGetEventProfilingInfo(cl_event event,
                                            void *param_value,
                                            size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetEventProfilingInfo,
              "event = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -738,6 +779,7 @@ cl_int CL_API_CALL clGetEventProfilingInfo(cl_event event,
 
 cl_int CL_API_CALL clFlush(cl_command_queue command_queue)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(Flush, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
@@ -749,6 +791,7 @@ cl_int CL_API_CALL clFlush(cl_command_queue command_queue)
 
 cl_int CL_API_CALL clFinish(cl_command_queue command_queue)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(Finish, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
@@ -768,6 +811,7 @@ cl_int CL_API_CALL clEnqueueReadBuffer(cl_command_queue command_queue,
                                        const cl_event *event_wait_list,
                                        cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueReadBuffer,
              "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
              ", blocking_read = %u, offset = %zu, size = %zu, ptr = 0x%016" PRIxPTR
@@ -799,6 +843,7 @@ cl_int CL_API_CALL clEnqueueWriteBuffer(cl_command_queue command_queue,
                                         const cl_event *event_wait_list,
                                         cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueWriteBuffer,
              "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
              ", blocking_write = %u, offset = %zu, size = %zu, ptr = 0x%016" PRIxPTR
@@ -830,6 +875,7 @@ cl_int CL_API_CALL clEnqueueCopyBuffer(cl_command_queue command_queue,
                                        const cl_event *event_wait_list,
                                        cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueCopyBuffer,
              "command_queue = 0x%016" PRIxPTR ", src_buffer = 0x%016" PRIxPTR
              ", dst_buffer = 0x%016" PRIxPTR
@@ -866,6 +912,7 @@ cl_int CL_API_CALL clEnqueueReadImage(cl_command_queue command_queue,
                                       const cl_event *event_wait_list,
                                       cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueReadImage,
              "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
              ", blocking_read = %u, origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR
@@ -902,6 +949,7 @@ cl_int CL_API_CALL clEnqueueWriteImage(cl_command_queue command_queue,
                                        const cl_event *event_wait_list,
                                        cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueWriteImage,
              "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
              ", blocking_write = %u, origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR
@@ -936,6 +984,7 @@ cl_int CL_API_CALL clEnqueueCopyImage(cl_command_queue command_queue,
                                       const cl_event *event_wait_list,
                                       cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueCopyImage,
              "command_queue = 0x%016" PRIxPTR ", src_image = 0x%016" PRIxPTR
              ", dst_image = 0x%016" PRIxPTR ", src_origin = 0x%016" PRIxPTR
@@ -971,6 +1020,7 @@ cl_int CL_API_CALL clEnqueueCopyImageToBuffer(cl_command_queue command_queue,
                                               const cl_event *event_wait_list,
                                               cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueCopyImageToBuffer,
              "command_queue = 0x%016" PRIxPTR ", src_image = 0x%016" PRIxPTR
              ", dst_buffer = 0x%016" PRIxPTR ", src_origin = 0x%016" PRIxPTR
@@ -1006,6 +1056,7 @@ cl_int CL_API_CALL clEnqueueCopyBufferToImage(cl_command_queue command_queue,
                                               const cl_event *event_wait_list,
                                               cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueCopyBufferToImage,
              "command_queue = 0x%016" PRIxPTR ", src_buffer = 0x%016" PRIxPTR
              ", dst_image = 0x%016" PRIxPTR ", src_offset = %zu, dst_origin = 0x%016" PRIxPTR
@@ -1042,6 +1093,7 @@ void *CL_API_CALL clEnqueueMapBuffer(cl_command_queue command_queue,
                                      cl_event *event,
                                      cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMapBuffer,
              "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
              ", blocking_map = %u, map_flags = %lu, offset = %zu, size = %zu, "
@@ -1078,6 +1130,7 @@ void *CL_API_CALL clEnqueueMapImage(cl_command_queue command_queue,
                                     cl_event *event,
                                     cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMapImage,
              "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
              ", blocking_map = %u, map_flags = %lu, origin = 0x%016" PRIxPTR
@@ -1112,6 +1165,7 @@ cl_int CL_API_CALL clEnqueueUnmapMemObject(cl_command_queue command_queue,
                                            const cl_event *event_wait_list,
                                            cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueUnmapMemObject,
              "command_queue = 0x%016" PRIxPTR ", memobj = 0x%016" PRIxPTR
              ", mapped_ptr = 0x%016" PRIxPTR
@@ -1142,6 +1196,7 @@ cl_int CL_API_CALL clEnqueueNDRangeKernel(cl_command_queue command_queue,
                                           const cl_event *event_wait_list,
                                           cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueNDRangeKernel,
              "command_queue = 0x%016" PRIxPTR ", kernel = 0x%016" PRIxPTR
              ", work_dim = %u, global_work_offset = 0x%016" PRIxPTR
@@ -1177,6 +1232,7 @@ cl_int CL_API_CALL clEnqueueNativeKernel(cl_command_queue command_queue,
                                          const cl_event *event_wait_list,
                                          cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueNativeKernel,
              "command_queue = 0x%016" PRIxPTR ", user_func = 0x%016" PRIxPTR
              ", args = 0x%016" PRIxPTR
@@ -1207,6 +1263,7 @@ cl_int CL_API_CALL clSetCommandQueueProperty(cl_command_queue command_queue,
                                              cl_bool enable,
                                              cl_command_queue_properties *old_properties)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetCommandQueueProperty,
              "command_queue = 0x%016" PRIxPTR
              ", properties = %lu, enable = %u, old_properties = 0x%016" PRIxPTR "",
@@ -1229,6 +1286,7 @@ cl_mem CL_API_CALL clCreateImage2D(cl_context context,
                                    void *host_ptr,
                                    cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(
         CreateImage2D,
         "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
@@ -1257,6 +1315,7 @@ cl_mem CL_API_CALL clCreateImage3D(cl_context context,
                                    void *host_ptr,
                                    cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(
         CreateImage3D,
         "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
@@ -1277,6 +1336,7 @@ cl_mem CL_API_CALL clCreateImage3D(cl_context context,
 
 cl_int CL_API_CALL clEnqueueMarker(cl_command_queue command_queue, cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMarker, "command_queue = 0x%016" PRIxPTR ", event = 0x%016" PRIxPTR "",
              (uintptr_t)command_queue, (uintptr_t)event);
 
@@ -1292,6 +1352,7 @@ cl_int CL_API_CALL clEnqueueWaitForEvents(cl_command_queue command_queue,
                                           cl_uint num_events,
                                           const cl_event *event_list)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueWaitForEvents,
              "command_queue = 0x%016" PRIxPTR ", num_events = %u, event_list = 0x%016" PRIxPTR "",
              (uintptr_t)command_queue, num_events, (uintptr_t)event_list);
@@ -1307,6 +1368,7 @@ cl_int CL_API_CALL clEnqueueWaitForEvents(cl_command_queue command_queue,
 
 cl_int CL_API_CALL clEnqueueBarrier(cl_command_queue command_queue)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueBarrier, "command_queue = 0x%016" PRIxPTR "", (uintptr_t)command_queue);
 
     CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
@@ -1318,6 +1380,7 @@ cl_int CL_API_CALL clEnqueueBarrier(cl_command_queue command_queue)
 
 cl_int CL_API_CALL clUnloadCompiler()
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(UnloadCompiler, "");
 
     ANGLE_CL_VALIDATE_ERROR(UnloadCompiler);
@@ -1327,6 +1390,7 @@ cl_int CL_API_CALL clUnloadCompiler()
 
 void *CL_API_CALL clGetExtensionFunctionAddress(const char *func_name)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetExtensionFunctionAddress, "func_name = 0x%016" PRIxPTR "", (uintptr_t)func_name);
 
     ANGLE_CL_VALIDATE_POINTER(GetExtensionFunctionAddress, func_name);
@@ -1339,6 +1403,7 @@ cl_command_queue CL_API_CALL clCreateCommandQueue(cl_context context,
                                                   cl_command_queue_properties properties,
                                                   cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateCommandQueue,
              "context = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
              ", properties = %lu, errcode_ret = 0x%016" PRIxPTR "",
@@ -1359,6 +1424,7 @@ cl_sampler CL_API_CALL clCreateSampler(cl_context context,
                                        cl_filter_mode filter_mode,
                                        cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateSampler,
              "context = 0x%016" PRIxPTR
              ", normalized_coords = %u, addressing_mode = %u, filter_mode = %u, errcode_ret = "
@@ -1383,6 +1449,7 @@ cl_int CL_API_CALL clEnqueueTask(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueTask,
              "command_queue = 0x%016" PRIxPTR ", kernel = 0x%016" PRIxPTR
              ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
@@ -1409,6 +1476,7 @@ cl_mem CL_API_CALL clCreateSubBuffer(cl_mem buffer,
                                      const void *buffer_create_info,
                                      cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateSubBuffer,
              "buffer = 0x%016" PRIxPTR
              ", flags = %lu, buffer_create_type = %u, buffer_create_info = 0x%016" PRIxPTR
@@ -1430,6 +1498,7 @@ cl_int CL_API_CALL clSetMemObjectDestructorCallback(cl_mem memobj,
                                                                                   void *user_data),
                                                     void *user_data)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetMemObjectDestructorCallback,
              "memobj = 0x%016" PRIxPTR ", pfn_notify = 0x%016" PRIxPTR
              ", user_data = 0x%016" PRIxPTR "",
@@ -1444,6 +1513,7 @@ cl_int CL_API_CALL clSetMemObjectDestructorCallback(cl_mem memobj,
 
 cl_event CL_API_CALL clCreateUserEvent(cl_context context, cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateUserEvent, "context = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)errcode_ret);
 
@@ -1456,6 +1526,7 @@ cl_event CL_API_CALL clCreateUserEvent(cl_context context, cl_int *errcode_ret)
 
 cl_int CL_API_CALL clSetUserEventStatus(cl_event event, cl_int execution_status)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetUserEventStatus, "event = 0x%016" PRIxPTR ", execution_status = %d",
              (uintptr_t)event, execution_status);
 
@@ -1473,6 +1544,7 @@ cl_int CL_API_CALL clSetEventCallback(cl_event event,
                                                                     void *user_data),
                                       void *user_data)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(
         SetEventCallback,
         "event = 0x%016" PRIxPTR ", command_exec_callback_type = %d, pfn_notify = 0x%016" PRIxPTR
@@ -1502,6 +1574,7 @@ cl_int CL_API_CALL clEnqueueReadBufferRect(cl_command_queue command_queue,
                                            const cl_event *event_wait_list,
                                            cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueReadBufferRect,
              "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
              ", blocking_read = %u, buffer_origin = 0x%016" PRIxPTR ", host_origin = 0x%016" PRIxPTR
@@ -1546,6 +1619,7 @@ cl_int CL_API_CALL clEnqueueWriteBufferRect(cl_command_queue command_queue,
                                             const cl_event *event_wait_list,
                                             cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueWriteBufferRect,
              "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
              ", blocking_write = %u, buffer_origin = 0x%016" PRIxPTR
@@ -1589,6 +1663,7 @@ cl_int CL_API_CALL clEnqueueCopyBufferRect(cl_command_queue command_queue,
                                            const cl_event *event_wait_list,
                                            cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueCopyBufferRect,
              "command_queue = 0x%016" PRIxPTR ", src_buffer = 0x%016" PRIxPTR
              ", dst_buffer = 0x%016" PRIxPTR ", src_origin = 0x%016" PRIxPTR
@@ -1625,6 +1700,7 @@ cl_int CL_API_CALL clCreateSubDevices(cl_device_id in_device,
                                       cl_device_id *out_devices,
                                       cl_uint *num_devices_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateSubDevices,
              "in_device = 0x%016" PRIxPTR ", properties = 0x%016" PRIxPTR
              ", num_devices = %u, out_devices = 0x%016" PRIxPTR ", num_devices_ret = 0x%016" PRIxPTR
@@ -1644,6 +1720,7 @@ cl_int CL_API_CALL clCreateSubDevices(cl_device_id in_device,
 
 cl_int CL_API_CALL clRetainDevice(cl_device_id device)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(RetainDevice, "device = 0x%016" PRIxPTR "", (uintptr_t)device);
 
     Device *devicePacked = PackParam<Device *>(device);
@@ -1655,6 +1732,7 @@ cl_int CL_API_CALL clRetainDevice(cl_device_id device)
 
 cl_int CL_API_CALL clReleaseDevice(cl_device_id device)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(ReleaseDevice, "device = 0x%016" PRIxPTR "", (uintptr_t)device);
 
     Device *devicePacked = PackParam<Device *>(device);
@@ -1671,6 +1749,7 @@ cl_mem CL_API_CALL clCreateImage(cl_context context,
                                  void *host_ptr,
                                  cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateImage,
              "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
              ", image_desc = 0x%016" PRIxPTR ", host_ptr = 0x%016" PRIxPTR
@@ -1692,6 +1771,7 @@ cl_program CL_API_CALL clCreateProgramWithBuiltInKernels(cl_context context,
                                                          const char *kernel_names,
                                                          cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateProgramWithBuiltInKernels,
              "context = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016" PRIxPTR
              ", kernel_names = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
@@ -1719,6 +1799,7 @@ cl_int CL_API_CALL clCompileProgram(cl_program program,
                                                                   void *user_data),
                                     void *user_data)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CompileProgram,
              "program = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016" PRIxPTR
              ", options = 0x%016" PRIxPTR ", num_input_headers = %u, input_headers = 0x%016" PRIxPTR
@@ -1751,6 +1832,7 @@ cl_program CL_API_CALL clLinkProgram(cl_context context,
                                      void *user_data,
                                      cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(LinkProgram,
              "context = 0x%016" PRIxPTR ", num_devices = %u, device_list = 0x%016" PRIxPTR
              ", options = 0x%016" PRIxPTR
@@ -1775,6 +1857,7 @@ cl_program CL_API_CALL clLinkProgram(cl_context context,
 
 cl_int CL_API_CALL clUnloadPlatformCompiler(cl_platform_id platform)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(UnloadPlatformCompiler, "platform = 0x%016" PRIxPTR "", (uintptr_t)platform);
 
     Platform *platformPacked = PackParam<Platform *>(platform);
@@ -1791,6 +1874,7 @@ cl_int CL_API_CALL clGetKernelArgInfo(cl_kernel kernel,
                                       void *param_value,
                                       size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(
         GetKernelArgInfo,
         "kernel = 0x%016" PRIxPTR
@@ -1819,6 +1903,7 @@ cl_int CL_API_CALL clEnqueueFillBuffer(cl_command_queue command_queue,
                                        const cl_event *event_wait_list,
                                        cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueFillBuffer,
              "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
              ", pattern = 0x%016" PRIxPTR
@@ -1849,6 +1934,7 @@ cl_int CL_API_CALL clEnqueueFillImage(cl_command_queue command_queue,
                                       const cl_event *event_wait_list,
                                       cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueFillImage,
              "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
              ", fill_color = 0x%016" PRIxPTR ", origin = 0x%016" PRIxPTR ", region = 0x%016" PRIxPTR
@@ -1878,6 +1964,7 @@ cl_int CL_API_CALL clEnqueueMigrateMemObjects(cl_command_queue command_queue,
                                               const cl_event *event_wait_list,
                                               cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMigrateMemObjects,
              "command_queue = 0x%016" PRIxPTR ", num_mem_objects = %u, mem_objects = 0x%016" PRIxPTR
              ", flags = %lu, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
@@ -1903,6 +1990,7 @@ cl_int CL_API_CALL clEnqueueMarkerWithWaitList(cl_command_queue command_queue,
                                                const cl_event *event_wait_list,
                                                cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMarkerWithWaitList,
              "command_queue = 0x%016" PRIxPTR
              ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
@@ -1926,6 +2014,7 @@ cl_int CL_API_CALL clEnqueueBarrierWithWaitList(cl_command_queue command_queue,
                                                 const cl_event *event_wait_list,
                                                 cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueBarrierWithWaitList,
              "command_queue = 0x%016" PRIxPTR
              ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
@@ -1947,6 +2036,7 @@ cl_int CL_API_CALL clEnqueueBarrierWithWaitList(cl_command_queue command_queue,
 void *CL_API_CALL clGetExtensionFunctionAddressForPlatform(cl_platform_id platform,
                                                            const char *func_name)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetExtensionFunctionAddressForPlatform,
              "platform = 0x%016" PRIxPTR ", func_name = 0x%016" PRIxPTR "", (uintptr_t)platform,
              (uintptr_t)func_name);
@@ -1965,6 +2055,7 @@ clCreateCommandQueueWithProperties(cl_context context,
                                    const cl_queue_properties *properties,
                                    cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateCommandQueueWithProperties,
              "context = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR ", properties = 0x%016" PRIxPTR
              ", errcode_ret = 0x%016" PRIxPTR "",
@@ -1986,6 +2077,7 @@ cl_mem CL_API_CALL clCreatePipe(cl_context context,
                                 const cl_pipe_properties *properties,
                                 cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(
         CreatePipe,
         "context = 0x%016" PRIxPTR
@@ -2009,6 +2101,7 @@ cl_int CL_API_CALL clGetPipeInfo(cl_mem pipe,
                                  void *param_value,
                                  size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetPipeInfo,
              "pipe = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR
@@ -2031,6 +2124,7 @@ void *CL_API_CALL clSVMAlloc(cl_context context,
                              size_t size,
                              cl_uint alignment)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SVMAlloc, "context = 0x%016" PRIxPTR ", flags = %lu, size = %zu, alignment = %u",
              (uintptr_t)context, flags, size, alignment);
 
@@ -2043,6 +2137,7 @@ void *CL_API_CALL clSVMAlloc(cl_context context,
 
 void CL_API_CALL clSVMFree(cl_context context, void *svm_pointer)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SVMFree, "context = 0x%016" PRIxPTR ", svm_pointer = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)svm_pointer);
 
@@ -2058,6 +2153,7 @@ clCreateSamplerWithProperties(cl_context context,
                               const cl_sampler_properties *sampler_properties,
                               cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateSamplerWithProperties,
              "context = 0x%016" PRIxPTR ", sampler_properties = 0x%016" PRIxPTR
              ", errcode_ret = 0x%016" PRIxPTR "",
@@ -2075,6 +2171,7 @@ cl_int CL_API_CALL clSetKernelArgSVMPointer(cl_kernel kernel,
                                             cl_uint arg_index,
                                             const void *arg_value)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetKernelArgSVMPointer,
              "kernel = 0x%016" PRIxPTR ", arg_index = %u, arg_value = 0x%016" PRIxPTR "",
              (uintptr_t)kernel, arg_index, (uintptr_t)arg_value);
@@ -2091,6 +2188,7 @@ cl_int CL_API_CALL clSetKernelExecInfo(cl_kernel kernel,
                                        size_t param_value_size,
                                        const void *param_value)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetKernelExecInfo,
              "kernel = 0x%016" PRIxPTR
              ", param_name = %u, param_value_size = %zu, param_value = 0x%016" PRIxPTR "",
@@ -2117,6 +2215,7 @@ cl_int CL_API_CALL clEnqueueSVMFree(cl_command_queue command_queue,
                                     const cl_event *event_wait_list,
                                     cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueSVMFree,
              "command_queue = 0x%016" PRIxPTR
              ", num_svm_pointers = %u, svm_pointers = 0x%016" PRIxPTR
@@ -2148,6 +2247,7 @@ cl_int CL_API_CALL clEnqueueSVMMemcpy(cl_command_queue command_queue,
                                       const cl_event *event_wait_list,
                                       cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueSVMMemcpy,
              "command_queue = 0x%016" PRIxPTR ", blocking_copy = %u, dst_ptr = 0x%016" PRIxPTR
              ", src_ptr = 0x%016" PRIxPTR
@@ -2176,6 +2276,7 @@ cl_int CL_API_CALL clEnqueueSVMMemFill(cl_command_queue command_queue,
                                        const cl_event *event_wait_list,
                                        cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueSVMMemFill,
              "command_queue = 0x%016" PRIxPTR ", svm_ptr = 0x%016" PRIxPTR
              ", pattern = 0x%016" PRIxPTR
@@ -2204,6 +2305,7 @@ cl_int CL_API_CALL clEnqueueSVMMap(cl_command_queue command_queue,
                                    const cl_event *event_wait_list,
                                    cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueSVMMap,
              "command_queue = 0x%016" PRIxPTR
              ", blocking_map = %u, flags = %lu, svm_ptr = 0x%016" PRIxPTR
@@ -2229,6 +2331,7 @@ cl_int CL_API_CALL clEnqueueSVMUnmap(cl_command_queue command_queue,
                                      const cl_event *event_wait_list,
                                      cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueSVMUnmap,
              "command_queue = 0x%016" PRIxPTR ", svm_ptr = 0x%016" PRIxPTR
              ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
@@ -2252,6 +2355,7 @@ cl_int CL_API_CALL clSetDefaultDeviceCommandQueue(cl_context context,
                                                   cl_device_id device,
                                                   cl_command_queue command_queue)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetDefaultDeviceCommandQueue,
              "context = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
              ", command_queue = 0x%016" PRIxPTR "",
@@ -2271,6 +2375,7 @@ cl_int CL_API_CALL clGetDeviceAndHostTimer(cl_device_id device,
                                            cl_ulong *device_timestamp,
                                            cl_ulong *host_timestamp)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetDeviceAndHostTimer,
              "device = 0x%016" PRIxPTR ", device_timestamp = 0x%016" PRIxPTR
              ", host_timestamp = 0x%016" PRIxPTR "",
@@ -2285,6 +2390,7 @@ cl_int CL_API_CALL clGetDeviceAndHostTimer(cl_device_id device,
 
 cl_int CL_API_CALL clGetHostTimer(cl_device_id device, cl_ulong *host_timestamp)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetHostTimer, "device = 0x%016" PRIxPTR ", host_timestamp = 0x%016" PRIxPTR "",
              (uintptr_t)device, (uintptr_t)host_timestamp);
 
@@ -2300,6 +2406,7 @@ cl_program CL_API_CALL clCreateProgramWithIL(cl_context context,
                                              size_t length,
                                              cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateProgramWithIL,
              "context = 0x%016" PRIxPTR ", il = 0x%016" PRIxPTR
              ", length = %zu, errcode_ret = 0x%016" PRIxPTR "",
@@ -2314,6 +2421,7 @@ cl_program CL_API_CALL clCreateProgramWithIL(cl_context context,
 
 cl_kernel CL_API_CALL clCloneKernel(cl_kernel source_kernel, cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CloneKernel, "source_kernel = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)source_kernel, (uintptr_t)errcode_ret);
 
@@ -2333,6 +2441,7 @@ cl_int CL_API_CALL clGetKernelSubGroupInfo(cl_kernel kernel,
                                            void *param_value,
                                            size_t *param_value_size_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetKernelSubGroupInfo,
              "kernel = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
              ", param_name = %u, input_value_size = %zu, input_value = 0x%016" PRIxPTR
@@ -2363,6 +2472,7 @@ cl_int CL_API_CALL clEnqueueSVMMigrateMem(cl_command_queue command_queue,
                                           const cl_event *event_wait_list,
                                           cl_event *event)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueSVMMigrateMem,
              "command_queue = 0x%016" PRIxPTR
              ", num_svm_pointers = %u, svm_pointers = 0x%016" PRIxPTR ", sizes = 0x%016" PRIxPTR
@@ -2389,6 +2499,7 @@ cl_int CL_API_CALL clSetProgramReleaseCallback(cl_program program,
                                                                              void *user_data),
                                                void *user_data)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetProgramReleaseCallback,
              "program = 0x%016" PRIxPTR ", pfn_notify = 0x%016" PRIxPTR
              ", user_data = 0x%016" PRIxPTR "",
@@ -2406,6 +2517,7 @@ cl_int CL_API_CALL clSetProgramSpecializationConstant(cl_program program,
                                                       size_t spec_size,
                                                       const void *spec_value)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetProgramSpecializationConstant,
              "program = 0x%016" PRIxPTR
              ", spec_id = %u, spec_size = %zu, spec_value = 0x%016" PRIxPTR "",
@@ -2425,6 +2537,7 @@ cl_int CL_API_CALL clSetContextDestructorCallback(cl_context context,
                                                                                 void *user_data),
                                                   void *user_data)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetContextDestructorCallback,
              "context = 0x%016" PRIxPTR ", pfn_notify = 0x%016" PRIxPTR
              ", user_data = 0x%016" PRIxPTR "",
@@ -2444,6 +2557,7 @@ cl_mem CL_API_CALL clCreateBufferWithProperties(cl_context context,
                                                 void *host_ptr,
                                                 cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateBufferWithProperties,
              "context = 0x%016" PRIxPTR ", properties = 0x%016" PRIxPTR
              ", flags = %lu, size = %zu, host_ptr = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR
@@ -2468,6 +2582,7 @@ cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
                                                void *host_ptr,
                                                cl_int *errcode_ret)
 {
+    ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateImageWithProperties,
              "context = 0x%016" PRIxPTR ", properties = 0x%016" PRIxPTR
              ", flags = %lu, image_format = 0x%016" PRIxPTR ", image_desc = 0x%016" PRIxPTR
@@ -2482,6 +2597,23 @@ cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
 
     return CreateImageWithProperties(contextPacked, properties, flags, image_format, image_desc,
                                      host_ptr, errcode_ret);
+}
+
+// cl_khr_icd
+cl_int CL_API_CALL clIcdGetPlatformIDsKHR(cl_uint num_entries,
+                                          cl_platform_id *platforms,
+                                          cl_uint *num_platforms)
+{
+    ANGLE_SCOPED_GLOBAL_LOCK();
+    CL_EVENT(IcdGetPlatformIDsKHR,
+             "num_entries = %u, platforms = 0x%016" PRIxPTR ", num_platforms = 0x%016" PRIxPTR "",
+             num_entries, (uintptr_t)platforms, (uintptr_t)num_platforms);
+
+    Platform **platformsPacked = PackParam<Platform **>(platforms);
+
+    ANGLE_CL_VALIDATE_ERROR(IcdGetPlatformIDsKHR, num_entries, platformsPacked, num_platforms);
+
+    return IcdGetPlatformIDsKHR(num_entries, platformsPacked, num_platforms);
 }
 
 }  // namespace cl

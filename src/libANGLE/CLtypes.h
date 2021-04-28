@@ -10,7 +10,10 @@
 
 #include "angle_cl.h"
 
+#include "common/PackedCLEnums_autogen.h"
+
 #include <memory>
+#include <utility>
 
 namespace cl
 {

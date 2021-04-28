@@ -12,15 +12,32 @@
 
 #include "libANGLE/renderer/CLPlatformImpl.h"
 
+#include <string>
+
 namespace rx
 {
 
 class CLPlatformCL : public CLPlatformImpl
 {
   public:
-    CLPlatformCL();
     ~CLPlatformCL() override;
+
+    cl_platform_id getNative();
+
+    static ImplList GetPlatforms(bool isIcd);
+
+  private:
+    CLPlatformCL(cl_platform_id platform, Info &&info);
+
+    static std::unique_ptr<CLPlatformCL> Create(cl_platform_id platform);
+
+    const cl_platform_id mPlatform;
 };
+
+inline cl_platform_id CLPlatformCL::getNative()
+{
+    return mPlatform;
+}
 
 }  // namespace rx
 

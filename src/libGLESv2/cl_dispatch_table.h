@@ -13,7 +13,7 @@
 
 extern "C" {
 
-ANGLE_EXPORT extern cl_icd_dispatch gCLIcdDispatchTable;
+ANGLE_EXPORT extern const cl_icd_dispatch gCLIcdDispatchTable;
 
 }  // extern "C"
 
