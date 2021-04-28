@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "23493602_72bc51c2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T17:48:59Z",
+      "side": 1,
+      "message": "I think we\u0027ll eventually want the cache stats per-context rather than Renderer. Will defer this for now if that\u0027s ok.",
+      "parentUuid": "f0c9a0b7_9b56f5c2",
+      "range": {
+        "startLine": 3907,
+        "startChar": 4,
+        "endLine": 3907,
+        "endChar": 24
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "23aa94fd_3ad3193f",
         "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
         "patchSetId": 8
@@ -71,6 +95,30 @@
       "writtenOn": "2021-04-28T16:47:05Z",
       "side": 1,
       "message": "Curious: is it failing to compile without this? I see other version of the same func (for example, line 1658) not having \u0027this-\u003e\u0027",
+      "range": {
+        "startLine": 1692,
+        "startChar": 12,
+        "endLine": 1692,
+        "endChar": 18
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "957d9cbd_df26fc0e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1692,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T17:48:59Z",
+      "side": 1,
+      "message": "Because this is a template function referencing an inherited member we need to explicitly use this-\u003e. C++ is a bit weird sometimes.",
+      "parentUuid": "23aa94fd_3ad3193f",
       "range": {
         "startLine": 1692,
         "startChar": 12,
