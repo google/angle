@@ -63,6 +63,30 @@
       },
       "revId": "9947a41b9c593919430f1be945541f912dd89b4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a602ae6c_a9ff87b5",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2381,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-28T15:19:48Z",
+      "side": 1,
+      "message": "Actually, I was running a different build when I tested this.  Pixel2XL actually has the same deviceID as Pixel2:\n\n  $ adb devices -l\n  List of devices attached\n  XXXXXXXX device usb:1-6 product:taimen model:Pixel_2_XL device:taimen ...\n\n  $ adb shell cmd gpu vkjson | grep deviceID\n              \"deviceID\" : 84148225,\n\n  $ printf \u0027%x\\n\u0027 84148225\n  5040001\n\n  $ git grep ANDROID_DEVICE_ID_PIXEL2\n  src/libANGLE/renderer/driver_utils.h: ANDROID_DEVICE_ID_PIXEL2 \u003d 0x5040001,",
+      "parentUuid": "b2d97e4f_66be10e3",
+      "range": {
+        "startLine": 2381,
+        "startChar": 13,
+        "endLine": 2381,
+        "endChar": 21
+      },
+      "revId": "9947a41b9c593919430f1be945541f912dd89b4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
