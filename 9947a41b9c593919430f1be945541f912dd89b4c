@@ -39,6 +39,30 @@
       },
       "revId": "9947a41b9c593919430f1be945541f912dd89b4c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2d97e4f_66be10e3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2381,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-28T15:09:33Z",
+      "side": 1,
+      "message": "Pixel 2 XL fails as well.  I didn\u0027t realize this helper was that specific.  Probably everywhere in this code checking for Pixel2 also cares about Pixel2XL.  I\u0027ll add a helper and update the other checks.",
+      "parentUuid": "3026549f_99d8a1e0",
+      "range": {
+        "startLine": 2381,
+        "startChar": 13,
+        "endLine": 2381,
+        "endChar": 21
+      },
+      "revId": "9947a41b9c593919430f1be945541f912dd89b4c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
