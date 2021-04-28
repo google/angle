@@ -285,6 +285,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0ec17e4_293d4c8d",
+        "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-28T20:00:03Z",
+      "side": 1,
+      "message": "The purpose of this entry point is for an ICL loader to load multiple CL implementations, and to use the dispatch tables to maintain entry points for each platform in each implementation. Apps are supposed to load the ICD loader (which is in libOpenCL) in a regular way and to simply choose a platform. The ICD loader will dispatch the calls to the right implementation using the dispatch table in each CL object.",
+      "parentUuid": "b406f21e_ea1dc392",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83a76772_2861b1eb",
