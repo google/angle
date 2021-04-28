@@ -90,6 +90,30 @@
       },
       "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "31298bf2_eb2a9071",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-28T17:00:16Z",
+      "side": 1,
+      "message": "Thought about this a bit more: Why not check mUse in ImageHelper::releaseImage() and immediately free ImageVk if it\u0027s not been used OR already finished? That way you avoids the garbage collector in the first place. It has a few benefits:\n\n1) This will not just fix this specific usage case, but a lot more common usage patterns as well. If someone delete a texture that already finished using, this will also immediately gets deleted. I believe it will also fix angleproject:5806\n\n2) It likely will reduce the memory foot print quite a bit because you are solving the much more general usage pattern. \n\n3) And it may help performance as well that now this just deleted VK object\u0027s memory might gets reused early for new objects. \n\n(Sorry that I am removing +2 now for this discussion).",
+      "parentUuid": "3083585e_7e5f88f3",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 54,
+        "endChar": 49
+      },
+      "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
