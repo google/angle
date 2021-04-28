@@ -35,6 +35,126 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c94ffd3_5ca08eae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-28T18:44:43Z",
+      "side": 1,
+      "message": "CC\u0027ing Mohan since I think he did the initial DS cache tracking work.",
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2aa6f1f7_89e79b13",
+        "filename": "src/libANGLE/OverlayWidgets.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-28T18:44:43Z",
+      "side": 1,
+      "message": "Same as above: add a \"DS\" to add some more context to these names/descriptions.",
+      "range": {
+        "startLine": 457,
+        "startChar": 17,
+        "endLine": 457,
+        "endChar": 39
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cee4b9b1_5b88f737",
+        "filename": "src/libANGLE/Overlay_autogen.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-28T18:44:43Z",
+      "side": 1,
+      "message": "nit: Descriptor Set",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72202072_b08a0259",
+        "filename": "src/libANGLE/Overlay_autogen.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-28T18:44:43Z",
+      "side": 1,
+      "message": "nit: Please add either \"DescriptorSet\" or \"DS\" to the name to make it more specific to what\u0027s being tracked here, since there are lots of \u0027shader buffer\u0027 things this could be referring to.",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 29
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3be964c0_617dfdfb",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-28T18:44:43Z",
+      "side": 1,
+      "message": "Why is this check necessary?",
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78b95c5e_9b7be205",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-28T18:44:43Z",
+      "side": 1,
+      "message": "{}",
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f0c9a0b7_9b56f5c2",
