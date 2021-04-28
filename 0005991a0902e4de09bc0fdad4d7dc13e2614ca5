@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ef14ab9_190bedd7",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-28T18:30:30Z",
+      "side": 1,
+      "message": "That is a forward declaration for CL/cl_icd.h. In headers it is advisable in general to use forward declarations instead of includes where possible, to avoid cyclic dependencies, to reduce compile time and to avoid header incompatibilities.\n\nIn this case I tried to avoid including cl_icd.h (which includes D3D9), which is incompatible with Windows UWP. This didn\u0027t work anyway in another place, that\u0027s why I already turned off CL support for UWP, which made it now possible to include cl_icd.h already in angle_cl.h (and to remove the forward declaration).",
+      "parentUuid": "1311564f_023f7553",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 23
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "59a18fff_5624fc3a",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-04-28T15:28:28Z",
       "side": 1,
       "message": "The preferred pattern is to pass a context object around everywhere instead of storing duplicated member variables. Can you make the switch? If you\u0027re basing this pattern on other back-ends, that\u0027s a relic of prior design.",
+      "range": {
+        "startLine": 23,
+        "startChar": 56,
+        "endLine": 23,
+        "endChar": 65
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bcd57bb3_a0d68093",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-28T18:30:30Z",
+      "side": 1,
+      "message": "That\u0027s an OpenCL requirement, not possible to change. The ICD dispatch table has to be stored at a specific offset in each CL object:\nhttps://www.khronos.org/registry/OpenCL/specs/3.0-unified/html/OpenCL_Ext.html#cl_khr_icd-opencl",
+      "parentUuid": "59a18fff_5624fc3a",
       "range": {
         "startLine": 23,
         "startChar": 56,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c70b2df4_1fea798e",
+        "filename": "src/libGLESv2/cl_dispatch_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-28T18:30:30Z",
+      "side": 1,
+      "message": "include/CL/cl_icd.h, lines 1104-1288. This dispatch table is fixed, only additions are allowed.",
+      "parentUuid": "8b9a96b9_eb60c14d",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 14,
+        "endChar": 32
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f55c5f63_30d7c0b6",
         "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
         "patchSetId": 4
@@ -83,6 +155,30 @@
       "writtenOn": "2021-04-28T15:28:28Z",
       "side": 1,
       "message": "If we export these from libOpenCL as well then they\u0027ll be discoverable from other apps/users who talk to libOpenCL directly. I\u0027d recommend it.",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26c65ba6_18c57602",
+        "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-28T18:30:30Z",
+      "side": 1,
+      "message": "libOpenCL is not supposed to provide the ICD extension. It is on purpose only in the CL implementation lib (libGLESv2). The official libOpenCL in Windows and Linux and also the Khronos ICD loader also don\u0027t export this specific entry point for the same reason. Apps are not supposed to use the ICD extension to load OpenCL. If we find apps on Android which don\u0027t follow that standard, we can consider to change it.",
+      "parentUuid": "f55c5f63_30d7c0b6",
       "range": {
         "startLine": 13,
         "startChar": 19,
@@ -106,6 +202,30 @@
       "writtenOn": "2021-04-28T15:28:28Z",
       "side": 1,
       "message": "naming nit",
+      "range": {
+        "startLine": 34,
+        "startChar": 17,
+        "endLine": 34,
+        "endChar": 28
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0537c498_51fe9785",
+        "filename": "src/libOpenCL/libOpenCL_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-28T18:30:30Z",
+      "side": 1,
+      "message": "Thanks, the naming standard is not yet my habbit. :)",
+      "parentUuid": "83a76772_2861b1eb",
       "range": {
         "startLine": 34,
         "startChar": 17,
