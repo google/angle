@@ -123,6 +123,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "60c9f5b9_577380c8",
+        "filename": "src/libANGLE/Overlay_autogen.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-28T19:36:27Z",
+      "side": 1,
+      "message": "+1",
+      "parentUuid": "72202072_b08a0259",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 29
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3be964c0_617dfdfb",
         "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
         "patchSetId": 8
@@ -197,6 +221,29 @@
         "startChar": 4,
         "endLine": 3907,
         "endChar": 24
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79d5fb05_01095839",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1436,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-28T19:36:27Z",
+      "side": 1,
+      "message": "curious about naming, why not \"CacheStatsHelper\"?",
+      "range": {
+        "startLine": 1436,
+        "startChar": 6,
+        "endLine": 1436,
+        "endChar": 20
       },
       "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
