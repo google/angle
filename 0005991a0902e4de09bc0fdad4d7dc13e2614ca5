@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1311564f_023f7553",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T15:28:28Z",
+      "side": 1,
+      "message": "Are you defining this type or does it come from the CL headers? If it\u0027s an ANGLE type, give it a namespace and use the ANGLE naming style. If it\u0027s from the headers, I\u0027m not sure how you\u0027re redefining it here. Better to include the header for the typedef type.",
+      "range": {
+        "startLine": 14,
+        "startChar": 7,
+        "endLine": 14,
+        "endChar": 23
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59a18fff_5624fc3a",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T15:28:28Z",
+      "side": 1,
+      "message": "The preferred pattern is to pass a context object around everywhere instead of storing duplicated member variables. Can you make the switch? If you\u0027re basing this pattern on other back-ends, that\u0027s a relic of prior design.",
+      "range": {
+        "startLine": 23,
+        "startChar": 56,
+        "endLine": 23,
+        "endChar": 65
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b9a96b9_eb60c14d",
+        "filename": "src/libGLESv2/cl_dispatch_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T15:28:28Z",
+      "side": 1,
+      "message": "where is the correct order defined? wondering if it really is possible to auto-gen.",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 14,
+        "endChar": 32
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f55c5f63_30d7c0b6",
+        "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T15:28:28Z",
+      "side": 1,
+      "message": "If we export these from libOpenCL as well then they\u0027ll be discoverable from other apps/users who talk to libOpenCL directly. I\u0027d recommend it.",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83a76772_2861b1eb",
+        "filename": "src/libOpenCL/libOpenCL_autogen.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T15:28:28Z",
+      "side": 1,
+      "message": "naming nit",
+      "range": {
+        "startLine": 34,
+        "startChar": 17,
+        "endLine": 34,
+        "endChar": 28
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
