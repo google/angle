@@ -16,6 +16,69 @@
       "message": "PTAL Charlie/Tim.",
       "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "412f87f4_c6efa0fe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-28T16:47:05Z",
+      "side": 1,
+      "message": "LGTM with minor comment",
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0c9a0b7_9b56f5c2",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-28T16:47:05Z",
+      "side": 1,
+      "message": "I think different thread could be calling accumulateCacheStats at the same time and it modifies data structure in rendererVk. I am not seeing any protection here. Maybe the accumulateCacheStats code can change to atomic_add? Not a regression of this CL and I think not a big deal as well. But atomic op is pretty cheap too.",
+      "range": {
+        "startLine": 3907,
+        "startChar": 4,
+        "endLine": 3907,
+        "endChar": 24
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23aa94fd_3ad3193f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1692,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-28T16:47:05Z",
+      "side": 1,
+      "message": "Curious: is it failing to compile without this? I see other version of the same func (for example, line 1658) not having \u0027this-\u003e\u0027",
+      "range": {
+        "startLine": 1692,
+        "startChar": 12,
+        "endLine": 1692,
+        "endChar": 18
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
