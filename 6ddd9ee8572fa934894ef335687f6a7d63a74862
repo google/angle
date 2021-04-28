@@ -75,6 +75,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1405f7a_d6ee77a3",
+        "filename": "src/libANGLE/OverlayWidgets.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 457,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:44:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2aa6f1f7_89e79b13",
+      "range": {
+        "startLine": 457,
+        "startChar": 17,
+        "endLine": 457,
+        "endChar": 39
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "cee4b9b1_5b88f737",
@@ -88,6 +112,30 @@
       "writtenOn": "2021-04-28T18:44:43Z",
       "side": 1,
       "message": "nit: Descriptor Set",
+      "range": {
+        "startLine": 31,
+        "startChar": 21,
+        "endLine": 31,
+        "endChar": 23
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d81a714a_9a8a4f04",
+        "filename": "src/libANGLE/Overlay_autogen.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:44:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cee4b9b1_5b88f737",
       "range": {
         "startLine": 31,
         "startChar": 21,
@@ -145,6 +193,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6dae5e6_92f927fa",
+        "filename": "src/libANGLE/Overlay_autogen.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:44:04Z",
+      "side": 1,
+      "message": "Done. I am trying to make these names as simple and easy to remember and type as possible. e.g. not VulkanProgramShaderBufferDescriptorSetCacheHitRate",
+      "parentUuid": "72202072_b08a0259",
+      "range": {
+        "startLine": 32,
+        "startChar": 4,
+        "endLine": 32,
+        "endChar": 29
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3be964c0_617dfdfb",
@@ -162,6 +234,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4056d737_0f7f091d",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1980,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:44:04Z",
+      "side": 1,
+      "message": "It\u0027s been more than a month since I landed this, I think it was a problem I ran into specifically using the overlay with a particular configuration. It was necessary and I believe it still is.",
+      "parentUuid": "3be964c0_617dfdfb",
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78b95c5e_9b7be205",
@@ -175,6 +265,24 @@
       "writtenOn": "2021-04-28T18:44:43Z",
       "side": 1,
       "message": "{}",
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af658cb0_8c32bda6",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 1981,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:44:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78b95c5e_9b7be205",
       "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -250,6 +358,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c7f1ebe_82fd0c4e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 3907,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:44:04Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "23493602_72bc51c2",
+      "range": {
+        "startLine": 3907,
+        "startChar": 4,
+        "endLine": 3907,
+        "endChar": 24
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "79d5fb05_01095839",
@@ -263,6 +395,30 @@
       "writtenOn": "2021-04-28T19:36:27Z",
       "side": 1,
       "message": "curious about naming, why not \"CacheStatsHelper\"?",
+      "range": {
+        "startLine": 1436,
+        "startChar": 6,
+        "endLine": 1436,
+        "endChar": 20
+      },
+      "revId": "6ddd9ee8572fa934894ef335687f6a7d63a74862",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6912bb54_3971169d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 1436,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T19:44:04Z",
+      "side": 1,
+      "message": "Ack, I thought this was clearer. I don\u0027t even feel great about using this class. Sometimes I feel we\u0027d be better off with just C. :D",
+      "parentUuid": "79d5fb05_01095839",
       "range": {
         "startLine": 1436,
         "startChar": 6,
