@@ -112,7 +112,7 @@ def main():
     if args.device_os:
         swarming_args += ['-d', 'device_os=' + args.device_os]
 
-    cmd_args = ['-relative-cwd', args.gn_path, '-raw-cmd', '--'] + swarming_cmd
+    cmd_args = ['-relative-cwd', args.gn_path, '--'] + swarming_cmd
     if unknown:
         cmd_args += unknown
 
