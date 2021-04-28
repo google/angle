@@ -114,6 +114,30 @@
       },
       "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a90db1e5_fe0acf97",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-28T17:46:48Z",
+      "side": 1,
+      "message": "Deleting resources isn\u0027t a terribly common use case. This is just for a test. Your suggestion seems reasonable. Because it\u0027s larger in scope how about we land this approach for now and consider a more optimal solution in a follow-up?",
+      "parentUuid": "31298bf2_eb2a9071",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 54,
+        "endChar": 49
+      },
+      "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
