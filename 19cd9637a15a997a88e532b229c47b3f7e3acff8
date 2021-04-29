@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aee894cf_52352847",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-29T14:41:38Z",
+      "side": 1,
+      "message": "see input properties from a chromium build, e.g.:\n\nhttps://ci.chromium.org/ui/p/chromium/builders/try/win-angle-chromium-x86-try/1106/overview",
+      "revId": "19cd9637a15a997a88e532b229c47b3f7e3acff8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
