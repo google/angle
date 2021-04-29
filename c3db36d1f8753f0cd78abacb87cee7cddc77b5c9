@@ -162,6 +162,30 @@
       },
       "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "90d86e22_e9c8a89e",
+        "filename": "src/libANGLE/renderer/vulkan/ImageVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-29T18:05:00Z",
+      "side": 1,
+      "message": "Looking at this a bit more, I\u0027m going to land this version and open a bug to look at implementing what Charlie describes.\n\nBased on his description, we would skip moving objects to the shared garbage if the object is not in use (!isCurrentlyInUse()).   This sounds like a good approach to me, but could apply to Buffers and Syncs also (which is why I think a follow-on bug+CL is appropriate).   Here are the various call stacks to RendererVk::collectGarbage():\n\n    RendererVk::collectGarbage\n        BufferViewHelper::release\n        ImageViewHelper::release\n        RendererVk::collectGarbageAndReinit\n            BufferHelper::release\n            ImageHelper::releaseImage\n            SyncHelper::releaseToRenderer\n            SyncHelperNativeFence::releaseToRenderer\n        StagingBuffer::collectGarbage\n            BufferHelper::initializeNonZeroMemory\n            ImageHelper::initializeNonZeroMemory\n\nI\u0027ve opened anglebug.com/5917: Vulkan: Free unused/completed objects immediately",
+      "parentUuid": "09b000f7_44b0937b",
+      "range": {
+        "startLine": 54,
+        "startChar": 18,
+        "endLine": 54,
+        "endChar": 49
+      },
+      "revId": "c3db36d1f8753f0cd78abacb87cee7cddc77b5c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
