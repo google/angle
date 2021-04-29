@@ -3,6 +3,10 @@
 # Use of this source code is governed by a BSD-style license that can be
 # found in the LICENSE file.
 """Script to generate the test spec JSON files. Calls Chromium's generate_buildbot_json.
+
+=== NOTE: DO NOT RUN THIS SCRIPT DIRECTLY. ===
+Run scripts/run_code_generation.py instead to update necessary hashes.
+
 """
 
 import os
@@ -12,8 +16,8 @@ import subprocess
 
 d = os.path.dirname
 THIS_DIR = d(os.path.abspath(__file__))
-TESTING_DIR = os.path.join(d(d(THIS_DIR)), 'testing', 'buildbot')
-sys.path.insert(0, TESTING_DIR)
+TESTING_BBOT_DIR = os.path.join(d(d(THIS_DIR)), 'testing', 'buildbot')
+sys.path.insert(0, TESTING_BBOT_DIR)
 
 import generate_buildbot_json
 
@@ -39,7 +43,25 @@ MIXINS_PYL_TEMPLATE = """\
 {mixin_data}
 """
 
-if __name__ == '__main__':  # pragma: no cover
+
+def main():
+    if len(sys.argv) > 1:
+        gen_bb_json = os.path.join(TESTING_BBOT_DIR, 'generate_buildbot_json.py')
+        mixins_pyl = os.path.join(TESTING_BBOT_DIR, 'mixins.pyl')
+        inputs = [
+            'test_suite_exceptions.pyl', 'test_suites.pyl', 'variants.pyl', 'waterfalls.pyl',
+            gen_bb_json, mixins_pyl
+        ]
+        outputs = ['angle.json', 'mixins.pyl']
+        if sys.argv[1] == 'inputs':
+            print(','.join(inputs))
+        elif sys.argv[1] == 'outputs':
+            print(','.join(outputs))
+        else:
+            print('Invalid script parameters')
+            return 1
+        return 0
+
     chromium_args = generate_buildbot_json.BBJSONGenerator.parse_args(sys.argv[1:])
     chromium_generator = generate_buildbot_json.BBJSONGenerator(chromium_args)
     chromium_generator.load_configuration_files()
@@ -85,4 +107,8 @@ if __name__ == '__main__':  # pragma: no cover
         f.write(generated_mixin_pyl)
         f.close()
 
-    sys.exit(angle_generator.main())
+    return angle_generator.main()
+
+
+if __name__ == '__main__':  # pragma: no cover
+    sys.exit(main())

@@ -129,6 +129,8 @@ generators = {
         'src/common/spirv/gen_spirv_builder_and_parser.py',
     'Static builtins':
         'src/compiler/translator/gen_builtin_symbols.py',
+    'Test spec JSON':
+        'infra/specs/generate_test_spec_json.py',
     'uniform type':
         'src/common/gen_uniform_type_table.py',
     'Vulkan format':
