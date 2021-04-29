@@ -152,6 +152,7 @@ bool IsCherryView(uint32_t DeviceId);
 bool IsSkylake(uint32_t DeviceId);
 bool IsBroxton(uint32_t DeviceId);
 bool IsKabylake(uint32_t DeviceId);
+bool Is9thGenIntel(uint32_t DeviceId);
 
 // Platform helpers
 inline bool IsWindows()

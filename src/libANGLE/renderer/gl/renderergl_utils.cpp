@@ -1800,6 +1800,19 @@ bool GetSystemInfoVendorIDAndDeviceID(const FunctionsGL *functions,
     return isGetSystemInfoSuccess;
 }
 
+bool Has9thGenIntelGPU(const angle::SystemInfo &systemInfo)
+{
+    for (const angle::GPUDeviceInfo &deviceInfo : systemInfo.gpus)
+    {
+        if (IsIntel(deviceInfo.vendorId) && Is9thGenIntel(deviceInfo.deviceId))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *features)
 {
     angle::VendorID vendor;
@@ -2100,6 +2113,10 @@ void InitializeFeatures(const FunctionsGL *functions, angle::FeaturesGL *feature
     // Imagination drivers are buggy with context switching. It needs to unbind fbo before context
     // switching to workadround the driver issues.
     ANGLE_FEATURE_CONDITION(features, unbindFBOOnContextSwitch, IsPowerVR(vendor));
+
+    // http://crbug.com/1181068 and http://crbug.com/783979
+    ANGLE_FEATURE_CONDITION(features, flushOnFramebufferChange,
+                            IsApple() && Has9thGenIntelGPU(systemInfo));
 }
 
 void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFeatures *features)

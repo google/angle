@@ -549,6 +549,12 @@ struct FeaturesGL : FeatureSetBase
                                         FeatureCategory::OpenGLWorkarounds,
                                         "Imagination GL drivers are buggy with context switching.",
                                         &members, "http://crbug.com/1181193"};
+
+    Feature flushOnFramebufferChange = {"flush_on_framebuffer_change",
+                                        FeatureCategory::OpenGLWorkarounds,
+                                        "Switching framebuffers without a flush can lead to "
+                                        "crashes on Intel 9th Generation GPU Macs.",
+                                        &members, "http://crbug.com/1181068"};
 };
 
 inline FeaturesGL::FeaturesGL()  = default;

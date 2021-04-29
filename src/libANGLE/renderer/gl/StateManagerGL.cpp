@@ -657,6 +657,7 @@ angle::Result StateManagerGL::setPixelPackBuffer(const gl::Context *context,
 
 void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 {
+    bool framebufferChanged = false;
     switch (type)
     {
         case GL_FRAMEBUFFER:
@@ -669,6 +670,8 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
 
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+
+                framebufferChanged = true;
             }
             break;
 
@@ -680,6 +683,8 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
                 mFunctions->bindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_READ_FRAMEBUFFER_BINDING);
+
+                framebufferChanged = true;
             }
             break;
 
@@ -691,12 +696,19 @@ void StateManagerGL::bindFramebuffer(GLenum type, GLuint framebuffer)
                 mFunctions->bindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
 
                 mLocalDirtyBits.set(gl::State::DIRTY_BIT_DRAW_FRAMEBUFFER_BINDING);
+
+                framebufferChanged = true;
             }
             break;
 
         default:
             UNREACHABLE();
             break;
+    }
+
+    if (framebufferChanged && mFeatures.flushOnFramebufferChange.enabled)
+    {
+        mFunctions->flush();
     }
 }
 
