@@ -18,6 +18,69 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "071052a4_b78985e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-29T22:01:32Z",
+      "side": 1,
+      "message": "Thanks for doing this!  I apologize for not finishing my comments sooner (kept getting pulled away:-).  I hope my suggestions are helpful.",
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e74d78ac_c58db397",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-29T22:01:32Z",
+      "side": 1,
+      "message": "I suggest we introduce this differently (in case another approach/debugger is added later).  Perhaps the following:\n\n## Debug ANGLE on Android with LLDB\n\nAndroid is built as an Android APK, which makes it more difficult to debug an APK that is using ANGLE.  The following information can allow you to debug ANGLE with LLDB.",
+      "range": {
+        "startLine": 49,
+        "startChar": 0,
+        "endLine": 51,
+        "endChar": 100
+      },
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e044d0b_06057ce3",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-29T22:01:32Z",
+      "side": 1,
+      "message": "Perhaps reword:\n\nThe following local patch may also be necessary:",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 62,
+        "endChar": 28
+      },
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "98edea31_3c669e70",
@@ -36,6 +99,98 @@
         "startChar": 0,
         "endLine": 74,
         "endChar": 3
+      },
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "decc9b15_9a100fac",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-29T22:01:32Z",
+      "side": 1,
+      "message": "Perhaps add a newline before the above sentence.",
+      "range": {
+        "startLine": 75,
+        "startChar": 0,
+        "endLine": 75,
+        "endChar": 81
+      },
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eee85032_be780f82",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-29T22:01:32Z",
+      "side": 1,
+      "message": "Please change \"angle\" to \"ANGLE\" in several places (e.g. unless a file has lower-case \"angle\" in the name)",
+      "range": {
+        "startLine": 76,
+        "startChar": 48,
+        "endLine": 76,
+        "endChar": 54
+      },
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfd402d2_5494e63c",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-29T22:01:32Z",
+      "side": 1,
+      "message": "I wasn\u0027t sure how to read this at first.  I think it\u0027s trying to say the following:\n\nThis adds the ANGLE source-file paths to what is visible to LLDB, which allows LLDB to show ANGLE\u0027s source files.",
+      "range": {
+        "startLine": 90,
+        "startChar": 118,
+        "endLine": 90,
+        "endChar": 125
+      },
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "129877f8_43bd25b0",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-29T22:01:32Z",
+      "side": 1,
+      "message": "typo: don\u0027t",
+      "range": {
+        "startLine": 91,
+        "startChar": 197,
+        "endLine": 91,
+        "endChar": 201
       },
       "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
