@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ec6caf2_de2f6af4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-29T08:57:32Z",
+      "side": 1,
+      "message": "This change is probably incomplete. Since we need ANGLE_serialized_context_string to compare contexts on replay, we should make sure that the extension is not disabled, and this patch does do the trick. \n\nHowever, I\u0027m not sure whether it is the right way to do it. Other options would be to make the extension not requestable, or request the extension in the replay code, but there I didn\u0027t find a good place to do it without exposing interfaces.  \n\nIf the extension is always enabled, then we could probably drop the test for it being available too. ",
+      "revId": "52e87faaafac7be125fcab032acf87ad84acde07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
