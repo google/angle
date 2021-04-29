@@ -143,6 +143,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f42751c_4ca476ca",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T11:18:09Z",
+      "side": 1,
+      "message": "We can\u0027t do exactly what Mesa did because we have different circumstances, e.g. the entry points are not in the same library, and I need the dispatch table to be configurable. I implemented a similar solution, which also removes the need for a return cast. We still need the reinterpret_cast, because C++ doesn\u0027t allow to static_cast pointer to pointer (type**).",
+      "parentUuid": "39e03073_253eea0c",
+      "range": {
+        "startLine": 23,
+        "startChar": 56,
+        "endLine": 23,
+        "endChar": 65
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b9a96b9_eb60c14d",
@@ -204,6 +228,30 @@
       "side": 1,
       "message": "OK. Technically we could generate it by scanning cl_icd.h. Maybe amend the comment to indicate where the ordering is specified.",
       "parentUuid": "c70b2df4_1fea798e",
+      "range": {
+        "startLine": 14,
+        "startChar": 3,
+        "endLine": 14,
+        "endChar": 32
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eade280e_9949857f",
+        "filename": "src/libGLESv2/cl_dispatch_table.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T11:18:09Z",
+      "side": 1,
+      "message": "I have changed the comment to indicate where the ordering is specified. There are more ways to generate it, but they are all very complex, and most probably it is more work long-term to maintain that generator than to amend the table manually.",
+      "parentUuid": "6d80ea6a_45a018f2",
       "range": {
         "startLine": 14,
         "startChar": 3,
@@ -323,6 +371,30 @@
       "side": 1,
       "message": "libOpenCL is our (and everyone else\u0027s) OpenCL implementation. libGLESv2 is hidden.",
       "parentUuid": "d0ec17e4_293d4c8d",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "90467bf6_487a3b92",
+        "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T11:18:09Z",
+      "side": 1,
+      "message": "As discussed I have renamed our original OpenCL library with the full set of entry points to avoid conflicts with system-provided OpenCL library. I have also moved the ICD entry points from libGLESv2 to a separate OpenCL library which can be only used by ICD-compatible loaders. Further I have renamed the CL entry points in libGLESv2 to the original names and disabled their export. The CL dispatch table is now the only CL symbol which is exported by libGLESv2.",
+      "parentUuid": "0a85f811_c3811cce",
       "range": {
         "startLine": 13,
         "startChar": 19,
