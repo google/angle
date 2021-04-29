@@ -14,6 +14,10 @@
 
 namespace rx
 {
+
+bool IsVulkanNullDisplayAvailable();
+DisplayImpl *CreateVulkanNullDisplay(const egl::DisplayState &state);
+
 #if defined(ANGLE_PLATFORM_WINDOWS)
 bool IsVulkanWin32DisplayAvailable();
 DisplayImpl *CreateVulkanWin32Display(const egl::DisplayState &state);

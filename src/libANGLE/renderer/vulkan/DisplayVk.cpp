@@ -260,6 +260,11 @@ const char *DisplayVk::getWSILayer() const
     return nullptr;
 }
 
+bool DisplayVk::isUsingSwapchain() const
+{
+    return true;
+}
+
 bool DisplayVk::getScratchBuffer(size_t requstedSizeBytes,
                                  angle::MemoryBuffer **scratchBufferOut) const
 {
