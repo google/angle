@@ -27,7 +27,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '06f7f05a5f4a087fa613e1cdff35ca4f613d53e1',
+  'chromium_revision': '5feb27ec9892e068c4fc9a19e6d822f787cf6441',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -72,7 +72,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'c5554ea0ab72873126d06f36d1bc19b23a0086a5',
+  'catapult_revision': '70ce64f4639423f995fb9172f25b68d546634bd4',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -112,7 +112,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@94367a1d1483f2321ca8cefb470dc9e8742d5c2a',
+    'url': '{chromium_git}/chromium/src/build.git@32281a3e42d30495248ea4c89aa6de41371a1001',
     'condition': 'not build_with_chromium',
   },
 
@@ -154,7 +154,7 @@ deps = {
   },
 
   'buildtools/third_party/libc++abi/trunk': {
-    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@f6a8e55d6e7719b835f3bdbe082245b8dd86cc4d',
+    'url': '{chromium_git}/external/github.com/llvm/llvm-project/libcxxabi.git@5f51521620a9229a8e7956a5a302031d3fc28b5f',
     'condition': 'not build_with_chromium',
   },
 
@@ -170,17 +170,17 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@5f9242e28214f7337009520bc18835093a957223',
+    'url': '{chromium_git}/chromium/src/testing@a660a95e6f9305381c5508d915d73843aaea0a46',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/abseil-cpp': {
-    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@a26b882fc49c737c5b56dabcff763135f552ab0a',
+    'url': '{chromium_git}/chromium/src/third_party/abseil-cpp@09a1a83d2fb3d83dce1b4fad068f33deee298355',
     'condition': 'not build_with_chromium',
   },
 
   'third_party/android_build_tools': {
-    'url': '{chromium_git}/chromium/src/third_party/android_build_tools@a27b4d3b82ef2b3524b6e5701863524bdba9f794',
+    'url': '{chromium_git}/chromium/src/third_party/android_build_tools@c3565d6e1f8fdddf763498b0fb234f00097af6ac',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -218,7 +218,7 @@ deps = {
   },
 
   'third_party/android_deps': {
-    'url': '{chromium_git}/chromium/src/third_party/android_deps@d738a9c39ad8b3ce8aa39abab0a4657da87bdd51',
+    'url': '{chromium_git}/chromium/src/third_party/android_deps@db2bba848d0c30b82cf47cdecaa8422304abe05d',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
@@ -315,7 +315,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@b3c9edb4af40cce0512adbcae7fc3fd2450e2b45',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@3a56ba9d9c9d22bc78e24f96a9096247d53649f8',
     'condition': 'not build_with_chromium',
   },
 
@@ -354,7 +354,7 @@ deps = {
 
   # libjpeg_turbo is used by glmark2.
   'third_party/libjpeg_turbo': {
-    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@7b4981b6500ccba10733c352b9ed2dad14ce3c73',
+    'url': '{chromium_git}/chromium/deps/libjpeg_turbo.git@24e310554f07c0fdb8ee52e3e708e4f3e9eb6e20',
     'condition': 'not build_with_chromium',
   },
 
@@ -544,7 +544,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@91e097a7c790caf52621c1078fa1bcbbbba30fbe',
+    'url': '{chromium_git}/chromium/src/tools/mb@7247aa6f401a02b72c90bd60a02b8ef2287e8213',
     'condition': 'not build_with_chromium',
   },
 
@@ -567,7 +567,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/linux-amd64',
-          'version': 'E6CrCAKZ_DKxclAqgBcEt4adU3HaviUwN42S1t3rW5QC',
+          'version': 'tB-aCGPgfoZoJkUY-FwC5e0McBlS1VYtKsDpf5G42GUC',
         },
       ],
       'dep_type': 'cipd',
@@ -578,7 +578,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/windows-amd64',
-          'version': 'XXJR8g1yaihqXsw7WodVpgLtZsimS7Cc3yLJI9sJssgC',
+          'version': 'PtSSNrSR0okAf8Q4RMYxK1dSmKxaw9jqoyxdNvNzOqwC',
         },
       ],
       'dep_type': 'cipd',
@@ -589,7 +589,7 @@ deps = {
       'packages': [
         {
           'package': 'skia/tools/goldctl/mac-amd64',
-          'version': 'RTGs3s-N45d3AzDXnEKw3kbI0qf8xyS_JYMHo4iRCMIC',
+          'version': '010YBDimThQHTBULjf4bYMXghL37h6xogw08_Ij5RrMC',
         },
       ],
       'dep_type': 'cipd',
