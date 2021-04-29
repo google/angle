@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a946dbd_861f9886",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-29T18:06:07Z",
+      "side": 1,
+      "message": "With this, I actually able to set breakpoint and step through angle code.",
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
