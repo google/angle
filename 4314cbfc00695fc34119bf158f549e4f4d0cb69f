@@ -59,6 +59,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d392894b_7f4a3150",
+        "filename": "gni/angle.gni",
+        "patchSetId": 10
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T19:47:15Z",
+      "side": 1,
+      "message": "Yes, replaced with an assertion, so someone who manually tries to configure OpenCL with Windows UWP will get a meaningful error message instead of a failing build.",
+      "parentUuid": "f0730659_963c0600",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 1
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eb97e2c6_e69bca93",
@@ -72,6 +96,30 @@
       "writtenOn": "2021-04-29T18:51:55Z",
       "side": 1,
       "message": "nit: please make this private/protected to follow the mNaming.",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 42
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d54b563_ab2933e7",
+        "filename": "include/angle_cl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T19:47:15Z",
+      "side": 1,
+      "message": "I had it private in an earlier patchset, but the templated static_assert in msvc couldn\u0027t access it. Maybe it works now.",
+      "parentUuid": "eb97e2c6_e69bca93",
       "range": {
         "startLine": 41,
         "startChar": 33,
@@ -105,6 +153,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "70b2cbf0_b1bcfb84",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T19:47:15Z",
+      "side": 1,
+      "message": "This class will be filled anyway with more functionality in the coming days, so please let it in for now.",
+      "parentUuid": "f9145ff8_c0963653",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 0
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6a838ec3_10b09b48",
@@ -118,6 +190,30 @@
       "writtenOn": "2021-04-29T18:51:55Z",
       "side": 1,
       "message": "nit: can you make cpp files for these and embed them there to prevent the cons/dtr being inlined in multiple files? You\u0027ll need the cpp in a follow-up patch in any case.",
+      "range": {
+        "startLine": 20,
+        "startChar": 17,
+        "endLine": 20,
+        "endChar": 24
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bd05f16_47728337",
+        "filename": "src/libANGLE/CLProgram.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T19:47:15Z",
+      "side": 1,
+      "message": "Sure, I moved the constructors to the existing cpp files. I planned to move them anyway in the next days.\n\nThe default destructors can stay in the header. A defining declaration inside a class body is implicitly declared inline, so the compiler will avoid symbol conflicts.",
+      "parentUuid": "6a838ec3_10b09b48",
       "range": {
         "startLine": 20,
         "startChar": 17,
