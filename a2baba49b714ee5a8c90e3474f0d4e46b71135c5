@@ -60,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0fed3b78_09f52c7c",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 522,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-29T08:47:26Z",
+      "side": 1,
+      "message": "I used \"info\" instead of \"print\" like used elsewhere, this seems to do the trick, i.e. I  now get \"INFO:root:Process-2: Run capture: \u0027out/CaptureR..:\"",
+      "parentUuid": "8e6dcb17_f690af19",
+      "range": {
+        "startLine": 522,
+        "startChar": 12,
+        "endLine": 522,
+        "endChar": 17
+      },
+      "revId": "a2baba49b714ee5a8c90e3474f0d4e46b71135c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "638df730_395be966",
         "filename": "src/tests/capture_replay_tests.py",
         "patchSetId": 1
@@ -71,6 +95,30 @@
       "writtenOn": "2021-04-26T13:11:19Z",
       "side": 1,
       "message": "same here",
+      "range": {
+        "startLine": 583,
+        "startChar": 12,
+        "endLine": 583,
+        "endChar": 17
+      },
+      "revId": "a2baba49b714ee5a8c90e3474f0d4e46b71135c5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b25f962_ab8e3d4c",
+        "filename": "src/tests/capture_replay_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 583,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-29T08:47:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "638df730_395be966",
       "range": {
         "startLine": 583,
         "startChar": 12,
