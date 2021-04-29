@@ -52,6 +52,60 @@
       "parentUuid": "a0840cd9_db9ed812",
       "revId": "52e87faaafac7be125fcab032acf87ad84acde07",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ecbb7be_f189def4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-29T14:37:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdacd543_e14f017a",
+      "revId": "52e87faaafac7be125fcab032acf87ad84acde07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2456bbf_a1949661",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-29T14:37:30Z",
+      "side": 1,
+      "message": "The function is actually called \u0027esOnlyExtension\u0027, so maybe it will also valid for ES1. I\u0027ve changed it accordingly.",
+      "parentUuid": "bdacd543_e14f017a",
+      "revId": "52e87faaafac7be125fcab032acf87ad84acde07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a56c50e_58797a11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-04-29T14:37:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bdacd543_e14f017a",
+      "revId": "52e87faaafac7be125fcab032acf87ad84acde07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
