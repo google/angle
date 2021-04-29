@@ -34,6 +34,24 @@
       "parentUuid": "3ec6caf2_de2f6af4",
       "revId": "52e87faaafac7be125fcab032acf87ad84acde07",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdacd543_e14f017a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-04-29T13:35:05Z",
+      "side": 1,
+      "message": "Note that Lubosz is landing fixes that would allow ES1 tests to run with the script:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2794381",
+      "parentUuid": "a0840cd9_db9ed812",
+      "revId": "52e87faaafac7be125fcab032acf87ad84acde07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
