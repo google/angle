@@ -148,7 +148,10 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
         dimensions["builderless"] = "1"
         goma_props["enable_ats"] = True
 
+    isolated_props = { "server": "https://isolateserver.appspot.com" }
+
     properties["$build/goma"] = goma_props
+    properties["$recipe_engine/isolated"] = isolated_props
     properties["platform"] = config_os.console_name
     properties["toolchain"] = toolchain
 
