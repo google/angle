@@ -50,6 +50,24 @@
       "message": "Question to Rob and Shahbaz:\n\nShould we enable this for chromeos always, or at least for devices?\nIf so, maybe we should use is_chromeos and simplify some conditions here?",
       "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5b2f2a68_7d422577",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1000246
+      },
+      "writtenOn": "2021-04-29T18:46:17Z",
+      "side": 1,
+      "message": "I think this is right but I\u0027m not sure.\n\nBoth Lacros and linux should be on the passthrough command decoder and hence require angle gl. \n\nhidehiko@ I thought that you\u0027d completed the #define change so that is_linux and is_chromeos are disjoint? If so, it seems possible to simplify this while you\u0027re here?",
+      "parentUuid": "231995dc_c4b1e823",
+      "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
