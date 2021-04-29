@@ -154,6 +154,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f4c3ae5_b50637f8",
+        "filename": "include/angle_cl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T20:16:30Z",
+      "side": 1,
+      "message": "Compiling now",
+      "parentUuid": "e858a604_99feb69b",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 42
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9145ff8_c0963653",
@@ -286,6 +310,30 @@
       "side": 1,
       "message": "Beware of inline destructors. \n\nhttps://google.github.io/styleguide/cppguide.html#Inline_Functions\n\nFor now put them in the cpp. That ok?",
       "parentUuid": "7bd05f16_47728337",
+      "range": {
+        "startLine": 20,
+        "startChar": 17,
+        "endLine": 20,
+        "endChar": 24
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "37b645b4_c2c50a9c",
+        "filename": "src/libANGLE/CLProgram.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T20:16:30Z",
+      "side": 1,
+      "message": "As discussed.",
+      "parentUuid": "8350aa76_6e566392",
       "range": {
         "startLine": 20,
         "startChar": 17,
