@@ -429,6 +429,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ddfa85a9_ccc65c8c",
+        "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-04-29T18:14:10Z",
+      "side": 1,
+      "message": "The entry point names are in a namespace now, as discussed.",
+      "parentUuid": "8e72c841_82ecd585",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83a76772_2861b1eb",
