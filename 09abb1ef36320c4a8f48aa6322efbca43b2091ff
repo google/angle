@@ -16,6 +16,29 @@
       "message": "With this, I actually able to set breakpoint and step through angle code.",
       "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98edea31_3c669e70",
+        "filename": "doc/DebuggingTips.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-29T18:08:26Z",
+      "side": 1,
+      "message": "Not sure if all these are required for debugging, but this is what I have. I just tried with is_component_build\u003dtrue and revert the compiler.gni chnage, but then angle_perftests always using native gles driver, not angle. Maybe I miss something?",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 3
+      },
+      "revId": "09abb1ef36320c4a8f48aa6322efbca43b2091ff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
