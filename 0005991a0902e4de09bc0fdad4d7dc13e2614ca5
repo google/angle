@@ -405,6 +405,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e72c841_82ecd585",
+        "filename": "src/libGLESv2/entry_points_cl_icd.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-29T13:13:16Z",
+      "side": 1,
+      "message": "Let\u0027s chat offline. The code isn\u0027t set how the rest of ANGLE is laid out right now.",
+      "parentUuid": "90467bf6_487a3b92",
+      "range": {
+        "startLine": 13,
+        "startChar": 19,
+        "endLine": 13,
+        "endChar": 41
+      },
+      "revId": "0005991a0902e4de09bc0fdad4d7dc13e2614ca5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "83a76772_2861b1eb",
