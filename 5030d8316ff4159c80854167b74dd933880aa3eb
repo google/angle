@@ -22,6 +22,30 @@
       },
       "revId": "5030d8316ff4159c80854167b74dd933880aa3eb",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e362655_cf758fbb",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 2119,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-04-29T17:06:03Z",
+      "side": 1,
+      "message": "We allow overriding features via flag so both paths need to ship",
+      "parentUuid": "e475f777_92679274",
+      "range": {
+        "startLine": 2119,
+        "startChar": 28,
+        "endLine": 2119,
+        "endChar": 35
+      },
+      "revId": "5030d8316ff4159c80854167b74dd933880aa3eb",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
