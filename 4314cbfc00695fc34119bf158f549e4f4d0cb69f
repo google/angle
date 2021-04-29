@@ -34,6 +34,98 @@
       "parentUuid": "3ac6b53b_d991d219",
       "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f0730659_963c0600",
+        "filename": "gni/angle.gni",
+        "patchSetId": 10
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-29T18:51:55Z",
+      "side": 1,
+      "message": "please remove this now that the prior change landed.",
+      "range": {
+        "startLine": 142,
+        "startChar": 0,
+        "endLine": 147,
+        "endChar": 1
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb97e2c6_e69bca93",
+        "filename": "include/angle_cl.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-29T18:51:55Z",
+      "side": 1,
+      "message": "nit: please make this private/protected to follow the mNaming.",
+      "range": {
+        "startLine": 41,
+        "startChar": 33,
+        "endLine": 41,
+        "endChar": 42
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9145ff8_c0963653",
+        "filename": "src/libANGLE/CLObject.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-29T18:51:55Z",
+      "side": 1,
+      "message": "nit: I\u0027d remove this for now as you have already implemented the dispatch elsewhere.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 0
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a838ec3_10b09b48",
+        "filename": "src/libANGLE/CLProgram.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-29T18:51:55Z",
+      "side": 1,
+      "message": "nit: can you make cpp files for these and embed them there to prevent the cons/dtr being inlined in multiple files? You\u0027ll need the cpp in a follow-up patch in any case.",
+      "range": {
+        "startLine": 20,
+        "startChar": 17,
+        "endLine": 20,
+        "endChar": 24
+      },
+      "revId": "4314cbfc00695fc34119bf158f549e4f4d0cb69f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
