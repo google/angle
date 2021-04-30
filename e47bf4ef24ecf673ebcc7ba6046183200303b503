@@ -16,6 +16,69 @@
       "message": "The memory logs are very useful! Minor change while I am on this.",
       "revId": "e47bf4ef24ecf673ebcc7ba6046183200303b503",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cce31967_4e314093",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-30T00:08:31Z",
+      "side": 1,
+      "message": "Thanks for doing this!  Sorry I didn\u0027t catch this with the initial CL.",
+      "revId": "e47bf4ef24ecf673ebcc7ba6046183200303b503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8b63f57e_d77aaf49",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1734,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-30T00:08:31Z",
+      "side": 1,
+      "message": "Nit:  Does this result in potentially 3 lines in logcat?:\n\n- logMemoryReportStats \n- logMemoryReportCallbacks \n- feature(s) is enabled, but driver does not support VK_EXT_DEVICE_MEMORY_REPORT_EXTENSION. Disabling the feature(s) now.\n\nWe could either put the last message first (and modify it to say that we are \"disabling the following feature(s)\" because \"the VK_EXT_device memory extension is not supported by the Vulkan driver\".  Not a huge deal, but from my past UX experience, I think that would be better.",
+      "range": {
+        "startLine": 1727,
+        "startChar": 0,
+        "endLine": 1734,
+        "endChar": 13
+      },
+      "revId": "e47bf4ef24ecf673ebcc7ba6046183200303b503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d73d766_53a45d7c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1736,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-04-30T00:08:31Z",
+      "side": 1,
+      "message": "Since you are quoting this, please change this to:\n\n\"... the VK_EXT_device memory extension.\"",
+      "range": {
+        "startLine": 1736,
+        "startChar": 23,
+        "endLine": 1736,
+        "endChar": 60
+      },
+      "revId": "e47bf4ef24ecf673ebcc7ba6046183200303b503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
