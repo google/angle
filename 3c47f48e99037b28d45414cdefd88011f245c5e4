@@ -87,6 +87,30 @@
       },
       "revId": "3c47f48e99037b28d45414cdefd88011f245c5e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e7bc899_f5f2b0a0",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-30T21:18:24Z",
+      "side": 1,
+      "message": "\u003e We convert that implicitly to INVALID_OPERATION.\n\nmind giving a link to where this implicit conversion happens?",
+      "parentUuid": "cfc80565_f6137438",
+      "range": {
+        "startLine": 299,
+        "startChar": 12,
+        "endLine": 299,
+        "endChar": 23
+      },
+      "revId": "3c47f48e99037b28d45414cdefd88011f245c5e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
