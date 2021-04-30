@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f47e9ae0_5c90b693",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-30T17:56:22Z",
+      "side": 1,
+      "message": "This patch completes GLES1 vertex capture by adding support for vertex buffers / their offsets in the gl*Pointer functions. This patch fixes texture coordinates in Dr. Driving.",
+      "revId": "9849faebc18a9b0daaf1b12a811ce8bea3440054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
