@@ -334,6 +334,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4db5ed0_93e27757",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2fc269d5_8d6de96d",
+      "range": {
+        "startLine": 206,
+        "startChar": 9,
+        "endLine": 206,
+        "endChar": 23
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b03590a2_3450976f",
@@ -347,6 +371,30 @@
       "writtenOn": "2021-04-14T17:48:54Z",
       "side": 1,
       "message": "suggest you define this and the destructor in the cpp.",
+      "range": {
+        "startLine": 216,
+        "startChar": 20,
+        "endLine": 216,
+        "endChar": 31
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ceb017c_4a9c55c5",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b03590a2_3450976f",
       "range": {
         "startLine": 216,
         "startChar": 20,
@@ -474,6 +522,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c547bfb_0551e87c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5c831301_0b579fec",
+      "range": {
+        "startLine": 229,
+        "startChar": 9,
+        "endLine": 229,
+        "endChar": 19
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d7b47f9_996ce7a7",
@@ -544,6 +616,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d149fb1_6ce87220",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3b510251_d0cec440",
+      "range": {
+        "startLine": 235,
+        "startChar": 4,
+        "endLine": 235,
+        "endChar": 70
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7a69bb63_b56458e0",
@@ -557,6 +653,30 @@
       "writtenOn": "2021-04-14T17:48:54Z",
       "side": 1,
       "message": "would be better if we didn\u0027t need to pass this flag to the getDriverPriority method. conceptually the priority and protected-ness are indepenent.\n\nCan you author a follow-up (or preliminary) change to remove mContextPriority and make the renderer do the lookup on demand?",
+      "range": {
+        "startLine": 403,
+        "startChar": 44,
+        "endLine": 403,
+        "endChar": 61
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1c5ec4ff_1ef67342",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 403,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7a69bb63_b56458e0",
       "range": {
         "startLine": 403,
         "startChar": 44,
@@ -590,6 +710,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "57b9741c_9ab5221a",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 671,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9c4a95a_218a3a30",
+      "range": {
+        "startLine": 670,
+        "startChar": 0,
+        "endLine": 671,
+        "endChar": 71
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aa405094_b9c84e96",
@@ -603,6 +747,30 @@
       "writtenOn": "2021-04-14T17:48:54Z",
       "side": 1,
       "message": "you can omit these",
+      "range": {
+        "startLine": 672,
+        "startChar": 0,
+        "endLine": 673,
+        "endChar": 30
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7bbbd411_b3b5e356",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa405094_b9c84e96",
       "range": {
         "startLine": 672,
         "startChar": 0,
@@ -683,6 +851,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23dce2d1_2e01cf56",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 404,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6123b9dd_34f297f6",
+      "range": {
+        "startLine": 404,
+        "startChar": 26,
+        "endLine": 404,
+        "endChar": 27
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d7c779f7_b0bf9bb2",
@@ -696,6 +888,30 @@
       "writtenOn": "2021-04-14T17:48:54Z",
       "side": 1,
       "message": "rather than using the pointer, I\u0027d rather you just check if the protected queue family is valid. I think it\u0027ll make the code easier to understand.",
+      "range": {
+        "startLine": 511,
+        "startChar": 21,
+        "endLine": 511,
+        "endChar": 45
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1953b218_0511e346",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 511,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-04-30T15:45:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d7c779f7_b0bf9bb2",
       "range": {
         "startLine": 511,
         "startChar": 21,
