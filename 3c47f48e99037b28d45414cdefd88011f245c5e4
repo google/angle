@@ -39,6 +39,30 @@
       },
       "revId": "3c47f48e99037b28d45414cdefd88011f245c5e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f899277_b39a3fa6",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-30T20:20:47Z",
+      "side": 1,
+      "message": "Negative ack\n\nI don\u0027t want to return a vulkan error but specifically the spec provided GL error enum of -\u003e \"GL_INVALID_OPERATION\"",
+      "parentUuid": "2e06661c_d3f76453",
+      "range": {
+        "startLine": 299,
+        "startChar": 12,
+        "endLine": 299,
+        "endChar": 23
+      },
+      "revId": "3c47f48e99037b28d45414cdefd88011f245c5e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
