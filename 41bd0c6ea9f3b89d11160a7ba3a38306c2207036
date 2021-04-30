@@ -118,6 +118,30 @@
       },
       "revId": "41bd0c6ea9f3b89d11160a7ba3a38306c2207036",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4292d3af_1b39503b",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-30T16:46:31Z",
+      "side": 1,
+      "message": "Sorry, on-screen is the wrong term. Rendering to a surface.",
+      "parentUuid": "4c39dc99_acc7848b",
+      "range": {
+        "startLine": 1205,
+        "startChar": 0,
+        "endLine": 1205,
+        "endChar": 15
+      },
+      "revId": "41bd0c6ea9f3b89d11160a7ba3a38306c2207036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
