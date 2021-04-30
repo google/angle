@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8205f062_a0ff5777",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-30T01:50:27Z",
+      "side": 1,
+      "message": "Thanks Ian for the quick review!",
+      "revId": "e47bf4ef24ecf673ebcc7ba6046183200303b503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8b63f57e_d77aaf49",
@@ -58,6 +75,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9d2e400c_ddb5d9cc",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1734,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-30T01:50:27Z",
+      "side": 1,
+      "message": "You are right, changed to what you said.",
+      "parentUuid": "8b63f57e_d77aaf49",
+      "range": {
+        "startLine": 1727,
+        "startChar": 0,
+        "endLine": 1734,
+        "endChar": 13
+      },
+      "revId": "e47bf4ef24ecf673ebcc7ba6046183200303b503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d73d766_53a45d7c",
@@ -71,6 +112,30 @@
       "writtenOn": "2021-04-30T00:08:31Z",
       "side": 1,
       "message": "Since you are quoting this, please change this to:\n\n\"... the VK_EXT_device memory extension.\"",
+      "range": {
+        "startLine": 1736,
+        "startChar": 23,
+        "endLine": 1736,
+        "endChar": 60
+      },
+      "revId": "e47bf4ef24ecf673ebcc7ba6046183200303b503",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc44ec74_1ce26aae",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1736,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-30T01:50:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9d73d766_53a45d7c",
       "range": {
         "startLine": 1736,
         "startChar": 23,
