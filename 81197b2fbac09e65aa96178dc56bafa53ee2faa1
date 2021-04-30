@@ -16,6 +16,75 @@
       "message": "PTAL",
       "revId": "81197b2fbac09e65aa96178dc56bafa53ee2faa1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "04e71709_973ad78f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-30T16:26:48Z",
+      "side": 1,
+      "message": "doesn\u0027t seem to need a return value. can be void.",
+      "range": {
+        "startLine": 232,
+        "startChar": 26,
+        "endLine": 232,
+        "endChar": 34
+      },
+      "revId": "81197b2fbac09e65aa96178dc56bafa53ee2faa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "735e2c65_18dee83e",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 853,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-30T16:26:48Z",
+      "side": 1,
+      "message": "nit: repeated, use helper.",
+      "range": {
+        "startLine": 846,
+        "startChar": 0,
+        "endLine": 853,
+        "endChar": 9
+      },
+      "revId": "81197b2fbac09e65aa96178dc56bafa53ee2faa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d9839ce7_c8c250e5",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-30T16:26:48Z",
+      "side": 1,
+      "message": "nit: lower-case angle naming.",
+      "range": {
+        "startLine": 139,
+        "startChar": 18,
+        "endLine": 139,
+        "endChar": 49
+      },
+      "revId": "81197b2fbac09e65aa96178dc56bafa53ee2faa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
