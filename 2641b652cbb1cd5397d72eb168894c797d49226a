@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1584b648_69b09ceb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-30T17:55:03Z",
+      "side": 1,
+      "message": "To capture the new torus example and the existing SimpleLighting I needed to implement new capture functions. The sizes are determined according to the ES1 spec and enum parameters.",
+      "revId": "2641b652cbb1cd5397d72eb168894c797d49226a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
