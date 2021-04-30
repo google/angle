@@ -17,7 +17,6 @@ root_targets = [
     "//:libGLESv2",
     "//:libGLESv1_CM",
     "//:libEGL",
-    "//:libfeature_support",
 ]
 
 sdk_version = '28'
@@ -507,7 +506,7 @@ def main():
     # Add APKs with all of the root libraries
     blueprint_targets.append(('filegroup', {
         'name': 'ANGLE_srcs',
-        'srcs': ['src/**/*.java',],
+        'srcs': ['src/android_system_settings/**/*.java',],
     }))
 
     blueprint_targets.append((
