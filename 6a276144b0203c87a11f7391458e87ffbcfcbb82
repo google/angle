@@ -68,6 +68,24 @@
       "parentUuid": "231995dc_c4b1e823",
       "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fed1eb9d_f3573905",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1115919
+      },
+      "writtenOn": "2021-04-30T03:20:59Z",
+      "side": 1,
+      "message": "Yes, it is completed so now is_linux and is_chromeos are disjoint.\nHow we can simplify depends on what platform do we need this.\n\nIf we can enable this for all {ash,lacros}-chrome for {linux,devices}, the condition can be:\n\n(!is_linux || angle_use_x11) \u0026\u0026 !is_fuchia \u0026\u0026 !angle_is_winuwp \u0026\u0026 !is_ggp \u0026\u0026 !is_win_arm64.\n\nwhich is the simplest, probably.\nIf we cannot, we need more conditions to guard.\n\n\u003e I think this is right but I\u0027m not sure.\n\nHow can we move forward this? Who should we contact to?",
+      "parentUuid": "5b2f2a68_7d422577",
+      "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
