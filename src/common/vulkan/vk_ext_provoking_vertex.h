@@ -18,10 +18,7 @@
 #include "vk_headers.h"
 
 // THIS FILE SHOULD BE DELETED IF VK_EXT_provoking_vertex IS EVER ADDED TO THE VULKAN HEADERS
-#ifdef VK_EXT_provoking_vertex
-#    error \
-        "VK_EXT_provoking_vertex is already defined in the Vulkan headers, you can delete this file"
-#endif
+#ifndef VK_EXT_provoking_vertex
 
 static constexpr VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_FEATURES_EXT =
     static_cast<VkStructureType>(1000254000);
@@ -31,9 +28,9 @@ static constexpr VkStructureType
 static constexpr VkStructureType VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROVOKING_VERTEX_PROPERTIES_EXT =
     static_cast<VkStructureType>(1000254002);
 
-#define VK_EXT_provoking_vertex 1
-#define VK_EXT_PROVOKING_VERTEX_SPEC_VERSION 1
-#define VK_EXT_PROVOKING_VERTEX_EXTENSION_NAME "VK_EXT_provoking_vertex"
+#    define VK_EXT_provoking_vertex 1
+#    define VK_EXT_PROVOKING_VERTEX_SPEC_VERSION 1
+#    define VK_EXT_PROVOKING_VERTEX_EXTENSION_NAME "VK_EXT_provoking_vertex"
 
 typedef enum VkProvokingVertexModeEXT
 {
@@ -66,5 +63,6 @@ typedef struct VkPipelineRasterizationProvokingVertexStateCreateInfoEXT
     const void *pNext;
     VkProvokingVertexModeEXT provokingVertexMode;
 } VkPipelineRasterizationProvokingVertexStateCreateInfoEXT;
+#endif  // VK_EXT_provoking_vertex
 
 #endif  // CUSTOM_VK_EXT_PROVOKING_VERTEX_H_
