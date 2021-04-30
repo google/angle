@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f340378_113a255f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-04-30T17:53:05Z",
+      "side": 1,
+      "message": "To reproduce the ES1 vertex buffer offset issue I have written this example, which was based on an example from the AOSP ApiDemos. I ported the example to to compare the behaviour of FrameCapture between both API versions.",
+      "revId": "5c172d1406c8ea6d9596b4605af23a3261592add",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
