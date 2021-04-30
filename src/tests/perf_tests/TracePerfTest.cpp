@@ -131,17 +131,19 @@ class TracePerfTest : public ANGLERenderTest, public ::testing::WithParamInterfa
     std::vector<TimeSample> mTimeline;
 
     std::string mStartingDirectory;
-    bool mUseTimestampQueries      = false;
-    GLuint mOffscreenFramebuffer   = 0;
-    GLuint mOffscreenTexture       = 0;
-    GLuint mOffscreenDepthStencil  = 0;
-    int mWindowWidth               = 0;
-    int mWindowHeight              = 0;
-    GLuint mDrawFramebufferBinding = 0;
-    GLuint mReadFramebufferBinding = 0;
-    uint32_t mCurrentFrame         = 0;
-    uint32_t mOffscreenFrameCount  = 0;
-    bool mScreenshotSaved          = false;
+    bool mUseTimestampQueries                                           = false;
+    static constexpr int mMaxOffscreenBufferCount                       = 2;
+    std::array<GLuint, mMaxOffscreenBufferCount> mOffscreenFramebuffers = {0, 0};
+    std::array<GLuint, mMaxOffscreenBufferCount> mOffscreenTextures     = {0, 0};
+    GLuint mOffscreenDepthStencil                                       = 0;
+    int mWindowWidth                                                    = 0;
+    int mWindowHeight                                                   = 0;
+    GLuint mDrawFramebufferBinding                                      = 0;
+    GLuint mReadFramebufferBinding                                      = 0;
+    uint32_t mCurrentFrame                                              = 0;
+    uint32_t mOffscreenFrameCount                                       = 0;
+    uint32_t mTotalFrameCount                                           = 0;
+    bool mScreenshotSaved                                               = false;
     std::unique_ptr<TraceLibrary> mTraceLibrary;
 };
 
@@ -1020,27 +1022,30 @@ void TracePerfTest::initializeBenchmark()
             mWindowHeight *= 4;
         }
 
-        glGenFramebuffers(1, &mOffscreenFramebuffer);
-        glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffer);
-
-        // Hard-code RGBA8/D24S8. This should be specified in the trace info.
-        glGenTextures(1, &mOffscreenTexture);
-        glBindTexture(GL_TEXTURE_2D, mOffscreenTexture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowWidth, mWindowHeight, 0, GL_RGBA,
-                     GL_UNSIGNED_BYTE, nullptr);
-
         glGenRenderbuffers(1, &mOffscreenDepthStencil);
         glBindRenderbuffer(GL_RENDERBUFFER, mOffscreenDepthStencil);
         glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, mWindowWidth, mWindowHeight);
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                               mOffscreenTexture, 0);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
-                                  mOffscreenDepthStencil);
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
-                                  mOffscreenDepthStencil);
-        glBindTexture(GL_TEXTURE_2D, 0);
         glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+        glGenFramebuffers(mMaxOffscreenBufferCount, mOffscreenFramebuffers.data());
+        glGenTextures(mMaxOffscreenBufferCount, mOffscreenTextures.data());
+        for (int i = 0; i < mMaxOffscreenBufferCount; i++)
+        {
+            glBindFramebuffer(GL_FRAMEBUFFER, mOffscreenFramebuffers[i]);
+
+            // Hard-code RGBA8/D24S8. This should be specified in the trace info.
+            glBindTexture(GL_TEXTURE_2D, mOffscreenTextures[i]);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, mWindowWidth, mWindowHeight, 0, GL_RGBA,
+                         GL_UNSIGNED_BYTE, nullptr);
+
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                                   mOffscreenTextures[i], 0);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER,
+                                      mOffscreenDepthStencil);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_STENCIL_ATTACHMENT, GL_RENDERBUFFER,
+                                      mOffscreenDepthStencil);
+            glBindTexture(GL_TEXTURE_2D, 0);
+        }
     }
 
     // Potentially slow. Can load a lot of resources.
@@ -1066,23 +1071,14 @@ void TracePerfTest::initializeBenchmark()
 
 void TracePerfTest::destroyBenchmark()
 {
-    if (mOffscreenTexture != 0)
-    {
-        glDeleteTextures(1, &mOffscreenTexture);
-        mOffscreenTexture = 0;
-    }
+    glDeleteTextures(mMaxOffscreenBufferCount, mOffscreenTextures.data());
+    mOffscreenTextures.fill(0);
 
-    if (mOffscreenDepthStencil != 0)
-    {
-        glDeleteRenderbuffers(1, &mOffscreenDepthStencil);
-        mOffscreenDepthStencil = 0;
-    }
+    glDeleteRenderbuffers(1, &mOffscreenDepthStencil);
+    mOffscreenDepthStencil = 0;
 
-    if (mOffscreenFramebuffer != 0)
-    {
-        glDeleteFramebuffers(1, &mOffscreenFramebuffer);
-        mOffscreenFramebuffer = 0;
-    }
+    glDeleteFramebuffers(mMaxOffscreenBufferCount, mOffscreenFramebuffers.data());
+    mOffscreenFramebuffers.fill(0);
 
     mTraceLibrary->finishReplay();
     mTraceLibrary.reset(nullptr);
@@ -1136,6 +1132,18 @@ void TracePerfTest::drawBenchmark()
         sampleTime();
     }
 
+    if (params.surfaceType == SurfaceType::Offscreen)
+    {
+        // Some driver (ARM and ANGLE) try to nop or defer the glFlush if it is called within the
+        // renderpass to avoid breaking renderpass (performance reason). For app traces that does
+        // not use any FBO, when we run in the offscreen mode, there is no frame boundary and
+        // glFlush call we issued at end of frame will get skipped. To overcome this (and also
+        // matches what onscreen double buffering behavior as well), we use two offscreen FBOs and
+        // ping pong between them for each frame.
+        glBindFramebuffer(GL_FRAMEBUFFER,
+                          mOffscreenFramebuffers[mTotalFrameCount % mMaxOffscreenBufferCount]);
+    }
+
     char frameName[32];
     sprintf(frameName, "Frame %u", mCurrentFrame);
     beginInternalTraceEvent(frameName);
@@ -1151,7 +1159,8 @@ void TracePerfTest::drawBenchmark()
         glGetIntegerv(GL_READ_FRAMEBUFFER_BINDING, &currentReadFBO);
 
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        glBindFramebuffer(GL_READ_FRAMEBUFFER, mOffscreenFramebuffer);
+        glBindFramebuffer(GL_READ_FRAMEBUFFER,
+                          mOffscreenFramebuffers[mTotalFrameCount % mMaxOffscreenBufferCount]);
 
         uint32_t frameX  = (mOffscreenFrameCount % kFramesPerXY) % kFramesPerX;
         uint32_t frameY  = (mOffscreenFrameCount % kFramesPerXY) / kFramesPerX;
@@ -1185,6 +1194,7 @@ void TracePerfTest::drawBenchmark()
         }
         else
         {
+            glFlush();
             mOffscreenFrameCount++;
         }
 
@@ -1194,6 +1204,8 @@ void TracePerfTest::drawBenchmark()
         }
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, currentDrawFBO);
         glBindFramebuffer(GL_READ_FRAMEBUFFER, currentReadFBO);
+
+        mTotalFrameCount++;
     }
     else
     {
@@ -1293,7 +1305,8 @@ void TracePerfTest::onReplayFramebufferChange(GLenum target, GLuint framebuffer)
 {
     if (framebuffer == 0 && GetParam().surfaceType == SurfaceType::Offscreen)
     {
-        glBindFramebuffer(target, mOffscreenFramebuffer);
+        glBindFramebuffer(target,
+                          mOffscreenFramebuffers[mTotalFrameCount % mMaxOffscreenBufferCount]);
     }
     else
     {
