@@ -22,6 +22,30 @@
       },
       "revId": "81197b2fbac09e65aa96178dc56bafa53ee2faa1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e0e1990_613bfc8f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3496,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-04-30T20:21:58Z",
+      "side": 0,
+      "message": "Here \"memoryProperties\" is the requested memory property flags and \"mMemoryPropertyFlags\" will contain the actual/supportable memory property flags.\n\nwe were incorrectly overwriting the actual results with requested value.",
+      "parentUuid": "e0d48def_fbeb1129",
+      "range": {
+        "startLine": 3494,
+        "startChar": 0,
+        "endLine": 3496,
+        "endChar": 48
+      },
+      "revId": "81197b2fbac09e65aa96178dc56bafa53ee2faa1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
