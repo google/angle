@@ -598,7 +598,7 @@ deps = {
 
   'tools/swarming_client': {
     'url': '{chromium_git}/infra/luci/client-py.git@a32a1607f6093d338f756c7e7c7b4333b0c50c9c',
-    'condition': 'checkout_android and not build_with_chromium',
+    'condition': 'not build_with_chromium',
   },
 
   # === ANGLE Restricted Trace Generated Code Start ===
