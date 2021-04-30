@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b887e641_d7564c6a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-04-30T16:57:20Z",
+      "side": 1,
+      "message": "Jonah, PTAL. TBRing some changes for ANGLE to work with 1.2.177 Vulkan Headers.",
+      "revId": "fb1fc678a39ea422ce344a128c74981f19832b89",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
