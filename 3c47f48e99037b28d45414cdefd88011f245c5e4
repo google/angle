@@ -16,6 +16,29 @@
       "message": "PTAL",
       "revId": "3c47f48e99037b28d45414cdefd88011f245c5e4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e06661c_d3f76453",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 299,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-04-30T16:24:35Z",
+      "side": 1,
+      "message": "use ANGLE_VK_CHECK. Pretend you don\u0027t have access to getImplementation.",
+      "range": {
+        "startLine": 299,
+        "startChar": 12,
+        "endLine": 299,
+        "endChar": 23
+      },
+      "revId": "3c47f48e99037b28d45414cdefd88011f245c5e4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
