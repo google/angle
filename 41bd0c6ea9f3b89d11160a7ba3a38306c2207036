@@ -142,6 +142,30 @@
       },
       "revId": "41bd0c6ea9f3b89d11160a7ba3a38306c2207036",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c3390b3_5597812e",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-04-30T17:58:41Z",
+      "side": 1,
+      "message": "Right, we will issue glFlush when render to surface as well. The question here really are:\n\n1) Do we want to allow the combination of onscreen and gMinimizeGPUWork?\nMy understanding from what you just said above is that you prefer it to be a valid combination. I was originally thinking this will be invalid and we automatically ignore onscreen request and always test offscreen. But I am okay with onscreen+gMinimizeGPUWork to be a valid combination\n\n2) If on screen is valid, do we want to issue swap for each frame or a glFlush is enough?\nIf we do swap, you will see swap becomes dominant calls in the trace (we are still doing some kind of sync even with vsync off. ANd swap behavior is a bit different native versus angle). Since the focus here is CPU overhead, I think we should move swap behavior out of picture. So my preference is issue glFlush instead of swap.\n\nPatchSet 9 will issue glFlush, regardless onscreen or offscreen. If onscreen it will render to surface and issue a glFlush. If offscreen it will render to FBO and issue a glFlush.\n\nDoes this sounds right to you?",
+      "parentUuid": "4292d3af_1b39503b",
+      "range": {
+        "startLine": 1205,
+        "startChar": 0,
+        "endLine": 1205,
+        "endChar": 15
+      },
+      "revId": "41bd0c6ea9f3b89d11160a7ba3a38306c2207036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
