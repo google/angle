@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "10e44c0f_645aa691",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-04-30T20:23:17Z",
+      "side": 1,
+      "message": "This allows a manual roll of ANGLE into AOSP to build successfully.   The only part that may be controversial is removing libfeature_support, which we can look into adding back as a follow-on.",
+      "revId": "26160fa8b7b5b846cdfb4eb7e092550e2a441cb2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
