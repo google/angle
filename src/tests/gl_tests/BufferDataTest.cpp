@@ -616,7 +616,11 @@ TEST_P(BufferDataTestES3, MapBufferRangeUnsynchronizedBit)
     EXPECT_GL_NO_ERROR();
     for (size_t i = 0; i < numElements; ++i)
     {
-        EXPECT_EQ(dstData[i], data[i]);
+        // Allow for the possibility that data matches either "dstData" or "srcData"
+        if (dstData[i] != data[i])
+        {
+            EXPECT_EQ(srcData[i], data[i]);
+        }
     }
     glUnmapBuffer(GL_COPY_WRITE_BUFFER);
     EXPECT_GL_NO_ERROR();

@@ -136,6 +136,7 @@ class BufferVk : public BufferImpl
     angle::Result initializeShadowBuffer(ContextVk *contextVk,
                                          gl::BufferBinding target,
                                          size_t size);
+    void initializeHostVisibleBufferPool(ContextVk *contextVk);
 
     ANGLE_INLINE uint8_t *getShadowBuffer(size_t offset)
     {
@@ -148,6 +149,10 @@ class BufferVk : public BufferImpl
     }
 
     void updateShadowBuffer(const uint8_t *data, size_t size, size_t offset);
+    angle::Result updateBuffer(ContextVk *contextVk,
+                               const uint8_t *data,
+                               size_t size,
+                               size_t offset);
     angle::Result directUpdate(ContextVk *contextVk,
                                const uint8_t *data,
                                size_t size,
@@ -166,6 +171,13 @@ class BufferVk : public BufferImpl
                                         size_t size,
                                         VkMemoryPropertyFlags memoryPropertyFlags,
                                         bool persistentMapRequired);
+    angle::Result handleDeviceLocalBufferMap(ContextVk *contextVk,
+                                             VkDeviceSize offset,
+                                             VkDeviceSize size,
+                                             void **mapPtr);
+    angle::Result handleDeviceLocalBufferUnmap(ContextVk *contextVk,
+                                               VkDeviceSize offset,
+                                               VkDeviceSize size);
     angle::Result setDataImpl(ContextVk *contextVk,
                               const uint8_t *data,
                               size_t size,
@@ -198,6 +210,10 @@ class BufferVk : public BufferImpl
 
     // Pool of BufferHelpers for mBuffer to acquire from
     vk::DynamicBuffer mBufferPool;
+
+    // DynamicBuffer to aid map operations of buffers when they are not host visible.
+    vk::DynamicBuffer mHostVisibleBufferPool;
+    VkDeviceSize mHostVisibleBufferOffset;
 
     // For GPU-read only buffers glMap* latency is reduced by maintaining a copy
     // of the buffer which is writeable only by the CPU. The contents are updated on all
