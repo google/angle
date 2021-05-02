@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4270b3f8_92f481e0",
+        "filename": "gni/angle.gni",
+        "patchSetId": 10
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-02T14:43:58Z",
+      "side": 1,
+      "message": "I have disabled the pass-through CL back end for now as it requires the third-party https://github.com/KhronosGroup/OpenCL-ICD-Loader. I created a GN build script which works fine locally, but I don\u0027t know yet how to add a third party lib. I found the DEPS file, but I don\u0027t know if it is allowed to add something which is not yet mirrored on googlesource.com.\nI don\u0027t mind to add that library in a separate CL or to amend this CL.",
+      "revId": "b00f226cdfd5f71ce891c68991f7caaac07d2975",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
