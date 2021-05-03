@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bcd6247_89e5cba2",
+        "filename": "src/libANGLE/CLPlatform.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0f88d06d_a15ddf6e",
+      "range": {
+        "startLine": 24,
+        "startChar": 10,
+        "endLine": 24,
+        "endChar": 14
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "014f6777_ce82c50b",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-05-03T17:16:48Z",
       "side": 1,
       "message": "nit: avoid using list, unless you plan on very frequently inserting + deleting from the middle (you won\u0027t for this case). use vector instead.",
+      "range": {
+        "startLine": 28,
+        "startChar": 22,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "463a0e82_5ffcaaa5",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "014f6777_ce82c50b",
       "range": {
         "startLine": 28,
         "startChar": 22,
@@ -165,6 +213,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22ea1271_f385a530",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "I stored it in rx::CLPlatformImpl for now, so that both front and back end can easily access it.",
+      "parentUuid": "efd0d9b9_0f9de20d",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 1
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a8e1ba7d_a1189510",
@@ -202,6 +274,30 @@
       "side": 1,
       "message": "Yes, I already have locally the solution with the subfolder \u0027src\u0027 and the README.chromium, because the BUILD.gn is customized for us and compiles only a subset of the package.",
       "parentUuid": "a8e1ba7d_a1189510",
+      "range": {
+        "startLine": 30,
+        "startChar": 6,
+        "endLine": 30,
+        "endChar": 7
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d8faa7_e3ba1f19",
+        "filename": "src/libANGLE/renderer/cl/BUILD.gn",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "Done, and I have added the build file and readme.",
+      "parentUuid": "ba23ac6b_eddce621",
       "range": {
         "startLine": 30,
         "startChar": 6,
@@ -354,6 +450,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2b678da_39b8d9c5",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d81f1a5_6a2f9861",
+      "range": {
+        "startLine": 93,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 16
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d27b63f9_e2d537bc",
@@ -367,6 +487,30 @@
       "writtenOn": "2021-05-03T17:16:48Z",
       "side": 1,
       "message": "nit: typo. also avoid auto unless it\u0027s a nested template. there\u0027s a style guide discussion on this, and the policy we adopt is to generally avoid it except for lambdas and iterators.\n\nthe auto thing applies to many cases in these files.",
+      "range": {
+        "startLine": 218,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 52
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "953d9954_1fbfb686",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "I guess there is a style guide discussion in every company about this. From the thousands of \u0027auto\u0027 in ANGLE it is hard to deduct that we generally avoid them. I searched and replaced almost all auto in all of my code in ANGLE.",
+      "parentUuid": "d27b63f9_e2d537bc",
       "range": {
         "startLine": 218,
         "startChar": 0,
@@ -402,6 +546,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "879d7f1c_daf852bc",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "I had a look at src/libANGLE/Display.cpp and am not sure what you mean. Can we just keep it for now and I will address it later when I understand it?",
+      "parentUuid": "671511fd_d27180a0",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 6
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d33a3367_519611a2",
         "filename": "src/libGLESv2/cl_stubs.cpp",
         "patchSetId": 11
@@ -413,6 +581,30 @@
       "writtenOn": "2021-05-03T17:16:48Z",
       "side": 1,
       "message": "suggest you split this into a separate prior or following patch to declutter the review.",
+      "range": {
+        "startLine": 696,
+        "startChar": 0,
+        "endLine": 696,
+        "endChar": 41
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f740183b_95aca6e6",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T21:40:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d33a3367_519611a2",
       "range": {
         "startLine": 696,
         "startChar": 0,
