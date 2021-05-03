@@ -283,6 +283,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b9a25a8_62427e2f",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T19:14:17Z",
+      "side": 1,
+      "message": "Both the global variable khrIcdVendors and the type KHRicdVendor are defined by the Khronos ICD loader. I can\u0027t change it.",
+      "parentUuid": "41abcce0_1f1aea10",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d81f1a5_6a2f9861",
