@@ -86,6 +86,24 @@
       "parentUuid": "5b2f2a68_7d422577",
       "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b99bbe6_4c65790a",
+        "filename": "gni/angle.gni",
+        "patchSetId": 3
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T16:46:04Z",
+      "side": 1,
+      "message": "I\u0027m not familiar with ChromeOS, so I can\u0027t really tell. However:\n\n\u003e Both Lacros and linux should be on the passthrough command decoder and hence require angle gl. \n\nThis should be irrelevant. Ideally, the gn args for whatever platform needs ANGLE/GL should explicitly state `angle_enable_gl \u003d true`. So the default value should really be for excluding platforms you _don\u0027t_ want ANGLE/GL on (to avoid having to have everyone use `angle_enable_gl \u003d false`.\n\nIf this change as-is let\u0027s you move forward, it LGTM. Otherwise, like I said you can have the lacros build use `angle_enable_gl \u003d true`, in which case this change is unnecessary.",
+      "parentUuid": "fed1eb9d_f3573905",
+      "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
