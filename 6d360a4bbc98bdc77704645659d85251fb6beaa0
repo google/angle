@@ -1,0 +1,101 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2bbbb327_a869b296",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T19:51:11Z",
+      "side": 1,
+      "message": "Thanks for adding this to the samples!  A few quick pieces of feedback.",
+      "revId": "6d360a4bbc98bdc77704645659d85251fb6beaa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "173ca123_c1130c4b",
+        "filename": "samples/BUILD.gn",
+        "patchSetId": 4
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T19:51:11Z",
+      "side": 1,
+      "message": "Please add them here as well.  Tested out on Windows and couldn\u0027t get them to compile without changing this list.",
+      "revId": "6d360a4bbc98bdc77704645659d85251fb6beaa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0a3470e_2f15a120",
+        "filename": "samples/torus_lighting/torus.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 8,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T19:51:11Z",
+      "side": 1,
+      "message": "Can you include this in each of the three files?",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 8,
+        "endChar": 152
+      },
+      "revId": "6d360a4bbc98bdc77704645659d85251fb6beaa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3324ca2a_0fcb893c",
+        "filename": "samples/torus_lighting/torus.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T19:51:11Z",
+      "side": 1,
+      "message": "This could be a const called kSteps (or whatever you choose) and eliminate the precompile definition.",
+      "revId": "6d360a4bbc98bdc77704645659d85251fb6beaa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e91ad7c3_5b2b2cc7",
+        "filename": "samples/torus_lighting/torus.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T19:51:11Z",
+      "side": 1,
+      "message": "Might as well use ANGLE naming convention: kPi",
+      "range": {
+        "startLine": 16,
+        "startChar": 12,
+        "endLine": 16,
+        "endChar": 14
+      },
+      "revId": "6d360a4bbc98bdc77704645659d85251fb6beaa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
