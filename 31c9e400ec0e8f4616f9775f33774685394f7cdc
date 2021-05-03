@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "374b787e_4e6d3307",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T19:34:11Z",
+      "side": 1,
+      "message": "Am I right to understand this is never supposed to happen in practice (because of the terrible cost)? In that case, why not do something like this:\n\n- Create the device local buffer, assuming it will never be mapped\n- If it\u0027s ever mapped, create a copy of it in the shadow buffer -\u003e this will cause the same GPU bubble as this change\n- Continue using the buffer which now has a shadow -\u003e future maps don\u0027t cause a GPU bubble.\n\nBy reusing the shadow buffer for this purpose, the change can be greatly simplified.",
+      "revId": "31c9e400ec0e8f4616f9775f33774685394f7cdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b109a199_5688aa14",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T19:34:11Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 479,
+        "startChar": 74,
+        "endLine": 479,
+        "endChar": 78
+      },
+      "revId": "31c9e400ec0e8f4616f9775f33774685394f7cdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
