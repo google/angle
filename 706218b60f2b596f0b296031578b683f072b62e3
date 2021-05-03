@@ -235,6 +235,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "24279a07_5c3a914d",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T18:25:28Z",
+      "side": 1,
+      "message": "I usually prefer RAII, but decided here against it, because \u0027khrIcdVendors\u0027 is not part of the library API. If the struct changes, RAII will probably fail. It is more robust to initialize it first, and then only set a single variable by name.",
+      "parentUuid": "42cfd362_237e23ff",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d81f1a5_6a2f9861",
