@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "24a834a8_3068ea8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T16:24:15Z",
+      "side": 1,
+      "message": "Thank you! The shared objects are easier than it looks like. OpenCL_ANGLE is a simple shim which dispatches the calls into libGLESv2. And OpenCL_ICD_ANGLE is an OpenCL ICD-compatible library, which also simply dispatches the calls into libGLESv2. From there the entry points, stubs and ANGLE objects follow the ANGLE convention.",
+      "parentUuid": "8aae5a6a_9393a868",
+      "revId": "daa46577c352b44190fd3348e1ce8d31ffb88c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b9e35c3a_bb47675c",
