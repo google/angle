@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "82c3f1ff_4b41ef9d",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T19:19:45Z",
+      "side": 1,
+      "message": "Nice. Incidentally this also optimizes things here if source has a shadow buffer.",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71a39a3f_97176941",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T19:19:45Z",
+      "side": 1,
+      "message": "Ref",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d1b2d76_b228d2a2",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T19:19:45Z",
+      "side": 1,
+      "message": "There is a bug here, that in fact this change fixes. Could you please write a test for it?\n\n- Create a buffer that has a shadow\n- Record a command that changes the buffer but make sure it doesn\u0027t get submitted\n- Use a command that verifies the index range. This should have used waitForIdle just like mapRangeImpl does which incurs a flush before mapping the buffer. The bug is that finishRunningCommands doesn\u0027t flush. (This change already fixes that bug)",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "735e258f_465280e9",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T19:19:45Z",
+      "side": 1,
+      "message": "The whole `if` and `else` can be replaced with `mapRangeImpl` as it takes care of shadow buffer, flushing, waiting etc.",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f43c7b92_f6709cfe",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T19:19:45Z",
+      "side": 1,
+      "message": "Please add a flag to unmapImpl like \"isReadWrite\", and send false here. That would automatically take care of things so that you wouldn\u0027t need an `if !shadow` here.\n\n`unmapImpl` should also avoid calling `markConversionBuffersDirty();` if mapping was read-only (which currently doesn\u0027t, so it\u0027s an optimization). In places like Ref, this change is incurring a call to `markConversionBuffersDirty();` otherwise.",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
