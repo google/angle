@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8aae5a6a_9393a868",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T15:59:14Z",
+      "side": 1,
+      "message": "Wow, lots of moving parts here.  I follow the changes though, and it looks good to me.  When this settles, would be good to diagram the final shared object layout. Great work John!",
+      "revId": "daa46577c352b44190fd3348e1ce8d31ffb88c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9e35c3a_bb47675c",
+        "filename": "gni/angle.gni",
+        "patchSetId": 12
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T15:59:14Z",
+      "side": 1,
+      "message": "micro-nit: D3D9 or DX9?",
+      "range": {
+        "startLine": 143,
+        "startChar": 73,
+        "endLine": 143,
+        "endChar": 77
+      },
+      "revId": "daa46577c352b44190fd3348e1ce8d31ffb88c5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
