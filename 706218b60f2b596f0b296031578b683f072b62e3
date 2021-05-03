@@ -70,6 +70,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cdc470ab_e6272e6f",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T17:48:29Z",
+      "side": 1,
+      "message": "Yes, constant pointer, non-constant CLPlatformImpl.",
+      "parentUuid": "3582d390_f631442f",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 9
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a98bca2c_69e69130",
@@ -95,6 +119,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9e0faa48_082fd2c3",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T17:48:29Z",
+      "side": 1,
+      "message": "Yeah, there was lot of flexibility to implement this, I didn\u0027t have a strong favorite. Ok, I will create a struct \u0027PlatformInfo\u0027 which will hold all the constant platform info. The question remains where to store it. In cl::Platform directly? In rx::CLPlatformImpl, so I can access it without virtual function? Or in the back end and create a single virtual function that returns a reference to the struct PlatformInfo?",
+      "parentUuid": "a98bca2c_69e69130",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 1
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8e1ba7d_a1189510",
         "filename": "src/libANGLE/renderer/cl/BUILD.gn",
         "patchSetId": 11
@@ -106,6 +154,30 @@
       "writtenOn": "2021-05-03T17:16:48Z",
       "side": 1,
       "message": "use $angle_root, it\u0027ll work that way when used as a component.\n\nalso you\u0027ll need to either upstream the BUILD.gn file or check out the ICD into a subfolder, \u0027src\u0027, then include the ICD GN file in the project folder, along with a README.chromium.",
+      "range": {
+        "startLine": 30,
+        "startChar": 6,
+        "endLine": 30,
+        "endChar": 7
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba23ac6b_eddce621",
+        "filename": "src/libANGLE/renderer/cl/BUILD.gn",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-03T17:48:29Z",
+      "side": 1,
+      "message": "Yes, I already have locally the solution with the subfolder \u0027src\u0027 and the README.chromium, because the BUILD.gn is customized for us and compiles only a subset of the package.",
+      "parentUuid": "a8e1ba7d_a1189510",
       "range": {
         "startLine": 30,
         "startChar": 6,
