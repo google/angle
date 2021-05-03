@@ -33,6 +33,23 @@
       "message": "Other comments resolved.\n\nI found I did not need 2 Queue Families one protected and one unprotected, also found that the Queues in a family may be protected enabled and still work with unprotected commands. So there is no need for 2 QueueMaps. Just need 2 CommandPools.\nAlso found that splitting a QueueFamily so that one VkQueue is protected and one VkQueue is unprotected is not supported by Pixel3 - and probably others. This is in the spec. Seems this feature is not needed, it does create confusion on intended use.\n\nAlso the EGL_EXT_protected_content allows for unprotected context to draw to a protected surface - this is not supported by Vulkan. Everything with a CommandBuffer must be protected or none. Not sure if but maybe we can detected that surface is protected and allow protected draw (fake protected context) - but that potentially allows for exploit.",
       "revId": "ec59153641076c19cbf6b738d30b46ca62861246",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "152f2200_479b4bd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-03T16:54:32Z",
+      "side": 1,
+      "message": "Next patch has some debugging for RendererVk initialization to see if I can get more clues on the initialization failure seen in the runs below.",
+      "revId": "ec59153641076c19cbf6b738d30b46ca62861246",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
