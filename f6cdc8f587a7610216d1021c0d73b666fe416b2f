@@ -16,6 +16,24 @@
       "message": "PTAL.\n\nWill land tomorrow if all is well today. Also, this is a nice additional \"Dry Run\" on 5%.",
       "revId": "f6cdc8f587a7610216d1021c0d73b666fe416b2f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a02b2fc_4c221f6d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-05-03T15:55:19Z",
+      "side": 1,
+      "message": "actually, given that Angle doesn\u0027t trigger isolate tasks into shared Chrome pool, we can bump to 25% today if you approve.\n\nI\u0027ve already got a bunch of good .try jobs with realm,\n  https://chromium-swarm.appspot.com/tasklist?c\u003dname\u0026c\u003dcreated_ts\u0026c\u003dpending_time\u0026c\u003dduration\u0026c\u003dbot\u0026c\u003dpool-tag\u0026c\u003dstate\u0026d\u003ddesc\u0026et\u003d1620057144698\u0026f\u003drealm-tag%3Aangle%3Atry\u0026s\u003dcreated_ts\u0026st\u003d1619970745000\n\nand 1 .ci:\n  https://chromium-swarm.appspot.com/tasklist?c\u003dname\u0026c\u003dcreated_ts\u0026c\u003dpending_time\u0026c\u003dduration\u0026c\u003dbot\u0026c\u003dpool-tag\u0026c\u003dstate\u0026d\u003ddesc\u0026et\u003d1620057144698\u0026f\u003drealm-tag%3Aangle%3Aci\u0026s\u003dcreated_ts\u0026st\u003d1619970745000",
+      "parentUuid": "ba84e40b_f96cd062",
+      "revId": "f6cdc8f587a7610216d1021c0d73b666fe416b2f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
