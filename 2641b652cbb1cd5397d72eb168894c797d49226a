@@ -16,6 +16,52 @@
       "message": "To capture the new torus example and the existing SimpleLighting I needed to implement new capture functions. The sizes are determined according to the ES1 spec and enum parameters.",
       "revId": "2641b652cbb1cd5397d72eb168894c797d49226a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98c33c30_6d7a6b4c",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T20:02:14Z",
+      "side": 1,
+      "message": "Prefer a switch statement here that detects if any unusual params come through.  Explicitly detect each one, throw error if unsupported.  I\u0027ve lost time recently due to strange app behavior that is already handled by ANGLE\u0027s validation.  Same for below.",
+      "range": {
+        "startLine": 176,
+        "startChar": 28,
+        "endLine": 176,
+        "endChar": 50
+      },
+      "revId": "2641b652cbb1cd5397d72eb168894c797d49226a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05f7b29b_494099f1",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T20:02:14Z",
+      "side": 1,
+      "message": "Rather than a silent default, please detect each parameter and throw UNIMPLEMENTED if we reach default.  Same for each of the below.",
+      "range": {
+        "startLine": 210,
+        "startChar": 8,
+        "endLine": 210,
+        "endChar": 15
+      },
+      "revId": "2641b652cbb1cd5397d72eb168894c797d49226a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
