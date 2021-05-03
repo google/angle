@@ -15,6 +15,12 @@ lucicfg.config(
     ],
 )
 
+# Enable LUCI Realms support.
+lucicfg.enable_experiment("crbug.com/1085650")
+# Launch 0% of Swarming tasks for builds in "realms-aware mode"
+# TODO(https://crbug.com/1204972): ramp up to 100%.
+# luci.builder.defaults.experiments.set({"luci.use_realms": 0})
+
 luci.project(
     name = "angle",
     buildbucket = "cr-buildbucket.appspot.com",
@@ -46,6 +52,42 @@ luci.project(
             groups = "luci-logdog-angle-writers",
         ),
     ],
+    bindings = [
+        luci.binding(
+            roles = "role/swarming.poolOwner",
+            groups = ["project-angle-owners", "mdb/chrome-troopers"],
+        ),
+        luci.binding(
+            roles = "role/swarming.poolViewer",
+            groups = "all",
+        ),
+        # Allow any Angle build to trigger a test ran under testing accounts
+        # used on shared chromium tester pools.
+        luci.binding(
+            roles = "role/swarming.taskServiceAccount",
+            users = [
+                "chromium-tester@chops-service-accounts.iam.gserviceaccount.com",
+                "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com",
+            ],
+        ),
+    ],
+)
+
+# Swarming permissions
+luci.realm(name = "pools/ci")
+luci.realm(name = "pools/try")
+
+# Allow Angle owners and Chrome troopers to run tasks directly for testing and
+# development on all Angle bots. E.g. via `led` tool or "Debug" button in Swarming Web UI.
+luci.binding(
+    realm = "@root",
+    roles = "role/swarming.poolUser",
+    groups = ["project-angle-owners", "mdb/chrome-troopers"],
+)
+luci.binding(
+    realm = "@root",
+    roles = "role/swarming.taskTriggerer",
+    groups = ["project-angle-owners", "mdb/chrome-troopers"],
 )
 
 def _generate_project_pyl(ctx):
