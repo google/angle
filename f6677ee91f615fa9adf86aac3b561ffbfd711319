@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "abd68815_f585fdf5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1114919
+      },
+      "writtenOn": "2021-05-03T19:20:19Z",
+      "side": 1,
+      "message": "While so far everything looked good and I don\u0027t expect any issues,\nthere are indeed not enough Angle builds to gain confidence.\n\nSo, Jamie -- you tell me the earliest you are comfortable landing this.\n\nFrom me, I\u0027m confident that .try is OK, but for .ci I want to get at least 4-5 git revisions on angle\u0027s main branch first.\n\nLike the prior 25% bump, this CL is safe to revert.",
+      "range": {
+        "startLine": 8,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 0
+      },
+      "revId": "f6677ee91f615fa9adf86aac3b561ffbfd711319",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
