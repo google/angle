@@ -21,6 +21,13 @@ lucicfg.enable_experiment("crbug.com/1085650")
 # TODO(https://crbug.com/1204972): ramp up to 100%.
 # luci.builder.defaults.experiments.set({"luci.use_realms": 0})
 
+# Enable LUCI Realms support.
+lucicfg.enable_experiment("crbug.com/1085650")
+
+# Launch 5% of Swarming tasks for builds in "realms-aware mode"
+# TODO(https://crbug.com/1204972): ramp up to 100%.
+luci.builder.defaults.experiments.set({"luci.use_realms": 5})
+
 luci.project(
     name = "angle",
     buildbucket = "cr-buildbucket.appspot.com",
