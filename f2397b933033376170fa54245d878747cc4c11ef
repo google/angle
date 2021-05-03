@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ca31dfc_36d5bb50",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T16:35:58Z",
+      "side": 1,
+      "message": "What\u0027s the real motivation for this change? Chromium on Fuchsia runs already. Was Fuchsia faking support for VK_KHR_swapchain and plans to no longer do it?\n\nIs it possible for Fuchsia to implement VK_EXT_headless_surface, and then we can use DisplayVkHeadless?",
+      "revId": "f2397b933033376170fa54245d878747cc4c11ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ddc7226_673bea8f",
+        "filename": "gni/angle.gni",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T16:35:58Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 132,
+        "startChar": 33,
+        "endLine": 132,
+        "endChar": 35
+      },
+      "revId": "f2397b933033376170fa54245d878747cc4c11ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
