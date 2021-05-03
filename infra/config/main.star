@@ -6,7 +6,14 @@
 #
 # main.star: lucicfg configuration for ANGLE's standalone builers.
 
-lucicfg.config(fail_on_warnings = True)
+lucicfg.config(
+    fail_on_warnings = True,
+    lint_checks = [
+        "default",
+        "-module-docstring",
+        "-function-docstring",
+    ],
+)
 
 luci.project(
     name = "angle",
@@ -148,7 +155,7 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
         dimensions["builderless"] = "1"
         goma_props["enable_ats"] = True
 
-    isolated_props = { "server": "https://isolateserver.appspot.com" }
+    isolated_props = {"server": "https://isolateserver.appspot.com"}
 
     properties["$build/goma"] = goma_props
     properties["$recipe_engine/isolated"] = isolated_props
