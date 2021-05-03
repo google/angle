@@ -166,6 +166,30 @@
       },
       "revId": "41bd0c6ea9f3b89d11160a7ba3a38306c2207036",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a185a0d7_165ecdb8",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1205,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T16:19:02Z",
+      "side": 1,
+      "message": "Minimizing the application\u0027s GPU work while still allowing the display system to run would provide value by isolating GPU work done by SurfaceFlinger.  I think we should go ahead and support it even though you focus on offscreen.  glFlush after each frame sounds good to me, along with a swap for onscreen and vsync modes, knowing that this triggers dominant work per frame.",
+      "parentUuid": "2c3390b3_5597812e",
+      "range": {
+        "startLine": 1205,
+        "startChar": 0,
+        "endLine": 1205,
+        "endChar": 15
+      },
+      "revId": "41bd0c6ea9f3b89d11160a7ba3a38306c2207036",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
