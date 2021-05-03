@@ -20,6 +20,41 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f623042b_bea45f67",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-03T20:13:46Z",
+      "side": 1,
+      "message": "The spec was not clear to me as when PROTECTED_BIT was required for protected operation, or just mean protected handling was enabled for the structure. Not always clear.\nAnyway, I did have everything divided in CommandQueue, and then started un-duplicating the members.\n\nIt seems then, we just need 2 CommandPools? one protected, one not (if supported). Everything else the PROTECTED_BIT is just an enablement, not a requirement.\n\n\"It\u0027s ok to submit an unprotected CB with a submission flagged as protected.\" Why would this be ok? I may still be not clear what NEEDS PROTECTED_BIT and what does not.",
+      "parentUuid": "30d93de3_e17fc989",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a45ffbae_0545591e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-03T20:13:46Z",
+      "side": 1,
+      "message": "Thanks for feedback Shahbaz. I have some questions so I am clear.\nThe recommended changes will get in ASAP.",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "81513d77_f56d0ebf",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 8
@@ -31,6 +66,24 @@
       "writtenOn": "2021-05-03T18:53:18Z",
       "side": 1,
       "message": "Something doesn\u0027t seem right here. Say there are two contexts in different threads. If one triggers a submission, currently commands recorded for both contexts are submitted.\n\nWith this change however, if one context is protected and the other not, only the commands for one of the two is submitted. I don\u0027t know if this discrepancy can cause issues when shared resources are used in rendering.",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d86e313_1a3fb3d9",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-03T20:13:46Z",
+      "side": 1,
+      "message": "OK, then I need some clarity.",
+      "parentUuid": "81513d77_f56d0ebf",
       "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
