@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8eb64606_e5720ecc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-03T22:44:37Z",
+      "side": 1,
+      "message": "This turns out fixing https://issuetracker.google.com/186881553.",
+      "revId": "aaccaa09d3e2c9ede172f3b2cd669e16a5287009",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
