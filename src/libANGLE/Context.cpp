@@ -3818,6 +3818,7 @@ void Context::initCaps()
         mState.mExtensions.getProgramBinaryOES = false;
         mState.mCaps.shaderBinaryFormats.clear();
         mState.mCaps.programBinaryFormats.clear();
+        mMemoryProgramCache = nullptr;
     }
 
 #undef ANGLE_LIMIT_CAP

@@ -170,6 +170,13 @@ bool IsAndroidEmulator(const FunctionsGL *functions)
     return angle::BeginsWith(nativeGLRenderer, androidEmulator);
 }
 
+bool IsPowerVrRogue(const FunctionsGL *functions)
+{
+    constexpr char powerVRRogue[] = "PowerVR Rogue";
+    const char *nativeGLRenderer  = GetString(functions, GL_RENDERER);
+    return angle::BeginsWith(nativeGLRenderer, powerVRRogue);
+}
+
 void ClearErrors(const FunctionsGL *functions,
                  const char *file,
                  const char *function,
@@ -2177,6 +2184,9 @@ void InitializeFrontendFeatures(const FunctionsGL *functions, angle::FrontendFea
     ANGLE_FEATURE_CONDITION(features, disableProgramCachingForTransformFeedback,
                             IsAndroid() && isQualcomm);
     ANGLE_FEATURE_CONDITION(features, syncFramebufferBindingsOnTexImage, false);
+    // https://crbug.com/480992
+    // Disable shader program cache to workaround PowerVR Rogue issues.
+    ANGLE_FEATURE_CONDITION(features, disableProgramBinary, IsPowerVrRogue(functions));
 }
 
 void ReInitializeFeaturesAtGPUSwitch(const FunctionsGL *functions, angle::FeaturesGL *features)
