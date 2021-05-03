@@ -16,6 +16,46 @@
       "message": "This patch completes GLES1 vertex capture by adding support for vertex buffers / their offsets in the gl*Pointer functions. This patch fixes texture coordinates in Dr. Driving.",
       "revId": "9849faebc18a9b0daaf1b12a811ce8bea3440054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8fea17f5_5235beae",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T18:29:23Z",
+      "side": 1,
+      "message": "Looks good, just one refactor request.",
+      "revId": "9849faebc18a9b0daaf1b12a811ce8bea3440054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b5bb5c4_5c039b5d",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4084,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-03T18:29:23Z",
+      "side": 1,
+      "message": "Please add a case for VertexPointer and use UNIMPLEMENTED in default.",
+      "range": {
+        "startLine": 4084,
+        "startChar": 20,
+        "endLine": 4084,
+        "endChar": 27
+      },
+      "revId": "9849faebc18a9b0daaf1b12a811ce8bea3440054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
