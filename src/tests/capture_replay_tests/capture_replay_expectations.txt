@@ -8,7 +8,6 @@
 #
 
 # Failed tests
-CopyTextureTestWebGL.NPOT/*
 D3DImageFormatConversionTest.*
 FramebufferTest.MultiContextNoRenderingFeedbackLoops/*
 PbufferTest.BindTexImage/*
