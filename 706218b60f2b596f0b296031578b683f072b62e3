@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f88d06d_a15ddf6e",
+        "filename": "src/libANGLE/CLPlatform.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "nit: suggest you split these two into two lines. we don\u0027t use a lot of comma decl in ANGLE thought there may be one or two places. same for the header.",
+      "range": {
+        "startLine": 24,
+        "startChar": 10,
+        "endLine": 24,
+        "endChar": 14
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "014f6777_ce82c50b",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "nit: avoid using list, unless you plan on very frequently inserting + deleting from the middle (you won\u0027t for this case). use vector instead.",
+      "range": {
+        "startLine": 28,
+        "startChar": 22,
+        "endLine": 28,
+        "endChar": 26
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3582d390_f631442f",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "just to confirm - this const only affects the pointer right, not the value pointed to?",
+      "range": {
+        "startLine": 51,
+        "startChar": 4,
+        "endLine": 51,
+        "endChar": 9
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a98bca2c_69e69130",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 89,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "Instead of making impl functions for all these, I suggest you make a struct and initialize it all at once. This will be more flexible for other back-ends.",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 89,
+        "endChar": 1
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8e1ba7d_a1189510",
+        "filename": "src/libANGLE/renderer/cl/BUILD.gn",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "use $angle_root, it\u0027ll work that way when used as a component.\n\nalso you\u0027ll need to either upstream the BUILD.gn file or check out the ICD into a subfolder, \u0027src\u0027, then include the ICD GN file in the project folder, along with a README.chromium.",
+      "range": {
+        "startLine": 30,
+        "startChar": 6,
+        "endLine": 30,
+        "endChar": 7
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "42cfd362_237e23ff",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "nit: use RAII",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d81f1a5_6a2f9861",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "nit: for all your macros, prefix with ANGLE_ to ensure there are no namespace issues (even in a cpp, unless it\u0027s a big verbosity problem)",
+      "range": {
+        "startLine": 93,
+        "startChar": 8,
+        "endLine": 93,
+        "endChar": 16
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d27b63f9_e2d537bc",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "nit: typo. also avoid auto unless it\u0027s a nested template. there\u0027s a style guide discussion on this, and the policy we adopt is to generally avoid it except for lambdas and iterators.\n\nthe auto thing applies to many cases in these files.",
+      "range": {
+        "startLine": 218,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 52
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "671511fd_d27180a0",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "nit: look at how we include small cut-out headers when initializing the GL display. This allows us to isolate the back-end and its header includes from other platforms.",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 6
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d33a3367_519611a2",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-03T17:16:48Z",
+      "side": 1,
+      "message": "suggest you split this into a separate prior or following patch to declutter the review.",
+      "range": {
+        "startLine": 696,
+        "startChar": 0,
+        "endLine": 696,
+        "endChar": 41
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
