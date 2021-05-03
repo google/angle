@@ -20,6 +20,52 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d145a318_8cc3b341",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T15:39:59Z",
+      "side": 1,
+      "message": "Just leave this to true. This function is only used inside an ASSERT, so it\u0027s more of a best effort validation. We can\u0027t validate every combination of options, and any subset is as good as any other.",
+      "range": {
+        "startLine": 77,
+        "startChar": 53,
+        "endLine": 77,
+        "endChar": 74
+      },
+      "revId": "80b6a724281a3bacfd60237c7cb9a621f5e535dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab00be2f_24322e2e",
+        "filename": "src/libANGLE/renderer/vulkan/ProgramExecutableVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-03T15:39:59Z",
+      "side": 1,
+      "message": "Suggest using just `!contextVk-\u003egetFeatures().retainSpirvDebugInfo.enabled`, and then have `retainSpirvDebugInfo` initialized with `contextVk-\u003egetRenderer()-\u003egetEnableValidationLayers()`",
+      "range": {
+        "startLine": 196,
+        "startChar": 43,
+        "endLine": 197,
+        "endChar": 86
+      },
+      "revId": "80b6a724281a3bacfd60237c7cb9a621f5e535dd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4fe895ee_c5a574c2",
         "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
         "patchSetId": 1
