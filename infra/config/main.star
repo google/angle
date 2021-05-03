@@ -230,7 +230,6 @@ luci.bucket(
             acl.BUILDBUCKET_TRIGGERER,
             users = [
                 "angle-ci-builder@chops-service-accounts.iam.gserviceaccount.com",
-                "luci-scheduler@appspot.gserviceaccount.com",
             ],
         ),
     ],
