@@ -821,34 +821,39 @@ void RendererVk::ensureCapsInitialized() const
     mNativeCaps.maxCombinedShaderOutputResources =
         LimitToInt(maxPerStageResources - kReservedPerStageBindingCount);
 
-    // The max vertex output components should not include gl_Position.
-    // The gles2.0 section 2.10 states that "gl_Position is not a varying variable and does
-    // not count against this limit.", but the Vulkan spec has no such mention in its Built-in
-    // vars section. It is implicit that we need to actually reserve it for Vulkan in that case.
-    GLint reservedVaryingVectorCount = 1;
+    // Reserve 1 extra varying for ANGLEPosition when GLLineRasterization is enabled
+    constexpr GLint kReservedVaryingComponentsForGLLineRasterization = 4;
+    // Reserve 1 extra varying for transform feedback capture of gl_Position.
+    constexpr GLint kReservedVaryingComponentsForTransformFeedbackExtension = 4;
 
-    // Reserve 1 extra for ANGLEPosition when GLLineRasterization is enabled
-    constexpr GLint kReservedVaryingForGLLineRasterization = 1;
-    // Reserve 1 extra for transform feedback capture of gl_Position.
-    constexpr GLint kReservedVaryingForTransformFeedbackExtension = 1;
+    GLint reservedVaryingComponentCount = 0;
 
     if (getFeatures().basicGLLineRasterization.enabled)
     {
-        reservedVaryingVectorCount += kReservedVaryingForGLLineRasterization;
+        reservedVaryingComponentCount += kReservedVaryingComponentsForGLLineRasterization;
     }
     if (getFeatures().supportsTransformFeedbackExtension.enabled)
     {
-        reservedVaryingVectorCount += kReservedVaryingForTransformFeedbackExtension;
+        reservedVaryingComponentCount += kReservedVaryingComponentsForTransformFeedbackExtension;
     }
+
+    // The max varying vectors should not include gl_Position.
+    // The gles2.0 section 2.10 states that "gl_Position is not a varying variable and does
+    // not count against this limit.", but the Vulkan spec has no such mention in its Built-in
+    // vars section. It is implicit that we need to actually reserve it for Vulkan in that case.
+    //
+    // Note that this exception for gl_Position does not apply to MAX_VERTEX_OUTPUT_COMPONENTS and
+    // similar limits.
+    const GLint reservedVaryingVectorCount = reservedVaryingComponentCount / 4 + 1;
 
     const GLint maxVaryingCount =
         std::min(limitsVk.maxVertexOutputComponents, limitsVk.maxFragmentInputComponents);
     mNativeCaps.maxVaryingVectors =
         LimitToInt((maxVaryingCount / kComponentsPerVector) - reservedVaryingVectorCount);
     mNativeCaps.maxVertexOutputComponents =
-        LimitToInt(limitsVk.maxVertexOutputComponents) - reservedVaryingVectorCount * 4;
+        LimitToInt(limitsVk.maxVertexOutputComponents) - reservedVaryingComponentCount;
     mNativeCaps.maxFragmentInputComponents =
-        LimitToInt(limitsVk.maxFragmentInputComponents) - reservedVaryingVectorCount * 4;
+        LimitToInt(limitsVk.maxFragmentInputComponents) - reservedVaryingComponentCount;
 
     mNativeCaps.maxTransformFeedbackInterleavedComponents =
         gl::IMPLEMENTATION_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS;
@@ -934,9 +939,9 @@ void RendererVk::ensureCapsInitialized() const
                                                : GL_FIRST_VERTEX_CONVENTION_EXT;
 
         mNativeCaps.maxGeometryInputComponents =
-            LimitToInt(limitsVk.maxGeometryInputComponents) - reservedVaryingVectorCount * 4;
+            LimitToInt(limitsVk.maxGeometryInputComponents) - reservedVaryingComponentCount;
         mNativeCaps.maxGeometryOutputComponents =
-            LimitToInt(limitsVk.maxGeometryOutputComponents) - reservedVaryingVectorCount * 4;
+            LimitToInt(limitsVk.maxGeometryOutputComponents) - reservedVaryingComponentCount;
         mNativeCaps.maxGeometryOutputVertices = LimitToInt(limitsVk.maxGeometryOutputVertices);
         mNativeCaps.maxGeometryTotalOutputComponents =
             LimitToInt(limitsVk.maxGeometryTotalOutputComponents);
