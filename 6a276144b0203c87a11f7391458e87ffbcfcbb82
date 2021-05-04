@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0619ef46_520a106e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1115919
+      },
+      "writtenOn": "2021-05-04T14:57:08Z",
+      "side": 1,
+      "message": "LGTM, too (but I do not have CR bit permission).\nRob, let me talk to you later (after I\u0027m back from OOO next week) what to do for the gn args simplification along with is_linux/is_chromeos update.",
+      "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "231995dc_c4b1e823",
