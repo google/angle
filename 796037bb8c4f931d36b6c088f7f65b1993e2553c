@@ -33,6 +33,23 @@
       "message": "I\u0027ll need to check perf. Is this a Clang bug? Did you file a bug report?",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "47861960_b08f2733",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-04T14:45:00Z",
+      "side": 1,
+      "message": "LGTM from a correctness perspective. Mirroring Jamie\u0027s comments, what compiler is this and is a bug filed? Perf is also a concern but this is a small struct being copied at least.",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
