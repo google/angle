@@ -94,6 +94,30 @@
       },
       "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3de7f797_74d683f1",
+        "filename": "third_party/OpenCL-ICD-Loader/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T19:03:39Z",
+      "side": 1,
+      "message": "Weird. Before I had built the ICD from the GitHub source / CMakeLists and run objdump to examine exported symbols. I see no occurrences of the \"icd\" (ignoring case) in the list of dynamic symbols. I guess you\u0027re building in GN with some custom way of exporting everything?",
+      "parentUuid": "a9bec4ea_726585d2",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
