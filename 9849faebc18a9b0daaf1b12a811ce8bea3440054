@@ -56,6 +56,30 @@
       },
       "revId": "9849faebc18a9b0daaf1b12a811ce8bea3440054",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae2e5927_8c8d13eb",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4084,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-04T11:37:34Z",
+      "side": 1,
+      "message": "Done.\nFor the default case I am initializing the enum with `gl::ClientVertexArrayType::InvalidEnum`, not sure if this is appropriate, but I believed this was the one most fitting.",
+      "parentUuid": "1b5bb5c4_5c039b5d",
+      "range": {
+        "startLine": 4084,
+        "startChar": 20,
+        "endLine": 4084,
+        "endChar": 27
+      },
+      "revId": "9849faebc18a9b0daaf1b12a811ce8bea3440054",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
