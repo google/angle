@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26f5fa62_8e248afa",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T14:31:50Z",
+      "side": 1,
+      "message": "nit: can omit static and place this at the top of the file in the namespace {} block.\n\nAlso naming nit for ANGLE style.",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 170,
+        "endChar": 6
+      },
+      "revId": "bbbcd7a8f0e62e46366f3e677ef5aa714db7c29b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d90f3082_57e2de53",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T14:31:50Z",
+      "side": 1,
+      "message": "same comments.",
+      "range": {
+        "startLine": 204,
+        "startChar": 15,
+        "endLine": 204,
+        "endChar": 32
+      },
+      "revId": "bbbcd7a8f0e62e46366f3e677ef5aa714db7c29b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2930fbde_b62e49a7",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T14:31:50Z",
+      "side": 1,
+      "message": "ditto here.",
+      "range": {
+        "startLine": 266,
+        "startChar": 15,
+        "endLine": 266,
+        "endChar": 35
+      },
+      "revId": "bbbcd7a8f0e62e46366f3e677ef5aa714db7c29b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
