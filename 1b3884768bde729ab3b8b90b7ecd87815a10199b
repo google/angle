@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1dfce2e_aa91331a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-04T09:35:23Z",
+      "side": 1,
+      "message": "Moved to separate CL as requested",
+      "revId": "1b3884768bde729ab3b8b90b7ecd87815a10199b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
