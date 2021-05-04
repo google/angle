@@ -33,6 +33,24 @@
       "message": "Discovered another problem with offscreen. Some traces never uses FBO, it always keep render into surface and issue swap. When we run such traces in offscreen mode, we lose the frame boundary signal. From driver\u0027s point of view, you are rendering to the same offscreen FBO over and over again. Some driver(s) try to detect frame boundary and issue flush across frame boundary, but try to ignore the flush issued inside the frame. Our offscreen playback mechanism triggered the bad side of such driver, and it hits a code path that does realloc+memcpy over and over again and becomes worse and worse as we accumukate more frames. Since this is not real app behavior and driver is not optimized for such usage, I think it is better for us to use two offscreen FBOs and ping-pong between them. This way we still keep the frame boundary of each frame, but not go to actual screen.\n\nBTW, other than other driver, ANGLE also adopts the similar flush behavior, so ANGLE also gets hit here. But ANGLE\u0027s implementation does not have that specific resize code path that slows down so badly that offscreen is worse than on screen. ",
       "revId": "c89ab6674c8043b32302a785f56a73c56b01de8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99d514e8_d4350b46",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1463997
+      },
+      "writtenOn": "2021-05-04T10:38:48Z",
+      "side": 1,
+      "message": "Thanks! Sounds like an excellent change.",
+      "parentUuid": "82d9e232_9528b56a",
+      "revId": "c89ab6674c8043b32302a785f56a73c56b01de8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
