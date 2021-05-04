@@ -142,6 +142,30 @@
       },
       "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1f0553b1_67e65bf1",
+        "filename": "third_party/OpenCL-ICD-Loader/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T19:25:45Z",
+      "side": 1,
+      "message": "Can you summarize this in the design doc? As I said before I\u0027m fine with whatever works, as long as we can be flexible and change the plan later if required. i.e. if we want to move away from custom builds and towards test-what-we-ship.",
+      "parentUuid": "418724d1_434173fd",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
