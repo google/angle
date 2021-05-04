@@ -82,6 +82,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27310e0f_42eb1228",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1026,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-04T00:27:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "974129e9_c6d8d63a",
+      "range": {
+        "startLine": 1026,
+        "startChar": 8,
+        "endLine": 1026,
+        "endChar": 25
+      },
+      "revId": "8871a06c745a98ec88ec58aa0f4f547bc7c3cfa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "062c969c_55f5b848",
@@ -166,6 +190,30 @@
       "side": 1,
       "message": "Good catch!",
       "parentUuid": "d7d17e1d_c8f62591",
+      "range": {
+        "startLine": 1159,
+        "startChar": 49,
+        "endLine": 1159,
+        "endChar": 70
+      },
+      "revId": "8871a06c745a98ec88ec58aa0f4f547bc7c3cfa0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7180365d_bbc811b3",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-04T00:27:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3acdee83_8b2bbb5b",
       "range": {
         "startLine": 1159,
         "startChar": 49,
