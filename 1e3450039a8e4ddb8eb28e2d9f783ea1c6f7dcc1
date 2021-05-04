@@ -122,6 +122,24 @@
       "message": "LGTM",
       "revId": "1e3450039a8e4ddb8eb28e2d9f783ea1c6f7dcc1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d8a82ae_dc517ab3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-04T18:19:26Z",
+      "side": 1,
+      "message": "@Tim, how can I tell from the GOLD interface if the baseball regression is showing me the results from the first or the second run? The failures have the same link. In particular, I don\u0027t know if the second run is failing baseball with minor differences, but GOLD is showing the images from the first run.\n\nI\u0027ll try to reproduce locally anyway and see what\u0027s going on.\n\n---\n\nBTW, it\u0027s the GPU conversion that\u0027s introducing this error. It\u0027s simply calculating 255.0f / 255.0f as 0x3f7fffff. Other than special-casing 255, I don\u0027t see a way to reliably avoid an off-by-one ULP in the shader.\n\nEither way, that\u0027s an unrelated problem to this change.",
+      "parentUuid": "01ad0c5e_2383a5e4",
+      "revId": "1e3450039a8e4ddb8eb28e2d9f783ea1c6f7dcc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
