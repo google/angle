@@ -595,8 +595,10 @@ translator_lib("translator") {
   gl_d3d_only = false
 }
 
-translator_lib("translator_gl_d3d_only") {
-  gl_d3d_only = true
+if (angle_enable_essl || angle_enable_glsl || angle_enable_hlsl) {
+  translator_lib("translator_gl_d3d_only") {
+    gl_d3d_only = true
+  }
 }
 
 angle_source_set("translator_fuzzer") {
