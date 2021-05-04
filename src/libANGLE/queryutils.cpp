@@ -2487,6 +2487,7 @@ unsigned int GetLightModelParameterCount(GLenum pname)
         case GL_LIGHT_MODEL_TWO_SIDE:
             return 1;
         default:
+            UNREACHABLE();
             return 0;
     }
 }
@@ -2497,6 +2498,7 @@ unsigned int GetLightParameterCount(LightParameter pname)
     {
         case LightParameter::Ambient:
         case LightParameter::Diffuse:
+        case LightParameter::AmbientAndDiffuse:
         case LightParameter::Specular:
         case LightParameter::Position:
             return 4;
@@ -2509,6 +2511,7 @@ unsigned int GetLightParameterCount(LightParameter pname)
         case LightParameter::QuadraticAttenuation:
             return 1;
         default:
+            UNREACHABLE();
             return 0;
     }
 }
@@ -2519,12 +2522,14 @@ unsigned int GetMaterialParameterCount(MaterialParameter pname)
     {
         case MaterialParameter::Ambient:
         case MaterialParameter::Diffuse:
+        case MaterialParameter::AmbientAndDiffuse:
         case MaterialParameter::Specular:
         case MaterialParameter::Emission:
             return 4;
         case MaterialParameter::Shininess:
             return 1;
         default:
+            UNREACHABLE();
             return 0;
     }
 }
