@@ -140,6 +140,24 @@
       "parentUuid": "01ad0c5e_2383a5e4",
       "revId": "1e3450039a8e4ddb8eb28e2d9f783ea1c6f7dcc1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c15cbcf_af5d5eb0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-04T18:26:35Z",
+      "side": 1,
+      "message": "Hm, good question.   Admittedly, I\u0027m not very familiar with the interface and it isn\u0027t very clear.   However, I\u0027ve seen the gold failures go away if a re-run is good, so my assumption is that it\u0027s still failing in the same way.\n\nMy only concern is that\u0027s the only one we don\u0027t want to accept as the new \"good\" image so I\u0027m not sure how to land the trace with it rendering that way.\n\n@Jamie may have some better input though.",
+      "parentUuid": "8d8a82ae_dc517ab3",
+      "revId": "1e3450039a8e4ddb8eb28e2d9f783ea1c6f7dcc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
