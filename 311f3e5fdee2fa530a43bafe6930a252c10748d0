@@ -16,6 +16,24 @@
       "message": "syoussefi@: Thanks for the submission and also modifying the message!",
       "revId": "311f3e5fdee2fa530a43bafe6930a252c10748d0",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b21566dd_ac33f189",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-04T15:51:36Z",
+      "side": 1,
+      "message": "No problem, thanks for your contribution!",
+      "parentUuid": "d807e25a_b509c622",
+      "revId": "311f3e5fdee2fa530a43bafe6930a252c10748d0",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
