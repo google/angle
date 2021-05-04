@@ -33,6 +33,24 @@
       "message": "Seems to break Windows. Are you sure this is necessary?",
       "revId": "afa57b485887260dd11c08b0b7526449f61ec896",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e8207a31_67313dfd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-04T08:00:08Z",
+      "side": 1,
+      "message": "At least for me the replay exe changes to the new directory, and with the path to the executable pre-pended to the library name the library can\u0027t be found. \n\nI\u0027ve changed the patch to try to load the library first with ApplicationDir and if that fails, try SystemDir. I had o refactor the PosixLibrary a bit to not create an instance on failure. I didn\u0027t want to do a check on getNative(), this seems to me like breaking  the encapsulation.",
+      "parentUuid": "ce1b953e_36a5251c",
+      "revId": "afa57b485887260dd11c08b0b7526449f61ec896",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
