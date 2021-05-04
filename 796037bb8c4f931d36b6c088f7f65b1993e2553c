@@ -122,6 +122,24 @@
       "parentUuid": "74c9d187_42f7a983",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9ac39366_1f985b3e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-05-04T21:23:58Z",
+      "side": 1,
+      "message": "@Jamie, thank you for link about toolchain support. \n\nI\u0027ve since confirmed that taking top-of-tree ANGLE without my CL and adjusting the commit hash of the Clang repository to just before the following commit makes things work again: \n\n commit f7f4c24a06d74c10f64c0cdacbd0ef17ae2e92a8\n Author: Hans Wennborg hans@chromium.org\n Date:   Fri Apr 16 12:09:59 2021 +0000\n\n    Roll clang llvmorg-13-init-7051-gdad5caa5-2 : llvmorg-13-init-7296-ga749bd76-1\n\n    Ran `tools/clang/scripts/upload_revision.py a749bd76394c05b423cd643633188eb09f59fbe8`.\n\n    Bug: 1199224\n\n\n\nSeparately from the toolchain situation, I whether my change affects perf. \nAre there performance tests I can run to make sure I do not regress performance?",
+      "parentUuid": "af73c0f0_e6cc498d",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
