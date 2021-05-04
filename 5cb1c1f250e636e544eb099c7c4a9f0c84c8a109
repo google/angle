@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a635cee9_c83e6036",
+        "filename": "samples/torus_lighting/torus.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T14:33:49Z",
+      "side": 1,
+      "message": "nit: use ANGLE convention of #ifndef/#define/#endif with comments.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 12
+      },
+      "revId": "5cb1c1f250e636e544eb099c7c4a9f0c84c8a109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6c7c6c93_9b94a080",
+        "filename": "samples/torus_lighting/torus.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T14:33:49Z",
+      "side": 1,
+      "message": "You should omit static, as it has no practical effect in a header. Also naming nit.",
+      "range": {
+        "startLine": 17,
+        "startChar": 12,
+        "endLine": 17,
+        "endChar": 25
+      },
+      "revId": "5cb1c1f250e636e544eb099c7c4a9f0c84c8a109",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
