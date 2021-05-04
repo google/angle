@@ -166,6 +166,30 @@
       },
       "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "25614aac_318a4d07",
+        "filename": "third_party/OpenCL-ICD-Loader/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-04T19:27:39Z",
+      "side": 1,
+      "message": "Sounds good, let\u0027s keep it for now and I write a design doc for this",
+      "parentUuid": "1f0553b1_67e65bf1",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
