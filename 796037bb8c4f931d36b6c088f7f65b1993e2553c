@@ -86,6 +86,24 @@
       "parentUuid": "57d3d90a_96a030c6",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74c9d187_42f7a983",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-05-04T18:44:14Z",
+      "side": 1,
+      "message": "The regressing change in the ANGLE repo is the following:\n\n commit 24d21dce699a41ceb8e98323cff16f7fb0fc21e5 (HEAD, refs/bisect/bad)\n Author: angle-autoroll \u003cangle-autoroll@skia-public.iam.gserviceaccount.com\u003e\n Date:   Mon Apr 19 07:03:07 2021 +0000\n\n    Roll Chromium from 11d568cbfed1 to cb5ad5e674fa (484 revisions)\n\n    https://chromium.googlesource.com/chromium/src.git/+log/11d568cbfed1..cb5ad5e674fa\n\n    If this roll has caused a breakage, revert this CL and stop the roller\n    using the controls here:\n    https://autoroll.skia.org/r/chromium-angle-autoroll\n    Please CC ynovikov@google.com on the revert to ensure that a human\n    is aware of the problem.\n\n    To report a problem with the AutoRoller itself, please file a bug:\n    https://bugs.chromium.org/p/skia/issues/entry?template\u003dAutoroller+Bug\n\n    Documentation for the AutoRoller is here:\n    https://skia.googlesource.com/buildbot/+doc/master/autoroll/README.md\n\n    Changed dependencies\n    * build: https://chromium.googlesource.com/chromium/src/build.git/+log/e00ea2a33f..5658f225b4\n    * testing: https://chromium.googlesource.com/chromium/src/testing/+log/5d440f33b4..db4fc48f37\n    * third_party/catapult: https://chromium.googlesource.com/catapult.git/+log/{catapult_..d6284252dc\n    * third_party/depot_tools: https://chromium.googlesource.com/chromium/tools/depot_tools.git/+log/f959d17028..efd29f6f5c\n    * tools/clang: https://chromium.googlesource.com/chromium/src/tools/clang.git/+log/eefe475693..d7dd881ddc\n    * tools/luci-go: git_revision:4b61ac9cadfb8d19a09262c6e6f5342d9324acd0..git_revision:0f913477afc80d5c4b6609834d3bef6b44910e67\n    * tools/luci-go: git_revision:4b61ac9cadfb8d19a09262c6e6f5342d9324acd0..git_revision:0f913477afc80d5c4b6609834d3bef6b44910e67\n    * tools/luci-go: git_revision:4b61ac9cadfb8d19a09262c6e6f5342d9324acd0..git_revision:0f913477afc80d5c4b6609834d3bef6b44910e67\n    * tools/mb: https://chromium.googlesource.com/chromium/src/tools/mb/+log/5e7cca9ca0..f4ded123d0\n    No update to Clang.\n\n    Bug: None\n    Tbr: ynovikov@google.com\n    Change-Id: I61264c3b92501cd9b1816dee7c26cf2d32efdc31\n    Reviewed-on: https://chromium-review.googlesource.com/c/angle/angle/+/2834733\n\n\nThe PR says \"No update to Clang\" but I did get the following output when I did a \"gclient sync -D\" for these.  \n\n\u003cGOOD\u003e Downloading https://commondatastorage.googleapis.com/chromium-browser-clang/Win/clang-llvmorg-13-init-7051-gdad5caa5-2.tgz \n\u003cBAD\u003e Downloading https://commondatastorage.googleapis.com/chromium-browser-clang/Win/clang-llvmorg-13-init-7296-ga749bd76-1.tgz\n\nThe tools/clang line includes the following change: \n f7f4c24 Roll clang llvmorg-13-init-7051-gdad5caa5-2 : llvmorg-13-init-7296-ga749bd76-1\n\n@Jamie and @Geoff: How do I file a bug on the people responsible for the toolchains?  https://crbug.com?",
+      "parentUuid": "848adf16_9cac6cbb",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
