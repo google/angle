@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd26f87c_e5d7657e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-04T14:32:18Z",
+      "side": 1,
+      "message": "I looked extensively into the NBA2K20 gold failure. The difference is due to it using an rgb8 vertex format which previously used to be emulated with rgb32f but is now emulated with rgba8. I can verify that the added alpha is 1.0 (even though the shader takes a vec3 anyway, so it didn\u0027t matter) and that the vertex data input to the differing draw calls are identical (data exported from renderdoc). However, the affected draw calls have slightly different VS output (like 0.001% difference). I can\u0027t really explain where that difference comes from, but I\u0027d say the new conversion more accurately represents what the native driver does.\n\nAll that said, I think we should accept the new images!",
+      "revId": "1e3450039a8e4ddb8eb28e2d9f783ea1c6f7dcc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
