@@ -22,6 +22,30 @@
       },
       "revId": "4ab224f7b05ace9bcfcd00f0dd6d603b194091c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3c15989_5eabd998",
+        "filename": "src/tests/test_utils/ANGLETest.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 281,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-04T14:42:13Z",
+      "side": 0,
+      "message": "It was added as a hack to avoid testing alpha, because the implementation had a bug where alpha was garbage (which I fixed in this change). There are no other users in the myriad of tests that we have, and I suspect there never would be.",
+      "parentUuid": "6d46880f_3c4d2cb7",
+      "range": {
+        "startLine": 270,
+        "startChar": 0,
+        "endLine": 281,
+        "endChar": 0
+      },
+      "revId": "4ab224f7b05ace9bcfcd00f0dd6d603b194091c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
