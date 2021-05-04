@@ -453,6 +453,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c81a3b7c_e389ddd3",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-04T15:10:55Z",
+      "side": 1,
+      "message": "First I tried the approach that you described, but it doesn\u0027t work with the CL pass-through back end because the Khronos ICD Loader is not re-entrant. So the CL back end needs a separate loader. The easiest way was to integrate the part of the Khronos loader, which loads the CL implementations. This requires the modification that prevents the loader from loading ANGLE\u0027s ICD library, because libGLESv2 is also not re-entrant.",
+      "parentUuid": "d6625f49_1cf4de7a",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0d81f1a5_6a2f9861",
         "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
         "patchSetId": 11
