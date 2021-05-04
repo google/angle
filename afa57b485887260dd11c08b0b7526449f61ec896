@@ -69,6 +69,24 @@
       "parentUuid": "e8207a31_67313dfd",
       "revId": "afa57b485887260dd11c08b0b7526449f61ec896",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a06d6c4_5c76c348",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-04T17:34:17Z",
+      "side": 1,
+      "message": "It fixes for me that I can run multiple tests in one go, currently I get an error as described in the given issue 5849, I debugged it, and for some reason the replay executable runs in the ReplayN directory, so that prepending the path to the library name makes loading the the replay library fail. TBH I have no idea why it would fail locally and pass remotely, because I have no additional patches applied that would change something there. It could be only some configuration that is not stored in git that borks my setup.",
+      "parentUuid": "8355d707_c64f096e",
+      "revId": "afa57b485887260dd11c08b0b7526449f61ec896",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
