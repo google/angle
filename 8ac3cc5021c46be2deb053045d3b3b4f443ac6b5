@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "133a9ec4_c1138a16",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-04T21:11:18Z",
+      "side": 1,
+      "message": "There\u0027s a perf test already exercising this by the way, BufferSubDataBenchmark, but I didn\u0027t notice any discernible performance difference between the runs, maybe gaining 0.5%, but could have also been noise.\n\n+Charlie, you might be interested in giving this a try with your minimized-gpu-work tests to see if you see any CPU perf gain from this.",
+      "revId": "8ac3cc5021c46be2deb053045d3b3b4f443ac6b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
