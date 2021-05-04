@@ -50,6 +50,24 @@
       "message": "LGTM from a correctness perspective. Mirroring Jamie\u0027s comments, what compiler is this and is a bug filed? Perf is also a concern but this is a small struct being copied at least.",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "57d3d90a_96a030c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1130144
+      },
+      "writtenOn": "2021-05-04T16:49:02Z",
+      "side": 1,
+      "message": "I have not filed a bug report yet. I\u0027m going to bisect ANGLE commits to determine which one caused the issue. \n\nI was surprised the root cause was these static variables as I know they\u0027re used in many places in Chromium. Perhaps it is the sheer number of them in this function, or the fact that these contain a function pointer which messed things up.",
+      "parentUuid": "40894a24_1e619049",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
