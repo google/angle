@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d2bc74d_2aab80d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-04T17:40:52Z",
+      "side": 1,
+      "message": "LGTM with one additional comment",
+      "revId": "cf55d77ea9473439de005d40e85d54eab587708e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d840cc42_fc0fe138",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1137,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-04T17:40:52Z",
+      "side": 1,
+      "message": "Charlie, can you  mention the driver workaround here too, not just in the CL message?",
+      "range": {
+        "startLine": 1137,
+        "startChar": 8,
+        "endLine": 1137,
+        "endChar": 53
+      },
+      "revId": "cf55d77ea9473439de005d40e85d54eab587708e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
