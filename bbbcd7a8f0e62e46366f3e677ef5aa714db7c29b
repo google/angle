@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f7bc9a1f_1a5870ad",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-04T14:53:07Z",
+      "side": 1,
+      "message": "It looks like these already exist in queryutils.cpp:\ngl::GetLightModelParameterCount and gl::GetLightParameterCount\nCan you instead update those to complain in the default case and call them?  Sorry I didn\u0027t notice that before.\nUpdating those to complain may cause problems.  If so, ignore that request and just use them directly.  Code savings is worth the risk of not handling unknown values.",
+      "parentUuid": "26f5fa62_8e248afa",
+      "range": {
+        "startLine": 170,
+        "startChar": 0,
+        "endLine": 170,
+        "endChar": 6
+      },
+      "revId": "bbbcd7a8f0e62e46366f3e677ef5aa714db7c29b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d90f3082_57e2de53",
         "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
         "patchSetId": 2
@@ -60,6 +84,30 @@
       "writtenOn": "2021-05-04T14:31:50Z",
       "side": 1,
       "message": "ditto here.",
+      "range": {
+        "startLine": 266,
+        "startChar": 15,
+        "endLine": 266,
+        "endChar": 35
+      },
+      "revId": "bbbcd7a8f0e62e46366f3e677ef5aa714db7c29b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3717b796_5aa40327",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-04T14:53:07Z",
+      "side": 1,
+      "message": "Might be able to use gl::GetMaterialParameterCount, although it doesn\u0027t appear to include AmbientAndDiffuse. That might be an ANGLE bug?",
+      "parentUuid": "2930fbde_b62e49a7",
       "range": {
         "startLine": 266,
         "startChar": 15,
