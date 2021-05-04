@@ -104,6 +104,24 @@
       "parentUuid": "848adf16_9cac6cbb",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af73c0f0_e6cc498d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T18:49:10Z",
+      "side": 1,
+      "message": "https://chromium.googlesource.com/chromium/src/+/master/docs/toolchain_support.md#filing-good-toolchain-bugs\n\nI found this by typing \"clang chrome\" into Google, YMMV.\n\nYuly, just a FYI that maybe the clang roll detection logic is broken, I should check to see if WebRTC updated their script.",
+      "parentUuid": "74c9d187_42f7a983",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
