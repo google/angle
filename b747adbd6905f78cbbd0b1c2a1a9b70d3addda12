@@ -118,6 +118,30 @@
       },
       "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "418724d1_434173fd",
+        "filename": "third_party/OpenCL-ICD-Loader/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-04T19:22:30Z",
+      "side": 1,
+      "message": "From the Readme:\n\"The ICD Loader is responsible for:\n - Exporting OpenCL API entry points\n - Enumerating OpenCL implementations\n - Forwarding OpenCL API calls to the correct implementation\"\nI have a custom build which only uses the enumerating. The regular shared library only exports the CL EPs. The docs specifically recommends to build the whole thing as shared library, but there is an option to build it statically. It says: \"Using the OpenCL ICD loader as a static library is NOT recommended for end-user installations in general. However in some controlled environments it may be useful to simplify the build and distribution of the application. Use it with discretion.\"\nSo I see no reason for a shared library, but if you insist, I can do it by exporting the ICD interface in the custom build.",
+      "parentUuid": "3de7f797_74d683f1",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
