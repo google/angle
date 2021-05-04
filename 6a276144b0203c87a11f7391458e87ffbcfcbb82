@@ -69,6 +69,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "47135354_be43f24b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1302660
+      },
+      "writtenOn": "2021-05-04T15:11:32Z",
+      "side": 1,
+      "message": "Thank you so much for the discussion. Since this CL is blocking the other CL for build config changes, I would like to submit this.\n\nBut it seems I cannot submit this change. Could someone authorized submit the CL instead?",
+      "revId": "6a276144b0203c87a11f7391458e87ffbcfcbb82",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "231995dc_c4b1e823",
