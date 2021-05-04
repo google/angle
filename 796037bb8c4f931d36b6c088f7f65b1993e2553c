@@ -68,6 +68,24 @@
       "parentUuid": "40894a24_1e619049",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "848adf16_9cac6cbb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T17:32:13Z",
+      "side": 1,
+      "message": "If it is a Clang bug (and seems possible if the toolchain is Clang) it would be good to report it upstream. The toolchain folks are usually very quick to address these things. I can help figure out the right templates to use if you\u0027re unsure.\n\nIf you can do the bisect that would help. If it\u0027s a strange ANGLE bug would be good to know what CL caused it.",
+      "parentUuid": "57d3d90a_96a030c6",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
