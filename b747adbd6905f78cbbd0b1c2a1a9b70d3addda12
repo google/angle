@@ -46,6 +46,30 @@
       },
       "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8bcf3b6_38939564",
+        "filename": "third_party/OpenCL-ICD-Loader/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T18:36:16Z",
+      "side": 1,
+      "message": "OK, thanks unique name + shared is good. Are you able to load the normally exported EPs instead of using the internal ones?\n\nIn the interests of unblocking you and moving quickly we can land whatever works. It would be good to put it into a one-page ddoc or into an existing ddoc to track and update what we\u0027re doing here if we run into snafus later.",
+      "parentUuid": "b2dcceb3_ccd30007",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
