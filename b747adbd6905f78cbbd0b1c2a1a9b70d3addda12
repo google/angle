@@ -70,6 +70,30 @@
       },
       "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9bec4ea_726585d2",
+        "filename": "third_party/OpenCL-ICD-Loader/BUILD.gn",
+        "patchSetId": 15
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-04T19:00:29Z",
+      "side": 1,
+      "message": "Actually I only use the exported symbols. The global variable is indeed exported, just not listed below \"khrIcd interface\". The regular interface has no option to filter out ANGLE\u0027s library, so I have to use that global variable. Otherwise we would have to implement our own ICD-compatible loader.",
+      "parentUuid": "b8bcf3b6_38939564",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 10
+      },
+      "revId": "b747adbd6905f78cbbd0b1c2a1a9b70d3addda12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
