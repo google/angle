@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0e4faa92_c57b200a",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-04T20:57:21Z",
+      "side": 1,
+      "message": "mBufferOffset is the same as mBufferPool::mNextAllocationOffset, but that\u0027s only returned from mBufferPool.allocate() which is where this value is cached. That\u0027s not true for external buffers though. We could add a getter to DynamicBuffer, but things would get more complicated because we have to check isExternalBuffer() on every access.",
+      "parentUuid": "d56df3c9_44fa398d",
+      "range": {
+        "startLine": 160,
+        "startChar": 43,
+        "endLine": 160,
+        "endChar": 56
+      },
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ad5e0ba_e15a5f66",
@@ -71,6 +95,24 @@
       "writtenOn": "2021-03-10T15:58:49Z",
       "side": 1,
       "message": "all alignment logic can be in a helper",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2448eefa_90d8b009",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-04T20:57:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ad5e0ba_e15a5f66",
       "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
