@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1884b0bd_219326ff",
+        "filename": "scripts/roll_chromium_deps.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-04T22:22:02Z",
+      "side": 1,
+      "message": "Clang?",
+      "range": {
+        "startLine": 247,
+        "startChar": 22,
+        "endLine": 247,
+        "endChar": 31
+      },
+      "revId": "1a6849999c4222f6605ff117d32f62354d88bdbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3bbb7e1a_0d66d7ab",
         "filename": "scripts/roll_chromium_deps.py",
         "patchSetId": 1
@@ -60,6 +83,53 @@
         "startChar": 59,
         "endLine": 416,
         "endChar": 66
+      },
+      "revId": "1a6849999c4222f6605ff117d32f62354d88bdbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2f0785d_77d350b6",
+        "filename": "scripts/roll_chromium_deps.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 416,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-04T22:22:02Z",
+      "side": 1,
+      "message": "Ah, probably because it\u0027s tools/clang in ANGLE\u0027s DEPS.",
+      "parentUuid": "58cd8add_e698fd25",
+      "range": {
+        "startLine": 416,
+        "startChar": 59,
+        "endLine": 416,
+        "endChar": 66
+      },
+      "revId": "1a6849999c4222f6605ff117d32f62354d88bdbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62d17470_6dde8864",
+        "filename": "scripts/roll_chromium_deps.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-04T22:22:02Z",
+      "side": 1,
+      "message": "So, should this then be:\nCLANG_FILE_TEMPLATE % (rev_interval, CLANG_UPDATE_SCRIPT_URL_PATH)\n?",
+      "range": {
+        "startLine": 471,
+        "startChar": 21,
+        "endLine": 472,
+        "endChar": 76
       },
       "revId": "1a6849999c4222f6605ff117d32f62354d88bdbc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
