@@ -58,6 +58,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6cb0af2_345c1541",
+        "filename": "src/libANGLE/Caps.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 723,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-05-04T22:56:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "870efb91_ef45321d",
+      "range": {
+        "startLine": 723,
+        "startChar": 34,
+        "endLine": 723,
+        "endChar": 35
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8097d65_3b02da51",
@@ -345,6 +369,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "626ac374_b0d750c5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1850,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-05-04T22:56:27Z",
+      "side": 1,
+      "message": "Tested on a pixel 4xl, the test I wrote does not behave the same there, it does just grab a byte\u0027s worth of data if GL_*BYTE is specified\n\nThe latest patch set now matches the base case when the formats are mismatched",
+      "parentUuid": "1c0bd16b_b4d0c32e",
+      "range": {
+        "startLine": 1850,
+        "startChar": 12,
+        "endLine": 1850,
+        "endChar": 70
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b62df61_b9c2d850",
@@ -382,6 +430,30 @@
       "side": 1,
       "message": "Shouldn\u0027t the previous `attribSize !\u003d shaderVarSize` check also be included here?",
       "parentUuid": "4b62df61_b9c2d850",
+      "range": {
+        "startLine": 1852,
+        "startChar": 13,
+        "endLine": 1854,
+        "endChar": 55
+      },
+      "revId": "557030adf2f8fbce54a75c5468b08c9d97bf7686",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f0ad43f_2cf001e1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1854,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-05-04T22:56:27Z",
+      "side": 1,
+      "message": "Added this back in",
+      "parentUuid": "b2b97a9d_34f41d09",
       "range": {
         "startLine": 1852,
         "startChar": 13,
