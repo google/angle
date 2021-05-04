@@ -211,6 +211,24 @@
       "parentUuid": "ac259c54_0d75c621",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0122c36a_6f53c3d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-04T22:49:38Z",
+      "side": 1,
+      "message": "Sure, we can look. We\u0027d need to find a test that queries the vertex format at least once every draw. While doing very little else other than the draw. I\u0027d need to check where this method gets called.",
+      "parentUuid": "16722ac7_1540a09b",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
