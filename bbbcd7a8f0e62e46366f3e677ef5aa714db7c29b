@@ -116,6 +116,30 @@
       },
       "revId": "bbbcd7a8f0e62e46366f3e677ef5aa714db7c29b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f649366c_7baf2cb7",
+        "filename": "src/libANGLE/capture/capture_gles_1_0_params.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-04T16:09:31Z",
+      "side": 1,
+      "message": "Great find, these are the same functions I ended up with, except for the UNREACHABLE in the default case and the lack of AmbientAndDiffuse. I will add AmbientAndDiffuse cases to both switches. I also wonder about the usage of AmbientAndDiffuse in the LightParameter. It is part of PackedGLEnums_autogen.cpp, but I could not find a relation to lighting in the spec, only to materials.",
+      "parentUuid": "3717b796_5aa40327",
+      "range": {
+        "startLine": 266,
+        "startChar": 15,
+        "endLine": 266,
+        "endChar": 35
+      },
+      "revId": "bbbcd7a8f0e62e46366f3e677ef5aa714db7c29b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
