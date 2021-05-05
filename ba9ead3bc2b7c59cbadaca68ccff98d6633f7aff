@@ -150,6 +150,24 @@
       "parentUuid": "eb94cb52_452c7aac",
       "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b86871e_0c9cb90f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-05T02:06:44Z",
+      "side": 1,
+      "message": "My worry is that this is going to increase memory usage even further. We already having memory issues compared to native GLES.\n\nThe problem with dynamic buffer is that it is simple (sequential) version of sub-allocator. It can work very well if we have control of how it is been used. Things like staging buffer that is internal to ANGLE. But anything is out of our control, you could easily run into unused memory lie around somewhere that can\u0027t reused. And there are also applications requested STATIC_USE but use it like dynamic (we are talking about OpenGL here).\n\nWe already have a decent sub-allocator, which is VMA. My suggestion is to rely on VMA and we spend effort to optimize VMA for our usage.",
+      "parentUuid": "2e89cf9a_654867fd",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

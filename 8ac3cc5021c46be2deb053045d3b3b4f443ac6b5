@@ -16,6 +16,29 @@
       "message": "There\u0027s a perf test already exercising this by the way, BufferSubDataBenchmark, but I didn\u0027t notice any discernible performance difference between the runs, maybe gaining 0.5%, but could have also been noise.\n\n+Charlie, you might be interested in giving this a try with your minimized-gpu-work tests to see if you see any CPU perf gain from this.",
       "revId": "8ac3cc5021c46be2deb053045d3b3b4f443ac6b5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d4bb6501_74638740",
+        "filename": "scripts/code_generation_hashes/Vulkan_internal_shader_programs.json",
+        "patchSetId": 14
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-05T02:06:44Z",
+      "side": 1,
+      "message": "Are these changes intentional, Looks like unrelated?",
+      "range": {
+        "startLine": 61,
+        "startChar": 5,
+        "endLine": 61,
+        "endChar": 37
+      },
+      "revId": "8ac3cc5021c46be2deb053045d3b3b4f443ac6b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
