@@ -547,6 +547,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e02ff630_ec9cb294",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-05T17:48:41Z",
+      "side": 1,
+      "message": "Replaced heap allocation with static as discussed.",
+      "parentUuid": "557acccf_faa475b8",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d81f1a5_6a2f9861",
@@ -678,6 +702,30 @@
       "side": 1,
       "message": "I had a look at src/libANGLE/Display.cpp and am not sure what you mean. Can we just keep it for now and I will address it later when I understand it?",
       "parentUuid": "671511fd_d27180a0",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 19,
+        "endChar": 6
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e11d5115_7a4f6079",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-05T17:48:41Z",
+      "side": 1,
+      "message": "Deferred as discussed.",
+      "parentUuid": "879d7f1c_daf852bc",
       "range": {
         "startLine": 14,
         "startChar": 0,
