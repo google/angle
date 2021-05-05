@@ -87,7 +87,7 @@
       'gn_args': 'is_clang=false',
     },
     'release': {
-      'gn_args': 'is_debug=false',
+      'gn_args': 'is_debug=false dcheck_always_on=true',
     },
     'winuwp': {
       'gn_args': 'target_os="winuwp"',
