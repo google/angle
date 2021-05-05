@@ -124,6 +124,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d518a8f_2a630b40",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T15:00:05Z",
+      "side": 1,
+      "message": "Not sure how they are in conflict. You can create the buffer in such a way that it creates a shadow buffer, then bind it as index buffer. Am I missing something?\n\nBut I do recall that we removed index validation as much as possible, so if you can\u0027t find a reliable way to get this function called, nevermind the test.",
+      "parentUuid": "d023ca96_ca1e4aec",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "735e258f_465280e9",
@@ -226,6 +244,24 @@
       "side": 1,
       "message": "\u003e but that state is irrelevant because this (and Ref) are not map functions\n\nBuffer.cpp resets the accessFlags on an unmap. So the way it turns out is that accessFlags \u003d\u003d 0 for all mapRangeImpl(...) calls that don\u0027t trickle in via the front end and hence writeOperation will always be false for all such calls.\n\nWhat am i missing?",
       "parentUuid": "1473b901_fbc893ad",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9882f6d4_11cc9af5",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T15:00:05Z",
+      "side": 1,
+      "message": "Could something like this happen?\n\n- Map buffer src for write\n- Copy buffer src to buffer dst (which affects Ref)\n- Unmap buffer src\n\nThen the call at Ref thinks it\u0027s mapping was writable. Also, what if src is persistently mapped?\n\nThinking about these questions myself, not sure if there are other issues here, like in the example above we are remapping and unmapping the source buffer which is already mapped. Is that broken currently?\n\n---\n\nLet\u0027s not get bogged down on this then, admittedly all these are corner cases.",
+      "parentUuid": "6abb2246_7308331e",
       "revId": "817b12189b7336ce9c88014088704663972f5f71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
