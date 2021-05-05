@@ -39,6 +39,30 @@
       },
       "revId": "8ac3cc5021c46be2deb053045d3b3b4f443ac6b5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "936ed713_0f3a6d5a",
+        "filename": "scripts/code_generation_hashes/Vulkan_internal_shader_programs.json",
+        "patchSetId": 14
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T02:29:46Z",
+      "side": 1,
+      "message": "The shader has changed to get the capability to handle non-zero offsets.",
+      "parentUuid": "d4bb6501_74638740",
+      "range": {
+        "startLine": 61,
+        "startChar": 5,
+        "endLine": 61,
+        "endChar": 37
+      },
+      "revId": "8ac3cc5021c46be2deb053045d3b3b4f443ac6b5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

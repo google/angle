@@ -168,6 +168,24 @@
       "parentUuid": "2e89cf9a_654867fd",
       "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a241c8bd_9627041f",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 365,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T02:29:46Z",
+      "side": 1,
+      "message": "Regarding memory: that\u0027s a valid point, but it\u0027s not trivial. We should take measurements. For example, say this change creates a dynamic buffer that can do 16 suballocations. Say the application changes the UBO data for a particular program 4 times every frame. Previously, there would end up being 12 individual buffer allocations alive at any point which then get recycled, resulting in 12 descriptor sets in the cache. With this change, there would be 2 buffers and 2 descriptor sets.\n\nRegarding STATIC_USE: if the application does that, they will retain the old behavior, so it\u0027s their loss for giving the wrong hint. If you mean that we should try to optimize them anyway, perhaps that\u0027s best done as future work.\n\nThe problem with relying solely on VMA is that we still create buffer handles and we have to deal with garbage collecting them etc. Admittedly not as big of an issue here given that the buffers are recycled by DynamicBuffer.\n\nAll that said, I agree that the change adds a lot of complexity. As I said before, I don\u0027t think it\u0027s useful to merge unless we find it helps with performance somewhere. If you give it a try with your minimize-gpu-work tests, we could see if this change actually affects performance.",
+      "parentUuid": "2b86871e_0c9cb90f",
+      "revId": "ba9ead3bc2b7c59cbadaca68ccff98d6633f7aff",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
