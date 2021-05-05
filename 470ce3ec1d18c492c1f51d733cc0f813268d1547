@@ -1,0 +1,1262 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af860f80_0f7ef35c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "Hi,\n\nI just want to leave some comments on metal back-end\u0027s code. Most of them are about out of date code from MetalANGLE since I know the code base very well. Would like to avoid the out of date code being merged into upstream.\n\nAlso, I have one question about transform feedback\u0027s code\u0027s changes. I guess these changes are based on an old version of MetalANGLE when transform feedback was not implemented. Would like to know whether the current upstream version of transform feedback\u0027s implementation has any issues or it is just a result of diversely concurrent developments.",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b84846fe_8b395832",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this was renamed on upstream. Pls keep upstream version.",
+      "range": {
+        "startLine": 30,
+        "startChar": 38,
+        "endLine": 30,
+        "endChar": 62
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6423f5b4_4665957e",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this was renamed on upstream. Pls keep upstream version.",
+      "range": {
+        "startLine": 43,
+        "startChar": 33,
+        "endLine": 43,
+        "endChar": 51
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b840157_31fe13db",
+        "filename": "include/platform/FeaturesMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this was renamed on upstream. Pls keep upstream version.",
+      "range": {
+        "startLine": 100,
+        "startChar": 12,
+        "endLine": 100,
+        "endChar": 35
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a7969c2_14892cad",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 748,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "These instance draw emulations are not needed. At that time, I thought older iOS devices don\u0027t support instance draws if base vertex instance draw feature is not supported. But it is not the case.",
+      "range": {
+        "startLine": 723,
+        "startChar": 0,
+        "endLine": 748,
+        "endChar": 1
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea2cb16f_3dd7cdbc",
+        "filename": "src/libANGLE/renderer/metal/ContextMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 1890,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "These updates are not needed since they will be done in `onDrawFrameBufferChangedState`",
+      "range": {
+        "startLine": 1888,
+        "startChar": 4,
+        "endLine": 1890,
+        "endChar": 27
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0b4cb260_16bd8f36",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this flag is out of date. It was removed from upstream ANGLE.",
+      "range": {
+        "startLine": 205,
+        "startChar": 4,
+        "endLine": 206,
+        "endChar": 29
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "448a3902_16d8a724",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this flag is out of date. It was removed from upstream ANGLE.",
+      "range": {
+        "startLine": 152,
+        "startChar": 8,
+        "endLine": 152,
+        "endChar": 33
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "763343e8_de24bf0f",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this flag is out of date. It was removed from upstream ANGLE.",
+      "range": {
+        "startLine": 184,
+        "startChar": 4,
+        "endLine": 184,
+        "endChar": 28
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6cd89650_e1758739",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this code is out of date. We decided to use EGL_TEXTURE_2D for IOSurface on both iOS \u0026 mac platforms.",
+      "range": {
+        "startLine": 435,
+        "startChar": 4,
+        "endLine": 435,
+        "endChar": 61
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5409d9b_984c0640",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 771,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "we decided to use EGL_TEXTURE_2D for IOSurface. So rectangle textures are not needed.",
+      "range": {
+        "startLine": 770,
+        "startChar": 4,
+        "endLine": 771,
+        "endChar": 46
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb9f56c2_1c98bdce",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 778,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "This extension\u0027s implementation on Metal back-end is not fully compliant, hence I left it out of upstream ANGLE.",
+      "range": {
+        "startLine": 773,
+        "startChar": 4,
+        "endLine": 778,
+        "endChar": 5
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fefaa893_4bdcc38d",
+        "filename": "src/libANGLE/renderer/metal/DisplayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 913,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "these sampler\u0027s compare mode \u0026 gradient limitations are for spirv-cross work-arounds which are not feasible on upstream ANGLE since we cannot modify spirv-cross.",
+      "range": {
+        "startLine": 909,
+        "startChar": 4,
+        "endLine": 913,
+        "endChar": 97
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dfb10829_4dfad55f",
+        "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "As per the GLES 3.0 spec, stencil value is masked, not clamped.\nReviewed on this https://chromium-review.googlesource.com/c/angle/angle/+/2433329",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03a373b1_6719563b",
+        "filename": "src/libANGLE/renderer/metal/FrameBufferMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "As per the GLES 3.0 spec, stencil value is masked, not clamped.\nReviewed on this https://chromium-review.googlesource.com/c/angle/angle/+/2433329",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95e35862_c7e7aa53",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "shadow compare mode work-arounds are not possible due to spriv-cross\u0027s overrides are not maintainable on upstream.",
+      "range": {
+        "startLine": 278,
+        "startChar": 13,
+        "endLine": 278,
+        "endChar": 32
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5185d8f_784e6fec",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 1321,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "unsupported shadow compare modes\u0027 work-arounds are not possible due to spriv-cross\u0027s overrides are not maintainable on upstream.\nOn upstream version, unsupported compare modes will just simply throw errors.\nNot sure this is addressed by direct msl translator yet.",
+      "range": {
+        "startLine": 1321,
+        "startChar": 20,
+        "endLine": 1321,
+        "endChar": 39
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76ec16d1_866e7b01",
+        "filename": "src/libANGLE/renderer/metal/ProgramMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 1334,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "as above, unsupported shadow compare modes\u0027 work-arounds are not possible due to spriv-cross\u0027s overrides are not maintainable on upstream.",
+      "range": {
+        "startLine": 1330,
+        "startChar": 8,
+        "endLine": 1334,
+        "endChar": 9
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3fa8d48_e1e6c20c",
+        "filename": "src/libANGLE/renderer/metal/RenderTargetMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "fyi, this is MetalANGLE\u0027s old code. I removed it.\nshared_ptr is not the correct way to cache the render target\u0027s descriptor. It created a bug in render pass\u0027s descriptor\u0027s changes\u0027 detection because shared_ptr is shared between multiple RenderPassAttachmentDesc\u0027s copies.\n\nPls keep the version of the code on upstream.",
+      "range": {
+        "startLine": 59,
+        "startChar": 3,
+        "endLine": 60,
+        "endChar": 89
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e4646ca_4b254ad2",
+        "filename": "src/libANGLE/renderer/metal/SyncMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this was changed to ANGLE_MTL_EVENT_AVAILABLE macro to make it clean",
+      "range": {
+        "startLine": 25,
+        "startChar": 4,
+        "endLine": 25,
+        "endChar": 50
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e2420b7_57e7a7db",
+        "filename": "src/libANGLE/renderer/metal/SyncMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "implemented on upstream",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 17
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a97db18b_feee5781",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this instance draw\u0027s emulation is not needed. I was wrong when I thought some iOS devices don\u0027t support it.",
+      "range": {
+        "startLine": 72,
+        "startChar": 9,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c832597c_8d93930b",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 427,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this code is out of date. It didn\u0027t take into account the matrix attributes which occupy multiple slots.",
+      "range": {
+        "startLine": 403,
+        "startChar": 16,
+        "endLine": 427,
+        "endChar": 17
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a852e4c_5259b79d",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "instance draw\u0027s emulation is no longer needed.",
+      "range": {
+        "startLine": 455,
+        "startChar": 23,
+        "endLine": 455,
+        "endChar": 49
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5ce372e_320204fa",
+        "filename": "src/libANGLE/renderer/metal/VertexArrayMtl.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 776,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "think this was renamed to hasCheapRenderPass",
+      "range": {
+        "startLine": 776,
+        "startChar": 50,
+        "endLine": 776,
+        "endChar": 72
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e66a8fff_e3405766",
+        "filename": "src/libANGLE/renderer/metal/doc/APPLE_clip_distance.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "These comments were moved to ../../vulkan/doc/APPLE_clip_distance.md",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 27
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bc3d07e_74475d22",
+        "filename": "src/libANGLE/renderer/metal/mtl_buffer_pool.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "I think this is already initialized in constructor",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecf5aa9c_8ea05800",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "This was renamed to ready() to make it more intuitive.",
+      "range": {
+        "startLine": 105,
+        "startChar": 9,
+        "endLine": 105,
+        "endChar": 14
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5999a702_542ad103",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "This was renamed to readyImpl() to make it more intuitive.",
+      "range": {
+        "startLine": 133,
+        "startChar": 9,
+        "endLine": 133,
+        "endChar": 18
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d744698b_567b526c",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 589,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "I think I changed these arguments to raw pointers, there are no need to use shared_ptr.",
+      "range": {
+        "startLine": 588,
+        "startChar": 39,
+        "endLine": 589,
+        "endChar": 71
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "85439769_84bbffa4",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 578,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "This was renamed to ready() to make it more intuitive.",
+      "range": {
+        "startLine": 578,
+        "startChar": 20,
+        "endLine": 578,
+        "endChar": 25
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "52bd2bd9_d03b8ccc",
+        "filename": "src/libANGLE/renderer/metal/mtl_command_buffer.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 582,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "This was renamed to ready() to make it more intuitive.",
+      "range": {
+        "startLine": 582,
+        "startChar": 11,
+        "endLine": 582,
+        "endChar": 20
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eef1f321_60d46f38",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 212,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this work-around was converted to FeaturesMtl.forceD24S8AsUnsupported feature.",
+      "range": {
+        "startLine": 201,
+        "startChar": 4,
+        "endLine": 212,
+        "endChar": 5
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e69458ab_af26734c",
+        "filename": "src/libANGLE/renderer/metal/mtl_format_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 439,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this function was converted to autogenerated one instead of hand-written code.",
+      "range": {
+        "startLine": 432,
+        "startChar": 4,
+        "endLine": 439,
+        "endChar": 70
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f48f4e73_ec65c88e",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this depth sampler\u0027s compare mode work-around is not possible on upstream ANGLE because it requires spirv-cross\u0027s protected methods override to insert custom code.\nspirv-cross\u0027s protected methods keep changing their signatures after each new version roll thus rendering this work-around unmaintainable.",
+      "range": {
+        "startLine": 259,
+        "startChar": 4,
+        "endLine": 269,
+        "endChar": 5
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48195e34_485e52d3",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 280,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "think this is out of date. The variable name declaration was moved to translator\u0027s ShaderLang.h",
+      "range": {
+        "startLine": 280,
+        "startChar": 43,
+        "endLine": 280,
+        "endChar": 93
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c86756d_643766dc",
+        "filename": "src/libANGLE/renderer/metal/mtl_glslang_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 377,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this depth sampler\u0027s compare mode work-around is not possible on upstream ANGLE because it requires spirv-cross\u0027s protected methods override to insert custom code.\nspirv-cross\u0027s protected methods keep changing their signatures after each new version roll thus rendering this work-around unmaintainable.",
+      "range": {
+        "startLine": 376,
+        "startChar": 4,
+        "endLine": 377,
+        "endChar": 31
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1c8ad1cb_812af8eb",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "These params were removed from upstream ANGLE, and the default shader doesn\u0027t refer to them anymore.",
+      "range": {
+        "startLine": 98,
+        "startChar": 4,
+        "endLine": 99,
+        "endChar": 33
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b1da60e_5e60b729",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "missing sRGB flag to generate sRGB mipmaps. This flag was added to upstream ANGLE.",
+      "range": {
+        "startLine": 103,
+        "startChar": 7,
+        "endLine": 103,
+        "endChar": 30
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "424d0557_e6a02844",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 310,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this is out of date. We should use `unmapAndFlushSubset` like updated code on upstream because only a region of the buffer is updated in this function.",
+      "range": {
+        "startLine": 310,
+        "startChar": 15,
+        "endLine": 310,
+        "endChar": 20
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36637ba5_c5020cfe",
+        "filename": "src/libANGLE/renderer/metal/mtl_render_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 446,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this is out of date. We should use `unmapAndFlushSubset` like updated code on upstream because only a region of the buffer is updated in this function.",
+      "range": {
+        "startLine": 446,
+        "startChar": 15,
+        "endLine": 446,
+        "endChar": 20
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83c2b48e_c53d04db",
+        "filename": "src/libANGLE/renderer/metal/mtl_resources.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this function was renamed, and we don\u0027t need shared_ptr anymore which would require shared_from_this() call.",
+      "range": {
+        "startLine": 37,
+        "startChar": 5,
+        "endLine": 37,
+        "endChar": 16
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c333419_1ba3faa6",
+        "filename": "src/libANGLE/renderer/metal/mtl_resources.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this function was renamed, and we don\u0027t need shared_ptr anymore which would require shared_from_this() call.",
+      "range": {
+        "startLine": 52,
+        "startChar": 5,
+        "endLine": 52,
+        "endChar": 24
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94772ad6_85b26c56",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "this was removed since we use 2D textures for IOSurface, not rectangle anymore",
+      "range": {
+        "startLine": 116,
+        "startChar": 12,
+        "endLine": 116,
+        "endChar": 33
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acd5c838_025f2042",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "fyi, this is MetalANGLE\u0027s old code. I removed it.",
+      "range": {
+        "startLine": 296,
+        "startChar": 0,
+        "endLine": 315,
+        "endChar": 2
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "971a1a10_375f8af8",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "fyi, this is MetalANGLE\u0027s old code. I removed it and the above.\nshared_ptr is not the correct way to cache the render target\u0027s descriptor. It created a bug in render pass\u0027s descriptor\u0027s changes\u0027 detection because shared_ptr is shared between multiple RenderPassAttachmentDesc\u0027s copies.\n\nPls keep the version of the code on upstream.",
+      "range": {
+        "startLine": 353,
+        "startChar": 4,
+        "endLine": 353,
+        "endChar": 72
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3334d5db_19e73a82",
+        "filename": "src/libANGLE/renderer/metal/mtl_state_cache.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 609,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "these code was removed by Alexey. He updated them to support per attachment\u0027s blend states.",
+      "range": {
+        "startLine": 571,
+        "startChar": 0,
+        "endLine": 609,
+        "endChar": 1
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d6efb83_475f4237",
+        "filename": "src/libANGLE/renderer/metal/mtl_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "pls keep the upstream version of this function. The version in this CL is out of date",
+      "range": {
+        "startLine": 105,
+        "startChar": 14,
+        "endLine": 105,
+        "endChar": 39
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efaf0a02_e812a279",
+        "filename": "src/libANGLE/renderer/metal/mtl_utils.mm",
+        "patchSetId": 1
+      },
+      "lineNbr": 917,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "pls keep the upstream version of this function. The version in this CL is out of date (the variables were renamed as requested by ANGLE devs)",
+      "range": {
+        "startLine": 917,
+        "startChar": 18,
+        "endLine": 917,
+        "endChar": 43
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1cbff8d5_1a85531c",
+        "filename": "src/libANGLE/renderer/metal/shaders/blit.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 337,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "on upstream \"@@\" marker was added to this line to keep the preprocessor macro intact after autogen step.\n\nWe want to keep default shader\u0027s macros intact when compiling it at runtime. Binary versions of default shader were no longer kept because metal compiler is not cross-platform thus cannot be executed on non-mac platforms. Hence, the best way is keeping the string version of shader and compile it at runtime.",
+      "range": {
+        "startLine": 337,
+        "startChar": 0,
+        "endLine": 337,
+        "endChar": 1
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1721fbe0_b2d64d2b",
+        "filename": "src/libANGLE/renderer/metal/shaders/blit.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "same here, need \"@@\" marker to keep the #endif macro intact.",
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "769b795e_3f89c68a",
+        "filename": "src/libANGLE/renderer/metal/shaders/common.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "pls keep \"@@\" before #",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 27
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "758c4eac_f5f7ee9f",
+        "filename": "src/libANGLE/renderer/metal/shaders/copy_buffer.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "I think this was changed to 10, because we no longer compile the shader offline and link them into shader library. It was because the metal compiler is not cross-platform.\nInstead the shader files are concatenated into one single source file, thus the function constant\u0027s indices must not be conflicted.",
+      "range": {
+        "startLine": 19,
+        "startChar": 49,
+        "endLine": 19,
+        "endChar": 50
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4aa8f3c7_285c1bfb",
+        "filename": "src/libANGLE/renderer/metal/shaders/copy_buffer.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "pls keep the function constant\u0027s index on upstream",
+      "range": {
+        "startLine": 22,
+        "startChar": 50,
+        "endLine": 22,
+        "endChar": 51
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8ea7de4d_b52215f7",
+        "filename": "src/libANGLE/renderer/metal/shaders/gen_mipmap.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "sRGB flag is missing. Without this, the mipmap generator will compute wrong color for sRGB textures because texture sampling always returns linear color iirc.\n\nsRGB was added to upstream version.",
+      "range": {
+        "startLine": 29,
+        "startChar": 7,
+        "endLine": 29,
+        "endChar": 19
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bb8a2e7_5d71f86c",
+        "filename": "src/libANGLE/renderer/metal/shaders/visibility.metal",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1374244
+      },
+      "writtenOn": "2021-05-05T18:13:17Z",
+      "side": 1,
+      "message": "pls keep the function constant\u0027s index on upstream",
+      "range": {
+        "startLine": 9,
+        "startChar": 61,
+        "endLine": 9,
+        "endChar": 62
+      },
+      "revId": "470ce3ec1d18c492c1f51d733cc0f813268d1547",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
