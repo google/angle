@@ -160,6 +160,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ade577d_48967bd5",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T15:55:16Z",
+      "side": 1,
+      "message": "Hah, my original comment had a typo. The buffer should *not* have a shadow. Sorry about that.",
+      "parentUuid": "c43d6fa5_0feac91a",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "735e258f_465280e9",
@@ -298,6 +316,24 @@
       "side": 1,
       "message": "\u003e Could something like this happen? ...\n\nmap/unmap are meant for CPU/host side operations. Interleaving that with possibly GPU side operations is undefined behavior. For example, the copybuffersubdata spec says this -\n\n GL_INVALID_OPERATION is generated if the buffer object bound to either\n readtarget or writetarget is mapped.\n\n\u003e Also, what if src is persistently mapped?\n\nWith my changes, we will support \"persistently mapped\" only if the buffer memory is host visible and coherent, in which case we would have already informed VMA that the memory is persistently mapped.",
       "parentUuid": "9882f6d4_11cc9af5",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99e2a5a5_e01ad575",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T15:55:16Z",
+      "side": 1,
+      "message": "Ack.",
+      "parentUuid": "25c36c6f_89bb0555",
       "revId": "817b12189b7336ce9c88014088704663972f5f71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
