@@ -29,6 +29,7 @@
         ],
         'test_suites': {
           'gtest_tests': 'linux_intel_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'linux-nvidia': {
@@ -38,6 +39,7 @@
         ],
         'test_suites': {
           'gtest_tests': 'linux_nvidia_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'mac-amd': {
