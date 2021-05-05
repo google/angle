@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77722a7b_714d76b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-05T11:57:46Z",
+      "side": 1,
+      "message": "android_angle_rel_ng failure is the same as on CI\nhttps://luci-milo.appspot.com/ui/p/chromium/builders/ci/Android%20FYI%20Release%20(Nexus%205X)/34458/overview\n\nSubmitting No-try to unbreak SwANGLE bots",
+      "revId": "4279215b2a31df66ca96cb54ffc1ddb8d625721e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
