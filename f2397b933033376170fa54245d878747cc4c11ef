@@ -72,6 +72,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5d1e6d37_caefa736",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1116023
+      },
+      "writtenOn": "2021-05-05T18:48:08Z",
+      "side": 1,
+      "message": "VkLayer_image_pipe_swapchain implements VK_FUCHSIA_imagepipe_surface extension. It\u0027s a useful extension for clients that need to use swapchain on Fuchsia. It\u0027s not headless and it can\u0027t be replaced with VK_EXT_headless_surface. Problem with swapchain is that it doesn\u0027t provide accurate presentation timestamps. So we use ImagePipe directly to improve A/V sync. Swapchain with VK_FUCHSIA_imagepipe_surface is still usable for applications that don\u0027t need precise A/V sync.\n\nDisplayVkHeadless was added to avoid X11 dependency in Chrome on Linux, see crbug.com/1034840 . \nAccording to comments on that bug, Chrome doesn\u0027t use swapchain on Linux either, similar to what we have on Fuchsia. So I think in that case DisplayVkNull can be used instead of DisplayVkHeadless (I\u0027m not sure if there are other use-cases for DisplayVkHeadless).",
+      "parentUuid": "6558587d_d78ad90e",
+      "revId": "f2397b933033376170fa54245d878747cc4c11ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ddc7226_673bea8f",
