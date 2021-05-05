@@ -19,7 +19,7 @@ namespace angle
 std::string GetExecutableName();
 std::string GetExecutablePath();
 std::string GetExecutableDirectory();
-std::string GetHelperExecutableDir();
+std::string GetModuleDirectory();
 const char *GetSharedLibraryExtension();
 const char *GetExecutableExtension();
 char GetPathSeparator();
@@ -34,6 +34,9 @@ std::string GetEnvironmentVarOrAndroidProperty(const char *variableName, const c
 const char *GetPathSeparatorForEnvironmentVar();
 bool PrependPathToEnvironmentVar(const char *variableName, const char *path);
 bool IsDirectory(const char *filename);
+bool IsFullPath(std::string dirName);
+std::string GetRootDirectory();
+std::string ConcatenatePath(std::string first, std::string second);
 
 // Get absolute time in seconds.  Use this function to get an absolute time with an unknown origin.
 double GetCurrentTime();

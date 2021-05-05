@@ -15,19 +15,35 @@
 
 namespace angle
 {
-std::string GetExecutablePath()
+
+namespace
+{
+
+std::string GetPath(HMODULE module)
 {
     std::array<char, MAX_PATH> executableFileBuf;
-    DWORD executablePathLen = GetModuleFileNameA(nullptr, executableFileBuf.data(),
+    DWORD executablePathLen = GetModuleFileNameA(module, executableFileBuf.data(),
                                                  static_cast<DWORD>(executableFileBuf.size()));
     return (executablePathLen > 0 ? std::string(executableFileBuf.data()) : "");
 }
 
-std::string GetExecutableDirectory()
+std::string GetDirectory(HMODULE module)
 {
-    std::string executablePath = GetExecutablePath();
+    std::string executablePath = GetPath(module);
     size_t lastPathSepLoc      = executablePath.find_last_of("\\/");
     return (lastPathSepLoc != std::string::npos) ? executablePath.substr(0, lastPathSepLoc) : "";
+}
+
+}  // anonymous namespace
+
+std::string GetExecutablePath()
+{
+    return GetPath(nullptr);
+}
+
+std::string GetExecutableDirectory()
+{
+    return GetDirectory(nullptr);
 }
 
 const char *GetSharedLibraryExtension()
@@ -101,8 +117,25 @@ char GetPathSeparator()
     return '\\';
 }
 
-std::string GetHelperExecutableDir()
+std::string GetModuleDirectory()
 {
-    return "";
+// GetModuleHandleEx is unavailable on UWP
+#if !defined(ANGLE_IS_WINUWP)
+    static int placeholderSymbol = 0;
+    HMODULE module               = nullptr;
+    if (GetModuleHandleExA(
+            GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            reinterpret_cast<LPCSTR>(&placeholderSymbol), &module))
+    {
+        return GetDirectory(module);
+    }
+#endif
+    return GetDirectory(nullptr);
 }
+
+std::string GetRootDirectory()
+{
+    return "C:\\";
+}
+
 }  // namespace angle

@@ -107,6 +107,9 @@ config("internal_config") {
 
   if (is_win) {
     defines += [ "ANGLE_IS_WIN" ]
+    if (angle_is_winuwp) {
+      defines += [ "ANGLE_IS_WINUWP" ]
+    }
   } else if (is_linux || is_chromeos) {
     defines += [ "ANGLE_IS_LINUX" ]
   }

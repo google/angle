@@ -56,4 +56,119 @@ TEST(SystemUtils, Environment)
     readback = GetEnvironmentVar(kEnvVarName);
     EXPECT_EQ("", readback);
 }
+
+#if defined(ANGLE_PLATFORM_POSIX)
+TEST(SystemUtils, ConcatenatePathSimple)
+{
+    std::string path1    = "/this/is/path1";
+    std::string path2    = "this/is/path2";
+    std::string expected = "/this/is/path1/this/is/path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePath1Empty)
+{
+    std::string path1    = "";
+    std::string path2    = "this/is/path2";
+    std::string expected = "this/is/path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePath2Empty)
+{
+    std::string path1    = "/this/is/path1";
+    std::string path2    = "";
+    std::string expected = "/this/is/path1";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePath2FullPath)
+{
+    std::string path1    = "/this/is/path1";
+    std::string path2    = "/this/is/path2";
+    std::string expected = "/this/is/path1";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePathRedundantSeparators)
+{
+    std::string path1    = "/this/is/path1/";
+    std::string path2    = "this/is/path2";
+    std::string expected = "/this/is/path1/this/is/path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, IsFullPath)
+{
+    std::string path1 = "/this/is/path1/";
+    std::string path2 = "this/is/path2";
+    EXPECT_TRUE(IsFullPath(path1));
+    EXPECT_FALSE(IsFullPath(path2));
+}
+#elif defined(ANGLE_PLATFORM_WINDOWS)
+TEST(SystemUtils, ConcatenatePathSimple)
+{
+    std::string path1    = "C:\\this\\is\\path1";
+    std::string path2    = "this\\is\\path2";
+    std::string expected = "C:\\this\\is\\path1\\this\\is\\path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePath1Empty)
+{
+    std::string path1    = "";
+    std::string path2    = "this\\is\\path2";
+    std::string expected = "this\\is\\path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePath2Empty)
+{
+    std::string path1    = "C:\\this\\is\\path1";
+    std::string path2    = "";
+    std::string expected = "C:\\this\\is\\path1";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePath2FullPath)
+{
+    std::string path1    = "C:\\this\\is\\path1";
+    std::string path2    = "C:\\this\\is\\path2";
+    std::string expected = "C:\\this\\is\\path1";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePathRedundantSeparators)
+{
+    std::string path1    = "C:\\this\\is\\path1\\";
+    std::string path2    = "this\\is\\path2";
+    std::string expected = "C:\\this\\is\\path1\\this\\is\\path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePathRedundantSeparators2)
+{
+    std::string path1    = "C:\\this\\is\\path1\\";
+    std::string path2    = "\\this\\is\\path2";
+    std::string expected = "C:\\this\\is\\path1\\this\\is\\path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, ConcatenatePathRedundantSeparators3)
+{
+    std::string path1    = "C:\\this\\is\\path1";
+    std::string path2    = "\\this\\is\\path2";
+    std::string expected = "C:\\this\\is\\path1\\this\\is\\path2";
+    EXPECT_EQ(ConcatenatePath(path1, path2), expected);
+}
+
+TEST(SystemUtils, IsFullPath)
+{
+    std::string path1 = "C:\\this\\is\\path1\\";
+    std::string path2 = "this\\is\\path2";
+    EXPECT_TRUE(IsFullPath(path1));
+    EXPECT_FALSE(IsFullPath(path2));
+}
+#endif
+
 }  // anonymous namespace

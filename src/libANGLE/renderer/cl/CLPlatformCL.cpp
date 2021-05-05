@@ -427,9 +427,8 @@ void CLPlatformCL::Initialize(const cl_icd_dispatch &dispatch, bool isIcd)
     }
 
     // The absolute path to ANGLE's OpenCL library is needed and it is assumed here that
-    // it is in the same directory as the module which contains this CL back end.
-    // TODO(http://anglebug.com/5949) Use GetModuleDirectory when it relands
-    std::string libPath;  // = angle::GetModuleDirectory();
+    // it is in the same directory as the shared library which contains this CL back end.
+    std::string libPath = angle::GetModuleDirectory();
     if (!libPath.empty() && libPath.back() != angle::GetPathSeparator())
     {
         libPath += angle::GetPathSeparator();

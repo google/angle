@@ -93,4 +93,40 @@ bool PrependPathToEnvironmentVar(const char *variableName, const char *path)
     }
     return SetEnvironmentVar(variableName, newValue);
 }
+
+bool IsFullPath(std::string dirName)
+{
+    if (dirName.find(GetRootDirectory()) == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+std::string ConcatenatePath(std::string first, std::string second)
+{
+    if (first.empty())
+    {
+        return second;
+    }
+    if (second.empty())
+    {
+        return first;
+    }
+    if (IsFullPath(second))
+    {
+        return first;
+    }
+    bool firstRedundantPathSeparator = first.find_last_of(GetPathSeparator()) == first.length() - 1;
+    bool secondRedundantPathSeparator = second.find(GetPathSeparator()) == 0;
+    if (firstRedundantPathSeparator && secondRedundantPathSeparator)
+    {
+        return first + second.substr(1);
+    }
+    else if (firstRedundantPathSeparator || secondRedundantPathSeparator)
+    {
+        return first + second;
+    }
+    return first + GetPathSeparator() + second;
+}
 }  // namespace angle
