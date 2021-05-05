@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "06f3ceff_5b62e68d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1185209
+      },
+      "writtenOn": "2021-05-05T18:50:31Z",
+      "side": 1,
+      "message": "This change is breaking ANGLE build in Skia, https://ci.chromium.org/raw/build/logs.chromium.org/skia/535503ce58f24311/+/annotations",
+      "revId": "b62f8dd1164a7486646ad9281ffd6f02aa926e1c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
