@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "13ca4c4b_f65621b8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-05T16:21:02Z",
+      "side": 1,
+      "message": "\u003e Am I right to understand this is never supposed to happen in practice\n\nnot necessarily. There are vendors that can support importing external buffers into a memory type that is host visible and coherent. An app/user who knows what he is doing could make efficient use of CPU/GPU API entry points\n\n\u003e future maps don\u0027t cause a GPU bubble\n\nthis is not necessarily correct. Say we have this -\n1. create GLBuffer \"externalBuffer\"\n2. bind \"externalBuffer\" to say pixel_unpack\n3. map pixel_unpack buffer and do something\n4. bind 0 to pixel_unpack\n5. AHardwareBuffer_lock the external memory and update data from CPU/DSP and then AHardwareBuffer_unlock\n6. bind \"externalBuffer\" to pixel_unpack\n7. map and read\n\nstep (7) will cause us to be functionally incorrect since shadow buffer will not have the updated data. We should explicitly disable shadow buffers for external buffers.",
+      "parentUuid": "38706b11_2b3dc4b1",
+      "revId": "31c9e400ec0e8f4616f9775f33774685394f7cdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b109a199_5688aa14",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 6
