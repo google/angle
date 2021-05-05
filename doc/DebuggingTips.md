@@ -298,8 +298,8 @@ Next, you need to install an ANGLE test apk.  When you build the test, a test la
 for example, `./out/Release/bin/run_angle_end2end_tests`. The best way to install the APK is to run
 this test launcher once.
 
-In RenderDoc, use `org.chromium.native_test` as the Executable Path, and provide the following
-arguments:
+In RenderDoc, use `com.android.angle.test/com.android.angle.test.AngleUnitTestActivity` as the
+Executable Path, and provide the following arguments:
 
 ```
 -e org.chromium.native_test.NativeTest.StdoutFile /sdcard/chromium_tests_root/out.txt -e org.chromium.native_test.NativeTest.CommandLineFlags "--gtest_filter=*ES2_VULKAN"
