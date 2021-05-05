@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "38706b11_2b3dc4b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T02:16:23Z",
+      "side": 1,
+      "message": "Please see the above comment. Perhaps we could reuse the shadow buffer logic for this purpose.",
+      "parentUuid": "374b787e_4e6d3307",
+      "revId": "31c9e400ec0e8f4616f9775f33774685394f7cdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b109a199_5688aa14",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 6
