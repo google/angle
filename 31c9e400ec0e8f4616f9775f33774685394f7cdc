@@ -54,6 +54,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e2999cc_189f3b04",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T16:33:14Z",
+      "side": 1,
+      "message": "Ack. Understood that anything could happen to the external buffer, so shadow is not useful.",
+      "parentUuid": "13ca4c4b_f65621b8",
+      "revId": "31c9e400ec0e8f4616f9775f33774685394f7cdc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b109a199_5688aa14",
