@@ -595,6 +595,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d11b8af_b853789c",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-05T19:21:26Z",
+      "side": 1,
+      "message": "Oh, wasn\u0027t paying enough attention in a hurry. Thanks for spotting it!",
+      "parentUuid": "89af8741_3a3af8a8",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d81f1a5_6a2f9861",
