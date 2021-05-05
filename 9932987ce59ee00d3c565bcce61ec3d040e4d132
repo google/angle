@@ -16,6 +16,23 @@
       "message": "PTAL. Will launch a few LEDs before landing.",
       "revId": "9932987ce59ee00d3c565bcce61ec3d040e4d132",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b82a092a_fb8ddd78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-05T21:10:04Z",
+      "side": 1,
+      "message": "While at it, I\u0027ve noticed you run without DCHECK enabled.",
+      "revId": "9932987ce59ee00d3c565bcce61ec3d040e4d132",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
