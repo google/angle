@@ -16,6 +16,24 @@
       "message": "This bit is also lost. mapRangeImpl doesn\u0027t check if buffer is already mapped (I presume that\u0027s for persistently mapped buffers?). Is that something that should be added to mapRangeImpl?",
       "revId": "4ab224f7b05ace9bcfcd00f0dd6d603b194091c8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "430f43fe_91c2aaa5",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-05T01:57:19Z",
+      "side": 0,
+      "message": "\u003e I presume that\u0027s for persistently mapped buffers?\n\nnot the way it is implemented right now. The only usecase \"isMapped()\" optimizes for is when glMapBuffer...(...) is called multiple times without calling unmap\n\n\u003e Is that something that should be added to mapRangeImpl?\n\nmaybe but it needs non-trivial logic. We will need special care for external buffer usecases that are not host visible",
+      "parentUuid": "e0e7fe2b_17ea21f6",
+      "revId": "4ab224f7b05ace9bcfcd00f0dd6d603b194091c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
