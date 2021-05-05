@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7d14bc2_63469bf7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-05T16:34:40Z",
+      "side": 1,
+      "message": "Gert and Lubosz are both blocked by this.\n\nFrom discussions the tests will pass if run individually (like perhaps the bots do?), but will fail if multiple tests are invoked at once.",
+      "revId": "3c8cae04c25fed027e89ffdb45d05e90a6ddad12",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
