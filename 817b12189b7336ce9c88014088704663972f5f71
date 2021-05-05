@@ -108,6 +108,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d023ca96_ca1e4aec",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-05T14:50:58Z",
+      "side": 1,
+      "message": "these 2 statements seemed contradictory -\n\u003e Create a buffer that has a shadow\n\n\u003e Use a command that verifies the index range\n\n1. did you mean we have 2 buffers 1 with shadow and 1 without and the buffer without shadow will be the element array buffer?\n\n2. the dev env i have has robust access support so the range index validation is never called by default, i had to force disable the robust access check for it to call getIndexRange(...)",
+      "parentUuid": "4d2a6644_3fb1c3ae",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "735e258f_465280e9",
         "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
         "patchSetId": 4
@@ -190,6 +208,24 @@
       "side": 1,
       "message": "... except it doesn\u0027t do the right thing here or at Ref. It\u0027s using the state to determine whether it\u0027s mapped for write, but that state is irrelevant because this (and Ref) are not map functions.\n\nAck regarding the other change fixing markConversionBuffersDirty.",
       "parentUuid": "c77f435c_73ab800b",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6abb2246_7308331e",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-05T14:50:58Z",
+      "side": 1,
+      "message": "\u003e but that state is irrelevant because this (and Ref) are not map functions\n\nBuffer.cpp resets the accessFlags on an unmap. So the way it turns out is that accessFlags \u003d\u003d 0 for all mapRangeImpl(...) calls that don\u0027t trickle in via the front end and hence writeOperation will always be false for all such calls.\n\nWhat am i missing?",
+      "parentUuid": "1473b901_fbc893ad",
       "revId": "817b12189b7336ce9c88014088704663972f5f71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
