@@ -158,6 +158,24 @@
       "parentUuid": "8d8a82ae_dc517ab3",
       "revId": "1e3450039a8e4ddb8eb28e2d9f783ea1c6f7dcc1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7db37f7b_b4dca102",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T15:38:43Z",
+      "side": 1,
+      "message": "This turned out to be an R8_USCALED to R16_FLOAT conversion where the number of vertices was odd and some division needed to use ceil(). Fixed now.",
+      "parentUuid": "3c15cbcf_af5d5eb0",
+      "revId": "1e3450039a8e4ddb8eb28e2d9f783ea1c6f7dcc1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
