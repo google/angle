@@ -16,6 +16,24 @@
       "message": "jamie, the android bot seems to be stuck for more than an hour. Is there a known issue?",
       "revId": "250840d1a512ea0593071d09fc945fa8f1b28c0d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "109ecb39_fb3d1a89",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-05T18:48:14Z",
+      "side": 1,
+      "message": "I think it\u0027s http://anglebug.com/5923 . Please hold off on your try jobs until we fix it.",
+      "parentUuid": "9d0e05a7_854cecd0",
+      "revId": "250840d1a512ea0593071d09fc945fa8f1b28c0d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
