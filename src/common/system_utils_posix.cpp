@@ -56,7 +56,7 @@ const char *GetPathSeparatorForEnvironmentVar()
     return ":";
 }
 
-std::string GetHelperExecutableDir()
+std::string GetModuleDirectory()
 {
     std::string directory;
     static int placeholderSymbol = 0;
@@ -107,7 +107,7 @@ Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
         // On iOS, shared libraries must be loaded from within the app bundle.
         directory = GetExecutableDirectory() + "/Frameworks/";
 #else
-        directory = GetHelperExecutableDir();
+        directory = GetModuleDirectory();
 #endif
     }
 
