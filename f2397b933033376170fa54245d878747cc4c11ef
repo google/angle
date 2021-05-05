@@ -36,6 +36,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "67dd698a_53c15cea",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-05T13:37:45Z",
+      "side": 1,
+      "message": "Do you have any links to info as to why vulkan exts are implemented as separate sos? That seems unusual vs any other Vulkan driver I\u0027ve seen.",
+      "parentUuid": "789ffac2_46c69e59",
+      "revId": "f2397b933033376170fa54245d878747cc4c11ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ddc7226_673bea8f",
