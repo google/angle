@@ -142,6 +142,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c43d6fa5_0feac91a",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 601,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-05T15:49:59Z",
+      "side": 1,
+      "message": "\u003e  You can create the buffer in such a way that it creates a shadow buffer, then bind it as index buffer. Am I missing something?\n\nwhat i meant was - say we create a buffer with shadow buffer and subdata update it and dont call a flush. Then we bind it as index buffer, during index range validation it will never enter \"if (!mShadowBuffer.valid())\" and hence wont even do the \"finishRunningCommands\" part.",
+      "parentUuid": "7d518a8f_2a630b40",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "735e258f_465280e9",
@@ -262,6 +280,24 @@
       "side": 1,
       "message": "Could something like this happen?\n\n- Map buffer src for write\n- Copy buffer src to buffer dst (which affects Ref)\n- Unmap buffer src\n\nThen the call at Ref thinks it\u0027s mapping was writable. Also, what if src is persistently mapped?\n\nThinking about these questions myself, not sure if there are other issues here, like in the example above we are remapping and unmapping the source buffer which is already mapped. Is that broken currently?\n\n---\n\nLet\u0027s not get bogged down on this then, admittedly all these are corner cases.",
       "parentUuid": "6abb2246_7308331e",
+      "revId": "817b12189b7336ce9c88014088704663972f5f71",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25c36c6f_89bb0555",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 616,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-05T15:49:59Z",
+      "side": 1,
+      "message": "\u003e Could something like this happen? ...\n\nmap/unmap are meant for CPU/host side operations. Interleaving that with possibly GPU side operations is undefined behavior. For example, the copybuffersubdata spec says this -\n\n GL_INVALID_OPERATION is generated if the buffer object bound to either\n readtarget or writetarget is mapped.\n\n\u003e Also, what if src is persistently mapped?\n\nWith my changes, we will support \"persistently mapped\" only if the buffer memory is host visible and coherent, in which case we would have already informed VMA that the memory is persistently mapped.",
+      "parentUuid": "9882f6d4_11cc9af5",
       "revId": "817b12189b7336ce9c88014088704663972f5f71",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
