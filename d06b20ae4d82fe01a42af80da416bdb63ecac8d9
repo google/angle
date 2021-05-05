@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8777e352_1f13bb7f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-05T16:25:10Z",
+      "side": 1,
+      "message": "LGTM once the UWP stuff and any other failures are ironed out. This stuff is a bit particular so manual verification on Windows would be good.",
+      "revId": "d06b20ae4d82fe01a42af80da416bdb63ecac8d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef27d042_16035c58",
@@ -14,6 +31,30 @@
       "writtenOn": "2021-05-05T16:21:34Z",
       "side": 1,
       "message": "It\u0027s having trouble finding this symbol on UWP, but it\u0027s in the same header (libloaderapi.h) as GetModuleFileNameA (used above), which should be included via windows.h\nDoes anyone have any ideas what\u0027s going on?",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 124,
+        "endChar": 26
+      },
+      "revId": "d06b20ae4d82fe01a42af80da416bdb63ecac8d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bb054fc_f17d39db",
+        "filename": "src/common/system_utils_win.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-05T16:25:10Z",
+      "side": 1,
+      "message": "Presumably it\u0027s not available on UWP, and you\u0027ll have to handle that.",
+      "parentUuid": "ef27d042_16035c58",
       "range": {
         "startLine": 124,
         "startChar": 8,
