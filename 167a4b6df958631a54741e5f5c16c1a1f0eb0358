@@ -70,6 +70,30 @@
       },
       "revId": "167a4b6df958631a54741e5f5c16c1a1f0eb0358",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32bbbd30_d9bd3b47",
+        "filename": "infra/specs/waterfalls.pyl",
+        "patchSetId": 2
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-05T21:08:32Z",
+      "side": 1,
+      "message": "Aha, I was looking at x64 before. This is for the same CL:\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-clang-x64-rel/20175/overview",
+      "parentUuid": "981830ef_197f1ccf",
+      "range": {
+        "startLine": 105,
+        "startChar": 7,
+        "endLine": 105,
+        "endChar": 19
+      },
+      "revId": "167a4b6df958631a54741e5f5c16c1a1f0eb0358",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
