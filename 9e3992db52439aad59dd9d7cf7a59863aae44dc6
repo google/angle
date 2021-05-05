@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55df8909_bbc9aac3",
+        "filename": "src/libANGLE/renderer/vulkan/null/DisplayVkNull.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T13:45:32Z",
+      "side": 1,
+      "message": "This should do `config-\u003esurfaceType \u0026\u003d ~EGL_WINDOW_BIT;` so that the config doesn\u0027t advertise window support.",
+      "revId": "9e3992db52439aad59dd9d7cf7a59863aae44dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

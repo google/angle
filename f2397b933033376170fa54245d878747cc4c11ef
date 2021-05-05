@@ -54,6 +54,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6558587d_d78ad90e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-05T13:45:32Z",
+      "side": 1,
+      "message": "Ok. I never really understood why Fuchsia is implementing the swapchain with a layer. Out of scope of this change, but perhaps VkLayer_image_pipe_swapchain could be replaced entirely by VK_EXT_headless_surface in Fuchsia, or if that extension is not sufficient, a new extension proposed. With this change, there are three \"headless\" displays in the Vulkan backend!",
+      "parentUuid": "789ffac2_46c69e59",
+      "revId": "f2397b933033376170fa54245d878747cc4c11ef",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ddc7226_673bea8f",
