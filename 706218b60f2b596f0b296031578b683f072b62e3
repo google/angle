@@ -525,6 +525,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "557acccf_faa475b8",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-05T17:03:13Z",
+      "side": 1,
+      "message": "Correct, ANGLE has a high bar for these kind of quality issue. I don\u0027t have a full mapping of everything because some problems happen downstream. So we should fix this. We won\u0027t apply this bar to everything in the ICD.",
+      "parentUuid": "68dade6c_11de18fa",
+      "range": {
+        "startLine": 49,
+        "startChar": 8,
+        "endLine": 49,
+        "endChar": 21
+      },
+      "revId": "706218b60f2b596f0b296031578b683f072b62e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0d81f1a5_6a2f9861",
         "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
         "patchSetId": 11
