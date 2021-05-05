@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dcbd64e4_00a83542",
+        "filename": "scripts/roll_chromium_deps.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-05T18:35:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1884b0bd_219326ff",
+      "range": {
+        "startLine": 247,
+        "startChar": 22,
+        "endLine": 247,
+        "endChar": 31
+      },
+      "revId": "1a6849999c4222f6605ff117d32f62354d88bdbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3bbb7e1a_0d66d7ab",
@@ -125,6 +149,30 @@
       "writtenOn": "2021-05-04T22:22:02Z",
       "side": 1,
       "message": "So, should this then be:\nCLANG_FILE_TEMPLATE % (rev_interval, CLANG_UPDATE_SCRIPT_URL_PATH)\n?",
+      "range": {
+        "startLine": 471,
+        "startChar": 21,
+        "endLine": 472,
+        "endChar": 76
+      },
+      "revId": "1a6849999c4222f6605ff117d32f62354d88bdbc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e6e8cd8_8bb0573a",
+        "filename": "scripts/roll_chromium_deps.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-05T18:35:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "62d17470_6dde8864",
       "range": {
         "startLine": 471,
         "startChar": 21,
