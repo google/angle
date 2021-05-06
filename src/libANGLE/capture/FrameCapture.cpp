@@ -3300,50 +3300,97 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         capCap(GL_STENCIL_TEST, currentDSState.stencilTest);
     }
 
-    if (defaultDSState.stencilFunc != currentDSState.stencilFunc ||
-        defaultDSState.stencilMask != currentDSState.stencilMask || apiState.getStencilRef() != 0)
+    if (currentDSState.stencilFunc == currentDSState.stencilBackFunc &&
+        currentDSState.stencilMask == currentDSState.stencilBackMask)
     {
-        cap(CaptureStencilFuncSeparate(replayState, true, GL_FRONT, currentDSState.stencilFunc,
-                                       apiState.getStencilRef(), currentDSState.stencilMask));
+        // Front and back are equal
+        if (defaultDSState.stencilFunc != currentDSState.stencilFunc ||
+            defaultDSState.stencilMask != currentDSState.stencilMask ||
+            apiState.getStencilRef() != 0)
+        {
+            cap(CaptureStencilFunc(replayState, true, currentDSState.stencilFunc,
+                                   apiState.getStencilRef(), currentDSState.stencilMask));
+        }
+    }
+    else
+    {
+        // Front and back are separate
+        if (defaultDSState.stencilFunc != currentDSState.stencilFunc ||
+            defaultDSState.stencilMask != currentDSState.stencilMask ||
+            apiState.getStencilRef() != 0)
+        {
+            cap(CaptureStencilFuncSeparate(replayState, true, GL_FRONT, currentDSState.stencilFunc,
+                                           apiState.getStencilRef(), currentDSState.stencilMask));
+        }
+
+        if (defaultDSState.stencilBackFunc != currentDSState.stencilBackFunc ||
+            defaultDSState.stencilBackMask != currentDSState.stencilBackMask ||
+            apiState.getStencilBackRef() != 0)
+        {
+            cap(CaptureStencilFuncSeparate(
+                replayState, true, GL_BACK, currentDSState.stencilBackFunc,
+                apiState.getStencilBackRef(), currentDSState.stencilBackMask));
+        }
     }
 
-    if (defaultDSState.stencilBackFunc != currentDSState.stencilBackFunc ||
-        defaultDSState.stencilBackMask != currentDSState.stencilBackMask ||
-        apiState.getStencilBackRef() != 0)
+    if (currentDSState.stencilFail == currentDSState.stencilBackFail &&
+        currentDSState.stencilPassDepthFail == currentDSState.stencilBackPassDepthFail &&
+        currentDSState.stencilPassDepthPass == currentDSState.stencilBackPassDepthPass)
     {
-        cap(CaptureStencilFuncSeparate(replayState, true, GL_BACK, currentDSState.stencilBackFunc,
-                                       apiState.getStencilBackRef(),
-                                       currentDSState.stencilBackMask));
+        // Front and back are equal
+        if (defaultDSState.stencilFail != currentDSState.stencilFail ||
+            defaultDSState.stencilPassDepthFail != currentDSState.stencilPassDepthFail ||
+            defaultDSState.stencilPassDepthPass != currentDSState.stencilPassDepthPass)
+        {
+            cap(CaptureStencilOp(replayState, true, currentDSState.stencilFail,
+                                 currentDSState.stencilPassDepthFail,
+                                 currentDSState.stencilPassDepthPass));
+        }
+    }
+    else
+    {
+        // Front and back are separate
+        if (defaultDSState.stencilFail != currentDSState.stencilFail ||
+            defaultDSState.stencilPassDepthFail != currentDSState.stencilPassDepthFail ||
+            defaultDSState.stencilPassDepthPass != currentDSState.stencilPassDepthPass)
+        {
+            cap(CaptureStencilOpSeparate(replayState, true, GL_FRONT, currentDSState.stencilFail,
+                                         currentDSState.stencilPassDepthFail,
+                                         currentDSState.stencilPassDepthPass));
+        }
+
+        if (defaultDSState.stencilBackFail != currentDSState.stencilBackFail ||
+            defaultDSState.stencilBackPassDepthFail != currentDSState.stencilBackPassDepthFail ||
+            defaultDSState.stencilBackPassDepthPass != currentDSState.stencilBackPassDepthPass)
+        {
+            cap(CaptureStencilOpSeparate(replayState, true, GL_BACK, currentDSState.stencilBackFail,
+                                         currentDSState.stencilBackPassDepthFail,
+                                         currentDSState.stencilBackPassDepthPass));
+        }
     }
 
-    if (defaultDSState.stencilFail != currentDSState.stencilFail ||
-        defaultDSState.stencilPassDepthFail != currentDSState.stencilPassDepthFail ||
-        defaultDSState.stencilPassDepthPass != currentDSState.stencilPassDepthPass)
+    if (currentDSState.stencilWritemask == currentDSState.stencilBackWritemask)
     {
-        cap(CaptureStencilOpSeparate(replayState, true, GL_FRONT, currentDSState.stencilFail,
-                                     currentDSState.stencilPassDepthFail,
-                                     currentDSState.stencilPassDepthPass));
+        // Front and back are equal
+        if (defaultDSState.stencilWritemask != currentDSState.stencilWritemask)
+        {
+            cap(CaptureStencilMask(replayState, true, currentDSState.stencilWritemask));
+        }
     }
-
-    if (defaultDSState.stencilBackFail != currentDSState.stencilBackFail ||
-        defaultDSState.stencilBackPassDepthFail != currentDSState.stencilBackPassDepthFail ||
-        defaultDSState.stencilBackPassDepthPass != currentDSState.stencilBackPassDepthPass)
+    else
     {
-        cap(CaptureStencilOpSeparate(replayState, true, GL_BACK, currentDSState.stencilBackFail,
-                                     currentDSState.stencilBackPassDepthFail,
-                                     currentDSState.stencilBackPassDepthPass));
-    }
+        // Front and back are separate
+        if (defaultDSState.stencilWritemask != currentDSState.stencilWritemask)
+        {
+            cap(CaptureStencilMaskSeparate(replayState, true, GL_FRONT,
+                                           currentDSState.stencilWritemask));
+        }
 
-    if (defaultDSState.stencilWritemask != currentDSState.stencilWritemask)
-    {
-        cap(CaptureStencilMaskSeparate(replayState, true, GL_FRONT,
-                                       currentDSState.stencilWritemask));
-    }
-
-    if (defaultDSState.stencilBackWritemask != currentDSState.stencilBackWritemask)
-    {
-        cap(CaptureStencilMaskSeparate(replayState, true, GL_BACK,
-                                       currentDSState.stencilBackWritemask));
+        if (defaultDSState.stencilBackWritemask != currentDSState.stencilBackWritemask)
+        {
+            cap(CaptureStencilMaskSeparate(replayState, true, GL_BACK,
+                                           currentDSState.stencilBackWritemask));
+        }
     }
 
     // Blend state.
@@ -3360,9 +3407,20 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         currentBlendState.sourceBlendAlpha != defaultBlendState.sourceBlendAlpha ||
         currentBlendState.destBlendAlpha != defaultBlendState.destBlendAlpha)
     {
-        cap(CaptureBlendFuncSeparate(
-            replayState, true, currentBlendState.sourceBlendRGB, currentBlendState.destBlendRGB,
-            currentBlendState.sourceBlendAlpha, currentBlendState.destBlendAlpha));
+        if (currentBlendState.sourceBlendRGB == currentBlendState.sourceBlendAlpha &&
+            currentBlendState.destBlendRGB == currentBlendState.destBlendAlpha)
+        {
+            // Color and alpha are equal
+            cap(CaptureBlendFunc(replayState, true, currentBlendState.sourceBlendRGB,
+                                 currentBlendState.destBlendRGB));
+        }
+        else
+        {
+            // Color and alpha are separate
+            cap(CaptureBlendFuncSeparate(
+                replayState, true, currentBlendState.sourceBlendRGB, currentBlendState.destBlendRGB,
+                currentBlendState.sourceBlendAlpha, currentBlendState.destBlendAlpha));
+        }
     }
 
     if (currentBlendState.blendEquationRGB != defaultBlendState.blendEquationRGB ||
