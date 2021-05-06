@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd659747_8c8b94cf",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-06T16:26:15Z",
+      "side": 1,
+      "message": "Since we have internal programs initialized for GLES1 contexts, this behavior cannot be distinguished by checking for default state and required me to check for context version.",
+      "revId": "558ab260aaec20fa05a923511fac9b1675a51af1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
