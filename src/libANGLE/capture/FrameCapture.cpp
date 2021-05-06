@@ -2251,6 +2251,24 @@ void CaptureIndexedBuffers(const gl::State &glState,
     }
 }
 
+void CaptureDefaultVertexAttribs(const gl::State &replayState,
+                                 const gl::State &apiState,
+                                 std::vector<CallCapture> *setupCalls)
+{
+    const std::vector<gl::VertexAttribCurrentValueData> &currentValues =
+        apiState.getVertexAttribCurrentValues();
+
+    for (GLuint attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; ++attribIndex)
+    {
+        const gl::VertexAttribCurrentValueData &defaultValue = currentValues[attribIndex];
+        if (!IsDefaultCurrentValue(defaultValue))
+        {
+            Capture(setupCalls, CaptureVertexAttrib4fv(replayState, true, attribIndex,
+                                                       defaultValue.Values.FloatValues));
+        }
+    }
+}
+
 void CaptureMidExecutionSetup(const gl::Context *context,
                               std::vector<CallCapture> *setupCalls,
                               ResourceTracker *resourceTracker,
@@ -2357,18 +2375,10 @@ void CaptureMidExecutionSetup(const gl::Context *context,
     // Must happen after buffer data initialization.
     // TODO(http://anglebug.com/3662): Complete state capture.
 
-    // Capture default vertex attribs
-    const std::vector<gl::VertexAttribCurrentValueData> &currentValues =
-        apiState.getVertexAttribCurrentValues();
-
-    for (GLuint attribIndex = 0; attribIndex < gl::MAX_VERTEX_ATTRIBS; ++attribIndex)
+    // Capture default vertex attribs. Do not capture on GLES1.
+    if (!context->isGLES1())
     {
-        const gl::VertexAttribCurrentValueData &defaultValue = currentValues[attribIndex];
-        if (!IsDefaultCurrentValue(defaultValue))
-        {
-            Capture(setupCalls, CaptureVertexAttrib4fv(replayState, true, attribIndex,
-                                                       defaultValue.Values.FloatValues));
-        }
+        CaptureDefaultVertexAttribs(replayState, apiState, setupCalls);
     }
 
     // Capture vertex array objects
