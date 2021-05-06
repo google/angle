@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "35184280_e6bf0848",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-06T00:03:59Z",
+      "side": 1,
+      "message": "Will this affect perftests in CI too?  I see big slow downs locally with dcheck_always_on when running traces.  One of the first things I look for when numbers are off.",
+      "revId": "db670c82bf0ad3a300dcca6d5fe71c6979737371",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
