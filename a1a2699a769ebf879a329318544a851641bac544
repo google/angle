@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d47c4597_cb656de5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-06T16:20:06Z",
+      "side": 1,
+      "message": "This patch implements capturing GLES1 vertex pointer functions like glVertexPointer, glNormalPointer, etc as well as using glEnableClientState instead of the GLES2 glEnableVertexAttribArray equivalent.\n\nTo keep the diff short I am currently checking for the context version inside CaptureVertexArrayData function, as this behavior is not distinguishable by default state, but needs to check for GLES1 contexts.\n\nAny ideas about the structural improvement of this are appreciated.",
+      "revId": "a1a2699a769ebf879a329318544a851641bac544",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
