@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b0ae91a_f2de021f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-06T02:26:26Z",
+      "side": 1,
+      "message": "Also need No-try, since the CQ still wants to test on bots which are being removed.\nNot sure if this is the correct behavior or how it can be fixed.",
+      "revId": "b1dee777f586a4be42571dd0c7a56e45255fc440",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
