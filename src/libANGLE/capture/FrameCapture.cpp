@@ -3004,7 +3004,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
 
     // For now we assume the installed program executable is the same as the current program.
     // TODO(jmadill): Handle installed program executable. http://anglebug.com/3662
-    if (apiState.getProgram())
+    if (apiState.getProgram() && !context->isGLES1())
     {
         cap(CaptureUseProgram(replayState, true, apiState.getProgram()->id()));
         CaptureUpdateCurrentProgram(setupCalls->back(), setupCalls);
