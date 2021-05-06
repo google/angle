@@ -31,6 +31,7 @@
 #include "libANGLE/Shader.h"
 #include "libANGLE/Surface.h"
 #include "libANGLE/VertexArray.h"
+#include "libANGLE/capture/capture_gles_1_0_autogen.h"
 #include "libANGLE/capture/capture_gles_2_0_autogen.h"
 #include "libANGLE/capture/capture_gles_3_0_autogen.h"
 #include "libANGLE/capture/capture_gles_3_1_autogen.h"
@@ -1870,6 +1871,46 @@ void CaptureUpdateUniformValues(const gl::State &replayState,
     }
 }
 
+void CaptureVertexPointerES1(std::vector<CallCapture> *setupCalls,
+                             gl::State *replayState,
+                             GLuint attribIndex,
+                             const gl::VertexAttribute &attrib,
+                             const gl::VertexBinding &binding)
+{
+    switch (gl::GLES1Renderer::VertexArrayType(attribIndex))
+    {
+        case gl::ClientVertexArrayType::Vertex:
+            Capture(setupCalls,
+                    CaptureVertexPointer(*replayState, true, attrib.format->channelCount,
+                                         attrib.format->vertexAttribType, binding.getStride(),
+                                         attrib.pointer));
+            break;
+        case gl::ClientVertexArrayType::Normal:
+            Capture(setupCalls,
+                    CaptureNormalPointer(*replayState, true, attrib.format->vertexAttribType,
+                                         binding.getStride(), attrib.pointer));
+            break;
+        case gl::ClientVertexArrayType::Color:
+            Capture(setupCalls, CaptureColorPointer(*replayState, true, attrib.format->channelCount,
+                                                    attrib.format->vertexAttribType,
+                                                    binding.getStride(), attrib.pointer));
+            break;
+        case gl::ClientVertexArrayType::PointSize:
+            Capture(setupCalls,
+                    CapturePointSizePointerOES(*replayState, true, attrib.format->vertexAttribType,
+                                               binding.getStride(), attrib.pointer));
+            break;
+        case gl::ClientVertexArrayType::TextureCoord:
+            Capture(setupCalls,
+                    CaptureTexCoordPointer(*replayState, true, attrib.format->channelCount,
+                                           attrib.format->vertexAttribType, binding.getStride(),
+                                           attrib.pointer));
+            break;
+        default:
+            UNREACHABLE();
+    }
+}
+
 void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
                             const gl::Context *context,
                             const gl::VertexArray *vertexArray,
@@ -1888,7 +1929,17 @@ void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
 
         if (attrib.enabled != defaultAttrib.enabled)
         {
-            Capture(setupCalls, CaptureEnableVertexAttribArray(*replayState, false, attribIndex));
+            if (context->isGLES1())
+            {
+                Capture(setupCalls,
+                        CaptureEnableClientState(*replayState, false,
+                                                 gl::GLES1Renderer::VertexArrayType(attribIndex)));
+            }
+            else
+            {
+                Capture(setupCalls,
+                        CaptureEnableVertexAttribArray(*replayState, false, attribIndex));
+            }
         }
 
         if (attrib.format != defaultAttrib.format || attrib.pointer != defaultAttrib.pointer ||
@@ -1906,10 +1957,18 @@ void CaptureVertexArrayData(std::vector<CallCapture> *setupCalls,
             }
 
             // Establish the relationship between currently bound buffer and the VAO
-            Capture(setupCalls, CaptureVertexAttribPointer(
-                                    *replayState, true, attribIndex, attrib.format->channelCount,
-                                    attrib.format->vertexAttribType, attrib.format->isNorm(),
-                                    binding.getStride(), attrib.pointer));
+            if (context->isGLES1())
+            {
+                CaptureVertexPointerES1(setupCalls, replayState, attribIndex, attrib, binding);
+            }
+            else
+            {
+                Capture(setupCalls,
+                        CaptureVertexAttribPointer(
+                            *replayState, true, attribIndex, attrib.format->channelCount,
+                            attrib.format->vertexAttribType, attrib.format->isNorm(),
+                            binding.getStride(), attrib.pointer));
+            }
         }
 
         if (binding.getDivisor() != 0)
