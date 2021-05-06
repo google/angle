@@ -492,9 +492,6 @@ basic_types_enumeration = [
     'Image2DMSArray',
     'IImage2DMSArray',
     'UImage2DMSArray',
-    'Image2DRect',
-    'IImage2DRect',
-    'UImage2DRect',
     'ImageCubeArray',
     'IImageCubeArray',
     'UImageCubeArray',
@@ -1331,7 +1328,7 @@ def gen_function_variants(function_props):
         variants = [['gimage2D', 'ivec2'], ['gimage3D', 'ivec3'], ['gimageCube', 'ivec3'],
                     ['gimageBuffer', 'int'], ['gimage2DArray', 'ivec3'],
                     ['gimageCubeArray', 'ivec3'], ['gimage1D', 'int'], ['gimage1DArray', 'ivec2'],
-                    ['gimage2DRect', 'ivec2'], ['gimage2DMS', 'ivec2', 'int'],
+                    ['gimageRect', 'ivec2'], ['gimage2DMS', 'ivec2', 'int'],
                     ['gimage2DMSArray', 'ivec3', 'int']]
         for variant in variants:
             image_variant_parameters = []

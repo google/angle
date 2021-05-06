@@ -21,77 +21,77 @@ namespace BuiltInGroup
 bool isTextureOffsetNoBias(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3795 && id <= 3864;
+    return id >= 3792 && id <= 3861;
 }
 bool isTextureOffsetBias(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3865 && id <= 3884;
+    return id >= 3862 && id <= 3881;
 }
 bool isTextureGatherOffsetNoComp(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3922 && id <= 3929;
+    return id >= 3919 && id <= 3926;
 }
 bool isTextureGatherOffsetComp(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3930 && id <= 3935;
+    return id >= 3927 && id <= 3932;
 }
 bool isTextureGatherOffset(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3922 && id <= 3935;
+    return id >= 3919 && id <= 3932;
 }
 bool isTextureGatherOffsetsNoComp(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3936 && id <= 3952;
+    return id >= 3933 && id <= 3949;
 }
 bool isTextureGatherOffsetsComp(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3953 && id <= 3964;
+    return id >= 3950 && id <= 3961;
 }
 bool isTextureGatherOffsets(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3936 && id <= 3964;
+    return id >= 3933 && id <= 3961;
 }
 bool isTextureGather(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3898 && id <= 3964;
+    return id >= 3895 && id <= 3961;
 }
 bool isInterpolationFS(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 3977 && id <= 4000;
+    return id >= 3974 && id <= 3997;
 }
 bool isAtomicMemory(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 4005 && id <= 4022;
+    return id >= 4002 && id <= 4019;
 }
 bool isImageStore(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 4059 && id <= 4076;
+    return id >= 4056 && id <= 4073;
 }
 bool isImageLoad(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 4077 && id <= 4094;
+    return id >= 4074 && id <= 4091;
 }
 bool isImageAtomic(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 4095 && id <= 4670;
+    return id >= 4092 && id <= 4667;
 }
 bool isImage(const TFunction *func)
 {
     int id = func->uniqueId().get();
-    return id >= 4023 && id <= 4670;
+    return id >= 4020 && id <= 4667;
 }
 
 }  // namespace BuiltInGroup
