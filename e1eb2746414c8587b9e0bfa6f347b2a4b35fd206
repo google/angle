@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "89a2e5d2_65939af3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-06T16:27:48Z",
+      "side": 1,
+      "message": "This could potentially check for all GLES1 states in getEnableFeature and be moved to a helper function. I only needed this for GL_TEXTURE_2D in the case of Dr. Driving.",
+      "revId": "e1eb2746414c8587b9e0bfa6f347b2a4b35fd206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
