@@ -126,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "824ea575_fca4fcc4",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-06T14:35:33Z",
+      "side": 1,
+      "message": "Same garbagelist? different hasProtectedContent? What about submitQueueSerial?\n\nDo we need a separate queue per context? Not that that is possible.",
+      "parentUuid": "de6c8f2b_75e05628",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "35322b1d_0029dc8f",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 8
@@ -137,6 +155,30 @@
       "writtenOn": "2021-05-03T18:53:18Z",
       "side": 1,
       "message": "Probably doesn\u0027t need to be a separate list.",
+      "range": {
+        "startLine": 929,
+        "startChar": 41,
+        "endLine": 929,
+        "endChar": 63
+      },
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25b26bfa_526e3813",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 929,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-06T14:35:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35322b1d_0029dc8f",
       "range": {
         "startLine": 929,
         "startChar": 41,
@@ -160,6 +202,30 @@
       "writtenOn": "2021-05-03T18:53:18Z",
       "side": 1,
       "message": "Refactor to avoid duplication with the above loop.\n\nAlternatively, remove mProtectedInFlightCommands and keep all in-flight commands in the same list. Why are they separate?",
+      "range": {
+        "startLine": 961,
+        "startChar": 0,
+        "endLine": 975,
+        "endChar": 39
+      },
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "849c2a93_140c46d9",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 975,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-06T14:35:33Z",
+      "side": 1,
+      "message": "In CommandQueue::retireFinishedCommands() inFlightCommands are moved back to the CommandPool, but with protected and non-protected commands in the inFlightCommands, I think they are being moved into the wrong commandPool? I started seeing issue with mixed protected/nonprotected context/window surface. So I went back to 2 inflightCommands and issue resolved.",
+      "parentUuid": "fba76009_3ee99594",
       "range": {
         "startLine": 961,
         "startChar": 0,
@@ -200,6 +266,30 @@
       "writtenOn": "2021-05-03T18:53:18Z",
       "side": 1,
       "message": "nit: F because it\u0027s static",
+      "range": {
+        "startLine": 197,
+        "startChar": 20,
+        "endLine": 197,
+        "endChar": 21
+      },
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e64f0e8b_48a932ef",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-06T14:35:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a2415bca_1de7d722",
       "range": {
         "startLine": 197,
         "startChar": 20,

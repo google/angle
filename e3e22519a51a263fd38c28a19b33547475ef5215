@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ded9ae5e_3de1b2fc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-06T14:35:33Z",
+      "side": 1,
+      "message": "Some responses.\nMerge conflict on this latest upload from hashes.",
+      "revId": "e3e22519a51a263fd38c28a19b33547475ef5215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
