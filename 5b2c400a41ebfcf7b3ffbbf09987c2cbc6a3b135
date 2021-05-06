@@ -16,6 +16,92 @@
       "message": "LGTM!",
       "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c0971b8_cbf9133c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-06T00:00:56Z",
+      "side": 1,
+      "message": "This is an enormous amount of code, difficult to review.  I\u0027ve gone through most of it, but hard to have full confidence in the code until tests are online.  I know you are having local success so let\u0027s land this.  You could add some more detail to the commit message showing what you shared over chat, like the library names and output from clinfo, showing the impact of this commit.",
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8d987935_fe1b313f",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-06T00:00:56Z",
+      "side": 1,
+      "message": "This bit is hard to follow. Maybe just a bit more color about how the code below prevents ANGLE ICD from being loaded in the loop below.",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 82
+      },
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5215ba0b_679424b3",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-06T00:00:56Z",
+      "side": 1,
+      "message": "Its weird seeing a file names \"stubs\" get a bunch of populated functions, but I know that\u0027s the pattern.",
+      "range": {
+        "startLine": 6,
+        "startChar": 17,
+        "endLine": 6,
+        "endChar": 22
+      },
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "daa9701b_f0c6934d",
+        "filename": "src/libOpenCL/dispatch.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-06T00:00:56Z",
+      "side": 1,
+      "message": "This doesn\u0027t appear to be used anywhere?",
+      "range": {
+        "startLine": 18,
+        "startChar": 17,
+        "endLine": 18,
+        "endChar": 23
+      },
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
