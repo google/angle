@@ -1421,9 +1421,9 @@ bool State::getEnableFeature(GLenum feature) const
         case GL_TEXTURE_COORD_ARRAY:
             return mGLES1State.mTexCoordArrayEnabled[mGLES1State.mClientActiveTexture];
         case GL_TEXTURE_2D:
-            return mGLES1State.mTexUnitEnables[mActiveSampler].test(TextureType::_2D);
+            return mGLES1State.isTextureTargetEnabled(getActiveSampler(), TextureType::_2D);
         case GL_TEXTURE_CUBE_MAP:
-            return mGLES1State.mTexUnitEnables[mActiveSampler].test(TextureType::CubeMap);
+            return mGLES1State.isTextureTargetEnabled(getActiveSampler(), TextureType::CubeMap);
         case GL_LIGHTING:
             return mGLES1State.mLightingEnabled;
         case GL_LIGHT0:

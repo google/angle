@@ -3224,6 +3224,17 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
     };
 
+    // Capture GLES1 context states.
+    if (context->isGLES1())
+    {
+        const bool currentTextureState = apiState.getEnableFeature(GL_TEXTURE_2D);
+        const bool defaultTextureState = replayState.getEnableFeature(GL_TEXTURE_2D);
+        if (currentTextureState != defaultTextureState)
+        {
+            capCap(GL_TEXTURE_2D, currentTextureState);
+        }
+    }
+
     // Rasterizer state. Missing ES 3.x features.
     const gl::RasterizerState &defaultRasterState = replayState.getRasterizerState();
     const gl::RasterizerState &currentRasterState = apiState.getRasterizerState();
