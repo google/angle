@@ -8,7 +8,17 @@ import("../../gni/angle.gni")
 
 assert(angle_enable_cl)
 
-angle_shared_library("OpenCL_ANGLE") {
+cl_library_name = "OpenCL_ANGLE"
+
+config("opencl_library_name") {
+  if (is_win) {
+    defines = [ "ANGLE_OPENCL_LIB_NAME=\"" + cl_library_name + "\"" ]
+  } else {
+    defines = [ "ANGLE_OPENCL_LIB_NAME=\"lib" + cl_library_name + ".so\"" ]
+  }
+}
+
+angle_shared_library(cl_library_name) {
   defines = [ "LIBCL_IMPLEMENTATION" ]
 
   sources = [
@@ -28,39 +38,6 @@ angle_shared_library("OpenCL_ANGLE") {
   ]
 }
 
-icd_library_name = "OpenCL_ICD_ANGLE"
-
-config("opencl_icd_library_name") {
-  if (is_win) {
-    defines = [ "ANGLE_OPENCL_ICD_LIB_NAME=\"" + icd_library_name + "\"" ]
-  } else {
-    defines = [ "ANGLE_OPENCL_ICD_LIB_NAME=\"lib" + icd_library_name + ".so\"" ]
-  }
-}
-
-angle_shared_library(icd_library_name) {
-  defines = [ "LIBCL_IMPLEMENTATION" ]
-
-  sources = [
-    "dispatch.cpp",
-    "dispatch.h",
-    "libOpenCL_ICD.cpp",
-  ]
-
-  configs += [
-    "$angle_root:debug_annotations_config",
-    "$angle_root:library_name_config",
-  ]
-
-  deps = [
-    "$angle_root:angle_common",
-    "$angle_root:cl_includes",
-  ]
-}
-
 group("angle_cl") {
-  data_deps = [
-    ":OpenCL_ANGLE",
-    ":OpenCL_ICD_ANGLE",
-  ]
+  data_deps = [ ":$cl_library_name" ]
 }

@@ -48,16 +48,16 @@ CLPlatformCL::ImplList CLPlatformCL::GetPlatforms(bool isIcd)
     if (khrIcdVendors == nullptr)
     {
         // Our OpenCL entry points are not reentrant, so we have to prevent khrIcdInitialize()
-        // from querying ANGLE's OpenCL ICD library. We store a dummy entry with the library in
-        // the khrIcdVendors list, because the ICD Loader skips the libries which are already in
+        // from querying ANGLE's OpenCL library. We store a dummy entry with the library in the
+        // khrIcdVendors list, because the ICD Loader skips the libraries which are already in
         // the list as it assumes they were already enumerated.
         static angle::base::NoDestructor<KHRicdVendor> sVendorAngle({});
-        sVendorAngle->library = khrIcdOsLibraryLoad(ANGLE_OPENCL_ICD_LIB_NAME);
+        sVendorAngle->library = khrIcdOsLibraryLoad(ANGLE_OPENCL_LIB_NAME);
         khrIcdVendors         = sVendorAngle.get();
         if (khrIcdVendors->library != nullptr)
         {
             khrIcdInitialize();
-            // After the enumeration we don't need ANGLE's OpenCL ICD library any more,
+            // After the enumeration we don't need ANGLE's OpenCL library any more,
             // but we keep the dummy entry int the list to prevent another enumeration.
             khrIcdOsLibraryUnload(khrIcdVendors->library);
             khrIcdVendors->library = nullptr;
