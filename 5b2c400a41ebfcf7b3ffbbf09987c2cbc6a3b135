@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2555297c_fb057ec9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-06T11:29:56Z",
+      "side": 1,
+      "message": "Yes, I have already finished a design doc for the OpenCL interception in ANGLE, and will add a README later on how to configure the ICD loader on Windows and Linux, with the clinfo example.",
+      "parentUuid": "3c0971b8_cbf9133c",
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8d987935_fe1b313f",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-05-06T00:00:56Z",
       "side": 1,
       "message": "This bit is hard to follow. Maybe just a bit more color about how the code below prevents ANGLE ICD from being loaded in the loop below.",
+      "range": {
+        "startLine": 48,
+        "startChar": 8,
+        "endLine": 48,
+        "endChar": 82
+      },
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5df469a1_a85bd6bc",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-06T11:29:56Z",
+      "side": 1,
+      "message": "Thanks, yes, I added a detailed explanation",
+      "parentUuid": "8d987935_fe1b313f",
       "range": {
         "startLine": 48,
         "startChar": 8,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df4870a4_49fe1d42",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-06T11:29:56Z",
+      "side": 1,
+      "message": "I agree",
+      "parentUuid": "5215ba0b_679424b3",
+      "range": {
+        "startLine": 6,
+        "startChar": 17,
+        "endLine": 6,
+        "endChar": 22
+      },
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "daa9701b_f0c6934d",
@@ -94,6 +160,30 @@
       "writtenOn": "2021-05-06T00:00:56Z",
       "side": 1,
       "message": "This doesn\u0027t appear to be used anywhere?",
+      "range": {
+        "startLine": 18,
+        "startChar": 17,
+        "endLine": 18,
+        "endChar": 23
+      },
+      "revId": "5b2c400a41ebfcf7b3ffbbf09987c2cbc6a3b135",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fb34003c_570a0be6",
+        "filename": "src/libOpenCL/dispatch.cpp",
+        "patchSetId": 17
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-06T11:29:56Z",
+      "side": 1,
+      "message": "Correct, was used before. I removed it.",
+      "parentUuid": "daa9701b_f0c6934d",
       "range": {
         "startLine": 18,
         "startChar": 17,
