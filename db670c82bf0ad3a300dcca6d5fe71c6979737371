@@ -16,6 +16,24 @@
       "message": "Will this affect perftests in CI too?  I see big slow downs locally with dcheck_always_on when running traces.  One of the first things I look for when numbers are off.",
       "revId": "db670c82bf0ad3a300dcca6d5fe71c6979737371",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "05161f92_800ea3c5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T13:40:14Z",
+      "side": 1,
+      "message": "Yes and no. This maintains the current flow we have where perftests are verified for correctness with one frame. Also for Gold tests, we build with this on. For the performance build it\u0027ll be off. That is something that we don\u0027t have set up quite right at the moment.",
+      "parentUuid": "35184280_e6bf0848",
+      "revId": "db670c82bf0ad3a300dcca6d5fe71c6979737371",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
