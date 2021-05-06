@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e02ead9_f16f6e5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-06T16:29:50Z",
+      "side": 1,
+      "message": "This behavior is again not distinguishable by default / current state, as GLES1 requires the simpler versions of these functions.\n\nTo keep the diff short and for review I am checking for context version in each relevant function. I can create helper functions for capturing Stencil and Blending states for each GLES1 and GLES2, which will introduce a bit of code duplication.",
+      "revId": "a8ba7d1f4f64696c4a8f0e02e4412258dbeb114a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
