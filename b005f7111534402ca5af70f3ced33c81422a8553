@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54e4f88f_4cad9e27",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-06T15:59:37Z",
+      "side": 1,
+      "message": "This patch fixes replay of all GLES1 traces on native Android / QC.\nThe off screen tests also succeed with this test applied, I suppose they were also working before, I have not tested it though.",
+      "revId": "b005f7111534402ca5af70f3ced33c81422a8553",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
