@@ -1388,30 +1388,6 @@ void CommandBufferHelper::finalizeDepthStencilImageLayout(Context *context)
         VkImageAspectFlags aspectFlags = GetDepthStencilAspectFlags(format);
         updateImageLayoutAndBarrier(context, mDepthStencilImage, aspectFlags, imageLayout);
     }
-
-    if (!mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
-    {
-        ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
-        const PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
-
-        // If the image is being written to, mark its contents defined.
-        VkImageAspectFlags definedAspects = 0;
-        if (dsOps.storeOp == VK_ATTACHMENT_STORE_OP_STORE)
-        {
-            definedAspects |= VK_IMAGE_ASPECT_DEPTH_BIT;
-        }
-        if (dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_STORE)
-        {
-            definedAspects |= VK_IMAGE_ASPECT_STENCIL_BIT;
-        }
-        if (definedAspects != 0)
-        {
-            mDepthStencilImage->onWrite(mDepthStencilLevelIndex, 1, mDepthStencilLayerIndex,
-                                        mDepthStencilLayerCount, definedAspects);
-        }
-    }
-
-    mDepthStencilImage->resetRenderPassUsageFlags();
 }
 
 void CommandBufferHelper::finalizeDepthStencilResolveImageLayout(Context *context)
@@ -1475,7 +1451,7 @@ void CommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelpe
 
     if (mDepthStencilImage == image)
     {
-        finalizeDepthStencilImageLayout(context);
+        finalizeDepthStencilImageLayoutAndLoadStore(context);
         mDepthStencilImage = nullptr;
     }
 
@@ -1484,6 +1460,106 @@ void CommandBufferHelper::finalizeImageLayout(Context *context, const ImageHelpe
         finalizeDepthStencilResolveImageLayout(context);
         mDepthStencilResolveImage = nullptr;
     }
+}
+
+void CommandBufferHelper::finalizeDepthStencilLoadStore(Context *context)
+{
+    ASSERT(mDepthStencilAttachmentIndex != kAttachmentIndexInvalid);
+
+    PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
+
+    // This has to be called after layout been finalized
+    ASSERT(dsOps.initialLayout != static_cast<uint16_t>(ImageLayout::Undefined));
+
+    // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
+    ASSERT(dsOps.initialLayout != static_cast<uint16_t>(ImageLayout::DepthStencilReadOnly) ||
+           (mDepthAccess != ResourceAccess::Write && mStencilAccess != ResourceAccess::Write));
+
+    // If the attachment is invalidated, skip the store op.  If we are not loading or clearing the
+    // attachment and the attachment has not been used, auto-invalidate it.
+    const bool depthNotLoaded = dsOps.loadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE &&
+                                !mRenderPassDesc.hasDepthUnresolveAttachment();
+    if (isInvalidated(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled) ||
+        (depthNotLoaded && mDepthAccess != ResourceAccess::Write))
+    {
+        dsOps.storeOp       = RenderPassStoreOp::DontCare;
+        dsOps.isInvalidated = true;
+    }
+    else if (hasWriteAfterInvalidate(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled))
+    {
+        // The depth attachment was invalidated, but is now valid.  Let the image know the contents
+        // are now defined so a future render pass would use loadOp=LOAD.
+        restoreDepthContent();
+    }
+    const bool stencilNotLoaded = dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE &&
+                                  !mRenderPassDesc.hasStencilUnresolveAttachment();
+    if (isInvalidated(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled) ||
+        (stencilNotLoaded && mStencilAccess != ResourceAccess::Write))
+    {
+        dsOps.stencilStoreOp       = RenderPassStoreOp::DontCare;
+        dsOps.isStencilInvalidated = true;
+    }
+    else if (hasWriteAfterInvalidate(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled))
+    {
+        // The stencil attachment was invalidated, but is now valid.  Let the image know the
+        // contents are now defined so a future render pass would use loadOp=LOAD.
+        restoreStencilContent();
+    }
+
+    // For read only depth stencil, we can use StoreOpNone if available. DONT_CARE is still
+    // preferred, so do this after finish the DONT_CARE handling.
+    if (dsOps.initialLayout == static_cast<uint16_t>(ImageLayout::DepthStencilReadOnly) &&
+        context->getRenderer()->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled)
+    {
+        if (dsOps.storeOp == RenderPassStoreOp::Store)
+        {
+            dsOps.storeOp = RenderPassStoreOp::NoneQCOM;
+        }
+        if (dsOps.stencilStoreOp == RenderPassStoreOp::Store)
+        {
+            dsOps.stencilStoreOp = RenderPassStoreOp::NoneQCOM;
+        }
+    }
+
+    // If we are loading or clearing the attachment, but the attachment has not been used, and the
+    // data has also not been stored back into attachment, then just skip the load/clear op.
+    if (mDepthAccess == ResourceAccess::Unused && dsOps.storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
+    {
+        dsOps.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    }
+
+    if (mStencilAccess == ResourceAccess::Unused &&
+        dsOps.stencilStoreOp == RenderPassStoreOp::DontCare)
+    {
+        dsOps.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    }
+
+    // This has to be done after storeOp has been finalized.
+    if (!mDepthStencilImage->hasRenderPassUsageFlag(RenderPassUsage::ReadOnlyAttachment))
+    {
+        // If the image is being written to, mark its contents defined.
+        VkImageAspectFlags definedAspects = 0;
+        if (dsOps.storeOp == VK_ATTACHMENT_STORE_OP_STORE)
+        {
+            definedAspects |= VK_IMAGE_ASPECT_DEPTH_BIT;
+        }
+        if (dsOps.stencilStoreOp == VK_ATTACHMENT_STORE_OP_STORE)
+        {
+            definedAspects |= VK_IMAGE_ASPECT_STENCIL_BIT;
+        }
+        if (definedAspects != 0)
+        {
+            mDepthStencilImage->onWrite(mDepthStencilLevelIndex, 1, mDepthStencilLayerIndex,
+                                        mDepthStencilLayerCount, definedAspects);
+        }
+    }
+}
+
+void CommandBufferHelper::finalizeDepthStencilImageLayoutAndLoadStore(Context *context)
+{
+    finalizeDepthStencilImageLayout(context);
+    finalizeDepthStencilLoadStore(context);
+    mDepthStencilImage->resetRenderPassUsageFlags();
 }
 
 void CommandBufferHelper::beginRenderPass(const Framebuffer &framebuffer,
@@ -1530,76 +1606,10 @@ void CommandBufferHelper::endRenderPass(ContextVk *contextVk)
         return;
     }
 
-    PackedAttachmentOpsDesc &dsOps = mAttachmentOps[mDepthStencilAttachmentIndex];
-    // Depth/Stencil buffer optimizations:
-
-    // If the attachment is invalidated, skip the store op.  If we are not loading or clearing the
-    // attachment and the attachment has not been used, auto-invalidate it.
-    const bool depthNotLoaded = dsOps.loadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE &&
-                                !mRenderPassDesc.hasDepthUnresolveAttachment();
-    if (isInvalidated(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled) ||
-        (depthNotLoaded && mDepthAccess != ResourceAccess::Write))
-    {
-        dsOps.storeOp       = RenderPassStoreOp::DontCare;
-        dsOps.isInvalidated = true;
-    }
-    else if (hasWriteAfterInvalidate(mDepthCmdSizeInvalidated, mDepthCmdSizeDisabled))
-    {
-        // The depth attachment was invalidated, but is now valid.  Let the image know the contents
-        // are now defined so a future render pass would use loadOp=LOAD.
-        restoreDepthContent();
-    }
-    const bool stencilNotLoaded = dsOps.stencilLoadOp == VK_ATTACHMENT_LOAD_OP_DONT_CARE &&
-                                  !mRenderPassDesc.hasStencilUnresolveAttachment();
-    if (isInvalidated(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled) ||
-        (stencilNotLoaded && mStencilAccess != ResourceAccess::Write))
-    {
-        dsOps.stencilStoreOp       = RenderPassStoreOp::DontCare;
-        dsOps.isStencilInvalidated = true;
-    }
-    else if (hasWriteAfterInvalidate(mStencilCmdSizeInvalidated, mStencilCmdSizeDisabled))
-    {
-        // The stencil attachment was invalidated, but is now valid.  Let the image know the
-        // contents are now defined so a future render pass would use loadOp=LOAD.
-        restoreStencilContent();
-    }
-
-    // For read only depth stencil, we can use StoreOpNone if available. DONT_CARE is still
-    // preferred, so do this after finish the DONT_CARE handling.
-    if (dsOps.initialLayout == static_cast<uint16_t>(ImageLayout::DepthStencilReadOnly) &&
-        contextVk->getFeatures().supportsRenderPassStoreOpNoneQCOM.enabled)
-    {
-        if (dsOps.storeOp == RenderPassStoreOp::Store)
-        {
-            dsOps.storeOp = RenderPassStoreOp::NoneQCOM;
-        }
-        if (dsOps.stencilStoreOp == RenderPassStoreOp::Store)
-        {
-            dsOps.stencilStoreOp = RenderPassStoreOp::NoneQCOM;
-        }
-    }
-
-    // If we are loading or clearing the attachment, but the attachment has not been used, and the
-    // data has also not been stored back into attachment, then just skip the load/clear op.
-    if (mDepthAccess == ResourceAccess::Unused && dsOps.storeOp == VK_ATTACHMENT_STORE_OP_DONT_CARE)
-    {
-        dsOps.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    }
-
-    if (mStencilAccess == ResourceAccess::Unused &&
-        dsOps.stencilStoreOp == RenderPassStoreOp::DontCare)
-    {
-        dsOps.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-    }
-
-    // Ensure we don't write to a read-only RenderPass. (ReadOnly -> !Write)
-    ASSERT(dsOps.initialLayout != static_cast<uint16_t>(ImageLayout::DepthStencilReadOnly) ||
-           (mDepthAccess != ResourceAccess::Write && mStencilAccess != ResourceAccess::Write));
-
-    // Do depth stencil layout change.
+    // Do depth stencil layout change and load store optimization.
     if (mDepthStencilImage)
     {
-        finalizeDepthStencilImageLayout(contextVk);
+        finalizeDepthStencilImageLayoutAndLoadStore(contextVk);
     }
     if (mDepthStencilResolveImage)
     {
