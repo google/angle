@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c304892d_ee7e95d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-06T15:31:12Z",
+      "side": 1,
+      "message": "I verified locally that it finds the ANGLE dll. I can\u0027t verify that it fixes the issue until it lands in Canary",
+      "parentUuid": "8777e352_1f13bb7f",
+      "revId": "d06b20ae4d82fe01a42af80da416bdb63ecac8d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef27d042_16035c58",
@@ -55,6 +73,30 @@
       "side": 1,
       "message": "Presumably it\u0027s not available on UWP, and you\u0027ll have to handle that.",
       "parentUuid": "ef27d042_16035c58",
+      "range": {
+        "startLine": 124,
+        "startChar": 8,
+        "endLine": 124,
+        "endChar": 26
+      },
+      "revId": "d06b20ae4d82fe01a42af80da416bdb63ecac8d9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4050dac_6ba1f716",
+        "filename": "src/common/system_utils_win.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-06T15:31:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bb054fc_f17d39db",
       "range": {
         "startLine": 124,
         "startChar": 8,
