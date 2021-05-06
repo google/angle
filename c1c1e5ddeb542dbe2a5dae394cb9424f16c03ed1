@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba5245d3_a887b26e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-06T15:49:44Z",
+      "side": 1,
+      "message": "This extends the capture/replay test expectations list for the GLES1 test suite, tested with SwiftShader ES1.\nTo make the capture/replay tests work in groups, including GLES2 ones, I needed to apply both patches from:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2867080\nRunning one test at a time still worked without applying the patches.\n\nFurthermore the expectations list expects 2 patches form my ES1 capture CL to be merged, which is currently passing the CI:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2859826\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2859825\n\n",
+      "revId": "c1c1e5ddeb542dbe2a5dae394cb9424f16c03ed1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
