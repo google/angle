@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83a2c1db_68b0fc1d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T22:19:48Z",
+      "side": 1,
+      "message": "Nice work Brandon. LGTM with one last suggestion.",
+      "revId": "034befec5064b340882860e6105c6dc8ec7d9d63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a61099d1_b3dfab5d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1874,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T22:19:48Z",
+      "side": 1,
+      "message": "Suggest we take out the fallback. And change the check to an ASSERT.",
+      "range": {
+        "startLine": 1873,
+        "startChar": 16,
+        "endLine": 1874,
+        "endChar": 16
+      },
+      "revId": "034befec5064b340882860e6105c6dc8ec7d9d63",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
