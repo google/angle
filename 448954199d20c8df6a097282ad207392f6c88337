@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c386810_6f557ff5",
+        "filename": "infra/specs/mixins.pyl",
+        "patchSetId": 1
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-06T14:20:31Z",
+      "side": 1,
+      "message": "I guess if you\u0027ve modified the file manually, this would fail presubmit?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 3,
+        "endChar": 0
+      },
+      "revId": "448954199d20c8df6a097282ad207392f6c88337",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
