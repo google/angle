@@ -232,6 +232,7 @@ set_defaults("angle_executable") {
   configs = angle_common_configs
   public_configs = []
   suppressed_configs = angle_remove_configs
+  data_deps = []
 }
 
 set_defaults("angle_shared_library") {
@@ -284,6 +285,10 @@ template("angle_executable") {
 
     configs += invoker.configs
     configs -= invoker.suppressed_configs
+
+    if (is_win) {
+      data_deps += [ "//build/win:runtime_libs" ]
+    }
   }
 }
 
@@ -462,6 +467,10 @@ if (angle_standalone || build_with_chromium) {
           "_ios_main",
         ]
         sources += [ "$angle_root/util/ios/ios_main.mm" ]
+      }
+
+      if (is_win) {
+        data_deps += [ "//build/win:runtime_libs" ]
       }
     }
   }
