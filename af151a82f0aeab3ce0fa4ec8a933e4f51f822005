@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d0fdf0d6_8fe9e347",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-06T00:25:26Z",
+      "side": 1,
+      "message": "PTAL\n\nI\u0027m not sure where exactly to put the AndroidManifest.xml, since it can be a bit confusing having it live next to AndroidManifest.xml.jinja2 with one being used in the ANGLE build and the other used in AOSP.   Let me know what you think.",
+      "revId": "af151a82f0aeab3ce0fa4ec8a933e4f51f822005",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
