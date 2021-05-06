@@ -16,6 +16,23 @@
       "message": "Patch updated, with a preparing patch added. ",
       "revId": "92495974f02167a1b1b467fefb0540d030dd2cb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6611167_ce358075",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T22:22:19Z",
+      "side": 1,
+      "message": "Sorry for the slow response, I\u0027m looking at it locally, wanted to see if we can get a solution that doesn\u0027t need a try-if-fail-then-fallback pattern.",
+      "revId": "92495974f02167a1b1b467fefb0540d030dd2cb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
