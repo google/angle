@@ -1071,14 +1071,18 @@ void TracePerfTest::initializeBenchmark()
 
 void TracePerfTest::destroyBenchmark()
 {
-    glDeleteTextures(mMaxOffscreenBufferCount, mOffscreenTextures.data());
-    mOffscreenTextures.fill(0);
+    const auto &params = GetParam();
+    if (params.surfaceType == SurfaceType::Offscreen)
+    {
+        glDeleteTextures(mMaxOffscreenBufferCount, mOffscreenTextures.data());
+        mOffscreenTextures.fill(0);
 
-    glDeleteRenderbuffers(1, &mOffscreenDepthStencil);
-    mOffscreenDepthStencil = 0;
+        glDeleteRenderbuffers(1, &mOffscreenDepthStencil);
+        mOffscreenDepthStencil = 0;
 
-    glDeleteFramebuffers(mMaxOffscreenBufferCount, mOffscreenFramebuffers.data());
-    mOffscreenFramebuffers.fill(0);
+        glDeleteFramebuffers(mMaxOffscreenBufferCount, mOffscreenFramebuffers.data());
+        mOffscreenFramebuffers.fill(0);
+    }
 
     mTraceLibrary->finishReplay();
     mTraceLibrary.reset(nullptr);
