@@ -271,7 +271,7 @@ def angle_standalone_builder(name, debug, cpu, toolchain = "clang", uwp = False,
     )
 
     # Include all bots in the CQ by default except GCC and Android configs.
-    if toolchain != "gcc" and name not in ["linux-clang-rel", "mac-rel", "win-clang-x64-rel", "win-clang-x86-rel"]:
+    if toolchain != "gcc":
         luci.cq_tryjob_verifier(
             cq_group = "master",
             builder = "angle:try/" + name,
