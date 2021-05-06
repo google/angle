@@ -144,6 +144,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ab061100_6dff610c",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 650,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T19:43:16Z",
+      "side": 1,
+      "message": "Shabi I don\u0027t follow your example. Why would a flush in one context force a flush in another? We don\u0027t keep submissions floating somewhere except in the async processor, which would process them in order if they were submitted in that order. Unless I\u0027m missing something.",
+      "parentUuid": "824ea575_fca4fcc4",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "35322b1d_0029dc8f",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 8
@@ -249,6 +267,24 @@
       "writtenOn": "2021-05-03T18:53:18Z",
       "side": 1,
       "message": "Very likely problematic with resources shared between protected and unprotected contexts. This will be fixed if all in-flight commands are kept in the same list.",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c61fd627_d88cbf32",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 8
+      },
+      "lineNbr": 989,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T19:43:16Z",
+      "side": 1,
+      "message": "Yes, this is a problem. We need to use one list here.",
+      "parentUuid": "a3f2948c_35525f32",
       "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },

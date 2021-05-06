@@ -16,6 +16,52 @@
       "message": "Some responses.\nMerge conflict on this latest upload from hashes.",
       "revId": "e3e22519a51a263fd38c28a19b33547475ef5215",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc6fc7df_bb25ff80",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T19:43:16Z",
+      "side": 1,
+      "message": "nit: please follow Google style guide ordering.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "e3e22519a51a263fd38c28a19b33547475ef5215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c47bc69_8e094d7a",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-06T19:43:16Z",
+      "side": 1,
+      "message": "it looks like before we weren\u0027t exposing the queue. what breaks when you remove this method?",
+      "range": {
+        "startLine": 381,
+        "startChar": 2,
+        "endLine": 381,
+        "endChar": 71
+      },
+      "revId": "e3e22519a51a263fd38c28a19b33547475ef5215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
