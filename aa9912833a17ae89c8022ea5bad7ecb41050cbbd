@@ -33,6 +33,24 @@
       "message": "This seems reasonable to me. Thanks.\n\nlgtm.",
       "revId": "aa9912833a17ae89c8022ea5bad7ecb41050cbbd",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c3bb5170_c5a532a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1302660
+      },
+      "writtenOn": "2021-05-06T18:08:38Z",
+      "side": 1,
+      "message": "Thanks for working on this.\nFrom lacros perspective, LGTM to set true for all chrome os build.\nIIUC, ozone_platform_gbm is set to true in ash-chrome build so angle_enable_gl is set to true anyway.",
+      "parentUuid": "af65170b_53dc2205",
+      "revId": "aa9912833a17ae89c8022ea5bad7ecb41050cbbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
