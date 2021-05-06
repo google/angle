@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5fc00bba_6af4a982",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-05-06T20:46:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1af983b4_e245cfa6",
+      "range": {
+        "startLine": 357,
+        "startChar": 5,
+        "endLine": 357,
+        "endChar": 6
+      },
+      "revId": "63ade3bee95a162ce3ad300151daed10751e005d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65581907_e374a2ce",
@@ -58,6 +82,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc903348_513502a5",
+        "filename": "src/libANGLE/formatutils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-05-06T20:46:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "65581907_e374a2ce",
+      "revId": "63ade3bee95a162ce3ad300151daed10751e005d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "37b7ec4b_6c3f60e0",
@@ -71,6 +113,30 @@
       "writtenOn": "2021-05-05T20:15:24Z",
       "side": 1,
       "message": "this only makes sense for Int types... how about you make a converts GL \u003c-\u003e GL types or ANGLE format \u003c-\u003e ANGLE format types and you include that either in utilties.h/cpp or in formatutils.h/cpp. You\u0027re really converting between signed/unsigned equivalent types so you can make that clear.",
+      "range": {
+        "startLine": 1366,
+        "startChar": 4,
+        "endLine": 1366,
+        "endChar": 31
+      },
+      "revId": "63ade3bee95a162ce3ad300151daed10751e005d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "091ab3e0_45663254",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1366,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-05-06T20:46:04Z",
+      "side": 1,
+      "message": "Reverted the map(only used when floats are involved now) and added a function that flips signs of int or unsigned int types",
+      "parentUuid": "37b7ec4b_6c3f60e0",
       "range": {
         "startLine": 1366,
         "startChar": 4,
