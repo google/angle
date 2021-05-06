@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fde04013_7a80f114",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-06T16:25:19Z",
+      "side": 1,
+      "message": "This part was wrongfully emitting glVertexAttrib4fv on GLES1 contexts. Even though there are equivalent functions on GLES1, there are only available for non vertex position and texture coordinate attribs, e.g. glColor, glNormal, glPointSize. In addition the functions don\u0027t take vectors but each component separately.\nI tried to implement this in my last CL using client side array pointers, which did not lead to expected results easily.\nI did not encounter a negative effect in the GLES1 apps I was tracing when skipping this part.",
+      "revId": "cb668e168db02549b325184240497064105347a6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
