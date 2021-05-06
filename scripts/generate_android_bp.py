@@ -504,11 +504,6 @@ def main():
         blueprint_targets.append(gn_target_to_blueprint(target, build_info))
 
     # Add APKs with all of the root libraries
-    blueprint_targets.append(('filegroup', {
-        'name': 'ANGLE_srcs',
-        'srcs': ['src/android_system_settings/**/*.java',],
-    }))
-
     blueprint_targets.append((
         'java_defaults',
         {
@@ -525,36 +520,17 @@ def main():
             'aaptflags': [
                 # Don't compress *.json files
                 '-0 .json',
-                # Give com.android.angle.common Java files access to the R class
-                '--extra-packages com.android.angle.common',
             ],
-            'srcs': [':ANGLE_srcs'],
             'plugins': ['java_api_finder',],
             'privileged': True,
+            'product_specific': True,
             'owner': 'google',
-        }))
-
-    blueprint_targets.append((
-        'android_library',
-        {
-            'name': 'ANGLE_library',
-            'sdk_version': 'system_current',
-            'min_sdk_version': sdk_version,
-            'resource_dirs': ['src/android_system_settings/res',],
-            'asset_dirs': ['src/android_system_settings/assets',],
-            'aaptflags': [
-                # Don't compress *.json files
-                '-0 .json',
-            ],
-            'manifest': 'src/android_system_settings/src/com/android/angle/AndroidManifest.xml',
-            'static_libs': ['androidx.preference_preference',],
         }))
 
     blueprint_targets.append(('android_app', {
         'name': 'ANGLE',
         'defaults': ['ANGLE_java_defaults'],
-        'static_libs': ['ANGLE_library'],
-        'manifest': 'src/android_system_settings/src/com/android/angle/AndroidManifest.xml',
+        'manifest': 'android/AndroidManifest.xml',
     }))
 
     output = [
