@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "af65170b_53dc2205",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-06T15:42:59Z",
+      "side": 1,
+      "message": "This is an attempt to reland https://chromium-review.googlesource.com/c/angle/angle/+/2851829\n\nI made angle_enable_gl effectively true for is_chromeos (not just lacros). Let me know if there are any objectsion.\n\n@Greg, linux-ozone-rel is failing at the time of this writing seemingly due to an unrelated failure. Once the bots are green, will you please verify that this will not break the Skia roll?",
+      "revId": "aa9912833a17ae89c8022ea5bad7ecb41050cbbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
