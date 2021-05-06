@@ -16,6 +16,46 @@
       "message": "PTAL",
       "revId": "e456d8332ce4c1a1478628662b43908502d4c028",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d96ca6de_7aa409c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-06T01:39:39Z",
+      "side": 1,
+      "message": "Glad to see this extension finally being done :) Looks like some failures on the bots though, hopefully nothing too serious.",
+      "revId": "e456d8332ce4c1a1478628662b43908502d4c028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d49b703_3efd8e30",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 3368,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-06T01:39:39Z",
+      "side": 1,
+      "message": "nit: unnecessary, \u003d {} above already does this.",
+      "range": {
+        "startLine": 3368,
+        "startChar": 8,
+        "endLine": 3368,
+        "endChar": 46
+      },
+      "revId": "e456d8332ce4c1a1478628662b43908502d4c028",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
