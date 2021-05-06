@@ -30,8 +30,8 @@
           'linux_intel_hd_630_stable',
         ],
         'test_suites': {
-          # 'gtest_tests': 'linux_intel_gtests',
-          # 'isolated_scripts': 'common_isolated_scripts',
+          'gtest_tests': 'linux_intel_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'linux-nvidia': {
@@ -40,8 +40,8 @@
           'linux_nvidia_quadro_p400_stable',
         ],
         'test_suites': {
-          # 'gtest_tests': 'linux_nvidia_gtests',
-          # 'isolated_scripts': 'common_isolated_scripts',
+          'gtest_tests': 'linux_nvidia_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'mac-amd': {
@@ -50,7 +50,7 @@
           'mac_retina_amd_gpu_stable',
         ],
         'test_suites': {
-          # 'gtest_tests': 'mac_amd_and_intel_gtests',
+          'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
       'mac-builder': {},
@@ -60,7 +60,7 @@
           'mac_mini_intel_gpu_stable',
         ],
         'test_suites': {
-          # 'gtest_tests': 'mac_amd_and_intel_gtests',
+          'gtest_tests': 'mac_amd_and_intel_gtests',
         },
       },
       'mac-nvidia': {
@@ -70,7 +70,7 @@
         ],
         'test_suites': {
           # Fewer tests enabled on this config because of limited capacity.
-          # 'gtest_tests': 'mac_nvidia_gtests',
+          'gtest_tests': 'mac_nvidia_gtests',
         },
       },
       'win-x64-builder': {},
@@ -81,8 +81,8 @@
           'win10_intel_hd_630_stable',
         ],
         'test_suites': {
-          # 'gtest_tests': 'win10_intel_gtests',
-          # 'isolated_scripts': 'common_isolated_scripts',
+          'gtest_tests': 'win10_intel_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'win10-x64-nvidia': {
@@ -91,8 +91,8 @@
           'win10_nvidia_quadro_p400_stable',
         ],
         'test_suites': {
-          # 'gtest_tests': 'win10_nvidia_gtests',
-          # 'isolated_scripts': 'common_isolated_scripts',
+          'gtest_tests': 'win10_nvidia_gtests',
+          'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'win7-x64-nvidia': {
@@ -101,7 +101,7 @@
           'win7_nvidia_quadro_p400',
         ],
         'test_suites': {
-          # 'gtest_tests': 'win7_nvidia_gtests',
+          'gtest_tests': 'win7_nvidia_gtests',
         },
       },
       'win7-x86-amd': {
@@ -110,7 +110,7 @@
           'win7_amd_r7_240',
         ],
         'test_suites': {
-          # 'gtest_tests': 'win7_amd_gtests',
+          'gtest_tests': 'win7_amd_gtests',
         },
       },
     },
