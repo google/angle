@@ -33,6 +33,24 @@
       "message": "Sorry for the slow response, I\u0027m looking at it locally, wanted to see if we can get a solution that doesn\u0027t need a try-if-fail-then-fallback pattern.",
       "revId": "92495974f02167a1b1b467fefb0540d030dd2cb3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "182ae795_c7e352ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-07T08:33:06Z",
+      "side": 1,
+      "message": "That would certainly be better. There is one option: In the PosixLibrary, instead of adding the path to the library name, one could add the path to the LD_LIBRARY_PATH environment variable, then any library located there would take precedence without removing the option that the dynamic linker searches the local directory. \n\nTechnically it just pushed the try-if-fail-fallback work onto the dynamic linker, but it would encapsulate this better. An alternative is to directly encapsulate this try-if-fail-fallback in the PosixLibrary class.",
+      "parentUuid": "e6611167_ce358075",
+      "revId": "92495974f02167a1b1b467fefb0540d030dd2cb3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
