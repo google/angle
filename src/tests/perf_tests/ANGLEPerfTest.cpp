@@ -284,7 +284,7 @@ void ANGLEPerfTest::run()
 
     for (uint32_t trial = 0; trial < numTrials; ++trial)
     {
-        doRunLoop(gTestTimeSeconds, mStepsToRun, RunLoopPolicy::RunContinuously);
+        doRunLoop(gMaxTrialTimeSeconds, mStepsToRun, RunLoopPolicy::RunContinuously);
         printResults();
         if (gVerboseLogging)
         {
@@ -360,10 +360,6 @@ void ANGLEPerfTest::doRunLoop(double maxRunTime, int maxStepsToRun, RunLoopPolic
                 mRunning = false;
             }
             else if (mTrialNumStepsPerformed >= maxStepsToRun)
-            {
-                mRunning = false;
-            }
-            else if (gMaxStepsPerformed > 0 && mTotalNumStepsPerformed >= gMaxStepsPerformed)
             {
                 mRunning = false;
             }

@@ -34,7 +34,8 @@ Several command-line arguments control how the tests run:
 * `--warmup-loops x`: Number of times to warm up the test before starting timing. Defaults to 3.
 * `--no-warmup`: Skip warming up the tests. Equivalent to `--warmup-steps 0`.
 * `--calibration-time`: Run each test calibration step in a fixed time. Defaults to 1 second.
-* `--test-time`: Run each test trial in a fixed time. Defaults to 10 seconds.
+* `--max-trial-time x`: Run each test trial under this max time. Defaults to 10 seconds.
+* `--fixed-test-time x`: Run the tests until this much time has elapsed.
 * `--trials`: Number of times to repeat testing. Defaults to 3.
 * `--no-finish`: Don't call glFinish after each test trial.
 * `--enable-all-trace-tests`: Offscreen and vsync-limited trace tests are disabled by default to reduce test time.
