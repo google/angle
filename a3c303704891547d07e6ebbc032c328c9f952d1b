@@ -36,6 +36,41 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "46d4dbc5_1a43bad7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-07T20:08:51Z",
+      "side": 1,
+      "message": "The one app that I\u0027ve seen logcat for (with all GLES API calls logged) shows that the app does NOT call FramebufferFetchBarrierEXT().  I think this approach may be a dead-end.\n\nI\u0027m going to put this on hold for now, and wait for Fran/Ben Gable to talk with the ISVs",
+      "parentUuid": "0a08edf2_cc4a7a78",
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3be1534_56335170",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-07T20:08:51Z",
+      "side": 1,
+      "message": "Using this WIP CL to test the bots",
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d11954d_cf34e36d",
