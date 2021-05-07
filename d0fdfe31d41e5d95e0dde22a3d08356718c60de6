@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1263db8_258bf10a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-07T19:20:24Z",
+      "side": 1,
+      "message": "Re Paul\u0027s comments - you could make this argument work without adding a new global. Specify a single trial with no calibration and a large (infinite) number of steps.",
+      "revId": "d0fdfe31d41e5d95e0dde22a3d08356718c60de6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b39ad838_0409220e",
