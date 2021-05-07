@@ -1,6 +1,75 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4424cbd_2278b0c4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-07T15:59:39Z",
+      "side": 1,
+      "message": "There are white box performance counter tests in VulkanPerformanceCounterTest.cpp that use the PerfCounters struct (vk_utils.h) to verify the load/store ops are being initialized correctly.   For example: VulkanPerformanceCounterTest::InvalidateDisableDraw()\n\nIt sounds like this optimization needs a similar test to ensure that it\u0027s working correctly and doesn\u0027t get broken in the future.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 13
+      },
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "886de3c4_92d74569",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-07T15:59:39Z",
+      "side": 1,
+      "message": "nit: is used",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a9d5e263_34cbfd7f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-07T15:59:39Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 17,
+        "startChar": 26,
+        "endLine": 17,
+        "endChar": 30
+      },
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "cd1d7a9b_cef2d20e",
@@ -14,6 +83,23 @@
       "writtenOn": "2021-05-07T15:16:17Z",
       "side": 1,
       "message": "Nice find!",
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fdea9c6_d2cc3d8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-07T15:59:39Z",
+      "side": 1,
+      "message": "LGTM with Shabi\u0027s comment and a test.",
       "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
