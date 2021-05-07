@@ -161,6 +161,24 @@
       "parentUuid": "2eea53d3_44ae0242",
       "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5be8a4c6_2bde7950",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1454,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-07T21:11:11Z",
+      "side": 1,
+      "message": "It\u0027s easier in my opinion to miss one of these calls and introduce a bug this way. If every finalizeDepthStencilImageLayout must be followed by finalizeDepthStencilLoadStore and then by resetRenderPassUsageFlags in that order, it\u0027s more robust if that order is specified in a single place. Don\u0027t you think so?\n\nRegarding naming, we can always improve that. For example you could call it `onDepthStencilRenderPassUsageEnd` which would be responsible for finalizing things and removing the usage flags.",
+      "parentUuid": "833ac004_76ca4142",
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
