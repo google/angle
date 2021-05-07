@@ -227,6 +227,11 @@ deps = {
     'condition': 'checkout_android and not build_with_chromium',
   },
 
+  'third_party/android_platform': {
+    'url': '{chromium_git}/chromium/src/third_party/android_platform@fdaa5e5b9f6384c3011ca8479d672e47528f743f',
+    'condition': 'checkout_android and not build_with_chromium',
+  },
+
   'third_party/android_sdk': {
     'url': '{chromium_git}/chromium/src/third_party/android_sdk@1cfc90728e0c42cbd68d8c900a3d46d5f8ba86ec',
     'condition': 'checkout_android and not build_with_chromium',
@@ -566,6 +571,11 @@ deps = {
   'tools/protoc_wrapper': {
     'url': '{chromium_git}/chromium/src/tools/protoc_wrapper@4d4e1824fc1a93147a2f640a25812d1db9d3c2d2',
     'condition': 'not build_with_chromium',
+  },
+
+  'tools/python': {
+    'url': '{chromium_git}/chromium/src/tools/python@dda1627b521c77359abd0431b72ef44329ccefc9',
+    'condition': 'checkout_android and not build_with_chromium',
   },
 
   'tools/skia_goldctl/linux': {
