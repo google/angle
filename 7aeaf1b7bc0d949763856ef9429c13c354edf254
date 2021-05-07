@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5bf0bb6_cf56bc74",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-07T18:58:01Z",
+      "side": 1,
+      "message": "+Paul",
+      "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4f9720a2_ab6aad4d",
@@ -60,6 +77,30 @@
       "writtenOn": "2021-05-07T18:47:09Z",
       "side": 1,
       "message": "What if both `--max-steps-performed` and `--max-test-time` are specified? My intuitive feeling is that it should meet both condition, which means test will stop whenone of the max value is reached. But this line of code will actually override gMaxTestSeconds, makes the time specified in `--max-test-time` gets lost.\n\nNot a regression here, but just bring up since I am seeing this.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 39
+      },
+      "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a17b7df_4ef2a979",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-07T18:58:01Z",
+      "side": 1,
+      "message": "They should be mutually exclusive.  I should be able to add that.\n\nThe intent for gMaxTestSeconds is that it is never reached.  We\u0027ve thought about putting \"-1\" in there to mean \"run forever\", but this high number was decided.",
+      "parentUuid": "c9b45f1f_4a8a328b",
       "range": {
         "startLine": 91,
         "startChar": 0,
