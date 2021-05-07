@@ -39,6 +39,30 @@
       },
       "revId": "a8ba7d1f4f64696c4a8f0e02e4412258dbeb114a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "173bb367_b8d58e07",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3316,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-07T10:11:06Z",
+      "side": 1,
+      "message": "This is a good solution. This patch needs the most work in the whole CL, since I actually ran into an issue where both the separate and non separate function was emitted on GLES1 captures. Implementing your request will resolve this.",
+      "parentUuid": "7c94e7a5_fec3c331",
+      "range": {
+        "startLine": 3305,
+        "startChar": 0,
+        "endLine": 3316,
+        "endChar": 9
+      },
+      "revId": "a8ba7d1f4f64696c4a8f0e02e4412258dbeb114a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
