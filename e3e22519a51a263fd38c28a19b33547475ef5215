@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "daf01e99_88902335",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-07T00:13:09Z",
+      "side": 1,
+      "message": "Responses.",
+      "revId": "e3e22519a51a263fd38c28a19b33547475ef5215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "fc6fc7df_bb25ff80",
@@ -43,6 +60,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1fb09967_35edc0c6",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-07T00:13:09Z",
+      "side": 1,
+      "message": "Temporary,",
+      "parentUuid": "fc6fc7df_bb25ff80",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 19
+      },
+      "revId": "e3e22519a51a263fd38c28a19b33547475ef5215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0c47bc69_8e094d7a",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
         "patchSetId": 9
@@ -54,6 +95,30 @@
       "writtenOn": "2021-05-06T19:43:16Z",
       "side": 1,
       "message": "it looks like before we weren\u0027t exposing the queue. what breaks when you remove this method?",
+      "range": {
+        "startLine": 381,
+        "startChar": 2,
+        "endLine": 381,
+        "endChar": 71
+      },
+      "revId": "e3e22519a51a263fd38c28a19b33547475ef5215",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6132db37_8944918d",
+        "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-07T00:13:09Z",
+      "side": 1,
+      "message": "At the RendererVk interface there is a getDevicePriority, which gets the QueueMap and then queries the priority from that. It can be pushed down, to not expose the QueueMap.\nQueueCommand::getDevicePriority(priority) {\n    return mQueueMap.getDevicePriority(priority);\n}",
+      "parentUuid": "0c47bc69_8e094d7a",
       "range": {
         "startLine": 381,
         "startChar": 2,
