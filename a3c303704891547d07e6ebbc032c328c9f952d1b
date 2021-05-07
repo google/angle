@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "649d7f98_980dab38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-07T04:58:44Z",
+      "side": 1,
+      "message": "Fran asked me to try to enable the \"coherent\" extension using the \"non-coherent\" extension (because two new games are using the coherent extension).  I thought the experiment would be simple, but I\u0027m not sure it is.  I can see that I don\u0027t understand the translator well enough.  I could use help.  Thanks in advance.",
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d11954d_cf34e36d",
+        "filename": "src/compiler/translator/builtin_variables.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-07T04:58:44Z",
+      "side": 1,
+      "message": "Changing the order of these changes the preferences of the symbolTable.findBuiltIn() method.  I don\u0027t think this is a good fix, but just works around an issue to get some tests to pass.",
+      "range": {
+        "startLine": 839,
+        "startChar": 0,
+        "endLine": 857,
+        "endChar": 14
+      },
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05c6660e_8b6e3182",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-07T04:58:44Z",
+      "side": 1,
+      "message": "I thought this was a fast/efficient solution.  However, there is more than one \"built-in\" variable for the \"gl_lastFragData\" identifier, and setting this to true causes the symbolTable.findBuiltIn() method to always return the one associated for the \"coherent\" extension.\n\nIs there a better approach?  At some point, we know what the application enabled/required.  Can we change this decision once we know that?",
+      "range": {
+        "startLine": 155,
+        "startChar": 4,
+        "endLine": 155,
+        "endChar": 17
+      },
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
