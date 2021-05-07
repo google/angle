@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a08edf2_cc4a7a78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-07T11:33:24Z",
+      "side": 1,
+      "message": "Does the application call the barrier function? Otherwise I don\u0027t know if this\u0027ll work. It\u0027s like glFramebufferFetchBarrierEXT or something.",
+      "parentUuid": "649d7f98_980dab38",
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1d11954d_cf34e36d",
