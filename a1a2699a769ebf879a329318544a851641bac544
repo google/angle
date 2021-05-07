@@ -56,6 +56,30 @@
       },
       "revId": "a1a2699a769ebf879a329318544a851641bac544",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4cc8bfef_b5b712c5",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-07T12:06:58Z",
+      "side": 1,
+      "message": "Since we need to cover all values up to kTextureCoordAttribIndexBase + kTexUnitCount in the texture case, I added a check for this range in the default case and emit an UNREACHABLE now if we are out of range.",
+      "parentUuid": "0d763b24_aa959a98",
+      "range": {
+        "startLine": 470,
+        "startChar": 8,
+        "endLine": 470,
+        "endChar": 15
+      },
+      "revId": "a1a2699a769ebf879a329318544a851641bac544",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
