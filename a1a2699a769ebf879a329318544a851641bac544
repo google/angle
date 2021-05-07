@@ -16,6 +16,46 @@
       "message": "This patch implements capturing GLES1 vertex pointer functions like glVertexPointer, glNormalPointer, etc as well as using glEnableClientState instead of the GLES2 glEnableVertexAttribArray equivalent.\n\nTo keep the diff short I am currently checking for the context version inside CaptureVertexArrayData function, as this behavior is not distinguishable by default state, but needs to check for GLES1 contexts.\n\nAny ideas about the structural improvement of this are appreciated.",
       "revId": "a1a2699a769ebf879a329318544a851641bac544",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c66877e_8ae43167",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-07T03:36:22Z",
+      "side": 1,
+      "message": "LGTM with one fixup.",
+      "revId": "a1a2699a769ebf879a329318544a851641bac544",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d763b24_aa959a98",
+        "filename": "src/libANGLE/GLES1Renderer.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 470,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-07T03:36:22Z",
+      "side": 1,
+      "message": "Prefer default to be UNIMPLEMENTED or UNREACHABLE",
+      "range": {
+        "startLine": 470,
+        "startChar": 8,
+        "endLine": 470,
+        "endChar": 15
+      },
+      "revId": "a1a2699a769ebf879a329318544a851641bac544",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
