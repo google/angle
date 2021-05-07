@@ -39,6 +39,30 @@
       },
       "revId": "558ab260aaec20fa05a923511fac9b1675a51af1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bea74dc_4e27dfde",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3012,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-07T12:29:22Z",
+      "side": 1,
+      "message": "Right, it seems that this is only populated when Context::bindProgramPipeline is called, which is only the on GLES3 and not in the default shaders that are initialized on GLES1.",
+      "parentUuid": "75f3dc9e_c27acc73",
+      "range": {
+        "startLine": 3012,
+        "startChar": 13,
+        "endLine": 3012,
+        "endChar": 42
+      },
+      "revId": "558ab260aaec20fa05a923511fac9b1675a51af1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
