@@ -71,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a154c70_ce596967",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-07T22:19:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "886de3c4_92d74569",
+      "range": {
+        "startLine": 13,
+        "startChar": 18,
+        "endLine": 13,
+        "endChar": 30
+      },
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a9d5e263_34cbfd7f",
@@ -84,6 +108,30 @@
       "writtenOn": "2021-05-07T15:59:39Z",
       "side": 1,
       "message": "typo",
+      "range": {
+        "startLine": 17,
+        "startChar": 26,
+        "endLine": 17,
+        "endChar": 30
+      },
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4482914e_e9210125",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-07T22:19:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a9d5e263_34cbfd7f",
       "range": {
         "startLine": 17,
         "startChar": 26,
@@ -177,6 +225,24 @@
       "side": 1,
       "message": "It\u0027s easier in my opinion to miss one of these calls and introduce a bug this way. If every finalizeDepthStencilImageLayout must be followed by finalizeDepthStencilLoadStore and then by resetRenderPassUsageFlags in that order, it\u0027s more robust if that order is specified in a single place. Don\u0027t you think so?\n\nRegarding naming, we can always improve that. For example you could call it `onDepthStencilRenderPassUsageEnd` which would be responsible for finalizing things and removing the usage flags.",
       "parentUuid": "833ac004_76ca4142",
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "558699e8_4c38f9b3",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1454,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-07T22:19:09Z",
+      "side": 1,
+      "message": "I personally value the one funciton does one thing and name reflect what it does more. It makes code much easier to read (you dont need to actually look into the implementation of funcion to understand exact what it does). But anyway, I am moving resetRenderPassUsageFlags back and added finalizeDepthStencilImageLayoutAndLoadStore() for the purpose.",
+      "parentUuid": "5be8a4c6_2bde7950",
       "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
