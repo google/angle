@@ -63,6 +63,30 @@
       },
       "revId": "a8ba7d1f4f64696c4a8f0e02e4412258dbeb114a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56d66cfb_015f1f04",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3316,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-07T12:08:00Z",
+      "side": 1,
+      "message": "This now done without checking for context version and also captures non-separate functions on higher context versions, if applicable.",
+      "parentUuid": "173bb367_b8d58e07",
+      "range": {
+        "startLine": 3305,
+        "startChar": 0,
+        "endLine": 3316,
+        "endChar": 9
+      },
+      "revId": "a8ba7d1f4f64696c4a8f0e02e4412258dbeb114a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
