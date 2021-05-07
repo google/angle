@@ -39,6 +39,30 @@
       },
       "revId": "e1eb2746414c8587b9e0bfa6f347b2a4b35fd206",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8cd1612c_acb1c5fe",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3228,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-07T10:09:18Z",
+      "side": 1,
+      "message": "I tried this first when implementing this, and was hitting this assert on contexts higher than GLES1:\nhttps://source.chromium.org/chromium/chromium/src/+/master:third_party/angle/src/libANGLE/State.cpp;l\u003d1406\n\ngetEnableFeature currently can\u0027t be called on GLES2 contexts for these enums. Is the assert wrong?",
+      "parentUuid": "a4c61fcb_a5103ee7",
+      "range": {
+        "startLine": 3228,
+        "startChar": 4,
+        "endLine": 3228,
+        "endChar": 27
+      },
+      "revId": "e1eb2746414c8587b9e0bfa6f347b2a4b35fd206",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
