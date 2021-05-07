@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd1d7a9b_cef2d20e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-07T15:16:17Z",
+      "side": 1,
+      "message": "Nice find!",
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2eea53d3_44ae0242",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1454,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-07T15:16:17Z",
+      "side": 1,
+      "message": "How about we keep `resetRenderPassUsageFlags` where it was (at the end of finalize*), but make `finalizeDepthStencilImageLayout` call `finalizeDepthStencilLoadStore` before that itself? It would avoid having to call `resetRenderPassUsageFlags` everywhere.",
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
