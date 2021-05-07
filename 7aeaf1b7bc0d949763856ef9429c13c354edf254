@@ -157,6 +157,30 @@
       },
       "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b815be1b_9ace9a97",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-07T19:40:44Z",
+      "side": 1,
+      "message": "Right. What I am saying is that you only need two command line options to achieve this:\n\n// 0 means user did not set value\ngMaxStepsPerformed \u003d 0;\ngMaxTestSeconds \u003d 0;\nif(\"--max-steps-performed\" requested)\n    gMaxStepsPerformed \u003d min(userInput, kMaxSteps); // cap with system max value\nif(\"--max-test-time\" requested)\n    gMaxTestSeconds \u003d min(userInput, kMaxSeconds); // cap with system max value\n\n\nif(gMaxStepsPerformed !\u003d0 \u0026\u0026 gMaxTestSeconds !\u003d 0)\n{\n   // user requested both, we stop whenever one of the condition meets\n}\nelse if(gMaxStepsPerformed \u003d\u003d0 \u0026\u0026 gMaxTestSeconds \u003d\u003d 0)\n{\n   // user did not request any, set default value\n   gMaxStepsPerformed \u003d kDefaultTestSteps;\n   gMaxTestSeconds \u003d kMaxSeconds;\n}\nelse if(gMaxStepsPerformed \u003d\u003d 0)\n{\n   // we will stop at gMaxTestSeconds\n   gMaxStepsPerformed \u003d kMaxSteps;\n}\nelse\n{\n   // we will stop at gMaxStepsPerformed\n   gMaxTestSeconds \u003d kMaxSeconds;\n}",
+      "parentUuid": "0d34c204_8937214b",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 39
+      },
+      "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
