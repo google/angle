@@ -133,6 +133,30 @@
       },
       "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d34c204_8937214b",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-07T19:21:44Z",
+      "side": 1,
+      "message": "We\u0027re trying to service two use cases here.  One is \"Run a fixed number of frames, no matter what\".  That was requested by some hardware teams, so that\u0027s what --max-steps-performed is designed to do.  It should probably be named --fixed-frame-count or something.\n\nThe second is \"Run this trace for this fixed amount of time, no matter what\". That\u0027s the intent of --fixed-test-time in the second CL.",
+      "parentUuid": "a569ab60_a67a2ec4",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 39
+      },
+      "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
