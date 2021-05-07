@@ -45,6 +45,29 @@
       },
       "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9b45f1f_4a8a328b",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-07T18:47:09Z",
+      "side": 1,
+      "message": "What if both `--max-steps-performed` and `--max-test-time` are specified? My intuitive feeling is that it should meet both condition, which means test will stop whenone of the max value is reached. But this line of code will actually override gMaxTestSeconds, makes the time specified in `--max-test-time` gets lost.\n\nNot a regression here, but just bring up since I am seeing this.",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 39
+      },
+      "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
