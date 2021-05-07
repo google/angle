@@ -181,6 +181,30 @@
       },
       "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "810f5079_36e99456",
+        "filename": "src/tests/perf_tests/ANGLEPerfTestArgs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-07T19:58:44Z",
+      "side": 1,
+      "message": "--max-test-time doesn\u0027t work that way, it is specifying how long a *trial* should be allowed to run.  There are multiple trials run by default, which works great for simpler tests.  They will also quit early if the tests are short. That\u0027s why I suggested renaming it.  In the second CL we settled on \"--max-trial-time\"\n\nI\u0027m not keen on supporting fixed-time and fixed-frames at the same time.",
+      "parentUuid": "b815be1b_9ace9a97",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 39
+      },
+      "revId": "7aeaf1b7bc0d949763856ef9429c13c354edf254",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
