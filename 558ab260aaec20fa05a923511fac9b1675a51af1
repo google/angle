@@ -16,6 +16,29 @@
       "message": "Since we have internal programs initialized for GLES1 contexts, this behavior cannot be distinguished by checking for default state and required me to check for context version.",
       "revId": "558ab260aaec20fa05a923511fac9b1675a51af1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "75f3dc9e_c27acc73",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3012,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-07T03:42:05Z",
+      "side": 1,
+      "message": "We probably won\u0027t hit this in the GLES1 case, so the above check is sufficient.",
+      "range": {
+        "startLine": 3012,
+        "startChar": 13,
+        "endLine": 3012,
+        "endChar": 42
+      },
+      "revId": "558ab260aaec20fa05a923511fac9b1675a51af1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
