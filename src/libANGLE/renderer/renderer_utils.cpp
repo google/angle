@@ -1279,6 +1279,8 @@ angle::FormatID ConvertToSRGB(angle::FormatID formatID)
     {
         case angle::FormatID::R8_UNORM:
             return angle::FormatID::R8_UNORM_SRGB;
+        case angle::FormatID::R8G8_UNORM:
+            return angle::FormatID::R8G8_UNORM_SRGB;
         case angle::FormatID::R8G8B8_UNORM:
             return angle::FormatID::R8G8B8_UNORM_SRGB;
         case angle::FormatID::R8G8B8A8_UNORM:
@@ -1340,6 +1342,8 @@ angle::FormatID ConvertToLinear(angle::FormatID formatID)
     {
         case angle::FormatID::R8_UNORM_SRGB:
             return angle::FormatID::R8_UNORM;
+        case angle::FormatID::R8G8_UNORM_SRGB:
+            return angle::FormatID::R8G8_UNORM;
         case angle::FormatID::R8G8B8_UNORM_SRGB:
             return angle::FormatID::R8G8B8_UNORM;
         case angle::FormatID::R8G8B8A8_UNORM_SRGB:

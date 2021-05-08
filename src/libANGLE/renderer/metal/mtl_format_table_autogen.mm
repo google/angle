@@ -233,6 +233,10 @@ angle::FormatID Format::MetalToAngleFormatID(MTLPixelFormat formatMtl)
             return angle::FormatID::R5G5B5A1_UNORM;
         case MTLPixelFormatB5G6R5Unorm:
             return angle::FormatID::R5G6B5_UNORM;
+        case MTLPixelFormatRG8Unorm_sRGB:
+            return angle::FormatID::R8G8_UNORM_SRGB;
+        case MTLPixelFormatR8Unorm_sRGB:
+            return angle::FormatID::R8_UNORM_SRGB;
         case MTLPixelFormatASTC_10x10_LDR:
             return angle::FormatID::ASTC_10x10_UNORM_BLOCK;
         case MTLPixelFormatASTC_10x10_HDR:
@@ -1615,6 +1619,24 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
             this->swizzled = false;
             break;
 
+        case angle::FormatID::R8G8_UNORM_SRGB:
+
+            this->metalFormat    = MTLPixelFormatRG8Unorm_sRGB;
+            this->actualFormatId = angle::FormatID::R8G8_UNORM_SRGB;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::R8_UNORM_SRGB:
+
+            this->metalFormat    = MTLPixelFormatR8Unorm_sRGB;
+            this->actualFormatId = angle::FormatID::R8_UNORM_SRGB;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
         case angle::FormatID::D16_UNORM:
 
             this->metalFormat    = MTLPixelFormatDepth32Float;
@@ -2333,6 +2355,24 @@ void Format::init(const DisplayMtl *display, angle::FormatID intendedFormatId_)
                 this->actualFormatId = angle::FormatID::R8G8B8A8_UNORM;
                 this->initFunction   = Initialize4ComponentData<GLubyte, 0x00, 0x00, 0x00, 0xFF>;
             }
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::R8G8_UNORM_SRGB:
+
+            this->metalFormat    = MTLPixelFormatRG8Unorm_sRGB;
+            this->actualFormatId = angle::FormatID::R8G8_UNORM_SRGB;
+            this->initFunction   = nullptr;
+
+            this->swizzled = false;
+            break;
+
+        case angle::FormatID::R8_UNORM_SRGB:
+
+            this->metalFormat    = MTLPixelFormatR8Unorm_sRGB;
+            this->actualFormatId = angle::FormatID::R8_UNORM_SRGB;
+            this->initFunction   = nullptr;
 
             this->swizzled = false;
             break;
@@ -4279,6 +4319,22 @@ void FormatTable::initNativeFormatCapsAutogen(const DisplayMtl *display)
                   /** filterable*/ display->supportsAppleGPUFamily(1), /** writable*/ false,
                   /** blendable*/ false, /** multisample*/ false, /** resolve*/ false,
                   /** colorRenderable*/ false, /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatR8Unorm_sRGB, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ display->supportsAppleGPUFamily(2),
+                  /** blendable*/ display->supportsAppleGPUFamily(1),
+                  /** multisample*/ display->supportsAppleGPUFamily(1),
+                  /** resolve*/ display->supportsAppleGPUFamily(1),
+                  /** colorRenderable*/ display->supportsAppleGPUFamily(1),
+                  /** depthRenderable*/ false);
+
+    setFormatCaps(MTLPixelFormatRG8Unorm_sRGB, /** filterable*/ display->supportsAppleGPUFamily(1),
+                  /** writable*/ display->supportsAppleGPUFamily(2),
+                  /** blendable*/ display->supportsAppleGPUFamily(1),
+                  /** multisample*/ display->supportsAppleGPUFamily(1),
+                  /** resolve*/ display->supportsAppleGPUFamily(1),
+                  /** colorRenderable*/ display->supportsAppleGPUFamily(1),
+                  /** depthRenderable*/ false);
 
 #endif
 }

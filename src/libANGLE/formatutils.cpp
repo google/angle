@@ -1010,6 +1010,10 @@ static InternalFormatInfoMap BuildInternalFormatInfoMap()
     //                 | Internal format    |sized| R | G | B | A |S | Format | Type             | Component type        | SRGB | Texture supported                     | Filterable     | Texture attachment                    | Renderbuffer                          | Blend
     AddRGBAFormat(&map, GL_SR8_EXT,          true,  8,  0,  0,  0, 0, GL_RED,  GL_UNSIGNED_BYTE,  GL_UNSIGNED_NORMALIZED, true,  RequireExt<&Extensions::sRGBR8EXT>,     AlwaysSupported, NeverSupported,                         NeverSupported,                         NeverSupported);
 
+    // From EXT_texture_sRGB_RG8
+    //                 | Internal format    |sized| R | G | B | A |S | Format | Type             | Component type        | SRGB | Texture supported                     | Filterable     | Texture attachment                    | Renderbuffer                          | Blend
+    AddRGBAFormat(&map, GL_SRG8_EXT,         true,  8,  8,  0,  0, 0, GL_RG,   GL_UNSIGNED_BYTE,  GL_UNSIGNED_NORMALIZED, true,  RequireExt<&Extensions::sRGBRG8EXT>,    AlwaysSupported, NeverSupported,                         NeverSupported,                         NeverSupported);
+
     // Unsized formats
     //                 | Internal format  |sized | R | G | B | A |S | Format           | Type                          | Component type        | SRGB | Texture supported                               | Filterable     | Texture attachment                            | Renderbuffer  | Blend
     AddRGBAFormat(&map, GL_RED,            false,  8,  0,  0,  0, 0, GL_RED,            GL_UNSIGNED_BYTE,               GL_UNSIGNED_NORMALIZED, false, RequireExt<&Extensions::textureRG>,               AlwaysSupported, RequireExt<&Extensions::textureRG>,             NeverSupported, NeverSupported);

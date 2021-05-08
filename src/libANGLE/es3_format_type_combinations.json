@@ -109,6 +109,10 @@
     [
         [ "GL_SR8_EXT",            "GL_RED",       "GL_UNSIGNED_BYTE" ]
     ],
+    "From GL_EXT_texture_sRGB_RG8":
+    [
+        [ "GL_SRG8_EXT",           "GL_RG",        "GL_UNSIGNED_BYTE" ]
+    ],
     "From GL_OES_texture_float":
     [
         [ "GL_RGBA",               "GL_RGBA",            "GL_FLOAT" ],

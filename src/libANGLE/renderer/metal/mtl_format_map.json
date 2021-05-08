@@ -81,6 +81,8 @@
             "R9G9B9E5_SHAREDEXP": "MTLPixelFormatRGB9E5Float"
         },
         "map_ios": {
+            "R8_UNORM_SRGB": "MTLPixelFormatR8Unorm_sRGB",
+            "R8G8_UNORM_SRGB": "MTLPixelFormatRG8Unorm_sRGB",
             "R5G6B5_UNORM": "MTLPixelFormatB5G6R5Unorm",
             "R5G5B5A1_UNORM": "MTLPixelFormatA1BGR5Unorm",
             "R4G4B4A4_UNORM": "MTLPixelFormatABGR4Unorm",
@@ -662,6 +664,22 @@
             }
         },
         "caps_ios": {
+            "MTLPixelFormatR8Unorm_sRGB":{
+                "filterable": "display->supportsAppleGPUFamily(1)",
+                "writable": "display->supportsAppleGPUFamily(2)",
+                "blendable": "display->supportsAppleGPUFamily(1)",
+                "multisample": "display->supportsAppleGPUFamily(1)",
+                "resolve": "display->supportsAppleGPUFamily(1)",
+                "colorRenderable": "display->supportsAppleGPUFamily(1)"
+            },
+            "MTLPixelFormatRG8Unorm_sRGB":{
+                "filterable": "display->supportsAppleGPUFamily(1)",
+                "writable": "display->supportsAppleGPUFamily(2)",
+                "blendable": "display->supportsAppleGPUFamily(1)",
+                "multisample": "display->supportsAppleGPUFamily(1)",
+                "resolve": "display->supportsAppleGPUFamily(1)",
+                "colorRenderable": "display->supportsAppleGPUFamily(1)"
+            },
             "MTLPixelFormatB5G6R5Unorm":{
                 "filterable": "display->supportsAppleGPUFamily(1)",
                 "writable": "false",

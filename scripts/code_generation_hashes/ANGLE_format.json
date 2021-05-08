@@ -1,14 +1,14 @@
 {
   "src/libANGLE/renderer/FormatID_autogen.h":
-    "27b489d26f03514a466c5b3a8302eb4b",
+    "14285e7bdfd0346aa99712b48ec63967",
   "src/libANGLE/renderer/Format_table_autogen.cpp":
-    "b28fd3a6ed2ff60197dbb40c4b122d31",
+    "da0b1b6dbbbb4ff1228c18c09c03827c",
   "src/libANGLE/renderer/angle_format.py":
     "74d6c9842128293118ccf128aeae896a",
   "src/libANGLE/renderer/angle_format_data.json":
     "10e2ee1ed8ee54226edb644de30f512d",
   "src/libANGLE/renderer/angle_format_map.json":
-    "5cfbdcad0391a5d70dca1466c5361ee4",
+    "623bcd907ccba69766fbc17c4b9a5b9a",
   "src/libANGLE/renderer/gen_angle_format_table.py":
     "70bdbceee30506d4b14bf52f2bbd8f2b"
 }

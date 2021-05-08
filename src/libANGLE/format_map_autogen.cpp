@@ -1183,6 +1183,7 @@ bool ValidES3FormatCombination(GLenum format, GLenum type, GLenum internalFormat
                     {
                         case GL_RG8:
                         case GL_RG:
+                        case GL_SRG8_EXT:
                             return true;
                         default:
                             break;

@@ -44,6 +44,7 @@ constexpr FormatMap<VkFormatProperties> kFormatProperties = {
     {FormatID::R8G8_USCALED, {0, 0, 0}},
     {FormatID::D32_FLOAT_S8X24_UINT, {0, 0, 0}},
     {FormatID::ETC2_R8G8B8_SRGB_BLOCK, {0, 0, 0}},
+    {FormatID::R8G8_UNORM_SRGB, {0, 0, 0}},
     {FormatID::R32G32B32A32_SINT,
      {0, BLIT_DST | BLIT_SRC | COLOR_ATTACHMENT | SAMPLED_IMAGE | STORAGE_IMAGE,
       STORAGE_TEXEL_BUFFER | UNIFORM_TEXEL_BUFFER | VERTEX_BUFFER}},

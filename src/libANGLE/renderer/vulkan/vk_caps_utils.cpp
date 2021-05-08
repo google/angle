@@ -123,6 +123,7 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
         GL_COMPRESSED_RGB_S3TC_DXT1_EXT, GL_COMPRESSED_RGBA_S3TC_DXT1_EXT,
         GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT};
     std::vector<GLenum> optionalR8LinearFormats   = {GL_R8};
+    std::vector<GLenum> optionalRG8LinearFormats  = {GL_RG8};
     std::vector<GLenum> optionalBPTCLinearFormats = {GL_COMPRESSED_RGBA_BPTC_UNORM_EXT};
 
     if (!FormatReinterpretationSupported(optionalLinearFormats, rendererVk, kNonLinearColorspace))
@@ -130,7 +131,7 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
         return false;
     }
 
-    if (supportedExtensions.textureCompressionS3TCsRGB == true)
+    if (supportedExtensions.textureCompressionS3TCsRGB)
     {
         if (!FormatReinterpretationSupported(optionalS3TCLinearFormats, rendererVk,
                                              kNonLinearColorspace))
@@ -139,7 +140,7 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
         }
     }
 
-    if (supportedExtensions.sRGBR8EXT == true)
+    if (supportedExtensions.sRGBR8EXT)
     {
         if (!FormatReinterpretationSupported(optionalR8LinearFormats, rendererVk,
                                              kNonLinearColorspace))
@@ -148,9 +149,16 @@ bool GetTextureSRGBOverrideSupport(const RendererVk *rendererVk,
         }
     }
 
-    // TODO: http://anglebug.com/4932 check EXT_texture_sRGB_RG8
+    if (supportedExtensions.sRGBRG8EXT)
+    {
+        if (!FormatReinterpretationSupported(optionalRG8LinearFormats, rendererVk,
+                                             kNonLinearColorspace))
+        {
+            return false;
+        }
+    }
 
-    if (supportedExtensions.textureCompressionBPTC == true)
+    if (supportedExtensions.textureCompressionBPTC)
     {
         if (!FormatReinterpretationSupported(optionalBPTCLinearFormats, rendererVk,
                                              kNonLinearColorspace))

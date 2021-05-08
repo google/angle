@@ -228,6 +228,7 @@ enum
     R8G8_SSCALED,
     R8G8_UINT,
     R8G8_UNORM,
+    R8G8_UNORM_SRGB,
     R8G8_USCALED,
     R8_SINT,
     R8_SNORM,
@@ -244,7 +245,6 @@ enum
     X2R10G10B10_UNORM_VERTEX,
     X2R10G10B10_USCALED_VERTEX
 };
-
 }
 
 }  // namespace mtl_shader

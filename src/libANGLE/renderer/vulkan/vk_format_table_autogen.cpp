@@ -2168,6 +2168,16 @@ void Format::initialize(RendererVk *renderer, const angle::Format &angleFormat)
             vertexLoadRequiresConversion = false;
             break;
 
+        case angle::FormatID::R8G8_UNORM_SRGB:
+            intendedGLFormat             = GL_SRG8_EXT;
+            actualImageFormatID          = angle::FormatID::R8G8_UNORM_SRGB;
+            imageInitializerFunction     = nullptr;
+            actualBufferFormatID         = angle::FormatID::R8G8_UNORM_SRGB;
+            vkBufferFormatIsPacked       = false;
+            vertexLoadFunction           = CopyNativeVertexData<GLubyte, 2, 2, 0>;
+            vertexLoadRequiresConversion = false;
+            break;
+
         case angle::FormatID::R8G8_USCALED:
             intendedGLFormat         = GL_RG8_USCALED_ANGLEX;
             actualImageFormatID      = angle::FormatID::R8G8_USCALED;
@@ -2492,6 +2502,7 @@ VkFormat GetVkFormatFromFormatID(angle::FormatID formatID)
         {angle::FormatID::R8G8_SSCALED, VK_FORMAT_R8G8_SSCALED},
         {angle::FormatID::R8G8_UINT, VK_FORMAT_R8G8_UINT},
         {angle::FormatID::R8G8_UNORM, VK_FORMAT_R8G8_UNORM},
+        {angle::FormatID::R8G8_UNORM_SRGB, VK_FORMAT_R8G8_SRGB},
         {angle::FormatID::R8G8_USCALED, VK_FORMAT_R8G8_USCALED},
         {angle::FormatID::R8_SINT, VK_FORMAT_R8_SINT},
         {angle::FormatID::R8_SNORM, VK_FORMAT_R8_SNORM},
@@ -2784,6 +2795,8 @@ angle::FormatID GetFormatIDFromVkFormat(VkFormat vkFormat)
             return angle::FormatID::R8G8_UINT;
         case VK_FORMAT_R8G8_UNORM:
             return angle::FormatID::R8G8_UNORM;
+        case VK_FORMAT_R8G8_SRGB:
+            return angle::FormatID::R8G8_UNORM_SRGB;
         case VK_FORMAT_R8G8_USCALED:
             return angle::FormatID::R8G8_USCALED;
         case VK_FORMAT_R8_SINT:

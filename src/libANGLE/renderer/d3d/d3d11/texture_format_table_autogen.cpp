@@ -2583,6 +2583,20 @@ const Format &Format::Get(GLenum internalFormat, const Renderer11DeviceCaps &dev
                                          nullptr);
             return info;
         }
+        case GL_SRG8_EXT:
+        {
+            static constexpr Format info(GL_SRG8_EXT,
+                                         angle::FormatID::NONE,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         DXGI_FORMAT_UNKNOWN,
+                                         GL_NONE,
+                                         nullptr);
+            return info;
+        }
         case GL_SRGB8:
         {
             static constexpr Format info(GL_SRGB8,

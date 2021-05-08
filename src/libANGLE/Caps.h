@@ -285,6 +285,9 @@ struct Extensions
     // GL_EXT_texture_sRGB_R8
     bool sRGBR8EXT = false;
 
+    // GL_EXT_texture_sRGB_RG8
+    bool sRGBRG8EXT = false;
+
     // GL_ANGLE_depth_texture
     bool depthTextureANGLE = false;
 
