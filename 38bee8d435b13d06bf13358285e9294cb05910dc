@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7210f37b_a53031e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-08T15:44:24Z",
+      "side": 1,
+      "message": "Please take another look.  I merged the two CLs and was able to avoid adding a new global, simplifying things.",
+      "revId": "38bee8d435b13d06bf13358285e9294cb05910dc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
