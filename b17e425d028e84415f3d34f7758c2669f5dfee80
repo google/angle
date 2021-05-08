@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "558f3695_5af36eb0",
+        "filename": "src/libGLESv2/cl_stubs.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-08T16:08:28Z",
+      "side": 1,
+      "message": "Moved to cl::Platform, thanks to inspiration from Cody:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2864022/17/src/libGLESv2/cl_stubs.cpp#6",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 52
+      },
+      "revId": "b17e425d028e84415f3d34f7758c2669f5dfee80",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
