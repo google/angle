@@ -21,8 +21,6 @@
 
 #include "libANGLE/Debug.h"
 
-#include <cstring>
-
 #define WARN_NOT_SUPPORTED(command)                                         \
     do                                                                      \
     {                                                                       \
@@ -105,73 +103,8 @@ cl_int GetPlatformInfo(Platform *platform,
                        void *param_value,
                        size_t *param_value_size_ret)
 {
-    cl_version version    = 0u;
-    cl_ulong hostTimerRes = 0u;
-    const void *value     = nullptr;
-    size_t value_size     = 0u;
-    switch (param_name)
-    {
-        case PlatformInfo::Profile:
-            value      = platform->getProfile();
-            value_size = std::strlen(platform->getProfile()) + 1u;
-            break;
-        case PlatformInfo::Version:
-            value      = platform->getVersionString();
-            value_size = std::strlen(platform->getVersionString()) + 1u;
-            break;
-        case PlatformInfo::NumericVersion:
-            version    = platform->getVersion();
-            value      = &version;
-            value_size = sizeof(version);
-            break;
-        case PlatformInfo::Name:
-            value      = platform->getName();
-            value_size = std::strlen(platform->getName()) + 1u;
-            break;
-        case PlatformInfo::Vendor:
-            value      = Platform::GetVendor();
-            value_size = std::strlen(Platform::GetVendor()) + 1u;
-            break;
-        case PlatformInfo::Extensions:
-            value      = platform->getExtensions();
-            value_size = std::strlen(platform->getExtensions()) + 1u;
-            break;
-        case PlatformInfo::ExtensionsWithVersion:
-            if (platform->getExtensionsWithVersion().empty())
-            {
-                return CL_INVALID_VALUE;
-            }
-            value      = platform->getExtensionsWithVersion().data();
-            value_size = platform->getExtensionsWithVersion().size() * sizeof(cl_name_version);
-            break;
-        case PlatformInfo::HostTimerResolution:
-            hostTimerRes = platform->getHostTimerResolution();
-            value        = &hostTimerRes;
-            value_size   = sizeof(hostTimerRes);
-            break;
-        case PlatformInfo::IcdSuffix:
-            value      = Platform::GetIcdSuffix();
-            value_size = std::strlen(Platform::GetIcdSuffix()) + 1u;
-            break;
-        default:
-            return CL_INVALID_VALUE;
-    }
-    if (param_value != nullptr)
-    {
-        if (param_value_size < value_size)
-        {
-            return CL_INVALID_VALUE;
-        }
-        if (value != nullptr)
-        {
-            std::memcpy(param_value, value, value_size);
-        }
-    }
-    if (param_value_size_ret != nullptr)
-    {
-        *param_value_size_ret = value_size;
-    }
-    return CL_SUCCESS;
+    return (platform != nullptr ? platform : Platform::GetDefault())
+        ->getInfo(param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 cl_int GetDeviceIDs(Platform *platform,

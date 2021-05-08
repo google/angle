@@ -16,10 +16,6 @@ namespace rx
 class CLPlatformImpl : angle::NonCopyable
 {
   public:
-    using Ptr      = std::unique_ptr<CLPlatformImpl>;
-    using InitData = Ptr;
-    using InitList = std::list<InitData>;
-
     struct Info
     {
         Info();
@@ -31,38 +27,26 @@ class CLPlatformImpl : angle::NonCopyable
         Info(Info &&);
         Info &operator=(Info &&);
 
-        Info(std::string &&profile,
-             std::string &&versionStr,
-             cl_version version,
-             std::string &&name,
-             std::string &&extensions,
-             NameVersionVector &&extensionList,
-             cl_ulong hostTimerRes);
+        bool isValid() const;
 
         std::string mProfile;
         std::string mVersionStr;
         cl_version mVersion;
         std::string mName;
         std::string mExtensions;
-        NameVersionVector mExtensionList;
+        NameVersionVector mExtensionsWithVersion;
         cl_ulong mHostTimerRes;
     };
 
-    explicit CLPlatformImpl(Info &&info);
-    virtual ~CLPlatformImpl();
+    using Ptr      = std::unique_ptr<CLPlatformImpl>;
+    using InitData = std::pair<Ptr, Info>;
+    using InitList = std::list<InitData>;
 
-    const Info &getInfo();
+    CLPlatformImpl()          = default;
+    virtual ~CLPlatformImpl() = default;
 
     virtual CLDeviceImpl::InitList getDevices() = 0;
-
-  protected:
-    const Info mInfo;
 };
-
-inline const CLPlatformImpl::Info &CLPlatformImpl::getInfo()
-{
-    return mInfo;
-}
 
 }  // namespace rx
 

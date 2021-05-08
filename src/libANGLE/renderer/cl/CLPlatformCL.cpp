@@ -107,40 +107,49 @@ CLPlatformCL::InitList CLPlatformCL::GetPlatforms(bool isIcd)
     {
         if (vendorIt->platform != nullptr)
         {
-            rx::CLPlatformImpl::Ptr impl = Create(vendorIt->platform);
-            if (impl)
+            Info info = GetInfo(vendorIt->platform);
+            if (info.isValid())
             {
-                initList.emplace_back(std::move(impl));
+                initList.emplace_back(new CLPlatformCL(vendorIt->platform), std::move(info));
             }
         }
     }
     return initList;
 }
 
-CLPlatformCL::CLPlatformCL(cl_platform_id platform, Info &&info)
-    : CLPlatformImpl(std::move(info)), mPlatform(platform)
-{}
+CLPlatformCL::CLPlatformCL(cl_platform_id platform) : mPlatform(platform) {}
 
-#define ANGLE_GET_INFO(info, size, param, size_ret) \
-    result = platform->getDispatch().clGetPlatformInfo(platform, info, size, param, size_ret)
+#define ANGLE_GET_INFO_SIZE(name, size_ret) \
+    platform->getDispatch().clGetPlatformInfo(platform, name, 0u, nullptr, size_ret)
 
-#define ANGLE_TRY_GET_INFO(info, size, param, size_ret)  \
-    do                                                   \
-    {                                                    \
-        ANGLE_GET_INFO(info, size, param, size_ret);     \
-        if (result != CL_SUCCESS)                        \
-        {                                                \
-            ERR() << "Failed to query CL platform info"; \
-            return std::unique_ptr<CLPlatformCL>();      \
-        }                                                \
+#define ANGLE_GET_INFO_SIZE_RET(name, size_ret)                       \
+    do                                                                \
+    {                                                                 \
+        if (ANGLE_GET_INFO_SIZE(name, size_ret) != CL_SUCCESS)        \
+        {                                                             \
+            ERR() << "Failed to query CL platform info for " << name; \
+            return info;                                              \
+        }                                                             \
     } while (0)
 
-std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
+#define ANGLE_GET_INFO(name, size, param) \
+    platform->getDispatch().clGetPlatformInfo(platform, name, size, param, nullptr)
+
+#define ANGLE_GET_INFO_RET(name, size, param)                         \
+    do                                                                \
+    {                                                                 \
+        if (ANGLE_GET_INFO(name, size, param) != CL_SUCCESS)          \
+        {                                                             \
+            ERR() << "Failed to query CL platform info for " << name; \
+            return info;                                              \
+        }                                                             \
+    } while (0)
+
+CLPlatformImpl::Info CLPlatformCL::GetInfo(cl_platform_id platform)
 {
-    cl_int result    = 0;
-    size_t paramSize = 0u;
-    std::vector<std::string::value_type> param;
-    CLPlatformImpl::Info info;
+    Info info;
+    size_t valueSize = 0u;
+    std::vector<char> valString;
 
     // Verify that the platform is valid
     ASSERT(platform != nullptr);
@@ -149,24 +158,24 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
     ASSERT(platform->getDispatch().clGetDeviceInfo != nullptr);
 
     // Skip ANGLE CL implementation to prevent passthrough loop
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_VENDOR, 0u, nullptr, &paramSize);
-    param.resize(paramSize, '\0');
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_VENDOR, paramSize, param.data(), nullptr);
-    if (std::string(param.data()).compare(cl::Platform::GetVendor()) == 0)
+    ANGLE_GET_INFO_SIZE_RET(CL_PLATFORM_VENDOR, &valueSize);
+    valString.resize(valueSize, '\0');
+    ANGLE_GET_INFO_RET(CL_PLATFORM_VENDOR, valueSize, valString.data());
+    if (std::string(valString.data()).compare(cl::Platform::GetVendor()) == 0)
     {
         ERR() << "Tried to create CL pass-through back end for ANGLE library";
-        return std::unique_ptr<CLPlatformCL>();
+        return info;
     }
 
     // Skip platform if it is not ICD compatible
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_EXTENSIONS, 0u, nullptr, &paramSize);
-    param.resize(paramSize, '\0');
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_EXTENSIONS, paramSize, param.data(), nullptr);
-    info.mExtensions.assign(param.data());
+    ANGLE_GET_INFO_SIZE_RET(CL_PLATFORM_EXTENSIONS, &valueSize);
+    valString.resize(valueSize, '\0');
+    ANGLE_GET_INFO_RET(CL_PLATFORM_EXTENSIONS, valueSize, valString.data());
+    info.mExtensions.assign(valString.data());
     if (info.mExtensions.find("cl_khr_icd") == std::string::npos)
     {
         WARN() << "CL platform is not ICD compatible";
-        return std::unique_ptr<CLPlatformCL>();
+        return info;
     }
 
     // Filter out extensions which are not (yet) supported to be passed through
@@ -202,15 +211,10 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
     }
 
     // Fetch common platform info
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_PROFILE, 0u, nullptr, &paramSize);
-    param.resize(paramSize, '\0');
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_PROFILE, paramSize, param.data(), nullptr);
-    info.mProfile.assign(param.data());
-
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_VERSION, 0u, nullptr, &paramSize);
-    param.resize(paramSize, '\0');
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_VERSION, paramSize, param.data(), nullptr);
-    info.mVersionStr.assign(param.data());
+    ANGLE_GET_INFO_SIZE_RET(CL_PLATFORM_VERSION, &valueSize);
+    valString.resize(valueSize, '\0');
+    ANGLE_GET_INFO_RET(CL_PLATFORM_VERSION, valueSize, valString.data());
+    info.mVersionStr.assign(valString.data());
     info.mVersionStr += " (ANGLE " ANGLE_VERSION_STRING ")";
 
     const std::string::size_type spacePos = info.mVersionStr.find(' ');
@@ -218,7 +222,7 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
     if (spacePos == std::string::npos || dotPos == std::string::npos)
     {
         ERR() << "Failed to extract version from OpenCL version string: " << info.mVersionStr;
-        return std::unique_ptr<CLPlatformCL>();
+        return info;
     }
     const cl_uint major =
         static_cast<cl_uint>(std::strtol(&info.mVersionStr[spacePos + 1u], nullptr, 10));
@@ -227,11 +231,11 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
     if (major == 0)
     {
         ERR() << "Failed to extract version from OpenCL version string: " << info.mVersionStr;
-        return std::unique_ptr<CLPlatformCL>();
+        return info;
     }
 
-    ANGLE_GET_INFO(CL_PLATFORM_NUMERIC_VERSION, sizeof(info.mVersion), &info.mVersion, nullptr);
-    if (result != CL_SUCCESS)
+    if (ANGLE_GET_INFO(CL_PLATFORM_NUMERIC_VERSION, sizeof(info.mVersion), &info.mVersion) !=
+        CL_SUCCESS)
     {
         info.mVersion = CL_MAKE_VERSION(major, minor, 0);
     }
@@ -242,23 +246,24 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
                << " does not match version string: " << info.mVersionStr;
     }
 
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_NAME, 0u, nullptr, &paramSize);
-    param.resize(paramSize, '\0');
-    ANGLE_TRY_GET_INFO(CL_PLATFORM_NAME, paramSize, param.data(), nullptr);
+    ANGLE_GET_INFO_SIZE_RET(CL_PLATFORM_NAME, &valueSize);
+    valString.resize(valueSize, '\0');
+    ANGLE_GET_INFO_RET(CL_PLATFORM_NAME, valueSize, valString.data());
     info.mName.assign("ANGLE pass-through -> ");
-    info.mName += param.data();
+    info.mName += valString.data();
 
-    ANGLE_GET_INFO(CL_PLATFORM_EXTENSIONS_WITH_VERSION, 0u, nullptr, &paramSize);
-    if (result == CL_SUCCESS)
+    if (ANGLE_GET_INFO_SIZE(CL_PLATFORM_EXTENSIONS_WITH_VERSION, &valueSize) == CL_SUCCESS &&
+        (valueSize % sizeof(decltype(info.mExtensionsWithVersion)::value_type)) == 0u)
     {
-        info.mExtensionList.resize(paramSize);
-        ANGLE_TRY_GET_INFO(CL_PLATFORM_EXTENSIONS_WITH_VERSION, paramSize,
-                           info.mExtensionList.data(), nullptr);
+        info.mExtensionsWithVersion.resize(
+            valueSize / sizeof(decltype(info.mExtensionsWithVersion)::value_type));
+        ANGLE_GET_INFO_RET(CL_PLATFORM_EXTENSIONS_WITH_VERSION, valueSize,
+                           info.mExtensionsWithVersion.data());
 
         // Filter out extensions which are not (yet) supported to be passed through
-        const ExtensionSet &supported           = GetSupportedExtensions();
-        NameVersionVector::const_iterator extIt = info.mExtensionList.cbegin();
-        while (extIt != info.mExtensionList.cend())
+        const ExtensionSet &supported = GetSupportedExtensions();
+        auto extIt                    = info.mExtensionsWithVersion.cbegin();
+        while (extIt != info.mExtensionsWithVersion.cend())
         {
             if (supported.find(extIt->name) != supported.cend())
             {
@@ -266,15 +271,21 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
             }
             else
             {
-                extIt = info.mExtensionList.erase(extIt);
+                extIt = info.mExtensionsWithVersion.erase(extIt);
             }
         }
     }
 
     ANGLE_GET_INFO(CL_PLATFORM_HOST_TIMER_RESOLUTION, sizeof(info.mHostTimerRes),
-                   &info.mHostTimerRes, nullptr);
+                   &info.mHostTimerRes);
 
-    return std::unique_ptr<CLPlatformCL>(new CLPlatformCL(platform, std::move(info)));
+    // Get this last, so the info is invalid if anything before fails
+    ANGLE_GET_INFO_SIZE_RET(CL_PLATFORM_PROFILE, &valueSize);
+    valString.resize(valueSize, '\0');
+    ANGLE_GET_INFO_RET(CL_PLATFORM_PROFILE, valueSize, valString.data());
+    info.mProfile.assign(valString.data());
+
+    return info;
 }
 
 }  // namespace rx

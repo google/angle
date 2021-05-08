@@ -18,24 +18,9 @@ CLPlatformImpl::Info::Info(Info &&) = default;
 
 CLPlatformImpl::Info &CLPlatformImpl::Info::operator=(Info &&) = default;
 
-CLPlatformImpl::Info::Info(std::string &&profile,
-                           std::string &&versionStr,
-                           cl_version version,
-                           std::string &&name,
-                           std::string &&extensions,
-                           NameVersionVector &&extensionList,
-                           cl_ulong hostTimerRes)
-    : mProfile(std::move(profile)),
-      mVersionStr(std::move(versionStr)),
-      mVersion(version),
-      mName(std::move(name)),
-      mExtensions(std::move(extensions)),
-      mExtensionList(std::move(extensionList)),
-      mHostTimerRes(hostTimerRes)
-{}
-
-CLPlatformImpl::CLPlatformImpl(Info &&info) : mInfo(std::move(info)) {}
-
-CLPlatformImpl::~CLPlatformImpl() = default;
+bool CLPlatformImpl::Info::isValid() const
+{
+    return !mProfile.empty();
+}
 
 }  // namespace rx

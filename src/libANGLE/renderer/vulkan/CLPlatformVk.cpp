@@ -33,8 +33,6 @@ std::string CreateExtensionString(const NameVersionVector &extList)
 }
 }  // anonymous namespace
 
-CLPlatformVk::CLPlatformVk(Info &&info) : CLPlatformImpl(std::move(info)) {}
-
 CLPlatformVk::~CLPlatformVk() = default;
 
 CLDeviceImpl::InitList CLPlatformVk::getDevices()
@@ -53,13 +51,18 @@ CLPlatformVk::InitList CLPlatformVk::GetPlatforms()
     NameVersionVector extList = {
         cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_icd"},
         cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_extended_versioning"}};
-    std::string extensions = CreateExtensionString(extList);
 
-    Info info("FULL_PROFILE", std::string(GetVersionString()), GetVersion(), "ANGLE Vulkan",
-              std::move(extensions), std::move(extList), 0u);
+    Info info;
+    info.mProfile.assign("FULL_PROFILE");
+    info.mVersionStr.assign(GetVersionString());
+    info.mVersion = GetVersion();
+    info.mName.assign("ANGLE Vulkan");
+    info.mExtensions.assign(CreateExtensionString(extList));
+    info.mExtensionsWithVersion = std::move(extList);
+    info.mHostTimerRes          = 0u;
 
     InitList initList;
-    initList.emplace_back(new CLPlatformVk(std::move(info)));
+    initList.emplace_back(new CLPlatformVk, std::move(info));
     return initList;
 }
 
@@ -70,5 +73,7 @@ const std::string &CLPlatformVk::GetVersionString()
         std::to_string(CL_VERSION_MINOR(GetVersion())) + " ANGLE " ANGLE_VERSION_STRING);
     return *sVersion;
 }
+
+CLPlatformVk::CLPlatformVk() = default;
 
 }  // namespace rx

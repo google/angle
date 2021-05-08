@@ -25,9 +25,9 @@ class CLPlatformCL : public CLPlatformImpl
     static InitList GetPlatforms(bool isIcd);
 
   private:
-    CLPlatformCL(cl_platform_id platform, Info &&info);
+    explicit CLPlatformCL(cl_platform_id platform);
 
-    static std::unique_ptr<CLPlatformCL> Create(cl_platform_id platform);
+    static Info GetInfo(cl_platform_id platform);
 
     const cl_platform_id mPlatform;
 };

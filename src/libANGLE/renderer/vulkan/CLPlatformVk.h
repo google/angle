@@ -27,7 +27,7 @@ class CLPlatformVk : public CLPlatformImpl
     static const std::string &GetVersionString();
 
   private:
-    explicit CLPlatformVk(Info &&info);
+    CLPlatformVk();
 };
 
 constexpr cl_version CLPlatformVk::GetVersion()
