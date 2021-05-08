@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d92986b7_20dd604b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-08T02:56:34Z",
+      "side": 1,
+      "message": "We should make sure we are per spec here. We could get clarification from the working group if the spec wording is not clear. I\u0027d say making all the command pools protected is not a good idea though, I believe that would effectively disable renderdoc/agi debugging in the very least. Isn\u0027t that right?",
+      "parentUuid": "c467a301_3bf2a638",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "81513d77_f56d0ebf",
         "filename": "src/libANGLE/renderer/vulkan/CommandProcessor.cpp",
         "patchSetId": 8
