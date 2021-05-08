@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72c813ae_ccd422c9",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-08T04:01:53Z",
+      "side": 1,
+      "message": "This information (which is for Windows in general by the way, not specific to 10) is right there in the depot_tools link above. Do we really want them duplicated here?\n\nEither way, whatever windows instructions added should go under \"On Windows:\" below.",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 53
+      },
+      "revId": "8ccdb46f2f93aa251212d95825daad3420ad0eb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5c922702_a65b0315",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-08T04:01:53Z",
+      "side": 1,
+      "message": "Not sure what value this is adding. If gclient is needed, it\u0027s probably needed on every platform. The last item is a duplicate of the line above. Maybe something like this instead?\n\n * Run `gclient` (note that on Windows, this only works from the Command Prompt (cmd.exe) and not for example git bash).\n * For Googlers, run `download_from_google_storage --config` to login to Google Storage.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 30,
+        "endChar": 74
+      },
+      "revId": "8ccdb46f2f93aa251212d95825daad3420ad0eb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "efa0c530_79e967c6",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-08T04:01:53Z",
+      "side": 1,
+      "message": "Not windows 10 specific.",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 107,
+        "endChar": 27
+      },
+      "revId": "8ccdb46f2f93aa251212d95825daad3420ad0eb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
