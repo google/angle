@@ -7,6 +7,7 @@
 
 #include "libGLESv2/cl_stubs_autogen.h"
 
+#include "libANGLE/CLDevice.h"
 #include "libANGLE/CLPlatform.h"
 #include "libGLESv2/cl_dispatch_table.h"
 #include "libGLESv2/proc_table_cl.h"
@@ -39,7 +40,7 @@ namespace cl
 namespace
 {
 
-const Platform::List &InitializePlatforms(bool isIcd)
+const Platform::PtrList &InitializePlatforms(bool isIcd)
 {
     static bool initialized = false;
     if (!initialized)
@@ -47,20 +48,20 @@ const Platform::List &InitializePlatforms(bool isIcd)
         initialized = true;
 
 #ifdef ANGLE_ENABLE_CL_PASSTHROUGH
-        rx::CLPlatformImpl::ImplList implListCL = rx::CLPlatformCL::GetPlatforms(isIcd);
-        while (!implListCL.empty())
+        rx::CLPlatformImpl::InitList initListCL = rx::CLPlatformCL::GetPlatforms(isIcd);
+        while (!initListCL.empty())
         {
-            Platform::CreatePlatform(gCLIcdDispatchTable, std::move(implListCL.front()));
-            implListCL.pop_front();
+            Platform::CreatePlatform(gCLIcdDispatchTable, initListCL.front());
+            initListCL.pop_front();
         }
 #endif
 
 #ifdef ANGLE_ENABLE_VULKAN
-        rx::CLPlatformImpl::ImplList implListVk = rx::CLPlatformVk::GetPlatforms();
-        while (!implListVk.empty())
+        rx::CLPlatformImpl::InitList initListVk = rx::CLPlatformVk::GetPlatforms();
+        while (!initListVk.empty())
         {
-            Platform::CreatePlatform(gCLIcdDispatchTable, std::move(implListVk.front()));
-            implListVk.pop_front();
+            Platform::CreatePlatform(gCLIcdDispatchTable, initListVk.front());
+            initListVk.pop_front();
         }
 #endif
     }
@@ -69,7 +70,7 @@ const Platform::List &InitializePlatforms(bool isIcd)
 
 cl_int GetPlatforms(cl_uint num_entries, Platform **platforms, cl_uint *num_platforms, bool isIcd)
 {
-    const Platform::List &platformList = InitializePlatforms(isIcd);
+    const Platform::PtrList &platformList = InitializePlatforms(isIcd);
     if (num_platforms != nullptr)
     {
         *num_platforms = static_cast<cl_uint>(platformList.size());
@@ -179,8 +180,8 @@ cl_int GetDeviceIDs(Platform *platform,
                     Device **devices,
                     cl_uint *num_devices)
 {
-    WARN_NOT_SUPPORTED(GetDeviceIDs);
-    return 0;
+    return (platform != nullptr ? platform : Platform::GetDefault())
+        ->getDeviceIDs(device_type, num_entries, devices, num_devices);
 }
 
 cl_int GetDeviceInfo(Device *device,
@@ -189,8 +190,7 @@ cl_int GetDeviceInfo(Device *device,
                      void *param_value,
                      size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetDeviceInfo);
-    return 0;
+    return device->getInfo(param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 cl_int CreateSubDevices(Device *in_device,

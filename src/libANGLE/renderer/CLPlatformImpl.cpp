@@ -23,7 +23,7 @@ CLPlatformImpl::Info::Info(std::string &&profile,
                            cl_version version,
                            std::string &&name,
                            std::string &&extensions,
-                           rx::CLPlatformImpl::ExtensionList &&extensionList,
+                           NameVersionVector &&extensionList,
                            cl_ulong hostTimerRes)
     : mProfile(std::move(profile)),
       mVersionStr(std::move(versionStr)),

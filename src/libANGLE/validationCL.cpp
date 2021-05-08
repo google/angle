@@ -3,7 +3,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-
 // validationCL.cpp: Validation functions for generic CL entry point parameters
 
 #include "libANGLE/validationCL_autogen.h"
@@ -12,28 +11,28 @@ namespace cl
 {
 // CL 1.0
 cl_int ValidateGetPlatformIDs(cl_uint num_entries,
-                              Platform *const *platformsPacked,
+                              Platform *const *platforms,
                               const cl_uint *num_platforms)
 {
-    if ((num_entries == 0u && platformsPacked != nullptr) ||
-        (platformsPacked == nullptr && num_platforms == nullptr))
+    if ((num_entries == 0u && platforms != nullptr) ||
+        (platforms == nullptr && num_platforms == nullptr))
     {
         return CL_INVALID_VALUE;
     }
     return CL_SUCCESS;
 }
 
-cl_int ValidateGetPlatformInfo(const Platform *platformPacked,
-                               PlatformInfo param_namePacked,
+cl_int ValidateGetPlatformInfo(const Platform *platform,
+                               PlatformInfo param_name,
                                size_t param_value_size,
                                const void *param_value,
                                const size_t *param_value_size_ret)
 {
-    if (!Platform::IsValid(platformPacked))
+    if (!Platform::IsValid(platform))
     {
         return CL_INVALID_PLATFORM;
     }
-    if (param_namePacked == PlatformInfo::InvalidEnum ||
+    if (param_name == PlatformInfo::InvalidEnum ||
         (param_value_size == 0u && param_value != nullptr))
     {
         return CL_INVALID_VALUE;
@@ -41,21 +40,41 @@ cl_int ValidateGetPlatformInfo(const Platform *platformPacked,
     return CL_SUCCESS;
 }
 
-cl_int ValidateGetDeviceIDs(const Platform *platformPacked,
+cl_int ValidateGetDeviceIDs(const Platform *platform,
                             cl_device_type device_type,
                             cl_uint num_entries,
-                            Device *const *devicesPacked,
+                            Device *const *devices,
                             const cl_uint *num_devices)
 {
+    if (!Platform::IsValidOrDefault(platform))
+    {
+        return CL_INVALID_PLATFORM;
+    }
+    if (!Device::IsValidType(device_type))
+    {
+        return CL_INVALID_DEVICE_TYPE;
+    }
+    if ((num_entries == 0u && devices != nullptr) || (devices == nullptr && num_devices == nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
-cl_int ValidateGetDeviceInfo(const Device *devicePacked,
-                             DeviceInfo param_namePacked,
+cl_int ValidateGetDeviceInfo(const Device *device,
+                             DeviceInfo param_name,
                              size_t param_value_size,
                              const void *param_value,
                              const size_t *param_value_size_ret)
 {
+    if (!Device::IsValid(device))
+    {
+        return CL_INVALID_DEVICE;
+    }
+    if (param_name == DeviceInfo::InvalidEnum || (param_value_size == 0u && param_value != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 

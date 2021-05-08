@@ -3,23 +3,21 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// CLPlatformVk.cpp:
-//    Implements the class methods for CLPlatformVk.
-//
+// CLPlatformVk.cpp: Implements the class methods for CLPlatformVk.
 
 #include "libANGLE/renderer/vulkan/CLPlatformVk.h"
 
+#include "libANGLE/renderer/vulkan/CLDeviceVk.h"
+
 #include "anglebase/no_destructor.h"
 #include "common/angle_version.h"
-
-#include <algorithm>
 
 namespace rx
 {
 
 namespace
 {
-std::string CreateExtensionString(const CLPlatformImpl::ExtensionList &extList)
+std::string CreateExtensionString(const NameVersionVector &extList)
 {
     std::string extensions;
     for (const cl_name_version &ext : extList)
@@ -39,9 +37,20 @@ CLPlatformVk::CLPlatformVk(Info &&info) : CLPlatformImpl(std::move(info)) {}
 
 CLPlatformVk::~CLPlatformVk() = default;
 
-CLPlatformVk::ImplList CLPlatformVk::GetPlatforms()
+CLDeviceImpl::InitList CLPlatformVk::getDevices()
 {
-    ExtensionList extList = {
+    CLDeviceImpl::InitList initList;
+    CLDeviceImpl::Info info = CLDeviceVk::GetInfo();
+    if (info.isValid())
+    {
+        initList.emplace_back(new CLDeviceVk(), std::move(info));
+    }
+    return initList;
+}
+
+CLPlatformVk::InitList CLPlatformVk::GetPlatforms()
+{
+    NameVersionVector extList = {
         cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_icd"},
         cl_name_version{CL_MAKE_VERSION(1, 0, 0), "cl_khr_extended_versioning"}};
     std::string extensions = CreateExtensionString(extList);
@@ -49,9 +58,9 @@ CLPlatformVk::ImplList CLPlatformVk::GetPlatforms()
     Info info("FULL_PROFILE", std::string(GetVersionString()), GetVersion(), "ANGLE Vulkan",
               std::move(extensions), std::move(extList), 0u);
 
-    ImplList implList;
-    implList.emplace_back(new CLPlatformVk(std::move(info)));
-    return implList;
+    InitList initList;
+    initList.emplace_back(new CLPlatformVk(std::move(info)));
+    return initList;
 }
 
 const std::string &CLPlatformVk::GetVersionString()

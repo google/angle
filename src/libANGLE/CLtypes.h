@@ -12,8 +12,13 @@
 
 #include "common/PackedCLEnums_autogen.h"
 
+// Include frequently used standard headers
+#include <algorithm>
+#include <list>
 #include <memory>
+#include <string>
 #include <utility>
+#include <vector>
 
 namespace cl
 {

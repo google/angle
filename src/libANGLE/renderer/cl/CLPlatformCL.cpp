@@ -3,11 +3,11 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// CLPlatformCL.cpp:
-//    Implements the class methods for CLPlatformCL.
-//
+// CLPlatformCL.cpp: Implements the class methods for CLPlatformCL.
 
 #include "libANGLE/renderer/cl/CLPlatformCL.h"
+
+#include "libANGLE/renderer/cl/CLDeviceCL.h"
 
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/Debug.h"
@@ -21,7 +21,6 @@ extern "C" {
 
 #include <cstdlib>
 #include <unordered_set>
-#include <vector>
 
 namespace rx
 {
@@ -40,7 +39,44 @@ const ExtensionSet &GetSupportedExtensions()
 
 CLPlatformCL::~CLPlatformCL() = default;
 
-CLPlatformCL::ImplList CLPlatformCL::GetPlatforms(bool isIcd)
+CLDeviceImpl::InitList CLPlatformCL::getDevices()
+{
+    CLDeviceImpl::InitList initList;
+
+    // Fetch all regular devices. This does not include CL_DEVICE_TYPE_CUSTOM, which are not
+    // supported by the CL pass-through back end because they have no standard feature set.
+    // This makes them unreliable for the purpose of this back end.
+    cl_uint numDevices = 0u;
+    if (mPlatform->getDispatch().clGetDeviceIDs(mPlatform, CL_DEVICE_TYPE_ALL, 0u, nullptr,
+                                                &numDevices) == CL_SUCCESS)
+    {
+        std::vector<cl_device_id> devices(numDevices, nullptr);
+        if (mPlatform->getDispatch().clGetDeviceIDs(mPlatform, CL_DEVICE_TYPE_ALL, numDevices,
+                                                    devices.data(), nullptr) == CL_SUCCESS)
+        {
+            for (cl_device_id device : devices)
+            {
+                CLDeviceImpl::Info info = CLDeviceCL::GetInfo(device);
+                if (info.isValid())
+                {
+                    initList.emplace_back(new CLDeviceCL(device), std::move(info));
+                }
+            }
+        }
+        else
+        {
+            ERR() << "Failed to query CL devices";
+        }
+    }
+    else
+    {
+        ERR() << "Failed to query CL devices";
+    }
+
+    return initList;
+}
+
+CLPlatformCL::InitList CLPlatformCL::GetPlatforms(bool isIcd)
 {
     // Using khrIcdInitialize() of the third party Khronos OpenCL ICD Loader to enumerate the
     // available OpenCL implementations on the system. They will be stored in the singly linked
@@ -66,7 +102,7 @@ CLPlatformCL::ImplList CLPlatformCL::GetPlatforms(bool isIcd)
 
     // Iterating through the singly linked list khrIcdVendors to create an ANGLE CL pass-through
     // platform for each found ICD platform. Skipping our dummy entry that has an invalid platform.
-    ImplList implList;
+    InitList initList;
     for (KHRicdVendor *vendorIt = khrIcdVendors; vendorIt != nullptr; vendorIt = vendorIt->next)
     {
         if (vendorIt->platform != nullptr)
@@ -74,11 +110,11 @@ CLPlatformCL::ImplList CLPlatformCL::GetPlatforms(bool isIcd)
             rx::CLPlatformImpl::Ptr impl = Create(vendorIt->platform);
             if (impl)
             {
-                implList.emplace_back(std::move(impl));
+                initList.emplace_back(std::move(impl));
             }
         }
     }
-    return implList;
+    return initList;
 }
 
 CLPlatformCL::CLPlatformCL(cl_platform_id platform, Info &&info)
@@ -105,6 +141,12 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
     size_t paramSize = 0u;
     std::vector<std::string::value_type> param;
     CLPlatformImpl::Info info;
+
+    // Verify that the platform is valid
+    ASSERT(platform != nullptr);
+    ASSERT(platform->getDispatch().clGetPlatformInfo != nullptr);
+    ASSERT(platform->getDispatch().clGetDeviceIDs != nullptr);
+    ASSERT(platform->getDispatch().clGetDeviceInfo != nullptr);
 
     // Skip ANGLE CL implementation to prevent passthrough loop
     ANGLE_TRY_GET_INFO(CL_PLATFORM_VENDOR, 0u, nullptr, &paramSize);
@@ -214,8 +256,8 @@ std::unique_ptr<CLPlatformCL> CLPlatformCL::Create(cl_platform_id platform)
                            info.mExtensionList.data(), nullptr);
 
         // Filter out extensions which are not (yet) supported to be passed through
-        const ExtensionSet &supported       = GetSupportedExtensions();
-        ExtensionList::const_iterator extIt = info.mExtensionList.cbegin();
+        const ExtensionSet &supported           = GetSupportedExtensions();
+        NameVersionVector::const_iterator extIt = info.mExtensionList.cbegin();
         while (extIt != info.mExtensionList.cend())
         {
             if (supported.find(extIt->name) != supported.cend())
