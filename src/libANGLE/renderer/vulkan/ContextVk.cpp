@@ -3477,7 +3477,12 @@ angle::Result ContextVk::syncState(const gl::Context *context,
                 // open, such as invalidate or blit. Note that we always start a new command buffer
                 // because we currently can only support one open RenderPass at a time.
                 onRenderPassFinished();
-
+                if (mRenderer->getFeatures().preferSubmitAtFBOBoundary.enabled)
+                {
+                    // This will behave as if user called glFlush, but the actual flush will be
+                    // triggered at endRenderPass time.
+                    mHasDeferredFlush = true;
+                }
                 gl::Framebuffer *drawFramebuffer = glState.getDrawFramebuffer();
                 mDrawFramebuffer                 = vk::GetImpl(drawFramebuffer);
                 mDrawFramebuffer->setReadOnlyDepthFeedbackLoopMode(false);

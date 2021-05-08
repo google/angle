@@ -515,6 +515,12 @@ struct FeaturesVk : FeatureSetBase
         "forceFragmentShaderPrecisionHighpToMediump", FeatureCategory::VulkanWorkarounds,
         "Forces highp precision in fragment shader to mediump.", &members,
         "https://issuetracker.google.com/184850002"};
+
+    // Whether we should submit at each FBO boundary.
+    Feature preferSubmitAtFBOBoundary = {
+        "preferSubmitAtFBOBoundary", FeatureCategory::VulkanWorkarounds,
+        "Submit commands to driver at each FBO boundary for performance improvements.", &members,
+        "https://issuetracker.google.com/187425444"};
 };
 
 inline FeaturesVk::FeaturesVk()  = default;
