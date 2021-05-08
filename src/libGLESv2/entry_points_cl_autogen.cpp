@@ -68,10 +68,10 @@ cl_int CL_API_CALL clGetDeviceIDs(cl_platform_id platform,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetDeviceIDs,
              "platform = 0x%016" PRIxPTR
-             ", device_type = %lu, num_entries = %u, devices = 0x%016" PRIxPTR
+             ", device_type = %llu, num_entries = %u, devices = 0x%016" PRIxPTR
              ", num_devices = 0x%016" PRIxPTR "",
-             (uintptr_t)platform, device_type, num_entries, (uintptr_t)devices,
-             (uintptr_t)num_devices);
+             (uintptr_t)platform, static_cast<unsigned long long>(device_type), num_entries,
+             (uintptr_t)devices, (uintptr_t)num_devices);
 
     Platform *platformPacked = PackParam<Platform *>(platform);
     Device **devicesPacked   = PackParam<Device **>(devices);
@@ -145,10 +145,10 @@ clCreateContextFromType(const cl_context_properties *properties,
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateContextFromType,
-             "properties = 0x%016" PRIxPTR ", device_type = %lu, pfn_notify = 0x%016" PRIxPTR
+             "properties = 0x%016" PRIxPTR ", device_type = %llu, pfn_notify = 0x%016" PRIxPTR
              ", user_data = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)properties, device_type, (uintptr_t)pfn_notify, (uintptr_t)user_data,
-             (uintptr_t)errcode_ret);
+             (uintptr_t)properties, static_cast<unsigned long long>(device_type),
+             (uintptr_t)pfn_notify, (uintptr_t)user_data, (uintptr_t)errcode_ret);
 
     ANGLE_CL_VALIDATE_POINTER(CreateContextFromType, properties, device_type, pfn_notify, user_data,
                               errcode_ret);
@@ -260,9 +260,10 @@ cl_mem CL_API_CALL clCreateBuffer(cl_context context,
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateBuffer,
-             "context = 0x%016" PRIxPTR ", flags = %lu, size = %zu, host_ptr = 0x%016" PRIxPTR
+             "context = 0x%016" PRIxPTR ", flags = %llu, size = %zu, host_ptr = 0x%016" PRIxPTR
              ", errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)context, flags, size, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
+             (uintptr_t)context, static_cast<unsigned long long>(flags), size, (uintptr_t)host_ptr,
+             (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
 
@@ -305,10 +306,10 @@ cl_int CL_API_CALL clGetSupportedImageFormats(cl_context context,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(GetSupportedImageFormats,
              "context = 0x%016" PRIxPTR
-             ", flags = %lu, image_type = %u, num_entries = %u, image_formats = 0x%016" PRIxPTR
+             ", flags = %llu, image_type = %u, num_entries = %u, image_formats = 0x%016" PRIxPTR
              ", num_image_formats = 0x%016" PRIxPTR "",
-             (uintptr_t)context, flags, image_type, num_entries, (uintptr_t)image_formats,
-             (uintptr_t)num_image_formats);
+             (uintptr_t)context, static_cast<unsigned long long>(flags), image_type, num_entries,
+             (uintptr_t)image_formats, (uintptr_t)num_image_formats);
 
     Context *contextPacked         = PackParam<Context *>(context);
     MemObjectType image_typePacked = PackParam<MemObjectType>(image_type);
@@ -1096,12 +1097,12 @@ void *CL_API_CALL clEnqueueMapBuffer(cl_command_queue command_queue,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMapBuffer,
              "command_queue = 0x%016" PRIxPTR ", buffer = 0x%016" PRIxPTR
-             ", blocking_map = %u, map_flags = %lu, offset = %zu, size = %zu, "
+             ", blocking_map = %u, map_flags = %llu, offset = %zu, size = %zu, "
              "num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
              ", event = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)command_queue, (uintptr_t)buffer, blocking_map, map_flags, offset, size,
-             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event,
-             (uintptr_t)errcode_ret);
+             (uintptr_t)command_queue, (uintptr_t)buffer, blocking_map,
+             static_cast<unsigned long long>(map_flags), offset, size, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event, (uintptr_t)errcode_ret);
 
     CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
     Memory *bufferPacked                = PackParam<Memory *>(buffer);
@@ -1133,15 +1134,15 @@ void *CL_API_CALL clEnqueueMapImage(cl_command_queue command_queue,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMapImage,
              "command_queue = 0x%016" PRIxPTR ", image = 0x%016" PRIxPTR
-             ", blocking_map = %u, map_flags = %lu, origin = 0x%016" PRIxPTR
+             ", blocking_map = %u, map_flags = %llu, origin = 0x%016" PRIxPTR
              ", region = 0x%016" PRIxPTR ", image_row_pitch = 0x%016" PRIxPTR
              ", image_slice_pitch = 0x%016" PRIxPTR
              ", num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
              ", event = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)command_queue, (uintptr_t)image, blocking_map, map_flags, (uintptr_t)origin,
-             (uintptr_t)region, (uintptr_t)image_row_pitch, (uintptr_t)image_slice_pitch,
-             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event,
-             (uintptr_t)errcode_ret);
+             (uintptr_t)command_queue, (uintptr_t)image, blocking_map,
+             static_cast<unsigned long long>(map_flags), (uintptr_t)origin, (uintptr_t)region,
+             (uintptr_t)image_row_pitch, (uintptr_t)image_slice_pitch, num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event, (uintptr_t)errcode_ret);
 
     CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
     Memory *imagePacked                 = PackParam<Memory *>(image);
@@ -1266,8 +1267,9 @@ cl_int CL_API_CALL clSetCommandQueueProperty(cl_command_queue command_queue,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(SetCommandQueueProperty,
              "command_queue = 0x%016" PRIxPTR
-             ", properties = %lu, enable = %u, old_properties = 0x%016" PRIxPTR "",
-             (uintptr_t)command_queue, properties, enable, (uintptr_t)old_properties);
+             ", properties = %llu, enable = %u, old_properties = 0x%016" PRIxPTR "",
+             (uintptr_t)command_queue, static_cast<unsigned long long>(properties), enable,
+             (uintptr_t)old_properties);
 
     CommandQueue *command_queuePacked = PackParam<CommandQueue *>(command_queue);
 
@@ -1289,11 +1291,11 @@ cl_mem CL_API_CALL clCreateImage2D(cl_context context,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(
         CreateImage2D,
-        "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
+        "context = 0x%016" PRIxPTR ", flags = %llu, image_format = 0x%016" PRIxPTR
         ", image_width = %zu, image_height = %zu, image_row_pitch = %zu, host_ptr = 0x%016" PRIxPTR
         ", errcode_ret = 0x%016" PRIxPTR "",
-        (uintptr_t)context, flags, (uintptr_t)image_format, image_width, image_height,
-        image_row_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
+        (uintptr_t)context, static_cast<unsigned long long>(flags), (uintptr_t)image_format,
+        image_width, image_height, image_row_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
 
@@ -1316,13 +1318,14 @@ cl_mem CL_API_CALL clCreateImage3D(cl_context context,
                                    cl_int *errcode_ret)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    CL_EVENT(
-        CreateImage3D,
-        "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
-        ", image_width = %zu, image_height = %zu, image_depth = %zu, image_row_pitch = %zu, "
-        "image_slice_pitch = %zu, host_ptr = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
-        (uintptr_t)context, flags, (uintptr_t)image_format, image_width, image_height, image_depth,
-        image_row_pitch, image_slice_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
+    CL_EVENT(CreateImage3D,
+             "context = 0x%016" PRIxPTR ", flags = %llu, image_format = 0x%016" PRIxPTR
+             ", image_width = %zu, image_height = %zu, image_depth = %zu, image_row_pitch = %zu, "
+             "image_slice_pitch = %zu, host_ptr = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR
+             "",
+             (uintptr_t)context, static_cast<unsigned long long>(flags), (uintptr_t)image_format,
+             image_width, image_height, image_depth, image_row_pitch, image_slice_pitch,
+             (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
 
@@ -1406,8 +1409,9 @@ cl_command_queue CL_API_CALL clCreateCommandQueue(cl_context context,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateCommandQueue,
              "context = 0x%016" PRIxPTR ", device = 0x%016" PRIxPTR
-             ", properties = %lu, errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)context, (uintptr_t)device, properties, (uintptr_t)errcode_ret);
+             ", properties = %llu, errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)context, (uintptr_t)device, static_cast<unsigned long long>(properties),
+             (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
     Device *devicePacked   = PackParam<Device *>(device);
@@ -1479,10 +1483,10 @@ cl_mem CL_API_CALL clCreateSubBuffer(cl_mem buffer,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateSubBuffer,
              "buffer = 0x%016" PRIxPTR
-             ", flags = %lu, buffer_create_type = %u, buffer_create_info = 0x%016" PRIxPTR
+             ", flags = %llu, buffer_create_type = %u, buffer_create_info = 0x%016" PRIxPTR
              ", errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)buffer, flags, buffer_create_type, (uintptr_t)buffer_create_info,
-             (uintptr_t)errcode_ret);
+             (uintptr_t)buffer, static_cast<unsigned long long>(flags), buffer_create_type,
+             (uintptr_t)buffer_create_info, (uintptr_t)errcode_ret);
 
     Memory *bufferPacked = PackParam<Memory *>(buffer);
 
@@ -1751,11 +1755,11 @@ cl_mem CL_API_CALL clCreateImage(cl_context context,
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateImage,
-             "context = 0x%016" PRIxPTR ", flags = %lu, image_format = 0x%016" PRIxPTR
+             "context = 0x%016" PRIxPTR ", flags = %llu, image_format = 0x%016" PRIxPTR
              ", image_desc = 0x%016" PRIxPTR ", host_ptr = 0x%016" PRIxPTR
              ", errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)context, flags, (uintptr_t)image_format, (uintptr_t)image_desc,
-             (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
+             (uintptr_t)context, static_cast<unsigned long long>(flags), (uintptr_t)image_format,
+             (uintptr_t)image_desc, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
 
@@ -1967,10 +1971,11 @@ cl_int CL_API_CALL clEnqueueMigrateMemObjects(cl_command_queue command_queue,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueMigrateMemObjects,
              "command_queue = 0x%016" PRIxPTR ", num_mem_objects = %u, mem_objects = 0x%016" PRIxPTR
-             ", flags = %lu, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", flags = %llu, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
              ", event = 0x%016" PRIxPTR "",
-             (uintptr_t)command_queue, num_mem_objects, (uintptr_t)mem_objects, flags,
-             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+             (uintptr_t)command_queue, num_mem_objects, (uintptr_t)mem_objects,
+             static_cast<unsigned long long>(flags), num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
     Memory *const *mem_objectsPacked    = PackParam<Memory *const *>(mem_objects);
@@ -2081,10 +2086,10 @@ cl_mem CL_API_CALL clCreatePipe(cl_context context,
     CL_EVENT(
         CreatePipe,
         "context = 0x%016" PRIxPTR
-        ", flags = %lu, pipe_packet_size = %u, pipe_max_packets = %u, properties = 0x%016" PRIxPTR
+        ", flags = %llu, pipe_packet_size = %u, pipe_max_packets = %u, properties = 0x%016" PRIxPTR
         ", errcode_ret = 0x%016" PRIxPTR "",
-        (uintptr_t)context, flags, pipe_packet_size, pipe_max_packets, (uintptr_t)properties,
-        (uintptr_t)errcode_ret);
+        (uintptr_t)context, static_cast<unsigned long long>(flags), pipe_packet_size,
+        pipe_max_packets, (uintptr_t)properties, (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
 
@@ -2125,8 +2130,8 @@ void *CL_API_CALL clSVMAlloc(cl_context context,
                              cl_uint alignment)
 {
     ANGLE_SCOPED_GLOBAL_LOCK();
-    CL_EVENT(SVMAlloc, "context = 0x%016" PRIxPTR ", flags = %lu, size = %zu, alignment = %u",
-             (uintptr_t)context, flags, size, alignment);
+    CL_EVENT(SVMAlloc, "context = 0x%016" PRIxPTR ", flags = %llu, size = %zu, alignment = %u",
+             (uintptr_t)context, static_cast<unsigned long long>(flags), size, alignment);
 
     Context *contextPacked = PackParam<Context *>(context);
 
@@ -2308,11 +2313,12 @@ cl_int CL_API_CALL clEnqueueSVMMap(cl_command_queue command_queue,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(EnqueueSVMMap,
              "command_queue = 0x%016" PRIxPTR
-             ", blocking_map = %u, flags = %lu, svm_ptr = 0x%016" PRIxPTR
+             ", blocking_map = %u, flags = %llu, svm_ptr = 0x%016" PRIxPTR
              ", size = %zu, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
              ", event = 0x%016" PRIxPTR "",
-             (uintptr_t)command_queue, blocking_map, flags, (uintptr_t)svm_ptr, size,
-             num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+             (uintptr_t)command_queue, blocking_map, static_cast<unsigned long long>(flags),
+             (uintptr_t)svm_ptr, size, num_events_in_wait_list, (uintptr_t)event_wait_list,
+             (uintptr_t)event);
 
     CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
     Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
@@ -2476,10 +2482,11 @@ cl_int CL_API_CALL clEnqueueSVMMigrateMem(cl_command_queue command_queue,
     CL_EVENT(EnqueueSVMMigrateMem,
              "command_queue = 0x%016" PRIxPTR
              ", num_svm_pointers = %u, svm_pointers = 0x%016" PRIxPTR ", sizes = 0x%016" PRIxPTR
-             ", flags = %lu, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
+             ", flags = %llu, num_events_in_wait_list = %u, event_wait_list = 0x%016" PRIxPTR
              ", event = 0x%016" PRIxPTR "",
              (uintptr_t)command_queue, num_svm_pointers, (uintptr_t)svm_pointers, (uintptr_t)sizes,
-             flags, num_events_in_wait_list, (uintptr_t)event_wait_list, (uintptr_t)event);
+             static_cast<unsigned long long>(flags), num_events_in_wait_list,
+             (uintptr_t)event_wait_list, (uintptr_t)event);
 
     CommandQueue *command_queuePacked   = PackParam<CommandQueue *>(command_queue);
     Event *const *event_wait_listPacked = PackParam<Event *const *>(event_wait_list);
@@ -2560,10 +2567,10 @@ cl_mem CL_API_CALL clCreateBufferWithProperties(cl_context context,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateBufferWithProperties,
              "context = 0x%016" PRIxPTR ", properties = 0x%016" PRIxPTR
-             ", flags = %lu, size = %zu, host_ptr = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR
-             "",
-             (uintptr_t)context, (uintptr_t)properties, flags, size, (uintptr_t)host_ptr,
-             (uintptr_t)errcode_ret);
+             ", flags = %llu, size = %zu, host_ptr = 0x%016" PRIxPTR
+             ", errcode_ret = 0x%016" PRIxPTR "",
+             (uintptr_t)context, (uintptr_t)properties, static_cast<unsigned long long>(flags),
+             size, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
 
@@ -2585,10 +2592,11 @@ cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
     ANGLE_SCOPED_GLOBAL_LOCK();
     CL_EVENT(CreateImageWithProperties,
              "context = 0x%016" PRIxPTR ", properties = 0x%016" PRIxPTR
-             ", flags = %lu, image_format = 0x%016" PRIxPTR ", image_desc = 0x%016" PRIxPTR
+             ", flags = %llu, image_format = 0x%016" PRIxPTR ", image_desc = 0x%016" PRIxPTR
              ", host_ptr = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
-             (uintptr_t)context, (uintptr_t)properties, flags, (uintptr_t)image_format,
-             (uintptr_t)image_desc, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
+             (uintptr_t)context, (uintptr_t)properties, static_cast<unsigned long long>(flags),
+             (uintptr_t)image_format, (uintptr_t)image_desc, (uintptr_t)host_ptr,
+             (uintptr_t)errcode_ret);
 
     Context *contextPacked = PackParam<Context *>(context);
 

@@ -715,23 +715,33 @@ cl_int ValidateEnqueueCopyBufferRect(const CommandQueue *command_queuePacked,
 }
 
 // CL 1.2
-cl_int ValidateCreateSubDevices(const Device *in_devicePacked,
+cl_int ValidateCreateSubDevices(const Device *in_device,
                                 const cl_device_partition_property *properties,
                                 cl_uint num_devices,
-                                Device *const *out_devicesPacked,
+                                Device *const *out_devices,
                                 const cl_uint *num_devices_ret)
 {
+    if (!Device::IsValid(in_device))
+    {
+        return CL_INVALID_DEVICE;
+    }
+    if (properties == nullptr || (*properties != CL_DEVICE_PARTITION_EQUALLY &&
+                                  *properties != CL_DEVICE_PARTITION_BY_COUNTS &&
+                                  *properties != CL_DEVICE_PARTITION_BY_AFFINITY_DOMAIN))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
-cl_int ValidateRetainDevice(const Device *devicePacked)
+cl_int ValidateRetainDevice(const Device *device)
 {
-    return CL_SUCCESS;
+    return Device::IsValid(device) ? CL_SUCCESS : CL_INVALID_DEVICE;
 }
 
-cl_int ValidateReleaseDevice(const Device *devicePacked)
+cl_int ValidateReleaseDevice(const Device *device)
 {
-    return CL_SUCCESS;
+    return Device::IsValid(device) ? CL_SUCCESS : CL_INVALID_DEVICE;
 }
 
 bool ValidateCreateImage(const Context *contextPacked,

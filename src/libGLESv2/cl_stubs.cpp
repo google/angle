@@ -132,20 +132,19 @@ cl_int CreateSubDevices(Device *in_device,
                         Device **out_devices,
                         cl_uint *num_devices_ret)
 {
-    WARN_NOT_SUPPORTED(CreateSubDevices);
-    return 0;
+    return in_device->createSubDevices(properties, num_devices, out_devices, num_devices_ret);
 }
 
 cl_int RetainDevice(Device *device)
 {
-    WARN_NOT_SUPPORTED(RetainDevice);
-    return 0;
+    device->retain();
+    return CL_SUCCESS;
 }
 
 cl_int ReleaseDevice(Device *device)
 {
-    WARN_NOT_SUPPORTED(ReleaseDevice);
-    return 0;
+    device->release();
+    return CL_SUCCESS;
 }
 
 cl_int SetDefaultDeviceCommandQueue(Context *context, Device *device, CommandQueue *command_queue)

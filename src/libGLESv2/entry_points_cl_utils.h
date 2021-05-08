@@ -9,11 +9,13 @@
 #ifndef LIBGLESV2_ENTRY_POINTS_CL_UTILS_H_
 #define LIBGLESV2_ENTRY_POINTS_CL_UTILS_H_
 
+#include "libANGLE/Debug.h"
+
 #include <cinttypes>
 #include <cstdio>
 #include <type_traits>
 
-#if defined(ANGLE_TRACE_ENABLED)
+#if defined(ANGLE_ENABLE_DEBUG_TRACE)
 #    define CL_EVENT(entryPoint, ...)                    \
         std::printf("CL " #entryPoint ": " __VA_ARGS__); \
         std::printf("\n")

@@ -34,6 +34,7 @@ class CLDeviceImpl : angle::NonCopyable
         NameVersionVector mBuiltInKernelsWithVersion;
         NameVersionVector mOpenCL_C_AllVersions;
         NameVersionVector mOpenCL_C_Features;
+        std::string mExtensions;
         NameVersionVector mExtensionsWithVersion;
         std::vector<cl_device_partition_property> mPartitionProperties;
         std::vector<cl_device_partition_property> mPartitionType;
@@ -57,6 +58,11 @@ class CLDeviceImpl : angle::NonCopyable
     virtual cl_int getInfoSizeT(cl::DeviceInfo name, size_t *value) const             = 0;
     virtual cl_int getInfoStringLength(cl::DeviceInfo name, size_t *value) const      = 0;
     virtual cl_int getInfoString(cl::DeviceInfo name, size_t size, char *value) const = 0;
+
+    virtual cl_int createSubDevices(const cl_device_partition_property *properties,
+                                    cl_uint numDevices,
+                                    InitList &deviceInitList,
+                                    cl_uint *numDevicesRet) = 0;
 };
 
 }  // namespace rx

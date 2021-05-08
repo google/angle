@@ -62,7 +62,7 @@ class Platform final : public _cl_platform_id, public Object
 inline bool Platform::hasDevice(const Device *device) const
 {
     return std::find_if(mDevices.cbegin(), mDevices.cend(), [=](const Device::Ptr &ptr) {
-               return ptr.get() == device;
+               return ptr.get() == device || ptr->hasSubDevice(device);
            }) != mDevices.cend();
 }
 

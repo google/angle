@@ -8,6 +8,7 @@
 #include "libANGLE/renderer/cl/CLPlatformCL.h"
 
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
+#include "libANGLE/renderer/cl/cl_util.h"
 
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/Debug.h"
@@ -19,23 +20,8 @@ extern "C" {
 #include "icd.h"
 }  // extern "C"
 
-#include <cstdlib>
-#include <unordered_set>
-
 namespace rx
 {
-
-namespace
-{
-using ExtensionSet = std::unordered_set<std::string>;
-
-const ExtensionSet &GetSupportedExtensions()
-{
-    static angle::base::NoDestructor<ExtensionSet> sExtensions(
-        {"cl_khr_extended_versioning", "cl_khr_icd"});
-    return *sExtensions;
-}
-}  // namespace
 
 CLPlatformCL::~CLPlatformCL() = default;
 
@@ -56,10 +42,11 @@ CLDeviceImpl::InitList CLPlatformCL::getDevices()
         {
             for (cl_device_id device : devices)
             {
+                CLDeviceImpl::Ptr impl(CLDeviceCL::Create(device));
                 CLDeviceImpl::Info info = CLDeviceCL::GetInfo(device);
-                if (info.isValid())
+                if (impl && info.isValid())
                 {
-                    initList.emplace_back(new CLDeviceCL(device), std::move(info));
+                    initList.emplace_back(std::move(impl), std::move(info));
                 }
             }
         }
@@ -152,10 +139,75 @@ CLPlatformImpl::Info CLPlatformCL::GetInfo(cl_platform_id platform)
     std::vector<char> valString;
 
     // Verify that the platform is valid
-    ASSERT(platform != nullptr);
-    ASSERT(platform->getDispatch().clGetPlatformInfo != nullptr);
-    ASSERT(platform->getDispatch().clGetDeviceIDs != nullptr);
-    ASSERT(platform->getDispatch().clGetDeviceInfo != nullptr);
+    if (platform == nullptr || platform->getDispatch().clGetPlatformIDs == nullptr ||
+        platform->getDispatch().clGetPlatformInfo == nullptr ||
+        platform->getDispatch().clGetDeviceIDs == nullptr ||
+        platform->getDispatch().clGetDeviceInfo == nullptr ||
+        platform->getDispatch().clCreateContext == nullptr ||
+        platform->getDispatch().clCreateContextFromType == nullptr ||
+        platform->getDispatch().clRetainContext == nullptr ||
+        platform->getDispatch().clReleaseContext == nullptr ||
+        platform->getDispatch().clGetContextInfo == nullptr ||
+        platform->getDispatch().clCreateCommandQueue == nullptr ||
+        platform->getDispatch().clRetainCommandQueue == nullptr ||
+        platform->getDispatch().clReleaseCommandQueue == nullptr ||
+        platform->getDispatch().clGetCommandQueueInfo == nullptr ||
+        platform->getDispatch().clSetCommandQueueProperty == nullptr ||
+        platform->getDispatch().clCreateBuffer == nullptr ||
+        platform->getDispatch().clCreateImage2D == nullptr ||
+        platform->getDispatch().clCreateImage3D == nullptr ||
+        platform->getDispatch().clRetainMemObject == nullptr ||
+        platform->getDispatch().clReleaseMemObject == nullptr ||
+        platform->getDispatch().clGetSupportedImageFormats == nullptr ||
+        platform->getDispatch().clGetMemObjectInfo == nullptr ||
+        platform->getDispatch().clGetImageInfo == nullptr ||
+        platform->getDispatch().clCreateSampler == nullptr ||
+        platform->getDispatch().clRetainSampler == nullptr ||
+        platform->getDispatch().clReleaseSampler == nullptr ||
+        platform->getDispatch().clGetSamplerInfo == nullptr ||
+        platform->getDispatch().clCreateProgramWithSource == nullptr ||
+        platform->getDispatch().clCreateProgramWithBinary == nullptr ||
+        platform->getDispatch().clRetainProgram == nullptr ||
+        platform->getDispatch().clReleaseProgram == nullptr ||
+        platform->getDispatch().clBuildProgram == nullptr ||
+        platform->getDispatch().clUnloadCompiler == nullptr ||
+        platform->getDispatch().clGetProgramInfo == nullptr ||
+        platform->getDispatch().clGetProgramBuildInfo == nullptr ||
+        platform->getDispatch().clCreateKernel == nullptr ||
+        platform->getDispatch().clCreateKernelsInProgram == nullptr ||
+        platform->getDispatch().clRetainKernel == nullptr ||
+        platform->getDispatch().clReleaseKernel == nullptr ||
+        platform->getDispatch().clSetKernelArg == nullptr ||
+        platform->getDispatch().clGetKernelInfo == nullptr ||
+        platform->getDispatch().clGetKernelWorkGroupInfo == nullptr ||
+        platform->getDispatch().clWaitForEvents == nullptr ||
+        platform->getDispatch().clGetEventInfo == nullptr ||
+        platform->getDispatch().clRetainEvent == nullptr ||
+        platform->getDispatch().clReleaseEvent == nullptr ||
+        platform->getDispatch().clGetEventProfilingInfo == nullptr ||
+        platform->getDispatch().clFlush == nullptr || platform->getDispatch().clFinish == nullptr ||
+        platform->getDispatch().clEnqueueReadBuffer == nullptr ||
+        platform->getDispatch().clEnqueueWriteBuffer == nullptr ||
+        platform->getDispatch().clEnqueueCopyBuffer == nullptr ||
+        platform->getDispatch().clEnqueueReadImage == nullptr ||
+        platform->getDispatch().clEnqueueWriteImage == nullptr ||
+        platform->getDispatch().clEnqueueCopyImage == nullptr ||
+        platform->getDispatch().clEnqueueCopyImageToBuffer == nullptr ||
+        platform->getDispatch().clEnqueueCopyBufferToImage == nullptr ||
+        platform->getDispatch().clEnqueueMapBuffer == nullptr ||
+        platform->getDispatch().clEnqueueMapImage == nullptr ||
+        platform->getDispatch().clEnqueueUnmapMemObject == nullptr ||
+        platform->getDispatch().clEnqueueNDRangeKernel == nullptr ||
+        platform->getDispatch().clEnqueueTask == nullptr ||
+        platform->getDispatch().clEnqueueNativeKernel == nullptr ||
+        platform->getDispatch().clEnqueueMarker == nullptr ||
+        platform->getDispatch().clEnqueueWaitForEvents == nullptr ||
+        platform->getDispatch().clEnqueueBarrier == nullptr ||
+        platform->getDispatch().clGetExtensionFunctionAddress == nullptr)
+    {
+        ERR() << "Missing entry points for OpenCL 1.0";
+        return info;
+    }
 
     // Skip ANGLE CL implementation to prevent passthrough loop
     ANGLE_GET_INFO_SIZE_RET(CL_PLATFORM_VENDOR, &valueSize);
@@ -172,42 +224,11 @@ CLPlatformImpl::Info CLPlatformCL::GetInfo(cl_platform_id platform)
     valString.resize(valueSize, '\0');
     ANGLE_GET_INFO_RET(CL_PLATFORM_EXTENSIONS, valueSize, valString.data());
     info.mExtensions.assign(valString.data());
+    RemoveUnsupportedCLExtensions(info.mExtensions);
     if (info.mExtensions.find("cl_khr_icd") == std::string::npos)
     {
         WARN() << "CL platform is not ICD compatible";
         return info;
-    }
-
-    // Filter out extensions which are not (yet) supported to be passed through
-    if (!info.mExtensions.empty())
-    {
-        const ExtensionSet &supported   = GetSupportedExtensions();
-        std::string::size_type extStart = 0u;
-        do
-        {
-            const std::string::size_type spacePos = info.mExtensions.find(' ', extStart);
-            const bool foundSpace                 = spacePos != std::string::npos;
-            const std::string::size_type length =
-                (foundSpace ? spacePos : info.mExtensions.length()) - extStart;
-            if (supported.find(info.mExtensions.substr(extStart, length)) != supported.cend())
-            {
-                extStart = foundSpace && spacePos + 1u < info.mExtensions.length()
-                               ? spacePos + 1u
-                               : std::string::npos;
-            }
-            else
-            {
-                info.mExtensions.erase(extStart, length + (foundSpace ? 1u : 0u));
-                if (extStart >= info.mExtensions.length())
-                {
-                    extStart = std::string::npos;
-                }
-            }
-        } while (extStart != std::string::npos);
-        while (!info.mExtensions.empty() && info.mExtensions.back() == ' ')
-        {
-            info.mExtensions.pop_back();
-        }
     }
 
     // Fetch common platform info
@@ -217,29 +238,19 @@ CLPlatformImpl::Info CLPlatformCL::GetInfo(cl_platform_id platform)
     info.mVersionStr.assign(valString.data());
     info.mVersionStr += " (ANGLE " ANGLE_VERSION_STRING ")";
 
-    const std::string::size_type spacePos = info.mVersionStr.find(' ');
-    const std::string::size_type dotPos   = info.mVersionStr.find('.');
-    if (spacePos == std::string::npos || dotPos == std::string::npos)
+    const cl_version version = ExtractCLVersion(info.mVersionStr);
+    if (version == 0u)
     {
-        ERR() << "Failed to extract version from OpenCL version string: " << info.mVersionStr;
-        return info;
-    }
-    const cl_uint major =
-        static_cast<cl_uint>(std::strtol(&info.mVersionStr[spacePos + 1u], nullptr, 10));
-    const cl_uint minor =
-        static_cast<cl_uint>(std::strtol(&info.mVersionStr[dotPos + 1u], nullptr, 10));
-    if (major == 0)
-    {
-        ERR() << "Failed to extract version from OpenCL version string: " << info.mVersionStr;
         return info;
     }
 
     if (ANGLE_GET_INFO(CL_PLATFORM_NUMERIC_VERSION, sizeof(info.mVersion), &info.mVersion) !=
         CL_SUCCESS)
     {
-        info.mVersion = CL_MAKE_VERSION(major, minor, 0);
+        info.mVersion = version;
     }
-    else if (CL_VERSION_MAJOR(info.mVersion) != major || CL_VERSION_MINOR(info.mVersion) != minor)
+    else if (CL_VERSION_MAJOR(info.mVersion) != CL_VERSION_MAJOR(version) ||
+             CL_VERSION_MINOR(info.mVersion) != CL_VERSION_MINOR(version))
     {
         WARN() << "CL_PLATFORM_NUMERIC_VERSION = " << CL_VERSION_MAJOR(info.mVersion) << '.'
                << CL_VERSION_MINOR(info.mVersion)
@@ -259,25 +270,95 @@ CLPlatformImpl::Info CLPlatformCL::GetInfo(cl_platform_id platform)
             valueSize / sizeof(decltype(info.mExtensionsWithVersion)::value_type));
         ANGLE_GET_INFO_RET(CL_PLATFORM_EXTENSIONS_WITH_VERSION, valueSize,
                            info.mExtensionsWithVersion.data());
-
-        // Filter out extensions which are not (yet) supported to be passed through
-        const ExtensionSet &supported = GetSupportedExtensions();
-        auto extIt                    = info.mExtensionsWithVersion.cbegin();
-        while (extIt != info.mExtensionsWithVersion.cend())
-        {
-            if (supported.find(extIt->name) != supported.cend())
-            {
-                ++extIt;
-            }
-            else
-            {
-                extIt = info.mExtensionsWithVersion.erase(extIt);
-            }
-        }
+        RemoveUnsupportedCLExtensions(info.mExtensionsWithVersion);
     }
 
     ANGLE_GET_INFO(CL_PLATFORM_HOST_TIMER_RESOLUTION, sizeof(info.mHostTimerRes),
                    &info.mHostTimerRes);
+
+    if (info.mVersion >= CL_MAKE_VERSION(1, 1, 0) &&
+        (platform->getDispatch().clSetEventCallback == nullptr ||
+         platform->getDispatch().clCreateSubBuffer == nullptr ||
+         platform->getDispatch().clSetMemObjectDestructorCallback == nullptr ||
+         platform->getDispatch().clCreateUserEvent == nullptr ||
+         platform->getDispatch().clSetUserEventStatus == nullptr ||
+         platform->getDispatch().clEnqueueReadBufferRect == nullptr ||
+         platform->getDispatch().clEnqueueWriteBufferRect == nullptr ||
+         platform->getDispatch().clEnqueueCopyBufferRect == nullptr))
+    {
+        ERR() << "Missing entry points for OpenCL 1.1";
+        return info;
+    }
+
+    if (info.mVersion >= CL_MAKE_VERSION(1, 2, 0) &&
+        (platform->getDispatch().clCreateSubDevices == nullptr ||
+         platform->getDispatch().clRetainDevice == nullptr ||
+         platform->getDispatch().clReleaseDevice == nullptr ||
+         platform->getDispatch().clCreateImage == nullptr ||
+         platform->getDispatch().clCreateProgramWithBuiltInKernels == nullptr ||
+         platform->getDispatch().clCompileProgram == nullptr ||
+         platform->getDispatch().clLinkProgram == nullptr ||
+         platform->getDispatch().clUnloadPlatformCompiler == nullptr ||
+         platform->getDispatch().clGetKernelArgInfo == nullptr ||
+         platform->getDispatch().clEnqueueFillBuffer == nullptr ||
+         platform->getDispatch().clEnqueueFillImage == nullptr ||
+         platform->getDispatch().clEnqueueMigrateMemObjects == nullptr ||
+         platform->getDispatch().clEnqueueMarkerWithWaitList == nullptr ||
+         platform->getDispatch().clEnqueueBarrierWithWaitList == nullptr ||
+         platform->getDispatch().clGetExtensionFunctionAddressForPlatform == nullptr))
+    {
+        ERR() << "Missing entry points for OpenCL 1.2";
+        return info;
+    }
+
+    if (info.mVersion >= CL_MAKE_VERSION(2, 0, 0) &&
+        (platform->getDispatch().clCreateCommandQueueWithProperties == nullptr ||
+         platform->getDispatch().clCreatePipe == nullptr ||
+         platform->getDispatch().clGetPipeInfo == nullptr ||
+         platform->getDispatch().clSVMAlloc == nullptr ||
+         platform->getDispatch().clSVMFree == nullptr ||
+         platform->getDispatch().clEnqueueSVMFree == nullptr ||
+         platform->getDispatch().clEnqueueSVMMemcpy == nullptr ||
+         platform->getDispatch().clEnqueueSVMMemFill == nullptr ||
+         platform->getDispatch().clEnqueueSVMMap == nullptr ||
+         platform->getDispatch().clEnqueueSVMUnmap == nullptr ||
+         platform->getDispatch().clCreateSamplerWithProperties == nullptr ||
+         platform->getDispatch().clSetKernelArgSVMPointer == nullptr ||
+         platform->getDispatch().clSetKernelExecInfo == nullptr))
+    {
+        ERR() << "Missing entry points for OpenCL 2.0";
+        return info;
+    }
+
+    if (info.mVersion >= CL_MAKE_VERSION(2, 1, 0) &&
+        (platform->getDispatch().clCloneKernel == nullptr ||
+         platform->getDispatch().clCreateProgramWithIL == nullptr ||
+         platform->getDispatch().clEnqueueSVMMigrateMem == nullptr ||
+         platform->getDispatch().clGetDeviceAndHostTimer == nullptr ||
+         platform->getDispatch().clGetHostTimer == nullptr ||
+         platform->getDispatch().clGetKernelSubGroupInfo == nullptr ||
+         platform->getDispatch().clSetDefaultDeviceCommandQueue == nullptr))
+    {
+        ERR() << "Missing entry points for OpenCL 2.1";
+        return info;
+    }
+
+    if (info.mVersion >= CL_MAKE_VERSION(2, 2, 0) &&
+        (platform->getDispatch().clSetProgramReleaseCallback == nullptr ||
+         platform->getDispatch().clSetProgramSpecializationConstant == nullptr))
+    {
+        ERR() << "Missing entry points for OpenCL 2.2";
+        return info;
+    }
+
+    if (info.mVersion >= CL_MAKE_VERSION(3, 0, 0) &&
+        (platform->getDispatch().clCreateBufferWithProperties == nullptr ||
+         platform->getDispatch().clCreateImageWithProperties == nullptr ||
+         platform->getDispatch().clSetContextDestructorCallback == nullptr))
+    {
+        ERR() << "Missing entry points for OpenCL 3.0";
+        return info;
+    }
 
     // Get this last, so the info is invalid if anything before fails
     ANGLE_GET_INFO_SIZE_RET(CL_PLATFORM_PROFILE, &valueSize);

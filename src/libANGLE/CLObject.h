@@ -10,14 +10,32 @@
 
 #include "libANGLE/renderer/CLtypes.h"
 
+#include "libANGLE/Debug.h"
+
 namespace cl
 {
 
 class Object
 {
   public:
-    constexpr Object() {}
-    ~Object() = default;
+    // This class cannot be virtual as its derived classes need to have standard layout
+    Object() = default;
+    ~Object() { ASSERT(mRefCount == 0u); }
+
+    cl_uint getRefCount() { return mRefCount; }
+
+    const cl_uint *getRefCountPtr() { return &mRefCount; }
+
+  protected:
+    void addRef() { ++mRefCount; }
+    bool removeRef()
+    {
+        ASSERT(mRefCount > 0u);
+        return --mRefCount == 0u;
+    }
+
+  private:
+    cl_uint mRefCount = 1u;
 };
 
 }  // namespace cl
