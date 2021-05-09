@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5af93f83_fb5b22fb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-09T04:27:31Z",
+      "side": 1,
+      "message": "Small nit: It\u0027s conventional to use the imperative form in the git commit message. For example \"Implement CL ...\", \"Refactor ...\", \"Add support for ...\".\n\nhttps://stackoverflow.com/a/3580764",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 11
+      },
+      "revId": "4076cf632e7c24f11fd3a7b857c01178b87082aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
