@@ -24,6 +24,11 @@
 namespace cl
 {
 
+using ContextErrorCB = void(CL_CALLBACK *)(const char *errinfo,
+                                           const void *private_info,
+                                           size_t cb,
+                                           void *user_data);
+
 template <typename CLObjectType>
 struct Dispatch
 {

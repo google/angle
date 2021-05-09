@@ -3,12 +3,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// CLContextVk.h:
-//    Defines the class interface for CLContextVk, implementing CLContextImpl.
-//
+// CLContextVk.h: Defines the class interface for CLContextVk, implementing CLContextImpl.
 
 #ifndef LIBANGLE_RENDERER_VULKAN_CLCONTEXTVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CLCONTEXTVK_H_
+
+#include "libANGLE/renderer/vulkan/cl_types.h"
 
 #include "libANGLE/renderer/CLContextImpl.h"
 
@@ -18,7 +18,7 @@ namespace rx
 class CLContextVk : public CLContextImpl
 {
   public:
-    CLContextVk();
+    CLContextVk(CLPlatformVk &platform, CLDeviceImpl::List &&devices);
     ~CLContextVk() override;
 };
 

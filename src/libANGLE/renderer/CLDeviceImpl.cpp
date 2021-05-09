@@ -7,6 +7,8 @@
 
 #include "libANGLE/renderer/CLDeviceImpl.h"
 
+#include "libANGLE/Debug.h"
+
 namespace rx
 {
 
@@ -18,14 +20,24 @@ CLDeviceImpl::Info::Info(Info &&) = default;
 
 CLDeviceImpl::Info &CLDeviceImpl::Info::operator=(Info &&) = default;
 
-bool CLDeviceImpl::Info::isValid() const
+CLDeviceImpl::CLDeviceImpl(CLPlatformImpl &platform, CLDeviceImpl *parent)
+    : mPlatform(platform), mParent(parent)
+{}
+
+CLDeviceImpl::~CLDeviceImpl()
 {
-    // From the OpenCL specification for info name CL_DEVICE_MAX_WORK_ITEM_SIZES:
-    // "The minimum value is (1, 1, 1) for devices that are not of type CL_DEVICE_TYPE_CUSTOM."
-    // https://www.khronos.org/registry/OpenCL/specs/3.0-unified/html/OpenCL_API.html#clGetDeviceInfo
-    // Custom devices are currently not supported by ANGLE back ends.
-    return mMaxWorkItemSizes.size() >= 3u && mMaxWorkItemSizes[0] >= 1u &&
-           mMaxWorkItemSizes[1] >= 1u && mMaxWorkItemSizes[2] >= 1u;
+    if (mParent != nullptr)
+    {
+        auto it = std::find(mParent->mSubDevices.cbegin(), mParent->mSubDevices.cend(), this);
+        if (it != mParent->mSubDevices.cend())
+        {
+            mParent->mSubDevices.erase(it);
+        }
+        else
+        {
+            ERR() << "Sub-device not in parent's list";
+        }
+    }
 }
 
 }  // namespace rx

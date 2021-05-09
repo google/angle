@@ -7,12 +7,41 @@
 
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
 
+#include "libANGLE/renderer/cl/CLPlatformCL.h"
 #include "libANGLE/renderer/cl/cl_util.h"
 
 #include "libANGLE/Debug.h"
 
 namespace rx
 {
+
+namespace
+{
+
+// Object information is queried in OpenCL by providing allocated memory into which the requested
+// data is copied. If the size of the data is unknown, it can be queried first with an additional
+// call to the same function, but without requesting the data itself. This function provides the
+// functionality to request and validate the size and the data.
+template <typename T>
+bool GetDeviceInfo(cl_device_id device, cl::DeviceInfo name, std::vector<T> &vector)
+{
+    size_t size = 0u;
+    if (device->getDispatch().clGetDeviceInfo(device, cl::ToCLenum(name), 0u, nullptr, &size) ==
+            CL_SUCCESS &&
+        (size % sizeof(T)) == 0u)  // size has to be a multiple of the data type
+    {
+        vector.resize(size / sizeof(T));
+        if (device->getDispatch().clGetDeviceInfo(device, cl::ToCLenum(name), size, vector.data(),
+                                                  nullptr) == CL_SUCCESS)
+        {
+            return true;
+        }
+    }
+    ERR() << "Failed to query CL device info for " << name;
+    return false;
+}
+
+}  // namespace
 
 CLDeviceCL::~CLDeviceCL()
 {
@@ -21,6 +50,58 @@ CLDeviceCL::~CLDeviceCL()
     {
         ERR() << "Error while releasing CL device";
     }
+}
+
+CLDeviceImpl::Info CLDeviceCL::createInfo() const
+{
+    Info info;
+    info.mVersion = mVersion;
+
+    std::vector<char> valString;
+    if (!GetDeviceInfo(mDevice, cl::DeviceInfo::Extensions, valString))
+    {
+        return Info{};
+    }
+    info.mExtensions.assign(valString.data());
+    RemoveUnsupportedCLExtensions(info.mExtensions);
+
+    if (!GetDeviceInfo(mDevice, cl::DeviceInfo::MaxWorkItemSizes, info.mMaxWorkItemSizes))
+    {
+        return Info{};
+    }
+    // From the OpenCL specification for info name CL_DEVICE_MAX_WORK_ITEM_SIZES:
+    // "The minimum value is (1, 1, 1) for devices that are not of type CL_DEVICE_TYPE_CUSTOM."
+    // https://www.khronos.org/registry/OpenCL/specs/3.0-unified/html/OpenCL_API.html#clGetDeviceInfo
+    // Custom devices are currently not supported by this back end.
+    if (info.mMaxWorkItemSizes.size() < 3u || info.mMaxWorkItemSizes[0] == 0u ||
+        info.mMaxWorkItemSizes[1] == 0u || info.mMaxWorkItemSizes[2] == 0u)
+    {
+        ERR() << "Invalid CL_DEVICE_MAX_WORK_ITEM_SIZES";
+        return Info{};
+    }
+
+    if (mVersion >= CL_MAKE_VERSION(1, 2, 0) &&
+        (!GetDeviceInfo(mDevice, cl::DeviceInfo::PartitionProperties, info.mPartitionProperties) ||
+         !GetDeviceInfo(mDevice, cl::DeviceInfo::PartitionType, info.mPartitionType)))
+    {
+        return Info{};
+    }
+
+    if (mVersion >= CL_MAKE_VERSION(3, 0, 0) &&
+        (!GetDeviceInfo(mDevice, cl::DeviceInfo::ILsWithVersion, info.mILsWithVersion) ||
+         !GetDeviceInfo(mDevice, cl::DeviceInfo::BuiltInKernelsWithVersion,
+                        info.mBuiltInKernelsWithVersion) ||
+         !GetDeviceInfo(mDevice, cl::DeviceInfo::OpenCL_C_AllVersions,
+                        info.mOpenCL_C_AllVersions) ||
+         !GetDeviceInfo(mDevice, cl::DeviceInfo::OpenCL_C_Features, info.mOpenCL_C_Features) ||
+         !GetDeviceInfo(mDevice, cl::DeviceInfo::ExtensionsWithVersion,
+                        info.mExtensionsWithVersion)))
+    {
+        return Info{};
+    }
+    RemoveUnsupportedCLExtensions(info.mExtensionsWithVersion);
+
+    return info;
 }
 
 cl_int CLDeviceCL::getInfoUInt(cl::DeviceInfo name, cl_uint *value) const
@@ -54,7 +135,7 @@ cl_int CLDeviceCL::getInfoString(cl::DeviceInfo name, size_t size, char *value) 
 
 cl_int CLDeviceCL::createSubDevices(const cl_device_partition_property *properties,
                                     cl_uint numDevices,
-                                    InitList &deviceInitList,
+                                    PtrList &implList,
                                     cl_uint *numDevicesRet)
 {
     if (mVersion < CL_MAKE_VERSION(1, 2, 0))
@@ -66,6 +147,7 @@ cl_int CLDeviceCL::createSubDevices(const cl_device_partition_property *properti
         return mDevice->getDispatch().clCreateSubDevices(mDevice, properties, 0u, nullptr,
                                                          numDevicesRet);
     }
+
     std::vector<cl_device_id> devices(numDevices, nullptr);
     const cl_int result = mDevice->getDispatch().clCreateSubDevices(mDevice, properties, numDevices,
                                                                     devices.data(), nullptr);
@@ -73,154 +155,44 @@ cl_int CLDeviceCL::createSubDevices(const cl_device_partition_property *properti
     {
         for (cl_device_id device : devices)
         {
-            CLDeviceImpl::Ptr impl(CLDeviceCL::Create(device));
-            CLDeviceImpl::Info info = CLDeviceCL::GetInfo(device);
-            if (impl && info.isValid())
+            implList.emplace_back(CLDeviceCL::Create(getPlatform<CLPlatformCL>(), this, device));
+            if (!implList.back())
             {
-                deviceInitList.emplace_back(std::move(impl), std::move(info));
+                implList.clear();
+                return CL_INVALID_VALUE;
             }
-        }
-        if (deviceInitList.size() != devices.size())
-        {
-            return CL_INVALID_VALUE;
+            mSubDevices.emplace_back(implList.back().get());
         }
     }
     return result;
 }
 
-#define ANGLE_GET_INFO_SIZE(name, size_ret) \
-    device->getDispatch().clGetDeviceInfo(device, name, 0u, nullptr, size_ret)
-
-#define ANGLE_GET_INFO_SIZE_RET(name, size_ret)                     \
-    do                                                              \
-    {                                                               \
-        if (ANGLE_GET_INFO_SIZE(name, size_ret) != CL_SUCCESS)      \
-        {                                                           \
-            ERR() << "Failed to query CL device info for " << name; \
-            return info;                                            \
-        }                                                           \
-    } while (0)
-
-#define ANGLE_GET_INFO(name, size, param) \
-    device->getDispatch().clGetDeviceInfo(device, name, size, param, nullptr)
-
-#define ANGLE_GET_INFO_RET(name, size, param)                       \
-    do                                                              \
-    {                                                               \
-        if (ANGLE_GET_INFO(name, size, param) != CL_SUCCESS)        \
-        {                                                           \
-            ERR() << "Failed to query CL device info for " << name; \
-            return Info{};                                          \
-        }                                                           \
-    } while (0)
-
-CLDeviceCL *CLDeviceCL::Create(cl_device_id device)
+CLDeviceCL *CLDeviceCL::Create(CLPlatformCL &platform, CLDeviceCL *parent, cl_device_id device)
 {
     size_t valueSize = 0u;
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_VERSION, &valueSize) == CL_SUCCESS)
+    if (device->getDispatch().clGetDeviceInfo(device, CL_DEVICE_VERSION, 0u, nullptr, &valueSize) ==
+        CL_SUCCESS)
     {
         std::vector<char> valString(valueSize, '\0');
-        if (ANGLE_GET_INFO(CL_DEVICE_VERSION, valueSize, valString.data()) == CL_SUCCESS)
+        if (device->getDispatch().clGetDeviceInfo(device, CL_DEVICE_VERSION, valueSize,
+                                                  valString.data(), nullptr) == CL_SUCCESS)
         {
             const cl_version version = ExtractCLVersion(valString.data());
             if (version != 0u)
             {
-                return new CLDeviceCL(device, version);
+                return new CLDeviceCL(platform, parent, device, version);
             }
         }
     }
+    ERR() << "Failed to query version for device";
     return nullptr;
 }
 
-CLDeviceImpl::Info CLDeviceCL::GetInfo(cl_device_id device)
-{
-    Info info;
-    size_t valueSize = 0u;
-    std::vector<char> valString;
-
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_ILS_WITH_VERSION, &valueSize) == CL_SUCCESS &&
-        (valueSize % sizeof(decltype(info.mILsWithVersion)::value_type)) == 0u)
-    {
-        info.mILsWithVersion.resize(valueSize / sizeof(decltype(info.mILsWithVersion)::value_type));
-        ANGLE_GET_INFO_RET(CL_DEVICE_ILS_WITH_VERSION, valueSize, info.mILsWithVersion.data());
-        info.mIsSupportedILsWithVersion = true;
-    }
-
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_BUILT_IN_KERNELS_WITH_VERSION, &valueSize) == CL_SUCCESS &&
-        (valueSize % sizeof(decltype(info.mBuiltInKernelsWithVersion)::value_type)) == 0u)
-    {
-        info.mBuiltInKernelsWithVersion.resize(
-            valueSize / sizeof(decltype(info.mBuiltInKernelsWithVersion)::value_type));
-        ANGLE_GET_INFO_RET(CL_DEVICE_BUILT_IN_KERNELS_WITH_VERSION, valueSize,
-                           info.mBuiltInKernelsWithVersion.data());
-        info.mIsSupportedBuiltInKernelsWithVersion = true;
-    }
-
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_OPENCL_C_ALL_VERSIONS, &valueSize) == CL_SUCCESS &&
-        (valueSize % sizeof(decltype(info.mOpenCL_C_AllVersions)::value_type)) == 0u)
-    {
-        info.mOpenCL_C_AllVersions.resize(valueSize /
-                                          sizeof(decltype(info.mOpenCL_C_AllVersions)::value_type));
-        ANGLE_GET_INFO_RET(CL_DEVICE_OPENCL_C_ALL_VERSIONS, valueSize,
-                           info.mOpenCL_C_AllVersions.data());
-        info.mIsSupportedOpenCL_C_AllVersions = true;
-    }
-
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_OPENCL_C_FEATURES, &valueSize) == CL_SUCCESS &&
-        (valueSize % sizeof(decltype(info.mOpenCL_C_Features)::value_type)) == 0u)
-    {
-        info.mOpenCL_C_Features.resize(valueSize /
-                                       sizeof(decltype(info.mOpenCL_C_Features)::value_type));
-        ANGLE_GET_INFO_RET(CL_DEVICE_OPENCL_C_FEATURES, valueSize, info.mOpenCL_C_Features.data());
-        info.mIsSupportedOpenCL_C_Features = true;
-    }
-
-    ANGLE_GET_INFO_SIZE_RET(CL_DEVICE_EXTENSIONS, &valueSize);
-    valString.resize(valueSize, '\0');
-    ANGLE_GET_INFO_RET(CL_DEVICE_EXTENSIONS, valueSize, valString.data());
-    info.mExtensions.assign(valString.data());
-    RemoveUnsupportedCLExtensions(info.mExtensions);
-
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_EXTENSIONS_WITH_VERSION, &valueSize) == CL_SUCCESS &&
-        (valueSize % sizeof(decltype(info.mExtensionsWithVersion)::value_type)) == 0u)
-    {
-        info.mExtensionsWithVersion.resize(
-            valueSize / sizeof(decltype(info.mExtensionsWithVersion)::value_type));
-        ANGLE_GET_INFO_RET(CL_DEVICE_EXTENSIONS_WITH_VERSION, valueSize,
-                           info.mExtensionsWithVersion.data());
-        RemoveUnsupportedCLExtensions(info.mExtensionsWithVersion);
-        info.mIsSupportedExtensionsWithVersion = true;
-    }
-
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_PARTITION_PROPERTIES, &valueSize) == CL_SUCCESS &&
-        (valueSize % sizeof(decltype(info.mPartitionProperties)::value_type)) == 0u)
-    {
-        info.mPartitionProperties.resize(valueSize /
-                                         sizeof(decltype(info.mPartitionProperties)::value_type));
-        ANGLE_GET_INFO_RET(CL_DEVICE_PARTITION_PROPERTIES, valueSize,
-                           info.mPartitionProperties.data());
-    }
-
-    if (ANGLE_GET_INFO_SIZE(CL_DEVICE_PARTITION_TYPE, &valueSize) == CL_SUCCESS &&
-        (valueSize % sizeof(decltype(info.mPartitionType)::value_type)) == 0u)
-    {
-        info.mPartitionType.resize(valueSize / sizeof(decltype(info.mPartitionType)::value_type));
-        ANGLE_GET_INFO_RET(CL_DEVICE_PARTITION_TYPE, valueSize, info.mPartitionType.data());
-    }
-
-    // Get this last, so the info is invalid if anything before fails
-    cl_uint maxWorkItemDims = 0u;
-    ANGLE_GET_INFO_RET(CL_DEVICE_MAX_WORK_ITEM_DIMENSIONS, sizeof(maxWorkItemDims),
-                       &maxWorkItemDims);
-    info.mMaxWorkItemSizes.resize(maxWorkItemDims, 0u);
-    ANGLE_GET_INFO_RET(CL_DEVICE_MAX_WORK_ITEM_SIZES,
-                       maxWorkItemDims * sizeof(decltype(info.mMaxWorkItemSizes)::value_type),
-                       info.mMaxWorkItemSizes.data());
-
-    return info;
-}
-
-CLDeviceCL::CLDeviceCL(cl_device_id device, cl_version version) : mDevice(device), mVersion(version)
+CLDeviceCL::CLDeviceCL(CLPlatformCL &platform,
+                       CLDeviceCL *parent,
+                       cl_device_id device,
+                       cl_version version)
+    : CLDeviceImpl(platform, parent), mDevice(device), mVersion(version)
 {}
 
 }  // namespace rx

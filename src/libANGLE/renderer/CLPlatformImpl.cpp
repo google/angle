@@ -18,9 +18,8 @@ CLPlatformImpl::Info::Info(Info &&) = default;
 
 CLPlatformImpl::Info &CLPlatformImpl::Info::operator=(Info &&) = default;
 
-bool CLPlatformImpl::Info::isValid() const
-{
-    return !mProfile.empty();
-}
+CLPlatformImpl::CLPlatformImpl(CLDeviceImpl::List &&devices) : mDevices(std::move(devices)) {}
+
+CLPlatformImpl::~CLPlatformImpl() = default;
 
 }  // namespace rx

@@ -15,6 +15,7 @@ _cl_backend_sources = [
   "CLDeviceCL.h",
   "CLPlatformCL.cpp",
   "CLPlatformCL.h",
+  "cl_types.h",
   "cl_util.cpp",
   "cl_util.h",
 ]

@@ -27,8 +27,9 @@ class CLDeviceImpl : angle::NonCopyable
         Info(Info &&);
         Info &operator=(Info &&);
 
-        bool isValid() const;
+        bool isValid() const { return mVersion != 0u; }
 
+        cl_version mVersion = 0u;
         std::vector<size_t> mMaxWorkItemSizes;
         NameVersionVector mILsWithVersion;
         NameVersionVector mBuiltInKernelsWithVersion;
@@ -38,20 +39,22 @@ class CLDeviceImpl : angle::NonCopyable
         NameVersionVector mExtensionsWithVersion;
         std::vector<cl_device_partition_property> mPartitionProperties;
         std::vector<cl_device_partition_property> mPartitionType;
-
-        bool mIsSupportedILsWithVersion            = false;
-        bool mIsSupportedBuiltInKernelsWithVersion = false;
-        bool mIsSupportedOpenCL_C_AllVersions      = false;
-        bool mIsSupportedOpenCL_C_Features         = false;
-        bool mIsSupportedExtensionsWithVersion     = false;
     };
 
-    using Ptr      = std::unique_ptr<CLDeviceImpl>;
-    using InitData = std::pair<Ptr, Info>;
-    using InitList = std::list<InitData>;
+    using Ptr     = std::unique_ptr<CLDeviceImpl>;
+    using PtrList = std::list<Ptr>;
+    using List    = std::list<CLDeviceImpl *>;
 
-    CLDeviceImpl()          = default;
-    virtual ~CLDeviceImpl() = default;
+    CLDeviceImpl(CLPlatformImpl &platform, CLDeviceImpl *parent);
+    virtual ~CLDeviceImpl();
+
+    template <typename T>
+    T &getPlatform() const
+    {
+        return static_cast<T &>(mPlatform);
+    }
+
+    virtual Info createInfo() const = 0;
 
     virtual cl_int getInfoUInt(cl::DeviceInfo name, cl_uint *value) const             = 0;
     virtual cl_int getInfoULong(cl::DeviceInfo name, cl_ulong *value) const           = 0;
@@ -61,8 +64,14 @@ class CLDeviceImpl : angle::NonCopyable
 
     virtual cl_int createSubDevices(const cl_device_partition_property *properties,
                                     cl_uint numDevices,
-                                    InitList &deviceInitList,
+                                    PtrList &implList,
                                     cl_uint *numDevicesRet) = 0;
+
+  protected:
+    CLPlatformImpl &mPlatform;
+    CLDeviceImpl *const mParent;
+
+    List mSubDevices;
 };
 
 }  // namespace rx

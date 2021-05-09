@@ -31,19 +31,35 @@ std::string CreateExtensionString(const NameVersionVector &extList)
     }
     return extensions;
 }
-}  // anonymous namespace
+
+CLDeviceImpl::List CreateDevices(CLPlatformVk &platform, CLDeviceImpl::PtrList &implList)
+{
+    implList.emplace_back(new CLDeviceVk(platform, nullptr));
+    return CLDeviceImpl::List(1u, implList.back().get());
+}
+
+}  // namespace
 
 CLPlatformVk::~CLPlatformVk() = default;
 
-CLDeviceImpl::InitList CLPlatformVk::getDevices()
+CLContextImpl::Ptr CLPlatformVk::createContext(CLDeviceImpl::List &&deviceImplList,
+                                               cl::ContextErrorCB notify,
+                                               void *userData,
+                                               bool userSync,
+                                               cl_int *errcodeRet)
 {
-    CLDeviceImpl::InitList initList;
-    CLDeviceImpl::Info info = CLDeviceVk::GetInfo();
-    if (info.isValid())
-    {
-        initList.emplace_back(new CLDeviceVk(), std::move(info));
-    }
-    return initList;
+    CLContextImpl::Ptr contextImpl;
+    return contextImpl;
+}
+
+CLContextImpl::Ptr CLPlatformVk::createContextFromType(cl_device_type deviceType,
+                                                       cl::ContextErrorCB notify,
+                                                       void *userData,
+                                                       bool userSync,
+                                                       cl_int *errcodeRet)
+{
+    CLContextImpl::Ptr contextImpl;
+    return contextImpl;
 }
 
 CLPlatformVk::InitList CLPlatformVk::GetPlatforms()
@@ -62,7 +78,15 @@ CLPlatformVk::InitList CLPlatformVk::GetPlatforms()
     info.mHostTimerRes          = 0u;
 
     InitList initList;
-    initList.emplace_back(new CLPlatformVk, std::move(info));
+    if (info.isValid())
+    {
+        CLDeviceImpl::PtrList devices;
+        Ptr platform(new CLPlatformVk(devices));
+        if (!devices.empty())
+        {
+            initList.emplace_back(std::move(platform), std::move(info), std::move(devices));
+        }
+    }
     return initList;
 }
 
@@ -74,6 +98,8 @@ const std::string &CLPlatformVk::GetVersionString()
     return *sVersion;
 }
 
-CLPlatformVk::CLPlatformVk() = default;
+CLPlatformVk::CLPlatformVk(CLDeviceImpl::PtrList &devices)
+    : CLPlatformImpl(CreateDevices(*this, devices))
+{}
 
 }  // namespace rx

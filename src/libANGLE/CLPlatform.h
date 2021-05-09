@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_CLPLATFORM_H_
 #define LIBANGLE_CLPLATFORM_H_
 
+#include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
 #include "libANGLE/renderer/CLPlatformImpl.h"
 
@@ -27,13 +28,31 @@ class Platform final : public _cl_platform_id, public Object
 
     bool hasDevice(const Device *device) const;
     const Device::PtrList &getDevices() const;
+    Device::RefList mapDevices(const rx::CLDeviceImpl::List &deviceImplList) const;
 
-    cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *sizeRet);
+    bool hasContext(const Context *context) const;
+
+    cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
 
     cl_int getDeviceIDs(cl_device_type deviceType,
                         cl_uint numEntries,
                         Device **devices,
                         cl_uint *numDevices) const;
+
+    Context *createContext(Context::PropArray &&properties,
+                           cl_uint numDevices,
+                           Device *const *devices,
+                           ContextErrorCB notify,
+                           void *userData,
+                           bool userSync,
+                           cl_int *errcodeRet);
+
+    Context *createContextFromType(Context::PropArray &&properties,
+                                   cl_device_type deviceType,
+                                   ContextErrorCB notify,
+                                   void *userData,
+                                   bool userSync,
+                                   cl_int *errcodeRet);
 
     static void CreatePlatform(const cl_icd_dispatch &dispatch,
                                rx::CLPlatformImpl::InitData &initData);
@@ -45,9 +64,15 @@ class Platform final : public _cl_platform_id, public Object
     static constexpr const char *GetVendor();
 
   private:
-    Platform(const cl_icd_dispatch &dispatch,
-             rx::CLPlatformImpl::InitData &initData,
-             rx::CLDeviceImpl::InitList &&deviceInitList);
+    Platform(const cl_icd_dispatch &dispatch, rx::CLPlatformImpl::InitData &initData);
+
+    rx::CLContextImpl::Ptr createContext(const Device::RefList &devices,
+                                         ContextErrorCB notify,
+                                         void *userData,
+                                         bool userSync,
+                                         cl_int *errcodeRet);
+
+    void destroyContext(Context *context);
 
     static PtrList &GetList();
 
@@ -55,8 +80,12 @@ class Platform final : public _cl_platform_id, public Object
     const rx::CLPlatformImpl::Info mInfo;
     const Device::PtrList mDevices;
 
+    Context::PtrList mContexts;
+
     static constexpr char kVendor[]    = "ANGLE";
     static constexpr char kIcdSuffix[] = "ANGLE";
+
+    friend class Context;
 };
 
 inline bool Platform::hasDevice(const Device *device) const
@@ -69,6 +98,13 @@ inline bool Platform::hasDevice(const Device *device) const
 inline const Device::PtrList &Platform::getDevices() const
 {
     return mDevices;
+}
+
+inline bool Platform::hasContext(const Context *context) const
+{
+    return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const Context::Ptr &ptr) {
+               return ptr.get() == context;
+           }) != mContexts.cend();
 }
 
 inline Platform::PtrList &Platform::GetList()

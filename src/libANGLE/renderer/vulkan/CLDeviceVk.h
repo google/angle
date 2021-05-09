@@ -8,6 +8,8 @@
 #ifndef LIBANGLE_RENDERER_VULKAN_CLDEVICEVK_H_
 #define LIBANGLE_RENDERER_VULKAN_CLDEVICEVK_H_
 
+#include "libANGLE/renderer/vulkan/cl_types.h"
+
 #include "libANGLE/renderer/CLDeviceImpl.h"
 
 namespace rx
@@ -16,8 +18,10 @@ namespace rx
 class CLDeviceVk : public CLDeviceImpl
 {
   public:
-    CLDeviceVk();
+    CLDeviceVk(CLPlatformVk &platform, CLDeviceVk *parent);
     ~CLDeviceVk() override;
+
+    Info createInfo() const override;
 
     cl_int getInfoUInt(cl::DeviceInfo name, cl_uint *value) const override;
     cl_int getInfoULong(cl::DeviceInfo name, cl_ulong *value) const override;
@@ -27,10 +31,8 @@ class CLDeviceVk : public CLDeviceImpl
 
     cl_int createSubDevices(const cl_device_partition_property *properties,
                             cl_uint numDevices,
-                            InitList &deviceInitList,
+                            PtrList &deviceImplList,
                             cl_uint *numDevicesRet) override;
-
-    static Info GetInfo();
 };
 
 }  // namespace rx

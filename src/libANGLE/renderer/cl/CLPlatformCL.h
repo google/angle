@@ -20,16 +20,29 @@ class CLPlatformCL : public CLPlatformImpl
 
     cl_platform_id getNative();
 
-    CLDeviceImpl::InitList getDevices() override;
+    CLContextImpl::Ptr createContext(CLDeviceImpl::List &&deviceImplList,
+                                     cl::ContextErrorCB notify,
+                                     void *userData,
+                                     bool userSync,
+                                     cl_int *errcodeRet) override;
+
+    CLContextImpl::Ptr createContextFromType(cl_device_type deviceType,
+                                             cl::ContextErrorCB notify,
+                                             void *userData,
+                                             bool userSync,
+                                             cl_int *errcodeRet) override;
 
     static InitList GetPlatforms(bool isIcd);
 
   private:
-    explicit CLPlatformCL(cl_platform_id platform);
+    CLPlatformCL(cl_platform_id platform, cl_version version, CLDeviceImpl::PtrList &devices);
 
     static Info GetInfo(cl_platform_id platform);
 
     const cl_platform_id mPlatform;
+    const cl_version mVersion;
+
+    friend class CLContextCL;
 };
 
 inline cl_platform_id CLPlatformCL::getNative()

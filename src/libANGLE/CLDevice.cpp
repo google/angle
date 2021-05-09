@@ -9,6 +9,8 @@
 
 #include "libANGLE/CLPlatform.h"
 
+#include <cstring>
+
 namespace cl
 {
 
@@ -202,7 +204,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
                        sizeof(decltype(mInfo.mMaxWorkItemSizes)::value_type);
             break;
         case DeviceInfo::ILsWithVersion:
-            if (!mInfo.mIsSupportedILsWithVersion)
+            if (mInfo.mVersion < CL_MAKE_VERSION(3, 0, 0))
             {
                 return CL_INVALID_VALUE;
             }
@@ -211,7 +213,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
                 mInfo.mILsWithVersion.size() * sizeof(decltype(mInfo.mILsWithVersion)::value_type);
             break;
         case DeviceInfo::BuiltInKernelsWithVersion:
-            if (!mInfo.mIsSupportedBuiltInKernelsWithVersion)
+            if (mInfo.mVersion < CL_MAKE_VERSION(3, 0, 0))
             {
                 return CL_INVALID_VALUE;
             }
@@ -220,7 +222,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
                        sizeof(decltype(mInfo.mBuiltInKernelsWithVersion)::value_type);
             break;
         case DeviceInfo::OpenCL_C_AllVersions:
-            if (!mInfo.mIsSupportedOpenCL_C_AllVersions)
+            if (mInfo.mVersion < CL_MAKE_VERSION(3, 0, 0))
             {
                 return CL_INVALID_VALUE;
             }
@@ -229,7 +231,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
                        sizeof(decltype(mInfo.mOpenCL_C_AllVersions)::value_type);
             break;
         case DeviceInfo::OpenCL_C_Features:
-            if (!mInfo.mIsSupportedOpenCL_C_Features)
+            if (mInfo.mVersion < CL_MAKE_VERSION(3, 0, 0))
             {
                 return CL_INVALID_VALUE;
             }
@@ -242,7 +244,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             copySize  = mInfo.mExtensions.length() + 1u;
             break;
         case DeviceInfo::ExtensionsWithVersion:
-            if (!mInfo.mIsSupportedExtensionsWithVersion)
+            if (mInfo.mVersion < CL_MAKE_VERSION(3, 0, 0))
             {
                 return CL_INVALID_VALUE;
             }
@@ -251,11 +253,19 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
                        sizeof(decltype(mInfo.mExtensionsWithVersion)::value_type);
             break;
         case DeviceInfo::PartitionProperties:
+            if (mInfo.mVersion < CL_MAKE_VERSION(1, 2, 0))
+            {
+                return CL_INVALID_VALUE;
+            }
             copyValue = mInfo.mPartitionProperties.data();
             copySize  = mInfo.mPartitionProperties.size() *
                        sizeof(decltype(mInfo.mPartitionProperties)::value_type);
             break;
         case DeviceInfo::PartitionType:
+            if (mInfo.mVersion < CL_MAKE_VERSION(1, 2, 0))
+            {
+                return CL_INVALID_VALUE;
+            }
             copyValue = mInfo.mPartitionType.data();
             copySize =
                 mInfo.mPartitionType.size() * sizeof(decltype(mInfo.mPartitionType)::value_type);
@@ -268,10 +278,18 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             copySize   = sizeof(valPointer);
             break;
         case DeviceInfo::ParentDevice:
+            if (mInfo.mVersion < CL_MAKE_VERSION(1, 2, 0))
+            {
+                return CL_INVALID_VALUE;
+            }
             copyValue = &mParent;
             copySize  = sizeof(mParent);
             break;
         case DeviceInfo::ReferenceCount:
+            if (mInfo.mVersion < CL_MAKE_VERSION(1, 2, 0))
+            {
+                return CL_INVALID_VALUE;
+            }
             copyValue = getRefCountPtr();
             copySize  = sizeof(*getRefCountPtr());
             break;
@@ -312,27 +330,39 @@ cl_int Device::createSubDevices(const cl_device_partition_property *properties,
     {
         numDevices = 0u;
     }
-    rx::CLDeviceImpl::InitList initList;
-    const cl_int result = mImpl->createSubDevices(properties, numDevices, initList, numDevicesRet);
+    rx::CLDeviceImpl::PtrList ptrList;
+    const cl_int result = mImpl->createSubDevices(properties, numDevices, ptrList, numDevicesRet);
     if (result == CL_SUCCESS)
     {
-        while (!initList.empty())
+        while (!ptrList.empty())
         {
-            mSubDevices.emplace_back(new Device(mPlatform, this, initList.front()));
+            rx::CLDeviceImpl::Info info = ptrList.front()->createInfo();
+            if (!info.isValid())
+            {
+                return CL_INVALID_VALUE;
+            }
+            mSubDevices.emplace_back(
+                new Device(mPlatform, this, std::move(ptrList.front()), std::move(info)));
+            ptrList.pop_front();
             *devices++ = mSubDevices.back().get();
-            initList.pop_front();
         }
     }
     return result;
 }
 
-Device::PtrList Device::CreateDevices(Platform &platform, rx::CLDeviceImpl::InitList &&initList)
+Device::PtrList Device::CreateDevices(Platform &platform, rx::CLDeviceImpl::PtrList &&implList)
 {
     PtrList devices;
-    while (!initList.empty())
+    while (!implList.empty())
     {
-        devices.emplace_back(new Device(platform, nullptr, initList.front()));
-        initList.pop_front();
+        rx::CLDeviceImpl::Info info = implList.front()->createInfo();
+        if (!info.isValid())
+        {
+            return Device::PtrList{};
+        }
+        devices.emplace_back(
+            new Device(platform, nullptr, std::move(implList.front()), std::move(info)));
+        implList.pop_front();
     }
     return devices;
 }
@@ -345,12 +375,15 @@ bool Device::IsValid(const Device *device)
            }) != platforms.cend();
 }
 
-Device::Device(Platform &platform, Device *parent, rx::CLDeviceImpl::InitData &initData)
+Device::Device(Platform &platform,
+               Device *parent,
+               rx::CLDeviceImpl::Ptr &&impl,
+               rx::CLDeviceImpl::Info &&info)
     : _cl_device_id(platform.getDispatch()),
       mPlatform(platform),
       mParent(parent),
-      mImpl(std::move(initData.first)),
-      mInfo(std::move(initData.second))
+      mImpl(std::move(impl)),
+      mInfo(std::move(info))
 {}
 
 void Device::destroySubDevice(Device *device)

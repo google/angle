@@ -7,8 +7,66 @@
 
 #include "libANGLE/validationCL_autogen.h"
 
+#define ANGLE_ERROR_RETURN(error, ret) \
+    if (errcode_ret != nullptr)        \
+    {                                  \
+        *errcode_ret = error;          \
+    }                                  \
+    return ret
+
 namespace cl
 {
+
+namespace
+{
+
+Platform *ValidateContextProperties(const cl_context_properties *properties, cl_int *errcode_ret)
+{
+    Platform *platform = nullptr;
+    bool hasUserSync   = false;
+    if (properties != nullptr)
+    {
+        while (*properties != 0)
+        {
+            switch (*properties++)
+            {
+                case CL_CONTEXT_PLATFORM:
+                    if (platform != nullptr)
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_PROPERTY, nullptr);
+                    }
+                    platform = reinterpret_cast<Platform *>(*properties++);
+                    if (!Platform::IsValid(platform))
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_PLATFORM, nullptr);
+                    }
+                    break;
+                case CL_CONTEXT_INTEROP_USER_SYNC:
+                    if (hasUserSync || (*properties != CL_FALSE && *properties != CL_TRUE))
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_PROPERTY, nullptr);
+                    }
+                    ++properties;
+                    hasUserSync = true;
+                    break;
+                default:
+                    ANGLE_ERROR_RETURN(CL_INVALID_PROPERTY, nullptr);
+            }
+        }
+    }
+    if (platform == nullptr)
+    {
+        platform = Platform::GetDefault();
+        if (platform == nullptr)
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_PLATFORM, nullptr);
+        }
+    }
+    return platform;
+}
+
+}  // namespace
+
 // CL 1.0
 cl_int ValidateGetPlatformIDs(cl_uint num_entries,
                               Platform *const *platforms,
@@ -80,7 +138,7 @@ cl_int ValidateGetDeviceInfo(const Device *device,
 
 bool ValidateCreateContext(const cl_context_properties *properties,
                            cl_uint num_devices,
-                           Device *const *devicesPacked,
+                           Device *const *devices,
                            void(CL_CALLBACK *pfn_notify)(const char *errinfo,
                                                          const void *private_info,
                                                          size_t cb,
@@ -88,6 +146,23 @@ bool ValidateCreateContext(const cl_context_properties *properties,
                            const void *user_data,
                            cl_int *errcode_ret)
 {
+    Platform *platform = ValidateContextProperties(properties, errcode_ret);
+    if (platform == nullptr)
+    {
+        return false;
+    }
+
+    if (num_devices == 0u || devices == nullptr || (pfn_notify == nullptr && user_data != nullptr))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    while (num_devices-- > 0u)
+    {
+        if (!platform->hasDevice(*devices++))
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_DEVICE, false);
+        }
+    }
     return true;
 }
 
@@ -100,25 +175,47 @@ bool ValidateCreateContextFromType(const cl_context_properties *properties,
                                    const void *user_data,
                                    cl_int *errcode_ret)
 {
+    Platform *platform = ValidateContextProperties(properties, errcode_ret);
+    if (platform == nullptr)
+    {
+        return false;
+    }
+    if (!Device::IsValidType(device_type))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_DEVICE_TYPE, false);
+    }
+    if (pfn_notify == nullptr && user_data != nullptr)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
     return true;
 }
 
-cl_int ValidateRetainContext(const Context *contextPacked)
+cl_int ValidateRetainContext(const Context *context)
 {
-    return CL_SUCCESS;
+    return Context::IsValid(context) ? CL_SUCCESS : CL_INVALID_CONTEXT;
 }
 
-cl_int ValidateReleaseContext(const Context *contextPacked)
+cl_int ValidateReleaseContext(const Context *context)
 {
-    return CL_SUCCESS;
+    return Context::IsValid(context) ? CL_SUCCESS : CL_INVALID_CONTEXT;
 }
 
-cl_int ValidateGetContextInfo(const Context *contextPacked,
-                              ContextInfo param_namePacked,
+cl_int ValidateGetContextInfo(const Context *context,
+                              ContextInfo param_name,
                               size_t param_value_size,
                               const void *param_value,
                               const size_t *param_value_size_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        return CL_INVALID_CONTEXT;
+    }
+    if (param_name == ContextInfo::InvalidEnum ||
+        (param_value_size == 0u && param_value != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 

@@ -20,17 +20,28 @@ class Object
   public:
     // This class cannot be virtual as its derived classes need to have standard layout
     Object() = default;
-    ~Object() { ASSERT(mRefCount == 0u); }
+
+    ~Object()
+    {
+        if (mRefCount != 0u)
+        {
+            WARN() << "Deleted object with references";
+        }
+    }
 
     cl_uint getRefCount() { return mRefCount; }
 
     const cl_uint *getRefCountPtr() { return &mRefCount; }
 
   protected:
-    void addRef() { ++mRefCount; }
+    void addRef() noexcept { ++mRefCount; }
     bool removeRef()
     {
-        ASSERT(mRefCount > 0u);
+        if (mRefCount == 0u)
+        {
+            WARN() << "Unreferenced object without references";
+            return true;
+        }
         return --mRefCount == 0u;
     }
 

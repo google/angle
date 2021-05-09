@@ -111,6 +111,7 @@ if (angle_enable_cl) {
     "CLDeviceVk.h",
     "CLPlatformVk.cpp",
     "CLPlatformVk.h",
+    "cl_types.h",
   ]
 }
 

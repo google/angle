@@ -8,6 +8,8 @@
 #ifndef LIBANGLE_RENDERER_CL_CLDEVICECL_H_
 #define LIBANGLE_RENDERER_CL_CLDEVICECL_H_
 
+#include "libANGLE/renderer/cl/cl_types.h"
+
 #include "libANGLE/renderer/CLDeviceImpl.h"
 
 namespace rx
@@ -20,6 +22,8 @@ class CLDeviceCL : public CLDeviceImpl
 
     cl_device_id getNative();
 
+    Info createInfo() const override;
+
     cl_int getInfoUInt(cl::DeviceInfo name, cl_uint *value) const override;
     cl_int getInfoULong(cl::DeviceInfo name, cl_ulong *value) const override;
     cl_int getInfoSizeT(cl::DeviceInfo name, size_t *value) const override;
@@ -28,14 +32,13 @@ class CLDeviceCL : public CLDeviceImpl
 
     cl_int createSubDevices(const cl_device_partition_property *properties,
                             cl_uint numDevices,
-                            InitList &deviceInitList,
+                            PtrList &implList,
                             cl_uint *numDevicesRet) override;
 
-    static CLDeviceCL *Create(cl_device_id device);
-    static Info GetInfo(cl_device_id device);
+    static CLDeviceCL *Create(CLPlatformCL &platform, CLDeviceCL *parent, cl_device_id device);
 
   private:
-    CLDeviceCL(cl_device_id device, cl_version version);
+    CLDeviceCL(CLPlatformCL &platform, CLDeviceCL *parent, cl_device_id device, cl_version version);
 
     const cl_device_id mDevice;
     const cl_version mVersion;

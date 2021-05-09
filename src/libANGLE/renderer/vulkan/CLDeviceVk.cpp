@@ -7,12 +7,21 @@
 
 #include "libANGLE/renderer/vulkan/CLDeviceVk.h"
 
+#include "libANGLE/renderer/vulkan/CLPlatformVk.h"
+
 namespace rx
 {
 
-CLDeviceVk::CLDeviceVk() = default;
+CLDeviceVk::CLDeviceVk(CLPlatformVk &platform, CLDeviceVk *parent) : CLDeviceImpl(platform, parent)
+{}
 
 CLDeviceVk::~CLDeviceVk() = default;
+
+CLDeviceImpl::Info CLDeviceVk::createInfo() const
+{
+    CLDeviceImpl::Info info;
+    return info;
+}
 
 cl_int CLDeviceVk::getInfoUInt(cl::DeviceInfo name, cl_uint *value) const
 {
@@ -41,16 +50,10 @@ cl_int CLDeviceVk::getInfoString(cl::DeviceInfo name, size_t size, char *value) 
 
 cl_int CLDeviceVk::createSubDevices(const cl_device_partition_property *properties,
                                     cl_uint numDevices,
-                                    InitList &deviceInitList,
+                                    PtrList &deviceImplList,
                                     cl_uint *numDevicesRet)
 {
     return CL_INVALID_VALUE;
-}
-
-CLDeviceImpl::Info CLDeviceVk::GetInfo()
-{
-    CLDeviceImpl::Info info;
-    return info;
 }
 
 }  // namespace rx
