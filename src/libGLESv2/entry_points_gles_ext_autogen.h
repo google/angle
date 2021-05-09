@@ -1148,6 +1148,8 @@ ANGLE_EXPORT void GL_APIENTRY GL_TexBufferRangeEXT(GLenum target,
 
 // GL_EXT_texture_sRGB_R8
 
+// GL_EXT_texture_sRGB_RG8
+
 // GL_EXT_texture_storage
 ANGLE_EXPORT void GL_APIENTRY GL_TexStorage1DEXT(GLenum target,
                                                  GLsizei levels,

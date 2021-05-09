@@ -1700,6 +1700,8 @@ angle::CallCapture CaptureTexBufferRangeEXT(const State &glState,
 
 // GL_EXT_texture_sRGB_R8
 
+// GL_EXT_texture_sRGB_RG8
+
 // GL_EXT_texture_storage
 angle::CallCapture CaptureTexStorage1DEXT(const State &glState,
                                           bool isCallValid,

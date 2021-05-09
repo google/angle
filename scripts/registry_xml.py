@@ -111,6 +111,7 @@ gles_extensions = [
     "GL_EXT_texture_format_BGRA8888",
     "GL_EXT_texture_storage",
     "GL_EXT_texture_sRGB_R8",
+    "GL_EXT_texture_sRGB_RG8",
     "GL_EXT_YUV_target",
     "GL_KHR_debug",
     "GL_KHR_parallel_shader_compile",
