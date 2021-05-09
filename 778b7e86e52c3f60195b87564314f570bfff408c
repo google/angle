@@ -245,6 +245,24 @@
       "parentUuid": "5be8a4c6_2bde7950",
       "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09033c29_0d7b778c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1454,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-09T03:07:20Z",
+      "side": 1,
+      "message": "Thanks! The change looks much better IMO, good find again!",
+      "parentUuid": "558699e8_4c38f9b3",
+      "revId": "778b7e86e52c3f60195b87564314f570bfff408c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
