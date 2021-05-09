@@ -673,12 +673,6 @@ void main()
 
 TEST_P(GLSLTest, ScopedStructsOrderBug)
 {
-    // TODO(geofflang): Find out why this doesn't compile on Apple OpenGL drivers
-    // (http://anglebug.com/1292)
-    // TODO(geofflang): Find out why this doesn't compile on AMD OpenGL drivers
-    // (http://anglebug.com/1291)
-    ANGLE_SKIP_TEST_IF(IsDesktopOpenGL() && (IsOSX() || !IsNVIDIA()));
-
     constexpr char kFS[] = R"(precision mediump float;
 
 struct T
@@ -703,6 +697,132 @@ void main()
 })";
 
     ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+}
+
+// Test that defining a struct together with an inactive uniform, then using it in a scope that has
+// another struct with the same name declared works.
+TEST_P(GLSLTest, ScopedStructsOrderBug2)
+{
+    constexpr char kFS[] = R"(precision mediump float;
+
+uniform struct T
+{
+    float f;
+} x;
+
+void main()
+{
+    T a;
+
+    struct T
+    {
+        float q;
+    };
+
+    T b;
+
+    gl_FragColor = vec4(1, 0, 0, 1);
+    gl_FragColor.a += a.f;
+    gl_FragColor.a += b.q;
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Simple(), kFS);
+}
+
+// Regression test based on WebGL's conformance/glsl/misc/empty-declaration.html
+TEST_P(GLSLTest, StructEmptyDeclaratorBug)
+{
+    constexpr char kVS[] = R"(
+struct S {
+    float member;
+}, a;
+void main() {
+    a.member = 0.0;
+    gl_Position = vec4(a.member);
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
+
+// Regression test based on WebGL's conformance/ogles/GL/build/build_001_to_008.html
+TEST_P(GLSLTest, StructConstantFoldingBug)
+{
+    constexpr char kVS[] = R"(
+void main()
+{
+
+   const struct s2 {
+       int i;
+       vec3 v3;
+       bvec4 bv4;
+   } s22  = s2(8, vec3(9, 10, 11), bvec4(true, false, true, false));
+
+   struct s4 {
+       int ii;
+       vec4 v4;
+      };
+
+   const struct s1 {
+      s2 ss;
+      int i;
+      float f;
+      mat4 m;
+      s4 s44;
+   } s11 = s1(s22, 2, 4.0, mat4(5), s4(6, vec4(7, 8, 9, 10))) ;
+
+  const int field3 = s11.i * s11.ss.i;  // constant folding (int * int)
+  const vec4 field4 = s11.s44.v4 * s11.s44.v4; // constant folding (vec4 * vec4)
+ // 49, 64, 81, 100
+  const vec4 v4 = vec4(s11.ss.v3.y, s11.m[3][3], field3, field4[2]);  // 10.0, 5.0, 16.0, 81.0
+  gl_Position = v4;
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
+}
+
+// Test that constant folding doesn't remove struct declaration.
+TEST_P(GLSLTest, StructConstantFoldingBug2)
+{
+    constexpr char kVS[] = R"(
+uniform vec4 u;
+
+void main()
+{
+
+   const struct s2 {
+       int i;
+       vec3 v3;
+       bvec4 bv4;
+   } s22  = s2(8, vec3(9, 10, 11), bvec4(true, false, true, false));
+
+   s2 x;
+   x.v3 = u.xyz;
+
+   gl_Position = vec4(x.v3, float(s22.i));
+})";
+
+    constexpr char kFS[] = R"(precision mediump float;
+precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(1.0,0.0,0.0,1.0);
+})";
+
+    ANGLE_GL_PROGRAM(program, kVS, kFS);
 }
 
 TEST_P(GLSLTest, ScopedStructsBug)

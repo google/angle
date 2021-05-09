@@ -814,8 +814,8 @@ bool TranslatorVulkan::translateImpl(TInfoSinkBase &sink,
     // inactive samplers is not yet supported.  Note also that currently, CollectVariables marks
     // every field of an active uniform that's of struct type as active, i.e. no extracted sampler
     // is inactive.
-    if (!RemoveInactiveInterfaceVariables(this, root, getAttributes(), getInputVaryings(),
-                                          getOutputVariables(), getUniforms(),
+    if (!RemoveInactiveInterfaceVariables(this, root, &getSymbolTable(), getAttributes(),
+                                          getInputVaryings(), getOutputVariables(), getUniforms(),
                                           getInterfaceBlocks()))
     {
         return false;

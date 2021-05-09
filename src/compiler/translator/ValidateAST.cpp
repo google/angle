@@ -49,10 +49,15 @@ class ValidateAST : public TIntermTraverser
 
     // Visit as a generic node
     void visitNode(Visit visit, TIntermNode *node);
+    // Visit a structure or interface block, and recursively visit its fields of structure type.
+    void visitStructOrInterfaceBlockDeclaration(const TType &type, const TSourceLoc &location);
+    void visitStructInDeclarationUsage(const TType &type, const TSourceLoc &location);
 
     void scope(Visit visit);
     bool isVariableDeclared(const TVariable *variable);
     bool variableNeedsDeclaration(const TVariable *variable);
+    const TFieldListCollection *getStructOrInterfaceBlock(const TType &type,
+                                                          ImmutableString *typeNameOut);
 
     void expectNonNullChildren(Visit visit, TIntermNode *node, size_t least_count);
 
@@ -72,6 +77,10 @@ class ValidateAST : public TIntermTraverser
 
     // For validateNullNodes:
     bool mNullNodesFailed = false;
+
+    // For validateStructUsage:
+    std::vector<std::map<ImmutableString, const TFieldListCollection *>> mStructsAndBlocksByName;
+    bool mStructUsageFailed = false;
 
     // For validateMultiDeclarations:
     bool mMultiDeclarationsFailed = false;
@@ -130,6 +139,96 @@ void ValidateAST::visitNode(Visit visit, TIntermNode *node)
     }
 }
 
+void ValidateAST::visitStructOrInterfaceBlockDeclaration(const TType &type,
+                                                         const TSourceLoc &location)
+{
+    if (type.getStruct() == nullptr && type.getInterfaceBlock() == nullptr)
+    {
+        return;
+    }
+
+    // Make sure the structure or interface block is not doubly defined.
+    ImmutableString typeName("");
+    const TFieldListCollection *structOrBlock = getStructOrInterfaceBlock(type, &typeName);
+
+    if (structOrBlock)
+    {
+        ASSERT(!typeName.empty());
+
+        if (mStructsAndBlocksByName.back().find(typeName) != mStructsAndBlocksByName.back().end())
+        {
+            mDiagnostics->error(location,
+                                "Found redeclaration of struct or interface block with the same "
+                                "name in the same scope <validateStructUsage>",
+                                typeName.data());
+            mStructUsageFailed = true;
+        }
+        else
+        {
+            // First encounter.
+            mStructsAndBlocksByName.back()[typeName] = structOrBlock;
+        }
+    }
+
+    // Recurse the fields of the structure or interface block and check members of structure type.
+    // Note that structOrBlock was previously only set for named structures, so make sure nameless
+    // structs are also recursed.
+    if (structOrBlock == nullptr)
+    {
+        structOrBlock = type.getStruct();
+    }
+    ASSERT(structOrBlock != nullptr);
+
+    for (const TField *field : structOrBlock->fields())
+    {
+        visitStructInDeclarationUsage(*field->type(), field->line());
+    }
+}
+
+void ValidateAST::visitStructInDeclarationUsage(const TType &type, const TSourceLoc &location)
+{
+    if (type.getStruct() == nullptr)
+    {
+        return;
+    }
+
+    // Make sure the structure being referenced has the same pointer as the closest (in scope)
+    // definition.
+    const TStructure *structure     = type.getStruct();
+    const ImmutableString &typeName = structure->name();
+
+    bool foundDeclaration = false;
+    for (size_t scopeIndex = mStructsAndBlocksByName.size(); scopeIndex > 0; --scopeIndex)
+    {
+        const std::map<ImmutableString, const TFieldListCollection *> &scopeDecls =
+            mStructsAndBlocksByName[scopeIndex - 1];
+
+        auto iter = scopeDecls.find(typeName);
+        if (iter != scopeDecls.end())
+        {
+            foundDeclaration = true;
+
+            if (iter->second != structure)
+            {
+                mDiagnostics->error(location,
+                                    "Found reference to struct or interface block with doubly "
+                                    "created type <validateStructUsage>",
+                                    typeName.data());
+                mStructUsageFailed = true;
+            }
+        }
+    }
+
+    if (!foundDeclaration)
+    {
+        mDiagnostics->error(location,
+                            "Found reference to struct or interface block with no declaration "
+                            "<validateStructUsage>",
+                            typeName.data());
+        mStructUsageFailed = true;
+    }
+}
+
 void ValidateAST::scope(Visit visit)
 {
     if (mOptions.validateVariableReferences)
@@ -141,6 +240,18 @@ void ValidateAST::scope(Visit visit)
         else if (visit == PostVisit)
         {
             mDeclaredVariables.pop_back();
+        }
+    }
+
+    if (mOptions.validateStructUsage)
+    {
+        if (visit == PreVisit)
+        {
+            mStructsAndBlocksByName.push_back({});
+        }
+        else if (visit == PostVisit)
+        {
+            mStructsAndBlocksByName.pop_back();
         }
     }
 }
@@ -177,6 +288,30 @@ bool ValidateAST::variableNeedsDeclaration(const TVariable *variable)
     }
 
     return true;
+}
+
+const TFieldListCollection *ValidateAST::getStructOrInterfaceBlock(const TType &type,
+                                                                   ImmutableString *typeNameOut)
+{
+    const TStructure *structure           = type.getStruct();
+    const TInterfaceBlock *interfaceBlock = type.getInterfaceBlock();
+
+    ASSERT(structure != nullptr || interfaceBlock != nullptr);
+
+    // Make sure the structure or interface block is not doubly defined.
+    const TFieldListCollection *structOrBlock = nullptr;
+    if (structure != nullptr && structure->symbolType() != SymbolType::Empty)
+    {
+        structOrBlock = structure;
+        *typeNameOut  = structure->name();
+    }
+    else if (interfaceBlock != nullptr)
+    {
+        structOrBlock = interfaceBlock;
+        *typeNameOut  = interfaceBlock->name();
+    }
+
+    return structOrBlock;
 }
 
 void ValidateAST::expectNonNullChildren(Visit visit, TIntermNode *node, size_t least_count)
@@ -237,7 +372,10 @@ void ValidateAST::visitSymbol(TIntermSymbol *node)
         }
         else
         {
-            if (!isVariableDeclared(variable))
+            const bool isStructDeclaration =
+                type.isStructSpecifier() && variable->symbolType() == SymbolType::Empty;
+
+            if (!isStructDeclaration && !isVariableDeclared(variable))
             {
                 mDiagnostics->error(node->getLine(),
                                     "Found reference to undeclared or inconsistently redeclared "
@@ -366,8 +504,10 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
         mMultiDeclarationsFailed = true;
     }
 
-    if (mOptions.validateVariableReferences && visit == PreVisit)
+    if (visit == PreVisit)
     {
+        bool validateStructUsage = mOptions.validateStructUsage;
+
         for (TIntermNode *instance : sequence)
         {
             TIntermSymbol *symbol = instance->getAsSymbolNode();
@@ -381,29 +521,42 @@ bool ValidateAST::visitDeclaration(Visit visit, TIntermDeclaration *node)
 
             const TVariable *variable = &symbol->variable();
 
-            if (isVariableDeclared(variable))
+            if (mOptions.validateVariableReferences)
             {
-                mDiagnostics->error(
-                    node->getLine(),
-                    "Found two declarations of the same variable <validateVariableReferences>",
-                    variable->name().data());
-                mVariableReferencesFailed = true;
-                break;
+                if (isVariableDeclared(variable))
+                {
+                    mDiagnostics->error(
+                        node->getLine(),
+                        "Found two declarations of the same variable <validateVariableReferences>",
+                        variable->name().data());
+                    mVariableReferencesFailed = true;
+                    break;
+                }
+
+                mDeclaredVariables.back().insert(variable);
+
+                const TInterfaceBlock *interfaceBlock = variable->getType().getInterfaceBlock();
+
+                if (variable->symbolType() == SymbolType::Empty && interfaceBlock != nullptr)
+                {
+                    // Nameless interface blocks can only be declared at the top level.  Their
+                    // fields are matched by field index, and then verified to match by name.
+                    // Conflict in names should have already generated a compile error.
+                    ASSERT(mDeclaredVariables.size() == 1);
+                    ASSERT(mNamelessInterfaceBlocks.count(interfaceBlock) == 0);
+
+                    mNamelessInterfaceBlocks.insert(interfaceBlock);
+                }
             }
 
-            mDeclaredVariables.back().insert(variable);
-
-            const TInterfaceBlock *interfaceBlock = variable->getType().getInterfaceBlock();
-
-            if (variable->symbolType() == SymbolType::Empty && interfaceBlock != nullptr)
+            if (validateStructUsage)
             {
-                // Nameless interface blocks can only be declared at the top level.  Their fields
-                // are matched by field index, and then verified to match by name.  Conflict in
-                // names should have already generated a compile error.
-                ASSERT(mDeclaredVariables.size() == 1);
-                ASSERT(mNamelessInterfaceBlocks.count(interfaceBlock) == 0);
+                // Only declare the struct once.
+                validateStructUsage = false;
 
-                mNamelessInterfaceBlocks.insert(interfaceBlock);
+                const TType &type = variable->getType();
+                if (type.isStructSpecifier() || type.isInterfaceBlock())
+                    visitStructOrInterfaceBlockDeclaration(type, node->getLine());
             }
         }
     }
@@ -431,7 +584,7 @@ void ValidateAST::visitPreprocessorDirective(TIntermPreprocessorDirective *node)
 bool ValidateAST::validateInternal()
 {
     return !mSingleParentFailed && !mVariableReferencesFailed && !mNullNodesFailed &&
-           !mMultiDeclarationsFailed;
+           !mStructUsageFailed && !mMultiDeclarationsFailed;
 }
 
 }  // anonymous namespace

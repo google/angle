@@ -116,7 +116,7 @@ ANGLE_NO_DISCARD bool InitializeUnusedOutputs(TIntermBlock *root,
 }  // anonymous namespace
 
 // class DriverUniformMetal
-TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable) const
+TFieldList *DriverUniformMetal::createUniformFields(TSymbolTable *symbolTable)
 {
     TFieldList *driverFieldList = DriverUniform::createUniformFields(symbolTable);
 

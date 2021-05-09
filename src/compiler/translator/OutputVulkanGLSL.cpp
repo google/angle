@@ -174,15 +174,6 @@ void TOutputVulkanGLSL::writeVariableType(const TType &type,
     TOutputGLSL::writeVariableType(overrideType, symbol, isFunctionArgument);
 }
 
-void TOutputVulkanGLSL::writeStructType(const TStructure *structure)
-{
-    if (!structDeclared(structure))
-    {
-        declareStruct(structure);
-        objSink() << ";\n";
-    }
-}
-
 bool TOutputVulkanGLSL::writeVariablePrecision(TPrecision precision)
 {
     if ((precision == EbpUndefined) || !mEnablePrecision)

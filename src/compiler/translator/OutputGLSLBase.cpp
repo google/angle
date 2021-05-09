@@ -395,8 +395,8 @@ void TOutputGLSLBase::writeVariableType(const TType &type,
         out << getMemoryQualifiers(type);
     }
 
-    // Declare the struct if we have not done so already.
-    if (type.getBasicType() == EbtStruct && !structDeclared(type.getStruct()))
+    // Declare the struct.
+    if (type.isStructSpecifier())
     {
         const TStructure *structure = type.getStruct();
 
@@ -1279,17 +1279,6 @@ ImmutableString TOutputGLSLBase::hashFunctionNameIfNeeded(const TFunction *func)
     }
 }
 
-bool TOutputGLSLBase::structDeclared(const TStructure *structure) const
-{
-    ASSERT(structure);
-    if (structure->symbolType() == SymbolType::Empty)
-    {
-        return false;
-    }
-
-    return (mDeclaredStructs.count(structure->uniqueId().get()) > 0);
-}
-
 void TOutputGLSLBase::declareStruct(const TStructure *structure)
 {
     TInfoSinkBase &out = objSink();
@@ -1313,11 +1302,6 @@ void TOutputGLSLBase::declareStruct(const TStructure *structure)
         out << ";\n";
     }
     out << "}";
-
-    if (structure->symbolType() != SymbolType::Empty)
-    {
-        mDeclaredStructs.insert(structure->uniqueId().get());
-    }
 }
 
 void TOutputGLSLBase::declareInterfaceBlockLayout(const TType &type)

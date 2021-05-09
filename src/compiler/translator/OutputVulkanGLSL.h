@@ -32,8 +32,6 @@ class TOutputVulkanGLSL : public TOutputGLSL
                       bool enablePrecision,
                       ShCompileOptions compileOptions);
 
-    void writeStructType(const TStructure *structure);
-
     uint32_t nextUnusedBinding() { return mNextUnusedBinding++; }
     uint32_t nextUnusedInputLocation(uint32_t consumedCount)
     {

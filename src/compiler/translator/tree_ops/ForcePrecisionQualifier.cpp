@@ -24,28 +24,12 @@ class TPrecisionTraverser : public TIntermTraverser
   protected:
     bool visitDeclaration(Visit visit, TIntermDeclaration *node) override;
 
-    bool structDeclared(const TStructure *structure) const;
     void overwriteVariablePrecision(TType *type) const;
-
-  private:
-    // This set contains all the ids of the structs from every scope.
-    std::set<int> mDeclaredStructs;
 };
 
 TPrecisionTraverser::TPrecisionTraverser(TSymbolTable *symbolTable)
     : TIntermTraverser(true, true, true, symbolTable)
 {}
-
-bool TPrecisionTraverser::structDeclared(const TStructure *structure) const
-{
-    ASSERT(structure);
-    if (structure->symbolType() == SymbolType::Empty)
-    {
-        return false;
-    }
-
-    return (mDeclaredStructs.count(structure->uniqueId().get()) > 0);
-}
 
 void TPrecisionTraverser::overwriteVariablePrecision(TType *type) const
 {
@@ -71,8 +55,8 @@ bool TPrecisionTraverser::visitDeclaration(Visit visit, TIntermDeclaration *node
             return true;
         }
 
-        // Visit the struct if we have not done so already.
-        if (type.getBasicType() == EbtStruct && !structDeclared(type.getStruct()))
+        // Visit the struct.
+        if (type.isStructSpecifier())
         {
             const TStructure *structure = type.getStruct();
             const TFieldList &fields    = structure->fields();
@@ -82,7 +66,6 @@ bool TPrecisionTraverser::visitDeclaration(Visit visit, TIntermDeclaration *node
                 const TType *fieldType = field->type();
                 overwriteVariablePrecision((TType *)fieldType);
             }
-            mDeclaredStructs.insert(structure->uniqueId().get());
         }
         else if (type.getBasicType() == EbtInterfaceBlock)
         {
