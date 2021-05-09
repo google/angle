@@ -22,6 +22,30 @@
       },
       "revId": "4076cf632e7c24f11fd3a7b857c01178b87082aa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3e5237ae_0d9a8aaa",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-09T11:06:40Z",
+      "side": 1,
+      "message": "Thanks! I didn\u0027t notice that yet. Changed.",
+      "parentUuid": "5af93f83_fb5b22fb",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 11
+      },
+      "revId": "4076cf632e7c24f11fd3a7b857c01178b87082aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
