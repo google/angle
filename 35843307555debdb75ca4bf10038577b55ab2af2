@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f511eb3f_2b8d4b8d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-10T18:22:02Z",
+      "side": 1,
+      "message": "I skimmed this - might want to rely on another reviewer if you want a detailed and thorough review.",
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2c7ac188_f7f4eb82",
+        "filename": "src/libANGLE/renderer/CLPlatformImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-10T18:22:02Z",
+      "side": 1,
+      "message": "nit: having both rvalue and value-based ops doesn\u0027t really make sense in most cases. not sure why you introduced them.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
