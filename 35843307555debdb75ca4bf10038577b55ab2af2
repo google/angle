@@ -61,6 +61,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7c3b897e_badbbc82",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "These are in the same order as they appear in the OpenCL spec, so it is easier to compare them side-by-side for missing values. I suggest I will add a comment.",
+      "parentUuid": "3cf60a30_bbfb2996",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 34
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "192b84e7_1ae5cd9a",
         "filename": "src/libANGLE/CLDevice.cpp",
         "patchSetId": 2
@@ -72,6 +96,30 @@
       "writtenOn": "2021-05-10T21:23:24Z",
       "side": 1,
       "message": "Can this fail?  And it so, is the result communicated back to the app?",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 77
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e0189f8_de9f5182",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "This can\u0027t fail here, it only wraps the implementation device list from the back end into front end objects. If the back end fails to create a list in renderer/cl/CLPlatformCL.cpp:42 it, it will issue an error and deliver an empty device list, so the platform is not created in CLPlatform.cpp:20.",
+      "parentUuid": "192b84e7_1ae5cd9a",
       "range": {
         "startLine": 283,
         "startChar": 0,
@@ -118,6 +166,30 @@
       "writtenOn": "2021-05-10T21:23:24Z",
       "side": 1,
       "message": "How does this check whether platform is default?  Shouldn\u0027t it be IsDefault(platform)?",
+      "range": {
+        "startLine": 142,
+        "startChar": 53,
+        "endLine": 142,
+        "endChar": 76
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5023149f_d8aafd24",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "In some cases the spec allows a nullptr for platform, in which case the behavior is implementation-defined. In this case our implementation chooses the platform that we define as default. This will fail if no platforms are available, so if platform is nullptr, it is a valid default if a default is available. Should I add a comment?",
+      "parentUuid": "7fb35c24_02dcd96d",
       "range": {
         "startLine": 142,
         "startChar": 53,
@@ -271,6 +343,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7554dc27_a8dd7288",
+        "filename": "src/libANGLE/renderer/CLtypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "Yeah, I wasn\u0027t sure what are the best names. I chose the name Array when it data has to be contiguous in memory, so I can use data(). And I chose the name List otherwise. Any suggestion? I will also think about it.",
+      "parentUuid": "a4ca1760_0e381676",
+      "range": {
+        "startLine": 24,
+        "startChar": 6,
+        "endLine": 24,
+        "endChar": 22
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8008f9f4_be24e669",
         "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
         "patchSetId": 2
@@ -311,6 +407,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "24d5c7cc_ec329f4c",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "The valueSize should be a multiple of the size of the value type, otherwise there is a bug in the CL implementation. Should never happen, but if it happens an assert doesn\u0027t prevent a crash in the optimized build.",
+      "parentUuid": "1096b5b1_e273254a",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 78
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1b5324e4_bb41cfe7",
         "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
         "patchSetId": 2
@@ -322,6 +442,30 @@
       "writtenOn": "2021-05-10T21:23:24Z",
       "side": 1,
       "message": "Why does doing this last make the info invalid?  Why does this not have the same checks as the other pieces of info?",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 69
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "433cebb9_41e34691",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "If there is any error, the function will return what it has so far. I will change that, doesn\u0027t really make sense.\nThis value is not dependent on the CL version as the others, and there is an extra value to get the array dimension, so the extra check is not needed.",
+      "parentUuid": "1b5324e4_bb41cfe7",
       "range": {
         "startLine": 132,
         "startChar": 4,
@@ -357,6 +501,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "694d7d49_023445a6",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "I will add more comments. I won\u0027t support custom devices (with reduced feature set) for now for the pass-through back end, since it is undefined which features are not supported. Too much risk of crashes, not helpful for the purpose of the pass-through back end to test our front end.",
+      "parentUuid": "34c7b994_bdf99217",
+      "range": {
+        "startLine": 46,
+        "startChar": 34,
+        "endLine": 46,
+        "endChar": 78
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "78e2e80d_b829829c",
         "filename": "src/libANGLE/validationCL.cpp",
         "patchSetId": 2
@@ -368,6 +536,30 @@
       "writtenOn": "2021-05-10T21:23:24Z",
       "side": 1,
       "message": "Are you bringing any tests online as you implement these?  If so, worth mentioning somewhere, maybe in the CL message with a \"Test: \" line.",
+      "range": {
+        "startLine": 43,
+        "startChar": 7,
+        "endLine": 43,
+        "endChar": 27
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "419f4d17_c7eff99f",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T22:18:44Z",
+      "side": 1,
+      "message": "As discussed, will integrate official OpenCL CTS later.",
+      "parentUuid": "78e2e80d_b829829c",
       "range": {
         "startLine": 43,
         "startChar": 7,
