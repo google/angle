@@ -34,6 +34,24 @@
       "parentUuid": "ed5c049b_b637c51c",
       "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27a39ccd_f391a94f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-10T13:56:17Z",
+      "side": 1,
+      "message": "To confirm- you have a proposed patch to dEQP? Would be nice if we could somehow test it ahead of time on all the platforms.",
+      "parentUuid": "3878fe8d_a7f00216",
+      "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
