@@ -38,6 +38,121 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3cf60a30_bbfb2996",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "Might as well alphabetize these from the get go.",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 34
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "192b84e7_1ae5cd9a",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 284,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "Can this fail?  And it so, is the result communicated back to the app?",
+      "range": {
+        "startLine": 283,
+        "startChar": 0,
+        "endLine": 284,
+        "endChar": 77
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "670fca3e_2cd64a79",
+        "filename": "src/libANGLE/CLPlatform.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "Can you add a comment explaining the complexity here?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 72
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7fb35c24_02dcd96d",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "How does this check whether platform is default?  Shouldn\u0027t it be IsDefault(platform)?",
+      "range": {
+        "startLine": 142,
+        "startChar": 53,
+        "endLine": 142,
+        "endChar": 76
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81940398_ebeccc37",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "Could use a comment explaining why this makes it valid, or link to the spec language.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 68
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "2c7ac188_f7f4eb82",
         "filename": "src/libANGLE/renderer/CLPlatformImpl.h",
         "patchSetId": 2
@@ -126,6 +241,138 @@
         "startChar": 0,
         "endLine": 33,
         "endChar": 33
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a4ca1760_0e381676",
+        "filename": "src/libANGLE/renderer/CLtypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "nit: You\u0027re naming the vector type as array. Intentional, or should the name match the data type?  Extra confusing that it is used to supports List parameters.  Maybe drop the type from using (NameVersion), or stick with List (NameVersionList).",
+      "range": {
+        "startLine": 24,
+        "startChar": 6,
+        "endLine": 24,
+        "endChar": 22
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8008f9f4_be24e669",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "This section could use a comment explaining what\u0027s happening below. Its hard to tell precisely with all the macros and defines.",
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1096b5b1_e273254a",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "What does it mean if this is not true?  Is there an error here that needs to be reported, or should it be an assert instead?",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 78
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b5324e4_bb41cfe7",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "Why does doing this last make the info invalid?  Why does this not have the same checks as the other pieces of info?",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 69
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34c7b994_bdf99217",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "Why not?  Can you provide the reasoning for future readers?",
+      "range": {
+        "startLine": 46,
+        "startChar": 34,
+        "endLine": 46,
+        "endChar": 78
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78e2e80d_b829829c",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T21:23:24Z",
+      "side": 1,
+      "message": "Are you bringing any tests online as you implement these?  If so, worth mentioning somewhere, maybe in the CL message with a \"Test: \" line.",
+      "range": {
+        "startLine": 43,
+        "startChar": 7,
+        "endLine": 43,
+        "endChar": 27
       },
       "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
