@@ -1229,6 +1229,8 @@ void WriteCppReplayIndexFiles(bool compression,
            << (context->getState().isBindGeneratesResourceEnabled() ? "true" : "false") << ";\n";
     header << "constexpr bool kWebGLCompatibility = "
            << (context->getState().getExtensions().webglCompatibility ? "true" : "false") << ";\n";
+    header << "constexpr bool kRobustResourceInit = "
+           << (context->getState().isRobustResourceInitEnabled() ? "true" : "false") << ";\n";
 
     header << "// End Trace Metadata\n";
     header << "\n";

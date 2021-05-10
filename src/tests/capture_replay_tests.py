@@ -99,6 +99,7 @@ test_trace_info_init_template = """\
         {namespace}::kAreClientArraysEnabled,
         {namespace}::kbindGeneratesResources,
         {namespace}::kWebGLCompatibility,
+        {namespace}::kRobustResourceInit,
     }},
 """
 
@@ -129,6 +130,7 @@ struct TestTraceInfo {{
     bool areClientArraysEnabled;
     bool bindGeneratesResources;
     bool webGLCompatibility;
+    bool robustResourceInit;
 }};
 
 extern std::vector<TestTraceInfo> testTraceInfos;
