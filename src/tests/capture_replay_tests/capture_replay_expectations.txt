@@ -100,9 +100,6 @@ EGLProgramCacheControlTest.SaveAndReload/*
 LineLoopTest.DISABLED_DrawArraysWithLargeCount/*
 MipmapTest.DISABLED_ThreeLevelsInitData/*
 
-# Compile failed tests
-RobustResourceInitTest.SurfaceInitializedAfterSwap/*
-
 # ES1 crashed tests
 FramebufferObjectTest.FramebufferObject/*
 FramebufferObjectTest.RenderbufferObject/*
