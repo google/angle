@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9bc3f4b_3a901723",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-10T14:01:52Z",
+      "side": 1,
+      "message": "I verified that mac-rel, linux-clang-rel, win-clang-x86-rel and win-clang-x64-rel all have the exact same number of shards as their counterparts.",
+      "revId": "b04a2e11697ec8939af7c4047de07aa24569b3e9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
