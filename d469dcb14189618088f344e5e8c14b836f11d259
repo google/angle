@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba8e6645_e4db97fd",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-10T18:28:47Z",
+      "side": 0,
+      "message": "Is removing const here intentional or accidental? Its not obvious to me why it can\u0027t be const.",
+      "range": {
+        "startLine": 119,
+        "startChar": 79,
+        "endLine": 119,
+        "endChar": 84
+      },
+      "revId": "d469dcb14189618088f344e5e8c14b836f11d259",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
