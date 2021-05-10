@@ -52,6 +52,24 @@
       "parentUuid": "3878fe8d_a7f00216",
       "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "087276ca_f0b1de5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-05-10T14:31:32Z",
+      "side": 1,
+      "message": "The patch is currently waiting for review from VK-GL-CTS folks.",
+      "parentUuid": "27a39ccd_f391a94f",
+      "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
