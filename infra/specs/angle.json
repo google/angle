@@ -3,6 +3,7 @@
   "AAAAA2 See generate_buildbot_json.py to make changes": {},
   "android-arm-builder": {},
   "android-arm64-builder": {},
+  "android-arm64-pixel4": {},
   "linux-builder": {},
   "linux-intel": {
     "gtest_tests": [

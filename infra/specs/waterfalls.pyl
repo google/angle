@@ -23,6 +23,17 @@
     'machines': {
       'android-arm-builder': {},
       'android-arm64-builder': {},
+      'android-arm64-pixel4': {
+        'os_type': 'android',
+        'mixins': [
+          'android_r',
+          'flame',
+          'gpu-swarming-pool',
+        ],
+        'test_suites': {
+        # TODO(jmadill): Add Android tests. http://anglebug.com/5941
+        },
+      },
       'linux-builder': {},
       'linux-intel': {
         'os_type': 'linux',
