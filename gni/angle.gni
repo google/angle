@@ -286,7 +286,7 @@ template("angle_executable") {
     configs += invoker.configs
     configs -= invoker.suppressed_configs
 
-    if (is_win) {
+    if (angle_has_build && is_win) {
       data_deps += [ "//build/win:runtime_libs" ]
     }
   }
@@ -469,7 +469,7 @@ if (angle_standalone || build_with_chromium) {
         sources += [ "$angle_root/util/ios/ios_main.mm" ]
       }
 
-      if (is_win) {
+      if (angle_has_build && is_win) {
         data_deps += [ "//build/win:runtime_libs" ]
       }
     }
