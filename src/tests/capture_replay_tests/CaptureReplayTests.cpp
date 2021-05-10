@@ -97,6 +97,8 @@ class CaptureReplayTests
             return false;
         }
 
+        mStartingDirectory = angle::GetCWD().value();
+
         // Load trace
         mTraceLibrary.reset(new angle::TraceLibrary(testTraceInfo.testName.c_str()));
 
@@ -119,6 +121,7 @@ class CaptureReplayTests
 
     void cleanupTest()
     {
+        angle::SetCWD(mStartingDirectory.c_str());
         mTraceLibrary.reset(nullptr);
         mEGLWindow->destroyGL();
         mOSWindow->destroy();
@@ -184,6 +187,7 @@ class CaptureReplayTests
                        mTraceLibrary->getSerializedContextState(frame));
     }
 
+    std::string mStartingDirectory;
     OSWindow *mOSWindow   = nullptr;
     EGLWindow *mEGLWindow = nullptr;
     EGLPlatformParameters mPlatformParams;
