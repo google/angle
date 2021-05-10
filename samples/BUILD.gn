@@ -74,6 +74,11 @@ template("angle_sample") {
     if (defined(invoker.suppressed_configs)) {
       suppressed_configs += invoker.suppressed_configs
     }
+
+    if ((is_linux || is_chromeos) && !is_component_build) {
+      # Set rpath to find shared libs in a non-component build.
+      configs += [ "//build/config/gcc:rpath_for_built_shared_libraries" ]
+    }
   }
 }
 
