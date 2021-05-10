@@ -2120,6 +2120,9 @@ TEST_P(TransformFeedbackTest, EndWithDifferentProgram)
     // AMD drivers fail because they perform transform feedback when it should be paused.
     ANGLE_SKIP_TEST_IF(IsAMD() && IsOpenGL());
 
+    // https://crbug.com/1207380 Pixel 2 is crashing during ES3_Vulkan_AsyncQueue testing
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsPixel2());
+
     std::vector<std::string> tfVaryings;
     tfVaryings.push_back("gl_Position");
     compileDefaultProgram(tfVaryings, GL_INTERLEAVED_ATTRIBS);
