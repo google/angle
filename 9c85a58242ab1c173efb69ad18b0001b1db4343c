@@ -147,6 +147,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27224463_79adc262",
+        "filename": "src/libANGLE/State.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-10T14:36:14Z",
+      "side": 1,
+      "message": "Minimized any redundancy to what is needed.",
+      "parentUuid": "cdb717bc_0ab015a5",
+      "range": {
+        "startLine": 104,
+        "startChar": 15,
+        "endLine": 104,
+        "endChar": 32
+      },
+      "revId": "9c85a58242ab1c173efb69ad18b0001b1db4343c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "589c0e13_83479483",
