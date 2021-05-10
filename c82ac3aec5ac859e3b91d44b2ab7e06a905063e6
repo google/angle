@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "51b46b2f_79ba796b",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-10T13:58:02Z",
+      "side": 1,
+      "message": "don\u0027t these things have IDs? if so, you could use that instead.",
+      "range": {
+        "startLine": 11,
+        "startChar": 11,
+        "endLine": 12,
+        "endChar": 42
+      },
+      "revId": "c82ac3aec5ac859e3b91d44b2ab7e06a905063e6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
