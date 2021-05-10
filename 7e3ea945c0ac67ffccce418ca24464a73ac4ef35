@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed5c049b_b637c51c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-10T02:48:59Z",
+      "side": 1,
+      "message": "Thanks again for the contribution. Are there any tests in deqp for this extension? The change LGTM (as a non-primary reviewer) nevertheless.",
+      "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
