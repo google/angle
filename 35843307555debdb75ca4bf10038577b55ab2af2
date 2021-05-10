@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e90b808e_9ae68d0c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T18:25:50Z",
+      "side": 1,
+      "message": "Sure",
+      "parentUuid": "f511eb3f_2b8d4b8d",
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c7ac188_f7f4eb82",
@@ -31,6 +49,30 @@
       "writtenOn": "2021-05-10T18:22:02Z",
       "side": 1,
       "message": "nit: having both rvalue and value-based ops doesn\u0027t really make sense in most cases. not sure why you introduced them.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7c0d3b1_f6d475ca",
+        "filename": "src/libANGLE/renderer/CLPlatformImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T18:25:50Z",
+      "side": 1,
+      "message": "Copy constructor and copy assignment are deleted to make sure that the info is only moved. Move constructor and move assignment are required to move the info.",
+      "parentUuid": "2c7ac188_f7f4eb82",
       "range": {
         "startLine": 29,
         "startChar": 0,
