@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aad1472a_ebf194e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-10T04:41:51Z",
+      "side": 1,
+      "message": "I added this in postCreate and tested it locally.  We don\u0027t have any actual layout code that I can tell, so I believe it can go anywhere and we don\u0027t need to worry about most of the visibility flags.\n\nCould explore adding this as a JNI thing when setVisible is called, but I think it is safe to run all the Android tests fullscreen.  LMKWYT.",
+      "revId": "397b97023bc2609abe58ea1ca0d4f5f1cebfe52d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
