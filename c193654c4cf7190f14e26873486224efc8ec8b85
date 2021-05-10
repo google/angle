@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "50ff5840_8acbc798",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-10T13:43:48Z",
+      "side": 1,
+      "message": "INFO:root:Comparison Failed tests:\nINFO:root:  SimpleOperationTest.ClearAndSwap/ES2_Vulkan_SwiftShader\n",
+      "revId": "c193654c4cf7190f14e26873486224efc8ec8b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
