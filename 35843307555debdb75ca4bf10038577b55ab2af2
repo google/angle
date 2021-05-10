@@ -105,6 +105,30 @@
       },
       "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3df7008f_4f1fdf86",
+        "filename": "src/libANGLE/renderer/CLPlatformImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T18:33:05Z",
+      "side": 1,
+      "message": "Ok, done. I will upload it after the second review. Also changed the other Info class in CLDeviceImpl.",
+      "parentUuid": "5742ebe9_ca1d8e1b",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
