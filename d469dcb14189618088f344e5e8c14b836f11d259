@@ -22,6 +22,30 @@
       },
       "revId": "d469dcb14189618088f344e5e8c14b836f11d259",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2692c56_002b6693",
+        "filename": "src/compiler/translator/TranslatorMetal.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-10T19:01:39Z",
+      "side": 0,
+      "message": "Intentional. It calls DriverUniform::createUniformFields which is no longer const, because it calls createEmulatedDepthRangeType which caches the result.",
+      "parentUuid": "ba8e6645_e4db97fd",
+      "range": {
+        "startLine": 119,
+        "startChar": 79,
+        "endLine": 119,
+        "endChar": 84
+      },
+      "revId": "d469dcb14189618088f344e5e8c14b836f11d259",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
