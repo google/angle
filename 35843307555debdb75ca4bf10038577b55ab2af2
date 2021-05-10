@@ -81,6 +81,30 @@
       },
       "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5742ebe9_ca1d8e1b",
+        "filename": "src/libANGLE/renderer/CLPlatformImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-10T18:27:26Z",
+      "side": 1,
+      "message": "Oh sorry, \u003d delete.\n\nDon\u0027t do that, use angle::NonCopyable. Unresolved.",
+      "parentUuid": "f7c0d3b1_f6d475ca",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
