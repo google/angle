@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a174aed5_db734107",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-10T08:11:18Z",
+      "side": 1,
+      "message": "This replaces https://chromium-review.googlesource.com/c/angle/angle/+/2867080",
+      "revId": "8f3cddda6fdc3deffb8a7a286a47abf8f67b2fbe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
