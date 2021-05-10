@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.os.Process;
 import android.system.Os;
 import android.util.Log;
+import android.view.View;
 
 import org.chromium.build.gtest_apk.NativeTestIntent;
 
@@ -60,6 +61,15 @@ public class AngleNativeTest
         mReporter.testRunStarted(Process.myPid());
         Thread.setDefaultUncaughtExceptionHandler(new ReportingUncaughtExceptionHandler(
                 mReporter, Thread.getDefaultUncaughtExceptionHandler()));
+
+        // Enable fullscreen mode
+        // https://developer.android.com/training/system-ui/immersive#java
+        View decorView = activity.getWindow().getDecorView();
+        if (decorView != null)
+        {
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
     }
 
     private void parseArgumentsFromIntent(Activity activity, Intent intent)
