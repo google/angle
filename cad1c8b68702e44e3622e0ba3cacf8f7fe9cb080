@@ -16,6 +16,24 @@
       "message": "bot issues.",
       "revId": "cad1c8b68702e44e3622e0ba3cacf8f7fe9cb080",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d1e65165_0568283d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-10T18:35:47Z",
+      "side": 1,
+      "message": "It compiles fine locally with clang and msvc, also for arm64. I will run the CQ again after the previous 3 commits are merged and rebased.",
+      "parentUuid": "22f4e0de_e705c165",
+      "revId": "cad1c8b68702e44e3622e0ba3cacf8f7fe9cb080",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
