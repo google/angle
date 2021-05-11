@@ -123,6 +123,23 @@
       "message": "LGTM too. Not super keen on cherry-picking deqp patches just yet. Once this change rolls into ANGLE we\u0027ll let you know if there are any failures.",
       "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6eac983_4214234a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-11T20:18:05Z",
+      "side": 1,
+      "message": "I\u0027m going to set up a branch in the VK-GL-CTS repo where we can test this on the CQ. Won\u0027t be long.",
+      "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
