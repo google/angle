@@ -943,6 +943,15 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
     }
 
+    // TODO: http://anglebug.com/5943 GL_INVALID_ENUM on Windows/Intel.
+    if (param.testID == RestrictedTraceID::summoners_war)
+    {
+        if (IsWindows() && IsIntel() && param.driver != GLESDriverType::AngleEGL)
+        {
+            mSkipTest = true;
+        }
+    }
+
     // We already swap in TracePerfTest::drawBenchmark, no need to swap again in the harness.
     disableTestHarnessSwap();
 

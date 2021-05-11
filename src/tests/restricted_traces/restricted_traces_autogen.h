@@ -127,6 +127,7 @@ enum class RestrictedTraceID
     sniper_3d,
     standoff_2,
     subway_surfers,
+    summoners_war,
     talking_tom_hero_dash,
     temple_run_2,
     temple_run_300,

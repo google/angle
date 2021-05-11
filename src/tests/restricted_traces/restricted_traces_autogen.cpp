@@ -85,6 +85,7 @@
 #include "sniper_3d/sniper_3d_capture_context1.h"
 #include "standoff_2/standoff_2_capture_context1.h"
 #include "subway_surfers/subway_surfers_capture_context1.h"
+#include "summoners_war/summoners_war_capture_context2.h"
 #include "talking_tom_hero_dash/talking_tom_hero_dash_capture_context1.h"
 #include "temple_run_2/temple_run_2_capture_context1.h"
 #include "temple_run_300/temple_run_300_capture_context1.h"
@@ -456,6 +457,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       subway_surfers::kReplayContextClientMinorVersion, subway_surfers::kReplayFrameStart,
       subway_surfers::kReplayFrameEnd, subway_surfers::kReplayDrawSurfaceWidth,
       subway_surfers::kReplayDrawSurfaceHeight, "subway_surfers"}},
+    {RestrictedTraceID::summoners_war,
+     {summoners_war::kReplayContextClientMajorVersion,
+      summoners_war::kReplayContextClientMinorVersion, summoners_war::kReplayFrameStart,
+      summoners_war::kReplayFrameEnd, summoners_war::kReplayDrawSurfaceWidth,
+      summoners_war::kReplayDrawSurfaceHeight, "summoners_war"}},
     {RestrictedTraceID::talking_tom_hero_dash,
      {talking_tom_hero_dash::kReplayContextClientMajorVersion,
       talking_tom_hero_dash::kReplayContextClientMinorVersion,
