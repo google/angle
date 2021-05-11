@@ -10,8 +10,6 @@
 #
 # For more info see Chromium's waterfalls.pyl in testing/buildbot.
 
-# Temporarily disabled. TODO(jmadill): Re-enable. http://anglebug.com/5114
-
 [
   {
     'name': 'angle',
