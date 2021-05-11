@@ -34,6 +34,24 @@
       "parentUuid": "d41f5cdf_8b16aa5b",
       "revId": "45ae3eda58eb6754f82b28620f0d49248a4a85f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b56d385_49f141ca",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-11T18:32:28Z",
+      "side": 1,
+      "message": "Yeah, we looked into it enough to determine that newer drivers had better behavior.",
+      "parentUuid": "c0c3bf36_c7f11b10",
+      "revId": "45ae3eda58eb6754f82b28620f0d49248a4a85f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
