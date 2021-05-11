@@ -615,6 +615,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "37db83d4_62fad04b",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-11T21:12:26Z",
+      "side": 1,
+      "message": "Okay, if this is protecting us against the underlying implementation (which we don\u0027t control) then assert is insufficient.",
+      "parentUuid": "81bb2d7f_5a1805e9",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 78
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1b5324e4_bb41cfe7",
