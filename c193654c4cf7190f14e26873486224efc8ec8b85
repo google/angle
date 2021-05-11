@@ -16,6 +16,24 @@
       "message": "INFO:root:Comparison Failed tests:\nINFO:root:  SimpleOperationTest.ClearAndSwap/ES2_Vulkan_SwiftShader\n",
       "revId": "c193654c4cf7190f14e26873486224efc8ec8b85",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef53a0de_60a10ec0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-11T08:08:39Z",
+      "side": 1,
+      "message": "I see. What backends are actually supposed to be passing when enabling a tests? So far I\u0027ve only tested with ES2_Vulkan ..",
+      "parentUuid": "50ff5840_8acbc798",
+      "revId": "c193654c4cf7190f14e26873486224efc8ec8b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
