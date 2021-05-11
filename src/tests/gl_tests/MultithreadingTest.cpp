@@ -193,6 +193,9 @@ TEST_P(MultithreadingTest, MultiContextClear)
 {
     ANGLE_SKIP_TEST_IF(!platformSupportsMultithreading());
 
+    // http://anglebug.com/5945: ES3_Vulkan_NoVirtual flaky on linux-clang-rel NVIDIA
+    ANGLE_SKIP_TEST_IF(IsVulkan() && IsLinux() && IsNVIDIA());
+
     auto testBody = [](EGLSurface surface, size_t thread) {
         constexpr size_t kIterationsPerThread = 32;
         for (size_t iteration = 0; iteration < kIterationsPerThread; iteration++)
