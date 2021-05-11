@@ -83,6 +83,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ec07d0b_b96fa026",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "I have added a comment as suggested. Please unresolve if there is a better reason to alphabetize them.",
+      "parentUuid": "7c3b897e_badbbc82",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 34
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "192b84e7_1ae5cd9a",
@@ -153,6 +177,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d73fb9cd_58f79c72",
+        "filename": "src/libANGLE/CLPlatform.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "I moved it into a separate function and added a comment",
+      "parentUuid": "670fca3e_2cd64a79",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 72
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7fb35c24_02dcd96d",
@@ -200,6 +248,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "38121a06_1d093d2d",
+        "filename": "src/libANGLE/CLPlatform.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "I have added a comment to clarify.",
+      "parentUuid": "5023149f_d8aafd24",
+      "range": {
+        "startLine": 142,
+        "startChar": 53,
+        "endLine": 142,
+        "endChar": 76
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81940398_ebeccc37",
@@ -213,6 +285,30 @@
       "writtenOn": "2021-05-10T21:23:24Z",
       "side": 1,
       "message": "Could use a comment explaining why this makes it valid, or link to the spec language.",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 68
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "86529844_df9c8e12",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "81940398_ebeccc37",
       "range": {
         "startLine": 23,
         "startChar": 0,
@@ -318,6 +414,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f13a985a_bd8fd09d",
+        "filename": "src/libANGLE/renderer/CLPlatformImpl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "And undone, doesn\u0027t compile. \u0027angle::NonCopyable\u0027 is not movable and therefore not usable for the Info class. I won\u0027t change \u0027angle::NonCopyable\u0027 in this CL as it is widely used and might break things. We can use it later for the Info class if it becomes movable.",
+      "parentUuid": "3df7008f_4f1fdf86",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 33,
+        "endChar": 33
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a4ca1760_0e381676",
@@ -365,6 +485,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0388f9b0_23bc446b",
+        "filename": "src/libANGLE/renderer/CLtypes.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "I have renamed it to NameVersionVector, since it needs to be continuous in memory. Also refactored other variables to be consistent, and I renamed the variables in a later CL to avoid \u0027list\u0027.",
+      "parentUuid": "7554dc27_a8dd7288",
+      "range": {
+        "startLine": 24,
+        "startChar": 6,
+        "endLine": 24,
+        "endChar": 22
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8008f9f4_be24e669",
@@ -378,6 +522,24 @@
       "writtenOn": "2021-05-10T21:23:24Z",
       "side": 1,
       "message": "This section could use a comment explaining what\u0027s happening below. Its hard to tell precisely with all the macros and defines.",
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d66342e_8203407a",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "I have moved and refactored the function in a later CL, so all changes here would be lost and had to be done again. I will explain more, but let\u0027s please defer it to the other CL.",
+      "parentUuid": "8008f9f4_be24e669",
       "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -419,6 +581,30 @@
       "side": 1,
       "message": "The valueSize should be a multiple of the size of the value type, otherwise there is a bug in the CL implementation. Should never happen, but if it happens an assert doesn\u0027t prevent a crash in the optimized build.",
       "parentUuid": "1096b5b1_e273254a",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 78
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81bb2d7f_5a1805e9",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "I will also change and explain this in one of the later uploaded CLs.",
+      "parentUuid": "24d5c7cc_ec329f4c",
       "range": {
         "startLine": 70,
         "startChar": 9,
@@ -476,6 +662,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab2ef8bc_0268e48c",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "Also this one will be changed later.",
+      "parentUuid": "433cebb9_41e34691",
+      "range": {
+        "startLine": 132,
+        "startChar": 4,
+        "endLine": 132,
+        "endChar": 69
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "34c7b994_bdf99217",
@@ -523,6 +733,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2175e240_f45bfbad",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "I have added a comment",
+      "parentUuid": "694d7d49_023445a6",
+      "range": {
+        "startLine": 46,
+        "startChar": 34,
+        "endLine": 46,
+        "endChar": 78
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "78e2e80d_b829829c",
@@ -560,6 +794,30 @@
       "side": 1,
       "message": "As discussed, will integrate official OpenCL CTS later.",
       "parentUuid": "78e2e80d_b829829c",
+      "range": {
+        "startLine": 43,
+        "startChar": 7,
+        "endLine": 43,
+        "endChar": 27
+      },
+      "revId": "35843307555debdb75ca4bf10038577b55ab2af2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec1f84ed_5bd5357b",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-11T11:18:15Z",
+      "side": 1,
+      "message": "We can discuss offline where to document the planned CTS integration.",
+      "parentUuid": "419f4d17_c7eff99f",
       "range": {
         "startLine": 43,
         "startChar": 7,
