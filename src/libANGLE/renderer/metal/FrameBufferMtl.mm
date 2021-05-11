@@ -14,6 +14,7 @@
 #include "common/MemoryBuffer.h"
 #include "common/angleutils.h"
 #include "common/debug.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/renderer/metal/BufferMtl.h"
 #include "libANGLE/renderer/metal/DisplayMtl.h"
 #include "libANGLE/renderer/metal/FrameBufferMtl.h"
@@ -468,18 +469,22 @@ angle::Result FramebufferMtl::blitWithDraw(const gl::Context *context,
     return angle::Result::Continue;
 }
 
-bool FramebufferMtl::checkStatus(const gl::Context *context) const
+gl::FramebufferStatus FramebufferMtl::checkStatus(const gl::Context *context) const
 {
     if (!mState.attachmentsHaveSameDimensions())
     {
-        return false;
+        return gl::FramebufferStatus::Incomplete(
+            GL_FRAMEBUFFER_UNSUPPORTED,
+            gl::err::kFramebufferIncompleteUnsupportedMissmatchedDimensions);
     }
 
     ContextMtl *contextMtl = mtl::GetImpl(context);
     if (!contextMtl->getDisplay()->getFeatures().allowSeparatedDepthStencilBuffers.enabled &&
         mState.hasSeparateDepthAndStencilAttachments())
     {
-        return false;
+        return gl::FramebufferStatus::Incomplete(
+            GL_FRAMEBUFFER_UNSUPPORTED,
+            gl::err::kFramebufferIncompleteUnsupportedSeparateDepthStencilBuffers);
     }
 
     if (mState.getDepthAttachment() && mState.getDepthAttachment()->getFormat().info->depthBits &&
@@ -495,10 +500,10 @@ bool FramebufferMtl::checkStatus(const gl::Context *context) const
         return checkPackedDepthStencilAttachment();
     }
 
-    return true;
+    return gl::FramebufferStatus::Complete();
 }
 
-bool FramebufferMtl::checkPackedDepthStencilAttachment() const
+gl::FramebufferStatus FramebufferMtl::checkPackedDepthStencilAttachment() const
 {
     if (ANGLE_APPLE_AVAILABLE_XCI(10.14, 13.0, 12.0))
     {
@@ -509,7 +514,9 @@ bool FramebufferMtl::checkPackedDepthStencilAttachment() const
         {
             WARN() << "Packed depth stencil texture/buffer must not be mixed with other "
                       "texture/buffer.";
-            return false;
+            return gl::FramebufferStatus::Incomplete(
+                GL_FRAMEBUFFER_UNSUPPORTED,
+                gl::err::kFramebufferIncompleteUnsupportedSeparateDepthStencilBuffers);
         }
     }
     else
@@ -520,10 +527,12 @@ bool FramebufferMtl::checkPackedDepthStencilAttachment() const
         {
             WARN() << "Packed depth stencil texture/buffer must be bound to both depth & stencil "
                       "attachment point.";
-            return false;
+            return gl::FramebufferStatus::Incomplete(
+                GL_FRAMEBUFFER_UNSUPPORTED,
+                gl::err::kFramebufferIncompleteUnsupportedSeparateDepthStencilBuffers);
         }
     }
-    return true;
+    return gl::FramebufferStatus::Complete();
 }
 
 angle::Result FramebufferMtl::syncState(const gl::Context *context,

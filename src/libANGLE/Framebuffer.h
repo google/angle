@@ -50,6 +50,17 @@ class State;
 class Texture;
 class TextureCapsMap;
 
+struct FramebufferStatus
+{
+    bool isComplete() const;
+
+    static FramebufferStatus Complete();
+    static FramebufferStatus Incomplete(GLenum status, const char *reason);
+
+    GLenum status      = GL_FRAMEBUFFER_COMPLETE;
+    const char *reason = nullptr;
+};
+
 class FramebufferState final : angle::NonCopyable
 {
   public:
@@ -293,7 +304,7 @@ class Framebuffer final : public angle::ObserverInterface,
     void invalidateCompletenessCache();
     ANGLE_INLINE bool cachedStatusValid() { return mCachedStatus.valid(); }
 
-    ANGLE_INLINE GLenum checkStatus(const Context *context) const
+    ANGLE_INLINE const FramebufferStatus &checkStatus(const Context *context) const
     {
         // The default framebuffer is always complete except when it is surfaceless in which
         // case it is always unsupported.
@@ -309,7 +320,7 @@ class Framebuffer final : public angle::ObserverInterface,
     // Helper for checkStatus == GL_FRAMEBUFFER_COMPLETE.
     ANGLE_INLINE bool isComplete(const Context *context) const
     {
-        return (checkStatus(context) == GL_FRAMEBUFFER_COMPLETE);
+        return checkStatus(context).isComplete();
     }
 
     bool hasValidDepthStencil() const;
@@ -429,8 +440,8 @@ class Framebuffer final : public angle::ObserverInterface,
                                   FramebufferAttachment *attachment,
                                   GLenum matchType,
                                   GLuint matchId);
-    GLenum checkStatusWithGLFrontEnd(const Context *context) const;
-    GLenum checkStatusImpl(const Context *context) const;
+    FramebufferStatus checkStatusWithGLFrontEnd(const Context *context) const;
+    const FramebufferStatus &checkStatusImpl(const Context *context) const;
     void setAttachment(const Context *context,
                        GLenum type,
                        GLenum binding,
@@ -491,7 +502,7 @@ class Framebuffer final : public angle::ObserverInterface,
     FramebufferState mState;
     rx::FramebufferImpl *mImpl;
 
-    mutable Optional<GLenum> mCachedStatus;
+    mutable Optional<FramebufferStatus> mCachedStatus;
     std::vector<angle::ObserverBinding> mDirtyColorAttachmentBindings;
     angle::ObserverBinding mDirtyDepthAttachmentBinding;
     angle::ObserverBinding mDirtyStencilAttachmentBinding;

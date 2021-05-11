@@ -6447,7 +6447,7 @@ GLenum Context::checkFramebufferStatus(GLenum target)
 {
     Framebuffer *framebuffer = mState.getTargetFramebuffer(target);
     ASSERT(framebuffer);
-    return framebuffer->checkStatus(this);
+    return framebuffer->checkStatus(this).status;
 }
 
 void Context::compileShader(ShaderProgramID shader)

@@ -15,6 +15,7 @@
 #include "common/vulkan/vk_headers.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/formatutils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 #include "libANGLE/renderer/vulkan/ContextVk.h"
@@ -1458,16 +1459,18 @@ angle::Result FramebufferVk::resolveColorWithCommand(ContextVk *contextVk,
     return angle::Result::Continue;
 }
 
-bool FramebufferVk::checkStatus(const gl::Context *context) const
+gl::FramebufferStatus FramebufferVk::checkStatus(const gl::Context *context) const
 {
     // if we have both a depth and stencil buffer, they must refer to the same object
     // since we only support packed_depth_stencil and not separate depth and stencil
     if (mState.hasSeparateDepthAndStencilAttachments())
     {
-        return false;
+        return gl::FramebufferStatus::Incomplete(
+            GL_FRAMEBUFFER_UNSUPPORTED,
+            gl::err::kFramebufferIncompleteUnsupportedSeparateDepthStencilBuffers);
     }
 
-    return true;
+    return gl::FramebufferStatus::Complete();
 }
 
 angle::Result FramebufferVk::invalidateImpl(ContextVk *contextVk,

@@ -10,6 +10,7 @@
 
 #include "common/bitset_utils.h"
 #include "common/debug.h"
+#include "libANGLE/ErrorStrings.h"
 #include "libANGLE/FramebufferAttachment.h"
 #include "libANGLE/State.h"
 #include "libANGLE/angletypes.h"
@@ -1188,7 +1189,7 @@ bool FramebufferGL::shouldSyncStateBeforeCheckStatus() const
     return true;
 }
 
-bool FramebufferGL::checkStatus(const gl::Context *context) const
+gl::FramebufferStatus FramebufferGL::checkStatus(const gl::Context *context) const
 {
     const FunctionsGL *functions = GetFunctionsGL(context);
     StateManagerGL *stateManager = GetStateManagerGL(context);
@@ -1197,9 +1198,12 @@ bool FramebufferGL::checkStatus(const gl::Context *context) const
     GLenum status = functions->checkFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
-        WARN() << "GL framebuffer returned incomplete.";
+        WARN() << "GL framebuffer returned incomplete: " << gl::FmtHex(status);
+        return gl::FramebufferStatus::Incomplete(GL_FRAMEBUFFER_UNSUPPORTED,
+                                                 gl::err::kFramebufferIncompleteDriverUnsupported);
     }
-    return (status == GL_FRAMEBUFFER_COMPLETE);
+
+    return gl::FramebufferStatus::Complete();
 }
 
 angle::Result FramebufferGL::syncState(const gl::Context *context,

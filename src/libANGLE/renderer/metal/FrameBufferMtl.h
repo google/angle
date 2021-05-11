@@ -78,7 +78,7 @@ class FramebufferMtl : public FramebufferImpl
                        GLbitfield mask,
                        GLenum filter) override;
 
-    bool checkStatus(const gl::Context *context) const override;
+    gl::FramebufferStatus checkStatus(const gl::Context *context) const override;
 
     angle::Result syncState(const gl::Context *context,
                             GLenum binding,
@@ -120,7 +120,7 @@ class FramebufferMtl : public FramebufferImpl
 
   private:
     void reset();
-    bool checkPackedDepthStencilAttachment() const;
+    gl::FramebufferStatus checkPackedDepthStencilAttachment() const;
     angle::Result invalidateImpl(ContextMtl *contextMtl, size_t count, const GLenum *attachments);
     angle::Result blitWithDraw(const gl::Context *context,
                                FramebufferMtl *srcFrameBuffer,
