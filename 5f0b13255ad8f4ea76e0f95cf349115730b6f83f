@@ -99,6 +99,24 @@
       "parentUuid": "76e9fa98_bd1d6888",
       "revId": "5f0b13255ad8f4ea76e0f95cf349115730b6f83f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "91b50574_6fc44f6e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-11T17:27:31Z",
+      "side": 1,
+      "message": "I did almost literal translation. Things that are slightly different:\ndrawQuad vs wtu.clearAndDrawUnitQuad\nthe vertex shader (so that I can use drawQuad).\n\nSo pretty sure it is very faithful capture.",
+      "parentUuid": "958fad25_0932959a",
+      "revId": "5f0b13255ad8f4ea76e0f95cf349115730b6f83f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
