@@ -1865,6 +1865,66 @@ bool GetTestResultsFromFile(const char *fileName, TestResults *resultsOut)
     return true;
 }
 
+void TestSuite::dumpTestExpectationsErrorMessages()
+{
+    std::stringstream errorMsgStream;
+    for (const auto &message : mTestExpectationsParser.getErrorMessages())
+    {
+        errorMsgStream << std::endl << " " << message;
+    }
+
+    std::cerr << "Failed to load test expectations." << errorMsgStream.str() << std::endl;
+}
+
+bool TestSuite::loadTestExpectationsFromFileWithConfig(const GPUTestConfig &config,
+                                                       const std::string &fileName)
+{
+    if (!mTestExpectationsParser.loadTestExpectationsFromFile(config, fileName))
+    {
+        dumpTestExpectationsErrorMessages();
+        return false;
+    }
+    return true;
+}
+
+bool TestSuite::loadAllTestExpectationsFromFile(const std::string &fileName)
+{
+    if (!mTestExpectationsParser.loadAllTestExpectationsFromFile(fileName))
+    {
+        dumpTestExpectationsErrorMessages();
+        return false;
+    }
+    return true;
+}
+
+bool TestSuite::logAnyUnusedTestExpectations()
+{
+    std::stringstream unusedMsgStream;
+    bool anyUnused = false;
+    for (const auto &message : mTestExpectationsParser.getUnusedExpectationsMessages())
+    {
+        anyUnused = true;
+        unusedMsgStream << std::endl << " " << message;
+    }
+    if (anyUnused)
+    {
+        std::cerr << "Failed to validate test expectations." << unusedMsgStream.str() << std::endl;
+        return true;
+    }
+    return false;
+}
+
+int32_t TestSuite::getTestExpectation(const std::string &testName)
+{
+    return mTestExpectationsParser.getTestExpectation(testName);
+}
+
+int32_t TestSuite::getTestExpectationWithConfig(const GPUTestConfig &config,
+                                                const std::string &testName)
+{
+    return mTestExpectationsParser.getTestExpectationWithConfig(config, testName);
+}
+
 const char *TestResultTypeToString(TestResultType type)
 {
     switch (type)

@@ -6,6 +6,7 @@
 
 #include "gtest/gtest.h"
 #include "test_utils/runner/TestSuite.h"
+#include "util/OSWindow.h"
 
 void ANGLEProcessTestArgs(int *argc, char *argv[]);
 
@@ -21,8 +22,9 @@ void RegisterContextCompatibilityTests();
 // If we ever move to a text-based expectations format, we should move this list in that file.
 namespace
 {
-const char *kSlowTests[] = {"GLSLTest.VerifyMaxVertexUniformVectors*",
+const char *kSlowTests[]               = {"GLSLTest.VerifyMaxVertexUniformVectors*",
                             "MultiThreadingTest.MultiContextDeleteDraw*"};
+constexpr char kTestExpectationsPath[] = "src/tests/angle_end2end_tests_expectations.txt";
 }  // namespace
 
 int main(int argc, char **argv)
@@ -31,5 +33,19 @@ int main(int argc, char **argv)
     ANGLEProcessTestArgs(&argc, argv);
     RegisterContextCompatibilityTests();
     testSuite.registerSlowTests(kSlowTests, ArraySize(kSlowTests));
+
+    constexpr size_t kMaxPath = 512;
+    std::array<char, kMaxPath> foundDataPath;
+    if (!angle::FindTestDataPath(kTestExpectationsPath, foundDataPath.data(), foundDataPath.size()))
+    {
+        std::cerr << "Unable to find test expectations path (" << kTestExpectationsPath << ")\n";
+        return EXIT_FAILURE;
+    }
+
+    if (!testSuite.loadAllTestExpectationsFromFile(std::string(foundDataPath.data())))
+    {
+        return EXIT_FAILURE;
+    }
+
     return testSuite.run();
 }

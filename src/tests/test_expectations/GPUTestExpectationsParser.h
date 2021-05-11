@@ -17,7 +17,6 @@
 
 namespace angle
 {
-
 struct GPUTestConfig;
 
 class GPUTestExpectationsParser

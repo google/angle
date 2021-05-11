@@ -1,0 +1,11 @@
+// Copyright 2021 The ANGLE Project Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
+// See deqp_support/README.md for format.
+
+3786 WIN NVIDIA D3D11 : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_D3D11 = SKIP
+4092 WIN VULKAN : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_Vulkan* = SKIP
+4092 WIN OPENGL : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_OpenGL = SKIP
+4092 WIN GLES : BufferDataOverflowTest.VertexBufferIntegerOverflow/ES3_OpenGLES = SKIP
+

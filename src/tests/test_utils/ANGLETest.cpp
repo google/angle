@@ -14,6 +14,7 @@
 
 #include "common/platform.h"
 #include "gpu_info_util/SystemInfo.h"
+#include "test_utils/runner/TestSuite.h"
 #include "util/EGLWindow.h"
 #include "util/OSWindow.h"
 #include "util/random_utils.h"
@@ -182,6 +183,35 @@ bool ShouldAlwaysForceNewDisplay()
     // Conservatively enable the feature only on Windows Intel and NVIDIA for now.
     SystemInfo *systemInfo = GetTestSystemInfo();
     return (!systemInfo || !IsWindows() || systemInfo->hasAMDGPU());
+}
+
+GPUTestConfig::API GetTestConfigAPIFromRenderer(EGLenum renderer, EGLenum deviceType)
+{
+    switch (renderer)
+    {
+        case EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE:
+            return GPUTestConfig::kAPID3D11;
+        case EGL_PLATFORM_ANGLE_TYPE_D3D9_ANGLE:
+            return GPUTestConfig::kAPID3D9;
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGL_ANGLE:
+            return GPUTestConfig::kAPIGLDesktop;
+        case EGL_PLATFORM_ANGLE_TYPE_OPENGLES_ANGLE:
+            return GPUTestConfig::kAPIGLES;
+        case EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE:
+            if (deviceType == EGL_PLATFORM_ANGLE_DEVICE_TYPE_SWIFTSHADER_ANGLE)
+            {
+                return GPUTestConfig::kAPISwiftShader;
+            }
+            else
+            {
+                return GPUTestConfig::kAPIVulkan;
+            }
+        case EGL_PLATFORM_ANGLE_TYPE_METAL_ANGLE:
+            return GPUTestConfig::kAPIMetal;
+        default:
+            std::cerr << "Unknown Renderer enum: 0x%X\n" << renderer;
+            return GPUTestConfig::kAPIUnknown;
+    }
 }
 }  // anonymous namespace
 
@@ -518,10 +548,30 @@ void ANGLETestBase::ANGLETestSetUp()
     gPlatformContext.warningsAsErrors = false;
     gPlatformContext.currentTest      = this;
 
+    const testing::TestInfo *testInfo = testing::UnitTest::GetInstance()->current_test_info();
+
+    // Check the skip list.
+
+    angle::GPUTestConfig::API api = GetTestConfigAPIFromRenderer(mCurrentParams->getRenderer(),
+                                                                 mCurrentParams->getDeviceType());
+    GPUTestConfig testConfig      = GPUTestConfig(api, 0);
+
+    std::stringstream fullTestNameStr;
+    fullTestNameStr << testInfo->test_case_name() << "." << testInfo->name();
+    std::string fullTestName = fullTestNameStr.str();
+
+    TestSuite *testSuite    = TestSuite::GetInstance();
+    int32_t testExpectation = testSuite->getTestExpectationWithConfig(testConfig, fullTestName);
+
+    if (testExpectation == GPUTestExpectationsParser::kGpuTestSkip)
+    {
+        GTEST_SKIP() << "Test skipped on this config";
+        return;
+    }
+
     if (IsWindows())
     {
-        const auto &info = testing::UnitTest::GetInstance()->current_test_info();
-        WriteDebugMessage("Entering %s.%s\n", info->test_case_name(), info->name());
+        WriteDebugMessage("Entering %s\n", fullTestName.c_str());
     }
 
     if (mCurrentParams->noFixture)

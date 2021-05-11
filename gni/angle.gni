@@ -408,8 +408,9 @@ if (angle_standalone || build_with_chromium) {
       public_deps = invoker.public_deps + [
                       "$angle_root:angle_common",
                       "$angle_root:includes",
-                      "$angle_root/util:angle_test_utils",
+                      "$angle_root/src/tests:angle_test_expectations",
                       "$angle_root/third_party/rapidjson:rapidjson",
+                      "$angle_root/util:angle_test_utils",
                       "//testing/gmock",
                       "//testing/gtest",
                       "//third_party/googletest:gmock",

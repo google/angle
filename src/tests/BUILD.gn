@@ -195,6 +195,7 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
 
     sources = angle_end2end_tests_sources + [ "angle_end2end_tests_main.cpp" ]
     libs = []
+    data = [ "angle_end2end_tests_expectations.txt" ]
 
     if (is_mac) {
       sources += angle_end2end_tests_mac_sources
@@ -222,7 +223,6 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
 
     deps = [
       ":angle_common_test_utils_shared",
-      ":angle_test_expectations",
       "$angle_root:angle_image_util",
     ]
 
@@ -275,7 +275,7 @@ if (is_win || is_linux || is_chromeos || is_android || is_fuchsia || is_apple) {
 
   angle_test("angle_white_box_tests") {
     include_dirs = [ "." ]
-    sources = angle_white_box_tests_sources + [ "angle_end2end_tests_main.cpp" ]
+    sources = angle_white_box_tests_sources + [ "angle_generic_tests_main.cpp" ]
 
     if (is_win && angle_enable_d3d11) {
       sources += angle_white_box_tests_win_sources
@@ -333,6 +333,7 @@ template("angle_perftests_common") {
       "test_utils/runner/TestSuite.h",
     ]
     public_deps = [
+      "$angle_root/src/tests:angle_test_expectations",
       "$angle_root/third_party/rapidjson:rapidjson",
       "${invoker.test_utils}",
     ]
@@ -648,7 +649,7 @@ if (build_angle_gles1_conform_tests) {
     include_dirs = [ "." ]
 
     sources = [
-      "angle_end2end_tests_main.cpp",
+      "angle_generic_tests_main.cpp",
       "gles1_conformance_tests/ConformanceTests.cpp",
       "test_utils/ANGLETest.cpp",
       "test_utils/ANGLETest.h",
@@ -725,7 +726,7 @@ if (build_angle_gles1_conform_tests) {
 
       sources = [
         "$gles1_conform_root/conform/covgl/shell.c",
-        "angle_end2end_tests_main.cpp",
+        "angle_generic_tests_main.cpp",
         "gles1_conformance_tests/CovglTests.cpp",
         "test_utils/ANGLETest.cpp",
         "test_utils/ANGLETest.h",
@@ -795,7 +796,7 @@ if (build_angle_gles1_conform_tests) {
     include_dirs = [ "$gles1_conform_root/conform" ]
 
     sources = [
-      "angle_end2end_tests_main.cpp",
+      "angle_generic_tests_main.cpp",
       "gles1_conformance_tests/PrimtestTests.cpp",
       "test_utils/ANGLETest.cpp",
       "test_utils/ANGLETest.h",
@@ -1263,7 +1264,6 @@ if (build_angle_deqp_tests && !is_fuchsia) {
     angle_test("angle_deqp_${_api}_tests") {
       deps = [
         ":${shared_library_name}",
-        ":angle_test_expectations",
         "$angle_root:angle_common",
         "$angle_root/util:angle_util",
       ]

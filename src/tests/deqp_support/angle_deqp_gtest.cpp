@@ -21,8 +21,6 @@
 #include "common/string_utils.h"
 #include "common/system_utils.h"
 #include "platform/PlatformMethods.h"
-#include "tests/test_expectations/GPUTestConfig.h"
-#include "tests/test_expectations/GPUTestExpectationsParser.h"
 #include "tests/test_utils/runner/TestSuite.h"
 #include "util/OSWindow.h"
 #include "util/test_utils.h"
@@ -244,7 +242,6 @@ class dEQPCaseList
 
   private:
     std::vector<CaseInfo> mCaseInfoList;
-    GPUTestExpectationsParser mTestExpectationsParser;
     size_t mTestModuleIndex;
     bool mInitialized = false;
 };
@@ -296,16 +293,11 @@ void dEQPCaseList::initialize()
     }
 #endif
 
-    if (!mTestExpectationsParser.loadTestExpectationsFromFile(testConfig,
-                                                              testExpectationsPath.value()))
-    {
-        std::stringstream errorMsgStream;
-        for (const auto &message : mTestExpectationsParser.getErrorMessages())
-        {
-            errorMsgStream << std::endl << " " << message;
-        }
+    TestSuite *testSuite = TestSuite::GetInstance();
 
-        std::cerr << "Failed to load test expectations." << errorMsgStream.str() << std::endl;
+    if (!testSuite->loadTestExpectationsFromFileWithConfig(testConfig,
+                                                           testExpectationsPath.value()))
+    {
         Die();
     }
 
@@ -328,20 +320,12 @@ void dEQPCaseList::initialize()
         if (gTestName.empty())
             continue;
 
-        int expectation = mTestExpectationsParser.getTestExpectation(dEQPName);
+        int expectation = testSuite->getTestExpectation(dEQPName);
         mCaseInfoList.push_back(CaseInfo(dEQPName, gTestName, expectation));
     }
 
-    std::stringstream unusedMsgStream;
-    bool anyUnused = false;
-    for (const auto &message : mTestExpectationsParser.getUnusedExpectationsMessages())
+    if (testSuite->logAnyUnusedTestExpectations())
     {
-        anyUnused = true;
-        unusedMsgStream << std::endl << " " << message;
-    }
-    if (anyUnused)
-    {
-        std::cerr << "Failed to validate test expectations." << unusedMsgStream.str() << std::endl;
         Die();
     }
 }

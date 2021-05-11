@@ -17,6 +17,7 @@
 #include <thread>
 
 #include "HistogramWriter.h"
+#include "tests/test_expectations/GPUTestExpectationsParser.h"
 #include "util/test_utils.h"
 
 namespace angle
@@ -144,12 +145,21 @@ class TestSuite
     int getShardIndex() const { return mShardIndex; }
     int getBatchId() const { return mBatchId; }
 
+    // Test expectation processing.
+    bool loadTestExpectationsFromFileWithConfig(const GPUTestConfig &config,
+                                                const std::string &fileName);
+    bool loadAllTestExpectationsFromFile(const std::string &fileName);
+    int32_t getTestExpectation(const std::string &testName);
+    int32_t getTestExpectationWithConfig(const GPUTestConfig &config, const std::string &testName);
+    bool logAnyUnusedTestExpectations();
+
   private:
     bool parseSingleArg(const char *argument);
     bool launchChildTestProcess(uint32_t batchId, const std::vector<TestIdentifier> &testsInBatch);
     bool finishProcess(ProcessInfo *processInfo);
     int printFailuresAndReturnCount() const;
     void startWatchdog();
+    void dumpTestExpectationsErrorMessages();
 
     static TestSuite *mInstance;
 
@@ -186,6 +196,7 @@ class TestSuite
     HistogramWriter mHistogramWriter;
     std::vector<std::string> mSlowTests;
     std::string mTestArtifactDirectory;
+    GPUTestExpectationsParser mTestExpectationsParser;
 };
 
 bool GetTestResultsFromFile(const char *fileName, TestResults *resultsOut);
