@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "797d734e_46daa2d9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-11T23:09:45Z",
+      "side": 1,
+      "message": "Most of these results are saying that ChooseConfig resulted in zero configs. The mac failure is due to a interface that I changed, but didn\u0027t see the mac class that extends it. There is still one initialization failure with no details. \nI think the ChooseConfig doesn\u0027t match up some of the texture related attributes that I added - are needed.",
+      "revId": "c0ffb5d440382699ca1472e0efcbe46f61bcc8ac",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
