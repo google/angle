@@ -16,6 +16,24 @@
       "message": "LGTM, any other comments Shabi? Been a few since I looked at this.",
       "revId": "efd6a9fb25c8b2a831aece7124aca2a43fc12e41",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73432296_3f4ce011",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-11T20:43:44Z",
+      "side": 1,
+      "message": "It\u0027s GL validation so whatever works is ok with me. Charlie (since you were doing something related recently), if you would take a look I\u0027d appreciate it.",
+      "parentUuid": "049bf224_3f234491",
+      "revId": "efd6a9fb25c8b2a831aece7124aca2a43fc12e41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
