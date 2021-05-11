@@ -22,6 +22,30 @@
       },
       "revId": "775f04245c212a84b4393dee2a1715a9087a0470",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17e0be2e_b2bfd95d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 8
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-11T15:02:53Z",
+      "side": 1,
+      "message": "Can you be more specific? The change now sets the current directory to the directory that the angle library is in. That\u0027s not always the same as the executable (for example in a chrome release, chrome.exe is in a different directory than libGLESv2.dll)",
+      "parentUuid": "0985893b_0eb30020",
+      "range": {
+        "startLine": 10,
+        "startChar": 3,
+        "endLine": 10,
+        "endChar": 33
+      },
+      "revId": "775f04245c212a84b4393dee2a1715a9087a0470",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
