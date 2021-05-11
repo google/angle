@@ -158,6 +158,24 @@
       "parentUuid": "d6eac983_4214234a",
       "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "673b51d5_17425fc2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-11T21:32:42Z",
+      "side": 1,
+      "message": "I\u0027ve put up this CL here:\n\nhttps://chromium.googlesource.com/external/github.com/KhronosGroup/VK-GL-CTS/+/refs/heads/wip-srgb-r8\n\nYou can patch DEPS for VK-GL-CTS for b24dbd6fc4a1b024c2fd07c232d39c0f57486a26 and try this on the CQ once before landing without the DEPS change.",
+      "parentUuid": "9f4b28b7_ff568fa5",
+      "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
