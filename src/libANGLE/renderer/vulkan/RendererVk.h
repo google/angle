@@ -17,8 +17,6 @@
 #include <queue>
 #include <thread>
 
-#include "common/vulkan/vk_ext_provoking_vertex.h"
-
 #include "common/PackedEnums.h"
 #include "common/PoolAlloc.h"
 #include "common/angleutils.h"

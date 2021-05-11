@@ -15,7 +15,6 @@
 #include "common/debug.h"
 #include "common/system_utils.h"
 
-#include "common/vulkan/vk_ext_provoking_vertex.h"
 #include "common/vulkan/vk_google_filtering_precision.h"
 
 namespace

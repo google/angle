@@ -36,12 +36,6 @@
 #include "libANGLE/trace.h"
 #include "platform/PlatformMethods.h"
 
-// TODO(ynovikov): http://anglebug.com/5905 remove once vulkan headers 1.2.177 roll into Chrome
-#ifndef VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
-#    define VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME \
-        VK_QCOM_render_pass_store_ops_EXTENSION_NAME
-#endif  // VK_QCOM_RENDER_PASS_STORE_OPS_EXTENSION_NAME
-
 // Consts
 namespace
 {

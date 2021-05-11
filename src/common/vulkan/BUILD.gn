@@ -15,7 +15,6 @@ config("angle_vulkan_headers_config") {
 
 angle_source_set("angle_vulkan_headers") {
   sources = [
-    "vk_ext_provoking_vertex.h",
     "vk_google_filtering_precision.h",
     "vk_headers.h",
   ]
