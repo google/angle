@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62a09815_e9885ad2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 17
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-11T02:17:05Z",
+      "side": 1,
+      "message": "Changed the following:\n\n- Instead of 16 suballoctions or up to 1MB, always allocate the pool with 4KB buffers\n- The pool is now initialized once and not reset when the buffer size changes\n  * Garbage collection being a hotspot due to this is coming up in a few spots, and this should alleviate that.",
+      "revId": "7e401a56a2259702e5ad6f2f518304eb3c2b16ae",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

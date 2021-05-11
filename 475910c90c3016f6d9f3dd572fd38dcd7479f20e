@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "15d9edce_9e677af1",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-11T02:17:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "074c0edb_05b97cfe",
+      "range": {
+        "startLine": 139,
+        "startChar": 21,
+        "endLine": 139,
+        "endChar": 54
+      },
+      "revId": "475910c90c3016f6d9f3dd572fd38dcd7479f20e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "13107a72_fc6d3d45",
@@ -47,6 +71,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3ccdfb6_10153ec4",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-11T02:17:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "13107a72_fc6d3d45",
+      "range": {
+        "startLine": 101,
+        "startChar": 28,
+        "endLine": 101,
+        "endChar": 37
+      },
+      "revId": "475910c90c3016f6d9f3dd572fd38dcd7479f20e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "df1846d3_eec90218",
@@ -60,6 +108,30 @@
       "writtenOn": "2021-05-05T16:29:38Z",
       "side": 1,
       "message": "same nit",
+      "range": {
+        "startLine": 108,
+        "startChar": 22,
+        "endLine": 108,
+        "endChar": 31
+      },
+      "revId": "475910c90c3016f6d9f3dd572fd38dcd7479f20e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56330f20_04822472",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-11T02:17:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "df1846d3_eec90218",
       "range": {
         "startLine": 108,
         "startChar": 22,
