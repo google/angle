@@ -16,6 +16,24 @@
       "message": "The Win/Intel thing - what\u0027s the issue?",
       "revId": "45ae3eda58eb6754f82b28620f0d49248a4a85f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c0c3bf36_c7f11b10",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-11T17:10:14Z",
+      "side": 1,
+      "message": "This is probably due to a GLES1 specific enum causing a GL_ERROR.\n\nDriver version on the CI:\nGL_RENDERER: Intel(R) UHD Graphics 630\nGL_VERSION: OpenGL ES-CM 1.1 - Build 26.20.100.8141\n\nError:\nError has been generated. GL error GL_INVALID_ENUM in (null): (ID: 173538523) Generic error\n\nDriver version on Cody\u0027s machine:\nGL_RENDERER: Intel(R) UHD Graphics\nGL_VERSION: OpenGL ES-CM 1.1 - Build 27.20.100.8729\n\nOn the newer driver it only causes a more descriptive warning:\nAPI, Deprecated behavior, Medium: API_ID_DEPRECATED_TARGET deprecated behavior warning has been generated. Enable of GL_LIGHTING capability is deprecated.",
+      "parentUuid": "d41f5cdf_8b16aa5b",
+      "revId": "45ae3eda58eb6754f82b28620f0d49248a4a85f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
