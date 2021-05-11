@@ -52,6 +52,24 @@
       "parentUuid": "c0c3bf36_c7f11b10",
       "revId": "45ae3eda58eb6754f82b28620f0d49248a4a85f8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c04765c4_095c5906",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-11T19:03:51Z",
+      "side": 1,
+      "message": "Is it an app bug? Is this GL_LIGHTING thing no longer valid? Maybe ANGLE should update itself to trigger an error here?",
+      "parentUuid": "9b56d385_49f141ca",
+      "revId": "45ae3eda58eb6754f82b28620f0d49248a4a85f8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
