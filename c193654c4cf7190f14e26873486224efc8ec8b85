@@ -34,6 +34,24 @@
       "parentUuid": "50ff5840_8acbc798",
       "revId": "c193654c4cf7190f14e26873486224efc8ec8b85",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e6ee37df_2cb0bef9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-11T09:02:00Z",
+      "side": 1,
+      "message": "There is actually a deeper problem with this failing tests: It clears the backbuffer and then swaps, so the first frame is okay, but after this the test finishes and triggers another frame capture that captures the uninitialized data of the former front buffer, resulting in random data being captured, and hence the failure. I\u0027m not sure how to quell this. The obvious solution to fix the capture would be to do another clear after the swap, but given the comments in the test I\u0027m not sure whether this is intend (and in any case, the test framework should be able to handle the case as is).",
+      "parentUuid": "ef53a0de_60a10ec0",
+      "revId": "c193654c4cf7190f14e26873486224efc8ec8b85",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
