@@ -140,6 +140,24 @@
       "message": "I\u0027m going to set up a branch in the VK-GL-CTS repo where we can test this on the CQ. Won\u0027t be long.",
       "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f4b28b7_ff568fa5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-11T20:22:09Z",
+      "side": 1,
+      "message": "cant we add a couple end2end tests? is there a reason we are waiting for deqp changes to roll in?",
+      "parentUuid": "d6eac983_4214234a",
+      "revId": "7e3ea945c0ac67ffccce418ca24464a73ac4ef35",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
