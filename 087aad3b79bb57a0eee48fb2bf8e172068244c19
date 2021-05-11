@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "acf490d6_0375cd2c",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 3010,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-11T17:03:38Z",
+      "side": 1,
+      "message": "nit: ANGLE naming (see style guide)",
+      "range": {
+        "startLine": 3010,
+        "startChar": 5,
+        "endLine": 3010,
+        "endChar": 14
+      },
+      "revId": "087aad3b79bb57a0eee48fb2bf8e172068244c19",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
