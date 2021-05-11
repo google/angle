@@ -32,6 +32,7 @@
 #include "coin_master/coin_master_capture_context1.h"
 #include "command_and_conquer_rivals/command_and_conquer_rivals_capture_context2.h"
 #include "disney_tsum_tsum/disney_tsum_tsum_capture_context3.h"
+#include "dr_driving/dr_driving_capture_context3.h"
 #include "dragon_ball_legends/dragon_ball_legends_capture_context1.h"
 #include "dragon_raja/dragon_raja_capture_context1.h"
 #include "efootball_pes_2021/efootball_pes_2021_capture_context1.h"
@@ -198,6 +199,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       disney_tsum_tsum::kReplayContextClientMinorVersion, disney_tsum_tsum::kReplayFrameStart,
       disney_tsum_tsum::kReplayFrameEnd, disney_tsum_tsum::kReplayDrawSurfaceWidth,
       disney_tsum_tsum::kReplayDrawSurfaceHeight, "disney_tsum_tsum"}},
+    {RestrictedTraceID::dr_driving,
+     {dr_driving::kReplayContextClientMajorVersion, dr_driving::kReplayContextClientMinorVersion,
+      dr_driving::kReplayFrameStart, dr_driving::kReplayFrameEnd,
+      dr_driving::kReplayDrawSurfaceWidth, dr_driving::kReplayDrawSurfaceHeight, "dr_driving"}},
     {RestrictedTraceID::dragon_ball_legends,
      {dragon_ball_legends::kReplayContextClientMajorVersion,
       dragon_ball_legends::kReplayContextClientMinorVersion, dragon_ball_legends::kReplayFrameStart,

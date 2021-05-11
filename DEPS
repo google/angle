@@ -817,6 +817,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/dr_driving': {
+      'packages': [
+        {
+            'package': 'angle/traces/dr_driving',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/dragon_ball_legends': {
       'packages': [
         {

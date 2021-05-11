@@ -74,6 +74,7 @@ enum class RestrictedTraceID
     coin_master,
     command_and_conquer_rivals,
     disney_tsum_tsum,
+    dr_driving,
     dragon_ball_legends,
     dragon_raja,
     efootball_pes_2021,
