@@ -115,6 +115,7 @@ TEST_F(TestSuiteTest, RunMockTests)
     std::map<TestIdentifier, TestResult> expectedResults = {
         {{"MockTestSuiteTest", "DISABLED_Pass"}, {TestResultType::Pass, 0.0}},
         {{"MockTestSuiteTest", "DISABLED_Fail"}, {TestResultType::Fail, 0.0}},
+        {{"MockTestSuiteTest", "DISABLED_Skip"}, {TestResultType::Skip, 0.0}},
         {{"MockTestSuiteTest", "DISABLED_Timeout"}, {TestResultType::Timeout, 0.0}},
     };
 
@@ -174,6 +175,12 @@ TEST(MockTestSuiteTest, DISABLED_Fail)
 TEST(MockTestSuiteTest, DISABLED_Timeout)
 {
     angle::Sleep(20000);
+}
+
+// Trigger a test skip.
+TEST(MockTestSuiteTest, DISABLED_Skip)
+{
+    GTEST_SKIP() << "Test skipped.";
 }
 
 // Trigger a flaky test failure.

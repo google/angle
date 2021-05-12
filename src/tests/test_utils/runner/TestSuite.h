@@ -60,6 +60,7 @@ enum class TestResultType
     Fail,
     NoResult,
     Pass,
+    Skip,
     Timeout,
     Unknown,
 };
