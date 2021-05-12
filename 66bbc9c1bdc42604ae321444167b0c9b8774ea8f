@@ -104,6 +104,30 @@
       },
       "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b430709e_a2b6b87e",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T19:35:00Z",
+      "side": 1,
+      "message": "My understanding - tests which are a included in the current shard + batch and do not get run because of a crash are reported as skipped instead of not reported.\n\nThe unknown thing maybe could be an internal error, not sure.",
+      "parentUuid": "cc3b25f3_959c8ebf",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
