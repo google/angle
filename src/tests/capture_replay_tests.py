@@ -487,6 +487,8 @@ class Test():
 
 class TestBatch():
 
+    CAPTURE_FRAME_END = 100
+
     def __init__(self, use_goma, batch_count, keep_temp_files, goma_dir, verbose):
         self.use_goma = use_goma
         self.tests = []
@@ -505,7 +507,7 @@ class TestBatch():
 
         # set the static environment variables that do not change throughout the script run
         env = os.environ.copy()
-        env['ANGLE_CAPTURE_FRAME_END'] = '100'
+        env['ANGLE_CAPTURE_FRAME_END'] = '{}'.format(self.CAPTURE_FRAME_END)
         env['ANGLE_CAPTURE_SERIALIZE_STATE'] = '1'
         env['ANGLE_CAPTURE_ENABLED'] = '1'
 
@@ -636,9 +638,10 @@ class TestBatch():
                         captured_context, replayed_context, fromfile=capture_file,
                         tofile=replay_file):
                     print(line, end="")
-                frame = frame + 1
             else:
-                break
+                if frame > self.CAPTURE_FRAME_END:
+                    break
+            frame = frame + 1
 
     def FindTestByLabel(self, label):
         for test in self.tests:
