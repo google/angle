@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d090da42_ad07c93e",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T16:42:17Z",
+      "side": 1,
+      "message": "would rather you pass these around than cache them. If you want to share state between the impl and top-level object, use the ObjectState design we use in ANGLE. See pretty much any front-end class for an example.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
