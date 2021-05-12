@@ -1055,6 +1055,11 @@ ProgramBindings::const_iterator ProgramBindings::end() const
     return mBindings.end();
 }
 
+std::map<std::string, GLuint> ProgramBindings::getStableIterationMap() const
+{
+    return std::map<std::string, GLuint>(mBindings.begin(), mBindings.end());
+}
+
 // ProgramAliasedBindings implementation.
 ProgramAliasedBindings::ProgramAliasedBindings() {}
 
@@ -1146,6 +1151,11 @@ ProgramAliasedBindings::const_iterator ProgramAliasedBindings::begin() const
 ProgramAliasedBindings::const_iterator ProgramAliasedBindings::end() const
 {
     return mBindings.end();
+}
+
+std::map<std::string, ProgramBinding> ProgramAliasedBindings::getStableIterationMap() const
+{
+    return std::map<std::string, ProgramBinding>(mBindings.begin(), mBindings.end());
 }
 
 // ImageBinding implementation.

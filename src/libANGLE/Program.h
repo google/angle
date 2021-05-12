@@ -187,6 +187,8 @@ class ProgramBindings final : angle::NonCopyable
     const_iterator begin() const;
     const_iterator end() const;
 
+    std::map<std::string, GLuint> getStableIterationMap() const;
+
   private:
     angle::HashMap<std::string, GLuint> mBindings;
 };
@@ -206,6 +208,8 @@ class ProgramAliasedBindings final : angle::NonCopyable
     using const_iterator = angle::HashMap<std::string, ProgramBinding>::const_iterator;
     const_iterator begin() const;
     const_iterator end() const;
+
+    std::map<std::string, ProgramBinding> getStableIterationMap() const;
 
   private:
     angle::HashMap<std::string, ProgramBinding> mBindings;

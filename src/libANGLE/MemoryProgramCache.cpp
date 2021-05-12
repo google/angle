@@ -57,7 +57,7 @@ HashStream &operator<<(HashStream &stream, Shader *shader)
 
 HashStream &operator<<(HashStream &stream, const ProgramBindings &bindings)
 {
-    for (const auto &binding : bindings)
+    for (const auto &binding : bindings.getStableIterationMap())
     {
         stream << binding.first << binding.second;
     }
@@ -66,7 +66,7 @@ HashStream &operator<<(HashStream &stream, const ProgramBindings &bindings)
 
 HashStream &operator<<(HashStream &stream, const ProgramAliasedBindings &bindings)
 {
-    for (const auto &binding : bindings)
+    for (const auto &binding : bindings.getStableIterationMap())
     {
         stream << binding.first << binding.second.location;
     }
