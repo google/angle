@@ -267,7 +267,18 @@ class IOSurfaceClientBufferTest : public ANGLETest
                sizeof(T) * data.size());
         IOSurfaceUnlock(ioSurface.get(), kIOSurfaceLockReadOnly, nullptr);
 
-        ASSERT_EQ(data, iosurfaceData);
+        if (internalFormat == GL_RGB && IsOSX() && IsOpenGL())
+        {
+            // Ignore alpha component for BGRX, the alpha value is undefined
+            for (int i = 0; i < 3; i++)
+            {
+                ASSERT_EQ(data[i], iosurfaceData[i]);
+            }
+        }
+        else
+        {
+            ASSERT_EQ(data, iosurfaceData);
+        }
 
         result = eglDestroySurface(mDisplay, pbuffer);
         EXPECT_EGL_TRUE(result);
