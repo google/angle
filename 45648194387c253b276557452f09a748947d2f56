@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "45648194387c253b276557452f09a748947d2f56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4eec8240_d233c9c8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T15:25:54Z",
+      "side": 1,
+      "message": "Looks like I\u0027ll need to update the Android test runner in Chromium before landing this.",
+      "revId": "45648194387c253b276557452f09a748947d2f56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
