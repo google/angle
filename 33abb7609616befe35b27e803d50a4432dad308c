@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "260b906a_cfe9cffb",
+        "filename": "src/libANGLE/Framebuffer.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-12T20:58:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e708910_53a0fd94",
+      "range": {
+        "startLine": 55,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 33
+      },
+      "revId": "33abb7609616befe35b27e803d50a4432dad308c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66665fd2_0d3aa290",
@@ -54,6 +78,30 @@
       "writtenOn": "2021-05-12T16:42:43Z",
       "side": 1,
       "message": "Could we use status here?",
+      "range": {
+        "startLine": 1202,
+        "startChar": 49,
+        "endLine": 1202,
+        "endChar": 75
+      },
+      "revId": "33abb7609616befe35b27e803d50a4432dad308c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f892cb67_a967f07a",
+        "filename": "src/libANGLE/renderer/gl/FramebufferGL.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 1202,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-12T20:58:29Z",
+      "side": 1,
+      "message": "I thought about that but it\u0027s probably a bad idea to expose it to the user. If we get a non-GL_FRAMEBUFFER_UNSUPPORTED result, it\u0027s a bug in ANGLE and the message won\u0027t help the user.\n\nI\u0027ll turn this into a real error that surfaces in tests.",
+      "parentUuid": "66665fd2_0d3aa290",
       "range": {
         "startLine": 1202,
         "startChar": 49,
