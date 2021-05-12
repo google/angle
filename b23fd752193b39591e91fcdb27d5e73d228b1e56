@@ -111,6 +111,30 @@
       },
       "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5e0a0b4_74ab39fb",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T21:55:46Z",
+      "side": 1,
+      "message": "Tangential discussion so I don\u0027t want to get into to deep in code review. If you\u0027d like to enact a more major change in ANGLE please create a ddoc and outline the proposed benefits.",
+      "parentUuid": "ffb28cda_ea91e1cc",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
