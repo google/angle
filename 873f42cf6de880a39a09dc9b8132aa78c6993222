@@ -34,6 +34,41 @@
       "parentUuid": "535c174b_3745e59a",
       "revId": "873f42cf6de880a39a09dc9b8132aa78c6993222",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e6413bcb_a9aeb1c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-12T20:33:46Z",
+      "side": 1,
+      "message": "In a WebGL context I believe ANGLE\u0027s validation should generate an OpenGL error like INVALID_OPERATION upon all of the draw calls. ANGLE passes https://www.khronos.org/registry/webgl/sdk/tests/conformance2/textures/misc/immutable-tex-render-feedback.html perfectly, where the validating command decoder has lots of failures. In a pure ES3 context like this test presumably runs with, ANGLE probably allows the undefined fragment values.\n\nAgree that this test definitely should not crash.",
+      "parentUuid": "30a6c4ed_13ccca6b",
+      "revId": "873f42cf6de880a39a09dc9b8132aa78c6993222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25cd6f7f_ccb54b8a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-12T20:33:46Z",
+      "side": 1,
+      "message": "lgtm\n",
+      "revId": "873f42cf6de880a39a09dc9b8132aa78c6993222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
