@@ -34,6 +34,24 @@
       "parentUuid": "69d97c0c_9c30b136",
       "revId": "b74e4835d02ab0305cc9eaf49dfdecee5ecb1282",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc53d216_b7447915",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-12T14:08:46Z",
+      "side": 1,
+      "message": "Hah, actually I think the bug is in the logic of ContextVk::insertEventMarker that checks for the existence of the extension:\n\n    if (!mRenderer-\u003eenableDebugUtils() \u0026\u0026 !mRenderer-\u003eangleDebuggerMode())\n    {\n        return angle::Result::Continue;\n    }\n\nThat should probably be ||?",
+      "parentUuid": "767e162e_16253fff",
+      "revId": "b74e4835d02ab0305cc9eaf49dfdecee5ecb1282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
