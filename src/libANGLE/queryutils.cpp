@@ -8,6 +8,8 @@
 
 #include "libANGLE/queryutils.h"
 
+#include <algorithm>
+
 #include "common/utilities.h"
 
 #include "libANGLE/Buffer.h"
@@ -86,7 +88,6 @@ void ConvertFromColor(const ColorGeneric &color, GLfloat *outParams)
     }
     else
     {
-        ASSERT(color.type == ColorGeneric::Type::Float);
         color.colorF.writeData(outParams);
     }
 }
@@ -96,7 +97,6 @@ void ConvertFromColor(const ColorGeneric &color, GLint *outParams)
 {
     if (isPureInteger)
     {
-        ASSERT(color.type == ColorGeneric::Type::Int);
         outParams[0] = color.colorI.red;
         outParams[1] = color.colorI.green;
         outParams[2] = color.colorI.blue;
@@ -104,7 +104,6 @@ void ConvertFromColor(const ColorGeneric &color, GLint *outParams)
     }
     else
     {
-        ASSERT(color.type == ColorGeneric::Type::Float);
         outParams[0] = floatToNormalized<GLint>(color.colorF.red);
         outParams[1] = floatToNormalized<GLint>(color.colorF.green);
         outParams[2] = floatToNormalized<GLint>(color.colorF.blue);
@@ -117,11 +116,12 @@ void ConvertFromColor(const ColorGeneric &color, GLuint *outParams)
 {
     if (isPureInteger)
     {
-        ASSERT(color.type == ColorGeneric::Type::UInt);
-        outParams[0] = color.colorUI.red;
-        outParams[1] = color.colorUI.green;
-        outParams[2] = color.colorUI.blue;
-        outParams[3] = color.colorUI.alpha;
+        constexpr unsigned int kMinValue = 0;
+
+        outParams[0] = std::max(color.colorUI.red, kMinValue);
+        outParams[1] = std::max(color.colorUI.green, kMinValue);
+        outParams[2] = std::max(color.colorUI.blue, kMinValue);
+        outParams[3] = std::max(color.colorUI.alpha, kMinValue);
     }
     else
     {

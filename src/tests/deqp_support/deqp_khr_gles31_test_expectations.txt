@@ -76,6 +76,10 @@
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-vs-*-matR* = SKIP
 4128 VULKAN NVIDIA : KHR-GLES31.core.shader_storage_buffer_object.advanced-unsizedArrayLength-fs-*-matR* = SKIP
 
+// GL_EXT_texture_border_clamp related test failures on NVIDIA
+5978 VULKAN NVIDIA : KHR-GLES31.core.texture_border_clamp.Texture2DDC16Linear = SKIP
+5978 VULKAN NVIDIA : KHR-GLES31.core.texture_border_clamp.Texture2DDC32FLinear = SKIP
+
 ////
 //// SwANGLE expectations
 ////

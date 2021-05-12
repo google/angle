@@ -351,9 +351,9 @@ void RendererVk::ensureCapsInitialized() const
     mNativeExtensions.robustness =
         !IsSwiftshader(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) &&
         !IsARM(mPhysicalDeviceProperties.vendorID);
-    mNativeExtensions.textureBorderClampOES = false;  // not implemented yet
     mNativeExtensions.discardFramebuffer    = true;
-
+    mNativeExtensions.textureBorderClampOES = getFeatures().supportsCustomBorderColorEXT.enabled;
+    mNativeExtensions.textureBorderClampEXT = getFeatures().supportsCustomBorderColorEXT.enabled;
     // Enable EXT_texture_type_2_10_10_10_REV
     mNativeExtensions.textureFormat2101010REV = true;
 

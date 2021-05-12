@@ -3201,22 +3201,26 @@ SamplerDesc::SamplerDesc(const angle::FeaturesVk &featuresVk,
 
 void SamplerDesc::reset()
 {
-    mMipLodBias     = 0.0f;
-    mMaxAnisotropy  = 0.0f;
-    mMinLod         = 0.0f;
-    mMaxLod         = 0.0f;
-    mExternalFormat = 0;
-    mMagFilter      = 0;
-    mMinFilter      = 0;
-    mMipmapMode     = 0;
-    mAddressModeU   = 0;
-    mAddressModeV   = 0;
-    mAddressModeW   = 0;
-    mCompareEnabled = 0;
-    mCompareOp      = 0;
-    mReserved[0]    = 0;
-    mReserved[1]    = 0;
-    mReserved[2]    = 0;
+    mMipLodBias        = 0.0f;
+    mMaxAnisotropy     = 0.0f;
+    mMinLod            = 0.0f;
+    mMaxLod            = 0.0f;
+    mExternalFormat    = 0;
+    mMagFilter         = 0;
+    mMinFilter         = 0;
+    mMipmapMode        = 0;
+    mAddressModeU      = 0;
+    mAddressModeV      = 0;
+    mAddressModeW      = 0;
+    mCompareEnabled    = 0;
+    mCompareOp         = 0;
+    mPadding           = 0;
+    mBorderColorType   = 0;
+    mBorderColor.red   = 0.0f;
+    mBorderColor.green = 0.0f;
+    mBorderColor.blue  = 0.0f;
+    mBorderColor.alpha = 0.0f;
+    mReserved          = 0;
 }
 
 void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
@@ -3284,9 +3288,11 @@ void SamplerDesc::update(const angle::FeaturesVk &featuresVk,
         mMaxLod = 0.25f;
     }
 
-    mReserved[0] = 0;
-    mReserved[1] = 0;
-    mReserved[2] = 0;
+    mBorderColorType =
+        (samplerState.getBorderColor().type == angle::ColorGeneric::Type::Float) ? 0 : 1;
+    mBorderColor = samplerState.getBorderColor().colorF;
+
+    mReserved = 0;
 }
 
 angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
@@ -3357,6 +3363,30 @@ angle::Result SamplerDesc::init(ContextVk *contextVk, Sampler *sampler) const
         createInfo.minFilter = VK_FILTER_NEAREST;
     }
 
+    VkSamplerCustomBorderColorCreateInfoEXT customBorderColorInfo = {};
+    if (createInfo.addressModeU == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER ||
+        createInfo.addressModeV == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER ||
+        createInfo.addressModeW == VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER)
+    {
+        ASSERT((contextVk->getRenderer()->getFeatures().supportsCustomBorderColorEXT.enabled));
+        customBorderColorInfo.sType = VK_STRUCTURE_TYPE_SAMPLER_CUSTOM_BORDER_COLOR_CREATE_INFO_EXT;
+
+        customBorderColorInfo.customBorderColor.float32[0] = mBorderColor.red;
+        customBorderColorInfo.customBorderColor.float32[1] = mBorderColor.green;
+        customBorderColorInfo.customBorderColor.float32[2] = mBorderColor.blue;
+        customBorderColorInfo.customBorderColor.float32[3] = mBorderColor.alpha;
+
+        if (mBorderColorType == static_cast<uint32_t>(angle::ColorGeneric::Type::Float))
+        {
+            createInfo.borderColor = VK_BORDER_COLOR_FLOAT_CUSTOM_EXT;
+        }
+        else
+        {
+            createInfo.borderColor = VK_BORDER_COLOR_INT_CUSTOM_EXT;
+        }
+
+        vk::AddToPNextChain(&createInfo, &customBorderColorInfo);
+    }
     ANGLE_VK_TRY(contextVk, sampler->init(contextVk->getDevice(), createInfo));
 
     return angle::Result::Continue;

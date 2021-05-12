@@ -1218,6 +1218,10 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mDepthStencilResolveProperties.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_DEPTH_STENCIL_RESOLVE_PROPERTIES;
 
+    mCustomBorderColorFeatures = {};
+    mCustomBorderColorFeatures.sType =
+        VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_CUSTOM_BORDER_COLOR_FEATURES_EXT;
+
     mMultisampledRenderToSingleSampledFeatures = {};
     mMultisampledRenderToSingleSampledFeatures.sType =
         VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_MULTISAMPLED_RENDER_TO_SINGLE_SAMPLED_FEATURES_EXT;
@@ -1321,6 +1325,12 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
         vk::AddToPNextChain(&deviceProperties, &mDriverProperties);
     }
 
+    // Query custom border color features
+    if (ExtensionFound(VK_EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME, deviceExtensionNames))
+    {
+        vk::AddToPNextChain(&deviceFeatures, &mCustomBorderColorFeatures);
+    }
+
     // Query subgroup properties
     vk::AddToPNextChain(&deviceProperties, &mSubgroupProperties);
 
@@ -1359,6 +1369,7 @@ void RendererVk::queryDeviceExtensionFeatures(const vk::ExtensionNameList &devic
     mIndexTypeUint8Features.pNext                    = nullptr;
     mSubgroupProperties.pNext                        = nullptr;
     mExternalMemoryHostProperties.pNext              = nullptr;
+    mCustomBorderColorFeatures.pNext                 = nullptr;
     mShaderFloat16Int8Features.pNext                 = nullptr;
     mDepthStencilResolveProperties.pNext             = nullptr;
     mMultisampledRenderToSingleSampledFeatures.pNext = nullptr;
@@ -1698,6 +1709,12 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     {
         enabledDeviceExtensions.push_back(VK_EXT_TRANSFORM_FEEDBACK_EXTENSION_NAME);
         vk::AddToPNextChain(&createInfo, &mTransformFeedbackFeatures);
+    }
+
+    if (getFeatures().supportsCustomBorderColorEXT.enabled)
+    {
+        enabledDeviceExtensions.push_back(VK_EXT_CUSTOM_BORDER_COLOR_EXTENSION_NAME);
+        vk::AddToPNextChain(&createInfo, &mCustomBorderColorFeatures);
     }
 
     if (getFeatures().supportsIndexTypeUint8.enabled)
@@ -2305,6 +2322,11 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, emulateTransformFeedback,
                             (!mFeatures.supportsTransformFeedbackExtension.enabled &&
                              mPhysicalDeviceFeatures.vertexPipelineStoresAndAtomics == VK_TRUE));
+
+    // TODO: http://anglebug.com/5927 - drop dependency on customBorderColorWithoutFormat.
+    ANGLE_FEATURE_CONDITION(&mFeatures, supportsCustomBorderColorEXT,
+                            (mCustomBorderColorFeatures.customBorderColors == VK_TRUE &&
+                             mCustomBorderColorFeatures.customBorderColorWithoutFormat == VK_TRUE));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, disableFifoPresentMode, IsLinux() && isIntel);
 
