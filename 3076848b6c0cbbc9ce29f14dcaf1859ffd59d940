@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94a6b9c1_fcc298ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-12T08:13:06Z",
+      "side": 1,
+      "message": "Revert to fix Capture/Replay on Swiftshader. ",
+      "revId": "3076848b6c0cbbc9ce29f14dcaf1859ffd59d940",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
