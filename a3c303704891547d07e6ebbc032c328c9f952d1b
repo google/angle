@@ -94,6 +94,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "877ead53_0b2c8b37",
+        "filename": "src/compiler/translator/builtin_variables.json",
+        "patchSetId": 2
+      },
+      "lineNbr": 857,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-12T00:52:20Z",
+      "side": 1,
+      "message": "I don\u0027t think that is needed.  Removing it.",
+      "parentUuid": "1d11954d_cf34e36d",
+      "range": {
+        "startLine": 839,
+        "startChar": 0,
+        "endLine": 857,
+        "endChar": 14
+      },
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05c6660e_8b6e3182",
@@ -107,6 +131,30 @@
       "writtenOn": "2021-05-07T04:58:44Z",
       "side": 1,
       "message": "I thought this was a fast/efficient solution.  However, there is more than one \"built-in\" variable for the \"gl_lastFragData\" identifier, and setting this to true causes the symbolTable.findBuiltIn() method to always return the one associated for the \"coherent\" extension.\n\nIs there a better approach?  At some point, we know what the application enabled/required.  Can we change this decision once we know that?",
+      "range": {
+        "startLine": 155,
+        "startChar": 4,
+        "endLine": 155,
+        "endChar": 17
+      },
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4c47703_ce7006d2",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-12T00:52:20Z",
+      "side": 1,
+      "message": "I hope that enabling one extension or the other will help with this problem.  I\u0027ll learn more with Patchset 3.",
+      "parentUuid": "05c6660e_8b6e3182",
       "range": {
         "startLine": 155,
         "startChar": 4,
