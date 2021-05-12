@@ -65,6 +65,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "14a8da4e_9edf4e3b",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T19:43:22Z",
+      "side": 1,
+      "message": "Just looked weird.  removeRef isn\u0027t const, nor is Release.  Wanted to make sure it wasn\u0027t an oversight.",
+      "parentUuid": "8c6cd6ed_e82ef9e4",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 19
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "179c5757_414de5d7",
@@ -337,6 +361,30 @@
       "side": 1,
       "message": "I\u0027m not sure what you mean. Write them directly in line 32? I made the macro because I wanted to have them easy accessible on the top of the file, as there will be many times when they get amended. Also I might need the string list somewhere else in the future.",
       "parentUuid": "ab58cf30_faafe77d",
+      "range": {
+        "startLine": 18,
+        "startChar": 8,
+        "endLine": 18,
+        "endChar": 42
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4aebbd8_43333a63",
+        "filename": "src/libANGLE/renderer/cl/cl_util.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T19:43:22Z",
+      "side": 1,
+      "message": "It just makes things more difficult in debuggers, making things precompile when they don\u0027t need to be.  Could make it a constexpr at the top instead of a define.",
+      "parentUuid": "f248143c_31d73759",
       "range": {
         "startLine": 18,
         "startChar": 8,
