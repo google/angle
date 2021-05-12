@@ -62,6 +62,13 @@ class CaptureReplayTests
         mOSWindow->disableErrorMessageDialog();
         mOSWindow->setVisible(true);
 
+        if (mEGLWindow && !mEGLWindow->isContextVersion(testTraceInfo.replayContextMajorVersion,
+                                                        testTraceInfo.replayContextMinorVersion))
+        {
+            EGLWindow::Delete(&mEGLWindow);
+            mEGLWindow = nullptr;
+        }
+
         if (!mEGLWindow)
         {
             mEGLWindow = EGLWindow::New(testTraceInfo.replayContextMajorVersion,

@@ -90,6 +90,11 @@ EGLContext EGLWindow::getContext() const
     return mContext;
 }
 
+bool EGLWindow::isContextVersion(EGLint glesMajorVersion, EGLint glesMinorVersion) const
+{
+    return mClientMajorVersion == glesMajorVersion && mClientMinorVersion == glesMinorVersion;
+}
+
 bool EGLWindow::initializeGL(OSWindow *osWindow,
                              angle::Library *glWindowingLibrary,
                              angle::GLESDriverType driverType,

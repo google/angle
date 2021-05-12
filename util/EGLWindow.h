@@ -112,6 +112,8 @@ class ANGLE_UTIL_EXPORT EGLWindow : public GLWindowBase
     EGLSurface getSurface() const;
     EGLContext getContext() const;
 
+    bool isContextVersion(EGLint glesMajorVersion, EGLint glesMinorVersion) const;
+
     // Internally initializes the Display, Surface and Context.
     bool initializeGL(OSWindow *osWindow,
                       angle::Library *glWindowingLibrary,

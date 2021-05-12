@@ -25,7 +25,6 @@ SimpleOperationTest.ClearAndSwap/*
 SimpleOperationTest.DrawQuadAndSwap/*
 
 # Crashed tests
-BlendMinMaxTest.*
 BlitFramebufferANGLETest.*
 BufferDataTest.*
 ClipDistanceTest.*
