@@ -1530,7 +1530,13 @@ void TracePerfTest::saveScreenshot(const std::string &screenshotName)
     uint32_t pixelCount = mTestParams.windowWidth * mTestParams.windowHeight;
     std::vector<uint8_t> pixelData(pixelCount * 4);
 
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    // Only unbind the framebuffer on context versions where it's available.
+    const TraceInfo &traceInfo = GetTraceInfo(GetParam().testID);
+    if (traceInfo.contextClientMajorVersion > 1)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
     glReadPixels(0, 0, mTestParams.windowWidth, mTestParams.windowHeight, GL_RGBA, GL_UNSIGNED_BYTE,
                  pixelData.data());
 
