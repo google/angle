@@ -41,7 +41,7 @@ class Traverser : public TIntermTraverser
 
         if (type.isStructSpecifier() && type.getQualifier() == EvqUniform)
         {
-            doReplacement(decl, declarator, type.getStruct());
+            doReplacement(decl, declarator, type);
         }
 
         return false;
@@ -57,15 +57,13 @@ class Traverser : public TIntermTraverser
     }
 
   private:
-    void doReplacement(TIntermDeclaration *decl,
-                       TIntermTyped *declarator,
-                       const TStructure *oldStructure)
+    void doReplacement(TIntermDeclaration *decl, TIntermTyped *declarator, const TType &oldType)
     {
-        const TStructure *structure = oldStructure;
-        if (oldStructure->symbolType() == SymbolType::Empty)
+        const TStructure *structure = oldType.getStruct();
+        if (structure->symbolType() == SymbolType::Empty)
         {
             // Handle nameless structs: uniform struct { ... } variable;
-            structure = new TStructure(mSymbolTable, kEmptyImmutableString, &oldStructure->fields(),
+            structure = new TStructure(mSymbolTable, kEmptyImmutableString, &structure->fields(),
                                        SymbolType::AngleInternal);
         }
         TType *namedType = new TType(structure, true);
@@ -87,6 +85,7 @@ class Traverser : public TIntermTraverser
         TIntermDeclaration *namedDecl = new TIntermDeclaration;
         TType *uniformType            = new TType(structure, false);
         uniformType->setQualifier(EvqUniform);
+        uniformType->makeArrays(oldType.getArraySizes());
 
         TVariable *newVar        = new TVariable(mSymbolTable, asSymbol->getName(), uniformType,
                                           asSymbol->variable().symbolType());

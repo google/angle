@@ -10717,6 +10717,37 @@ void main() {
     EXPECT_NE(compileResult, 0);
 }
 
+// Regression test for transformation bug which separates struct declarations from uniform
+// declarations.  The bug was that the arrayness of the declaration was not being applied to the
+// replaced uniform variable.
+TEST_P(GLSLTest_ES31, UniformStructBug2)
+{
+    constexpr char kVS[] = R"(#version 310 es
+precision highp float;
+
+uniform struct Global
+{
+    float x;
+} u_global[2][3];
+
+void main() {
+  float y = u_global[0][0].x;
+
+  gl_Position = vec4(y);
+})";
+
+    GLuint shader = glCreateShader(GL_VERTEX_SHADER);
+
+    const char *sourceArray[1] = {kVS};
+    GLint lengths[1]           = {static_cast<GLint>(sizeof(kVS) - 1)};
+    glShaderSource(shader, 1, sourceArray, lengths);
+    glCompileShader(shader);
+
+    GLint compileResult;
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &compileResult);
+    EXPECT_NE(compileResult, 0);
+}
+
 }  // anonymous namespace
 
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(GLSLTest);
