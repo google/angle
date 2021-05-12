@@ -16,6 +16,24 @@
       "message": "I scheduled some time tomorrow to talk this over and hopefully make the review easier.\n\nA couple notes:\n\n- This generates correct (but a little incomplete) SPIR-V already for the debug, decorations and types/constants/variables sections of SPIR-V, but can\u0027t enable tests yet as it doesn\u0027t translate function bodies. That would be upcoming and more gradual than this change.\n- go/vangle-link-time-shader-compilation is the accompanying doc for the changes in this series (which I will complete as I work more on it)\n- I made this excluded from non-dcheck builds by default to avoid binary size bloat while both the direct and glslang paths co-exist.",
       "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a673303_b4dfd1ba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T16:16:44Z",
+      "side": 1,
+      "message": "You could enable it with the non-conformant features and extensions gn arg?\n\nSuggest you make this a new output type rather than a flag to the translator.",
+      "parentUuid": "15165fa0_2b6f49df",
+      "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
