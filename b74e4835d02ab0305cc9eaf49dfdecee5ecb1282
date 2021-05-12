@@ -52,6 +52,24 @@
       "parentUuid": "767e162e_16253fff",
       "revId": "b74e4835d02ab0305cc9eaf49dfdecee5ecb1282",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d28a51d6_b801d0c4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-12T14:11:19Z",
+      "side": 1,
+      "message": "Ok, looks like mAngleDebuggerMode is set only if vkCmdBeginDebugUtilsLabelEXT is present, so maybe that\u0027s not an issue. I\u0027ll go ahead with ASSERT and we can debug things from there if it fires.",
+      "parentUuid": "bc53d216_b7447915",
+      "revId": "b74e4835d02ab0305cc9eaf49dfdecee5ecb1282",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
