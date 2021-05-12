@@ -163,6 +163,30 @@
       },
       "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0bf75d6_bd63b10f",
+        "filename": "src/libANGLE/Compiler.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-12T02:55:18Z",
+      "side": 1,
+      "message": "I think this is the right approach.",
+      "parentUuid": "e4c47703_ce7006d2",
+      "range": {
+        "startLine": 155,
+        "startChar": 4,
+        "endLine": 155,
+        "endChar": 17
+      },
+      "revId": "a3c303704891547d07e6ebbc032c328c9f952d1b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
