@@ -128,6 +128,30 @@
       },
       "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "603c8f88_9d39d3de",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-12T19:40:30Z",
+      "side": 1,
+      "message": "I thought we retry tests after the crashed one?\nWould be confusing now that we won\u0027t know if the test was skipped after a crash or via GTEST_SKIP.",
+      "parentUuid": "b430709e_a2b6b87e",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
