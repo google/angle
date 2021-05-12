@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75027e2d_1aee63e2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 20
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-12T01:45:29Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "680928ad37bf1dd7fd85e03ea38162111de44374",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "393157ae_8fcb3273",
+        "filename": "src/libANGLE/renderer/vulkan/BufferVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 400,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-12T01:45:29Z",
+      "side": 1,
+      "message": "Probably better to just pull this into a separate conditional and early out if size \u003d\u003d 0.   That lets you remove the other size\u003e0 check at the end too.",
+      "range": {
+        "startLine": 400,
+        "startChar": 8,
+        "endLine": 400,
+        "endChar": 16
+      },
+      "revId": "680928ad37bf1dd7fd85e03ea38162111de44374",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
