@@ -1,0 +1,182 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fa2e3d8_bb201a21",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "LGTM, just some nits and questions",
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e58e59c_731047c1",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "Returning const from non-const function",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 19
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "179c5757_414de5d7",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "Why bother calling the backend in this scenario?  Would be faster to just return.  Or is the intent that this is a middleman and we always want to call through?",
+      "range": {
+        "startLine": 311,
+        "startChar": 8,
+        "endLine": 311,
+        "endChar": 26
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4a14344b_40c7ecf7",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "Should this release be called from the subdevice?",
+      "range": {
+        "startLine": 366,
+        "startChar": 8,
+        "endLine": 366,
+        "endChar": 15
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2b4852b4_cae9f00e",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "Do subdevices require 1.2?  If so, this should go in validationCL?",
+      "range": {
+        "startLine": 60,
+        "startChar": 19,
+        "endLine": 60,
+        "endChar": 43
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21b021af_bd22a40e",
+        "filename": "src/libANGLE/renderer/cl/cl_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "This code was just moved, but this jumped out at me.\n\nZero is also the return value of strtol when no valid conversion could be performed, which is mildly annoying.  Tricky to verify unless you were to init to MAX_INT and verify it got set to something sensible. You could ASSERT that errno !\u003d ERANGE here.  Just weird to see one value validated and not the other.  Not a big deal if you want to leave it as-is.",
+      "range": {
+        "startLine": 34,
+        "startChar": 34,
+        "endLine": 34,
+        "endChar": 39
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5137ef1a_a1d29326",
+        "filename": "src/libANGLE/renderer/cl/cl_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "I know you just migrated this, but it difficult to read, perhaps:\n\n  if (foundSpace)\n  {\n      // There are multiple extensions, find the next one\n      const SizeT nextExt \u003d spacePos + 1u;\n      extStart \u003d nextExt \u003c extensions.length() ? nextExt : std::string::npos;\n  }",
+      "range": {
+        "startLine": 52,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 93
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ab58cf30_faafe77d",
+        "filename": "src/libANGLE/renderer/cl/cl_util.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-12T16:30:29Z",
+      "side": 1,
+      "message": "I\u0027d rather see these spelled out source instead of a precompile define.",
+      "range": {
+        "startLine": 18,
+        "startChar": 8,
+        "endLine": 18,
+        "endChar": 42
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
