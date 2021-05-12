@@ -52,6 +52,24 @@
       "parentUuid": "0a673303_b4dfd1ba",
       "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b329876_782211ad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T19:15:00Z",
+      "side": 1,
+      "message": "Reason - it\u0027s a non-conformant feature. You can do whichever you find preferable.",
+      "parentUuid": "f2bfbdf6_4783577f",
+      "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
