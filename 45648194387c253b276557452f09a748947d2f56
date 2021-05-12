@@ -33,6 +33,23 @@
       "message": "Looks like I\u0027ll need to update the Android test runner in Chromium before landing this.",
       "revId": "45648194387c253b276557452f09a748947d2f56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30875cf7_f340ef7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-12T15:31:26Z",
+      "side": 1,
+      "message": "Nice, LGTM ",
+      "revId": "45648194387c253b276557452f09a748947d2f56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
