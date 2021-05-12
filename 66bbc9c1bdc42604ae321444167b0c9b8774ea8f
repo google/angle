@@ -152,6 +152,30 @@
       },
       "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e6d249c_97a00020",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T19:48:44Z",
+      "side": 1,
+      "message": "Good point, I\u0027ll check out what happens when you have a skipped test and a crash. \n\nI was trying to stick to this format:\n\nhttps://chromium.googlesource.com/chromium/src/+/master/docs/testing/json_test_results_format.md\n\nI could deviate from it if the \"internal\" json is never seen by the test scripts.\n\nAll this would be much easier if I used socket communication..",
+      "parentUuid": "603c8f88_9d39d3de",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
