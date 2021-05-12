@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a367e3e_a9c8ddbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T19:14:06Z",
+      "side": 1,
+      "message": "Not really following what\u0027s changing, but LGTM. Is there some kind of testing for any of these changes?",
+      "revId": "77eb0f70efd0e3bbf8f89986ee27d3c1b51fc396",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
