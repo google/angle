@@ -3322,6 +3322,55 @@ TEST_P(FramebufferTest, BindAndDrawDifferentSizedFBOs)
     EXPECT_PIXEL_RECT_EQ(0, 0, kLargeWidth, kLargeHeight, GLColor::blue);
 }
 
+// Regression test based on a fuzzer failure.  A crash was encountered in the following situation:
+//
+// - Texture bound as sampler with MAX_LEVEL 0
+// - Framebuffer bound to level 0
+// - Draw
+// - Texture MAX_LEVEL changed to 1
+// - Framebuffer bound to level 1
+// - Draw
+//
+// Notes: Removing the first half removed the crash.  MIN_FILTERING of LINEAR vs
+// LINEAR_MIPMAP_LINEAR did not make any changes.
+TEST_P(FramebufferTest_ES3, FramebufferBindToNewLevelAfterMaxIncreaseShouldntCrash)
+{
+    // http://crbug.com/1197431
+    ANGLE_SKIP_TEST_IF(IsVulkan());
+
+    constexpr char kFS[] = R"(precision mediump float;
+uniform sampler2D u_tex0;
+void main() {
+    gl_FragColor = texture2D(u_tex0, vec2(0));
+})";
+
+    ANGLE_GL_PROGRAM(program, essl1_shaders::vs::Passthrough(), kFS);
+    glUseProgram(program);
+
+    GLTexture mutTex;
+    glBindTexture(GL_TEXTURE_2D, mutTex);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 10, 10, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 1, GL_RGBA8, 5, 5, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    GLFramebuffer fb;
+    glBindFramebuffer(GL_FRAMEBUFFER, fb);
+
+    // Attempt a draw with level 0 (feedback loop)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mutTex, 0);
+    glDrawArrays(GL_POINTS, 0, 1);
+
+    // Attempt another draw with level 1.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 1);
+
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mutTex, 1);
+
+    // This shouldn't crash.
+    glDrawArrays(GL_POINTS, 0, 1);
+}
+
 ANGLE_INSTANTIATE_TEST_ES2(AddMockTextureNoRenderTargetTest);
 ANGLE_INSTANTIATE_TEST_ES2(FramebufferTest);
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(FramebufferFormatsTest);
