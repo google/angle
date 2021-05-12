@@ -22,6 +22,30 @@
       },
       "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6a38875_17f026d2",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T19:40:40Z",
+      "side": 1,
+      "message": "Ok, I won\u0027t cache them and will use references to the front end objects instead. But I don\u0027t see the benefit of the ObjectState design, other than that it might be a better understandable match to OpenGL\u0027s state machine (which doesn\u0027t apply to OpenCL). Is there a design doc for the ObjectState?",
+      "parentUuid": "d090da42_ad07c93e",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
