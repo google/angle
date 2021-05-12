@@ -33,6 +33,29 @@
       "message": "Switching reviewers to Jonah as Jonah developed the test expectations lib.",
       "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8cf609d_cbb41567",
+        "filename": "src/tests/test_utils/runner/TestSuite.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 168,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-12T17:15:17Z",
+      "side": 1,
+      "message": "I find this confusing.\nMy understanding is that for a shard we first say that we want to run all tests, even those that belong to other shards. Then we say that tests that belong to other shards were skipped.\nWould be cleaner to just not have the tests that are not supposed to run in the current shard as the input to the current shard at all.\nInstead of listing them in the input but saying we shouldn\u0027t run them.",
+      "range": {
+        "startLine": 167,
+        "startChar": 0,
+        "endLine": 168,
+        "endChar": 26
+      },
+      "revId": "66bbc9c1bdc42604ae321444167b0c9b8774ea8f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
