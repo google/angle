@@ -34,6 +34,24 @@
       "parentUuid": "15165fa0_2b6f49df",
       "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2bfbdf6_4783577f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-12T18:23:00Z",
+      "side": 1,
+      "message": "\u003e You could enable it with the non-conformant features and extensions gn arg?\n\nAny reason why enabling it with dcheck alone is not sufficient?\n\nThe flag is temporary (until glslang is removed) and so would be a new output type. I prefer the flag if that\u0027s ok with you as it\u0027s a little less disruptive to the rest of the code.\n\nWe could talk about it tomorrow.",
+      "parentUuid": "0a673303_b4dfd1ba",
+      "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
