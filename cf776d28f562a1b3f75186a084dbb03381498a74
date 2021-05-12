@@ -16,6 +16,24 @@
       "message": "Jonah, with this fix, is the path change no longer necessasry?",
       "revId": "cf776d28f562a1b3f75186a084dbb03381498a74",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51258cfe_5233c345",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-12T19:29:30Z",
+      "side": 1,
+      "message": "By the path change do you mean this? https://chromium-review.googlesource.com/c/angle/angle/+/2892253\n\nThat\u0027s for a different issue on Linux.",
+      "parentUuid": "97329791_009648af",
+      "revId": "cf776d28f562a1b3f75186a084dbb03381498a74",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
