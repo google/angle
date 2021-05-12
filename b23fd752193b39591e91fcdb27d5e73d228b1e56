@@ -63,6 +63,30 @@
       },
       "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06907552_2bb115a0",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T20:37:35Z",
+      "side": 1,
+      "message": "We have this: https://docs.google.com/document/d/17mxRfzXuEWyvGM3t2KqVY4svvfRj_GzysOEpmnDpqeo/edit?usp\u003dsharing\n\nThere may be another doc where this is discussed, but I couldn\u0027t find one. The intent was to provide a read-only view of the shared state between the front \u0026 back-ends without exposing the action commands to the back-end. So we organized each object into a \"*State\" and \"*\" class.\n\nUltimately I think we would do away with the pImpl design. The extra implementation pointer causes an indirection that wouldn\u0027t be present if we just used normal inheritance or c-style dispatch.",
+      "parentUuid": "f6a38875_17f026d2",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
