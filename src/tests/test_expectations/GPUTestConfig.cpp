@@ -330,7 +330,7 @@ inline bool GetGPUTestSystemInfo(SystemInfo **sysInfo)
         sSystemInfo = new SystemInfo;
         if (!GetSystemInfo(sSystemInfo))
         {
-            std::cout << "Error populating SystemInfo for dEQP tests." << std::endl;
+            std::cout << "Error populating SystemInfo." << std::endl;
         }
         else
         {
