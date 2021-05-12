@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "8c6cd6ed_e82ef9e4",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T18:40:16Z",
+      "side": 1,
+      "message": "I am not sure what is wrong here?",
+      "parentUuid": "8e58e59c_731047c1",
+      "range": {
+        "startLine": 34,
+        "startChar": 4,
+        "endLine": 34,
+        "endChar": 19
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "179c5757_414de5d7",
         "filename": "src/libANGLE/CLDevice.cpp",
         "patchSetId": 5
@@ -54,6 +78,30 @@
       "writtenOn": "2021-05-12T16:30:29Z",
       "side": 1,
       "message": "Why bother calling the backend in this scenario?  Would be faster to just return.  Or is the intent that this is a middleman and we always want to call through?",
+      "range": {
+        "startLine": 311,
+        "startChar": 8,
+        "endLine": 311,
+        "endChar": 26
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8c5ecfb_55e8679c",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T18:40:16Z",
+      "side": 1,
+      "message": "If devices is null, createSubDevices ignores it. We still have to call through to return the number of devices, so the app can allocate memory and query the devices in a second call.",
+      "parentUuid": "179c5757_414de5d7",
       "range": {
         "startLine": 311,
         "startChar": 8,
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5a27b337_bea04219",
+        "filename": "src/libANGLE/CLDevice.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 366,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T18:40:16Z",
+      "side": 1,
+      "message": "The child references the parent, so the parent should be released. But yes, better to have a smart pointer to do that. Let\u0027s defer the resolution to the next CL, where I have added a RefPointer.",
+      "parentUuid": "4a14344b_40c7ecf7",
+      "range": {
+        "startLine": 366,
+        "startChar": 8,
+        "endLine": 366,
+        "endChar": 15
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2b4852b4_cae9f00e",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-05-12T16:30:29Z",
       "side": 1,
       "message": "Do subdevices require 1.2?  If so, this should go in validationCL?",
+      "range": {
+        "startLine": 60,
+        "startChar": 19,
+        "endLine": 60,
+        "endChar": 43
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ed3b459_13be9567",
+        "filename": "src/libANGLE/renderer/cl/CLDeviceCL.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T18:40:16Z",
+      "side": 1,
+      "message": "That\u0027s a difficult problem. Partitioning does require 1.2, so the CL pass-through back end should not call it for \u003c 1.2 since the function pointer might be null. But according to the spec it is not an error to provide the functionality of higher versions, so I was not sure if the front end should block it. Need to think about it. It is on my todo list, can we defer it?",
+      "parentUuid": "2b4852b4_cae9f00e",
       "range": {
         "startLine": 60,
         "startChar": 19,
@@ -133,6 +229,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f06c659b_b186f0df",
+        "filename": "src/libANGLE/renderer/cl/cl_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T18:40:16Z",
+      "side": 1,
+      "message": "Yep, zero is a bad choice to communicate a failure. I can\u0027t validate minor as zero is a valid number for it. I have moved the cast and check for reasonable ranges now, this covers the range failure.",
+      "parentUuid": "21b021af_bd22a40e",
+      "range": {
+        "startLine": 34,
+        "startChar": 34,
+        "endLine": 34,
+        "endChar": 39
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5137ef1a_a1d29326",
@@ -156,6 +276,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "496fe646_707fce9e",
+        "filename": "src/libANGLE/renderer/cl/cl_util.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T18:40:16Z",
+      "side": 1,
+      "message": "This wouldn\u0027t work, extStart would not be set to npos if no space is found. Ok, easy to fix, but instead I revised the whole function for readability.",
+      "parentUuid": "5137ef1a_a1d29326",
+      "range": {
+        "startLine": 52,
+        "startChar": 12,
+        "endLine": 53,
+        "endChar": 93
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ab58cf30_faafe77d",
@@ -169,6 +313,30 @@
       "writtenOn": "2021-05-12T16:30:29Z",
       "side": 1,
       "message": "I\u0027d rather see these spelled out source instead of a precompile define.",
+      "range": {
+        "startLine": 18,
+        "startChar": 8,
+        "endLine": 18,
+        "endChar": 42
+      },
+      "revId": "75048f55c8f245f01297c862344373076bfa939e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f248143c_31d73759",
+        "filename": "src/libANGLE/renderer/cl/cl_util.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T18:40:16Z",
+      "side": 1,
+      "message": "I\u0027m not sure what you mean. Write them directly in line 32? I made the macro because I wanted to have them easy accessible on the top of the file, as there will be many times when they get amended. Also I might need the string list somewhere else in the future.",
+      "parentUuid": "ab58cf30_faafe77d",
       "range": {
         "startLine": 18,
         "startChar": 8,
