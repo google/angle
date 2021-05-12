@@ -6365,7 +6365,8 @@ bool ValidateGetTexParameterBase(const Context *context,
         *length = 0;
     }
 
-    if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
+    if ((!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target)) ||
+        target == TextureType::Buffer)
     {
         context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
         return false;
@@ -6914,7 +6915,8 @@ bool ValidateTexParameterBase(const Context *context,
                               bool vectorParams,
                               const ParamType *params)
 {
-    if (!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target))
+    if ((!ValidTextureTarget(context, target) && !ValidTextureExternalTarget(context, target)) ||
+        target == TextureType::Buffer)
     {
         context->validationError(GL_INVALID_ENUM, kInvalidTextureTarget);
         return false;
