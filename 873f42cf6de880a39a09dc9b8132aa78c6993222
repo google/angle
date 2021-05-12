@@ -16,6 +16,24 @@
       "message": "@Ken, I need help regarding feedback loop here. See the test added in this change. Are these draw calls expected to fail due to feedback loop? This is a simplified version of a fuzzer test which in turn is a simplified version of conformance2/textures/misc/immutable-tex-render-feedback.html.\n\n@Jamie, the RenderTarget pulled out of the render target cache has an invalid vtable. Given that the crash only happens after a state change, do you think it\u0027s possible there is a stale entry in the cache?",
       "revId": "873f42cf6de880a39a09dc9b8132aa78c6993222",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30a6c4ed_13ccca6b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-12T13:29:05Z",
+      "side": 1,
+      "message": "Yeah, certainly possible we have a bug when rendering with feedback loops. To confirm this is 100% a feedback loop in both cases and should result in undefined fragment values. It should not crash or do anything like that.",
+      "parentUuid": "535c174b_3745e59a",
+      "revId": "873f42cf6de880a39a09dc9b8132aa78c6993222",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
