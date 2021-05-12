@@ -34,6 +34,24 @@
       "parentUuid": "8e1b0c32_81eb9ee9",
       "revId": "859ed39624bb8c58bcfc2bb6295e63621578077f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9d8df34_e6d8b12b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-12T03:54:54Z",
+      "side": 1,
+      "message": "Hah, I meant the change is all red (removing lines). I dunno, I found it funny that I\u0027d be saying \"I see red\" while +2ing in the sense that I really like this change, while the expression itself means I\u0027m enraged.",
+      "parentUuid": "1e174ef8_28b410d9",
+      "revId": "859ed39624bb8c58bcfc2bb6295e63621578077f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
