@@ -87,6 +87,30 @@
       },
       "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffb28cda_ea91e1cc",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-12T21:41:25Z",
+      "side": 1,
+      "message": "I understand the intent, but splitting the data from the functions goes explicitly against fundamental object-oriented design. It only makes sense in specific cases, e.g. the state design pattern. What is the danger of exposing action commands to the back ends which are our code? Most action commands would be inaccessible anyway if you have a const reference to the object. And some const functions might actually be useful for the back ends.\n\nYeah, pImpl is useful in some cases, e.g. visitor pattern. But no need here. Though we would have to change the entry point generator without pImpl, since we can\u0027t use virtual functions for the CL objects.",
+      "parentUuid": "06907552_2bb115a0",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
