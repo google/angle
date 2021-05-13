@@ -33,6 +33,46 @@
       "message": "Nice LGTM :)",
       "revId": "c92d4ccaebe519825ef54ac967afa14d97b9e96c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65696b54_4d12f4cd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-13T18:25:53Z",
+      "side": 1,
+      "message": "Cool! Is the goal to eventually switch all expectations over to the file?\nI think having some expectations in the file and others in the tests can get messy",
+      "revId": "c92d4ccaebe519825ef54ac967afa14d97b9e96c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "afdb6b46_894e61ed",
+        "filename": "src/tests/deqp_support/angle_deqp_gtest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 327,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-13T18:25:53Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this would work out of the box for end2end tests, but it would be useful to do the same in angle_end2end_tests_main given that tests are run on pretty arbitrary configs depending on what\u0027s initialized in the cpp file.",
+      "range": {
+        "startLine": 327,
+        "startChar": 0,
+        "endLine": 327,
+        "endChar": 50
+      },
+      "revId": "c92d4ccaebe519825ef54ac967afa14d97b9e96c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
