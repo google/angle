@@ -16,6 +16,24 @@
       "message": "What\u0027s left in the TODO?",
       "revId": "be6d15a0c24970c2d8fd1900cba9adba5a8e63da",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8d2b9cf_40947de7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491687
+      },
+      "writtenOn": "2021-05-13T16:19:23Z",
+      "side": 1,
+      "message": "Actually nothing, I just did the same all other comments did referencing an issue. I removed it from the comment.",
+      "parentUuid": "b0270c5e_569cbdec",
+      "revId": "be6d15a0c24970c2d8fd1900cba9adba5a8e63da",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
