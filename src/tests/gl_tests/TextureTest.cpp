@@ -8564,6 +8564,9 @@ TEST_P(Texture2DIntegerProjectiveOffsetTestES3, NonZeroBaseLevel)
 // texture is output.
 TEST_P(Texture2DArrayIntegerTestES3, NonZeroBaseLevel)
 {
+    // Test fail: http://anglebug.com/5959
+    ANGLE_SKIP_TEST_IF(IsIntel() && IsOSX() && IsOpenGL());
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D_ARRAY, m2DArrayTexture);
     int width     = getWindowWidth();
