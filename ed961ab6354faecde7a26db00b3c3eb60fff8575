@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c19b6a9_b0f63a07",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-13T14:21:59Z",
+      "side": 1,
+      "message": "Thanks for figuring out this issue and the patch. LGTM.",
+      "revId": "ed961ab6354faecde7a26db00b3c3eb60fff8575",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
