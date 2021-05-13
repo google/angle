@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "71ea3840_c1fd1853",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-13T19:17:46Z",
+      "side": 1,
+      "message": "LGTM with Jamie\u0027s feedback handled.",
+      "revId": "054f0cf4a8124f4b8cdaec5ba10edc954aea69d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "235dd8e5_e323337e",
