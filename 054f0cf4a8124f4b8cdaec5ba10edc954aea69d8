@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "235dd8e5_e323337e",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1533,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-13T16:25:18Z",
+      "side": 1,
+      "message": "you can remove the bug tag, we don\u0027t typically annotate fixes with bug tags in the code. (just TODOs so we have references to outstanding work).",
+      "range": {
+        "startLine": 1533,
+        "startChar": 6,
+        "endLine": 1533,
+        "endChar": 33
+      },
+      "revId": "054f0cf4a8124f4b8cdaec5ba10edc954aea69d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
