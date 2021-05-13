@@ -111,6 +111,7 @@ enum class RestrictedTraceID
     nba2k20_800,
     one_punch_man,
     plants_vs_zombies_2,
+    pokemon_go,
     professional_baseball_spirits,
     pubg_mobile_lite,
     ragnarok_m_eternal_love,

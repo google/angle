@@ -69,6 +69,7 @@
 #include "nba2k20_800/nba2k20_800_capture_context1.h"
 #include "one_punch_man/one_punch_man_capture_context1.h"
 #include "plants_vs_zombies_2/plants_vs_zombies_2_capture_context1.h"
+#include "pokemon_go/pokemon_go_capture_context2.h"
 #include "professional_baseball_spirits/professional_baseball_spirits_capture_context1.h"
 #include "pubg_mobile_lite/pubg_mobile_lite_capture_context1.h"
 #include "ragnarok_m_eternal_love/ragnarok_m_eternal_love_capture_context1.h"
@@ -373,6 +374,10 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       plants_vs_zombies_2::kReplayContextClientMinorVersion, plants_vs_zombies_2::kReplayFrameStart,
       plants_vs_zombies_2::kReplayFrameEnd, plants_vs_zombies_2::kReplayDrawSurfaceWidth,
       plants_vs_zombies_2::kReplayDrawSurfaceHeight, "plants_vs_zombies_2"}},
+    {RestrictedTraceID::pokemon_go,
+     {pokemon_go::kReplayContextClientMajorVersion, pokemon_go::kReplayContextClientMinorVersion,
+      pokemon_go::kReplayFrameStart, pokemon_go::kReplayFrameEnd,
+      pokemon_go::kReplayDrawSurfaceWidth, pokemon_go::kReplayDrawSurfaceHeight, "pokemon_go"}},
     {RestrictedTraceID::professional_baseball_spirits,
      {professional_baseball_spirits::kReplayContextClientMajorVersion,
       professional_baseball_spirits::kReplayContextClientMinorVersion,
