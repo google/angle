@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6e1d9e5_b95418db",
+        "filename": "scripts/gen_proc_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-13T23:32:01Z",
+      "side": 1,
+      "message": "Is this needed?",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 98
+      },
+      "revId": "240c95bcf752c320575cbd94e18e830c5a40dfee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
