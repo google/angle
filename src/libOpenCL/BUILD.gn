@@ -36,6 +36,12 @@ angle_shared_library(cl_library_name) {
     "$angle_root:angle_common",
     "$angle_root:cl_includes",
   ]
+
+  if (is_linux) {
+    inputs = [ "libOpenCL_autogen.map" ]
+    ldflags = [ "-Wl,--version-script=" +
+                rebase_path("libOpenCL_autogen.map", root_build_dir) ]
+  }
 }
 
 group("angle_cl") {
