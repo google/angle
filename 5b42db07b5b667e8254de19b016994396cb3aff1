@@ -33,6 +33,24 @@
       "message": "Mohan FYI, we found this guy was causing problems. You might run into the same.",
       "revId": "5b42db07b5b667e8254de19b016994396cb3aff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c27238f4_7c07ea85",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-13T20:43:45Z",
+      "side": 1,
+      "message": "Yes, in particular, 3 games are checking the substring \"GL_EXT_shader_framebuffer_fetch\" within the string of all supported extensions.  Since \"GL_EXT_shader_framebuffer_fetch\" is found within \"GL_EXT_shader_framebuffer_fetch_non_coherent\", the games assume that \"GL_EXT_shader_framebuffer_fetch\" is supported.\n\nThese 3 games will all have problems on your GPU.  We\u0027ve reached out to 2 of them so far (they said they were checking extensions, which is why I dug deeper and determined they are checking in a wrong way).",
+      "parentUuid": "bd3f8784_a584bcb6",
+      "revId": "5b42db07b5b667e8254de19b016994396cb3aff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
