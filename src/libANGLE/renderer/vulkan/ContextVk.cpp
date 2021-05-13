@@ -3017,6 +3017,18 @@ void ContextVk::endEventLog(angle::EntryPoint entryPoint)
     mRenderPassCommands->getCommandBuffer().endDebugUtilsLabelEXT();
 }
 
+angle::Result ContextVk::handleNoopDrawEvent()
+{
+    if (!mRenderer->angleDebuggerMode())
+    {
+        return angle::Result::Continue;
+    }
+
+    ASSERT(mRenderPassCommandBuffer);
+    // Even though this draw call is being no-op'd, we still must handle the dirty event log
+    return handleDirtyEventLogImpl(mRenderPassCommandBuffer);
+}
+
 bool ContextVk::isViewportFlipEnabledForDrawFBO() const
 {
     return mFlipViewportForDrawFramebuffer && mFlipYForCurrentSurface;

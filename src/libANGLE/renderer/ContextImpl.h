@@ -172,6 +172,7 @@ class ContextImpl : public GLImplFactory
                                          GLuint id,
                                          const std::string &message) = 0;
     virtual angle::Result popDebugGroup(const gl::Context *context)  = 0;
+    virtual angle::Result handleNoopDrawEvent();
 
     // KHR_parallel_shader_compile
     virtual void setMaxShaderCompilerThreads(GLuint count) {}

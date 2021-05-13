@@ -1045,6 +1045,7 @@ void GetSamplePosition(GLsizei sampleCount, size_t index, GLfloat *xy)
     {                                                                                          \
         if (ANGLE_NOOP_DRAW(instanced))                                                        \
         {                                                                                      \
+            ANGLE_TRY(contextImpl->handleNoopDrawEvent());                                     \
             continue;                                                                          \
         }                                                                                      \
         ANGLE_SET_DRAW_ID_UNIFORM(hasDrawID)(drawID);                                          \

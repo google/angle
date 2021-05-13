@@ -444,6 +444,8 @@ class Context final : public egl::LabeledObject, angle::NonCopyable, public angl
     ANGLE_GLES_3_2_CONTEXT_API
     ANGLE_GLES_EXT_CONTEXT_API
 
+    angle::Result handleNoopDrawEvent();
+
     // Consumes an error.
     void handleError(GLenum errorCode,
                      const char *message,

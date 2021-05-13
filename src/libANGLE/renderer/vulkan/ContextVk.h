@@ -791,6 +791,8 @@ class ContextVk : public ContextImpl, public vk::Context, public MultisampleText
     void invalidateGraphicsDriverUniforms();
     void invalidateDriverUniforms();
 
+    angle::Result handleNoopDrawEvent() override;
+
     // Handlers for graphics pipeline dirty bits.
     angle::Result handleDirtyGraphicsMemoryBarrier(DirtyBits::Iterator *dirtyBitsIterator,
                                                    DirtyBits dirtyBitMask);
