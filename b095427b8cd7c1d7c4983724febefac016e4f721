@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e471de6_ea010268",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-13T18:00:02Z",
+      "side": 1,
+      "message": "Relanding the original change plus the 2 fixes:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2892253\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2892256",
+      "revId": "b095427b8cd7c1d7c4983724febefac016e4f721",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
