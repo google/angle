@@ -63,6 +63,23 @@
       "message": "Cool stuff! Have you measured the CPU perf impact of this? vkQueueSubmit being expensive was a something they warned about back when Vulkan was released, not sure if it still valid.",
       "revId": "c849ecbaada0b861f1f4de098bbdff91e86b485e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3cbcca9_3db2ac11",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-13T18:39:07Z",
+      "side": 1,
+      "message": "Nice change!",
+      "revId": "c849ecbaada0b861f1f4de098bbdff91e86b485e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
