@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2244d353_e12a7de7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-13T22:40:41Z",
+      "side": 1,
+      "message": "The thing I worried is that combined with sub-allocation from your previous CL, the offset is going to be change frequently, since the offset here the offsetWithInBuffer+offsetFromSubAllocator, and that can change from each allocation. That will practically defeat the cache. Maybe we should leave the offset/range out of DS cache and always update them even in cache hit?",
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de24131f_c8981f26",
