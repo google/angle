@@ -229,6 +229,24 @@
       "parentUuid": "16722ac7_1540a09b",
       "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05f154dd_0f08ddee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-13T17:56:12Z",
+      "side": 1,
+      "message": "Rafael: I see a Clang update here: https://chromium-review.googlesource.com/c/angle/angle/+/2893193\n\nCan you check if that binary contains the required revert?",
+      "parentUuid": "0122c36a_6f53c3d7",
+      "revId": "796037bb8c4f931d36b6c088f7f65b1993e2553c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
