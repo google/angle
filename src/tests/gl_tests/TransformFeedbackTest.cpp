@@ -2814,6 +2814,84 @@ TEST_P(TransformFeedbackWithDepthBufferTest, RecordAndDrawWithDepthWriteEnabled)
     EXPECT_GL_NO_ERROR();
 }
 
+// Test that changing the transform feedback binding offset works.
+TEST_P(TransformFeedbackTest, RecordTwiceWithBindingOffsetChange)
+{
+    constexpr char kVS[] = R"(
+varying vec4 v;
+
+void main()
+{
+    v = vec4(0.25, 0.5, 0.75, 1.0);
+})";
+
+    constexpr char kFS[] = R"(
+precision mediump float;
+void main()
+{
+    gl_FragColor = vec4(0);
+})";
+
+    // Capture the varying "v"
+    const std::vector<std::string> tfVaryings = {"v"};
+    ANGLE_GL_PROGRAM_TRANSFORM_FEEDBACK(program, kVS, kFS, tfVaryings, GL_INTERLEAVED_ATTRIBS);
+    EXPECT_GL_NO_ERROR();
+
+    glUseProgram(program);
+
+    constexpr std::array<GLenum, 3> kUsages = {GL_STATIC_DRAW, GL_STREAM_DRAW, GL_DYNAMIC_DRAW};
+
+    constexpr uint32_t kVaryingSize  = 4;
+    constexpr uint32_t kFirstOffset  = 8;
+    constexpr uint32_t kSecondOffset = 24;
+    constexpr uint32_t kBufferSize   = 40;
+
+    const std::vector<float> initialData(kBufferSize, 0);
+    std::vector<float> expectedData = initialData;
+
+    expectedData[kFirstOffset + 0] = expectedData[kSecondOffset + 0] = 0.25f;
+    expectedData[kFirstOffset + 1] = expectedData[kSecondOffset + 1] = 0.5f;
+    expectedData[kFirstOffset + 2] = expectedData[kSecondOffset + 2] = 0.75f;
+    expectedData[kFirstOffset + 3] = expectedData[kSecondOffset + 3] = 1.0f;
+
+    for (GLenum usage : kUsages)
+    {
+        GLTransformFeedback xfb;
+        glBindTransformFeedback(GL_TRANSFORM_FEEDBACK, xfb);
+
+        GLBuffer xfbBuffer;
+        glBindBuffer(GL_TRANSFORM_FEEDBACK_BUFFER, xfbBuffer);
+        glBufferData(GL_TRANSFORM_FEEDBACK_BUFFER, kBufferSize * sizeof(float), initialData.data(),
+                     GL_DYNAMIC_DRAW);
+
+        // Record into first offset
+        glBindBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer, kFirstOffset * sizeof(float),
+                          kVaryingSize * sizeof(float));
+        glBeginTransformFeedback(GL_POINTS);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glEndTransformFeedback();
+
+        // Record into second offset
+        glBindBufferRange(GL_TRANSFORM_FEEDBACK_BUFFER, 0, xfbBuffer, kSecondOffset * sizeof(float),
+                          kVaryingSize * sizeof(float));
+        glBeginTransformFeedback(GL_POINTS);
+        glDrawArrays(GL_POINTS, 0, 1);
+        glEndTransformFeedback();
+
+        const float *bufferData = static_cast<float *>(glMapBufferRange(
+            GL_TRANSFORM_FEEDBACK_BUFFER, 0, kBufferSize * sizeof(float), GL_MAP_READ_BIT));
+        EXPECT_GL_NO_ERROR();
+
+        for (uint32_t index = 0; index < kBufferSize; ++index)
+        {
+            EXPECT_NEAR(bufferData[index], expectedData[index], 1e-6)
+                << "index: " << index << " usage: " << usage;
+        }
+
+        glUnmapBuffer(GL_TRANSFORM_FEEDBACK_BUFFER);
+    }
+}
+
 class TransformFeedbackTestES32 : public TransformFeedbackTest
 {};
 

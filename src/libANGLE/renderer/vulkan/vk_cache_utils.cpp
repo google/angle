@@ -3006,13 +3006,19 @@ UniformsAndXfbDescriptorDesc &UniformsAndXfbDescriptorDesc::operator=(
 
 size_t UniformsAndXfbDescriptorDesc::hash() const
 {
-    return angle::ComputeGenericHash(&mBufferSerials, sizeof(BufferSerial) * mBufferCount);
+    ASSERT(mBufferCount > 0);
+
+    return angle::ComputeGenericHash(&mBufferSerials, sizeof(mBufferSerials[0]) * mBufferCount) ^
+           angle::ComputeGenericHash(
+               &mXfbBufferOffsets,
+               sizeof(mXfbBufferOffsets[0]) * (mBufferCount - kDefaultUniformBufferCount));
 }
 
 void UniformsAndXfbDescriptorDesc::reset()
 {
     mBufferCount = 0;
-    memset(&mBufferSerials, 0, sizeof(BufferSerial) * kMaxBufferCount);
+    memset(&mBufferSerials, 0, sizeof(mBufferSerials));
+    memset(&mXfbBufferOffsets, 0, sizeof(mXfbBufferOffsets));
 }
 
 bool UniformsAndXfbDescriptorDesc::operator==(const UniformsAndXfbDescriptorDesc &other) const
@@ -3022,7 +3028,12 @@ bool UniformsAndXfbDescriptorDesc::operator==(const UniformsAndXfbDescriptorDesc
         return false;
     }
 
-    return memcmp(&mBufferSerials, &other.mBufferSerials, sizeof(BufferSerial) * mBufferCount) == 0;
+    ASSERT(mBufferCount > 0);
+
+    return memcmp(&mBufferSerials, &other.mBufferSerials,
+                  sizeof(mBufferSerials[0]) * mBufferCount) == 0 &&
+           memcmp(&mXfbBufferOffsets, &other.mXfbBufferOffsets,
+                  sizeof(mXfbBufferOffsets[0]) * (mBufferCount - kDefaultUniformBufferCount)) == 0;
 }
 
 // ShaderBuffersDescriptorDesc implementation.
@@ -3052,12 +3063,6 @@ void ShaderBuffersDescriptorDesc::reset()
 bool ShaderBuffersDescriptorDesc::operator==(const ShaderBuffersDescriptorDesc &other) const
 {
     return mPayload == other.mPayload;
-}
-
-void ShaderBuffersDescriptorDesc::append64BitValue(uint64_t value)
-{
-    mPayload.push_back(static_cast<uint32_t>(value & (angle::Bit<uint64_t>(32u) - 1u)));
-    mPayload.push_back(value >> 32);
 }
 
 // FramebufferDesc implementation.
