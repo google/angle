@@ -52,6 +52,24 @@
       "parentUuid": "cfdbac33_752c0ef0",
       "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5bb226a2_80ae7760",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-13T23:38:13Z",
+      "side": 1,
+      "message": "\u003e BTW, IsAndroid() would disable it for Samsung (Mohan).\n\nWhy is that a problem?   Earlier you stated the apps would fail on their platform also:\n\n\u003e These 3 games will all have problems on your GPU.",
+      "parentUuid": "4896f8e8_5447de1d",
+      "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
