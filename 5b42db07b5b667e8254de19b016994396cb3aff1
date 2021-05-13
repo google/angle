@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f484507c_18ccc61f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-13T20:01:23Z",
+      "side": 1,
+      "message": "This disables the non-coherent extension on Arm/QCOM.\n\nBased on testing that I and others have done, I\u0027m going to land this CL ASAP (to unblock broader testing and performance analysis).  Then, I can take more time to have a better-tested CL to enable the coherent extension on Arm/QCOM/IMG.",
+      "revId": "5b42db07b5b667e8254de19b016994396cb3aff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
