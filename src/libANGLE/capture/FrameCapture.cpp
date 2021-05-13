@@ -398,7 +398,7 @@ void WriteStringPointerParamReplay(DataTracker *dataTracker,
         counter = dataTracker->getCounters().getAndIncrement(call.entryPoint, param.name);
         dataTracker->getStringCounters().setStringCounter(strings, counter);
 
-        header << "const char *";
+        header << "const char* const ";
         WriteParamStaticVarName(call, param, counter, header);
         header << "[] = { \n";
 
