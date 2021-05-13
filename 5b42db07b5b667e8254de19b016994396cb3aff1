@@ -51,6 +51,23 @@
       "parentUuid": "bd3f8784_a584bcb6",
       "revId": "5b42db07b5b667e8254de19b016994396cb3aff1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "154142ad_08a87bba",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-13T20:50:26Z",
+      "side": 1,
+      "message": "LGTM as the short term solution",
+      "revId": "5b42db07b5b667e8254de19b016994396cb3aff1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
