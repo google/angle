@@ -161,10 +161,11 @@ const char *ResultTypeToString(TestResultType type)
             return "CRASH";
         case TestResultType::Fail:
             return "FAIL";
+        case TestResultType::NoResult:
+            return "NOTRUN";
         case TestResultType::Pass:
             return "PASS";
         case TestResultType::Skip:
-        case TestResultType::NoResult:
             return "SKIP";
         case TestResultType::Timeout:
             return "TIMEOUT";
@@ -181,6 +182,8 @@ TestResultType GetResultTypeFromString(const std::string &str)
         return TestResultType::Fail;
     if (str == "PASS")
         return TestResultType::Pass;
+    if (str == "NOTRUN")
+        return TestResultType::NoResult;
     if (str == "SKIP")
         return TestResultType::Skip;
     if (str == "TIMEOUT")
@@ -308,6 +311,10 @@ void WriteResultsFile(bool interrupted,
         actualResult += ResultTypeToString(result.type);
 
         std::string expectedResult = "PASS";
+        if (result.type == TestResultType::Skip)
+        {
+            expectedResult = "SKIP";
+        }
 
         // Handle flaky passing tests.
         if (result.flakyFailures > 0 && result.type == TestResultType::Pass)

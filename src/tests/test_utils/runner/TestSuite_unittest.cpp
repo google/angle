@@ -143,6 +143,7 @@ TEST_F(TestSuiteTest, RunCrashingTests)
 {
     std::vector<std::string> extraArgs = {
         "--gtest_filter=MockTestSuiteTest.DISABLED_Pass:MockTestSuiteTest.DISABLED_Fail:"
+        "MockTestSuiteTest.DISABLED_Skip:"
         "MockCrashTestSuiteTest.DISABLED_*",
         "--disable-crash-handler"};
 
@@ -152,8 +153,10 @@ TEST_F(TestSuiteTest, RunCrashingTests)
     std::map<TestIdentifier, TestResult> expectedResults = {
         {{"MockTestSuiteTest", "DISABLED_Pass"}, {TestResultType::Pass, 0.0}},
         {{"MockTestSuiteTest", "DISABLED_Fail"}, {TestResultType::Fail, 0.0}},
+        {{"MockTestSuiteTest", "DISABLED_Skip"}, {TestResultType::Skip, 0.0}},
         {{"MockCrashTestSuiteTest", "DISABLED_Crash"}, {TestResultType::Crash, 0.0}},
         {{"MockCrashTestSuiteTest", "DISABLED_PassAfterCrash"}, {TestResultType::Pass, 0.0}},
+        {{"MockCrashTestSuiteTest", "DISABLED_SkipAfterCrash"}, {TestResultType::Skip, 0.0}},
     };
 
     EXPECT_EQ(expectedResults, actual.results);
@@ -230,5 +233,11 @@ TEST(MockCrashTestSuiteTest, DISABLED_Crash)
 TEST(MockCrashTestSuiteTest, DISABLED_PassAfterCrash)
 {
     EXPECT_TRUE(true);
+}
+
+// This test runs after the crash test.
+TEST(MockCrashTestSuiteTest, DISABLED_SkipAfterCrash)
+{
+    GTEST_SKIP() << "Test skipped.";
 }
 }  // namespace
