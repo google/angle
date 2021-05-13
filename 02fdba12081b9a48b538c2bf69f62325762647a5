@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ce062e80_c9772ee7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-13T22:48:43Z",
+      "side": 1,
+      "message": "Tightening up our strings for traces that use large ones in the middle of the trace. This resolves a crash seen on at least three different platforms.  Basically the pointer changed on the second run through and was pointing off somewhere else.",
+      "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
