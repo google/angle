@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3d3e7de_f52572de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-13T22:46:12Z",
+      "side": 1,
+      "message": "PTAL. This is partial support for tracking programs on loop. Only handling the delete case, which is the common one, but asserting that none need to be recreated.",
+      "revId": "9623ee08f162f186b9ca3fc246cc6aa91fa107fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
