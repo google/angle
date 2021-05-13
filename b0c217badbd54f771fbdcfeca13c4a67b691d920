@@ -16,6 +16,24 @@
       "message": "Post-submit drive-by comment: This should have used a FeaturesVk feature bit.",
       "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cfdbac33_752c0ef0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-13T23:21:58Z",
+      "side": 1,
+      "message": "Going further, I would have preferred to see this use IsAndroid() instead, since IMG/etc. would likely hit the same issue.",
+      "parentUuid": "e4eef9ec_0dbb2b25",
+      "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
