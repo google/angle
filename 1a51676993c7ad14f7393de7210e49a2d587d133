@@ -70,6 +70,24 @@
       "parentUuid": "f2bfbdf6_4783577f",
       "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a908e41e_00a5b1e6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-13T15:01:42Z",
+      "side": 1,
+      "message": "The correct doc is go/vangle-compile-time-shader-compilation",
+      "parentUuid": "9b329876_782211ad",
+      "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
