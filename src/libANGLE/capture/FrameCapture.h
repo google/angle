@@ -216,6 +216,8 @@ using BufferMapStatusMap = std::map<gl::BufferID, bool>;
 using FenceSyncSet   = std::set<GLsync>;
 using FenceSyncCalls = std::map<GLsync, std::vector<CallCapture>>;
 
+using ProgramSet = std::set<gl::ShaderProgramID>;
+
 // Helper to track resource changes during the capture
 class ResourceTracker final : angle::NonCopyable
 {
@@ -266,6 +268,13 @@ class ResourceTracker final : angle::NonCopyable
     FenceSyncSet &getFenceSyncsToRegen() { return mFenceSyncsToRegen; }
     void setDeletedFenceSync(GLsync sync);
 
+    ProgramSet &getStartingPrograms() { return mStartingPrograms; }
+    ProgramSet &getNewPrograms() { return mNewPrograms; }
+    ProgramSet &getProgramsToRegen() { return mProgramsToRegen; }
+
+    void setCreatedProgram(gl::ShaderProgramID id);
+    void setDeletedProgram(gl::ShaderProgramID id);
+
   private:
     // Buffer regen calls will delete and gen a buffer
     BufferCalls mBufferRegenCalls;
@@ -295,6 +304,13 @@ class ResourceTracker final : angle::NonCopyable
 
     // Maximum accessed shader program ID.
     uint32_t mMaxShaderPrograms = 0;
+
+    // Programs created during startup
+    ProgramSet mStartingPrograms;
+    // Programs created during the run that need to be deleted
+    ProgramSet mNewPrograms;
+    // Programs deleted during the run that need to be recreated
+    ProgramSet mProgramsToRegen;
 
     // Fence sync objects created during MEC setup
     FenceSyncSet mStartingFenceSyncs;

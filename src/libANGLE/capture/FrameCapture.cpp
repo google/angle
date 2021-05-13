@@ -926,6 +926,21 @@ void MaybeResetResources(std::stringstream &out,
 
             break;
         }
+        case ResourceIDType::ShaderProgram:
+        {
+            ProgramSet &newPrograms = resourceTracker->getNewPrograms();
+
+            // If we have any new programs created and not deleted during the run, delete them now
+            for (const auto &newProgram : newPrograms)
+            {
+                out << "    glDeleteProgram(gShaderProgramMap[" << newProgram.value << "]);\n";
+            }
+
+            // TODO (http://anglebug.com/5968): Handle programs that need regen
+            // This would only happen if a starting program was deleted during the run
+            ASSERT(resourceTracker->getProgramsToRegen().empty());
+            break;
+        }
         default:
             // TODO (http://anglebug.com/4599): Reset more than just buffers
             break;
@@ -2932,6 +2947,7 @@ void CaptureMidExecutionSetup(const gl::Context *context,
         }
 
         resourceTracker->onShaderProgramAccess(id);
+        resourceTracker->getStartingPrograms().insert(id);
     }
 
     for (const auto &ppoIterator : *programPipelineManager)
@@ -4347,6 +4363,35 @@ void FrameCapture::maybeCapturePreCallUpdates(const gl::Context *context, CallCa
                 context->getShareGroup()->getFrameCaptureShared();
             frameCaptureShared->setShaderSource(shader->getHandle(), shader->getSourceString());
             frameCaptureShared->setProgramSources(programID, GetAttachedProgramSources(program));
+
+            if (isCaptureActive())
+            {
+                mResourceTracker.setCreatedProgram(programID);
+            }
+            break;
+        }
+
+        case EntryPoint::GLCreateProgram:
+        {
+            // If we're capturing, track which programs have been created
+            if (isCaptureActive())
+            {
+                gl::ShaderProgramID programID = {call.params.getReturnValue().value.GLuintVal};
+                mResourceTracker.setCreatedProgram(programID);
+            }
+            break;
+        }
+
+        case EntryPoint::GLDeleteProgram:
+        {
+            // If we're capturing, track which programs have been deleted
+            if (isCaptureActive())
+            {
+                const ParamCapture &param =
+                    call.params.getParam("programPacked", ParamType::TShaderProgramID, 0);
+
+                mResourceTracker.setDeletedProgram(param.value.ShaderProgramIDVal);
+            }
             break;
         }
 
@@ -4907,6 +4952,40 @@ void ResourceTracker::setDeletedFenceSync(GLsync sync)
 
     // In this case, the app is deleting a fence sync we started with, we need to regen on loop.
     mFenceSyncsToRegen.insert(sync);
+}
+
+void ResourceTracker::setCreatedProgram(gl::ShaderProgramID id)
+{
+    if (mStartingPrograms.find(id) == mStartingPrograms.end())
+    {
+        // This is a program created after MEC was initialized, track it
+        mNewPrograms.insert(id);
+        return;
+    }
+}
+
+void ResourceTracker::setDeletedProgram(gl::ShaderProgramID id)
+{
+    if (id.value == 0)
+    {
+        // Ignore program ID 0
+        return;
+    }
+
+    if (mNewPrograms.find(id) != mNewPrograms.end())
+    {
+        // This is a program created after MEC was initialized, just clear it, since there will be
+        // no actions required for it to return to starting state.
+        mNewPrograms.erase(id);
+        return;
+    }
+
+    // Ensure this program was in our starting set
+    // It's possible this could fire if the app deletes programs that were never generated
+    ASSERT(mStartingPrograms.empty() || (mStartingPrograms.find(id) != mStartingPrograms.end()));
+
+    // In this case, the app is deleting a program we started with, we need to regen on loop
+    mProgramsToRegen.insert(id);
 }
 
 void ResourceTracker::setGennedBuffer(gl::BufferID id)
