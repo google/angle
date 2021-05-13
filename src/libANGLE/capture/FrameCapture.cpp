@@ -3610,6 +3610,13 @@ bool SkipCall(EntryPoint entryPoint)
             // There is no need to capture these for replaying a trace in our harness
             return true;
 
+        case EntryPoint::GLGetActiveUniform:
+            // Skip this call because:
+            // - We don't use the return values from this call.
+            // - Active uniform counts can vary between platforms due to cross stage optimizations
+            //   and asking about uniforms above GL_ACTIVE_UNIFORMS triggers errors.
+            return true;
+
         default:
             break;
     }
