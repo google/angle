@@ -70,6 +70,24 @@
       "parentUuid": "4896f8e8_5447de1d",
       "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "34dab267_96d6a4a0",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-13T23:46:12Z",
+      "side": 1,
+      "message": "\u003e Why is that a problem? ...\n\nYou\u0027re correct.  It just didn\u0027t seem nice to unilaterally turn off the extension they created on their device without talking with them first:-).  I hope to have the next extension soon (already started)",
+      "parentUuid": "5bb226a2_80ae7760",
+      "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
