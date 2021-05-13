@@ -874,10 +874,18 @@ void RendererVk::ensureCapsInitialized() const
 
     mNativeCaps.subPixelBits = limitsVk.subPixelPrecisionBits;
 
-    // Enable GL_EXT_shader_framebuffer_fetch_non_coherent
-    // For supporting this extension, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS is used.
-    mNativeExtensions.shaderFramebufferFetchNonCoherentEXT =
-        mNativeCaps.maxDrawBuffers >= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    // Important games are not checking supported extensions properly, and are confusing the
+    // GL_EXT_shader_framebuffer_fetch_non_coherent as the GL_EXT_shader_framebuffer_fetch
+    // extension.  Therefore, don't enable the extension on Arm and Qualcomm.
+    // https://issuetracker.google.com/issues/186643966
+    if (!(IsARM(mPhysicalDeviceProperties.vendorID) ||
+          IsQualcomm(mPhysicalDeviceProperties.vendorID)))
+    {
+        // Enable GL_EXT_shader_framebuffer_fetch_non_coherent
+        // For supporting this extension, gl::IMPLEMENTATION_MAX_DRAW_BUFFERS is used.
+        mNativeExtensions.shaderFramebufferFetchNonCoherentEXT =
+            mNativeCaps.maxDrawBuffers >= gl::IMPLEMENTATION_MAX_DRAW_BUFFERS;
+    }
 
     // Enable Program Binary extension.
     mNativeExtensions.getProgramBinaryOES = true;
