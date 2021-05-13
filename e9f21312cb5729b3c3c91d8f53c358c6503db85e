@@ -16,6 +16,24 @@
       "message": "LGTM - might give a unique names to each CL.",
       "revId": "e9f21312cb5729b3c3c91d8f53c358c6503db85e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4134ab88_8c5b4f6b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-13T18:40:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6068c85_9d55dbf0",
+      "revId": "e9f21312cb5729b3c3c91d8f53c358c6503db85e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
