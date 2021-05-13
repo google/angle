@@ -16,6 +16,23 @@
       "message": "An alternative would be to reset the gl version values in the existing EGLWindow instead of re-creating the whole object, one would have to make sure whether everything is properly destroyed though.  ",
       "revId": "59286c3fb99e925a96f15915c894032eb840d9e2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "637c1ff1_a3c0f8ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-13T19:16:51Z",
+      "side": 1,
+      "message": "Nice fix!",
+      "revId": "59286c3fb99e925a96f15915c894032eb840d9e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
