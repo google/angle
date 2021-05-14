@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ad44599_65b0fb3a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-14T20:47:38Z",
+      "side": 1,
+      "message": "lgtm - have you tested this locally with Meet? Unclear whether our IOSurface-related tests for eglBind/ReleaseTexImage are sufficient. Couple of minor questions.\n",
+      "revId": "9e80214d1683d271708469dfc4d939874ddc3c00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dcbc8279_850d2172",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1759,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-14T20:47:38Z",
+      "side": 1,
+      "message": "Just confirming, the texture unit state will be reset to the application\u0027s the next time it\u0027s synced? No dirty bits need to be set at a more global level?",
+      "revId": "9e80214d1683d271708469dfc4d939874ddc3c00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f51854b0_4b716dbb",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-14T20:47:38Z",
+      "side": 1,
+      "message": "textrure -\u003e texture",
+      "revId": "9e80214d1683d271708469dfc4d939874ddc3c00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
