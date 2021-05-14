@@ -52,6 +52,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4cae8a9e_28756c35",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1759,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-14T20:51:55Z",
+      "side": 1,
+      "message": "The onStateChange below tells the higher up parts ANGLE bits to resync.",
+      "parentUuid": "dcbc8279_850d2172",
+      "revId": "9e80214d1683d271708469dfc4d939874ddc3c00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f51854b0_4b716dbb",
@@ -65,6 +83,24 @@
       "writtenOn": "2021-05-14T20:47:38Z",
       "side": 1,
       "message": "textrure -\u003e texture",
+      "revId": "9e80214d1683d271708469dfc4d939874ddc3c00",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eeb9b309_e629668e",
+        "filename": "src/libANGLE/renderer/gl/TextureGL.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-14T20:51:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f51854b0_4b716dbb",
       "revId": "9e80214d1683d271708469dfc4d939874ddc3c00",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
