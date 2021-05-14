@@ -36,6 +36,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9660253_d774f976",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T16:21:28Z",
+      "side": 1,
+      "message": "LGTM - ideally all data could be packed into one block like in the other cache, so we could hash/memcmp faster.",
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de24131f_c8981f26",
