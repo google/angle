@@ -88,6 +88,24 @@
       "parentUuid": "5bb226a2_80ae7760",
       "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bcde481_b29c2b5c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-14T04:53:40Z",
+      "side": 1,
+      "message": "This was landed quickly so it could show up in Monday\u0027s builds.  This is blocking critical apps.",
+      "parentUuid": "34dab267_96d6a4a0",
+      "revId": "b0c217badbd54f771fbdcfeca13c4a67b691d920",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
