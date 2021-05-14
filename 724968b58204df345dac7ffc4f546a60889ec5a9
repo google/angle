@@ -16,6 +16,24 @@
       "message": "LGTM - I worry a bit about the max path len on Windows.",
       "revId": "724968b58204df345dac7ffc4f546a60889ec5a9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8a73a57_b3a209de",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-14T16:54:37Z",
+      "side": 1,
+      "message": "Well, the files are already there, so if anything, the names of the files should be shortened or the output path changed, this patch only changes the search mask. Maybe I should be clearer about this in the commit message?",
+      "parentUuid": "11e06115_e77faf09",
+      "revId": "724968b58204df345dac7ffc4f546a60889ec5a9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
