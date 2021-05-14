@@ -36,6 +36,224 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "28106203_3ff05a35",
+        "filename": "include/GLSLANG/ShaderLang.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "nit: increment this. Maybe just set it to like 270 or something, so it won\u0027t accidentally be removed in automerge when another change increments it. We could live with the jump, or just fix it right before submission",
+      "range": {
+        "startLine": 29,
+        "startChar": 25,
+        "endLine": 29,
+        "endChar": 28
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56b3e87c_e6650279",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Try removing this",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66e26153_9dee18b1",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "This is the same function as VariableRowCount, and can be removed.",
+      "range": {
+        "startLine": 487,
+        "startChar": 4,
+        "endLine": 487,
+        "endChar": 26
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "faa8ceb2_b7c1af10",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "const TVariable. We don\u0027t use auto except for tedious types (like blah\u003ctype\u003e::iterator)",
+      "range": {
+        "startLine": 482,
+        "startChar": 9,
+        "endLine": 482,
+        "endChar": 13
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9bfdb9bb_b2b773e1",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Same",
+      "range": {
+        "startLine": 491,
+        "startChar": 9,
+        "endLine": 491,
+        "endChar": 13
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b064f79d_5dcfa125",
+        "filename": "src/compiler/translator/TranslatorMetalDirect.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Why does metal use this transformation? Do they not allow row-major matrices, or do they have bugs?",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f694fb1_5371161c",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/Debug.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Nope. TODO should be ASSERT with comment. Depends on context, but instead of LOGIC_ERROR they should likely use UNREACHABLE.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 35
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17ba4609_519b834e",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/EnvironmentVariable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "We have code for these in common/, these can be removed",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 42,
+        "endChar": 0
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2328b79e_41704e89",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/FixTypeConstructors.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "We don\u0027t use `assert`. You can use UNREACHABLE() here with a comment.",
+      "range": {
+        "startLine": 74,
+        "startChar": 28,
+        "endLine": 74,
+        "endChar": 34
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "12e643af_9b5263df",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/NameEmbeddedUniformStructsMetal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Duplicate of SeparateStructFromUniformDeclarations?",
+      "range": {
+        "startLine": 26,
+        "startChar": 22,
+        "endLine": 26,
+        "endChar": 53
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "f2b06ab2_6595cce2",
@@ -55,6 +273,154 @@
         "endLine": 2113,
         "endChar": 38
       },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9188d41d_c9ce6092",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/ReduceInterfaceBlocks.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "This seems like would make the AST validation unhappy.",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8cdab51_d271ab0b",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/SeparateCompoundStructDeclarations.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "This is a duplicate of SeparateStructFromUniformDeclarations. That transformation can be modified to always separate structs, not just for uniforms.",
+      "range": {
+        "startLine": 20,
+        "startChar": 22,
+        "endLine": 20,
+        "endChar": 56
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2243faf1_5c0de98e",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/ToposortStructs.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Note sure what the purpose of this is. The structs are already in topological order in the root block, if they just need to output them in order, they can walk the block and output them in order.",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bcee4835_c00360d2",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/WrapMain.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Can you check where this is used? It may be used to implement a transformation where something is added to run at the end of main. In that case, there\u0027s already something that does this: RunAtTheEndOfShader().",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a66108da_aa99f555",
+        "filename": "src/compiler/translator/TranslatorMetalUtils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Move to TranslatorMetalDirect/?",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84810ebc_a99deaef",
+        "filename": "src/compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Looks like this was a copy-paste issue. This should have #included the header corresponding to this same cpp file",
+      "range": {
+        "startLine": 9,
+        "startChar": 39,
+        "endLine": 9,
+        "endChar": 60
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7ddb6f7d_b9507821",
+        "filename": "src/compiler/translator/tree_util/IntermRebuild.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Could you please move this under TranslatorMetalDirect? I\u0027m not sure having a thin wrapper over what we already have is justified. We could probably improve the traverser code itself, but it doesn\u0027t make sense to have both the traverser and then a wrapper around it.",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66f3a9f4_7ecfdf72",
+        "filename": "src/compiler/translator/tree_util/NodeType.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "Not sure where this terrible code is used, but if it\u0027s IntermRebuild, please move it under TranslatorMetalDirect too.",
       "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }

@@ -164,6 +164,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0aa013a5_72f68648",
+        "filename": "src/compiler/translator/tree_ops/SimplifyLoopConditions.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:22:21Z",
+      "side": 1,
+      "message": "If it\u0027s not used in the end, maybe just revert it until needed.",
+      "parentUuid": "443cdf8a_4a73d808",
+      "range": {
+        "startLine": 22,
+        "startChar": 1,
+        "endLine": 24,
+        "endChar": 72
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "835310b8_eea163ba",
         "filename": "src/compiler/translator/tree_util/DriverUniform.h",
         "patchSetId": 3
