@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c5e9fc37_b5bc087a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T18:47:48Z",
+      "side": 1,
+      "message": "I don\u0027t follow why the extra function is necessary. Are you worried about emitting a call to a function that isn\u0027t yet defined, or is there another forcing reason to use the new indirection function?",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 55
+      },
+      "revId": "a57761d121059e35f52d2b2e3cc68b96bbbafc6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a6639b9_e8185651",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T18:47:48Z",
+      "side": 1,
+      "message": "Definitely appreciative of the late init, I wonder if we can eliminate the extra indirection.",
+      "revId": "a57761d121059e35f52d2b2e3cc68b96bbbafc6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

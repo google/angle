@@ -46,6 +46,29 @@
       },
       "revId": "52e527c65d78c6b2923b2bbfe7aa3667364a9b2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "84e7b89c_f7d82fab",
+        "filename": "src/tests/capture_replay_tests/capture_replay_expectations.txt",
+        "patchSetId": 2
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T18:47:48Z",
+      "side": 1,
+      "message": "tiny nit: eliminate trailing space",
+      "range": {
+        "startLine": 28,
+        "startChar": 74,
+        "endLine": 28,
+        "endChar": 75
+      },
+      "revId": "52e527c65d78c6b2923b2bbfe7aa3667364a9b2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
