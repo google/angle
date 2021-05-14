@@ -62,9 +62,6 @@ bool DebugAnnotatorVk::isDrawOrDispatchEntryPoint(angle::EntryPoint entryPoint) 
         case angle::EntryPoint::GLDrawArraysInstancedBaseInstance:
         case angle::EntryPoint::GLDrawArraysInstancedBaseInstanceANGLE:
         case angle::EntryPoint::GLDrawArraysInstancedEXT:
-        case angle::EntryPoint::GLDrawBuffer:
-        case angle::EntryPoint::GLDrawBuffers:
-        case angle::EntryPoint::GLDrawBuffersEXT:
         case angle::EntryPoint::GLDrawElements:
         case angle::EntryPoint::GLDrawElementsBaseVertex:
         case angle::EntryPoint::GLDrawElementsBaseVertexEXT:
