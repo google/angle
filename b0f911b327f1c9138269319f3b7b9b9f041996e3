@@ -16,6 +16,24 @@
       "message": "CQ said Vote reset ",
       "revId": "b0f911b327f1c9138269319f3b7b9b9f041996e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c550f5bc_2f9b92e0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-14T16:00:38Z",
+      "side": 1,
+      "message": "I\u0027m seeing this in your output:\n\n  Comparison Failed: \n\tIndexBufferOffsetTest.UInt16Index/ES2_Vulkan_SwiftShader\n\nhere:\nhttps://logs.chromium.org/logs/angle/buildbucket/cr-buildbucket.appspot.com/8847262425932034928/+/steps/Run_trace_tests/0/stdout\n\nI\u0027m actually seeing it in one of my CLs too:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2895326\n\nI\u0027ll look into it, maybe we need to suppress it.",
+      "parentUuid": "2b333e65_d7650971",
+      "revId": "b0f911b327f1c9138269319f3b7b9b9f041996e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
