@@ -16,6 +16,23 @@
       "message": "PTAL... I didn\u0027t verify this CL that much. In the end it was pretty simple to change.",
       "revId": "c0c74581d96cb397d6db5bc72534c7cfdb525fb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "26703408_452db3ce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T19:54:46Z",
+      "side": 1,
+      "message": "Note that I could actually enable both flaky retries and sharding in this CL or a follow-up ANGLE CL.",
+      "revId": "c0c74581d96cb397d6db5bc72534c7cfdb525fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
