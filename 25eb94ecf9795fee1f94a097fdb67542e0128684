@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e0d374b_65c35289",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 934,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T17:20:38Z",
+      "side": 1,
+      "message": "This check is unnecessary.",
+      "revId": "25eb94ecf9795fee1f94a097fdb67542e0128684",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
