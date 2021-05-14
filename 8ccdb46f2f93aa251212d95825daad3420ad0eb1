@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c918c908_cbcdc132",
+        "filename": "doc/DevSetup.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T18:52:19Z",
+      "side": 1,
+      "message": "Generally of the opinion to keep the instructions more minimal. Appreciate that you took the initiative to improve a document you found unclear, I worry though it introduces a bit too much text. So I am sort of in line with Shabi\u0027s point here and below.",
+      "parentUuid": "72c813ae_ccd422c9",
+      "range": {
+        "startLine": 16,
+        "startChar": 0,
+        "endLine": 25,
+        "endChar": 53
+      },
+      "revId": "8ccdb46f2f93aa251212d95825daad3420ad0eb1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5c922702_a65b0315",
         "filename": "doc/DevSetup.md",
         "patchSetId": 1
