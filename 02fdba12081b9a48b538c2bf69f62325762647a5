@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d9c03e0_4667ffbf",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-14T03:30:12Z",
+      "side": 1,
+      "message": "On second loop through, the pointer\u0027s value had changed and no longer pointed to the string.  This only happened on the native driver, but happened on multiple desktop vendors.  I didn\u0027t grab screenshots of the new value in the debugger, but I can if you want to dig into it more.",
+      "parentUuid": "9aa71815_3b708800",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 30
+      },
+      "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ce062e80_c9772ee7",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-05-14T01:41:30Z",
       "side": 1,
       "message": "Why does this fix the problem (and how did you figure it out)?",
+      "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "97ccf99a_99655a47",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-14T03:30:12Z",
+      "side": 1,
+      "message": "We were crashing in glCompileShader on the second loop through.  In the debugger, I could see that glShaderSource was no longer pointing to the string.  It wasn\u0027t nullptr, it had just ... changed. Looking at the spec, the parameter to glShaderSource is actually \"const char* const *string\", so I applied that to our strings.  The drivers may be relying on that.",
+      "parentUuid": "14d26d31_9bb77764",
       "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
