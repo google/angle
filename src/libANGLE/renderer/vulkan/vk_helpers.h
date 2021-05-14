@@ -1696,10 +1696,8 @@ class ImageHelper final : public Resource, public angle::Subject
 
     // Takes an image and stages a subresource update for each level of it, including its full
     // extent and all its layers, at the specified GL level.
-    void stageSubresourceUpdatesFromAllImageLevels(RendererVk *renderer,
-                                                   RefCounted<ImageHelper> *image,
-                                                   gl::LevelIndex baseLevel,
-                                                   gl::TexLevelMask skipLevelsMask);
+    void stageSubresourceUpdatesFromAllImageLevels(RefCounted<ImageHelper> *image,
+                                                   gl::LevelIndex baseLevel);
 
     // Stage a clear to an arbitrary value.
     void stageClear(const gl::ImageIndex &index,
@@ -1713,9 +1711,14 @@ class ImageHelper final : public Resource, public angle::Subject
                                                      const Format &format);
     void stageRobustResourceClear(const gl::ImageIndex &index);
 
-    // Stage the currently allocated image as an update to base level, making this !valid().  This
-    // is used for mipmap generation.
-    void stageSelfForBaseLevel(ContextVk *contextVk);
+    // Stage the currently allocated image as updates to base level and on, making this !valid().
+    // This is used for:
+    //
+    // - Mipmap generation, where levelCount is 1 so only the base level is retained
+    // - Image respecification, where every level (other than those explicitly skipped) is staged
+    void stageSelfAsSubresourceUpdates(ContextVk *contextVk,
+                                       uint32_t levelCount,
+                                       gl::TexLevelMask skipLevelsMask);
 
     // Flush staged updates for a single subresource. Can optionally take a parameter to defer
     // clears to a subsequent RenderPass load op.

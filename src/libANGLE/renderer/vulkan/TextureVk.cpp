@@ -1937,6 +1937,10 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
     // levels outside the range of the Vulkan image will remain intact.
     RendererVk *renderer = contextVk->getRenderer();
 
+    // This path is only called when switching from !owned to owned, in which case if any level was
+    // redefined it's already released and deleted by TextureVk::redefineLevel().
+    ASSERT(!mRedefinedLevels.any());
+
     // Create a temp copy of srcImage for staging.
     std::unique_ptr<vk::RefCounted<vk::ImageHelper>> stagingImage;
     stagingImage = std::make_unique<vk::RefCounted<vk::ImageHelper>>();
@@ -1967,15 +1971,6 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
 
     for (vk::LevelIndex levelVk(0); levelVk < vk::LevelIndex(levelCount); ++levelVk)
     {
-        if (mRedefinedLevels.test(levelVk.get()))
-        {
-            // Note: if this level is incompatibly redefined, there will necessarily be a
-            // staged update, and the contents of the image are to be thrown away.
-            ASSERT(srcImage->hasStagedUpdatesForSubresource(
-                vk_gl::GetLevelIndex(levelVk, previousFirstAllocateLevel), 0, layerCount));
-            continue;
-        }
-
         gl::Extents levelExtents = srcImage->getLevelExtents(levelVk);
 
         copyRegion.srcSubresource.mipLevel = levelVk.get();
@@ -1988,8 +1983,8 @@ angle::Result TextureVk::copyAndStageImageData(ContextVk *contextVk,
     }
 
     // Stage the staging image in the destination
-    dstImage->stageSubresourceUpdatesFromAllImageLevels(
-        renderer, stagingImage.release(), previousFirstAllocateLevel, mRedefinedLevels);
+    dstImage->stageSubresourceUpdatesFromAllImageLevels(stagingImage.release(),
+                                                        previousFirstAllocateLevel);
 
     return angle::Result::Continue;
 }
@@ -2065,14 +2060,11 @@ angle::Result TextureVk::respecifyImageStorageAndLevels(ContextVk *contextVk,
     }
     else
     {
-        // TODO: Make the image stage itself as an update to its levels.  http://anglebug.com/4835
+        // Make the image stage itself as updates to its levels.
+        mImage->stageSelfAsSubresourceUpdates(contextVk, mImage->getLevelCount(), mRedefinedLevels);
 
-        // Make a copy of the current image and stage that as an update to the new image.
-        ANGLE_TRY(copyAndStageImageData(contextVk, previousFirstAllocateLevel, mImage, mImage));
-
-        // Now that we've staged all the updates, release the current image so that it will be
-        // recreated with the correct number of mip levels, base level, and max level.
-        // Do this iff we owned the image and didn't create a new one.
+        // Release the current image so that it will be recreated with the correct number of mip
+        // levels, base level, and max level.
         releaseImage(contextVk);
 
         if (!mState.getImmutableFormat())
@@ -2423,8 +2415,8 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     // For immutable texture, base level does not affect allocation. Only usage flags are. If usage
     // flag changed, we respecify image storage early on. This makes the code more reliable and also
     // better performance wise. Otherwise, we will try to preserve base level by calling
-    // stageSelfForBaseLevel and then later on find out the mImageUsageFlags changed and the whole
-    // thing has to be respecified.
+    // stageSelfAsSubresourceUpdates and then later on find out the mImageUsageFlags changed and the
+    // whole thing has to be respecified.
     if (mState.getImmutableFormat() &&
         (oldUsageFlags != mImageUsageFlags || oldCreateFlags != mImageCreateFlags))
     {
@@ -2463,14 +2455,14 @@ angle::Result TextureVk::syncState(const gl::Context *context,
     {
         ASSERT(mOwnsImage);
         // Immutable texture is not expected to reach here. The usage flag change should have
-        // handled earlier and level count change should not need to reallocate
+        // been handled earlier and level count change should not need to reallocate
         ASSERT(!mState.getImmutableFormat());
 
         // Flush staged updates to the base level of the image.  Note that updates to the rest of
         // the levels have already been discarded through the |removeStagedUpdates| call above.
         ANGLE_TRY(flushImageStagedUpdates(contextVk));
 
-        mImage->stageSelfForBaseLevel(contextVk);
+        mImage->stageSelfAsSubresourceUpdates(contextVk, 1, {});
 
         // Release views and render targets created for the old image.
         releaseImage(contextVk);

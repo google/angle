@@ -5764,21 +5764,11 @@ void ImageHelper::stageSubresourceUpdateFromImage(RefCounted<ImageHelper> *image
     appendSubresourceUpdate(updateLevelGL, SubresourceUpdate(image, copyToImage));
 }
 
-void ImageHelper::stageSubresourceUpdatesFromAllImageLevels(RendererVk *renderer,
-                                                            RefCounted<ImageHelper> *image,
-                                                            gl::LevelIndex baseLevel,
-                                                            gl::TexLevelMask skipLevelsMask)
+void ImageHelper::stageSubresourceUpdatesFromAllImageLevels(RefCounted<ImageHelper> *image,
+                                                            gl::LevelIndex baseLevel)
 {
-    uint32_t levelsStaged = 0;
-
     for (LevelIndex levelVk(0); levelVk < LevelIndex(image->get().getLevelCount()); ++levelVk)
     {
-        if (skipLevelsMask.test(levelVk.get()))
-        {
-            continue;
-        }
-        ++levelsStaged;
-
         const gl::LevelIndex levelGL = vk_gl::GetLevelIndex(levelVk, baseLevel);
         const gl::ImageIndex index =
             gl::ImageIndex::Make2DArrayRange(levelGL.get(), 0, image->get().getLayerCount());
@@ -5786,15 +5776,6 @@ void ImageHelper::stageSubresourceUpdatesFromAllImageLevels(RendererVk *renderer
         stageSubresourceUpdateFromImage(image, index, levelVk, gl::kOffsetZero,
                                         image->get().getLevelExtents(levelVk),
                                         image->get().getType());
-    }
-
-    // TODO: remove skipLevelsMask and this code after optimizing image-respecify to stage itself
-    // (instead of a copy).  http://anglebug.com/4835
-    if (levelsStaged == 0)
-    {
-        image->get().releaseImage(renderer);
-        image->get().releaseStagingBuffer(renderer);
-        SafeDelete(image);
     }
 }
 
@@ -5905,8 +5886,17 @@ void ImageHelper::stageClearIfEmulatedFormat(bool isRobustResourceInitEnabled)
     }
 }
 
-void ImageHelper::stageSelfForBaseLevel(ContextVk *contextVk)
+void ImageHelper::stageSelfAsSubresourceUpdates(ContextVk *contextVk,
+                                                uint32_t levelCount,
+                                                gl::TexLevelMask skipLevelsMask)
+
 {
+    // Nothing to do if every level must be skipped
+    if ((~skipLevelsMask & gl::TexLevelMask(angle::Bit<uint32_t>(levelCount) - 1)).none())
+    {
+        return;
+    }
+
     // Because we are cloning this object to another object, we must finalize the layout if it is
     // being used by current renderpass as attachment. Otherwise we are copying the incorrect layout
     // since it is determined at endRenderPass time.
@@ -5922,14 +5912,14 @@ void ImageHelper::stageSelfForBaseLevel(ContextVk *contextVk)
     prevImage->get().mImage        = std::move(mImage);
     prevImage->get().mDeviceMemory = std::move(mDeviceMemory);
 
-    // Barrier information.  Note: mLevelCount is set to 1 so that only the base level is
-    // transitioned when flushing the update.
+    // Barrier information.  Note: mLevelCount is set to levelCount so that only the necessary
+    // levels are transitioned when flushing the update.
     prevImage->get().mFormat                      = mFormat;
     prevImage->get().mCurrentLayout               = mCurrentLayout;
     prevImage->get().mCurrentQueueFamilyIndex     = mCurrentQueueFamilyIndex;
     prevImage->get().mLastNonShaderReadOnlyLayout = mLastNonShaderReadOnlyLayout;
     prevImage->get().mCurrentShaderReadStageMask  = mCurrentShaderReadStageMask;
-    prevImage->get().mLevelCount                  = 1;
+    prevImage->get().mLevelCount                  = levelCount;
     prevImage->get().mLayerCount                  = mLayerCount;
     prevImage->get().mImageSerial                 = mImageSerial;
 
@@ -5942,11 +5932,23 @@ void ImageHelper::stageSelfForBaseLevel(ContextVk *contextVk)
 
     setEntireContentUndefined();
 
-    // Stage an update from the previous image.
-    const gl::ImageIndex firstAllocateLevelIndex =
-        gl::ImageIndex::Make2DArrayRange(mFirstAllocatedLevel.get(), 0, mLayerCount);
-    stageSubresourceUpdateFromImage(prevImage.release(), firstAllocateLevelIndex, LevelIndex(0),
-                                    gl::kOffsetZero, getLevelExtents(LevelIndex(0)), mImageType);
+    // Stage updates from the previous image.
+    for (LevelIndex levelVk(0); levelVk < LevelIndex(levelCount); ++levelVk)
+    {
+        if (skipLevelsMask.test(levelVk.get()))
+        {
+            continue;
+        }
+
+        const gl::ImageIndex index =
+            gl::ImageIndex::Make2DArrayRange(toGLLevel(levelVk).get(), 0, mLayerCount);
+
+        stageSubresourceUpdateFromImage(prevImage.get(), index, levelVk, gl::kOffsetZero,
+                                        getLevelExtents(levelVk), mImageType);
+    }
+
+    ASSERT(levelCount > 0);
+    prevImage.release();
 }
 
 angle::Result ImageHelper::flushSingleSubresourceStagedUpdates(ContextVk *contextVk,
