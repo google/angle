@@ -122,6 +122,24 @@
       "parentUuid": "e950dc04_ac2f2a97",
       "revId": "c849ecbaada0b861f1f4de098bbdff91e86b485e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc31b204_b41f6bce",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T19:28:51Z",
+      "side": 1,
+      "message": "Thanks for testing. We could potentially use the command buffer size as signal for when to flush, so we don\u0027t flush tiny render passes (and accumulate sizes until some threshold is met).",
+      "parentUuid": "d04049c7_66fe38a1",
+      "revId": "c849ecbaada0b861f1f4de098bbdff91e86b485e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
