@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d8ee8a85_34ffda01",
+        "filename": "src/compiler/translator/TranslatorMetalDirect.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "I\u0027m not sure if this is needed for iOS or was just copy-pasted at the time",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 248,
+        "endChar": 1
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94ccc223_94741c1d",
+        "filename": "src/compiler/translator/TranslatorMetalDirect.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 534,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "nit",
+      "range": {
+        "startLine": 529,
+        "startChar": 0,
+        "endLine": 534,
+        "endChar": 8
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53b8f88b_3317dac2",
+        "filename": "src/compiler/translator/TranslatorMetalDirect.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1221,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "These compile guards are present in apple\u0027s CL. Does not compile if removed, because TOutputMSL class doesn\u0027t exist yet",
+      "range": {
+        "startLine": 1215,
+        "startChar": 0,
+        "endLine": 1221,
+        "endChar": 6
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c594fc6a_47fc779f",
+        "filename": "src/compiler/translator/TranslatorMetalDirect.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1233,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "same",
+      "range": {
+        "startLine": 1230,
+        "startChar": 0,
+        "endLine": 1233,
+        "endChar": 6
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "783e247a_c92df6aa",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/EmitMetal.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "These are defined in src/libANGLE/renderer/metal/mtl_constants.h, which itself includes something from the GL backend for gl::MAX_VERTEX_ATTRIBS. Those are invalid includes here, but I\u0027m not sure the best way to define these constants",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 59,
+        "endChar": 0
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23b64350_78d72a0f",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/RewritePipelines.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 958,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "This is wrong. I need help figuring out how to merge this file. angleUniformsGlobalInstanceVar is passed in as a DriverUniform, not a TVariable, and that\u0027s the issue.",
+      "range": {
+        "startLine": 957,
+        "startChar": 8,
+        "endLine": 958,
+        "endChar": 43
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "443cdf8a_4a73d808",
+        "filename": "src/compiler/translator/tree_ops/SimplifyLoopConditions.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "This call signature hasn\u0027t actually existed before. I\u0027m uncertain if this is just a merge error or intentional. Same goes for the changes in the cpp file. I\u0027m not sure if they are reverting some older commit or are intentional.",
+      "range": {
+        "startLine": 22,
+        "startChar": 1,
+        "endLine": 24,
+        "endChar": 72
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "835310b8_eea163ba",
+        "filename": "src/compiler/translator/tree_util/DriverUniform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "I had to make this public because:\n1. There was a static function CreateDriverUniformRef in TranslatorMetalDirect that took in driverUniforms as a TVariable*, but that seems to be an old pattern, so I got rid of it.\n2. There are still parts. of CreateDriverUniformRef that I could\u0027t use the getters from this file for.\n\nI think the better solution would be to make new getters/functions and not make this public.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 71
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af757d6e_c087ea09",
+        "filename": "src/compiler/translator/tree_util/SpecializationConstant.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "Same as above comments about prerotation/iOS",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 41
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "347e0b9a_8dde31b1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-14T17:27:48Z",
+      "side": 1,
+      "message": "Patchset 1 contains files touched by this change as they were originally in Kyle Piddington\u0027s CL here: https://chromium-review.googlesource.com/c/angle/angle/+/2857366/, so compare against PS1 to see what I changed, and compare against base to see what\u0027s added to ANGLE.\n\nI would appreciate some feedback so I can clean this up further.\n\nThere are several functions that were copied directly from TranslatorVulkan and could be shared. I\u0027m not sure if it\u0027s best to do that here or in a follow-up.",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
