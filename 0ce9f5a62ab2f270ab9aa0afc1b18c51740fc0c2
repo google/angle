@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "49f58ee2_8bc894e0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T01:28:04Z",
+      "side": 1,
+      "message": "typo",
+      "range": {
+        "startLine": 20,
+        "startChar": 60,
+        "endLine": 20,
+        "endChar": 64
+      },
+      "revId": "0ce9f5a62ab2f270ab9aa0afc1b18c51740fc0c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ea30c060_6ba5ff25",
@@ -14,6 +37,23 @@
       "writtenOn": "2021-05-13T22:47:04Z",
       "side": 1,
       "message": "This is required for apps that have compiles in the middle of the trace.",
+      "revId": "0ce9f5a62ab2f270ab9aa0afc1b18c51740fc0c2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6c8ae0b_be238c6c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T01:28:04Z",
+      "side": 1,
+      "message": "LGTM",
       "revId": "0ce9f5a62ab2f270ab9aa0afc1b18c51740fc0c2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
