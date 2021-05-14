@@ -16,6 +16,46 @@
       "message": "PTAL. This is partial support for tracking programs on loop. Only handling the delete case, which is the common one, but asserting that none need to be recreated.",
       "revId": "9623ee08f162f186b9ca3fc246cc6aa91fa107fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2211ff8b_656fe4b7",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T00:46:26Z",
+      "side": 1,
+      "message": "Can this be simplified to:\n\n    for (const auto \u0026newProgram : newPrograms)\n    {\n        out \u003c\u003c \"    glDeleteProgram(gShaderProgramMap[\" \u003c\u003c newProgram.value \u003c\u003c \"]);\\n\";\n    }",
+      "range": {
+        "startLine": 934,
+        "startChar": 0,
+        "endLine": 943,
+        "endChar": 13
+      },
+      "revId": "9623ee08f162f186b9ca3fc246cc6aa91fa107fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4b3821e_dee9a2ec",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 316,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T00:46:26Z",
+      "side": 1,
+      "message": "Why do we need mProgramsToRestore also?   It looks like it mirrors mProgramsToRegen.",
+      "revId": "9623ee08f162f186b9ca3fc246cc6aa91fa107fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
