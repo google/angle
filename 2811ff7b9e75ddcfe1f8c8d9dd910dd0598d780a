@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b223923a_02213c74",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T18:54:24Z",
+      "side": 1,
+      "message": "LGTM\n\nWill this make the diffs show up on the bots? I noticed this was missing and it would be helpful.",
+      "revId": "2811ff7b9e75ddcfe1f8c8d9dd910dd0598d780a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
