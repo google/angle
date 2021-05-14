@@ -116,6 +116,24 @@
       "parentUuid": "97ccf99a_99655a47",
       "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0e479f9_482e8ddb",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T16:05:40Z",
+      "side": 1,
+      "message": "\u003e You would think the compiler would spew errors now if the pointer was previously being changed :-?\n\nBased on Cody\u0027s description, I agree.   It\u0027s a simple enough fix and it\u0027s even better than it matches the GLES API, so I\u0027m fine with it, but it\u0027s certainly strange.",
+      "parentUuid": "22de2028_90e19709",
+      "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
