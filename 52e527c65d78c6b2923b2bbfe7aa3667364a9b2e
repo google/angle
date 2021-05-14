@@ -22,6 +22,30 @@
       },
       "revId": "52e527c65d78c6b2923b2bbfe7aa3667364a9b2e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "64013fce_7d1dcbed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-14T08:12:35Z",
+      "side": 1,
+      "message": "I\u0027ve updated the commit message to clarify that the InitReplay() is an additional \nlayer of indirection that is used to emit the call to InitializeReplay() late. i.e. \nafter all frames have been captured.",
+      "parentUuid": "7c64d54a_111d5949",
+      "range": {
+        "startLine": 7,
+        "startChar": 21,
+        "endLine": 7,
+        "endChar": 37
+      },
+      "revId": "52e527c65d78c6b2923b2bbfe7aa3667364a9b2e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
