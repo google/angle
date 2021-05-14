@@ -67,6 +67,24 @@
       "message": "Just the usual request for a regression test.",
       "revId": "291822eef79b1ffdf1746e3f695d461ac582b25c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71499e29_07b50e4b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-14T19:26:32Z",
+      "side": 1,
+      "message": "is already present in deqp-khr -\u003e dEQP.KHR_GLES31/core_texture_border_clamp_texparameteri_errors\n\nwas not being run because texture border clamp extension support was a requirement for that test",
+      "parentUuid": "2b6a1029_e14e9e33",
+      "revId": "291822eef79b1ffdf1746e3f695d461ac582b25c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
