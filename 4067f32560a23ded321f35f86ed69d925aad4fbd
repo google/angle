@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ab47d24_4818271c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-14T16:24:47Z",
+      "side": 1,
+      "message": "But the exact same issue applies other types of descriptor set cache as well, for example, atomic and storage buffer which does not have the bug this CL try to fix, but also have the same cache miss issue. I was thinking you can fix this and the same mechanism can can be propagate to others.\n\nFor your point #1, you never know how bad app can be, but XFB in general is less common usage anyway. I am okay to deal with cache misses in separate CL.",
+      "parentUuid": "b6e65428_cc60c1e0",
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de24131f_c8981f26",
