@@ -51,6 +51,29 @@
       "parentUuid": "26703408_452db3ce",
       "revId": "c0c74581d96cb397d6db5bc72534c7cfdb525fb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ce68d30_f6c58313",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-14T21:06:08Z",
+      "side": 1,
+      "message": "Tempting to only retry on known flaky systems, but this should make things better.  We can watch for excessive retries.",
+      "range": {
+        "startLine": 358,
+        "startChar": 42,
+        "endLine": 358,
+        "endChar": 62
+      },
+      "revId": "c0c74581d96cb397d6db5bc72534c7cfdb525fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
