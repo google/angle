@@ -135,6 +135,30 @@
       },
       "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a04b1b33_a39dcb12",
+        "filename": "src/libANGLE/renderer/CLDeviceImpl.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-14T09:16:52Z",
+      "side": 1,
+      "message": "Yes, let\u0027s defer it until we discussed it",
+      "parentUuid": "c5e0a0b4_74ab39fb",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 72,
+        "endChar": 32
+      },
+      "revId": "b23fd752193b39591e91fcdb27d5e73d228b1e56",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
