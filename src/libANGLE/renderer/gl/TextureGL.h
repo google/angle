@@ -215,6 +215,8 @@ class TextureGL : public TextureImpl
     bool hasEmulatedAlphaChannel(const gl::ImageIndex &index) const;
 
   private:
+    angle::Result recreateTexture(const gl::Context *context);
+
     angle::Result setImageHelper(const gl::Context *context,
                                  gl::TextureTarget target,
                                  size_t level,
@@ -272,6 +274,11 @@ class TextureGL : public TextureImpl
 
     std::vector<LevelInfoGL> mLevelInfo;
     gl::Texture::DirtyBits mLocalDirtyBits;
+
+    // All dirty bits ever sychronized by this texture OR'd together. Used to know what state needs
+    // to be resynced if the texture is ever recreated without needing extension checks or state
+    // comparisons.
+    gl::Texture::DirtyBits mAllModifiedDirtyBits;
 
     gl::SwizzleState mAppliedSwizzle;
     gl::SamplerState mAppliedSampler;

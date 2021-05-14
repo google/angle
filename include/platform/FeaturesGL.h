@@ -343,12 +343,6 @@ struct FeaturesGL : FeatureSetBase
         "Issues with blitFramebuffer when the parameters don't match the framebuffer size.",
         &members, "http://crbug.com/830046"};
 
-    // Calling glTexImage2D with zero size generates GL errors
-    Feature resettingTexturesGeneratesErrors = {
-        "reset_texture_generates_errors", FeatureCategory::OpenGLWorkarounds,
-        "Calling glTexImage2D with zero size generates errors.", &members,
-        "http://anglebug.com/3859"};
-
     // Mac Intel samples transparent black from GL_COMPRESSED_RGB_S3TC_DXT1_EXT
     Feature rgbDXT1TexturesSampleZeroAlpha = {
         "rgb_dxt1_textures_sample_zero_alpha", FeatureCategory::OpenGLWorkarounds,
