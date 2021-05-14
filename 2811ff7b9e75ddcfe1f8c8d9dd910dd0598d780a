@@ -16,6 +16,24 @@
       "message": "LGTM\n\nWill this make the diffs show up on the bots? I noticed this was missing and it would be helpful.",
       "revId": "2811ff7b9e75ddcfe1f8c8d9dd910dd0598d780a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8e0af0bc_d0e80725",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-14T20:40:31Z",
+      "side": 1,
+      "message": "The diffs are shown when --verbose is set, that\u0027s independent from this change.",
+      "parentUuid": "b223923a_02213c74",
+      "revId": "2811ff7b9e75ddcfe1f8c8d9dd910dd0598d780a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
