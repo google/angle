@@ -16,6 +16,47 @@
       "message": "Patchset 1 contains files touched by this change as they were originally in Kyle Piddington\u0027s CL here: https://chromium-review.googlesource.com/c/angle/angle/+/2857366/, so compare against PS1 to see what I changed, and compare against base to see what\u0027s added to ANGLE.\n\nI would appreciate some feedback so I can clean this up further.\n\nThere are several functions that were copied directly from TranslatorVulkan and could be shared. I\u0027m not sure if it\u0027s best to do that here or in a follow-up.",
       "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2348b6f5_d7c79816",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T18:41:29Z",
+      "side": 1,
+      "message": "I would actually prefer if TranslatorVulkan stuff are duplicated for the time being. I\u0027m changing things there and it would be great if I didn\u0027t have to bother with metal.",
+      "parentUuid": "347e0b9a_8dde31b1",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2b06ab2_6595cce2",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/ProgramPrelude.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2113,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-14T18:41:29Z",
+      "side": 1,
+      "message": "nit: The worst part of this change IMO is all these wrappers here. They increase the shader size which gets cached to disk (and I\u0027m sure also increases compile time), and besides that it\u0027s just unnecessary. So when generating metal, instead of generating \"ANGLE_textureGrad_impl(x, y ,z)\", they could have a function here that outputs the translated code directly. Something like:\n\nstd::string Output_textureGrad_generic_float3_float2_float2(x, y z)\n{\n    return \"texture.sample(\" + x + \", \" + y + \", \" + z + \");\";\n}\n\nDoes that make sense? Then the output shader will not be riddled with a million wrappers. They would also need fewer helper functions than these wrappers since the don\u0027t need to duplicate the functions based on parameters type (like textureGrad_generic_float3_float2_float2 and textureGrad_generic_float4_float2_float2 do)\n\nThat said, I get how Apple wouldn\u0027t want to rework this, and in the end it hurts their own platform, so it\u0027s really up to them if they want to improve things here (i.e. this is not a blocking commit)",
+      "range": {
+        "startLine": 2100,
+        "startChar": 0,
+        "endLine": 2113,
+        "endChar": 38
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
