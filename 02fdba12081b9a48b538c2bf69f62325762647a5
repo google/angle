@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "9aa71815_3b708800",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T01:41:30Z",
+      "side": 1,
+      "message": "I don\u0027t quite understand what\u0027s going wrong here.   These strings are declared in the .cpp files and should be accessible whenever we\u0027d like from within them.   Why would they go away if accessed when something like ReplayContext1Frame1() is executed twice?\n\n\u003e the string pointer is no good on the second run through\n\nWhat does \"no good\" mean?   It\u0027s pointing to somewhere random or the string itself is being corrupted somehow?\n\nDoes this happen with native and ANGLE playbacks, or just one of them?",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 30
+      },
+      "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "ce062e80_c9772ee7",
@@ -14,6 +37,23 @@
       "writtenOn": "2021-05-13T22:48:43Z",
       "side": 1,
       "message": "Tightening up our strings for traces that use large ones in the middle of the trace. This resolves a crash seen on at least three different platforms.  Basically the pointer changed on the second run through and was pointing off somewhere else.",
+      "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14d26d31_9bb77764",
+        "filename": "src/libANGLE/capture/FrameCapture.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 401,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-14T01:41:30Z",
+      "side": 1,
+      "message": "Why does this fix the problem (and how did you figure it out)?",
       "revId": "02fdba12081b9a48b538c2bf69f62325762647a5",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
