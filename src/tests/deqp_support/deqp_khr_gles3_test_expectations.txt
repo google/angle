@@ -120,6 +120,8 @@
 // New failures with latest dEQP roll (2021-03-05)
 5722 VULKAN : KHR-GLES3.framebuffer_completeness.rbo_and_texture_expect_zero_numsamples = FAIL
 
+5976 LINUX VULKAN NVIDIA : KHR-GLES3.shaders.indexing.tmp_array.vertexid = FAIL
+
 // Fails only with SwiftShader:
 
 // These only fail on Android

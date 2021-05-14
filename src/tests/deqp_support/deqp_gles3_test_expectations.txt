@@ -80,6 +80,8 @@
 // Fails on 451.48 driver version
 4948 D3D11 NVIDIA : dEQP-GLES3.functional.shaders.texture_functions.texturesize.* = FAIL
 
+5976 WIN D3D11 NVIDIA : dEQP-GLES3.functional.texture.specification.texsubimage2d_pbo.pbo_bounds_2d = FAIL
+
 // Flaky on Win7 D3D11 NVIDIA
 4070 WIN7 D3D11 NVIDIA : dEQP-GLES3.functional.rasterization.flatshading.triangles = FAIL
 
@@ -936,6 +938,8 @@
 4235 METAL AMD : dEQP-GLES3.functional.texture.vertex.cube.wrap.mirror_clamp = FAIL
 4235 METAL AMD : dEQP-GLES3.functional.texture.vertex.cube.wrap.mirror_repeat = FAIL
 4235 METAL AMD : dEQP-GLES3.functional.texture.vertex.cube.wrap.mirror_mirror = FAIL
+
+5976 METAL : dEQP-GLES3.functional.texture.specification.texsubimage2d_pbo.pbo_bounds_2d = SKIP
 
 // Fails after a test fix in VK-GL-CTS
 5666 METAL AMD : dEQP-GLES3.functional.texture.filtering.2d_array.formats.rgb9_e5_linear_mipmap_linear = FAIL
