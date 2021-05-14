@@ -22,6 +22,30 @@
       },
       "revId": "240c95bcf752c320575cbd94e18e830c5a40dfee",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "11a010d8_92c06300",
+        "filename": "scripts/gen_proc_table.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-14T09:41:29Z",
+      "side": 1,
+      "message": "Oops, yes, thanks for catching it! I had several things commented out when the scripts failed on Linux, and missed to revive this one. Fixed.",
+      "parentUuid": "d6e1d9e5_b95418db",
+      "range": {
+        "startLine": 135,
+        "startChar": 0,
+        "endLine": 135,
+        "endChar": 98
+      },
+      "revId": "240c95bcf752c320575cbd94e18e830c5a40dfee",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
