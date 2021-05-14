@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a11ad63_5a7d264f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-14T17:21:07Z",
+      "side": 1,
+      "message": "All finished 3 runs before and 3 runs after on P4 as well, not seeing obvious signal here. It will be nice to see different GPUs stay on the same course for this kind of behavior. So I am going to file a separate CL for pixel4 and ask Mohan folks to give a try and meantime will do another round of testing with locked clock. As long as we can confirm there is no regression, I think it will be better to enable for pixel4 as well to keep them same behavior.",
+      "parentUuid": "b2e45dcc_34387bca",
+      "range": {
+        "startLine": 9,
+        "startChar": 61,
+        "endLine": 9,
+        "endChar": 68
+      },
+      "revId": "c849ecbaada0b861f1f4de098bbdff91e86b485e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "e950dc04_ac2f2a97",
@@ -78,6 +102,24 @@
       "writtenOn": "2021-05-13T18:39:07Z",
       "side": 1,
       "message": "Nice change!",
+      "revId": "c849ecbaada0b861f1f4de098bbdff91e86b485e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d04049c7_66fe38a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-14T17:21:07Z",
+      "side": 1,
+      "message": "CPU wise, most app the diff is tiny. There are a few apps does show more. Among these, marvel_contest_of_champions has the biggest percentage increase. It appears that the increase almost all come from kernel mutex lock. This app uses 18 FBOs in one frame, which also explains why it see most increase in cpu overhead. But the CPU overhead will not impact overall game performance since it is GPU bottlenecked anyway. Its just not going to save power much given the increase of CPU usage while decrease the GPU time.",
+      "parentUuid": "e950dc04_ac2f2a97",
       "revId": "c849ecbaada0b861f1f4de098bbdff91e86b485e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
