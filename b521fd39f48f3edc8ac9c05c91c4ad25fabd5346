@@ -34,6 +34,24 @@
       "parentUuid": "bb01ea80_981f2d29",
       "revId": "b521fd39f48f3edc8ac9c05c91c4ad25fabd5346",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7623cfc1_23446e74",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-14T18:50:02Z",
+      "side": 1,
+      "message": "What Gert said pretty much. c++ could benefit from private members not needing to be in the headers.",
+      "parentUuid": "b3a72128_9b181f0f",
+      "revId": "b521fd39f48f3edc8ac9c05c91c4ad25fabd5346",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
