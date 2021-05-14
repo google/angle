@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "3254239b_01d6d688",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-14T20:48:49Z",
+      "side": 1,
+      "message": "The InitializeReplay() call is emitted as part of SetupReplay(), and this is emitted with the first frame. I didn\u0027t really see whether the setup calls really have to be emitted with the first frame, or whether this can be postponed too. If the latter is possible, then we can move emitting the whole setup stuff to the place where this IniotReplay() call body is now emitted, if not then I guess the indirection must stay.",
+      "parentUuid": "c5e9fc37_b5bc087a",
+      "range": {
+        "startLine": 13,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 55
+      },
+      "revId": "a57761d121059e35f52d2b2e3cc68b96bbbafc6c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "8a6639b9_e8185651",
