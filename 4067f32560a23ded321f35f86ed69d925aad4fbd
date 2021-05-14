@@ -71,6 +71,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f7a49bc_b781ffd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-14T16:37:23Z",
+      "side": 1,
+      "message": "Actually I think this is not a regression with sub-allocation. As long as you call glBufferData with different size, you basically will have a cache miss. What can be improved here is that in this case, we know that cache likely will miss, we just use a generic buffer/offset/range as the key to find the cached DS and then update it. It\u0027s a seperate issue from this CL.",
+      "parentUuid": "9ab47d24_4818271c",
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de24131f_c8981f26",
