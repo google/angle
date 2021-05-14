@@ -457,7 +457,7 @@ class Test():
 
     def CanRunReplay(self, trace_folder_path):
         test_files = []
-        label = self.GetLabel()
+        label = self.GetLabel() + "_capture"
         assert (self.context_id == 0)
         for f in os.listdir(trace_folder_path):
             if os.path.isfile(os.path.join(trace_folder_path, f)) and f.startswith(label):
