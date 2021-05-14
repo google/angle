@@ -592,6 +592,7 @@ libglesv2_cl_sources = [
   "src/libGLESv2/cl_stubs_autogen.h",
   "src/libGLESv2/entry_points_cl_autogen.cpp",
   "src/libGLESv2/entry_points_cl_autogen.h",
+  "src/libGLESv2/entry_points_cl_utils.cpp",
   "src/libGLESv2/entry_points_cl_utils.h",
   "src/libGLESv2/proc_table_cl.h",
   "src/libGLESv2/proc_table_cl_autogen.cpp",

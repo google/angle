@@ -35,7 +35,7 @@ class Context final : public _cl_context, public Object
 
     cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
 
-    static bool IsValid(const Context *context);
+    static bool IsValid(const _cl_context *context);
 
   private:
     Context(Platform &platform,

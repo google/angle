@@ -14,293 +14,288 @@
 
 namespace cl
 {
-cl_int IcdGetPlatformIDsKHR(cl_uint num_entries,
-                            Platform **platformsPacked,
-                            cl_uint *num_platforms);
-cl_int GetPlatformIDs(cl_uint num_entries, Platform **platformsPacked, cl_uint *num_platforms);
-cl_int GetPlatformInfo(Platform *platformPacked,
+cl_int IcdGetPlatformIDsKHR(cl_uint num_entries, cl_platform_id *platforms, cl_uint *num_platforms);
+cl_int GetPlatformIDs(cl_uint num_entries, cl_platform_id *platforms, cl_uint *num_platforms);
+cl_int GetPlatformInfo(cl_platform_id platform,
                        PlatformInfo param_namePacked,
                        size_t param_value_size,
                        void *param_value,
                        size_t *param_value_size_ret);
-cl_int GetDeviceIDs(Platform *platformPacked,
+cl_int GetDeviceIDs(cl_platform_id platform,
                     cl_device_type device_type,
                     cl_uint num_entries,
-                    Device **devicesPacked,
+                    cl_device_id *devices,
                     cl_uint *num_devices);
-cl_int GetDeviceInfo(Device *devicePacked,
+cl_int GetDeviceInfo(cl_device_id device,
                      DeviceInfo param_namePacked,
                      size_t param_value_size,
                      void *param_value,
                      size_t *param_value_size_ret);
-cl_int CreateSubDevices(Device *in_devicePacked,
+cl_int CreateSubDevices(cl_device_id in_device,
                         const cl_device_partition_property *properties,
                         cl_uint num_devices,
-                        Device **out_devicesPacked,
+                        cl_device_id *out_devices,
                         cl_uint *num_devices_ret);
-cl_int RetainDevice(Device *devicePacked);
-cl_int ReleaseDevice(Device *devicePacked);
-cl_int SetDefaultDeviceCommandQueue(Context *contextPacked,
-                                    Device *devicePacked,
-                                    CommandQueue *command_queuePacked);
-cl_int GetDeviceAndHostTimer(Device *devicePacked,
+cl_int RetainDevice(cl_device_id device);
+cl_int ReleaseDevice(cl_device_id device);
+cl_int SetDefaultDeviceCommandQueue(cl_context context,
+                                    cl_device_id device,
+                                    cl_command_queue command_queue);
+cl_int GetDeviceAndHostTimer(cl_device_id device,
                              cl_ulong *device_timestamp,
                              cl_ulong *host_timestamp);
-cl_int GetHostTimer(Device *devicePacked, cl_ulong *host_timestamp);
-Context *CreateContext(const cl_context_properties *properties,
-                       cl_uint num_devices,
-                       Device *const *devicesPacked,
-                       void(CL_CALLBACK *pfn_notify)(const char *errinfo,
-                                                     const void *private_info,
-                                                     size_t cb,
-                                                     void *user_data),
-                       void *user_data,
-                       cl_int *errcode_ret);
-Context *CreateContextFromType(const cl_context_properties *properties,
-                               cl_device_type device_type,
-                               void(CL_CALLBACK *pfn_notify)(const char *errinfo,
-                                                             const void *private_info,
-                                                             size_t cb,
-                                                             void *user_data),
-                               void *user_data,
-                               cl_int *errcode_ret);
-cl_int RetainContext(Context *contextPacked);
-cl_int ReleaseContext(Context *contextPacked);
-cl_int GetContextInfo(Context *contextPacked,
+cl_int GetHostTimer(cl_device_id device, cl_ulong *host_timestamp);
+cl_context CreateContext(const cl_context_properties *properties,
+                         cl_uint num_devices,
+                         const cl_device_id *devices,
+                         void(CL_CALLBACK *pfn_notify)(const char *errinfo,
+                                                       const void *private_info,
+                                                       size_t cb,
+                                                       void *user_data),
+                         void *user_data,
+                         cl_int *errcode_ret);
+cl_context CreateContextFromType(const cl_context_properties *properties,
+                                 cl_device_type device_type,
+                                 void(CL_CALLBACK *pfn_notify)(const char *errinfo,
+                                                               const void *private_info,
+                                                               size_t cb,
+                                                               void *user_data),
+                                 void *user_data,
+                                 cl_int *errcode_ret);
+cl_int RetainContext(cl_context context);
+cl_int ReleaseContext(cl_context context);
+cl_int GetContextInfo(cl_context context,
                       ContextInfo param_namePacked,
                       size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret);
-cl_int SetContextDestructorCallback(Context *contextPacked,
+cl_int SetContextDestructorCallback(cl_context context,
                                     void(CL_CALLBACK *pfn_notify)(cl_context context,
                                                                   void *user_data),
                                     void *user_data);
-CommandQueue *CreateCommandQueueWithProperties(Context *contextPacked,
-                                               Device *devicePacked,
-                                               const cl_queue_properties *properties,
-                                               cl_int *errcode_ret);
-cl_int RetainCommandQueue(CommandQueue *command_queuePacked);
-cl_int ReleaseCommandQueue(CommandQueue *command_queuePacked);
-cl_int GetCommandQueueInfo(CommandQueue *command_queuePacked,
+cl_command_queue CreateCommandQueueWithProperties(cl_context context,
+                                                  cl_device_id device,
+                                                  const cl_queue_properties *properties,
+                                                  cl_int *errcode_ret);
+cl_int RetainCommandQueue(cl_command_queue command_queue);
+cl_int ReleaseCommandQueue(cl_command_queue command_queue);
+cl_int GetCommandQueueInfo(cl_command_queue command_queue,
                            CommandQueueInfo param_namePacked,
                            size_t param_value_size,
                            void *param_value,
                            size_t *param_value_size_ret);
-Memory *CreateBuffer(Context *contextPacked,
-                     cl_mem_flags flags,
-                     size_t size,
-                     void *host_ptr,
-                     cl_int *errcode_ret);
-Memory *CreateBufferWithProperties(Context *contextPacked,
-                                   const cl_mem_properties *properties,
-                                   cl_mem_flags flags,
-                                   size_t size,
-                                   void *host_ptr,
-                                   cl_int *errcode_ret);
-Memory *CreateSubBuffer(Memory *bufferPacked,
-                        cl_mem_flags flags,
-                        cl_buffer_create_type buffer_create_type,
-                        const void *buffer_create_info,
-                        cl_int *errcode_ret);
-Memory *CreateImage(Context *contextPacked,
+cl_mem CreateBuffer(cl_context context,
                     cl_mem_flags flags,
-                    const cl_image_format *image_format,
-                    const cl_image_desc *image_desc,
+                    size_t size,
                     void *host_ptr,
                     cl_int *errcode_ret);
-Memory *CreateImageWithProperties(Context *contextPacked,
+cl_mem CreateBufferWithProperties(cl_context context,
                                   const cl_mem_properties *properties,
                                   cl_mem_flags flags,
-                                  const cl_image_format *image_format,
-                                  const cl_image_desc *image_desc,
+                                  size_t size,
                                   void *host_ptr,
                                   cl_int *errcode_ret);
-Memory *CreatePipe(Context *contextPacked,
+cl_mem CreateSubBuffer(cl_mem buffer,
+                       cl_mem_flags flags,
+                       cl_buffer_create_type buffer_create_type,
+                       const void *buffer_create_info,
+                       cl_int *errcode_ret);
+cl_mem CreateImage(cl_context context,
                    cl_mem_flags flags,
-                   cl_uint pipe_packet_size,
-                   cl_uint pipe_max_packets,
-                   const cl_pipe_properties *properties,
+                   const cl_image_format *image_format,
+                   const cl_image_desc *image_desc,
+                   void *host_ptr,
                    cl_int *errcode_ret);
-cl_int RetainMemObject(Memory *memobjPacked);
-cl_int ReleaseMemObject(Memory *memobjPacked);
-cl_int GetSupportedImageFormats(Context *contextPacked,
+cl_mem CreateImageWithProperties(cl_context context,
+                                 const cl_mem_properties *properties,
+                                 cl_mem_flags flags,
+                                 const cl_image_format *image_format,
+                                 const cl_image_desc *image_desc,
+                                 void *host_ptr,
+                                 cl_int *errcode_ret);
+cl_mem CreatePipe(cl_context context,
+                  cl_mem_flags flags,
+                  cl_uint pipe_packet_size,
+                  cl_uint pipe_max_packets,
+                  const cl_pipe_properties *properties,
+                  cl_int *errcode_ret);
+cl_int RetainMemObject(cl_mem memobj);
+cl_int ReleaseMemObject(cl_mem memobj);
+cl_int GetSupportedImageFormats(cl_context context,
                                 cl_mem_flags flags,
                                 MemObjectType image_typePacked,
                                 cl_uint num_entries,
                                 cl_image_format *image_formats,
                                 cl_uint *num_image_formats);
-cl_int GetMemObjectInfo(Memory *memobjPacked,
+cl_int GetMemObjectInfo(cl_mem memobj,
                         MemInfo param_namePacked,
                         size_t param_value_size,
                         void *param_value,
                         size_t *param_value_size_ret);
-cl_int GetImageInfo(Memory *imagePacked,
+cl_int GetImageInfo(cl_mem image,
                     ImageInfo param_namePacked,
                     size_t param_value_size,
                     void *param_value,
                     size_t *param_value_size_ret);
-cl_int GetPipeInfo(Memory *pipePacked,
+cl_int GetPipeInfo(cl_mem pipe,
                    PipeInfo param_namePacked,
                    size_t param_value_size,
                    void *param_value,
                    size_t *param_value_size_ret);
-cl_int SetMemObjectDestructorCallback(Memory *memobjPacked,
+cl_int SetMemObjectDestructorCallback(cl_mem memobj,
                                       void(CL_CALLBACK *pfn_notify)(cl_mem memobj, void *user_data),
                                       void *user_data);
-void *SVMAlloc(Context *contextPacked, cl_svm_mem_flags flags, size_t size, cl_uint alignment);
-void SVMFree(Context *contextPacked, void *svm_pointer);
-Sampler *CreateSamplerWithProperties(Context *contextPacked,
-                                     const cl_sampler_properties *sampler_properties,
-                                     cl_int *errcode_ret);
-cl_int RetainSampler(Sampler *samplerPacked);
-cl_int ReleaseSampler(Sampler *samplerPacked);
-cl_int GetSamplerInfo(Sampler *samplerPacked,
+void *SVMAlloc(cl_context context, cl_svm_mem_flags flags, size_t size, cl_uint alignment);
+void SVMFree(cl_context context, void *svm_pointer);
+cl_sampler CreateSamplerWithProperties(cl_context context,
+                                       const cl_sampler_properties *sampler_properties,
+                                       cl_int *errcode_ret);
+cl_int RetainSampler(cl_sampler sampler);
+cl_int ReleaseSampler(cl_sampler sampler);
+cl_int GetSamplerInfo(cl_sampler sampler,
                       SamplerInfo param_namePacked,
                       size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret);
-Program *CreateProgramWithSource(Context *contextPacked,
-                                 cl_uint count,
-                                 const char **strings,
-                                 const size_t *lengths,
-                                 cl_int *errcode_ret);
-Program *CreateProgramWithBinary(Context *contextPacked,
-                                 cl_uint num_devices,
-                                 Device *const *device_listPacked,
-                                 const size_t *lengths,
-                                 const unsigned char **binaries,
-                                 cl_int *binary_status,
-                                 cl_int *errcode_ret);
-Program *CreateProgramWithBuiltInKernels(Context *contextPacked,
-                                         cl_uint num_devices,
-                                         Device *const *device_listPacked,
-                                         const char *kernel_names,
-                                         cl_int *errcode_ret);
-Program *CreateProgramWithIL(Context *contextPacked,
-                             const void *il,
-                             size_t length,
-                             cl_int *errcode_ret);
-cl_int RetainProgram(Program *programPacked);
-cl_int ReleaseProgram(Program *programPacked);
-cl_int BuildProgram(Program *programPacked,
+cl_program CreateProgramWithSource(cl_context context,
+                                   cl_uint count,
+                                   const char **strings,
+                                   const size_t *lengths,
+                                   cl_int *errcode_ret);
+cl_program CreateProgramWithBinary(cl_context context,
+                                   cl_uint num_devices,
+                                   const cl_device_id *device_list,
+                                   const size_t *lengths,
+                                   const unsigned char **binaries,
+                                   cl_int *binary_status,
+                                   cl_int *errcode_ret);
+cl_program CreateProgramWithBuiltInKernels(cl_context context,
+                                           cl_uint num_devices,
+                                           const cl_device_id *device_list,
+                                           const char *kernel_names,
+                                           cl_int *errcode_ret);
+cl_program CreateProgramWithIL(cl_context context,
+                               const void *il,
+                               size_t length,
+                               cl_int *errcode_ret);
+cl_int RetainProgram(cl_program program);
+cl_int ReleaseProgram(cl_program program);
+cl_int BuildProgram(cl_program program,
                     cl_uint num_devices,
-                    Device *const *device_listPacked,
+                    const cl_device_id *device_list,
                     const char *options,
                     void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                     void *user_data);
-cl_int CompileProgram(Program *programPacked,
+cl_int CompileProgram(cl_program program,
                       cl_uint num_devices,
-                      Device *const *device_listPacked,
+                      const cl_device_id *device_list,
                       const char *options,
                       cl_uint num_input_headers,
-                      Program *const *input_headersPacked,
+                      const cl_program *input_headers,
                       const char **header_include_names,
                       void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                       void *user_data);
-Program *LinkProgram(Context *contextPacked,
-                     cl_uint num_devices,
-                     Device *const *device_listPacked,
-                     const char *options,
-                     cl_uint num_input_programs,
-                     Program *const *input_programsPacked,
-                     void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
-                     void *user_data,
-                     cl_int *errcode_ret);
-cl_int SetProgramReleaseCallback(Program *programPacked,
+cl_program LinkProgram(cl_context context,
+                       cl_uint num_devices,
+                       const cl_device_id *device_list,
+                       const char *options,
+                       cl_uint num_input_programs,
+                       const cl_program *input_programs,
+                       void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
+                       void *user_data,
+                       cl_int *errcode_ret);
+cl_int SetProgramReleaseCallback(cl_program program,
                                  void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                                  void *user_data);
-cl_int SetProgramSpecializationConstant(Program *programPacked,
+cl_int SetProgramSpecializationConstant(cl_program program,
                                         cl_uint spec_id,
                                         size_t spec_size,
                                         const void *spec_value);
-cl_int UnloadPlatformCompiler(Platform *platformPacked);
-cl_int GetProgramInfo(Program *programPacked,
+cl_int UnloadPlatformCompiler(cl_platform_id platform);
+cl_int GetProgramInfo(cl_program program,
                       ProgramInfo param_namePacked,
                       size_t param_value_size,
                       void *param_value,
                       size_t *param_value_size_ret);
-cl_int GetProgramBuildInfo(Program *programPacked,
-                           Device *devicePacked,
+cl_int GetProgramBuildInfo(cl_program program,
+                           cl_device_id device,
                            ProgramBuildInfo param_namePacked,
                            size_t param_value_size,
                            void *param_value,
                            size_t *param_value_size_ret);
-Kernel *CreateKernel(Program *programPacked, const char *kernel_name, cl_int *errcode_ret);
-cl_int CreateKernelsInProgram(Program *programPacked,
+cl_kernel CreateKernel(cl_program program, const char *kernel_name, cl_int *errcode_ret);
+cl_int CreateKernelsInProgram(cl_program program,
                               cl_uint num_kernels,
-                              Kernel **kernelsPacked,
+                              cl_kernel *kernels,
                               cl_uint *num_kernels_ret);
-Kernel *CloneKernel(Kernel *source_kernelPacked, cl_int *errcode_ret);
-cl_int RetainKernel(Kernel *kernelPacked);
-cl_int ReleaseKernel(Kernel *kernelPacked);
-cl_int SetKernelArg(Kernel *kernelPacked,
-                    cl_uint arg_index,
-                    size_t arg_size,
-                    const void *arg_value);
-cl_int SetKernelArgSVMPointer(Kernel *kernelPacked, cl_uint arg_index, const void *arg_value);
-cl_int SetKernelExecInfo(Kernel *kernelPacked,
+cl_kernel CloneKernel(cl_kernel source_kernel, cl_int *errcode_ret);
+cl_int RetainKernel(cl_kernel kernel);
+cl_int ReleaseKernel(cl_kernel kernel);
+cl_int SetKernelArg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value);
+cl_int SetKernelArgSVMPointer(cl_kernel kernel, cl_uint arg_index, const void *arg_value);
+cl_int SetKernelExecInfo(cl_kernel kernel,
                          KernelExecInfo param_namePacked,
                          size_t param_value_size,
                          const void *param_value);
-cl_int GetKernelInfo(Kernel *kernelPacked,
+cl_int GetKernelInfo(cl_kernel kernel,
                      KernelInfo param_namePacked,
                      size_t param_value_size,
                      void *param_value,
                      size_t *param_value_size_ret);
-cl_int GetKernelArgInfo(Kernel *kernelPacked,
+cl_int GetKernelArgInfo(cl_kernel kernel,
                         cl_uint arg_index,
                         KernelArgInfo param_namePacked,
                         size_t param_value_size,
                         void *param_value,
                         size_t *param_value_size_ret);
-cl_int GetKernelWorkGroupInfo(Kernel *kernelPacked,
-                              Device *devicePacked,
+cl_int GetKernelWorkGroupInfo(cl_kernel kernel,
+                              cl_device_id device,
                               KernelWorkGroupInfo param_namePacked,
                               size_t param_value_size,
                               void *param_value,
                               size_t *param_value_size_ret);
-cl_int GetKernelSubGroupInfo(Kernel *kernelPacked,
-                             Device *devicePacked,
+cl_int GetKernelSubGroupInfo(cl_kernel kernel,
+                             cl_device_id device,
                              KernelSubGroupInfo param_namePacked,
                              size_t input_value_size,
                              const void *input_value,
                              size_t param_value_size,
                              void *param_value,
                              size_t *param_value_size_ret);
-cl_int WaitForEvents(cl_uint num_events, Event *const *event_listPacked);
-cl_int GetEventInfo(Event *eventPacked,
+cl_int WaitForEvents(cl_uint num_events, const cl_event *event_list);
+cl_int GetEventInfo(cl_event event,
                     EventInfo param_namePacked,
                     size_t param_value_size,
                     void *param_value,
                     size_t *param_value_size_ret);
-Event *CreateUserEvent(Context *contextPacked, cl_int *errcode_ret);
-cl_int RetainEvent(Event *eventPacked);
-cl_int ReleaseEvent(Event *eventPacked);
-cl_int SetUserEventStatus(Event *eventPacked, cl_int execution_status);
-cl_int SetEventCallback(Event *eventPacked,
+cl_event CreateUserEvent(cl_context context, cl_int *errcode_ret);
+cl_int RetainEvent(cl_event event);
+cl_int ReleaseEvent(cl_event event);
+cl_int SetUserEventStatus(cl_event event, cl_int execution_status);
+cl_int SetEventCallback(cl_event event,
                         cl_int command_exec_callback_type,
                         void(CL_CALLBACK *pfn_notify)(cl_event event,
                                                       cl_int event_command_status,
                                                       void *user_data),
                         void *user_data);
-cl_int GetEventProfilingInfo(Event *eventPacked,
+cl_int GetEventProfilingInfo(cl_event event,
                              ProfilingInfo param_namePacked,
                              size_t param_value_size,
                              void *param_value,
                              size_t *param_value_size_ret);
-cl_int Flush(CommandQueue *command_queuePacked);
-cl_int Finish(CommandQueue *command_queuePacked);
-cl_int EnqueueReadBuffer(CommandQueue *command_queuePacked,
-                         Memory *bufferPacked,
+cl_int Flush(cl_command_queue command_queue);
+cl_int Finish(cl_command_queue command_queue);
+cl_int EnqueueReadBuffer(cl_command_queue command_queue,
+                         cl_mem buffer,
                          cl_bool blocking_read,
                          size_t offset,
                          size_t size,
                          void *ptr,
                          cl_uint num_events_in_wait_list,
-                         Event *const *event_wait_listPacked,
-                         Event **eventPacked);
-cl_int EnqueueReadBufferRect(CommandQueue *command_queuePacked,
-                             Memory *bufferPacked,
+                         const cl_event *event_wait_list,
+                         cl_event *event);
+cl_int EnqueueReadBufferRect(cl_command_queue command_queue,
+                             cl_mem buffer,
                              cl_bool blocking_read,
                              const size_t *buffer_origin,
                              const size_t *host_origin,
@@ -311,19 +306,19 @@ cl_int EnqueueReadBufferRect(CommandQueue *command_queuePacked,
                              size_t host_slice_pitch,
                              void *ptr,
                              cl_uint num_events_in_wait_list,
-                             Event *const *event_wait_listPacked,
-                             Event **eventPacked);
-cl_int EnqueueWriteBuffer(CommandQueue *command_queuePacked,
-                          Memory *bufferPacked,
+                             const cl_event *event_wait_list,
+                             cl_event *event);
+cl_int EnqueueWriteBuffer(cl_command_queue command_queue,
+                          cl_mem buffer,
                           cl_bool blocking_write,
                           size_t offset,
                           size_t size,
                           const void *ptr,
                           cl_uint num_events_in_wait_list,
-                          Event *const *event_wait_listPacked,
-                          Event **eventPacked);
-cl_int EnqueueWriteBufferRect(CommandQueue *command_queuePacked,
-                              Memory *bufferPacked,
+                          const cl_event *event_wait_list,
+                          cl_event *event);
+cl_int EnqueueWriteBufferRect(cl_command_queue command_queue,
+                              cl_mem buffer,
                               cl_bool blocking_write,
                               const size_t *buffer_origin,
                               const size_t *host_origin,
@@ -334,29 +329,29 @@ cl_int EnqueueWriteBufferRect(CommandQueue *command_queuePacked,
                               size_t host_slice_pitch,
                               const void *ptr,
                               cl_uint num_events_in_wait_list,
-                              Event *const *event_wait_listPacked,
-                              Event **eventPacked);
-cl_int EnqueueFillBuffer(CommandQueue *command_queuePacked,
-                         Memory *bufferPacked,
+                              const cl_event *event_wait_list,
+                              cl_event *event);
+cl_int EnqueueFillBuffer(cl_command_queue command_queue,
+                         cl_mem buffer,
                          const void *pattern,
                          size_t pattern_size,
                          size_t offset,
                          size_t size,
                          cl_uint num_events_in_wait_list,
-                         Event *const *event_wait_listPacked,
-                         Event **eventPacked);
-cl_int EnqueueCopyBuffer(CommandQueue *command_queuePacked,
-                         Memory *src_bufferPacked,
-                         Memory *dst_bufferPacked,
+                         const cl_event *event_wait_list,
+                         cl_event *event);
+cl_int EnqueueCopyBuffer(cl_command_queue command_queue,
+                         cl_mem src_buffer,
+                         cl_mem dst_buffer,
                          size_t src_offset,
                          size_t dst_offset,
                          size_t size,
                          cl_uint num_events_in_wait_list,
-                         Event *const *event_wait_listPacked,
-                         Event **eventPacked);
-cl_int EnqueueCopyBufferRect(CommandQueue *command_queuePacked,
-                             Memory *src_bufferPacked,
-                             Memory *dst_bufferPacked,
+                         const cl_event *event_wait_list,
+                         cl_event *event);
+cl_int EnqueueCopyBufferRect(cl_command_queue command_queue,
+                             cl_mem src_buffer,
+                             cl_mem dst_buffer,
                              const size_t *src_origin,
                              const size_t *dst_origin,
                              const size_t *region,
@@ -365,10 +360,10 @@ cl_int EnqueueCopyBufferRect(CommandQueue *command_queuePacked,
                              size_t dst_row_pitch,
                              size_t dst_slice_pitch,
                              cl_uint num_events_in_wait_list,
-                             Event *const *event_wait_listPacked,
-                             Event **eventPacked);
-cl_int EnqueueReadImage(CommandQueue *command_queuePacked,
-                        Memory *imagePacked,
+                             const cl_event *event_wait_list,
+                             cl_event *event);
+cl_int EnqueueReadImage(cl_command_queue command_queue,
+                        cl_mem image,
                         cl_bool blocking_read,
                         const size_t *origin,
                         const size_t *region,
@@ -376,10 +371,10 @@ cl_int EnqueueReadImage(CommandQueue *command_queuePacked,
                         size_t slice_pitch,
                         void *ptr,
                         cl_uint num_events_in_wait_list,
-                        Event *const *event_wait_listPacked,
-                        Event **eventPacked);
-cl_int EnqueueWriteImage(CommandQueue *command_queuePacked,
-                         Memory *imagePacked,
+                        const cl_event *event_wait_list,
+                        cl_event *event);
+cl_int EnqueueWriteImage(cl_command_queue command_queue,
+                         cl_mem image,
                          cl_bool blocking_write,
                          const size_t *origin,
                          const size_t *region,
@@ -387,55 +382,55 @@ cl_int EnqueueWriteImage(CommandQueue *command_queuePacked,
                          size_t input_slice_pitch,
                          const void *ptr,
                          cl_uint num_events_in_wait_list,
-                         Event *const *event_wait_listPacked,
-                         Event **eventPacked);
-cl_int EnqueueFillImage(CommandQueue *command_queuePacked,
-                        Memory *imagePacked,
+                         const cl_event *event_wait_list,
+                         cl_event *event);
+cl_int EnqueueFillImage(cl_command_queue command_queue,
+                        cl_mem image,
                         const void *fill_color,
                         const size_t *origin,
                         const size_t *region,
                         cl_uint num_events_in_wait_list,
-                        Event *const *event_wait_listPacked,
-                        Event **eventPacked);
-cl_int EnqueueCopyImage(CommandQueue *command_queuePacked,
-                        Memory *src_imagePacked,
-                        Memory *dst_imagePacked,
+                        const cl_event *event_wait_list,
+                        cl_event *event);
+cl_int EnqueueCopyImage(cl_command_queue command_queue,
+                        cl_mem src_image,
+                        cl_mem dst_image,
                         const size_t *src_origin,
                         const size_t *dst_origin,
                         const size_t *region,
                         cl_uint num_events_in_wait_list,
-                        Event *const *event_wait_listPacked,
-                        Event **eventPacked);
-cl_int EnqueueCopyImageToBuffer(CommandQueue *command_queuePacked,
-                                Memory *src_imagePacked,
-                                Memory *dst_bufferPacked,
+                        const cl_event *event_wait_list,
+                        cl_event *event);
+cl_int EnqueueCopyImageToBuffer(cl_command_queue command_queue,
+                                cl_mem src_image,
+                                cl_mem dst_buffer,
                                 const size_t *src_origin,
                                 const size_t *region,
                                 size_t dst_offset,
                                 cl_uint num_events_in_wait_list,
-                                Event *const *event_wait_listPacked,
-                                Event **eventPacked);
-cl_int EnqueueCopyBufferToImage(CommandQueue *command_queuePacked,
-                                Memory *src_bufferPacked,
-                                Memory *dst_imagePacked,
+                                const cl_event *event_wait_list,
+                                cl_event *event);
+cl_int EnqueueCopyBufferToImage(cl_command_queue command_queue,
+                                cl_mem src_buffer,
+                                cl_mem dst_image,
                                 size_t src_offset,
                                 const size_t *dst_origin,
                                 const size_t *region,
                                 cl_uint num_events_in_wait_list,
-                                Event *const *event_wait_listPacked,
-                                Event **eventPacked);
-void *EnqueueMapBuffer(CommandQueue *command_queuePacked,
-                       Memory *bufferPacked,
+                                const cl_event *event_wait_list,
+                                cl_event *event);
+void *EnqueueMapBuffer(cl_command_queue command_queue,
+                       cl_mem buffer,
                        cl_bool blocking_map,
                        cl_map_flags map_flags,
                        size_t offset,
                        size_t size,
                        cl_uint num_events_in_wait_list,
-                       Event *const *event_wait_listPacked,
-                       Event **eventPacked,
+                       const cl_event *event_wait_list,
+                       cl_event *event,
                        cl_int *errcode_ret);
-void *EnqueueMapImage(CommandQueue *command_queuePacked,
-                      Memory *imagePacked,
+void *EnqueueMapImage(cl_command_queue command_queue,
+                      cl_mem image,
                       cl_bool blocking_map,
                       cl_map_flags map_flags,
                       const size_t *origin,
@@ -443,50 +438,50 @@ void *EnqueueMapImage(CommandQueue *command_queuePacked,
                       size_t *image_row_pitch,
                       size_t *image_slice_pitch,
                       cl_uint num_events_in_wait_list,
-                      Event *const *event_wait_listPacked,
-                      Event **eventPacked,
+                      const cl_event *event_wait_list,
+                      cl_event *event,
                       cl_int *errcode_ret);
-cl_int EnqueueUnmapMemObject(CommandQueue *command_queuePacked,
-                             Memory *memobjPacked,
+cl_int EnqueueUnmapMemObject(cl_command_queue command_queue,
+                             cl_mem memobj,
                              void *mapped_ptr,
                              cl_uint num_events_in_wait_list,
-                             Event *const *event_wait_listPacked,
-                             Event **eventPacked);
-cl_int EnqueueMigrateMemObjects(CommandQueue *command_queuePacked,
+                             const cl_event *event_wait_list,
+                             cl_event *event);
+cl_int EnqueueMigrateMemObjects(cl_command_queue command_queue,
                                 cl_uint num_mem_objects,
-                                Memory *const *mem_objectsPacked,
+                                const cl_mem *mem_objects,
                                 cl_mem_migration_flags flags,
                                 cl_uint num_events_in_wait_list,
-                                Event *const *event_wait_listPacked,
-                                Event **eventPacked);
-cl_int EnqueueNDRangeKernel(CommandQueue *command_queuePacked,
-                            Kernel *kernelPacked,
+                                const cl_event *event_wait_list,
+                                cl_event *event);
+cl_int EnqueueNDRangeKernel(cl_command_queue command_queue,
+                            cl_kernel kernel,
                             cl_uint work_dim,
                             const size_t *global_work_offset,
                             const size_t *global_work_size,
                             const size_t *local_work_size,
                             cl_uint num_events_in_wait_list,
-                            Event *const *event_wait_listPacked,
-                            Event **eventPacked);
-cl_int EnqueueNativeKernel(CommandQueue *command_queuePacked,
+                            const cl_event *event_wait_list,
+                            cl_event *event);
+cl_int EnqueueNativeKernel(cl_command_queue command_queue,
                            void(CL_CALLBACK *user_func)(void *),
                            void *args,
                            size_t cb_args,
                            cl_uint num_mem_objects,
-                           Memory *const *mem_listPacked,
+                           const cl_mem *mem_list,
                            const void **args_mem_loc,
                            cl_uint num_events_in_wait_list,
-                           Event *const *event_wait_listPacked,
-                           Event **eventPacked);
-cl_int EnqueueMarkerWithWaitList(CommandQueue *command_queuePacked,
+                           const cl_event *event_wait_list,
+                           cl_event *event);
+cl_int EnqueueMarkerWithWaitList(cl_command_queue command_queue,
                                  cl_uint num_events_in_wait_list,
-                                 Event *const *event_wait_listPacked,
-                                 Event **eventPacked);
-cl_int EnqueueBarrierWithWaitList(CommandQueue *command_queuePacked,
+                                 const cl_event *event_wait_list,
+                                 cl_event *event);
+cl_int EnqueueBarrierWithWaitList(cl_command_queue command_queue,
                                   cl_uint num_events_in_wait_list,
-                                  Event *const *event_wait_listPacked,
-                                  Event **eventPacked);
-cl_int EnqueueSVMFree(CommandQueue *command_queuePacked,
+                                  const cl_event *event_wait_list,
+                                  cl_event *event);
+cl_int EnqueueSVMFree(cl_command_queue command_queue,
                       cl_uint num_svm_pointers,
                       void *svm_pointers[],
                       void(CL_CALLBACK *pfn_free_func)(cl_command_queue queue,
@@ -495,88 +490,88 @@ cl_int EnqueueSVMFree(CommandQueue *command_queuePacked,
                                                        void *user_data),
                       void *user_data,
                       cl_uint num_events_in_wait_list,
-                      Event *const *event_wait_listPacked,
-                      Event **eventPacked);
-cl_int EnqueueSVMMemcpy(CommandQueue *command_queuePacked,
+                      const cl_event *event_wait_list,
+                      cl_event *event);
+cl_int EnqueueSVMMemcpy(cl_command_queue command_queue,
                         cl_bool blocking_copy,
                         void *dst_ptr,
                         const void *src_ptr,
                         size_t size,
                         cl_uint num_events_in_wait_list,
-                        Event *const *event_wait_listPacked,
-                        Event **eventPacked);
-cl_int EnqueueSVMMemFill(CommandQueue *command_queuePacked,
+                        const cl_event *event_wait_list,
+                        cl_event *event);
+cl_int EnqueueSVMMemFill(cl_command_queue command_queue,
                          void *svm_ptr,
                          const void *pattern,
                          size_t pattern_size,
                          size_t size,
                          cl_uint num_events_in_wait_list,
-                         Event *const *event_wait_listPacked,
-                         Event **eventPacked);
-cl_int EnqueueSVMMap(CommandQueue *command_queuePacked,
+                         const cl_event *event_wait_list,
+                         cl_event *event);
+cl_int EnqueueSVMMap(cl_command_queue command_queue,
                      cl_bool blocking_map,
                      cl_map_flags flags,
                      void *svm_ptr,
                      size_t size,
                      cl_uint num_events_in_wait_list,
-                     Event *const *event_wait_listPacked,
-                     Event **eventPacked);
-cl_int EnqueueSVMUnmap(CommandQueue *command_queuePacked,
+                     const cl_event *event_wait_list,
+                     cl_event *event);
+cl_int EnqueueSVMUnmap(cl_command_queue command_queue,
                        void *svm_ptr,
                        cl_uint num_events_in_wait_list,
-                       Event *const *event_wait_listPacked,
-                       Event **eventPacked);
-cl_int EnqueueSVMMigrateMem(CommandQueue *command_queuePacked,
+                       const cl_event *event_wait_list,
+                       cl_event *event);
+cl_int EnqueueSVMMigrateMem(cl_command_queue command_queue,
                             cl_uint num_svm_pointers,
                             const void **svm_pointers,
                             const size_t *sizes,
                             cl_mem_migration_flags flags,
                             cl_uint num_events_in_wait_list,
-                            Event *const *event_wait_listPacked,
-                            Event **eventPacked);
-void *GetExtensionFunctionAddressForPlatform(Platform *platformPacked, const char *func_name);
-cl_int SetCommandQueueProperty(CommandQueue *command_queuePacked,
+                            const cl_event *event_wait_list,
+                            cl_event *event);
+void *GetExtensionFunctionAddressForPlatform(cl_platform_id platform, const char *func_name);
+cl_int SetCommandQueueProperty(cl_command_queue command_queue,
                                cl_command_queue_properties properties,
                                cl_bool enable,
                                cl_command_queue_properties *old_properties);
-Memory *CreateImage2D(Context *contextPacked,
-                      cl_mem_flags flags,
-                      const cl_image_format *image_format,
-                      size_t image_width,
-                      size_t image_height,
-                      size_t image_row_pitch,
-                      void *host_ptr,
-                      cl_int *errcode_ret);
-Memory *CreateImage3D(Context *contextPacked,
-                      cl_mem_flags flags,
-                      const cl_image_format *image_format,
-                      size_t image_width,
-                      size_t image_height,
-                      size_t image_depth,
-                      size_t image_row_pitch,
-                      size_t image_slice_pitch,
-                      void *host_ptr,
-                      cl_int *errcode_ret);
-cl_int EnqueueMarker(CommandQueue *command_queuePacked, Event **eventPacked);
-cl_int EnqueueWaitForEvents(CommandQueue *command_queuePacked,
+cl_mem CreateImage2D(cl_context context,
+                     cl_mem_flags flags,
+                     const cl_image_format *image_format,
+                     size_t image_width,
+                     size_t image_height,
+                     size_t image_row_pitch,
+                     void *host_ptr,
+                     cl_int *errcode_ret);
+cl_mem CreateImage3D(cl_context context,
+                     cl_mem_flags flags,
+                     const cl_image_format *image_format,
+                     size_t image_width,
+                     size_t image_height,
+                     size_t image_depth,
+                     size_t image_row_pitch,
+                     size_t image_slice_pitch,
+                     void *host_ptr,
+                     cl_int *errcode_ret);
+cl_int EnqueueMarker(cl_command_queue command_queue, cl_event *event);
+cl_int EnqueueWaitForEvents(cl_command_queue command_queue,
                             cl_uint num_events,
-                            Event *const *event_listPacked);
-cl_int EnqueueBarrier(CommandQueue *command_queuePacked);
+                            const cl_event *event_list);
+cl_int EnqueueBarrier(cl_command_queue command_queue);
 cl_int UnloadCompiler();
 void *GetExtensionFunctionAddress(const char *func_name);
-CommandQueue *CreateCommandQueue(Context *contextPacked,
-                                 Device *devicePacked,
-                                 cl_command_queue_properties properties,
-                                 cl_int *errcode_ret);
-Sampler *CreateSampler(Context *contextPacked,
-                       cl_bool normalized_coords,
-                       AddressingMode addressing_modePacked,
-                       FilterMode filter_modePacked,
-                       cl_int *errcode_ret);
-cl_int EnqueueTask(CommandQueue *command_queuePacked,
-                   Kernel *kernelPacked,
+cl_command_queue CreateCommandQueue(cl_context context,
+                                    cl_device_id device,
+                                    cl_command_queue_properties properties,
+                                    cl_int *errcode_ret);
+cl_sampler CreateSampler(cl_context context,
+                         cl_bool normalized_coords,
+                         AddressingMode addressing_modePacked,
+                         FilterMode filter_modePacked,
+                         cl_int *errcode_ret);
+cl_int EnqueueTask(cl_command_queue command_queue,
+                   cl_kernel kernel,
                    cl_uint num_events_in_wait_list,
-                   Event *const *event_wait_listPacked,
-                   Event **eventPacked);
+                   const cl_event *event_wait_list,
+                   cl_event *event);
 }  // namespace cl
 #endif  // LIBGLESV2_CL_STUBS_AUTOGEN_H_

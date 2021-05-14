@@ -75,7 +75,7 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
     return CL_SUCCESS;
 }
 
-bool Context::IsValid(const Context *context)
+bool Context::IsValid(const _cl_context *context)
 {
     const Platform::PtrList &platforms = Platform::GetPlatforms();
     return std::find_if(platforms.cbegin(), platforms.cend(), [=](const Platform::Ptr &platform) {

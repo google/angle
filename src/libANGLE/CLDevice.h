@@ -28,7 +28,7 @@ class Device final : public _cl_device_id, public Object
 
     Platform &getPlatform() const noexcept;
     bool isRoot() const noexcept;
-    bool hasSubDevice(const Device *device) const;
+    bool hasSubDevice(const _cl_device_id *device) const;
 
     void retain() noexcept;
     bool release();
@@ -38,12 +38,12 @@ class Device final : public _cl_device_id, public Object
 
     cl_int createSubDevices(const cl_device_partition_property *properties,
                             cl_uint numDevices,
-                            Device **devices,
+                            cl_device_id *devices,
                             cl_uint *numDevicesRet);
 
     static PtrList CreateDevices(Platform &platform, rx::CLDeviceImpl::PtrList &&implList);
 
-    static bool IsValid(const Device *device);
+    static bool IsValid(const _cl_device_id *device);
     static bool IsValidType(cl_device_type type);
 
   private:
@@ -74,7 +74,7 @@ inline bool Device::isRoot() const noexcept
     return mParent == nullptr;
 }
 
-inline bool Device::hasSubDevice(const Device *device) const
+inline bool Device::hasSubDevice(const _cl_device_id *device) const
 {
     return std::find_if(mSubDevices.cbegin(), mSubDevices.cend(), [=](const Device::Ptr &ptr) {
                return ptr.get() == device || ptr->hasSubDevice(device);

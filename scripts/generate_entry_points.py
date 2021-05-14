@@ -39,6 +39,17 @@ ALIASING_EXCEPTIONS = [
     'renderbufferStorageMultisampleEXT',
 ]
 
+# These are the entry points which potentially are used first by an application
+# and require that the back ends are initialized before the front end is called.
+INIT_DICT = {
+    "clGetPlatformIDs": "false",
+    "clGetPlatformInfo": "false",
+    "clGetDeviceIDs": "false",
+    "clCreateContext": "false",
+    "clCreateContextFromType": "false",
+    "clIcdGetPlatformIDsKHR": "true",
+}
+
 # Strip these suffixes from Context entry point names. NV is excluded (for now).
 STRIP_SUFFIXES = ["ANDROID", "ANGLE", "EXT", "KHR", "OES", "CHROMIUM", "OVR"]
 
@@ -246,6 +257,7 @@ TEMPLATE_CL_ENTRY_POINT_NO_RETURN = """\
 void CL_API_CALL cl{name}({params})
 {{
     ANGLE_SCOPED_GLOBAL_LOCK();
+
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -260,6 +272,8 @@ TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR = """\
 cl_int CL_API_CALL cl{name}({params})
 {{
     ANGLE_SCOPED_GLOBAL_LOCK();
+    {initialization}
+
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -274,6 +288,8 @@ TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER = """\
 {return_type} CL_API_CALL cl{name}({params})
 {{
     ANGLE_SCOPED_GLOBAL_LOCK();
+    {initialization}
+
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -1200,24 +1216,6 @@ CL_PACKED_TYPES = {
     "cl_kernel_exec_info": "KernelExecInfo",
     "cl_event_info": "EventInfo",
     "cl_profiling_info": "ProfilingInfo",
-    # Objects
-    "cl_platform_id": "Platform *",
-    "cl_platform_id*": "Platform **",
-    "cl_device_id": "Device *",
-    "cl_device_id*": "Device **",
-    "const cl_device_id*": "Device *const *",
-    "cl_context": "Context *",
-    "cl_command_queue": "CommandQueue *",
-    "cl_mem": "Memory *",
-    "const cl_mem*": "Memory *const *",
-    "cl_program": "Program *",
-    "const cl_program*": "Program *const *",
-    "cl_kernel": "Kernel *",
-    "cl_kernel*": "Kernel **",
-    "cl_event": "Event *",
-    "cl_event*": "Event **",
-    "const cl_event*": "Event *const *",
-    "cl_sampler": "Sampler *",
 }
 
 EGL_PACKED_TYPES = {
@@ -1402,13 +1400,6 @@ def param_format_string(param):
         return just_the_name(param) + " = " + FORMAT_DICT[type_only]
 
 
-def default_return_value(cmd_name, return_type):
-    if return_type == "void":
-        return ""
-    return "GetDefaultReturnValue<EntryPoint::%s, %s>()" % (strip_api_prefix(cmd_name),
-                                                            return_type)
-
-
 def is_context_lost_acceptable_cmd(cmd_name):
     lost_context_acceptable_cmds = [
         "glGetError",
@@ -1527,7 +1518,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
     pass_params = [param_print_argument(command_node, param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)].strip()
-    default_return = default_return_value(cmd_name, return_type)
+    initialization = "InitBackEnds(%s);" % INIT_DICT[cmd_name] if cmd_name in INIT_DICT else ""
     event_comment = TEMPLATE_EVENT_COMMENT if cmd_name in NO_EVENT_MARKER_EXCEPTIONS_LIST else ""
     name_lower_no_suffix = strip_suffix(api, cmd_name[2:3].lower() + cmd_name[3:])
 
@@ -1542,6 +1533,8 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
             ", ".join(params),
         "internal_params":
             ", ".join(internal_params),
+        "initialization":
+            initialization,
         "packed_gl_enum_conversions":
             "".join(packed_gl_enum_conversions),
         "pass_params":

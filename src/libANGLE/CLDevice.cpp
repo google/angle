@@ -323,7 +323,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
 
 cl_int Device::createSubDevices(const cl_device_partition_property *properties,
                                 cl_uint numDevices,
-                                Device **devices,
+                                cl_device_id *devices,
                                 cl_uint *numDevicesRet)
 {
     if (devices == nullptr)
@@ -367,7 +367,7 @@ Device::PtrList Device::CreateDevices(Platform &platform, rx::CLDeviceImpl::PtrL
     return devices;
 }
 
-bool Device::IsValid(const Device *device)
+bool Device::IsValid(const _cl_device_id *device)
 {
     const Platform::PtrList &platforms = Platform::GetPlatforms();
     return std::find_if(platforms.cbegin(), platforms.cend(), [=](const Platform::Ptr &platform) {
