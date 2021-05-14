@@ -16,6 +16,24 @@
       "message": "Jamie, do you recall if there was any reason for this not to be a member?  There are several functions like that and I\u0027ve always just worked around it.",
       "revId": "b521fd39f48f3edc8ac9c05c91c4ad25fabd5346",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b3a72128_9b181f0f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-14T08:20:33Z",
+      "side": 1,
+      "message": "I can only imagine that this is because in C++ you have to add the method to the class definition. and thereby you\u0027re exposing internals of the class that are, actually, private. \n\nSo not making the function a member is a way to encapsulate it and hide the details from other modules. It has also the advantage that changing things there doesn\u0027t change the class interface, i.e. it doesn\u0027t trigger recompiling other source files that include the header with the class declaration. \n\nIt comes at the cost of awfully long parameter lists (and this is the main reason why I proposed this refactoring). An alternative to hide the private parts of the class would be to use the PImpl design pattern.",
+      "parentUuid": "bb01ea80_981f2d29",
+      "revId": "b521fd39f48f3edc8ac9c05c91c4ad25fabd5346",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
