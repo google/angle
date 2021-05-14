@@ -88,6 +88,24 @@
       "parentUuid": "11b183b7_ebe769a1",
       "revId": "b0f911b327f1c9138269319f3b7b9b9f041996e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08e01d51_7f062032",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-14T17:34:42Z",
+      "side": 1,
+      "message": "The workaround didn\u0027t help.\n\nI see now that these are new tests added in https://chromium-review.googlesource.com/c/angle/angle/+/2738650\n\nWe should be able to just add them to our expectations file to unblock CQ.",
+      "parentUuid": "3ddca03c_bf87b85e",
+      "revId": "b0f911b327f1c9138269319f3b7b9b9f041996e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
