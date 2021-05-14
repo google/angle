@@ -3955,7 +3955,7 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefineAndRebase)
     {
         setLodUniform(lod);
         drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[lod]) << lod;
     }
 
     // Redefine level 2 to an incompatible size, say the same size as level 0.
@@ -3978,10 +3978,10 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefineAndRebase)
     {
         setLodUniform(lod);
         drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[1]);
-        EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[1]);
-        EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[1]);
-        EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[1]);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[1]) << lod;
+        EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[1]) << lod;
+        EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[1]) << lod;
+        EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[1]) << lod;
     }
 
     // Redefine level 1 (current base level) to an incompatible size.
@@ -3998,10 +3998,10 @@ TEST_P(Texture2DBaseMaxTestES3, GenerateMipmapAfterRedefineAndRebase)
     {
         setLodUniform(lod);
         drawQuad(mProgram, essl3_shaders::PositionAttrib(), 0.5f);
-        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[0]);
-        EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[0]);
-        EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[0]);
-        EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[0]);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, kMipColors[0]) << lod;
+        EXPECT_PIXEL_COLOR_EQ(w, 0, kMipColors[0]) << lod;
+        EXPECT_PIXEL_COLOR_EQ(0, h, kMipColors[0]) << lod;
+        EXPECT_PIXEL_COLOR_EQ(w, h, kMipColors[0]) << lod;
     }
 }
 
