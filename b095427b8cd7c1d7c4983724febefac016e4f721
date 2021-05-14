@@ -50,6 +50,24 @@
       "message": "LGTM, I\u0027m testing locally, but it\u0027s not going to finish before I have to head out the door.  Will update later if I see failures.",
       "revId": "b095427b8cd7c1d7c4983724febefac016e4f721",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4306f7db_cace2bcb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-14T19:04:55Z",
+      "side": 1,
+      "message": "Verified locally using the command from the bug:\n\n  python3 src/tests/capture_replay_tests.py \\\n  --gtest_filter\u003d\"CopyTextureTestWebGL.NPOT/ES2_Vulkan_SwiftShader\"\n\nResults in:\n  INFO:root:Passed: 1, Comparison Failed: 0, Crashed: 0, CompileFailed 0, Skipped: 0, Timeout: 0\n\nSo this is good to go.",
+      "parentUuid": "fd4bd7f6_d3f3f210",
+      "revId": "b095427b8cd7c1d7c4983724febefac016e4f721",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
