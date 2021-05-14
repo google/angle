@@ -20,6 +20,14 @@ WebGLDrawElementsTest.DrawElementsTypeAlignment/*
 WebGLGLSLTest.*
 WebGLReadOutsideFramebufferTest.*
 
+# http://anglebug.com/5974 New tests, need triage
+IndexBufferOffsetTest.UInt16Index/*
+IndexBufferOffsetTest.UInt16IndexSmallUpdates/*
+IndexBufferOffsetTest.UInt32Index/*
+IndexBufferOffsetTest.UInt32IndexSmallUpdates/*
+IndexBufferOffsetTest.UInt8Index/*
+IndexBufferOffsetTest.UInt8IndexSmallUpdates/*
+
 # Has undefined framebuffer pixels. This fails comparison checks.
 SimpleOperationTest.ClearAndSwap/*
 SimpleOperationTest.DrawQuadAndSwap/*
