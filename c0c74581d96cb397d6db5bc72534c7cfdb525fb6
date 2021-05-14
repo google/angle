@@ -74,6 +74,30 @@
       },
       "revId": "c0c74581d96cb397d6db5bc72534c7cfdb525fb6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8cd7e501_b6fafdbe",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-14T21:21:03Z",
+      "side": 1,
+      "message": "This is going to retry only if --flaky-retries is set to non 0.\nSo, we should set it only on Intel.",
+      "parentUuid": "1ce68d30_f6c58313",
+      "range": {
+        "startLine": 358,
+        "startChar": 42,
+        "endLine": 358,
+        "endChar": 62
+      },
+      "revId": "c0c74581d96cb397d6db5bc72534c7cfdb525fb6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
