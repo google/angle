@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2548cba3_0767e724",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-15T01:44:15Z",
+      "side": 0,
+      "message": "The real motivation for this change (besides me wanting to do it for a long time) was to remove this function ... which is still there to serve capture/replay.\n\nNevertheless, this change lays the ground work for the next change in this chain to optimize image respecify and avoid the double-copy.\n\nhttps://i.pinimg.com/originals/04/44/d2/0444d210f580f4fc4c49520a7f5b0d5b.png",
+      "range": {
+        "startLine": 283,
+        "startChar": 24,
+        "endLine": 283,
+        "endChar": 45
+      },
+      "revId": "6f35e36686456ff453e15270b77eb429fc759981",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
