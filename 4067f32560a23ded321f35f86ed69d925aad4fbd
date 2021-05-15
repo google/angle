@@ -89,6 +89,42 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3812eab6_6b8cd848",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-15T01:18:05Z",
+      "side": 1,
+      "message": "I\u0027ll leave that as follow up if you don\u0027t mind. In this case, mBufferCount is going to be exactly 1 anywhere with VK_EXT_transform_feedback, so not a big deal probably.",
+      "parentUuid": "f9660253_d774f976",
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "488f5e42_9cd3a932",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-15T01:18:05Z",
+      "side": 1,
+      "message": "Ok, I\u0027ll leave that as follow up for future.\n\nWasn\u0027t part of the performance problem all the *writes* to the descriptor set? If the issue was just the allocation of the descriptor set, then what\u0027s stopping us from allocating a number of them and just pick any unused and fully update it every time? Then the cache is really just a recycler, and there\u0027s no key look up or anything.",
+      "parentUuid": "0f7a49bc_b781ffd4",
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de24131f_c8981f26",
@@ -126,6 +162,30 @@
       "side": 1,
       "message": "mBufferCount includes 1 for the default uniforms buffer. See ref\n\nI\u0027ll add a constant for it.",
       "parentUuid": "de24131f_c8981f26",
+      "range": {
+        "startLine": 3013,
+        "startChar": 69,
+        "endLine": 3013,
+        "endChar": 82
+      },
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "852a35dc_6ebd932e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3013,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-15T01:18:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73d9502c_9fd5ddfc",
       "range": {
         "startLine": 3013,
         "startChar": 69,
