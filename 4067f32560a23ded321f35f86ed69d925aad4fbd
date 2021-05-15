@@ -125,6 +125,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "30879aa9_10f8efbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-15T03:42:18Z",
+      "side": 1,
+      "message": "I think both. The point is if some descriptor we know it behaves like dynamic, there will be cache miss, just no point to walk through the cache and only to find miss and allocate a new one. Its better off just recycle old object and update it. We may do some stats collection against all traces we have and see how often is such case and how do we detect it.",
+      "parentUuid": "488f5e42_9cd3a932",
+      "revId": "4067f32560a23ded321f35f86ed69d925aad4fbd",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de24131f_c8981f26",
