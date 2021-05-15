@@ -16,6 +16,8 @@ namespace rx
 class CLDeviceImpl : angle::NonCopyable
 {
   public:
+    using Ptr = std::unique_ptr<CLDeviceImpl>;
+
     struct Info
     {
         Info();
@@ -41,18 +43,8 @@ class CLDeviceImpl : angle::NonCopyable
         std::vector<cl_device_partition_property> mPartitionType;
     };
 
-    using Ptr     = std::unique_ptr<CLDeviceImpl>;
-    using PtrList = std::list<Ptr>;
-    using List    = std::list<CLDeviceImpl *>;
-
-    CLDeviceImpl(CLPlatformImpl &platform, CLDeviceImpl *parent);
+    CLDeviceImpl(const cl::Device &device);
     virtual ~CLDeviceImpl();
-
-    template <typename T>
-    T &getPlatform() const
-    {
-        return static_cast<T &>(mPlatform);
-    }
 
     virtual Info createInfo() const = 0;
 
@@ -62,16 +54,14 @@ class CLDeviceImpl : angle::NonCopyable
     virtual cl_int getInfoStringLength(cl::DeviceInfo name, size_t *value) const      = 0;
     virtual cl_int getInfoString(cl::DeviceInfo name, size_t size, char *value) const = 0;
 
-    virtual cl_int createSubDevices(const cl_device_partition_property *properties,
+    virtual cl_int createSubDevices(cl::Device &device,
+                                    const cl_device_partition_property *properties,
                                     cl_uint numDevices,
-                                    PtrList &implList,
+                                    cl::DevicePtrList &subDeviceList,
                                     cl_uint *numDevicesRet) = 0;
 
   protected:
-    CLPlatformImpl &mPlatform;
-    CLDeviceImpl *const mParent;
-
-    List mSubDevices;
+    const cl::Device &mDevice;
 };
 
 }  // namespace rx

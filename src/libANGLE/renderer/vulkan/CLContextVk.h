@@ -18,7 +18,7 @@ namespace rx
 class CLContextVk : public CLContextImpl
 {
   public:
-    CLContextVk(CLPlatformVk &platform, CLDeviceImpl::List &&devices);
+    CLContextVk(const cl::Context &context);
     ~CLContextVk() override;
 };
 

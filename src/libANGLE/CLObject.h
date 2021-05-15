@@ -18,7 +18,6 @@ namespace cl
 class Object
 {
   public:
-    // This class cannot be virtual as its derived classes need to have standard layout
     Object() = default;
 
     ~Object()

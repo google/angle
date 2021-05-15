@@ -20,34 +20,36 @@ class CLPlatformCL : public CLPlatformImpl
 
     cl_platform_id getNative();
 
-    CLContextImpl::Ptr createContext(CLDeviceImpl::List &&deviceImplList,
+    Info createInfo() const override;
+    cl::DevicePtrList createDevices(cl::Platform &platform) const override;
+
+    CLContextImpl::Ptr createContext(const cl::Context &context,
+                                     const cl::DeviceRefList &devices,
                                      cl::ContextErrorCB notify,
                                      void *userData,
                                      bool userSync,
                                      cl_int *errcodeRet) override;
 
-    CLContextImpl::Ptr createContextFromType(cl_device_type deviceType,
+    CLContextImpl::Ptr createContextFromType(const cl::Context &context,
+                                             cl_device_type deviceType,
                                              cl::ContextErrorCB notify,
                                              void *userData,
                                              bool userSync,
                                              cl_int *errcodeRet) override;
 
-    static InitList GetPlatforms(bool isIcd);
+    static void Initialize(const cl_icd_dispatch &dispatch, bool isIcd);
 
   private:
-    CLPlatformCL(cl_platform_id platform, cl_version version, CLDeviceImpl::PtrList &devices);
+    CLPlatformCL(const cl::Platform &platform, cl_platform_id native);
 
-    static Info GetInfo(cl_platform_id platform);
-
-    const cl_platform_id mPlatform;
-    const cl_version mVersion;
+    const cl_platform_id mNative;
 
     friend class CLContextCL;
 };
 
 inline cl_platform_id CLPlatformCL::getNative()
 {
-    return mPlatform;
+    return mNative;
 }
 
 }  // namespace rx

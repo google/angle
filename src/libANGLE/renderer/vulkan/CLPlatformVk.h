@@ -10,8 +10,6 @@
 
 #include "libANGLE/renderer/CLPlatformImpl.h"
 
-#include <string>
-
 namespace rx
 {
 
@@ -20,24 +18,30 @@ class CLPlatformVk : public CLPlatformImpl
   public:
     ~CLPlatformVk() override;
 
-    CLContextImpl::Ptr createContext(CLDeviceImpl::List &&deviceImplList,
+    Info createInfo() const override;
+    cl::DevicePtrList createDevices(cl::Platform &platform) const override;
+
+    CLContextImpl::Ptr createContext(const cl::Context &context,
+                                     const cl::DeviceRefList &devices,
                                      cl::ContextErrorCB notify,
                                      void *userData,
                                      bool userSync,
                                      cl_int *errcodeRet) override;
 
-    CLContextImpl::Ptr createContextFromType(cl_device_type deviceType,
+    CLContextImpl::Ptr createContextFromType(const cl::Context &context,
+                                             cl_device_type deviceType,
                                              cl::ContextErrorCB notify,
                                              void *userData,
                                              bool userSync,
                                              cl_int *errcodeRet) override;
 
-    static InitList GetPlatforms();
+    static void Initialize(const cl_icd_dispatch &dispatch);
+
     static constexpr cl_version GetVersion();
     static const std::string &GetVersionString();
 
   private:
-    explicit CLPlatformVk(CLDeviceImpl::PtrList &devices);
+    explicit CLPlatformVk(const cl::Platform &platform);
 };
 
 constexpr cl_version CLPlatformVk::GetVersion()

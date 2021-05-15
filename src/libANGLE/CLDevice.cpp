@@ -273,7 +273,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
 
         // Handle all mapped values
         case DeviceInfo::Platform:
-            valPointer = &mPlatform;
+            valPointer = static_cast<cl_platform_id>(&mPlatform);
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -282,8 +282,9 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             {
                 return CL_INVALID_VALUE;
             }
-            copyValue = &mParent;
-            copySize  = sizeof(mParent);
+            valPointer = static_cast<cl_device_id>(mParent.get());
+            copyValue  = &valPointer;
+            copySize   = sizeof(valPointer);
             break;
         case DeviceInfo::ReferenceCount:
             if (mInfo.mVersion < CL_MAKE_VERSION(1, 2, 0))
@@ -323,67 +324,49 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
 
 cl_int Device::createSubDevices(const cl_device_partition_property *properties,
                                 cl_uint numDevices,
-                                cl_device_id *devices,
+                                cl_device_id *subDevices,
                                 cl_uint *numDevicesRet)
 {
-    if (devices == nullptr)
+    if (subDevices == nullptr)
     {
         numDevices = 0u;
     }
-    rx::CLDeviceImpl::PtrList ptrList;
-    const cl_int result = mImpl->createSubDevices(properties, numDevices, ptrList, numDevicesRet);
+    DevicePtrList subDeviceList;
+    const cl_int result =
+        mImpl->createSubDevices(*this, properties, numDevices, subDeviceList, numDevicesRet);
     if (result == CL_SUCCESS)
     {
-        while (!ptrList.empty())
+        for (const DevicePtr &subDevice : subDeviceList)
         {
-            rx::CLDeviceImpl::Info info = ptrList.front()->createInfo();
-            if (!info.isValid())
-            {
-                return CL_INVALID_VALUE;
-            }
-            mSubDevices.emplace_back(
-                new Device(mPlatform, this, std::move(ptrList.front()), std::move(info)));
-            ptrList.pop_front();
-            *devices++ = mSubDevices.back().get();
+            *subDevices++ = subDevice.get();
         }
+        mSubDevices.splice(mSubDevices.cend(), std::move(subDeviceList));
     }
     return result;
 }
 
-Device::PtrList Device::CreateDevices(Platform &platform, rx::CLDeviceImpl::PtrList &&implList)
+DevicePtr Device::CreateDevice(Platform &platform,
+                               DeviceRefPtr &&parent,
+                               const CreateImplFunc &createImplFunc)
 {
-    PtrList devices;
-    while (!implList.empty())
-    {
-        rx::CLDeviceImpl::Info info = implList.front()->createInfo();
-        if (!info.isValid())
-        {
-            return Device::PtrList{};
-        }
-        devices.emplace_back(
-            new Device(platform, nullptr, std::move(implList.front()), std::move(info)));
-        implList.pop_front();
-    }
-    return devices;
+    DevicePtr device(new Device(platform, std::move(parent), createImplFunc));
+    return device->mInfo.isValid() ? std::move(device) : DevicePtr{};
 }
 
 bool Device::IsValid(const _cl_device_id *device)
 {
     const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const Platform::Ptr &platform) {
+    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
                return platform->hasDevice(device);
            }) != platforms.cend();
 }
 
-Device::Device(Platform &platform,
-               Device *parent,
-               rx::CLDeviceImpl::Ptr &&impl,
-               rx::CLDeviceImpl::Info &&info)
+Device::Device(Platform &platform, DeviceRefPtr &&parent, const CreateImplFunc &createImplFunc)
     : _cl_device_id(platform.getDispatch()),
       mPlatform(platform),
-      mParent(parent),
-      mImpl(std::move(impl)),
-      mInfo(std::move(info))
+      mParent(std::move(parent)),
+      mImpl(createImplFunc(*this)),
+      mInfo(mImpl->createInfo())
 {}
 
 void Device::destroySubDevice(Device *device)
@@ -396,7 +379,6 @@ void Device::destroySubDevice(Device *device)
     if (deviceIt != mSubDevices.cend())
     {
         mSubDevices.erase(deviceIt);
-        release();
     }
     else
     {

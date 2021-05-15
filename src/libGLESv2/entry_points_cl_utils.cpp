@@ -9,8 +9,6 @@
 
 #include "libGLESv2/cl_dispatch_table.h"
 
-#include "libANGLE/CLPlatform.h"
-
 #ifdef ANGLE_ENABLE_CL_PASSTHROUGH
 #    include "libANGLE/renderer/cl/CLPlatformCL.h"
 #endif
@@ -31,21 +29,11 @@ void InitBackEnds(bool isIcd)
     initialized = true;
 
 #ifdef ANGLE_ENABLE_CL_PASSTHROUGH
-    rx::CLPlatformImpl::InitList initListCL = rx::CLPlatformCL::GetPlatforms(isIcd);
-    while (!initListCL.empty())
-    {
-        Platform::CreatePlatform(gCLIcdDispatchTable, initListCL.front());
-        initListCL.pop_front();
-    }
+    rx::CLPlatformCL::Initialize(gCLIcdDispatchTable, isIcd);
 #endif
 
 #ifdef ANGLE_ENABLE_VULKAN
-    rx::CLPlatformImpl::InitList initListVk = rx::CLPlatformVk::GetPlatforms();
-    while (!initListVk.empty())
-    {
-        Platform::CreatePlatform(gCLIcdDispatchTable, initListVk.front());
-        initListVk.pop_front();
-    }
+    rx::CLPlatformVk::Initialize(gCLIcdDispatchTable);
 #endif
 }
 

@@ -16,29 +16,16 @@ namespace rx
 class CLContextImpl : angle::NonCopyable
 {
   public:
-    using Ptr  = std::unique_ptr<CLContextImpl>;
-    using List = std::list<CLContextImpl *>;
+    using Ptr = std::unique_ptr<CLContextImpl>;
 
-    CLContextImpl(CLPlatformImpl &platform, CLDeviceImpl::List &&devices);
+    CLContextImpl(const cl::Context &context);
     virtual ~CLContextImpl();
 
-    template <typename T>
-    T &getPlatform() const
-    {
-        return static_cast<T &>(mPlatform);
-    }
-
-    const CLDeviceImpl::List &getDevices() const;
+    virtual cl::DeviceRefList getDevices() const = 0;
 
   protected:
-    CLPlatformImpl &mPlatform;
-    const CLDeviceImpl::List mDevices;
+    const cl::Context &mContext;
 };
-
-inline const CLDeviceImpl::List &CLContextImpl::getDevices() const
-{
-    return mDevices;
-}
 
 }  // namespace rx
 

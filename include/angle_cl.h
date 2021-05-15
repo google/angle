@@ -42,9 +42,6 @@ struct Dispatch
 
     constexpr const cl_icd_dispatch &getDispatch() { return *mDispatch; }
 
-  protected:
-    bool isCompatible(void *ptr) const { return ptr == &mDispatch; }
-
   private:
     // This has to be the first member to be OpenCL ICD compatible
     const cl_icd_dispatch *const mDispatch;

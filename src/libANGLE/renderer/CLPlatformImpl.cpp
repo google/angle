@@ -18,7 +18,7 @@ CLPlatformImpl::Info::Info(Info &&) = default;
 
 CLPlatformImpl::Info &CLPlatformImpl::Info::operator=(Info &&) = default;
 
-CLPlatformImpl::CLPlatformImpl(CLDeviceImpl::List &&devices) : mDevices(std::move(devices)) {}
+CLPlatformImpl::CLPlatformImpl(const cl::Platform &platform) : mPlatform(platform) {}
 
 CLPlatformImpl::~CLPlatformImpl() = default;
 

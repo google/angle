@@ -7,28 +7,11 @@
 
 #include "libANGLE/renderer/CLContextImpl.h"
 
-#include "libANGLE/renderer/CLPlatformImpl.h"
-
-#include "libANGLE/Debug.h"
-
 namespace rx
 {
 
-CLContextImpl::CLContextImpl(CLPlatformImpl &platform, CLDeviceImpl::List &&devices)
-    : mPlatform(platform), mDevices(std::move(devices))
-{}
+CLContextImpl::CLContextImpl(const cl::Context &context) : mContext(context) {}
 
-CLContextImpl::~CLContextImpl()
-{
-    auto it = std::find(mPlatform.mContexts.cbegin(), mPlatform.mContexts.cend(), this);
-    if (it != mPlatform.mContexts.cend())
-    {
-        mPlatform.mContexts.erase(it);
-    }
-    else
-    {
-        ERR() << "Context not in platform's list";
-    }
-}
+CLContextImpl::~CLContextImpl() = default;
 
 }  // namespace rx

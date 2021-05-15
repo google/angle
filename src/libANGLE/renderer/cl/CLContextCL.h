@@ -18,11 +18,13 @@ namespace rx
 class CLContextCL : public CLContextImpl
 {
   public:
-    CLContextCL(CLPlatformCL &platform, CLDeviceImpl::List &&devices, cl_context context);
+    CLContextCL(const cl::Context &context, cl_context native);
     ~CLContextCL() override;
 
+    cl::DeviceRefList getDevices() const override;
+
   private:
-    const cl_context mContext;
+    const cl_context mNative;
 };
 
 }  // namespace rx

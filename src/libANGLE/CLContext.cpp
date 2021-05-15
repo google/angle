@@ -78,21 +78,22 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
 bool Context::IsValid(const _cl_context *context)
 {
     const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const Platform::Ptr &platform) {
+    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
                return platform->hasContext(context);
            }) != platforms.cend();
 }
 
 Context::Context(Platform &platform,
                  PropArray &&properties,
-                 Device::RefList &&devices,
+                 DeviceRefList &&devices,
                  ContextErrorCB notify,
                  void *userData,
                  bool userSync,
                  cl_int *errcodeRet)
     : _cl_context(platform.getDispatch()),
       mPlatform(platform),
-      mImpl(platform.createContext(devices, ErrorCallback, this, userSync, errcodeRet)),
+      mImpl(
+          platform.mImpl->createContext(*this, devices, ErrorCallback, this, userSync, errcodeRet)),
       mProperties(std::move(properties)),
       mDevices(std::move(devices)),
       mNotify(notify),
@@ -108,10 +109,14 @@ Context::Context(Platform &platform,
                  cl_int *errcodeRet)
     : _cl_context(platform.getDispatch()),
       mPlatform(platform),
-      mImpl(platform.mImpl
-                ->createContextFromType(deviceType, ErrorCallback, this, userSync, errcodeRet)),
+      mImpl(platform.mImpl->createContextFromType(*this,
+                                                  deviceType,
+                                                  ErrorCallback,
+                                                  this,
+                                                  userSync,
+                                                  errcodeRet)),
       mProperties(std::move(properties)),
-      mDevices(mImpl ? platform.mapDevices(mImpl->getDevices()) : Device::RefList{}),
+      mDevices(mImpl ? mImpl->getDevices() : DeviceRefList{}),
       mNotify(notify),
       mUserData(userData)
 {}

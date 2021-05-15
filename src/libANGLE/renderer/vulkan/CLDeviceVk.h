@@ -18,7 +18,7 @@ namespace rx
 class CLDeviceVk : public CLDeviceImpl
 {
   public:
-    CLDeviceVk(CLPlatformVk &platform, CLDeviceVk *parent);
+    explicit CLDeviceVk(const cl::Device &device);
     ~CLDeviceVk() override;
 
     Info createInfo() const override;
@@ -29,9 +29,10 @@ class CLDeviceVk : public CLDeviceImpl
     cl_int getInfoStringLength(cl::DeviceInfo name, size_t *value) const override;
     cl_int getInfoString(cl::DeviceInfo name, size_t size, char *value) const override;
 
-    cl_int createSubDevices(const cl_device_partition_property *properties,
+    cl_int createSubDevices(cl::Device &device,
+                            const cl_device_partition_property *properties,
                             cl_uint numDevices,
-                            PtrList &deviceImplList,
+                            cl::DevicePtrList &subDeviceList,
                             cl_uint *numDevicesRet) override;
 };
 

@@ -10,8 +10,9 @@
 #define LIBANGLE_CLDEVICE_H_
 
 #include "libANGLE/CLObject.h"
-#include "libANGLE/CLRefPointer.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
+
+#include <functional>
 
 namespace cl
 {
@@ -19,15 +20,14 @@ namespace cl
 class Device final : public _cl_device_id, public Object
 {
   public:
-    using Ptr     = std::unique_ptr<Device>;
-    using PtrList = std::list<Ptr>;
-    using RefPtr  = RefPointer<Device>;
-    using RefList = std::vector<RefPtr>;
+    using CreateImplFunc = std::function<rx::CLDeviceImpl::Ptr(const cl::Device &)>;
 
     ~Device();
 
     Platform &getPlatform() const noexcept;
     bool isRoot() const noexcept;
+    rx::CLDeviceImpl &getImpl() const;
+    const rx::CLDeviceImpl::Info &getInfo() const;
     bool hasSubDevice(const _cl_device_id *device) const;
 
     void retain() noexcept;
@@ -38,28 +38,27 @@ class Device final : public _cl_device_id, public Object
 
     cl_int createSubDevices(const cl_device_partition_property *properties,
                             cl_uint numDevices,
-                            cl_device_id *devices,
+                            cl_device_id *subDevices,
                             cl_uint *numDevicesRet);
 
-    static PtrList CreateDevices(Platform &platform, rx::CLDeviceImpl::PtrList &&implList);
+    static DevicePtr CreateDevice(Platform &platform,
+                                  DeviceRefPtr &&parent,
+                                  const CreateImplFunc &createImplFunc);
 
     static bool IsValid(const _cl_device_id *device);
     static bool IsValidType(cl_device_type type);
 
   private:
-    Device(Platform &platform,
-           Device *parent,
-           rx::CLDeviceImpl::Ptr &&impl,
-           rx::CLDeviceImpl::Info &&info);
+    Device(Platform &platform, DeviceRefPtr &&parent, const CreateImplFunc &createImplFunc);
 
     void destroySubDevice(Device *device);
 
     Platform &mPlatform;
-    Device *const mParent;
+    const DeviceRefPtr mParent;
     const rx::CLDeviceImpl::Ptr mImpl;
     const rx::CLDeviceImpl::Info mInfo;
 
-    PtrList mSubDevices;
+    DevicePtrList mSubDevices;
 
     friend class Platform;
 };
@@ -71,12 +70,22 @@ inline Platform &Device::getPlatform() const noexcept
 
 inline bool Device::isRoot() const noexcept
 {
-    return mParent == nullptr;
+    return !mParent;
+}
+
+inline rx::CLDeviceImpl &Device::getImpl() const
+{
+    return *mImpl;
+}
+
+inline const rx::CLDeviceImpl::Info &Device::getInfo() const
+{
+    return mInfo;
 }
 
 inline bool Device::hasSubDevice(const _cl_device_id *device) const
 {
-    return std::find_if(mSubDevices.cbegin(), mSubDevices.cend(), [=](const Device::Ptr &ptr) {
+    return std::find_if(mSubDevices.cbegin(), mSubDevices.cend(), [=](const DevicePtr &ptr) {
                return ptr.get() == device || ptr->hasSubDevice(device);
            }) != mSubDevices.cend();
 }

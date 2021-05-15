@@ -7,14 +7,10 @@
 
 #include "libANGLE/renderer/vulkan/CLContextVk.h"
 
-#include "libANGLE/renderer/vulkan/CLPlatformVk.h"
-
 namespace rx
 {
 
-CLContextVk::CLContextVk(CLPlatformVk &platform, CLDeviceImpl::List &&devices)
-    : CLContextImpl(platform, std::move(devices))
-{}
+CLContextVk::CLContextVk(const cl::Context &context) : CLContextImpl(context) {}
 
 CLContextVk::~CLContextVk() = default;
 

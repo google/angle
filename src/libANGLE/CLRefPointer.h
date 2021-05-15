@@ -8,9 +8,6 @@
 #ifndef LIBANGLE_CLREFPOINTER_H_
 #define LIBANGLE_CLREFPOINTER_H_
 
-#include "libANGLE/CLtypes.h"
-#include "libANGLE/Debug.h"
-
 #include <algorithm>
 
 namespace cl

@@ -15,21 +15,22 @@
 
 #include "anglebase/no_destructor.h"
 
+#include <functional>
+
 namespace cl
 {
 
 class Platform final : public _cl_platform_id, public Object
 {
   public:
-    using Ptr     = std::unique_ptr<Platform>;
-    using PtrList = std::list<Ptr>;
+    using PtrList        = std::list<PlatformPtr>;
+    using CreateImplFunc = std::function<rx::CLPlatformImpl::Ptr(const cl::Platform &)>;
 
     ~Platform();
 
+    const rx::CLPlatformImpl::Info &getInfo() const;
     bool hasDevice(const _cl_device_id *device) const;
-    const Device::PtrList &getDevices() const;
-    Device::RefList mapDevices(const rx::CLDeviceImpl::List &deviceImplList) const;
-
+    const DevicePtrList &getDevices() const;
     bool hasContext(const _cl_context *context) const;
 
     cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
@@ -38,6 +39,9 @@ class Platform final : public _cl_platform_id, public Object
                         cl_uint numEntries,
                         cl_device_id *devices,
                         cl_uint *numDevices) const;
+
+    static void CreatePlatform(const cl_icd_dispatch &dispatch,
+                               const CreateImplFunc &createImplFunc);
 
     static cl_int GetPlatformIDs(cl_uint num_entries,
                                  cl_platform_id *platforms,
@@ -56,26 +60,16 @@ class Platform final : public _cl_platform_id, public Object
                                             void *userData,
                                             cl_int *errcodeRet);
 
-    static void CreatePlatform(const cl_icd_dispatch &dispatch,
-                               rx::CLPlatformImpl::InitData &initData);
     static const PtrList &GetPlatforms();
-
     static Platform *GetDefault();
     static Platform *CastOrDefault(cl_platform_id platform);
-
     static bool IsValid(const _cl_platform_id *platform);
     static bool IsValidOrDefault(const _cl_platform_id *platform);
 
     static constexpr const char *GetVendor();
 
   private:
-    Platform(const cl_icd_dispatch &dispatch, rx::CLPlatformImpl::InitData &initData);
-
-    rx::CLContextImpl::Ptr createContext(const Device::RefList &devices,
-                                         ContextErrorCB notify,
-                                         void *userData,
-                                         bool userSync,
-                                         cl_int *errcodeRet);
+    Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc);
 
     void destroyContext(Context *context);
 
@@ -83,7 +77,7 @@ class Platform final : public _cl_platform_id, public Object
 
     const rx::CLPlatformImpl::Ptr mImpl;
     const rx::CLPlatformImpl::Info mInfo;
-    const Device::PtrList mDevices;
+    const DevicePtrList mDevices;
 
     Context::PtrList mContexts;
 
@@ -93,21 +87,26 @@ class Platform final : public _cl_platform_id, public Object
     friend class Context;
 };
 
+inline const rx::CLPlatformImpl::Info &Platform::getInfo() const
+{
+    return mInfo;
+}
+
 inline bool Platform::hasDevice(const _cl_device_id *device) const
 {
-    return std::find_if(mDevices.cbegin(), mDevices.cend(), [=](const Device::Ptr &ptr) {
+    return std::find_if(mDevices.cbegin(), mDevices.cend(), [=](const DevicePtr &ptr) {
                return ptr.get() == device || ptr->hasSubDevice(device);
            }) != mDevices.cend();
 }
 
-inline const Device::PtrList &Platform::getDevices() const
+inline const DevicePtrList &Platform::getDevices() const
 {
     return mDevices;
 }
 
 inline bool Platform::hasContext(const _cl_context *context) const
 {
-    return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const Context::Ptr &ptr) {
+    return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
                return ptr.get() == context;
            }) != mContexts.cend();
 }
@@ -136,8 +135,9 @@ inline Platform *Platform::CastOrDefault(cl_platform_id platform)
 inline bool Platform::IsValid(const _cl_platform_id *platform)
 {
     const PtrList &platforms = GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(),
-                        [=](const Ptr &ptr) { return ptr.get() == platform; }) != platforms.cend();
+    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &ptr) {
+               return ptr.get() == platform;
+           }) != platforms.cend();
 }
 
 // Our CL implementation defines that a nullptr value chooses the platform that we provide as

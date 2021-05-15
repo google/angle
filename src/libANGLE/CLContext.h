@@ -21,8 +21,7 @@ namespace cl
 class Context final : public _cl_context, public Object
 {
   public:
-    using Ptr       = std::unique_ptr<Context>;
-    using PtrList   = std::list<Ptr>;
+    using PtrList   = std::list<ContextPtr>;
     using RefPtr    = RefPointer<Context>;
     using PropArray = std::vector<cl_context_properties>;
 
@@ -40,7 +39,7 @@ class Context final : public _cl_context, public Object
   private:
     Context(Platform &platform,
             PropArray &&properties,
-            Device::RefList &&devices,
+            DeviceRefList &&devices,
             ContextErrorCB notify,
             void *userData,
             bool userSync,
@@ -62,7 +61,7 @@ class Context final : public _cl_context, public Object
     Platform &mPlatform;
     const rx::CLContextImpl::Ptr mImpl;
     const PropArray mProperties;
-    const Device::RefList mDevices;
+    const DeviceRefList mDevices;
     const ContextErrorCB mNotify;
     void *const mUserData;
 

@@ -30,23 +30,23 @@ class CLDeviceCL : public CLDeviceImpl
     cl_int getInfoStringLength(cl::DeviceInfo name, size_t *value) const override;
     cl_int getInfoString(cl::DeviceInfo name, size_t size, char *value) const override;
 
-    cl_int createSubDevices(const cl_device_partition_property *properties,
+    cl_int createSubDevices(cl::Device &device,
+                            const cl_device_partition_property *properties,
                             cl_uint numDevices,
-                            PtrList &implList,
+                            cl::DevicePtrList &subDeviceList,
                             cl_uint *numDevicesRet) override;
 
-    static CLDeviceCL *Create(CLPlatformCL &platform, CLDeviceCL *parent, cl_device_id device);
-
   private:
-    CLDeviceCL(CLPlatformCL &platform, CLDeviceCL *parent, cl_device_id device, cl_version version);
+    CLDeviceCL(const cl::Device &device, cl_device_id native);
 
-    const cl_device_id mDevice;
-    const cl_version mVersion;
+    const cl_device_id mNative;
+
+    friend class CLPlatformCL;
 };
 
 inline cl_device_id CLDeviceCL::getNative()
 {
-    return mDevice;
+    return mNative;
 }
 
 }  // namespace rx

@@ -19,6 +19,8 @@ namespace rx
 class CLPlatformImpl : angle::NonCopyable
 {
   public:
+    using Ptr = std::unique_ptr<CLPlatformImpl>;
+
     struct Info
     {
         Info();
@@ -41,39 +43,30 @@ class CLPlatformImpl : angle::NonCopyable
         cl_ulong mHostTimerRes = 0u;
     };
 
-    using Ptr      = std::unique_ptr<CLPlatformImpl>;
-    using InitData = std::tuple<Ptr, Info, CLDeviceImpl::PtrList>;
-    using InitList = std::list<InitData>;
-
-    explicit CLPlatformImpl(CLDeviceImpl::List &&devices);
+    explicit CLPlatformImpl(const cl::Platform &platform);
     virtual ~CLPlatformImpl();
 
-    const CLDeviceImpl::List &getDevices() const;
+    // For initialization only
+    virtual Info createInfo() const                                       = 0;
+    virtual cl::DevicePtrList createDevices(cl::Platform &platform) const = 0;
 
-    virtual CLContextImpl::Ptr createContext(CLDeviceImpl::List &&devices,
+    virtual CLContextImpl::Ptr createContext(const cl::Context &context,
+                                             const cl::DeviceRefList &devices,
                                              cl::ContextErrorCB notify,
                                              void *userData,
                                              bool userSync,
                                              cl_int *errcodeRet) = 0;
 
-    virtual CLContextImpl::Ptr createContextFromType(cl_device_type deviceType,
+    virtual CLContextImpl::Ptr createContextFromType(const cl::Context &context,
+                                                     cl_device_type deviceType,
                                                      cl::ContextErrorCB notify,
                                                      void *userData,
                                                      bool userSync,
                                                      cl_int *errcodeRet) = 0;
 
   protected:
-    const CLDeviceImpl::List mDevices;
-
-    CLContextImpl::List mContexts;
-
-    friend class CLContextImpl;
+    const cl::Platform &mPlatform;
 };
-
-inline const CLDeviceImpl::List &CLPlatformImpl::getDevices() const
-{
-    return mDevices;
-}
 
 }  // namespace rx
 
