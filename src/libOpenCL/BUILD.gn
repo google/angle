@@ -9,17 +9,25 @@ import("../../gni/angle.gni")
 assert(angle_enable_cl)
 
 cl_library_name = "OpenCL_ANGLE"
+if (is_win || is_linux) {
+  glesv2_path =
+      rebase_path(get_label_info("$angle_root:libGLESv2", "root_out_dir"))
+}
 
 config("opencl_library_name") {
   if (is_win) {
     defines = [ "ANGLE_OPENCL_LIB_NAME=\"" + cl_library_name + "\"" ]
   } else {
-    defines = [ "ANGLE_OPENCL_LIB_NAME=\"lib" + cl_library_name + ".so\"" ]
+    defines = [ "ANGLE_OPENCL_LIB_NAME=\"lib" + cl_library_name + "\"" ]
   }
 }
 
 angle_shared_library(cl_library_name) {
   defines = [ "LIBCL_IMPLEMENTATION" ]
+  if (is_win) {
+    defines += [ "ANGLE_GLESV2_LIBRARY_PATH=\"" +
+                 string_replace(glesv2_path, "/", "\\\\") + "\"" ]
+  }
 
   sources = [
     "dispatch.cpp",
@@ -39,8 +47,11 @@ angle_shared_library(cl_library_name) {
 
   if (is_linux) {
     inputs = [ "libOpenCL_autogen.map" ]
-    ldflags = [ "-Wl,--version-script=" +
-                rebase_path("libOpenCL_autogen.map", root_build_dir) ]
+    ldflags = [
+      "-Wl,--version-script=" +
+          rebase_path("libOpenCL_autogen.map", root_build_dir),
+      "-Wl,-rpath=" + glesv2_path,
+    ]
   }
 }
 

@@ -16,6 +16,7 @@
 
 #include "anglebase/no_destructor.h"
 #include "common/angle_version.h"
+#include "common/system_utils.h"
 
 extern "C" {
 #include "icd.h"
@@ -391,16 +392,27 @@ void CLPlatformCL::Initialize(const cl_icd_dispatch &dispatch, bool isIcd)
         return;
     }
 
+    // The absolute path to ANGLE's OpenCL library is needed and it is assumed here that
+    // it is in the same directory as the shared library which contains this CL back end.
+    std::string libPath = angle::GetModuleDirectory();
+    if (!libPath.empty() && libPath.back() != angle::GetPathSeparator())
+    {
+        libPath += angle::GetPathSeparator();
+    }
+    libPath += ANGLE_OPENCL_LIB_NAME;
+    libPath += '.';
+    libPath += angle::GetSharedLibraryExtension();
+
     // Our OpenCL entry points are not reentrant, so we have to prevent khrIcdInitialize()
     // from querying ANGLE's OpenCL library. We store a dummy entry with the library in the
     // khrIcdVendors list, because the ICD Loader skips the libraries which are already in
     // the list as it assumes they were already enumerated.
     static angle::base::NoDestructor<KHRicdVendor> sVendorAngle({});
-    sVendorAngle->library = khrIcdOsLibraryLoad(ANGLE_OPENCL_LIB_NAME);
+    sVendorAngle->library = khrIcdOsLibraryLoad(libPath.c_str());
     khrIcdVendors         = sVendorAngle.get();
     if (khrIcdVendors->library == nullptr)
     {
-        WARN() << "Unable to load library \"" ANGLE_OPENCL_LIB_NAME "\"";
+        WARN() << "Unable to load library \"" << libPath << "\"";
         return;
     }
 
