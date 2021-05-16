@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "070811d7_49554256",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-16T18:39:38Z",
+      "side": 1,
+      "message": "Is there a better way to get ANGLE\u0027s library path?",
+      "revId": "cc6bba965c197eb2497b599f63c6dc39f4207d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce0aa91b_2c6e7023",
+        "filename": "src/libOpenCL/dispatch.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-16T18:39:38Z",
+      "side": 1,
+      "message": "Is there a way to find ANGLE\u0027s library path which doesn\u0027t assume the the calling library (or a link to it) is in the same path? That would avoid the below workarounds.",
+      "revId": "cc6bba965c197eb2497b599f63c6dc39f4207d5c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
