@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5d2a8eb_ea9b6603",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2003,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T14:03:29Z",
+      "side": 1,
+      "message": "nit: how about names like validateSubresourceUpdateRefCount(s)",
+      "range": {
+        "startLine": 2003,
+        "startChar": 9,
+        "endLine": 2003,
+        "endChar": 46
+      },
+      "revId": "5095c0b154eff97ddc0cb33f0aa4a62306f6bb7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
