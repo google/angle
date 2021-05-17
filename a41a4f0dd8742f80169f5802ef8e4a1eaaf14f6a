@@ -63,6 +63,30 @@
       },
       "revId": "a41a4f0dd8742f80169f5802ef8e4a1eaaf14f6a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4c7bbad_1a4b5401",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T18:37:18Z",
+      "side": 1,
+      "message": "The whole function if you\u0027re up for it. Non-blocking, because I\u0027ve held this CL up too long already. Or you can land as a follow-up.",
+      "parentUuid": "e2cf08e2_661aa199",
+      "range": {
+        "startLine": 152,
+        "startChar": 38,
+        "endLine": 152,
+        "endChar": 46
+      },
+      "revId": "a41a4f0dd8742f80169f5802ef8e4a1eaaf14f6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
