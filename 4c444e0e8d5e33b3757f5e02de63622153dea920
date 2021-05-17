@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78908763_1cced98f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-17T19:27:25Z",
+      "side": 1,
+      "message": "I\u0027m pretty sure the fuchsia_x64 bot doesn\u0027t work when triggered from an ANGLE CL, so I\u0027ll wait to see if this fixes the swiftshader roll.",
+      "revId": "4c444e0e8d5e33b3757f5e02de63622153dea920",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
