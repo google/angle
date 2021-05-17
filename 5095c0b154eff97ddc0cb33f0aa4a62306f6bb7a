@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0a47623_d5d6804d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-17T18:46:40Z",
+      "side": 1,
+      "message": "LGTM with Jamie\u0027s comment addressed.",
+      "revId": "5095c0b154eff97ddc0cb33f0aa4a62306f6bb7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5d2a8eb_ea9b6603",
@@ -14,6 +31,30 @@
       "writtenOn": "2021-05-17T14:03:29Z",
       "side": 1,
       "message": "nit: how about names like validateSubresourceUpdateRefCount(s)",
+      "range": {
+        "startLine": 2003,
+        "startChar": 9,
+        "endLine": 2003,
+        "endChar": 46
+      },
+      "revId": "5095c0b154eff97ddc0cb33f0aa4a62306f6bb7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d1eb3be8_7c85d2a1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2003,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-17T18:46:40Z",
+      "side": 1,
+      "message": "My preference is to be explicit of what this is checking: isOnlyReferencedBySubresourceUpdate",
+      "parentUuid": "d5d2a8eb_ea9b6603",
       "range": {
         "startLine": 2003,
         "startChar": 9,
