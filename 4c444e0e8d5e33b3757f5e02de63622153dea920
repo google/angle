@@ -33,6 +33,23 @@
       "message": "Retrying Fuchsia.",
       "revId": "4c444e0e8d5e33b3757f5e02de63622153dea920",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8820b8f_fb4cbdec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T19:36:35Z",
+      "side": 1,
+      "message": "Oh, the fuchsia builders won\u0027t work on the ANGLE CQ unfortunately. We have fuchsia-angle-rel though.",
+      "revId": "4c444e0e8d5e33b3757f5e02de63622153dea920",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
