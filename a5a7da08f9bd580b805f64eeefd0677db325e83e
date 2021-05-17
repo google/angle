@@ -16,6 +16,23 @@
       "message": "Re-running tests now.",
       "revId": "a5a7da08f9bd580b805f64eeefd0677db325e83e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c799ffbb_ebf64e0e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T21:16:46Z",
+      "side": 1,
+      "message": "Had a bug with overlapping test expectations using the /* approach. Might have to patch the expectations parser.\n\nhttps://chromium-swarm.appspot.com/task?id\u003d5394e864e10a8910",
+      "revId": "a5a7da08f9bd580b805f64eeefd0677db325e83e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
