@@ -130,19 +130,15 @@ size_t GetPreferredDynamicBufferInitialSize(RendererVk *renderer,
     // DynamicBuffer allocate bigger blocks to suballocate from.  Otherwise, let it adapt to the
     // buffer size automatically (which will allocate BufferHelpers with the same size as this
     // buffer).
-    //
-    // TODO: fix bugs with suballocation and uncomment the following.  http://anglebug.com/5719
-    // const bool isDynamic = usage == gl::BufferUsage::DynamicDraw ||
-    //                        usage == gl::BufferUsage::DynamicCopy ||
-    //                        usage == gl::BufferUsage::DynamicRead;
+    const bool isDynamic = usage == gl::BufferUsage::DynamicDraw ||
+                           usage == gl::BufferUsage::DynamicCopy ||
+                           usage == gl::BufferUsage::DynamicRead;
     // Sub-allocate from a 4KB buffer.  If the buffer allocations are bigger, the dynamic buffer
     // will adapt to it automatically (and stop sub-allocating).
-    //
-    // constexpr size_t kDynamicBufferMaxSize = 4 * 1024;
-    // const size_t alignedSize               = roundUp(dataSize, *alignmentOut);
-    // const size_t suballocationCount        = kDynamicBufferMaxSize / alignedSize;
-    // const size_t initialSize               = isDynamic ? alignedSize * suballocationCount : 0;
-    const size_t initialSize = 0;
+    constexpr size_t kDynamicBufferMaxSize = 4 * 1024;
+    const size_t alignedSize               = roundUp(dataSize, *alignmentOut);
+    const size_t suballocationCount        = kDynamicBufferMaxSize / alignedSize;
+    const size_t initialSize               = isDynamic ? alignedSize * suballocationCount : 0;
 
     return initialSize;
 }
