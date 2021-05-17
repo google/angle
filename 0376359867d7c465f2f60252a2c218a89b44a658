@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fea78b5e_f3d84acd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-05-17T22:06:30Z",
+      "side": 1,
+      "message": "FYI, git cl format passes for Patchset 4 on my local windows machine but fails on the bots. I had to use a linux machine to make Patchset 5.",
+      "revId": "0376359867d7c465f2f60252a2c218a89b44a658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
