@@ -68,7 +68,7 @@ std::string GetModuleDirectory()
     }
     // Ensure we return the full path to the module, not the relative path
     Optional<std::string> cwd = GetCWD();
-    if (directory.at(0) != '/' && cwd.valid())
+    if (!directory.empty() && directory.at(0) != '/' && cwd.valid())
     {
         directory = cwd.value() + GetPathSeparator() + directory;
     }
