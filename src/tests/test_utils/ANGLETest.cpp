@@ -577,6 +577,7 @@ void ANGLETestBase::ANGLETestSetUp()
     if (mCurrentParams->noFixture)
     {
         LoadEntryPointsWithUtilLoader(mCurrentParams->driver);
+        mIsSetUp = true;
         return;
     }
 
@@ -593,6 +594,7 @@ void ANGLETestBase::ANGLETestSetUp()
 
     if (!mFixture->osWindow->valid())
     {
+        mIsSetUp = true;
         return;
     }
 
@@ -673,6 +675,8 @@ void ANGLETestBase::ANGLETestSetUp()
     // taking OpenGL traces can guess the size of the default framebuffer and show it
     // in their UIs
     glViewport(0, 0, mWidth, mHeight);
+
+    mIsSetUp = true;
 }
 
 void ANGLETestBase::ANGLETestTearDown()

@@ -520,6 +520,8 @@ class ANGLETestBase
         return mCurrentParams->getAllocateNonZeroMemoryFeature() == EGL_TRUE;
     }
 
+    bool mIsSetUp = false;
+
   private:
     void checkD3D11SDKLayersMessages();
 
@@ -604,12 +606,18 @@ class ANGLETestWithParam : public ANGLETestBase, public ::testing::TestWithParam
     void SetUp() final
     {
         ANGLETestBase::ANGLETestSetUp();
-        testSetUp();
+        if (mIsSetUp)
+        {
+            testSetUp();
+        }
     }
 
     void TearDown() final
     {
-        testTearDown();
+        if (mIsSetUp)
+        {
+            testTearDown();
+        }
         ANGLETestBase::ANGLETestTearDown();
     }
 };
