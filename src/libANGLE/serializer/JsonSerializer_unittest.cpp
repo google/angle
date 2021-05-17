@@ -105,7 +105,14 @@ TEST_F(JsonSerializerTest, ByteArrayValue)
     const std::string expect =
         R"({
     "context": {
-        "test2": "SHA1:4315724B1AB1EB2C0128E8E9DAD6D76254BA711D"
+        "test2-hash": "SHA1:4315724B1AB1EB2C0128E8E9DAD6D76254BA711D",
+        "test2-raw[0-4]": [
+            10,
+            0,
+            204,
+            255,
+            170
+        ]
     }
 })";
 
@@ -142,7 +149,21 @@ TEST_F(JsonSerializerTest, IntVectorAsBlobValue)
     const std::string expect =
         R"({
     "context": {
-        "test2": "SHA1:6216A439C16A113E2F1E53AB63FB88877D3597F5"
+        "test2-hash": "SHA1:6216A439C16A113E2F1E53AB63FB88877D3597F5",
+        "test2-raw[0-11]": [
+            0,
+            0,
+            0,
+            0,
+            1,
+            0,
+            0,
+            0,
+            255,
+            255,
+            255,
+            255
+        ]
     }
 })";
     check(expect);
@@ -172,7 +193,15 @@ TEST_F(JsonSerializerTest, ShortVectorAsBlobValue)
     const std::string expect =
         R"({
     "context": {
-        "test2": "SHA1:0BA7C0DE700CE0F8018D084B8CF447B150A9465D"
+        "test2-hash": "SHA1:0BA7C0DE700CE0F8018D084B8CF447B150A9465D",
+        "test2-raw[0-5]": [
+            0,
+            0,
+            1,
+            0,
+            255,
+            255
+        ]
     }
 })";
     check(expect);
