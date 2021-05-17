@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2af211e_ab331bbe",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 19
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-17T18:24:18Z",
+      "side": 1,
+      "message": "The CL crrev.com/c/2888709 (queueSubmit after every FBO) appears worked around the problem that causing manhattan perf regresion with this CL. Now I am seeing good performance improvement with this CL.\nmanhattan_off:      without locking GPU clock, +12%\n                    with GPU clocked locked to 302MHz, +10%\nmanhattan31_off:  without locking GPU clock, +10%\n                  with GPU clocked locked to 302MHz, +8\nAnd app traces also seeing good improvement as well.\n",
+      "revId": "1bcd1088ed6b5c999b46fadf3bf64ef70b513539",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
