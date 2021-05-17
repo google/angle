@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5e495918_387371f9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T20:40:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dafd2ff3_6d04f1a3",
+      "range": {
+        "startLine": 19,
+        "startChar": 18,
+        "endLine": 19,
+        "endChar": 22
+      },
+      "revId": "8fe06e315659b9d6fd97664800c7b5b141450338",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "89bb4770_241ee864",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 9
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77790971_70cff829",
+        "filename": "src/tests/angle_end2end_tests_expectations.txt",
+        "patchSetId": 9
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T20:40:08Z",
+      "side": 1,
+      "message": "Yeah! I added it recently. I\u0027ll broadcast it.\n\nDone on the */condition.",
+      "parentUuid": "f9d86126_3ba57a95",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 24
+      },
+      "revId": "8fe06e315659b9d6fd97664800c7b5b141450338",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e551c594_d0455873",
@@ -87,6 +135,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8101dcc_999b09e0",
+        "filename": "src/tests/gl_tests/FramebufferFetchTest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T20:40:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e551c594_d0455873",
+      "range": {
+        "startLine": 603,
+        "startChar": 0,
+        "endLine": 605,
+        "endChar": 0
+      },
+      "revId": "8fe06e315659b9d6fd97664800c7b5b141450338",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b3823120_311fb6df",
@@ -100,6 +172,30 @@
       "writtenOn": "2021-05-17T20:22:26Z",
       "side": 1,
       "message": "What does FAIL do?\nWill it return with mIsSetUp \u003d\u003d true?\nThese changes probably belong in a separate CL since they affect more than Android.",
+      "range": {
+        "startLine": 626,
+        "startChar": 12,
+        "endLine": 626,
+        "endChar": 16
+      },
+      "revId": "8fe06e315659b9d6fd97664800c7b5b141450338",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e5de46d_c696d32e",
+        "filename": "src/tests/test_utils/ANGLETest.cpp",
+        "patchSetId": 9
+      },
+      "lineNbr": 626,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-17T20:40:08Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b3823120_311fb6df",
       "range": {
         "startLine": 626,
         "startChar": 12,
