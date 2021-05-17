@@ -113,6 +113,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0df208a2_935e29bd",
+        "filename": "src/compiler/translator/OutputSPIRV.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-17T14:56:34Z",
+      "side": 1,
+      "message": "This was more for myself, forgot to remove it. Done.",
+      "parentUuid": "2d76f7d1_30e81481",
+      "range": {
+        "startLine": 22,
+        "startChar": 21,
+        "endLine": 25,
+        "endChar": 37
+      },
+      "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "51107e58_440bc7e6",
@@ -136,6 +160,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba624373_c7117eba",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-17T14:56:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51107e58_440bc7e6",
+      "range": {
+        "startLine": 11,
+        "startChar": 11,
+        "endLine": 11,
+        "endChar": 17
+      },
+      "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "19373ffa_6486a650",
@@ -149,6 +197,30 @@
       "writtenOn": "2021-05-13T16:10:30Z",
       "side": 1,
       "message": "nit: else isn\u0027t necessary",
+      "range": {
+        "startLine": 1348,
+        "startChar": 4,
+        "endLine": 1348,
+        "endChar": 8
+      },
+      "revId": "1a51676993c7ad14f7393de7210e49a2d587d133",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc371153_2a176fe1",
+        "filename": "src/compiler/translator/TranslatorVulkan.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 1348,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-17T14:56:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19373ffa_6486a650",
       "range": {
         "startLine": 1348,
         "startChar": 4,
