@@ -3082,6 +3082,9 @@ void FillLevel(GLint level,
 // conformance/textures/misc/texture-size.html does
 TEST_P(Texture2DTest, TextureSize)
 {
+    // http://anglebug.com/5982
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL() && IsTSan());
+
     const GLColor kNewMipColors[] = {
         GLColor::green,  GLColor::red,     GLColor::blue,
         GLColor::yellow, GLColor::magenta, GLColor::cyan,
