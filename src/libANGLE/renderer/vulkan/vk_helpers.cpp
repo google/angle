@@ -2047,6 +2047,9 @@ angle::Result DynamicBuffer::allocateWithAlignment(ContextVk *contextVk,
     {
         if (mBuffer)
         {
+            // Make sure the buffer is not released externally.
+            ASSERT(mBuffer->valid());
+
             ANGLE_TRY(flush(contextVk));
 
             mInFlightBuffers.push_back(std::move(mBuffer));

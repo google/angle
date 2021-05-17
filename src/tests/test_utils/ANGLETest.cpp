@@ -231,6 +231,13 @@ GLColor::GLColor(GLuint colorValue) : R(0), G(0), B(0), A(0)
     memcpy(&R, &colorValue, sizeof(GLuint));
 }
 
+GLuint GLColor::asUint() const
+{
+    GLuint uint = 0;
+    memcpy(&uint, &R, sizeof(GLuint));
+    return uint;
+}
+
 testing::AssertionResult GLColor::ExpectNear(const GLColor &expected, const GLColor &err) const
 {
     testing::AssertionResult result(

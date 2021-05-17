@@ -134,6 +134,8 @@ struct GLColor
     const GLubyte *data() const { return &R; }
     GLubyte *data() { return &R; }
 
+    GLuint asUint() const;
+
     testing::AssertionResult ExpectNear(const GLColor &expected, const GLColor &err) const;
 
     GLubyte R, G, B, A;

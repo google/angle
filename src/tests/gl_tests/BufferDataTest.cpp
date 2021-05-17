@@ -824,6 +824,95 @@ TEST_P(BufferDataTestES3, BufferDataUnmap)
     ASSERT_GL_NO_ERROR();
 }
 
+// Ensures that mapping buffer with GL_MAP_INVALIDATE_BUFFER_BIT followed by glBufferSubData calls
+// works.  Regression test for the Vulkan backend where that flag caused use after free.
+TEST_P(BufferDataTestES3, MapInvalidateThenBufferSubData)
+{
+    // http://anglebug.com/5984
+    ANGLE_SKIP_TEST_IF(IsWindows() && IsOpenGL() && IsIntel());
+
+    // http://anglebug.com/5985
+    ANGLE_SKIP_TEST_IF(IsNexus5X() && IsOpenGLES());
+
+    const std::array<GLColor, 4> kInitialData = {GLColor::red, GLColor::red, GLColor::red,
+                                                 GLColor::red};
+    const std::array<GLColor, 4> kUpdateData1 = {GLColor::white, GLColor::white, GLColor::white,
+                                                 GLColor::white};
+    const std::array<GLColor, 4> kUpdateData2 = {GLColor::blue, GLColor::blue, GLColor::blue,
+                                                 GLColor::blue};
+
+    GLBuffer buffer;
+    glBindBuffer(GL_UNIFORM_BUFFER, buffer);
+    glBufferData(GL_UNIFORM_BUFFER, sizeof(kInitialData), kInitialData.data(), GL_DYNAMIC_DRAW);
+    glBindBufferBase(GL_UNIFORM_BUFFER, 0, buffer);
+    EXPECT_GL_NO_ERROR();
+
+    // Draw
+    constexpr char kVerifyUBO[] = R"(#version 300 es
+precision mediump float;
+uniform block {
+    uvec4 data;
+} ubo;
+uniform uint expect;
+uniform vec4 successOutput;
+out vec4 colorOut;
+void main()
+{
+    if (all(equal(ubo.data, uvec4(expect))))
+        colorOut = successOutput;
+    else
+        colorOut = vec4(1.0, 0, 0, 1.0);
+})";
+
+    ANGLE_GL_PROGRAM(verifyUbo, essl3_shaders::vs::Simple(), kVerifyUBO);
+    glUseProgram(verifyUbo);
+
+    GLint expectLoc = glGetUniformLocation(verifyUbo, "expect");
+    EXPECT_NE(-1, expectLoc);
+    GLint successLoc = glGetUniformLocation(verifyUbo, "successOutput");
+    EXPECT_NE(-1, successLoc);
+
+    glUniform1ui(expectLoc, kInitialData[0].asUint());
+    glUniform4f(successLoc, 0, 1, 0, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    // Dont't verify the buffer.  This is testing GL_MAP_INVALIDATE_BUFFER_BIT while the buffer is
+    // in use by the GPU.
+
+    // Map the buffer and update it.
+    void *mappedBuffer = glMapBufferRange(GL_UNIFORM_BUFFER, 0, sizeof(kInitialData),
+                                          GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+    memcpy(mappedBuffer, kUpdateData1.data(), sizeof(kInitialData));
+
+    glUnmapBuffer(GL_UNIFORM_BUFFER);
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the buffer has the updated value.
+    glUniform1ui(expectLoc, kUpdateData1[0].asUint());
+    glUniform4f(successLoc, 0, 0, 1, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::blue);
+
+    // Update the buffer with glBufferSubData
+    glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(kUpdateData2), kUpdateData2.data());
+    EXPECT_GL_NO_ERROR();
+
+    // Verify that the buffer has the updated value.
+    glUniform1ui(expectLoc, kUpdateData2[0].asUint());
+    glUniform4f(successLoc, 0, 1, 1, 1);
+
+    drawQuad(verifyUbo, essl3_shaders::PositionAttrib(), 0.5);
+    EXPECT_GL_NO_ERROR();
+
+    EXPECT_PIXEL_COLOR_EQ(0, 0, GLColor::cyan);
+}
+
 class BufferStorageTestES3 : public BufferDataTest
 {};
 
