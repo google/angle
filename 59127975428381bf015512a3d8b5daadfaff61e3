@@ -34,6 +34,24 @@
       "parentUuid": "e87c10ff_592c6f14",
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4440eca6_f48b96e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-17T19:14:45Z",
+      "side": 1,
+      "message": "My change affects frame capture (which is where the bad hierarchy is introduced by ANGLE).\n\nI tested with PUBG and \"Ragnarok M: Eternal Love\" (which has the compute bug).  I did before and after testing (2-3 times just to make sure:-).\n\nI didn\u0027t try Gangster or Hillclimb.  Please give them a try.  There may be more than one bug.\n\nWhat I looked for was that the hierarchy shown in AGI was wrong without a CL and was correct with a CL.  I take PUBG all the way till when I\u0027ve landed (after parachuting), and then I start the trace.",
+      "parentUuid": "877f3bc4_01227e8c",
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
