@@ -93,7 +93,14 @@ class JsonSerializer : public angle::NonCopyable
     template <typename T>
     void addVectorAsHash(const std::string &name, const std::vector<T> &value)
     {
-        addBlob(name, reinterpret_cast<const uint8_t *>(&value[0]), value.size() * sizeof(T));
+        if (!value.empty())
+        {
+            addBlob(name, reinterpret_cast<const uint8_t *>(&value[0]), value.size() * sizeof(T));
+        }
+        else
+        {
+            addCString(name, "null");
+        }
     }
 
     void addVectorOfStrings(const std::string &name, const std::vector<std::string> &value);

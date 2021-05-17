@@ -28,6 +28,9 @@ IndexBufferOffsetTest.UInt32IndexSmallUpdates/*
 IndexBufferOffsetTest.UInt8Index/*
 IndexBufferOffsetTest.UInt8IndexSmallUpdates/*
 
+# Flanky tests, pass standalone, but fail in a group
+ColorMaskTest.AMDZeroColorMaskBug/ES3_OpenGL
+
 # Has undefined framebuffer pixels. This fails comparison checks.
 SimpleOperationTest.ClearAndSwap/*
 SimpleOperationTest.DrawQuadAndSwap/*
@@ -36,7 +39,6 @@ SimpleOperationTest.DrawQuadAndSwap/*
 BlitFramebufferANGLETest.*
 BufferDataTest.*
 ClipDistanceTest.*
-ColorMaskTest.*
 CopyCompressedTextureTest.InternalFormat/*
 DebugMarkerTest.*
 DebugTest.*
