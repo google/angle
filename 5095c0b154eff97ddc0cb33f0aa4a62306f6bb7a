@@ -63,6 +63,30 @@
       },
       "revId": "5095c0b154eff97ddc0cb33f0aa4a62306f6bb7a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7c44f24f_a713af4a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 2003,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-17T19:02:42Z",
+      "side": 1,
+      "message": "validateSubresourceUpdateRefCount STGM (I was 50-50 with that already).\n\nisOnlyReferencedBySubresourceUpdate isn\u0027t accurate though. I can\u0027t really check if there are other references to the image, but what I can check is that the number of references in subresource updates is the same as the ref count (i.e. there won\u0027t be a leak).",
+      "parentUuid": "d1eb3be8_7c85d2a1",
+      "range": {
+        "startLine": 2003,
+        "startChar": 9,
+        "endLine": 2003,
+        "endChar": 46
+      },
+      "revId": "5095c0b154eff97ddc0cb33f0aa4a62306f6bb7a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
