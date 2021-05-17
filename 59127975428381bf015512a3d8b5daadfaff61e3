@@ -16,6 +16,24 @@
       "message": "Hi Mark,\n\nI looked over the change (seemed reasonable) and then tried it with AGI and PUBG.  The problem still exists.\n\nDoing some additional debugging, I found the problem.  It\u0027s in \"DebugAnnotatorVk.cpp\".  I added glDrawBuffer* to the list of commands that should trigger an endEvent.  That\u0027s why there was no draw/begin associated with the end.  My CL is https://chromium-review.googlesource.com/c/angle/angle/+/2898472, and I\u0027ll make you a reviewer.  Please try my CL and see if you see the same results as me.  If so, I suggest pressing the \"Abandon\" button on this CL.\n\nI tested my fix with the Ragnarok game (https://github.com/google/agi/issues/697), but my fix did not fix the glDispatch* issue reported with bug 697.\n\nBest regards,\nIan",
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "877f3bc4_01227e8c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1511618
+      },
+      "writtenOn": "2021-05-17T19:02:35Z",
+      "side": 1,
+      "message": "Ian, I\u0027m not sure I am correctly reproducing the issue on PUBG or Gangster (can\u0027t run the shared traces) but I did verify that both of those apps made glDrawBuffer* calls.  OTOH, I don\u0027t see any glDrawBuffer* calls made by Hillclimb and I\u0027m not seeing this CL having any effect on the mismatches there -- did your CL fix Hillclimb as well? These may be two separate issues.",
+      "parentUuid": "e87c10ff_592c6f14",
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
