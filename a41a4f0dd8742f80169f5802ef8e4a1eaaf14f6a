@@ -39,6 +39,30 @@
       },
       "revId": "a41a4f0dd8742f80169f5802ef8e4a1eaaf14f6a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e2cf08e2_661aa199",
+        "filename": "src/libANGLE/renderer/vulkan/vk_caps_utils.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1394635
+      },
+      "writtenOn": "2021-05-17T17:18:41Z",
+      "side": 1,
+      "message": "Should I cleanup only this line or the whole GetTextureSRGBOverrideSupport function?",
+      "parentUuid": "d4f57fdb_eda7d4d1",
+      "range": {
+        "startLine": 152,
+        "startChar": 38,
+        "endLine": 152,
+        "endChar": 46
+      },
+      "revId": "a41a4f0dd8742f80169f5802ef8e4a1eaaf14f6a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
