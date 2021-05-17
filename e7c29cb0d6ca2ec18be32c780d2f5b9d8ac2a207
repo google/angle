@@ -16,6 +16,24 @@
       "message": "This patch shouldn\u0027t probably not go in as is, because it doesn\u0027t solve the underlying problem, but I put it up because I don\u0027t really know where to search fro the real issue. When running more than one test it seems that the framebuffer setup gets clobbered sometimes, so that glClear(0,0,0,0), results in (0,0,0,1) being written to the framebuffer when replaying, but when looking at the test setup, and the things we track (also with EGL) I don\u0027t seen any reason why the output surface would become RGB1 instead of RGBA. ",
       "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "76593f2c_57598052",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-17T16:19:59Z",
+      "side": 1,
+      "message": "Could this be related to emulating formats and forcing alpha to 1.0?   For example:\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2809441",
+      "parentUuid": "c534ba10_46c027ce",
+      "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
