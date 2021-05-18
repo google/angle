@@ -111,6 +111,30 @@
       },
       "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e72fae3_ef96e4fc",
+        "filename": "src/tests/test_expectations/GPUTestExpectationsParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-18T18:13:44Z",
+      "side": 1,
+      "message": "Actually, if the only expectation type is SKIP, there is no need to check for overlaps.\nIf the test matches any condition, it is skipped, that\u0027s all.\n\nYeah, I\u0027m OK landing. We can enhance in the future.",
+      "parentUuid": "e4353725_8566acb6",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 93
+      },
+      "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
