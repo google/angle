@@ -63,6 +63,30 @@
       },
       "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4353725_8566acb6",
+        "filename": "src/tests/test_expectations/GPUTestExpectationsParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-18T18:10:54Z",
+      "side": 1,
+      "message": "I guess if the only expectation type is SKIP, you are right.\nIf you can have different expectations, like FAIL or FLAKY, then it would matter.\nE.g. SKIP for WIN NVIDIA and FLAKY for NVIDIA VULKAN.\nDo you run the test on WIN NVIDIA VULKAN or not?",
+      "parentUuid": "8ce5c17c_ed50a619",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 93
+      },
+      "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
