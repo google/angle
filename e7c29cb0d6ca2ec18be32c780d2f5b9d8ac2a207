@@ -52,6 +52,24 @@
       "parentUuid": "76593f2c_57598052",
       "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f58a8b0_d1781f36",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-18T15:25:21Z",
+      "side": 1,
+      "message": "It\u0027s possible the replay is on different HW from where the capture was taken and the underlying vulkan format support is different between them.   Admittedly, I don\u0027t know exactly how things are being run here, so that may not be happening in this case.",
+      "parentUuid": "bb3d392d_eb900de7",
+      "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
