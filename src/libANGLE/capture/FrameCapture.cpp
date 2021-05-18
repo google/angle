@@ -4939,13 +4939,16 @@ void ResourceTracker::setDeletedBuffer(gl::BufferID id)
         return;
     }
 
-    // Ensure this buffer was in our starting set
-    // It's possible this could fire if the app deletes buffers that were never generated
-    ASSERT(mStartingBuffers.empty() || (mStartingBuffers.find(id) != mStartingBuffers.end()));
+    if (mStartingBuffers.find(id) != mStartingBuffers.end())
+    {
+        // The app is deleting a buffer we started with, we need to regen on loop
+        mBuffersToRegen.insert(id);
+        mBuffersToRestore.insert(id);
+    }
 
-    // In this case, the app is deleting a buffer we started with, we need to regen on loop
-    mBuffersToRegen.insert(id);
-    mBuffersToRestore.insert(id);
+    // If none of the above is true, the app is deleting a buffer that was never genned.
+    // This is allowed by the spec for DeleteBuffers:
+    //    Unused names in buffers are silently ignored, as is the value zero.
 }
 
 void ResourceTracker::setDeletedFenceSync(GLsync sync)
