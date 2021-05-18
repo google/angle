@@ -123,7 +123,6 @@ class DisplayVk : public DisplayImpl, public vk::Context
 
     virtual const char *getWSIExtension() const = 0;
     virtual const char *getWSILayer() const;
-    virtual bool isUsingSwapchain() const;
 
     // Determine if a config with given formats and sample counts is supported.  This callback may
     // modify the config to add or remove platform specific attributes such as nativeVisualID.  If

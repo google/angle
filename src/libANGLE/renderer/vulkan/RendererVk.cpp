@@ -926,15 +926,8 @@ angle::Result RendererVk::initialize(DisplayVk *displayVk,
     }
 
     vk::ExtensionNameList enabledInstanceExtensions;
-    if (displayVk->isUsingSwapchain())
-    {
-        enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
-    }
-
-    if (wsiExtension)
-    {
-        enabledInstanceExtensions.push_back(wsiExtension);
-    }
+    enabledInstanceExtensions.push_back(VK_KHR_SURFACE_EXTENSION_NAME);
+    enabledInstanceExtensions.push_back(wsiExtension);
     mEnableDebugUtils = mEnableValidationLayers &&
                         ExtensionFound(VK_EXT_DEBUG_UTILS_EXTENSION_NAME, instanceExtensionNames);
 
@@ -1443,10 +1436,7 @@ angle::Result RendererVk::initializeDevice(DisplayVk *displayVk, uint32_t queueF
     }
 
     vk::ExtensionNameList enabledDeviceExtensions;
-    if (displayVk->isUsingSwapchain())
-    {
-        enabledDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
-    }
+    enabledDeviceExtensions.push_back(VK_KHR_SWAPCHAIN_EXTENSION_NAME);
 
     // Queues: map low, med, high priority to whatever is supported up to 3 queues
     uint32_t queueCount = std::min(mQueueFamilyProperties[queueFamilyIndex].queueCount,
