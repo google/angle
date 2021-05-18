@@ -110,6 +110,30 @@
       },
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72690817_1712bfdd",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-18T16:43:43Z",
+      "side": 1,
+      "message": "You shouldn\u0027t really be returning void if you generate angle::Result. It\u0027s meant to be passed up all the way to the entry points.\n\nThe exceptions to that rule are for threading, and for legacy code.\n\nNot sure which function is generating errors here.",
+      "parentUuid": "87ebc255_8ea21381",
+      "range": {
+        "startLine": 3000,
+        "startChar": 0,
+        "endLine": 3008,
+        "endChar": 0
+      },
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
