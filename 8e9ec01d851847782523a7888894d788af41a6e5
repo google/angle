@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78c63e8e_a31764ee",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-18T15:23:57Z",
+      "side": 1,
+      "message": "Will change this back when I reland. It should be the same directory in all ANGLE testing, it\u0027s just wrong in some Chrome releases.",
+      "range": {
+        "startLine": 397,
+        "startChar": 0,
+        "endLine": 397,
+        "endChar": 58
+      },
+      "revId": "8e9ec01d851847782523a7888894d788af41a6e5",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
