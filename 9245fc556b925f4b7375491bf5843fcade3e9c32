@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "12ffbd55_73b1fe0b",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2607,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-18T14:41:23Z",
+      "side": 1,
+      "message": "Isn\u0027t this function supposed to just switch the signedness but keep everything else identical? That is, shouldn\u0027t R8_SINT return R8_UINT?\n\nI saw the return value R8G8B8A8_UINT and assumed the input can only be R8G8B8A8_SINT, but looking again it looks like this is not doing the right thing for R8_SINT, R8G8_SINT etc.\n\nIn other words, shouldn\u0027t this function look like this?\n\n\n    switch(format.formatID){\n    case angle::FormatID::R8_SINT:       return angle::FormatID::R8_UINT;\n    case angle::FormatID::R8G8_SINT:     return angle::FormatID::R8G8_UINT;\n    case angle::FormatID::R8G8B8_SINT:   return angle::FormatID::R8G8B8_UINT;\n    case angle::FormatID::R8G8B8A8_SINT: return angle::FormatID::R8G8B8A8_UINT;\n    case angle::FormatID::R16_SINT:      return angle::FormatID::R16_UINT;\n    case angle::FormatID::R16G16_SINT:   return angle::FormatID::R16G16_UINT;\n    ...\n    }",
+      "parentUuid": "e889d12f_592cc883",
+      "range": {
+        "startLine": 2607,
+        "startChar": 16,
+        "endLine": 2607,
+        "endChar": 23
+      },
+      "revId": "9245fc556b925f4b7375491bf5843fcade3e9c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d622906_44f36265",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 7
