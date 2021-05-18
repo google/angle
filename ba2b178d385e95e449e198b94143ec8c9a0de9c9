@@ -87,6 +87,30 @@
       },
       "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73e253cb_84d5074e",
+        "filename": "src/tests/test_expectations/GPUTestExpectationsParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-18T18:12:36Z",
+      "side": 1,
+      "message": "Yeah I don\u0027t recall the specifics, Jonah might remember. I think there were number of edge cases and we ended up using a simple policy and just doing a best effort thing. Like the first one in the list takes priority.\n\nJust to confirm - you\u0027re OK with landing as-is?",
+      "parentUuid": "e4353725_8566acb6",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 93
+      },
+      "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
