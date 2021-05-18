@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "30fd27a0_8f2697d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-18T05:29:56Z",
+      "side": 1,
+      "message": "I\u0027ve seen this assert fire before, but not consistently.  With SAKURA I was able to create a scene that always hit it, so time to fix it.",
+      "revId": "76707d30fb5ba20fa92d93082152b930d35a156d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
