@@ -51,6 +51,24 @@
       "parentUuid": "c799ffbb_ebf64e0e",
       "revId": "a5a7da08f9bd580b805f64eeefd0677db325e83e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5523ae4_90078198",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-18T15:02:36Z",
+      "side": 1,
+      "message": "Fixed in latest patch set, with a prior CL fix.",
+      "parentUuid": "7ca308ad_9180535d",
+      "revId": "a5a7da08f9bd580b805f64eeefd0677db325e83e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
