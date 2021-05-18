@@ -70,6 +70,46 @@
       "parentUuid": "4440eca6_f48b96e4",
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b08cf182_0bffdfab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-18T16:35:32Z",
+      "side": 1,
+      "message": "I apologize for not looking at Hill Climb sooner.  I made a modification to one of your methods that will improve this CL, and then we can land it.  Thanks for this CL!",
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "87ebc255_8ea21381",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-18T16:35:32Z",
+      "side": 1,
+      "message": "I looked at the traces without and with this CL.  This definitely fixes the draws not being under the render pass.  However, it didn\u0027t the GLES calls that preceded this draw under the draw.  I modified this highlighted part of the method to be:\n\n```\n    // Even though this draw call is being no-op\u0027d, we still must handle the dirty event log\n    ASSERT(mRenderPassCommandBuffer);\n    angle::Result result \u003d handleDirtyEventLogImpl(mRenderPassCommandBuffer);\n    ASSERT(result \u003d\u003d angle::Result::Continue);\n```\n\nThis will put preceding non-draw calls under this draw (just like a non-noop\u0027d draw).\n\nI\u0027m a little uncertain if my handling of the `angle::Result` is proper.  Can you look at how other void functions handle those return values and modify this please?",
+      "range": {
+        "startLine": 3000,
+        "startChar": 0,
+        "endLine": 3008,
+        "endChar": 0
+      },
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
