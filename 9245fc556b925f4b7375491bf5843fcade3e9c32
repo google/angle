@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e889d12f_592cc883",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2607,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-18T04:07:47Z",
+      "side": 1,
+      "message": "I don\u0027t think I follow how to make this flat while keeping the same amount of cases.\nWhat I\u0027m seeing is that it would look something like this if it were to be flattened:\n```\nswitch(format.formatID){\ncase angle::FormatID::R8_SINT:\ncase angle::FormatID::R8G8_SINT:\ncase angle::FormatID::R8G8B8_SINT:\ncase angle::FormatID::R8G8B8A8_SINT:\ncase angle::FormatID::R16_SINT:\ncase angle::FormatID::R16G16_SINT:\n...\n}\n```",
+      "parentUuid": "36e769af_452264fc",
+      "range": {
+        "startLine": 2607,
+        "startChar": 16,
+        "endLine": 2607,
+        "endChar": 23
+      },
+      "revId": "9245fc556b925f4b7375491bf5843fcade3e9c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d622906_44f36265",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 7
@@ -37,6 +61,30 @@
       "writtenOn": "2021-05-07T15:23:47Z",
       "side": 1,
       "message": "nit: please use getWindowWidth() and getWindowHeight() instead of fixed numbers.",
+      "range": {
+        "startLine": 1827,
+        "startChar": 26,
+        "endLine": 1827,
+        "endChar": 34
+      },
+      "revId": "9245fc556b925f4b7375491bf5843fcade3e9c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2da41b9e_b28b2922",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1827,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-18T04:07:47Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6d622906_44f36265",
       "range": {
         "startLine": 1827,
         "startChar": 26,
