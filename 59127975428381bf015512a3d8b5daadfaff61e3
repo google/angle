@@ -52,6 +52,24 @@
       "parentUuid": "877f3bc4_01227e8c",
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d6e5c07c_590a4bb3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1511618
+      },
+      "writtenOn": "2021-05-18T00:07:21Z",
+      "side": 1,
+      "message": "Verified that the DrawBuffers CL (2898472) works for PUBG Mobile, but that it does not cover the behavior in Hillclimb (I was not able to reproduce the behavior in Real Gangster).  This CL fixes the hillclimb issue and from inspection it does seem that the two issues are distinct and unrelated, other than to their effect which manifests similarly.",
+      "parentUuid": "4440eca6_f48b96e4",
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
