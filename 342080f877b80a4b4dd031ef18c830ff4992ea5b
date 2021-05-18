@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd30a9c3_5293cb5d",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-18T16:12:15Z",
+      "side": 1,
+      "message": "I presume these are from the validating cmd decoder?",
+      "range": {
+        "startLine": 2139,
+        "startChar": 0,
+        "endLine": 2156,
+        "endChar": 57
+      },
+      "revId": "342080f877b80a4b4dd031ef18c830ff4992ea5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "310e936c_02a8c39a",
+        "filename": "src/tests/gl_tests/MultisampledRenderToTextureTest.cpp",
+        "patchSetId": 11
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-18T16:12:15Z",
+      "side": 1,
+      "message": "Just skip the test on this config.",
+      "revId": "342080f877b80a4b4dd031ef18c830ff4992ea5b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
