@@ -331,6 +331,11 @@ bool IsPixel2XL()
     return IsAndroidDevice("Pixel 2 XL");
 }
 
+bool IsPixel4()
+{
+    return IsAndroidDevice("Pixel 4");
+}
+
 bool IsNVIDIAShield()
 {
     return IsAndroidDevice("SHIELD Android TV");

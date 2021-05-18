@@ -473,6 +473,11 @@ deps = {
     'url': '{chromium_git}/external/github.com/Tencent/rapidjson@7484e06c589873e1ed80382d262087e4fa80fb63',
   },
 
+  'third_party/requests/src': {
+    'url': '{chromium_git}/external/github.com/kennethreitz/requests@refs/tags/v2.23.0',
+    'condition': 'checkout_android and not build_with_chromium',
+  },
+
   'third_party/six': {
     'url': '{chromium_git}/chromium/src/third_party/six@c96255caa80a7e0e45de07ce9af088a2ce984b68',
     'condition': 'checkout_android and not build_with_chromium',

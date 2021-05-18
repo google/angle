@@ -38,6 +38,7 @@ bool IsNexus9();
 bool IsPixelXL();
 bool IsPixel2();
 bool IsPixel2XL();
+bool IsPixel4();
 bool IsNVIDIAShield();
 
 // GPU vendors.

@@ -64,6 +64,7 @@ struct GPUTestConfig
         kConditionMetal,
         kConditionNexus5X,
         kConditionPixel2OrXL,
+        kConditionPixel4OrXL,
         kConditionNVIDIAQuadroP400,
         kConditionSwiftShader,
         kConditionPreRotation,

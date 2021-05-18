@@ -729,6 +729,11 @@
   },
 
   'compound_suites': {
+    'android_gtests': [
+      'angle_end2end_gtests',
+      'angle_unit_gtests',
+    ],
+
     'common_isolated_scripts': [
       'angle_perf_smoke_isolated_scripts',
       'angle_restricted_trace_gold_isolated_scripts',

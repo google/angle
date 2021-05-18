@@ -29,7 +29,7 @@
           'gpu-swarming-pool',
         ],
         'test_suites': {
-        # TODO(jmadill): Add Android tests. http://anglebug.com/5941
+          'gtest_tests': 'android_gtests',
         },
       },
       'linux-builder': {},

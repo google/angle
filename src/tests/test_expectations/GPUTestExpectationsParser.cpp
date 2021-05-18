@@ -74,6 +74,7 @@ enum Token
     // Android devices
     kConfigNexus5X,
     kConfigPixel2,
+    kConfigPixel4,
     // GPU devices
     kConfigNVIDIAQuadroP400,
     // PreRotation
@@ -171,6 +172,7 @@ constexpr TokenInfo kTokenData[kNumberOfTokens] = {
     {"metal", GPUTestConfig::kConditionMetal},
     {"nexus5x", GPUTestConfig::kConditionNexus5X},
     {"pixel2orxl", GPUTestConfig::kConditionPixel2OrXL},
+    {"pixel4orxl", GPUTestConfig::kConditionPixel4OrXL},
     {"quadrop400", GPUTestConfig::kConditionNVIDIAQuadroP400},
     {"prerotation", GPUTestConfig::kConditionPreRotation},
     {"prerotation90", GPUTestConfig::kConditionPreRotation90},
@@ -487,6 +489,7 @@ bool GPUTestExpectationsParser::parseLine(const GPUTestConfig *config,
             case kConfigMetal:
             case kConfigNexus5X:
             case kConfigPixel2:
+            case kConfigPixel4:
             case kConfigNVIDIAQuadroP400:
             case kConfigPreRotation:
             case kConfigPreRotation90:
