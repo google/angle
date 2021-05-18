@@ -33,6 +33,24 @@
       "message": "nit: Is this really possible? The qualifier shouldn\u0027t be EvqGeometryIn if not geometry shader (it would be like EvqFragmentIn etc). And if geometry shader, there must be some other validation that checks for the extension. I suspect this `else if` can be removed.",
       "revId": "1f0604fb8f860fe284b59ced7f603508254f883b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e0310ea_6df56777",
+        "filename": "src/compiler/translator/ParseContext.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 4246,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-18T20:39:09Z",
+      "side": 1,
+      "message": "You are correct and removing this `else if` allows the test to pass.",
+      "parentUuid": "15a05869_19e50c4f",
+      "revId": "1f0604fb8f860fe284b59ced7f603508254f883b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
