@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b6fb27d8_fcc6e81c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-18T18:05:59Z",
+      "side": 1,
+      "message": "+2-ing so that you can land the dependent change, but I think the overlap condition should be enhanced in a follow up.",
+      "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccf92133_20c738c0",
+        "filename": "src/tests/test_expectations/GPUTestExpectationsParser.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 264,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-18T18:05:59Z",
+      "side": 1,
+      "message": "This is not entirely correct.\nWIN NVIDIA\noverlaps with\nNVIDIA VULKAN\n\nSwiftShader is also a special case, since VULKAN expectations apply to SwiftShader, but not the opposite.",
+      "range": {
+        "startLine": 264,
+        "startChar": 0,
+        "endLine": 264,
+        "endChar": 93
+      },
+      "revId": "ba2b178d385e95e449e198b94143ec8c9a0de9c9",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
