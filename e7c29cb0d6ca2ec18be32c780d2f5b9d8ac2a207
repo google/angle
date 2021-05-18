@@ -34,6 +34,24 @@
       "parentUuid": "c534ba10_46c027ce",
       "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bb3d392d_eb900de7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-18T08:06:34Z",
+      "side": 1,
+      "message": "\u003e Could this be related to emulating formats and forcing alpha to 1.0?   For example:\n\u003e https://chromium-review.googlesource.com/c/angle/angle/+/2809441\n\nSomehow this could be, but it doesn\u0027t explain why the capture gets one value and the replay another one. I would expect that if it happens, then forcing alpha to 1.0 would happen both times.",
+      "parentUuid": "76593f2c_57598052",
+      "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
