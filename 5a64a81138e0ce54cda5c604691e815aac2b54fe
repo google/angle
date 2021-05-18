@@ -22,6 +22,30 @@
       },
       "revId": "5a64a81138e0ce54cda5c604691e815aac2b54fe",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9ecec96_92f84d00",
+        "filename": "src/libANGLE/serializer/JsonSerializer.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-18T14:45:59Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fdd9a59b_49b3a75a",
+      "range": {
+        "startLine": 96,
+        "startChar": 8,
+        "endLine": 96,
+        "endChar": 11
+      },
+      "revId": "5a64a81138e0ce54cda5c604691e815aac2b54fe",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
