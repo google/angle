@@ -206,6 +206,30 @@
       },
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5abda32_f1269f02",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-18T18:23:37Z",
+      "side": 1,
+      "message": "Drive by:\n\n\u003e This will put preceding non-draw calls under this draw (just like a non-noop\u0027d draw).\n\nIdeally you want the noop\u0027d draws to also have their own entry. Otherwise the developer may get confused as they don\u0027t see the draw call immediately. Likely not a big deal (since you would think no one issues noop draw calls)",
+      "parentUuid": "ea45f634_e2bcc090",
+      "range": {
+        "startLine": 3000,
+        "startChar": 0,
+        "endLine": 3008,
+        "endChar": 0
+      },
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
