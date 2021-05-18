@@ -56,7 +56,7 @@ const char *GetPathSeparatorForEnvironmentVar()
     return ":";
 }
 
-std::string GetModuleDirectory()
+std::string GetHelperExecutableDir()
 {
     std::string directory;
     static int placeholderSymbol = 0;
@@ -65,12 +65,6 @@ std::string GetModuleDirectory()
     {
         std::string moduleName = dlInfo.dli_fname;
         directory              = moduleName.substr(0, moduleName.find_last_of('/') + 1);
-    }
-    // Ensure we return the full path to the module, not the relative path
-    Optional<std::string> cwd = GetCWD();
-    if (!directory.empty() && directory.at(0) != '/' && cwd.valid())
-    {
-        directory = cwd.value() + GetPathSeparator() + directory;
     }
     return directory;
 }
@@ -113,7 +107,7 @@ Library *OpenSharedLibrary(const char *libraryName, SearchType searchType)
         // On iOS, shared libraries must be loaded from within the app bundle.
         directory = GetExecutableDirectory() + "/Frameworks/";
 #else
-        directory = GetModuleDirectory();
+        directory = GetHelperExecutableDir();
 #endif
     }
 

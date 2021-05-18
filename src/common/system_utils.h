@@ -19,7 +19,7 @@ namespace angle
 std::string GetExecutableName();
 std::string GetExecutablePath();
 std::string GetExecutableDirectory();
-std::string GetModuleDirectory();
+std::string GetHelperExecutableDir();
 const char *GetSharedLibraryExtension();
 const char *GetExecutableExtension();
 char GetPathSeparator();
