@@ -230,6 +230,30 @@
       },
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ce0e5ef_95c1a825",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-18T18:29:05Z",
+      "side": 1,
+      "message": "Yes, this does that Shabi (unless I\u0027m missing something in what you said).  For example, the following calls:\n\nglFoo1\nglDrawGood\nglFoo2\nglDrawNoop\nglFoo3\nglDrawGood\n\nwill result in the following hierarchy:\n\n- glDrawGood\n  - glFoo1\n  - glDrawGood\n- glDrawNoop\n  - glFoo2\n  - glDrawNoop\n- glDrawGood\n  - glFoo3\n  - glDrawGood\n\nwhere today (without this CL and my change to it), it show:\n\n- glDrawGood\n  - glFoo1\n  - glDrawGood\n- glDrawGood\n  - glFoo2\n  - glDrawNoop\n  - glFoo3\n  - glDrawGood",
+      "parentUuid": "f5abda32_f1269f02",
+      "range": {
+        "startLine": 3000,
+        "startChar": 0,
+        "endLine": 3008,
+        "endChar": 0
+      },
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
