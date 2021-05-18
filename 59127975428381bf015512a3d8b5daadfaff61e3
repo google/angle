@@ -158,6 +158,30 @@
       },
       "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ac975537_403e1688",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3008,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-18T16:54:16Z",
+      "side": 1,
+      "message": "Wait, I think I know the correct answer (I was just being too quick in my previous review feedback).  This method should \"return angle::Result, and the Context::draw* methods handle it per normal\".",
+      "parentUuid": "907f5b0b_f2fda264",
+      "range": {
+        "startLine": 3000,
+        "startChar": 0,
+        "endLine": 3008,
+        "endChar": 0
+      },
+      "revId": "59127975428381bf015512a3d8b5daadfaff61e3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
