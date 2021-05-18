@@ -222,12 +222,12 @@ cl_int ValidateGetContextInfo(cl_context context,
 
 cl_int ValidateRetainCommandQueue(cl_command_queue command_queue)
 {
-    return CL_SUCCESS;
+    return CommandQueue::IsValid(command_queue) ? CL_SUCCESS : CL_INVALID_COMMAND_QUEUE;
 }
 
 cl_int ValidateReleaseCommandQueue(cl_command_queue command_queue)
 {
-    return CL_SUCCESS;
+    return CommandQueue::IsValid(command_queue) ? CL_SUCCESS : CL_INVALID_COMMAND_QUEUE;
 }
 
 cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
@@ -236,6 +236,20 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
                                    const void *param_value,
                                    const size_t *param_value_size_ret)
 {
+    if (!CommandQueue::IsValid(command_queue))
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+    const cl_version version =
+        static_cast<CommandQueue *>(command_queue)->getDevice().getInfo().mVersion;
+    if (param_name == CommandQueueInfo::InvalidEnum ||
+        (param_name == CommandQueueInfo::Size && version < CL_MAKE_VERSION(2, 0, 0)) ||
+        (param_name == CommandQueueInfo::DeviceDefault && version < CL_MAKE_VERSION(2, 1, 0)) ||
+        (param_name == CommandQueueInfo::PropertiesArray && version < CL_MAKE_VERSION(3, 0, 0)) ||
+        (param_value_size == 0u && param_value != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
@@ -637,6 +651,15 @@ cl_int ValidateSetCommandQueueProperty(cl_command_queue command_queue,
                                        cl_bool enable,
                                        const cl_command_queue_properties *old_properties)
 {
+    if (!CommandQueue::IsValid(command_queue))
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+    // Fails if properties bitfield is not zero after masking out all allowed values
+    if ((properties & ~(CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE)) != 0u)
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
@@ -698,6 +721,19 @@ bool ValidateCreateCommandQueue(cl_context context,
                                 cl_command_queue_properties properties,
                                 cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (!static_cast<Context *>(context)->hasDevice(device))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_DEVICE, false);
+    }
+    // Fails if properties bitfield is not zero after masking out all allowed values
+    if ((properties & ~(CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE)) != 0u)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
     return true;
 }
 
@@ -817,7 +853,8 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
                                 const cl_device_id *out_devices,
                                 const cl_uint *num_devices_ret)
 {
-    if (!Device::IsValid(in_device))
+    if (!Device::IsValid(in_device) ||
+        static_cast<Device *>(in_device)->getInfo().mVersion < CL_MAKE_VERSION(1, 2, 0))
     {
         return CL_INVALID_DEVICE;
     }
@@ -832,12 +869,18 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
 
 cl_int ValidateRetainDevice(cl_device_id device)
 {
-    return Device::IsValid(device) ? CL_SUCCESS : CL_INVALID_DEVICE;
+    return Device::IsValid(device) &&
+                   static_cast<Device *>(device)->getInfo().mVersion >= CL_MAKE_VERSION(1, 2, 0)
+               ? CL_SUCCESS
+               : CL_INVALID_DEVICE;
 }
 
 cl_int ValidateReleaseDevice(cl_device_id device)
 {
-    return Device::IsValid(device) ? CL_SUCCESS : CL_INVALID_DEVICE;
+    return Device::IsValid(device) &&
+                   static_cast<Device *>(device)->getInfo().mVersion >= CL_MAKE_VERSION(1, 2, 0)
+               ? CL_SUCCESS
+               : CL_INVALID_DEVICE;
 }
 
 bool ValidateCreateImage(cl_context context,
@@ -963,6 +1006,55 @@ bool ValidateCreateCommandQueueWithProperties(cl_context context,
                                               const cl_queue_properties *properties,
                                               cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (!static_cast<Context *>(context)->hasDevice(device) ||
+        static_cast<Device *>(device)->getInfo().mVersion < CL_MAKE_VERSION(2, 0, 0))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_DEVICE, false);
+    }
+    if (properties != nullptr)
+    {
+        while (*properties != 0)
+        {
+            switch (*properties++)
+            {
+                case CL_QUEUE_PROPERTIES:
+                {
+                    const cl_command_queue_properties props = *properties++;
+                    // Fails if properties bitfield is not zero after masking out allowed values
+                    if ((props &
+                         ~(CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE | CL_QUEUE_PROFILING_ENABLE |
+                           CL_QUEUE_ON_DEVICE | CL_QUEUE_ON_DEVICE_DEFAULT)) != 0u ||
+                        // Fails for invalid value combinations
+                        ((props & CL_QUEUE_ON_DEVICE) != 0u &&
+                         (props & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE) == 0u) ||
+                        ((props & CL_QUEUE_ON_DEVICE_DEFAULT) != 0u &&
+                         (props & CL_QUEUE_ON_DEVICE) == 0u))
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+                    }
+                    break;
+                }
+                case CL_QUEUE_SIZE:
+                {
+                    cl_uint maxSize = 0u;
+                    if (static_cast<Device *>(device)->getInfoUInt(DeviceInfo::QueueOnDeviceMaxSize,
+                                                                   &maxSize) != CL_SUCCESS ||
+                        *properties > maxSize)
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+                    }
+                    ++properties;
+                    break;
+                }
+                default:
+                    ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+            }
+        }
+    }
     return true;
 }
 

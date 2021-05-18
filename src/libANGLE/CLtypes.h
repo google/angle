@@ -45,8 +45,10 @@ using PlatformPtr     = std::unique_ptr<Platform>;
 using ProgramPtr      = std::unique_ptr<Program>;
 using SamplerPtr      = std::unique_ptr<Sampler>;
 
-using DevicePtrList = std::list<DevicePtr>;
+using ContextRefPtr = RefPointer<Context>;
 using DeviceRefPtr  = RefPointer<Device>;
+
+using DevicePtrList = std::list<DevicePtr>;
 using DeviceRefList = std::vector<DeviceRefPtr>;
 
 }  // namespace cl

@@ -8,6 +8,7 @@
 #ifndef LIBANGLE_RENDERER_CLCONTEXTIMPL_H_
 #define LIBANGLE_RENDERER_CLCONTEXTIMPL_H_
 
+#include "libANGLE/renderer/CLCommandQueueImpl.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
 
 namespace rx
@@ -22,6 +23,9 @@ class CLContextImpl : angle::NonCopyable
     virtual ~CLContextImpl();
 
     virtual cl::DeviceRefList getDevices() const = 0;
+
+    virtual CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
+                                                       cl_int *errcodeRet) = 0;
 
   protected:
     const cl::Context &mContext;

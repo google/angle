@@ -32,6 +32,7 @@ class Platform final : public _cl_platform_id, public Object
     bool hasDevice(const _cl_device_id *device) const;
     const DevicePtrList &getDevices() const;
     bool hasContext(const _cl_context *context) const;
+    bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
 
     cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
 
@@ -108,6 +109,13 @@ inline bool Platform::hasContext(const _cl_context *context) const
 {
     return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
                return ptr.get() == context;
+           }) != mContexts.cend();
+}
+
+inline bool Platform::hasCommandQueue(const _cl_command_queue *commandQueue) const
+{
+    return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
+               return ptr->hasCommandQueue(commandQueue);
            }) != mContexts.cend();
 }
 

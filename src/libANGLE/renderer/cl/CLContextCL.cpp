@@ -7,6 +7,7 @@
 
 #include "libANGLE/renderer/cl/CLContextCL.h"
 
+#include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
 
 #include "libANGLE/CLContext.h"
@@ -47,7 +48,7 @@ cl::DeviceRefList CLContextCL::getDevices() const
             {
                 auto it = platformDevices.cbegin();
                 while (it != platformDevices.cend() &&
-                       static_cast<CLDeviceCL &>((*it)->getImpl()).getNative() != nativeDevice)
+                       (*it)->getImpl<CLDeviceCL &>().getNative() != nativeDevice)
                 {
                     ++it;
                 }
@@ -67,6 +68,29 @@ cl::DeviceRefList CLContextCL::getDevices() const
 
     ERR() << "Error fetching devices from CL context, code: " << result;
     return cl::DeviceRefList{};
+}
+
+CLCommandQueueImpl::Ptr CLContextCL::createCommandQueue(const cl::CommandQueue &commandQueue,
+                                                        cl_int *errcodeRet)
+{
+    const cl::Device &device        = commandQueue.getDevice();
+    const cl_device_id nativeDevice = device.getImpl<CLDeviceCL &>().getNative();
+    cl_command_queue nativeQueue    = nullptr;
+    if (device.getInfo().mVersion < CL_MAKE_VERSION(2, 0, 0))
+    {
+        nativeQueue = mNative->getDispatch().clCreateCommandQueue(
+            mNative, nativeDevice, commandQueue.getProperties(), errcodeRet);
+    }
+    else
+    {
+        const cl_queue_properties propArray[] = {CL_QUEUE_PROPERTIES, commandQueue.getProperties(),
+                                                 commandQueue.hasSize() ? CL_QUEUE_SIZE : 0u,
+                                                 commandQueue.getSize(), 0u};
+        nativeQueue = mNative->getDispatch().clCreateCommandQueueWithProperties(
+            mNative, nativeDevice, propArray, errcodeRet);
+    }
+    return CLCommandQueueImpl::Ptr(
+        nativeQueue != nullptr ? new CLCommandQueueCL(commandQueue, nativeQueue) : nullptr);
 }
 
 }  // namespace rx

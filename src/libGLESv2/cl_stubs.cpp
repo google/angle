@@ -173,20 +173,20 @@ cl_command_queue CreateCommandQueueWithProperties(cl_context context,
                                                   const cl_queue_properties *properties,
                                                   cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateCommandQueueWithProperties);
-    return 0;
+    return static_cast<Context *>(context)->createCommandQueueWithProperties(device, properties,
+                                                                             errcode_ret);
 }
 
 cl_int RetainCommandQueue(cl_command_queue command_queue)
 {
-    WARN_NOT_SUPPORTED(RetainCommandQueue);
-    return 0;
+    static_cast<CommandQueue *>(command_queue)->retain();
+    return CL_SUCCESS;
 }
 
 cl_int ReleaseCommandQueue(cl_command_queue command_queue)
 {
-    WARN_NOT_SUPPORTED(ReleaseCommandQueue);
-    return 0;
+    static_cast<CommandQueue *>(command_queue)->release();
+    return CL_SUCCESS;
 }
 
 cl_int GetCommandQueueInfo(cl_command_queue command_queue,
@@ -1063,8 +1063,8 @@ cl_int SetCommandQueueProperty(cl_command_queue command_queue,
                                cl_bool enable,
                                cl_command_queue_properties *old_properties)
 {
-    WARN_NOT_SUPPORTED(SetCommandQueueProperty);
-    return 0;
+    return static_cast<CommandQueue *>(command_queue)
+        ->setProperty(properties, enable, old_properties);
 }
 
 cl_mem CreateImage2D(cl_context context,
@@ -1137,8 +1137,7 @@ cl_command_queue CreateCommandQueue(cl_context context,
                                     cl_command_queue_properties properties,
                                     cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateCommandQueue);
-    return 0;
+    return static_cast<Context *>(context)->createCommandQueue(device, properties, errcode_ret);
 }
 
 cl_sampler CreateSampler(cl_context context,

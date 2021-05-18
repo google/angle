@@ -9,6 +9,8 @@ import("../../../../gni/angle.gni")
 assert(angle_enable_cl_passthrough)
 
 _cl_backend_sources = [
+  "CLCommandQueueCL.cpp",
+  "CLCommandQueueCL.h",
   "CLContextCL.cpp",
   "CLContextCL.h",
   "CLDeviceCL.cpp",

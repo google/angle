@@ -75,6 +75,59 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
     return CL_SUCCESS;
 }
 
+cl_command_queue Context::createCommandQueue(cl_device_id device,
+                                             cl_command_queue_properties properties,
+                                             cl_int *errcodeRet)
+{
+    mCommandQueues.emplace_back(new CommandQueue(
+        ContextRefPtr(this), DeviceRefPtr(static_cast<Device *>(device)), properties, errcodeRet));
+    if (!mCommandQueues.back()->mImpl)
+    {
+        mCommandQueues.back()->release();
+        return nullptr;
+    }
+    return mCommandQueues.back().get();
+}
+
+cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
+                                                           const cl_queue_properties *properties,
+                                                           cl_int *errcodeRet)
+{
+    CommandQueue::PropArray propArray;
+    cl_command_queue_properties props = 0u;
+    cl_uint size                      = CommandQueue::kNoSize;
+    if (properties != nullptr)
+    {
+        const cl_queue_properties *propIt = properties;
+        while (*propIt != 0)
+        {
+            switch (*propIt++)
+            {
+                case CL_QUEUE_PROPERTIES:
+                    props = *propIt++;
+                    break;
+                case CL_QUEUE_SIZE:
+                    size = static_cast<decltype(size)>(*propIt++);
+                    break;
+            }
+        }
+        // Include the trailing zero
+        ++propIt;
+        propArray.reserve(propIt - properties);
+        propArray.insert(propArray.cend(), properties, propIt);
+    }
+
+    mCommandQueues.emplace_back(new CommandQueue(ContextRefPtr(this),
+                                                 DeviceRefPtr(static_cast<Device *>(device)),
+                                                 std::move(propArray), props, size, errcodeRet));
+    if (!mCommandQueues.back()->mImpl)
+    {
+        mCommandQueues.back()->release();
+        return nullptr;
+    }
+    return mCommandQueues.back().get();
+}
+
 bool Context::IsValid(const _cl_context *context)
 {
     const Platform::PtrList &platforms = Platform::GetPlatforms();
@@ -120,6 +173,23 @@ Context::Context(Platform &platform,
       mNotify(notify),
       mUserData(userData)
 {}
+
+void Context::destroyCommandQueue(CommandQueue *commandQueue)
+{
+    auto commandQueueIt = mCommandQueues.cbegin();
+    while (commandQueueIt != mCommandQueues.cend() && commandQueueIt->get() != commandQueue)
+    {
+        ++commandQueueIt;
+    }
+    if (commandQueueIt != mCommandQueues.cend())
+    {
+        mCommandQueues.erase(commandQueueIt);
+    }
+    else
+    {
+        ERR() << "CommandQueue not found";
+    }
+}
 
 void Context::ErrorCallback(const char *errinfo, const void *privateInfo, size_t cb, void *userData)
 {

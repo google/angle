@@ -23,6 +23,9 @@ class CLContextCL : public CLContextImpl
 
     cl::DeviceRefList getDevices() const override;
 
+    CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
+                                               cl_int *errcodeRet) override;
+
   private:
     const cl_context mNative;
 };

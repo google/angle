@@ -9,11 +9,9 @@
 #ifndef LIBANGLE_CLCONTEXT_H_
 #define LIBANGLE_CLCONTEXT_H_
 
+#include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLDevice.h"
-#include "libANGLE/CLRefPointer.h"
 #include "libANGLE/renderer/CLContextImpl.h"
-
-#include <list>
 
 namespace cl
 {
@@ -22,17 +20,26 @@ class Context final : public _cl_context, public Object
 {
   public:
     using PtrList   = std::list<ContextPtr>;
-    using RefPtr    = RefPointer<Context>;
     using PropArray = std::vector<cl_context_properties>;
 
     ~Context();
 
-    Platform &getPlatform() const noexcept;
+    const Platform &getPlatform() const noexcept;
+    bool hasDevice(const _cl_device_id *device) const;
+    bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
 
     void retain() noexcept;
     bool release();
 
     cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
+
+    cl_command_queue createCommandQueue(cl_device_id device,
+                                        cl_command_queue_properties properties,
+                                        cl_int *errcodeRet);
+
+    cl_command_queue createCommandQueueWithProperties(cl_device_id device,
+                                                      const cl_queue_properties *properties,
+                                                      cl_int *errcodeRet);
 
     static bool IsValid(const _cl_context *context);
 
@@ -53,6 +60,8 @@ class Context final : public _cl_context, public Object
             bool userSync,
             cl_int *errcodeRet);
 
+    void destroyCommandQueue(CommandQueue *commandQueue);
+
     static void CL_CALLBACK ErrorCallback(const char *errinfo,
                                           const void *privateInfo,
                                           size_t cb,
@@ -65,12 +74,29 @@ class Context final : public _cl_context, public Object
     const ContextErrorCB mNotify;
     void *const mUserData;
 
+    CommandQueue::PtrList mCommandQueues;
+
+    friend class CommandQueue;
     friend class Platform;
 };
 
-inline Platform &Context::getPlatform() const noexcept
+inline const Platform &Context::getPlatform() const noexcept
 {
     return mPlatform;
+}
+
+inline bool Context::hasDevice(const _cl_device_id *device) const
+{
+    return std::find_if(mDevices.cbegin(), mDevices.cend(), [=](const DeviceRefPtr &ptr) {
+               return ptr.get() == device;
+           }) != mDevices.cend();
+}
+
+inline bool Context::hasCommandQueue(const _cl_command_queue *commandQueue) const
+{
+    return std::find_if(mCommandQueues.cbegin(), mCommandQueues.cend(),
+                        [=](const CommandQueuePtr &ptr) { return ptr.get() == commandQueue; }) !=
+           mCommandQueues.cend();
 }
 
 inline void Context::retain() noexcept

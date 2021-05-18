@@ -352,7 +352,7 @@ CLContextImpl::Ptr CLPlatformCL::createContext(const cl::Context &context,
     std::vector<cl_device_id> nativeDevices;
     for (const cl::DeviceRefPtr &device : devices)
     {
-        nativeDevices.emplace_back(static_cast<CLDeviceCL &>(device->getImpl()).getNative());
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL &>().getNative());
     }
 
     CLContextImpl::Ptr contextImpl;

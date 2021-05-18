@@ -32,26 +32,23 @@ Context::PropArray ParseContextProperties(const cl_context_properties *propertie
     Context::PropArray propArray;
     if (properties != nullptr)
     {
-        // Count the trailing zero
-        size_t propSize                     = 1u;
         const cl_context_properties *propIt = properties;
         while (*propIt != 0)
         {
-            ++propSize;
             switch (*propIt++)
             {
                 case CL_CONTEXT_PLATFORM:
                     platform = reinterpret_cast<Platform *>(*propIt++);
-                    ++propSize;
                     break;
                 case CL_CONTEXT_INTEROP_USER_SYNC:
                     userSync = *propIt++ != CL_FALSE;
-                    ++propSize;
                     break;
             }
         }
-        propArray.reserve(propSize);
-        propArray.insert(propArray.cend(), properties, properties + propSize);
+        // Include the trailing zero
+        ++propIt;
+        propArray.reserve(propIt - properties);
+        propArray.insert(propArray.cend(), properties, propIt);
     }
     if (platform == nullptr)
     {

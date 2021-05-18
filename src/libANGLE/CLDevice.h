@@ -24,16 +24,22 @@ class Device final : public _cl_device_id, public Object
 
     ~Device();
 
-    Platform &getPlatform() const noexcept;
+    Platform &getPlatform() noexcept;
+    const Platform &getPlatform() const noexcept;
     bool isRoot() const noexcept;
-    rx::CLDeviceImpl &getImpl() const;
+
+    template <typename T>
+    T &getImpl() const;
+
     const rx::CLDeviceImpl::Info &getInfo() const;
     bool hasSubDevice(const _cl_device_id *device) const;
 
     void retain() noexcept;
     bool release();
 
+    cl_int getInfoUInt(DeviceInfo name, cl_uint *value) const;
     cl_int getInfoULong(DeviceInfo name, cl_ulong *value) const;
+
     cl_int getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
 
     cl_int createSubDevices(const cl_device_partition_property *properties,
@@ -59,11 +65,18 @@ class Device final : public _cl_device_id, public Object
     const rx::CLDeviceImpl::Info mInfo;
 
     DevicePtrList mSubDevices;
+    CommandQueue *mDefaultCommandQueue = nullptr;
 
+    friend class CommandQueue;
     friend class Platform;
 };
 
-inline Platform &Device::getPlatform() const noexcept
+inline Platform &Device::getPlatform() noexcept
+{
+    return mPlatform;
+}
+
+inline const Platform &Device::getPlatform() const noexcept
 {
     return mPlatform;
 }
@@ -73,9 +86,10 @@ inline bool Device::isRoot() const noexcept
     return !mParent;
 }
 
-inline rx::CLDeviceImpl &Device::getImpl() const
+template <typename T>
+inline T &Device::getImpl() const
 {
-    return *mImpl;
+    return static_cast<T>(*mImpl);
 }
 
 inline const rx::CLDeviceImpl::Info &Device::getInfo() const
@@ -96,6 +110,11 @@ inline void Device::retain() noexcept
     {
         addRef();
     }
+}
+
+inline cl_int Device::getInfoUInt(DeviceInfo name, cl_uint *value) const
+{
+    return mImpl->getInfoUInt(name, value);
 }
 
 inline cl_int Device::getInfoULong(DeviceInfo name, cl_ulong *value) const
