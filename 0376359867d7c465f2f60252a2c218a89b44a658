@@ -16,6 +16,24 @@
       "message": "FYI, git cl format passes for Patchset 4 on my local windows machine but fails on the bots. I had to use a linux machine to make Patchset 5.",
       "revId": "0376359867d7c465f2f60252a2c218a89b44a658",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6078c85f_5aeaf77a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-18T01:08:23Z",
+      "side": 1,
+      "message": "I believe I have seen this sort of thing when there was a failure downloading the clang toolchain. Does `gclient sync` fail on your windows machine?",
+      "parentUuid": "fea78b5e_f3d84acd",
+      "revId": "0376359867d7c465f2f60252a2c218a89b44a658",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
