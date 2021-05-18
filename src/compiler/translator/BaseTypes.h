@@ -1053,6 +1053,7 @@ inline bool IsShaderIn(TQualifier qualifier)
         case EvqTessEvaluationIn:
         case EvqGeometryIn:
         case EvqFragmentIn:
+        case EvqPerVertexIn:
         case EvqAttribute:
         case EvqVaryingIn:
         case EvqSmoothIn:
@@ -1076,6 +1077,7 @@ inline bool IsShaderOut(TQualifier qualifier)
         case EvqTessEvaluationOut:
         case EvqGeometryOut:
         case EvqFragmentOut:
+        case EvqPerVertexOut:
         case EvqVaryingOut:
         case EvqSmoothOut:
         case EvqFlatOut:

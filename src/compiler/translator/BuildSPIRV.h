@@ -184,6 +184,7 @@ class SPIRVBuilder : angle::NonCopyable
     void addExecutionMode(spv::ExecutionMode executionMode);
     void setEntryPointId(spirv::IdRef id);
     void addEntryPointInterfaceVariableId(spirv::IdRef id);
+    void writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId);
     void writeInterfaceVariableDecorations(const TType &type, spirv::IdRef variableId);
 
     uint32_t calculateBaseAlignmentAndSize(const SpirvType &type, uint32_t *sizeInStorageBlockOut);

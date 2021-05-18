@@ -337,6 +337,18 @@ bool OutputSPIRVTraverser::visitDeclaration(Visit visit, TIntermDeclaration *nod
     {
         // Add in and out variables to the list of interface variables.
         mBuilder.addEntryPointInterfaceVariableId(variableId);
+
+        if (IsShaderIoBlock(type.getQualifier()) && type.isInterfaceBlock())
+        {
+            // For gl_PerVertex in particular, write the necessary BuiltIn decorations
+            if (type.getQualifier() == EvqPerVertexIn || type.getQualifier() == EvqPerVertexOut)
+            {
+                mBuilder.writePerVertexBuiltIns(type, typeId);
+            }
+
+            // I/O blocks are decorated with Block
+            spirv::WriteDecorate(mBuilder.getSpirvDecorations(), typeId, spv::DecorationBlock, {});
+        }
     }
     else if (type.getBasicType() == EbtInterfaceBlock)
     {

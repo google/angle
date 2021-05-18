@@ -21,6 +21,7 @@
 #include "compiler/translator/OutputVulkanGLSL.h"
 #include "compiler/translator/StaticType.h"
 #include "compiler/translator/glslang_wrapper.h"
+#include "compiler/translator/tree_ops/vulkan/DeclarePerVertexBlocks.h"
 #include "compiler/translator/tree_ops/vulkan/FlagSamplersWithTexelFetch.h"
 #include "compiler/translator/tree_ops/vulkan/MonomorphizeUnsupportedFunctionsInVulkanGLSL.h"
 #include "compiler/translator/tree_ops/vulkan/RemoveAtomicCounterBuiltins.h"
@@ -1341,6 +1342,13 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
 #if defined(ANGLE_ENABLE_DIRECT_SPIRV_GENERATION)
     if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0 && getShaderType() == GL_VERTEX_SHADER)
     {
+        // Declare the implicitly defined gl_PerVertex I/O blocks if not already.  This will help
+        // SPIR-V generation treat them mostly like usual I/O blocks.
+        if (!DeclarePerVertexBlocks(this, root, &getSymbolTable()))
+        {
+            return false;
+        }
+
         return OutputSPIRV(this, root, compileOptions);
     }
 #endif

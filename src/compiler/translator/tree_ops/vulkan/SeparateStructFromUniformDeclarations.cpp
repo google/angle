@@ -42,9 +42,10 @@ class Traverser : public TIntermTraverser
         if (type.isStructSpecifier() && type.getQualifier() == EvqUniform)
         {
             doReplacement(decl, declarator, type);
+            return false;
         }
 
-        return false;
+        return true;
     }
 
     void visitSymbol(TIntermSymbol *symbol) override

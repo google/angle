@@ -83,7 +83,7 @@ const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, TLayoutBlockSt
         // from this.  Default to std140.
         ASSERT(spirvType.blockStorage == EbsUnspecified);
         spirvType.blockStorage = type.getLayoutQualifier().blockStorage;
-        if (spirvType.blockStorage != EbsStd430)
+        if (!IsShaderIoBlock(type.getQualifier()) && spirvType.blockStorage != EbsStd430)
         {
             spirvType.blockStorage = EbsStd140;
         }
@@ -805,6 +805,39 @@ void SPIRVBuilder::setEntryPointId(spirv::IdRef id)
 void SPIRVBuilder::addEntryPointInterfaceVariableId(spirv::IdRef id)
 {
     mEntryPointInterfaceList.push_back(id);
+}
+
+void SPIRVBuilder::writePerVertexBuiltIns(const TType &type, spirv::IdRef typeId)
+{
+    ASSERT(type.isInterfaceBlock());
+    const TInterfaceBlock *block = type.getInterfaceBlock();
+
+    uint32_t fieldIndex = 0;
+    for (const TField *field : block->fields())
+    {
+        spv::BuiltIn decorationValue = spv::BuiltInPosition;
+        switch (field->type()->getQualifier())
+        {
+            case EvqPosition:
+                decorationValue = spv::BuiltInPosition;
+                break;
+            case EvqPointSize:
+                decorationValue = spv::BuiltInPointSize;
+                break;
+            case EvqClipDistance:
+                decorationValue = spv::BuiltInClipDistance;
+                break;
+            case EvqCullDistance:
+                decorationValue = spv::BuiltInCullDistance;
+                break;
+            default:
+                UNREACHABLE();
+        }
+
+        spirv::WriteMemberDecorate(&mSpirvDecorations, typeId, spirv::LiteralInteger(fieldIndex++),
+                                   spv::DecorationBuiltIn,
+                                   {spirv::LiteralInteger(decorationValue)});
+    }
 }
 
 void SPIRVBuilder::writeInterfaceVariableDecorations(const TType &type, spirv::IdRef variableId)
