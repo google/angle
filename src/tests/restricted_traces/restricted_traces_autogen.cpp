@@ -81,6 +81,7 @@
 #include "romancing_saga/romancing_saga_capture_context1.h"
 #include "rope_hero_vice_town/rope_hero_vice_town_capture_context1.h"
 #include "saint_seiya_awakening/saint_seiya_awakening_capture_context1.h"
+#include "sakura_school_simulator/sakura_school_simulator_capture_context2.h"
 #include "shadow_fight_2/shadow_fight_2_capture_context1.h"
 #include "slingshot_test1/slingshot_test1_capture_context2.h"
 #include "slingshot_test2/slingshot_test2_capture_context2.h"
@@ -439,6 +440,12 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       saint_seiya_awakening::kReplayFrameStart, saint_seiya_awakening::kReplayFrameEnd,
       saint_seiya_awakening::kReplayDrawSurfaceWidth,
       saint_seiya_awakening::kReplayDrawSurfaceHeight, "saint_seiya_awakening"}},
+    {RestrictedTraceID::sakura_school_simulator,
+     {sakura_school_simulator::kReplayContextClientMajorVersion,
+      sakura_school_simulator::kReplayContextClientMinorVersion,
+      sakura_school_simulator::kReplayFrameStart, sakura_school_simulator::kReplayFrameEnd,
+      sakura_school_simulator::kReplayDrawSurfaceWidth,
+      sakura_school_simulator::kReplayDrawSurfaceHeight, "sakura_school_simulator"}},
     {RestrictedTraceID::shadow_fight_2,
      {shadow_fight_2::kReplayContextClientMajorVersion,
       shadow_fight_2::kReplayContextClientMinorVersion, shadow_fight_2::kReplayFrameStart,

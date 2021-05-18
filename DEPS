@@ -1307,6 +1307,16 @@ deps = {
       'dep_type': 'cipd',
       'condition': 'checkout_angle_restricted_traces',
   },
+  'src/tests/restricted_traces/sakura_school_simulator': {
+      'packages': [
+        {
+            'package': 'angle/traces/sakura_school_simulator',
+            'version': 'version:1',
+        },
+      ],
+      'dep_type': 'cipd',
+      'condition': 'checkout_angle_restricted_traces',
+  },
   'src/tests/restricted_traces/shadow_fight_2': {
       'packages': [
         {
