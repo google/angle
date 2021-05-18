@@ -411,6 +411,20 @@ TEST_P(GPUTestExpectationsParserTest, GPUTestExpectationsParserOverrideExpectati
     EXPECT_TRUE(parser.getUnusedExpectationsMessages().empty());
 }
 
+// Tests that overlap checking doesn't generate false positives.
+TEST_P(GPUTestExpectationsParserTest, OverlapConditions)
+{
+    std::string lines = R"(
+100 NVIDIA VULKAN : dEQP-GLES31.functional.layout_binding.ubo.* = SKIP
+100 NVIDIA D3D11 : dEQP-GLES31.functional.layout_binding.ubo.* = SKIP)";
+
+    ASSERT_TRUE(load(lines));
+    ASSERT_TRUE(parser.getErrorMessages().empty());
+
+    EXPECT_EQ(get("dEQP-GLES31.functional.layout_binding.ubo.vertex_binding_max"),
+              GPUTestExpectationsParser::kGpuTestSkip);
+}
+
 std::string ConditionTestTypeName(testing::TestParamInfo<ConditionTestType> testParamInfo)
 {
     if (testParamInfo.param == ConditionTestType::OnLoad)

@@ -236,6 +236,38 @@ inline Token ParseToken(const std::string &word)
     }
     return kTokenWord;
 }
+
+bool ConditionArrayIsSubset(const GPUTestConfig::ConditionArray &subset,
+                            const GPUTestConfig::ConditionArray &superset)
+{
+    for (size_t subsetCondition : subset)
+    {
+        bool foundCondition = false;
+        for (size_t supersetCondition : superset)
+        {
+            if (subsetCondition == supersetCondition)
+            {
+                foundCondition = true;
+                break;
+            }
+        }
+
+        if (!foundCondition)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+// If one array is completely contained within the other, then we say the conditions overlap.
+bool ConditionsOverlap(const GPUTestConfig::ConditionArray &conditionsI,
+                       const GPUTestConfig::ConditionArray &conditionsJ)
+{
+    return ConditionArrayIsSubset(conditionsI, conditionsJ) ||
+           ConditionArrayIsSubset(conditionsJ, conditionsI);
+}
 }  // anonymous namespace
 
 const char *GetConditionName(uint32_t condition)
@@ -601,10 +633,13 @@ bool GPUTestExpectationsParser::detectConflictsBetweenEntries()
     {
         for (size_t j = i + 1; j < mEntries.size(); ++j)
         {
-            if (mEntries[i].testName == mEntries[j].testName)
+            const GPUTestExpectationEntry &entryI = mEntries[i];
+            const GPUTestExpectationEntry &entryJ = mEntries[j];
+            if (entryI.testName == entryJ.testName &&
+                ConditionsOverlap(entryI.conditions, entryJ.conditions))
             {
-                pushErrorMessage(kErrorMessage[kErrorEntriesOverlap], mEntries[i].lineNumber,
-                                 mEntries[j].lineNumber);
+                pushErrorMessage(kErrorMessage[kErrorEntriesOverlap], entryI.lineNumber,
+                                 entryJ.lineNumber);
                 rt = true;
             }
         }
