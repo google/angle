@@ -593,6 +593,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2651a57_b6412cae",
+        "filename": "src/compiler/translator/BuildSPIRV.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-19T15:57:04Z",
+      "side": 1,
+      "message": "Turned out it was because I needed padding because of angle::ComputeGenericHash expecting a key size divisible by 4.  Added a comment.",
+      "parentUuid": "b1a4a3f3_ae323c16",
+      "range": {
+        "startLine": 96,
+        "startChar": 33,
+        "endLine": 96,
+        "endChar": 34
+      },
+      "revId": "ac0f7bd849edbbcae3ecdb1472d25c955c28227e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e8e1dd71_c3762ba7",
