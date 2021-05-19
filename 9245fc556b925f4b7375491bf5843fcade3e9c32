@@ -122,6 +122,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a11cde0d_45e9638e",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2607,
+      "author": {
+        "id": 1505517
+      },
+      "writtenOn": "2021-05-19T22:32:45Z",
+      "side": 1,
+      "message": "Ah, I see, thanks!\nYeah if there\u0027s a mismatch in components between the shader and the glVertexAttribPointer input we\u0027ll definitely send in data we shouldn\u0027t be sending\n\nWe\u0027ll update it",
+      "parentUuid": "99a33e30_acbd4ae4",
+      "range": {
+        "startLine": 2607,
+        "startChar": 16,
+        "endLine": 2607,
+        "endChar": 23
+      },
+      "revId": "9245fc556b925f4b7375491bf5843fcade3e9c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d622906_44f36265",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 7
