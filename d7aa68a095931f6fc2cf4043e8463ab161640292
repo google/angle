@@ -39,6 +39,30 @@
       },
       "revId": "d7aa68a095931f6fc2cf4043e8463ab161640292",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86976535_6d83f8a5",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-19T15:38:25Z",
+      "side": 1,
+      "message": "The last time we saw a NOMINMAX issue was with anglebug.com/4338, which was fixed by adding the define to the VVL\u0027s GN file:\nhttps://github.com/KhronosGroup/Vulkan-ValidationLayers/pull/1510/commits/cc9f83638c0cea812a62f152c4f2cbeb9c9ca68a\n\nMight be worth giving something like that a shot if the #defines aren\u0027t working as expected.",
+      "parentUuid": "b930b282_458fc68d",
+      "range": {
+        "startLine": 70,
+        "startChar": 48,
+        "endLine": 70,
+        "endChar": 54
+      },
+      "revId": "d7aa68a095931f6fc2cf4043e8463ab161640292",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
