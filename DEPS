@@ -474,7 +474,7 @@ deps = {
   },
 
   'third_party/requests/src': {
-    'url': '{chromium_git}/external/github.com/kennethreitz/requests@refs/tags/v2.23.0',
+    'url': '{chromium_git}/external/github.com/kennethreitz/requests.git@refs/tags/v2.23.0',
     'condition': 'checkout_android and not build_with_chromium',
   },
 
