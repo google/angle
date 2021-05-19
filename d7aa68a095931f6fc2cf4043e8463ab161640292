@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4f0d8020_02fd42bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-19T09:09:22Z",
+      "side": 1,
+      "message": "Windows build is failing, but I\u0027m not quite sure why  ",
+      "revId": "d7aa68a095931f6fc2cf4043e8463ab161640292",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b930b282_458fc68d",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-19T09:09:22Z",
+      "side": 1,
+      "message": "That\u0027s strange, MSVC doesn\u0027t like this, but the JsonSerializer.cpp (indirectly) includes \"common/platform.h\" as the first include and this should define \"NOMINMAX\" and thereby take care of this problem. Any ideas?",
+      "range": {
+        "startLine": 70,
+        "startChar": 48,
+        "endLine": 70,
+        "endChar": 54
+      },
+      "revId": "d7aa68a095931f6fc2cf4043e8463ab161640292",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
