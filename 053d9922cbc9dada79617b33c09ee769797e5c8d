@@ -33,6 +33,24 @@
       "message": "Plans for dEQP on the GL backend too?",
       "revId": "053d9922cbc9dada79617b33c09ee769797e5c8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "efa6bb35_ed2c0da5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-19T15:18:33Z",
+      "side": 1,
+      "message": "I think we have capacity constraints for these phones. So no plans on my end, no.",
+      "parentUuid": "b5e5bd7c_062d675f",
+      "revId": "053d9922cbc9dada79617b33c09ee769797e5c8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
