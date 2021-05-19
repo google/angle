@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6edcaf0e_820abb36",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-19T23:24:45Z",
+      "side": 1,
+      "message": "Please make this OS-specific.  The bug is Linux specific, correct?\n\nAndroid needs this extension, and will remain at 1.1 until at least Android T (late 2022).  This extension is a crucial part of the Android Graphics Inspector (AGI) profiler/debugger (it\u0027s how ANGLE communicates what GLES commands correspond to each Vulkan draw/dispatch).  I\u0027ve heard that RenderDoc can use these debug-util markers as well.\n\nThanks!",
+      "range": {
+        "startLine": 846,
+        "startChar": 4,
+        "endLine": 846,
+        "endChar": 72
+      },
+      "revId": "4c7ffa55bd123f9878583d5afc673951c2df2c17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
