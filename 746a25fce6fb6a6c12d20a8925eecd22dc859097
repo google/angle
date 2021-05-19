@@ -16,6 +16,24 @@
       "message": "While you\u0027re at it, you might as well fix this for tessellation too.",
       "revId": "746a25fce6fb6a6c12d20a8925eecd22dc859097",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "810ba8c7_65a73344",
+        "filename": "src/libANGLE/validationES31.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 1902,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-19T02:42:38Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2dd69dd9_73b1e51a",
+      "revId": "746a25fce6fb6a6c12d20a8925eecd22dc859097",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
