@@ -98,6 +98,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "99a33e30_acbd4ae4",
+        "filename": "src/libANGLE/formatutils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 2607,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-19T14:59:02Z",
+      "side": 1,
+      "message": "That\u0027s exactly my concern. If you use R8G8B8A8_UINT instead of R8_SINT, doesn\u0027t it screw up the stride at least?\n\nCould you add a test to exercise this (with an R8 attribute) and see if it works? You could for example use 3 vertices, i.e. 3 bytes of data. I suspect switching to R8G8B8A8 makes it invalid for two reasons; one that the stride is wrong and two that robustness disallows reading even one attribute out of the buffer (of size 3), (though our allocations may round it up to 16 bytes?).",
+      "parentUuid": "1f3f5fa8_4a579e4f",
+      "range": {
+        "startLine": 2607,
+        "startChar": 16,
+        "endLine": 2607,
+        "endChar": 23
+      },
+      "revId": "9245fc556b925f4b7375491bf5843fcade3e9c32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6d622906_44f36265",
         "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
         "patchSetId": 7
