@@ -505,6 +505,14 @@ def main():
 
     # Add APKs with all of the root libraries
     blueprint_targets.append((
+        'filegroup',
+        {
+            'name': 'ANGLE_srcs',
+            # Only add EmptyMainActivity.java since we just need to be able to reply to the intent
+            # android.app.action.ANGLE_FOR_ANDROID to indicate ANGLE is present on the device.
+            'srcs': ['src/android_system_settings/src/com/android/angle/EmptyMainActivity.java'],
+        }))
+    blueprint_targets.append((
         'java_defaults',
         {
             'name': 'ANGLE_java_defaults',
@@ -521,6 +529,7 @@ def main():
                 # Don't compress *.json files
                 '-0 .json',
             ],
+            'srcs': [':ANGLE_srcs'],
             'plugins': ['java_api_finder',],
             'privileged': True,
             'product_specific': True,
@@ -531,6 +540,7 @@ def main():
         'name': 'ANGLE',
         'defaults': ['ANGLE_java_defaults'],
         'manifest': 'android/AndroidManifest.xml',
+        'asset_dirs': ['src/android_system_settings/assets',],
     }))
 
     output = [
