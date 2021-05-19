@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "943cf34d_fddd7f47",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-19T15:20:07Z",
+      "side": 1,
+      "message": "LGTM!",
+      "revId": "6ca2cc980bad4f4467e511ec179c63dce3a49261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "30cb2611_2af0923e",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-19T15:20:07Z",
+      "side": 1,
+      "message": "nit: I tend to like features names to be positive, so this would be enable... with default to true.",
+      "range": {
+        "startLine": 553,
+        "startChar": 12,
+        "endLine": 553,
+        "endChar": 47
+      },
+      "revId": "6ca2cc980bad4f4467e511ec179c63dce3a49261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
