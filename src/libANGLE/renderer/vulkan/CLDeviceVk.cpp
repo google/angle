@@ -16,9 +16,9 @@ CLDeviceVk::CLDeviceVk(const cl::Device &device) : CLDeviceImpl(device) {}
 
 CLDeviceVk::~CLDeviceVk() = default;
 
-CLDeviceImpl::Info CLDeviceVk::createInfo() const
+CLDeviceImpl::Info CLDeviceVk::createInfo(cl_device_type type) const
 {
-    CLDeviceImpl::Info info;
+    Info info(type);
     return info;
 }
 

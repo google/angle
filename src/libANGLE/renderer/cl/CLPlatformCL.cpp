@@ -313,12 +313,46 @@ cl::DevicePtrList CLPlatformCL::createDevices(cl::Platform &platform) const
         if (mNative->getDispatch().clGetDeviceIDs(mNative, CL_DEVICE_TYPE_ALL, numDevices,
                                                   nativeDevices.data(), nullptr) == CL_SUCCESS)
         {
-            for (cl_device_id nativeDevice : nativeDevices)
+            // Fetch all device types for front end initialization, and find the default device.
+            // If none exists declare first device as default.
+            std::vector<cl_device_type> types(nativeDevices.size(), 0u);
+            size_t defaultIndex = 0u;
+            for (size_t index = 0u; index < nativeDevices.size(); ++index)
             {
+                if (nativeDevices[index]->getDispatch().clGetDeviceInfo(
+                        nativeDevices[index], CL_DEVICE_TYPE, sizeof(cl_device_type), &types[index],
+                        nullptr) == CL_SUCCESS)
+                {
+                    // If default device found, select it
+                    if ((types[index] & CL_DEVICE_TYPE_DEFAULT) != 0u)
+                    {
+                        defaultIndex = index;
+                    }
+                }
+                else
+                {
+                    types.clear();
+                    nativeDevices.clear();
+                }
+            }
+
+            for (size_t index = 0u; index < nativeDevices.size(); ++index)
+            {
+                // Make sure the default bit is set in exactly one device
+                if (index == defaultIndex)
+                {
+                    types[index] |= CL_DEVICE_TYPE_DEFAULT;
+                }
+                else
+                {
+                    types[index] &= ~CL_DEVICE_TYPE_DEFAULT;
+                }
+
                 const cl::Device::CreateImplFunc createImplFunc = [&](const cl::Device &device) {
-                    return CLDeviceCL::Ptr(new CLDeviceCL(device, nativeDevice));
+                    return CLDeviceCL::Ptr(new CLDeviceCL(device, nativeDevices[index]));
                 };
-                devices.emplace_back(cl::Device::CreateDevice(platform, nullptr, createImplFunc));
+                devices.emplace_back(
+                    cl::Device::CreateDevice(platform, nullptr, types[index], createImplFunc));
                 if (!devices.back())
                 {
                     devices.clear();
@@ -393,8 +427,9 @@ void CLPlatformCL::Initialize(const cl_icd_dispatch &dispatch, bool isIcd)
     }
 
     // The absolute path to ANGLE's OpenCL library is needed and it is assumed here that
-    // it is in the same directory as the executable which contains this CL back end.
-    std::string libPath = angle::GetExecutableDirectory();
+    // it is in the same directory as the module which contains this CL back end.
+    // TODO(http://anglebug.com/5949) Use GetModuleDirectory when it relands
+    std::string libPath;  // = angle::GetModuleDirectory();
     if (!libPath.empty() && libPath.back() != angle::GetPathSeparator())
     {
         libPath += angle::GetPathSeparator();

@@ -58,11 +58,12 @@ CLPlatformImpl::Info CLPlatformVk::createInfo() const
 
 cl::DevicePtrList CLPlatformVk::createDevices(cl::Platform &platform) const
 {
+    cl_device_type type = 0u;  // TODO(jplate) Fetch device type from Vulkan
     cl::DevicePtrList devices;
     const cl::Device::CreateImplFunc createImplFunc = [](const cl::Device &device) {
         return CLDeviceVk::Ptr(new CLDeviceVk(device));
     };
-    devices.emplace_back(cl::Device::CreateDevice(platform, nullptr, createImplFunc));
+    devices.emplace_back(cl::Device::CreateDevice(platform, nullptr, type, createImplFunc));
     if (!devices.back())
     {
         devices.clear();

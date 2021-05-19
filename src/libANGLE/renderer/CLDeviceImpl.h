@@ -21,6 +21,7 @@ class CLDeviceImpl : angle::NonCopyable
     struct Info
     {
         Info();
+        explicit Info(cl_device_type type);
         ~Info();
 
         Info(const Info &) = delete;
@@ -29,9 +30,10 @@ class CLDeviceImpl : angle::NonCopyable
         Info(Info &&);
         Info &operator=(Info &&);
 
-        bool isValid() const { return mVersion != 0u; }
+        bool isValid() const { return mType != 0u; }
 
-        cl_version mVersion = 0u;
+        cl_device_type mType = 0u;
+        cl_version mVersion  = 0u;
         std::vector<size_t> mMaxWorkItemSizes;
         NameVersionVector mILsWithVersion;
         NameVersionVector mBuiltInKernelsWithVersion;
@@ -46,7 +48,7 @@ class CLDeviceImpl : angle::NonCopyable
     CLDeviceImpl(const cl::Device &device);
     virtual ~CLDeviceImpl();
 
-    virtual Info createInfo() const = 0;
+    virtual Info createInfo(cl_device_type type) const = 0;
 
     virtual cl_int getInfoUInt(cl::DeviceInfo name, cl_uint *value) const             = 0;
     virtual cl_int getInfoULong(cl::DeviceInfo name, cl_ulong *value) const           = 0;

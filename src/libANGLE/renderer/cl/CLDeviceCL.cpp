@@ -52,9 +52,9 @@ CLDeviceCL::~CLDeviceCL()
     }
 }
 
-CLDeviceImpl::Info CLDeviceCL::createInfo() const
+CLDeviceImpl::Info CLDeviceCL::createInfo(cl_device_type type) const
 {
-    Info info;
+    Info info(type);
 
     std::vector<char> valString;
     if (!GetDeviceInfo(mNative, cl::DeviceInfo::Version, valString))
@@ -165,7 +165,8 @@ cl_int CLDeviceCL::createSubDevices(cl::Device &device,
                 return Ptr(new CLDeviceCL(device, nativeSubDevice));
             };
             subDeviceList.emplace_back(cl::Device::CreateDevice(
-                device.getPlatform(), cl::DeviceRefPtr(&device), createImplFunc));
+                device.getPlatform(), cl::DeviceRefPtr(&device),
+                (device.getInfo().mType & ~CL_DEVICE_TYPE_DEFAULT), createImplFunc));
             if (!subDeviceList.back())
             {
                 subDeviceList.clear();

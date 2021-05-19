@@ -130,7 +130,6 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             break;
 
         // Handle all cl_ulong and aliased types
-        case DeviceInfo::Type:
         case DeviceInfo::MaxMemAllocSize:
         case DeviceInfo::SingleFpConfig:
         case DeviceInfo::DoubleFpConfig:
@@ -193,6 +192,10 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             break;
 
         // Handle all cached values
+        case DeviceInfo::Type:
+            copyValue = &mInfo.mType;
+            copySize  = sizeof(mInfo.mType);
+            break;
         case DeviceInfo::MaxWorkItemDimensions:
             valUInt   = static_cast<cl_uint>(mInfo.mMaxWorkItemSizes.size());
             copyValue = &valUInt;
@@ -347,9 +350,10 @@ cl_int Device::createSubDevices(const cl_device_partition_property *properties,
 
 DevicePtr Device::CreateDevice(Platform &platform,
                                DeviceRefPtr &&parent,
+                               cl_device_type type,
                                const CreateImplFunc &createImplFunc)
 {
-    DevicePtr device(new Device(platform, std::move(parent), createImplFunc));
+    DevicePtr device(new Device(platform, std::move(parent), type, createImplFunc));
     return device->mInfo.isValid() ? std::move(device) : DevicePtr{};
 }
 
@@ -361,12 +365,15 @@ bool Device::IsValid(const _cl_device_id *device)
            }) != platforms.cend();
 }
 
-Device::Device(Platform &platform, DeviceRefPtr &&parent, const CreateImplFunc &createImplFunc)
+Device::Device(Platform &platform,
+               DeviceRefPtr &&parent,
+               cl_device_type type,
+               const CreateImplFunc &createImplFunc)
     : _cl_device_id(platform.getDispatch()),
       mPlatform(platform),
       mParent(std::move(parent)),
       mImpl(createImplFunc(*this)),
-      mInfo(mImpl->createInfo())
+      mInfo(mImpl->createInfo(type))
 {}
 
 void Device::destroySubDevice(Device *device)

@@ -49,13 +49,17 @@ class Device final : public _cl_device_id, public Object
 
     static DevicePtr CreateDevice(Platform &platform,
                                   DeviceRefPtr &&parent,
+                                  cl_device_type type,
                                   const CreateImplFunc &createImplFunc);
 
     static bool IsValid(const _cl_device_id *device);
     static bool IsValidType(cl_device_type type);
 
   private:
-    Device(Platform &platform, DeviceRefPtr &&parent, const CreateImplFunc &createImplFunc);
+    Device(Platform &platform,
+           DeviceRefPtr &&parent,
+           cl_device_type type,
+           const CreateImplFunc &createImplFunc);
 
     void destroySubDevice(Device *device);
 

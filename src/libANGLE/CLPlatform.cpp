@@ -150,9 +150,7 @@ cl_int Platform::getDeviceIDs(cl_device_type deviceType,
     cl_uint found = 0u;
     for (const DevicePtr &device : mDevices)
     {
-        cl_device_type type = 0u;
-        if (device->getInfoULong(DeviceInfo::Type, &type) == CL_SUCCESS &&
-            IsDeviceTypeMatch(deviceType, type))
+        if (IsDeviceTypeMatch(deviceType, device->getInfo().mType))
         {
             if (devices != nullptr && found < numEntries)
             {
