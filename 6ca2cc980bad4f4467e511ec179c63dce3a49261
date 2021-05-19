@@ -39,6 +39,30 @@
       },
       "revId": "6ca2cc980bad4f4467e511ec179c63dce3a49261",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "628aee74_13e7aacb",
+        "filename": "include/platform/FeaturesGL.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 553,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-19T17:11:47Z",
+      "side": 1,
+      "message": "Going to keep the name this time because the feature name matches the Chrome one.",
+      "parentUuid": "30cb2611_2af0923e",
+      "range": {
+        "startLine": 553,
+        "startChar": 12,
+        "endLine": 553,
+        "endChar": 47
+      },
+      "revId": "6ca2cc980bad4f4467e511ec179c63dce3a49261",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
