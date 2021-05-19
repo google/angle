@@ -90,6 +90,7 @@
 /tools/python
 /tools/skia_goldctl
 /tools/swarming_client
+angle.iml
 angle_debug.txt
 build
 buildtools/
