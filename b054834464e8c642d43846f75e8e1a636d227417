@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "310fb1ed_0f260973",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-19T15:44:29Z",
+      "side": 1,
+      "message": "Implicit gl_PerVertex builtins are now generated in SPIR-V. The change helps a bit with I/O blocks in general too (not sure if anything left to do more about them actually). Not tested with tess/geom, so there might be bugs especially with user-redeclared gl_PerVertex.",
+      "revId": "b054834464e8c642d43846f75e8e1a636d227417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
