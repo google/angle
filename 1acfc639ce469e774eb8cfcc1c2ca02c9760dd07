@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56a49db2_9f888e3d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-19T18:45:09Z",
+      "side": 1,
+      "message": "Resolved cannot use protected commands with unprotected resources. I will need to keep both protected and unprotected commandPools.",
+      "revId": "1acfc639ce469e774eb8cfcc1c2ca02c9760dd07",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}

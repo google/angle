@@ -125,6 +125,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "27d5b790_2e9bb64e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-19T18:45:09Z",
+      "side": 1,
+      "message": "I was able to capture validation errors. And VUID 01830 was triggered. So it seems we can not use a protected Command with unprotected resources.",
+      "parentUuid": "626e3584_9db22d38",
+      "revId": "f7a92a4d0adfd34391a73df99beb078d962c1ecc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "81513d77_f56d0ebf",
