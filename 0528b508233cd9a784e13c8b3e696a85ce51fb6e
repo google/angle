@@ -16,6 +16,75 @@
       "message": "Initial super hack version of multicontext support that\u0027s able to capture and replay Asphalt 9 without any errors.",
       "revId": "0528b508233cd9a784e13c8b3e696a85ce51fb6e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ffa82ff3_fac9e94c",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 501,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-19T15:23:44Z",
+      "side": 1,
+      "message": "is this duplicated with something in display? If so let\u0027s try to de duplicate this information.",
+      "range": {
+        "startLine": 501,
+        "startChar": 28,
+        "endLine": 501,
+        "endChar": 46
+      },
+      "revId": "0528b508233cd9a784e13c8b3e696a85ce51fb6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14255971_6631e722",
+        "filename": "src/libANGLE/Context.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 592,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-19T15:23:44Z",
+      "side": 1,
+      "message": "just remove the other one (e.g. add const to the non-const version.)",
+      "range": {
+        "startLine": 592,
+        "startChar": 4,
+        "endLine": 592,
+        "endChar": 80
+      },
+      "revId": "0528b508233cd9a784e13c8b3e696a85ce51fb6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5764ab6_3518da53",
+        "filename": "src/libANGLE/capture/FrameCapture.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 714,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-19T15:23:44Z",
+      "side": 1,
+      "message": "nit: GLContextID would be preferable if we need this enum.",
+      "range": {
+        "startLine": 714,
+        "startChar": 38,
+        "endLine": 714,
+        "endChar": 50
+      },
+      "revId": "0528b508233cd9a784e13c8b3e696a85ce51fb6e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
