@@ -51,6 +51,24 @@
       "parentUuid": "b5e5bd7c_062d675f",
       "revId": "053d9922cbc9dada79617b33c09ee769797e5c8d",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c1358bf_82698f98",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-19T16:46:29Z",
+      "side": 1,
+      "message": "We could have GLES backend on CI, if we want.",
+      "parentUuid": "efa6bb35_ed2c0da5",
+      "revId": "053d9922cbc9dada79617b33c09ee769797e5c8d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
