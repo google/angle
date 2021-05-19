@@ -730,6 +730,14 @@
 
   'compound_suites': {
     'android_gtests': [
+      'angle_deqp_egl_vulkan_gtests',
+      'angle_deqp_gles2_vulkan_gtests',
+      'angle_deqp_gles31_vulkan_gtests',
+      'angle_deqp_gles3_vulkan_gtests',
+      'angle_deqp_khr_gles2_vulkan_gtests',
+      'angle_deqp_khr_gles31_vulkan_gtests',
+      'angle_deqp_khr_gles32_vulkan_gtests',
+      'angle_deqp_khr_gles3_vulkan_gtests',
       'angle_end2end_gtests',
       'angle_unit_gtests',
     ],

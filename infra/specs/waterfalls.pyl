@@ -30,6 +30,7 @@
         ],
         'test_suites': {
           'gtest_tests': 'android_gtests',
+          # 'isolated_scripts': 'common_isolated_scripts',
         },
       },
       'linux-builder': {},
