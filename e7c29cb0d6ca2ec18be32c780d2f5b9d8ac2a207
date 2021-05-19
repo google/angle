@@ -70,6 +70,24 @@
       "parentUuid": "bb3d392d_eb900de7",
       "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bde0e976_78f6f79f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-19T08:57:34Z",
+      "side": 1,
+      "message": "The replays in the tests are done on the same hardware, and allegedly also with the same forced limitations , i.e. when capturing some additional limitations are put on the context to make the trace replayable on more restricted backends, but god point it might be that when replaying we still miss setting some of these limitations.",
+      "parentUuid": "5f58a8b0_d1781f36",
+      "revId": "e7c29cb0d6ca2ec18be32c780d2f5b9d8ac2a207",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
