@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b956d380_deab6c2b",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1574,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-19T16:32:58Z",
+      "side": 1,
+      "message": "With the remainingShaderBits.reset(lastShader) call above (which could have reset the Compute bit, though that should be unlikely), this should be:\n\n    ASSERT(lastShader \u003d\u003d gl::ShaderType::Fragment);",
+      "revId": "9e81e0271634c45d5aaadd81b37477387d9a6f24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "03b54928_3e09c411",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 20
+      },
+      "lineNbr": 1617,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-19T16:32:58Z",
+      "side": 1,
+      "message": "Same as above.",
+      "revId": "9e81e0271634c45d5aaadd81b37477387d9a6f24",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
