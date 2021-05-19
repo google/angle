@@ -3083,7 +3083,7 @@ void FillLevel(GLint level,
 TEST_P(Texture2DTest, TextureSize)
 {
     // http://anglebug.com/5982
-    ANGLE_SKIP_TEST_IF(IsLinux() && IsOpenGL() && IsTSan());
+    ANGLE_SKIP_TEST_IF(IsLinux() && IsTSan() && (IsOpenGL() || IsVulkan()));
 
     const GLColor kNewMipColors[] = {
         GLColor::green,  GLColor::red,     GLColor::blue,
