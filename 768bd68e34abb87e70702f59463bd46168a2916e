@@ -33,6 +33,24 @@
       "message": "Is there a way to query the loader version?",
       "revId": "768bd68e34abb87e70702f59463bd46168a2916e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09f933ea_e060f781",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-20T15:35:00Z",
+      "side": 1,
+      "message": "Technically, yes.  It may not be what you\u0027re looking for.  There\u0027s vkEnumerateInstanceVersion(), which is really a query of what version of the spec the loader supports.  It was introduced at Vulkan 1.1, and allows the loader to support a different version of Vulkan than the the physical device(s).\n\nAs far as this issue, I\u0027m not sure there\u0027s something to help.  Android uses a completely different loader implementation than desktop, with different behaviors and loader-driver/layer/extension interfaces (sigh).",
+      "parentUuid": "363ebbf0_39988e0d",
+      "revId": "768bd68e34abb87e70702f59463bd46168a2916e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
