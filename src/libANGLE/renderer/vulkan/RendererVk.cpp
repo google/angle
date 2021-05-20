@@ -2367,11 +2367,12 @@ void RendererVk::initFeatures(DisplayVk *displayVk,
     ANGLE_FEATURE_CONDITION(&mFeatures, enablePreRotateSurfaces,
                             IsAndroid() && supportsNegativeViewport);
 
-    // Currently disabled by default: http://anglebug.com/3078
+    // http://anglebug.com/3078
     ANGLE_FEATURE_CONDITION(
         &mFeatures, enablePrecisionQualifiers,
         !(IsPixel2(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID) &&
-          (mPhysicalDeviceProperties.driverVersion < kPixel2DriverWithRelaxedPrecision)));
+          (mPhysicalDeviceProperties.driverVersion < kPixel2DriverWithRelaxedPrecision)) &&
+            !IsPixel4(mPhysicalDeviceProperties.vendorID, mPhysicalDeviceProperties.deviceID));
 
     ANGLE_FEATURE_CONDITION(&mFeatures, preferAggregateBarrierCalls, isNvidia || isAMD || isIntel);
 
