@@ -5131,25 +5131,46 @@ angle::Result ImageHelper::generateMipmapsWithBlit(ContextVk *contextVk,
             commandBuffer->blitImage(mImage, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL, mImage,
                                      VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &blit, filter);
         }
-        else
-        {
-            // Transition the mip level to the same layout as all the other ones, so we can declare
-            // our whole image layout to be SRC_OPTIMAL.
-            barrier.subresourceRange.baseMipLevel = mipLevel.get() - 1;
-            barrier.oldLayout                     = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-            barrier.newLayout                     = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
-            // We can do it for all layers at once.
-            commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
-                                        VK_PIPELINE_STAGE_TRANSFER_BIT, barrier);
-        }
         mipWidth  = nextMipWidth;
         mipHeight = nextMipHeight;
         mipDepth  = nextMipDepth;
     }
 
+    // Transition all mip level to the same layout so we can declare our whole image layout to one
+    // ImageLayout. FragmentShaderReadOnly is picked here since this is the most reasonable usage
+    // after glGenerateMipmap call.
+    barrier.oldLayout     = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    barrier.newLayout     = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    if (baseLevel.get() > 0)
+    {
+        // [0:baseLevel-1] from TRANSFER_DST to SHADER_READ
+        barrier.subresourceRange.baseMipLevel = 0;
+        barrier.subresourceRange.levelCount   = baseLevel.get();
+        commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                    VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, barrier);
+    }
+    // [maxLevel:mLevelCount-1] from TRANSFER_DST to SHADER_READ
+    ASSERT(mLevelCount > maxLevel.get());
+    barrier.subresourceRange.baseMipLevel = maxLevel.get();
+    barrier.subresourceRange.levelCount   = mLevelCount - maxLevel.get();
+    commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, barrier);
+    // [baseLevel:maxLevel-1] from TRANSFER_SRC to SHADER_READ
+    barrier.oldLayout                     = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    barrier.subresourceRange.baseMipLevel = baseLevel.get();
+    barrier.subresourceRange.levelCount   = maxLevel.get() - baseLevel.get();
+    commandBuffer->imageBarrier(VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, barrier);
+
     // This is just changing the internal state of the image helper so that the next call
     // to changeLayout will use this layout as the "oldLayout" argument.
-    mCurrentLayout = ImageLayout::TransferSrc;
+    // mLastNonShaderReadOnlyLayout is used to ensure previous write are made visible to reads,
+    // since the only write here is transfer, hence mLastNonShaderReadOnlyLayout is set to
+    // ImageLayout::TransferDst.
+    mLastNonShaderReadOnlyLayout = ImageLayout::TransferDst;
+    mCurrentShaderReadStageMask  = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+    mCurrentLayout               = ImageLayout::FragmentShaderReadOnly;
 
     return angle::Result::Continue;
 }
