@@ -22,6 +22,30 @@
       },
       "revId": "cfeeda63593494a83320eae07ecba44b94d9dce6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66981f59_1044f4f1",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-20T08:38:27Z",
+      "side": 1,
+      "message": "And you still have a good point. I will document it soon, not sure yet where and how. I could add a comment on top of this file that I am implementing the OpenCL spec and that we are targeting the CTS (with links). How is it documented for the validation of the other Khronos APIs?",
+      "parentUuid": "cf874a44_38c0d065",
+      "range": {
+        "startLine": 1027,
+        "startChar": 0,
+        "endLine": 1035,
+        "endChar": 61
+      },
+      "revId": "cfeeda63593494a83320eae07ecba44b94d9dce6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
