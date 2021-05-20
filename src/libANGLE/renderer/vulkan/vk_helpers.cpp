@@ -3731,6 +3731,7 @@ ImageHelper::ImageHelper(ImageHelper &&other)
       mDeviceMemory(std::move(other.mDeviceMemory)),
       mImageType(other.mImageType),
       mTilingMode(other.mTilingMode),
+      mCreateFlags(other.mCreateFlags),
       mUsage(other.mUsage),
       mExtents(other.mExtents),
       mRotatedAspectRatio(other.mRotatedAspectRatio),
@@ -3765,6 +3766,7 @@ void ImageHelper::resetCachedProperties()
 {
     mImageType                   = VK_IMAGE_TYPE_2D;
     mTilingMode                  = VK_IMAGE_TILING_OPTIMAL;
+    mCreateFlags                 = kVkImageCreateFlagsNone;
     mUsage                       = 0;
     mExtents                     = {};
     mRotatedAspectRatio          = false;
@@ -3938,6 +3940,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     mFirstAllocatedLevel = firstLevel;
     mLevelCount          = mipLevels;
     mLayerCount          = layerCount;
+    mCreateFlags         = GetImageCreateFlags(textureType) | additionalCreateFlags;
     mUsage               = usage;
 
     // Validate that mLayerCount is compatible with the texture type
@@ -3968,7 +3971,7 @@ angle::Result ImageHelper::initExternal(Context *context,
         imageFormatListEnabled = true;
 
         // Add VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT to VkImage create flag
-        additionalCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
+        mCreateFlags |= VK_IMAGE_CREATE_MUTABLE_FORMAT_BIT;
 
         // There is just 1 additional format we might use to create a VkImageView for this
         // VkImage
@@ -3986,7 +3989,7 @@ angle::Result ImageHelper::initExternal(Context *context,
     VkImageCreateInfo imageInfo = {};
     imageInfo.sType             = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     imageInfo.pNext     = (imageFormatListEnabled) ? &imageFormatListInfo : externalImageCreateInfo;
-    imageInfo.flags     = GetImageCreateFlags(textureType) | additionalCreateFlags;
+    imageInfo.flags     = mCreateFlags;
     imageInfo.imageType = mImageType;
     imageInfo.format    = format.actualImageVkFormat();
     imageInfo.extent    = mExtents;
