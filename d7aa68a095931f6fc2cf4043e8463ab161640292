@@ -63,6 +63,30 @@
       },
       "revId": "d7aa68a095931f6fc2cf4043e8463ab161640292",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a71f9868_0a2f0c9e",
+        "filename": "src/libANGLE/serializer/JsonSerializer.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1491823
+      },
+      "writtenOn": "2021-05-20T10:06:36Z",
+      "side": 1,
+      "message": "I went with the ?: construct",
+      "parentUuid": "86976535_6d83f8a5",
+      "range": {
+        "startLine": 70,
+        "startChar": 48,
+        "endLine": 70,
+        "endChar": 54
+      },
+      "revId": "d7aa68a095931f6fc2cf4043e8463ab161640292",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
