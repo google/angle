@@ -957,8 +957,10 @@ TracePerfTest::TracePerfTest()
         addExtensionPrerequisite("GL_EXT_texture_cube_map_array");
         addExtensionPrerequisite("GL_KHR_texture_compression_astc_ldr");
 
-        // TODO: https://anglebug.com/5989 Crashing on teardown
-        if (IsLinux() && IsIntel() && param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
+        // TODO: http://anglebug.com/5989 Intel Linux crashing on teardown
+        // TODO: http://anglebug.com/5994 Intel Windows timing out periodically
+        if ((IsLinux() || IsWindows()) && IsIntel() &&
+            param.getRenderer() == EGL_PLATFORM_ANGLE_TYPE_VULKAN_ANGLE)
         {
             mSkipTest = true;
         }
