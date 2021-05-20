@@ -51,6 +51,24 @@
       "parentUuid": "363ebbf0_39988e0d",
       "revId": "768bd68e34abb87e70702f59463bd46168a2916e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96bfcf82_13e170b0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-20T20:00:48Z",
+      "side": 1,
+      "message": "I\u0027m not aware of a better method than what current CL does.\nvolkGetInstanceVersion() calls vkEnumerateInstanceVersion(), which ends up calling terminator_EnumerateInstanceVersion() in the loader, unless some layer overrides it.\nAfter version 1.1.120, terminator_EnumerateInstanceVersion() would return the exact version of the headers it was built with, see https://github.com/KhronosGroup/Vulkan-Loader/pull/222\nBefore that, it would return 1.1.0 😞\nComparing that with 1.1.91, which fixes the loader bug, works.\nA small caveat is that we would actually reject versions \u003c 1.1.120 instead of \u003c 1.1.91 due to the above. I don\u0027t think that\u0027s a problem, as we\u0027d still use EXT_debug_report if we can\u0027t use EXT_debug_utils.\nAnd of course when we use our private copy of the loader, we\u0027d always use EXT_debug_utils, since current loader returns 1.2.178.\nSo for testing all is fine since we\u0027re using our own loader.\nAnd for production it wouldn\u0027t matter, since we shouldn\u0027t be using either debug_report or debug_utils there.\nThis CL should only affect the special case of DCHECKed ANGLE + production libvulkan.\nRight now SwANGLE-Chromium is the only bot in this config, due to not setting RPATH in Chrome.\nBut maybe we\u0027d want to have some more configs like that, to test how things would work out in production when we don\u0027t rely on our own version of loader.",
+      "parentUuid": "09f933ea_e060f781",
+      "revId": "768bd68e34abb87e70702f59463bd46168a2916e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
