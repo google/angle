@@ -33,6 +33,24 @@
       "message": "This looks okay to advance testing.  I\u0027m a little worried that the check is there for a reason, but I tested it locally and was able to get a capture.  If it causes problems, we can revert this.",
       "revId": "ab3bd795771091560d9de1d7074d02381386e69e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fa0eb93_cc432902",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-20T17:09:40Z",
+      "side": 1,
+      "message": "I think those are real failures, even though the bot status is \"Build infra failed\".  If you dig into the output, lots of errors:\n\n INFO:root:Elapsed time: 839.12 seconds\n INFO:root:Passed: 269, Comparison Failed: 0, Crashed: 515, CompileFailed 0, \n Skipped: 0, Timeout: 0\n INFO:root:Crashed tests:",
+      "parentUuid": "aad7a413_c2264e77",
+      "revId": "ab3bd795771091560d9de1d7074d02381386e69e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
