@@ -16,6 +16,24 @@
       "message": "PTAL, ideas on how to test this better?",
       "revId": "17c75cc9c25177c60556eea1565764965bf715d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "474ddf41_b84ac147",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-20T18:57:51Z",
+      "side": 1,
+      "message": "One approach could be creating a new angle::OrderedHashMap which uses absl::btree_map:\n\nhttps://abseil.io/docs/cpp/guides/container#hash-tables\n\u003e B-tree Ordered Containers\n\u003e The Abseil container library contains ordered containers generally adhering to the STL container API contract, but implemented using (generally more efficient) B-trees rather than binary trees (as used in std::map et al):\n\u003e \n\u003e - absl::btree_map\n\u003e - absl::btree_set\n\u003e - absl::btree_multimap\n\u003e - absl::btree_multiset\n\u003e \n\u003e These ordered containers are designed to be more efficient replacements for std::map and std::set in most cases. Specifically, they provide several advantages over the ordered std:: containers:\n\u003e \n\u003e - Provide lower memory overhead in most cases than their STL equivalents.\n\u003e - Are generally more cache friendly (and hence faster) than their STL equivalents.\n\u003e - Provide C++11 support for C++17 mechanisms such as try_emplace().\n\u003e - Support heterogeneous lookup.",
+      "parentUuid": "d11e7a92_9b978b9e",
+      "revId": "17c75cc9c25177c60556eea1565764965bf715d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
