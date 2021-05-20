@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd0173e0_1b7ffe2f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-20T21:09:22Z",
+      "side": 1,
+      "message": "The original CL that added this is crrev.com/c/2116874, citing the reason \"removes the latency caused by waiting for the in-flight GPU commands to be complete before handing over the buffer to the app.\" I think most of time the wait is harmless. If CPU gets too ahead of GPU, somewhere you have to wait. If you end up doing two copies here on the PBO and then end up reduced wait time for a swap buffer, you probably want to wait at mapBuffer time and save two data copy. Most app calls mapBuffer usually already doing two/triple buffering (Manhattan is using double buffering i.e., use buffer 2/4/6 for one frame and 1/3/5 for next frame), so the slight wait in mapBuffer is just fine. If there is some bad app is calling mapBuffer on the same buffer for every frame, the better fix is to call acquireNextBuffer and copy data to new buffer and map and return the new buffer to user. That way, there is only one copy instead of two copy right now. But I would rather save that effort for now until we find such a usage case in real app that we have to deal with it.\n\nFor now, I am just disabling the shadowBuffer. Once settled, I do want to delete all the related code. ",
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
