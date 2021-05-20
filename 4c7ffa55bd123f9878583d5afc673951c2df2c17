@@ -46,6 +46,30 @@
       },
       "revId": "4c7ffa55bd123f9878583d5afc673951c2df2c17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df80997c_d900f212",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-20T01:51:17Z",
+      "side": 1,
+      "message": "Ah, yes, I forgot that Android uses a different version of Loader.\nLooking at https://android.googlesource.com/platform/frameworks/native/+/master/vulkan\ndoesn\u0027t seem like it has this problem.\n\nThe bug is not Linux specific, though. Just that Bionic has the bad loader pre-installed. But this would happen on Windows as well.\n\nBTW, I\u0027ve ran \"adb shell cmd gpu vkjson\" on my Pixel 4, and it doesn\u0027t support VK_EXT_debug_utils, only VK_EXT_debug_report. So I\u0027m not sure how AGI can use it.",
+      "parentUuid": "6edcaf0e_820abb36",
+      "range": {
+        "startLine": 846,
+        "startChar": 4,
+        "endLine": 846,
+        "endChar": 72
+      },
+      "revId": "4c7ffa55bd123f9878583d5afc673951c2df2c17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
