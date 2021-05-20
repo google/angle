@@ -69,6 +69,24 @@
       "parentUuid": "08373379_c3cc200d",
       "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "63d9976c_d93ca38b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-20T23:13:01Z",
+      "side": 1,
+      "message": "The main point here is that the time spent in glMapBuffer() call is not the metric you should target for. Because somewhere it will have to wait if CPU goes too much ahead of GPU. The real metric should be if it improves fps or not. I can hardly believe doing two data copy is a good ting on integrated memory system.",
+      "parentUuid": "83ffddd7_8142a58f",
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
