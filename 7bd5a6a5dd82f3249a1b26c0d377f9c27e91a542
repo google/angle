@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ba57bbd1_35407b58",
+        "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-20T04:25:17Z",
+      "side": 1,
+      "message": "Could break after finding the default.",
+      "range": {
+        "startLine": 328,
+        "startChar": 24,
+        "endLine": 328,
+        "endChar": 45
+      },
+      "revId": "7bd5a6a5dd82f3249a1b26c0d377f9c27e91a542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6828d651_39f45ac7",
         "filename": "src/libANGLE/renderer/cl/CLPlatformCL.cpp",
         "patchSetId": 1
@@ -19,6 +42,29 @@
         "startChar": 29,
         "endLine": 430,
         "endChar": 33
+      },
+      "revId": "7bd5a6a5dd82f3249a1b26c0d377f9c27e91a542",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b714b683_64c531ca",
+        "filename": "src/libANGLE/renderer/vulkan/CLPlatformVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-20T04:25:17Z",
+      "side": 1,
+      "message": "Can you add more info for the TODO, like what you want to see happen?",
+      "range": {
+        "startLine": 61,
+        "startChar": 31,
+        "endLine": 61,
+        "endChar": 46
       },
       "revId": "7bd5a6a5dd82f3249a1b26c0d377f9c27e91a542",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
