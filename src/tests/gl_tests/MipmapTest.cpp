@@ -2070,6 +2070,22 @@ void main()
     EXPECT_PIXEL_COLOR_EQ(getWindowWidth() / 8, getWindowHeight() / 8, GLColor::green);
 }
 
+// Tests respecifying 3D mipmaps.
+TEST_P(MipmapTestES3, Generate3DMipmapRespecification)
+{
+    std::vector<GLColor> pixels(256 * 256 * 100, GLColor::black);
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, 256, 256, 100, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixels.data());
+    glTexImage3D(GL_TEXTURE_3D, 1, GL_RGBA, 128, 128, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                 pixels.data());
+    glGenerateMipmap(GL_TEXTURE_3D);
+
+    ASSERT_GL_NO_ERROR();
+}
+
 // Use this to select which configurations (e.g. which renderer, which GLES major version) these
 // tests should be run against.
 ANGLE_INSTANTIATE_TEST_ES2_AND_ES3(MipmapTest);
