@@ -78,6 +78,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3d977a4e_6d17bb5c",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "56b3e87c_e6650279",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "66e26153_9dee18b1",
         "filename": "src/common/utilities.cpp",
         "patchSetId": 5
@@ -89,6 +107,30 @@
       "writtenOn": "2021-05-14T19:22:21Z",
       "side": 1,
       "message": "This is the same function as VariableRowCount, and can be removed.",
+      "range": {
+        "startLine": 487,
+        "startChar": 4,
+        "endLine": 487,
+        "endChar": 26
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9147c072_f1d8c683",
+        "filename": "src/common/utilities.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 487,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66e26153_9dee18b1",
       "range": {
         "startLine": 487,
         "startChar": 4,
@@ -122,6 +164,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b37fdce9_044ebe33",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "faa8ceb2_b7c1af10",
+      "range": {
+        "startLine": 482,
+        "startChar": 9,
+        "endLine": 482,
+        "endChar": 13
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9bfdb9bb_b2b773e1",
@@ -135,6 +201,30 @@
       "writtenOn": "2021-05-14T19:22:21Z",
       "side": 1,
       "message": "Same",
+      "range": {
+        "startLine": 491,
+        "startChar": 9,
+        "endLine": 491,
+        "endChar": 13
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "412d21cb_19acc92e",
+        "filename": "src/compiler/translator/IntermNode.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9bfdb9bb_b2b773e1",
       "range": {
         "startLine": 491,
         "startChar": 9,
@@ -185,6 +275,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5bab029f_7328cb08",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/Debug.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f694fb1_5371161c",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 35
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17ba4609_519b834e",
@@ -208,6 +322,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7d8633e_9d5e072f",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/EnvironmentVariable.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "17ba4609_519b834e",
+      "range": {
+        "startLine": 18,
+        "startChar": 1,
+        "endLine": 42,
+        "endChar": 0
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2328b79e_41704e89",
@@ -221,6 +359,30 @@
       "writtenOn": "2021-05-14T19:22:21Z",
       "side": 1,
       "message": "We don\u0027t use `assert`. You can use UNREACHABLE() here with a comment.",
+      "range": {
+        "startLine": 74,
+        "startChar": 28,
+        "endLine": 74,
+        "endChar": 34
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "85a45ccd_05975aa7",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/FixTypeConstructors.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2328b79e_41704e89",
       "range": {
         "startLine": 74,
         "startChar": 28,
@@ -381,6 +543,30 @@
       "writtenOn": "2021-05-14T19:22:21Z",
       "side": 1,
       "message": "Looks like this was a copy-paste issue. This should have #included the header corresponding to this same cpp file",
+      "range": {
+        "startLine": 9,
+        "startChar": 39,
+        "endLine": 9,
+        "endChar": 60
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54e5ea13_f3767cc6",
+        "filename": "src/compiler/translator/tree_ops/vulkan/RewriteArrayOfArrayOfOpaqueUniforms.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "84810ebc_a99deaef",
       "range": {
         "startLine": 9,
         "startChar": 39,

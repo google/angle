@@ -186,6 +186,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "23e54fa7_11bb6179",
+        "filename": "src/compiler/translator/tree_ops/SimplifyLoopConditions.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-20T20:41:53Z",
+      "side": 1,
+      "message": "It\u0027s used",
+      "parentUuid": "0aa013a5_72f68648",
+      "range": {
+        "startLine": 22,
+        "startChar": 1,
+        "endLine": 24,
+        "endChar": 72
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "835310b8_eea163ba",
