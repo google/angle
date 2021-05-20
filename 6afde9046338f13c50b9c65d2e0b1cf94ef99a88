@@ -51,6 +51,24 @@
       "parentUuid": "fd0173e0_1b7ffe2f",
       "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83ffddd7_8142a58f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-20T23:03:27Z",
+      "side": 1,
+      "message": "I think this applies to your GPU as well. You should try it again with your GPU and tell me which test/metric gets better :-).",
+      "parentUuid": "08373379_c3cc200d",
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
