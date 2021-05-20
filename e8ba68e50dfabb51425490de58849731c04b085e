@@ -16,6 +16,23 @@
       "message": "PTAL",
       "revId": "e8ba68e50dfabb51425490de58849731c04b085e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "410bf4b0_655c8887",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-20T23:25:56Z",
+      "side": 1,
+      "message": "FYI - shabi, for the question you posted in [1] -\n\u003e Why isn\u0027t the test added in [1] failing with this change?\n\npbuffer is created with srgb format and texture is sampled in srgb format so there was no need to create an imageview with a format other than vkimage\u0027s format. The new test i just added here (PbufferTest.ClearAndBindTexImageSrgbSkipDecode) will fail without VK_KHR_image_format_list support\n\n[1] - https://chromium-review.googlesource.com/c/angle/angle/+/2793852",
+      "revId": "e8ba68e50dfabb51425490de58849731c04b085e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
