@@ -70,6 +70,30 @@
       },
       "revId": "4c7ffa55bd123f9878583d5afc673951c2df2c17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f187d361_4adba2a6",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-20T02:08:26Z",
+      "side": 1,
+      "message": "Hmm.  AGI must be bringing it along.",
+      "parentUuid": "df80997c_d900f212",
+      "range": {
+        "startLine": 846,
+        "startChar": 4,
+        "endLine": 846,
+        "endChar": 72
+      },
+      "revId": "4c7ffa55bd123f9878583d5afc673951c2df2c17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
