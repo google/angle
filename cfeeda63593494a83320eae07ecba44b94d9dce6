@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cf874a44_38c0d065",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1035,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-20T04:09:47Z",
+      "side": 1,
+      "message": "I know I sound like a broken record, but it looks like you are targeting tests here.  If you can\u0027t check them in somewhere, maybe worth documenting what you are bringing online with this code, in a design doc or something.",
+      "range": {
+        "startLine": 1027,
+        "startChar": 0,
+        "endLine": 1035,
+        "endChar": 61
+      },
+      "revId": "cfeeda63593494a83320eae07ecba44b94d9dce6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
