@@ -22,6 +22,30 @@
       },
       "revId": "4c7ffa55bd123f9878583d5afc673951c2df2c17",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "be80930f_d4e44244",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 846,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-20T01:48:14Z",
+      "side": 1,
+      "message": "Technically the bug could affect windows too, you never know what loader version someone is using, but +1 to at least !IsAndroid().",
+      "parentUuid": "6edcaf0e_820abb36",
+      "range": {
+        "startLine": 846,
+        "startChar": 4,
+        "endLine": 846,
+        "endChar": 72
+      },
+      "revId": "4c7ffa55bd123f9878583d5afc673951c2df2c17",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
