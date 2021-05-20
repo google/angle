@@ -33,6 +33,24 @@
       "message": "\u003e make sure to create the buffer as CPU mappable\n\nExternal buffers have no guarantee to be CPU mappable",
       "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08373379_c3cc200d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-20T22:43:59Z",
+      "side": 1,
+      "message": "is there is a specific platform you are targeting this for? if so could you disable only for that platform? or enable only for (amd || samsung). Either works",
+      "parentUuid": "fd0173e0_1b7ffe2f",
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
