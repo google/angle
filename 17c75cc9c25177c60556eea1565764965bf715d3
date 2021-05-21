@@ -87,6 +87,41 @@
       "parentUuid": "b3520b41_dc7c3b94",
       "revId": "17c75cc9c25177c60556eea1565764965bf715d3",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df0f1a68_323d272d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-21T19:28:45Z",
+      "side": 1,
+      "message": "Sunny: I think this should fix the blob cache misses in ANGLE but I can\u0027t confirm locally.",
+      "revId": "17c75cc9c25177c60556eea1565764965bf715d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ccb4b01_0f6eb0f4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-21T19:28:45Z",
+      "side": 1,
+      "message": "We do have tests that verify cache hits for program binaries and blob cache stuff. I\u0027m guessing it may require completely reloading ANGLE\u0027s .so to potentially generate a different ordering.",
+      "parentUuid": "41c9fbde_bf64d1b4",
+      "revId": "17c75cc9c25177c60556eea1565764965bf715d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
