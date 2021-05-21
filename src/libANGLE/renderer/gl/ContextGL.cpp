@@ -329,6 +329,8 @@ angle::Result ContextGL::drawArrays(const gl::Context *context,
         ANGLE_GL_TRY(context, getFunctions()->drawArraysInstanced(ToGLenum(mode), first, count,
                                                                   instanceCount));
     }
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -348,6 +350,8 @@ angle::Result ContextGL::drawArraysInstanced(const gl::Context *context,
     ANGLE_TRY(setDrawArraysState(context, first, count, adjustedInstanceCount));
     ANGLE_GL_TRY(context, getFunctions()->drawArraysInstanced(ToGLenum(mode), first, count,
                                                               adjustedInstanceCount));
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -469,6 +473,8 @@ angle::Result ContextGL::drawArraysInstancedBaseInstance(const gl::Context *cont
         resetUpdatedAttributes(attribToResetMask);
     }
 
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -500,6 +506,8 @@ angle::Result ContextGL::drawElements(const gl::Context *context,
                      getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type),
                                                            drawIndexPtr, instanceCount));
     }
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -532,6 +540,8 @@ angle::Result ContextGL::drawElementsBaseVertex(const gl::Context *context,
                                   ToGLenum(mode), count, ToGLenum(type), drawIndexPtr,
                                   instanceCount, baseVertex));
     }
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -579,6 +589,8 @@ angle::Result ContextGL::drawElementsInstancedBaseVertex(const gl::Context *cont
     ANGLE_GL_TRY(context, getFunctions()->drawElementsInstancedBaseVertex(
                               ToGLenum(mode), count, ToGLenum(type), drawIndexPointer,
                               adjustedInstanceCount, baseVertex));
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -625,6 +637,8 @@ angle::Result ContextGL::drawElementsInstancedBaseVertexBaseInstance(const gl::C
         resetUpdatedAttributes(attribToResetMask);
     }
 
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -654,6 +668,8 @@ angle::Result ContextGL::drawRangeElements(const gl::Context *context,
                      getFunctions()->drawElementsInstanced(ToGLenum(mode), count, ToGLenum(type),
                                                            drawIndexPointer, instanceCount));
     }
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -685,6 +701,8 @@ angle::Result ContextGL::drawRangeElementsBaseVertex(const gl::Context *context,
                                   ToGLenum(mode), count, ToGLenum(type), drawIndexPointer,
                                   instanceCount, baseVertex));
     }
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -693,6 +711,8 @@ angle::Result ContextGL::drawArraysIndirect(const gl::Context *context,
                                             const void *indirect)
 {
     ANGLE_GL_TRY(context, getFunctions()->drawArraysIndirect(ToGLenum(mode), indirect));
+    mRenderer->markWorkSubmitted();
+
     return angle::Result::Continue;
 }
 
@@ -712,6 +732,8 @@ angle::Result ContextGL::multiDrawArrays(const gl::Context *context,
                                          const GLsizei *counts,
                                          GLsizei drawcount)
 {
+    mRenderer->markWorkSubmitted();
+
     return rx::MultiDrawArraysGeneral(this, context, mode, firsts, counts, drawcount);
 }
 
@@ -722,6 +744,8 @@ angle::Result ContextGL::multiDrawArraysInstanced(const gl::Context *context,
                                                   const GLsizei *instanceCounts,
                                                   GLsizei drawcount)
 {
+    mRenderer->markWorkSubmitted();
+
     return rx::MultiDrawArraysInstancedGeneral(this, context, mode, firsts, counts, instanceCounts,
                                                drawcount);
 }
@@ -733,6 +757,8 @@ angle::Result ContextGL::multiDrawElements(const gl::Context *context,
                                            const GLvoid *const *indices,
                                            GLsizei drawcount)
 {
+    mRenderer->markWorkSubmitted();
+
     return rx::MultiDrawElementsGeneral(this, context, mode, counts, type, indices, drawcount);
 }
 
@@ -744,6 +770,8 @@ angle::Result ContextGL::multiDrawElementsInstanced(const gl::Context *context,
                                                     const GLsizei *instanceCounts,
                                                     GLsizei drawcount)
 {
+    mRenderer->markWorkSubmitted();
+
     return rx::MultiDrawElementsInstancedGeneral(this, context, mode, counts, type, indices,
                                                  instanceCounts, drawcount);
 }
@@ -756,6 +784,8 @@ angle::Result ContextGL::multiDrawArraysInstancedBaseInstance(const gl::Context 
                                                               const GLuint *baseInstances,
                                                               GLsizei drawcount)
 {
+    mRenderer->markWorkSubmitted();
+
     return rx::MultiDrawArraysInstancedBaseInstanceGeneral(
         this, context, mode, firsts, counts, instanceCounts, baseInstances, drawcount);
 }
@@ -771,6 +801,8 @@ angle::Result ContextGL::multiDrawElementsInstancedBaseVertexBaseInstance(
     const GLuint *baseInstances,
     GLsizei drawcount)
 {
+    mRenderer->markWorkSubmitted();
+
     return rx::MultiDrawElementsInstancedBaseVertexBaseInstanceGeneral(
         this, context, mode, counts, type, indices, instanceCounts, baseVertices, baseInstances,
         drawcount);
@@ -940,6 +972,11 @@ void ContextGL::setNeedsFlushBeforeDeleteTextures()
 void ContextGL::flushIfNecessaryBeforeDeleteTextures()
 {
     mRenderer->flushIfNecessaryBeforeDeleteTextures();
+}
+
+void ContextGL::markWorkSubmitted()
+{
+    mRenderer->markWorkSubmitted();
 }
 
 }  // namespace rx
