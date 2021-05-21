@@ -32,11 +32,14 @@ class CLDeviceImpl : angle::NonCopyable
 
         bool isValid() const { return mType != 0u; }
 
+        // In the order as they appear in the OpenCL specification V3.0.7, table 5
         cl_device_type mType = 0u;
-        cl_version mVersion  = 0u;
         std::vector<size_t> mMaxWorkItemSizes;
+        cl_ulong mMaxMemAllocSize = 0u;
         NameVersionVector mILsWithVersion;
         NameVersionVector mBuiltInKernelsWithVersion;
+        std::string mVersionStr;
+        cl_version mVersion = 0u;
         NameVersionVector mOpenCL_C_AllVersions;
         NameVersionVector mOpenCL_C_Features;
         std::string mExtensions;

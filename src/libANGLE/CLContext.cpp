@@ -7,6 +7,7 @@
 
 #include "libANGLE/CLContext.h"
 
+#include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLPlatform.h"
 
 #include <cstring>
@@ -79,8 +80,8 @@ cl_command_queue Context::createCommandQueue(cl_device_id device,
                                              cl_command_queue_properties properties,
                                              cl_int *errcodeRet)
 {
-    mCommandQueues.emplace_back(new CommandQueue(
-        ContextRefPtr(this), DeviceRefPtr(static_cast<Device *>(device)), properties, errcodeRet));
+    mCommandQueues.emplace_back(
+        new CommandQueue(*this, *static_cast<Device *>(device), properties, errcodeRet));
     if (!mCommandQueues.back()->mImpl)
     {
         mCommandQueues.back()->release();
@@ -117,8 +118,7 @@ cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
         propArray.insert(propArray.cend(), properties, propIt);
     }
 
-    mCommandQueues.emplace_back(new CommandQueue(ContextRefPtr(this),
-                                                 DeviceRefPtr(static_cast<Device *>(device)),
+    mCommandQueues.emplace_back(new CommandQueue(*this, *static_cast<Device *>(device),
                                                  std::move(propArray), props, size, errcodeRet));
     if (!mCommandQueues.back()->mImpl)
     {
@@ -126,6 +126,21 @@ cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
         return nullptr;
     }
     return mCommandQueues.back().get();
+}
+
+cl_mem Context::createBuffer(const cl_mem_properties *properties,
+                             cl_mem_flags flags,
+                             size_t size,
+                             void *hostPtr,
+                             cl_int *errcodeRet)
+{
+    mMemories.emplace_back(new Buffer(*this, {}, flags, size, hostPtr, errcodeRet));
+    if (!mMemories.back()->mImpl)
+    {
+        mMemories.back()->release();
+        return nullptr;
+    }
+    return mMemories.back().get();
 }
 
 bool Context::IsValid(const _cl_context *context)
@@ -188,6 +203,23 @@ void Context::destroyCommandQueue(CommandQueue *commandQueue)
     else
     {
         ERR() << "CommandQueue not found";
+    }
+}
+
+void Context::destroyMemory(Memory *memory)
+{
+    auto memoryIt = mMemories.cbegin();
+    while (memoryIt != mMemories.cend() && memoryIt->get() != memory)
+    {
+        ++memoryIt;
+    }
+    if (memoryIt != mMemories.cend())
+    {
+        mMemories.erase(memoryIt);
+    }
+    else
+    {
+        ERR() << "Memory not found";
     }
 }
 

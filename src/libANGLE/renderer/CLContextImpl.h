@@ -10,6 +10,7 @@
 
 #include "libANGLE/renderer/CLCommandQueueImpl.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
+#include "libANGLE/renderer/CLMemoryImpl.h"
 
 namespace rx
 {
@@ -26,6 +27,10 @@ class CLContextImpl : angle::NonCopyable
 
     virtual CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
                                                        cl_int *errcodeRet) = 0;
+    virtual CLMemoryImpl::Ptr createBuffer(const cl::Buffer &buffer,
+                                           size_t size,
+                                           void *hostPtr,
+                                           cl_int *errcodeRet)             = 0;
 
   protected:
     const cl::Context &mContext;

@@ -11,6 +11,7 @@
 
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLMemory.h"
 #include "libANGLE/renderer/CLContextImpl.h"
 
 namespace cl
@@ -22,11 +23,14 @@ class Context final : public _cl_context, public Object
     using PtrList   = std::list<ContextPtr>;
     using PropArray = std::vector<cl_context_properties>;
 
-    ~Context();
+    ~Context() override;
 
     const Platform &getPlatform() const noexcept;
     bool hasDevice(const _cl_device_id *device) const;
+    const DeviceRefList &getDevices() const;
+
     bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
+    bool hasMemory(const _cl_mem *memory) const;
 
     void retain() noexcept;
     bool release();
@@ -40,6 +44,12 @@ class Context final : public _cl_context, public Object
     cl_command_queue createCommandQueueWithProperties(cl_device_id device,
                                                       const cl_queue_properties *properties,
                                                       cl_int *errcodeRet);
+
+    cl_mem createBuffer(const cl_mem_properties *properties,
+                        cl_mem_flags flags,
+                        size_t size,
+                        void *hostPtr,
+                        cl_int *errcodeRet);
 
     static bool IsValid(const _cl_context *context);
 
@@ -61,6 +71,7 @@ class Context final : public _cl_context, public Object
             cl_int *errcodeRet);
 
     void destroyCommandQueue(CommandQueue *commandQueue);
+    void destroyMemory(Memory *memory);
 
     static void CL_CALLBACK ErrorCallback(const char *errinfo,
                                           const void *privateInfo,
@@ -75,8 +86,11 @@ class Context final : public _cl_context, public Object
     void *const mUserData;
 
     CommandQueue::PtrList mCommandQueues;
+    Memory::PtrList mMemories;
 
+    friend class Buffer;
     friend class CommandQueue;
+    friend class Memory;
     friend class Platform;
 };
 
@@ -92,11 +106,23 @@ inline bool Context::hasDevice(const _cl_device_id *device) const
            }) != mDevices.cend();
 }
 
+inline const DeviceRefList &Context::getDevices() const
+{
+    return mDevices;
+}
+
 inline bool Context::hasCommandQueue(const _cl_command_queue *commandQueue) const
 {
     return std::find_if(mCommandQueues.cbegin(), mCommandQueues.cend(),
                         [=](const CommandQueuePtr &ptr) { return ptr.get() == commandQueue; }) !=
            mCommandQueues.cend();
+}
+
+inline bool Context::hasMemory(const _cl_mem *memory) const
+{
+    return std::find_if(mMemories.cbegin(), mMemories.cend(), [=](const MemoryPtr &ptr) {
+               return ptr.get() == memory;
+           }) != mMemories.cend();
 }
 
 inline void Context::retain() noexcept

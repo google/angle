@@ -17,7 +17,7 @@ class Sampler final : public _cl_sampler, public Object
 {
   public:
     Sampler(const cl_icd_dispatch &dispatch);
-    ~Sampler() = default;
+    ~Sampler() override = default;
 };
 
 }  // namespace cl

@@ -23,6 +23,7 @@
 namespace cl
 {
 
+class Buffer;
 class CommandQueue;
 class Context;
 class Device;
@@ -47,6 +48,7 @@ using SamplerPtr      = std::unique_ptr<Sampler>;
 
 using ContextRefPtr = RefPointer<Context>;
 using DeviceRefPtr  = RefPointer<Device>;
+using MemoryRefPtr  = RefPointer<Memory>;
 
 using DevicePtrList = std::list<DevicePtr>;
 using DeviceRefList = std::vector<DeviceRefPtr>;

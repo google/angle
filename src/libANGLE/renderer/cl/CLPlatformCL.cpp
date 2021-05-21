@@ -378,10 +378,8 @@ CLContextImpl::Ptr CLPlatformCL::createContext(const cl::Context &context,
 {
     cl_context_properties properties[] = {
         CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(mNative),
-        userSync && mPlatform.getInfo().mVersion >= CL_MAKE_VERSION(1, 2, 0)
-            ? CL_CONTEXT_INTEROP_USER_SYNC
-            : 0,
-        CL_TRUE, 0};
+        userSync && mPlatform.isVersionOrNewer(1u, 2u) ? CL_CONTEXT_INTEROP_USER_SYNC : 0, CL_TRUE,
+        0};
 
     std::vector<cl_device_id> nativeDevices;
     for (const cl::DeviceRefPtr &device : devices)
@@ -406,10 +404,8 @@ CLContextImpl::Ptr CLPlatformCL::createContextFromType(const cl::Context &contex
 {
     cl_context_properties properties[] = {
         CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(mNative),
-        userSync && mPlatform.getInfo().mVersion >= CL_MAKE_VERSION(1, 2, 0)
-            ? CL_CONTEXT_INTEROP_USER_SYNC
-            : 0,
-        CL_TRUE, 0};
+        userSync && mPlatform.isVersionOrNewer(1u, 2u) ? CL_CONTEXT_INTEROP_USER_SYNC : 0, CL_TRUE,
+        0};
     cl_context nativeContext = mNative->getDispatch().clCreateContextFromType(
         properties, deviceType, notify, userData, errcodeRet);
     return CLContextImpl::Ptr(nativeContext != nullptr ? new CLContextCL(context, nativeContext)

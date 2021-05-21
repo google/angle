@@ -25,7 +25,7 @@ class CommandQueue final : public _cl_command_queue, public Object
 
     static constexpr cl_uint kNoSize = std::numeric_limits<cl_uint>::max();
 
-    ~CommandQueue();
+    ~CommandQueue() override;
 
     const Context &getContext() const;
     const Device &getDevice() const;
@@ -45,13 +45,13 @@ class CommandQueue final : public _cl_command_queue, public Object
     static bool IsValid(const _cl_command_queue *commandQueue);
 
   private:
-    CommandQueue(ContextRefPtr &&context,
-                 DeviceRefPtr &&device,
+    CommandQueue(Context &context,
+                 Device &device,
                  cl_command_queue_properties properties,
                  cl_int *errcodeRet);
 
-    CommandQueue(ContextRefPtr &&context,
-                 DeviceRefPtr &&device,
+    CommandQueue(Context &context,
+                 Device &device,
                  PropArray &&propArray,
                  cl_command_queue_properties properties,
                  cl_uint size,

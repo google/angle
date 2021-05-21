@@ -19,17 +19,9 @@ class Object
 {
   public:
     Object() = default;
-
-    ~Object()
-    {
-        if (mRefCount != 0u)
-        {
-            WARN() << "Deleted object with references";
-        }
-    }
+    virtual ~Object();
 
     cl_uint getRefCount() { return mRefCount; }
-
     const cl_uint *getRefCountPtr() { return &mRefCount; }
 
   protected:

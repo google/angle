@@ -22,7 +22,7 @@ class Device final : public _cl_device_id, public Object
   public:
     using CreateImplFunc = std::function<rx::CLDeviceImpl::Ptr(const cl::Device &)>;
 
-    ~Device();
+    ~Device() override;
 
     Platform &getPlatform() noexcept;
     const Platform &getPlatform() const noexcept;
@@ -32,6 +32,7 @@ class Device final : public _cl_device_id, public Object
     T &getImpl() const;
 
     const rx::CLDeviceImpl::Info &getInfo() const;
+    bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
     bool hasSubDevice(const _cl_device_id *device) const;
 
     void retain() noexcept;
@@ -48,7 +49,7 @@ class Device final : public _cl_device_id, public Object
                             cl_uint *numDevicesRet);
 
     static DevicePtr CreateDevice(Platform &platform,
-                                  DeviceRefPtr &&parent,
+                                  Device *parent,
                                   cl_device_type type,
                                   const CreateImplFunc &createImplFunc);
 
@@ -57,7 +58,7 @@ class Device final : public _cl_device_id, public Object
 
   private:
     Device(Platform &platform,
-           DeviceRefPtr &&parent,
+           Device *parent,
            cl_device_type type,
            const CreateImplFunc &createImplFunc);
 
@@ -99,6 +100,11 @@ inline T &Device::getImpl() const
 inline const rx::CLDeviceImpl::Info &Device::getInfo() const
 {
     return mInfo;
+}
+
+inline bool Device::isVersionOrNewer(cl_uint major, cl_uint minor) const
+{
+    return mInfo.mVersion >= CL_MAKE_VERSION(major, minor, 0u);
 }
 
 inline bool Device::hasSubDevice(const _cl_device_id *device) const

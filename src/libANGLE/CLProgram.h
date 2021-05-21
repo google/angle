@@ -17,7 +17,7 @@ class Program final : public _cl_program, public Object
 {
   public:
     Program(const cl_icd_dispatch &dispatch);
-    ~Program() = default;
+    ~Program() override = default;
 };
 
 }  // namespace cl

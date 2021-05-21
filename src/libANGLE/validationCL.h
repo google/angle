@@ -9,6 +9,7 @@
 #ifndef LIBANGLE_VALIDATIONCL_H_
 #define LIBANGLE_VALIDATIONCL_H_
 
+#include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"

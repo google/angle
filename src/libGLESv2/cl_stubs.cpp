@@ -9,7 +9,11 @@
 
 #include "libGLESv2/proc_table_cl.h"
 
+#include "libANGLE/CLBuffer.h"
+#include "libANGLE/CLCommandQueue.h"
+#include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
 
 #define WARN_NOT_SUPPORTED(command)                                         \
@@ -195,8 +199,8 @@ cl_int GetCommandQueueInfo(cl_command_queue command_queue,
                            void *param_value,
                            size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetCommandQueueInfo);
-    return 0;
+    return static_cast<CommandQueue *>(command_queue)
+        ->getInfo(param_name, param_value_size, param_value, param_value_size_ret);
 }
 
 cl_mem CreateBuffer(cl_context context,
@@ -205,8 +209,8 @@ cl_mem CreateBuffer(cl_context context,
                     void *host_ptr,
                     cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateBuffer);
-    return 0;
+    return static_cast<Context *>(context)->createBuffer(nullptr, flags, size, host_ptr,
+                                                         errcode_ret);
 }
 
 cl_mem CreateBufferWithProperties(cl_context context,
@@ -216,8 +220,8 @@ cl_mem CreateBufferWithProperties(cl_context context,
                                   void *host_ptr,
                                   cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateBufferWithProperties);
-    return 0;
+    return static_cast<Context *>(context)->createBuffer(properties, flags, size, host_ptr,
+                                                         errcode_ret);
 }
 
 cl_mem CreateSubBuffer(cl_mem buffer,
@@ -226,8 +230,8 @@ cl_mem CreateSubBuffer(cl_mem buffer,
                        const void *buffer_create_info,
                        cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateSubBuffer);
-    return 0;
+    return static_cast<Buffer *>(buffer)->createSubBuffer(flags, buffer_create_type,
+                                                          buffer_create_info, errcode_ret);
 }
 
 cl_mem CreateImage(cl_context context,
@@ -266,14 +270,14 @@ cl_mem CreatePipe(cl_context context,
 
 cl_int RetainMemObject(cl_mem memobj)
 {
-    WARN_NOT_SUPPORTED(RetainMemObject);
-    return 0;
+    static_cast<Memory *>(memobj)->retain();
+    return CL_SUCCESS;
 }
 
 cl_int ReleaseMemObject(cl_mem memobj)
 {
-    WARN_NOT_SUPPORTED(ReleaseMemObject);
-    return 0;
+    static_cast<Memory *>(memobj)->release();
+    return CL_SUCCESS;
 }
 
 cl_int GetSupportedImageFormats(cl_context context,
@@ -293,8 +297,8 @@ cl_int GetMemObjectInfo(cl_mem memobj,
                         void *param_value,
                         size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetMemObjectInfo);
-    return 0;
+    return static_cast<Memory *>(memobj)->getInfo(param_name, param_value_size, param_value,
+                                                  param_value_size_ret);
 }
 
 cl_int GetImageInfo(cl_mem image,

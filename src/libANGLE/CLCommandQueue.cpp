@@ -129,30 +129,30 @@ bool CommandQueue::IsValid(const _cl_command_queue *commandQueue)
            }) != platforms.cend();
 }
 
-CommandQueue::CommandQueue(ContextRefPtr &&context,
-                           DeviceRefPtr &&device,
+CommandQueue::CommandQueue(Context &context,
+                           Device &device,
                            cl_command_queue_properties properties,
                            cl_int *errcodeRet)
-    : _cl_command_queue(context->getDispatch()),
-      mContext(std::move(context)),
-      mDevice(std::move(device)),
+    : _cl_command_queue(context.getDispatch()),
+      mContext(&context),
+      mDevice(&device),
       mProperties(properties),
-      mImpl(mContext->mImpl->createCommandQueue(*this, errcodeRet))
+      mImpl(context.mImpl->createCommandQueue(*this, errcodeRet))
 {}
 
-CommandQueue::CommandQueue(ContextRefPtr &&context,
-                           DeviceRefPtr &&device,
+CommandQueue::CommandQueue(Context &context,
+                           Device &device,
                            PropArray &&propArray,
                            cl_command_queue_properties properties,
                            cl_uint size,
                            cl_int *errcodeRet)
-    : _cl_command_queue(context->getDispatch()),
-      mContext(std::move(context)),
-      mDevice(std::move(device)),
+    : _cl_command_queue(context.getDispatch()),
+      mContext(&context),
+      mDevice(&device),
       mPropArray(std::move(propArray)),
       mProperties(properties),
       mSize(size),
-      mImpl(mContext->mImpl->createCommandQueue(*this, errcodeRet))
+      mImpl(context.mImpl->createCommandQueue(*this, errcodeRet))
 {
     if ((mProperties & CL_QUEUE_ON_DEVICE_DEFAULT) != 0u)
     {

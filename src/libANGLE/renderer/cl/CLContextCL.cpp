@@ -9,9 +9,13 @@
 
 #include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
+#include "libANGLE/renderer/cl/CLMemoryCL.h"
 
+#include "libANGLE/CLBuffer.h"
+#include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/Debug.h"
 
@@ -76,7 +80,7 @@ CLCommandQueueImpl::Ptr CLContextCL::createCommandQueue(const cl::CommandQueue &
     const cl::Device &device        = commandQueue.getDevice();
     const cl_device_id nativeDevice = device.getImpl<CLDeviceCL &>().getNative();
     cl_command_queue nativeQueue    = nullptr;
-    if (device.getInfo().mVersion < CL_MAKE_VERSION(2, 0, 0))
+    if (!device.isVersionOrNewer(2u, 0u))
     {
         nativeQueue = mNative->getDispatch().clCreateCommandQueue(
             mNative, nativeDevice, commandQueue.getProperties(), errcodeRet);
@@ -91,6 +95,26 @@ CLCommandQueueImpl::Ptr CLContextCL::createCommandQueue(const cl::CommandQueue &
     }
     return CLCommandQueueImpl::Ptr(
         nativeQueue != nullptr ? new CLCommandQueueCL(commandQueue, nativeQueue) : nullptr);
+}
+
+CLMemoryImpl::Ptr CLContextCL::createBuffer(const cl::Buffer &buffer,
+                                            size_t size,
+                                            void *hostPtr,
+                                            cl_int *errcodeRet)
+{
+    cl_mem nativeBuffer = nullptr;
+    if (buffer.getProperties().empty())
+    {
+        nativeBuffer = mNative->getDispatch().clCreateBuffer(mNative, buffer.getFlags(), size,
+                                                             hostPtr, errcodeRet);
+    }
+    else
+    {
+        nativeBuffer = mNative->getDispatch().clCreateBufferWithProperties(
+            mNative, buffer.getProperties().data(), buffer.getFlags(), size, hostPtr, errcodeRet);
+    }
+    return CLMemoryImpl::Ptr(nativeBuffer != nullptr ? new CLMemoryCL(buffer, nativeBuffer)
+                                                     : nullptr);
 }
 
 }  // namespace rx

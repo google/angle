@@ -80,10 +80,6 @@ cl_int Platform::getInfo(PlatformInfo name, size_t valueSize, void *value, size_
             copySize  = mInfo.mVersionStr.length() + 1u;
             break;
         case PlatformInfo::NumericVersion:
-            if (mInfo.mVersion < CL_MAKE_VERSION(3, 0, 0))
-            {
-                return CL_INVALID_VALUE;
-            }
             copyValue = &mInfo.mVersion;
             copySize  = sizeof(mInfo.mVersion);
             break;
@@ -100,19 +96,11 @@ cl_int Platform::getInfo(PlatformInfo name, size_t valueSize, void *value, size_
             copySize  = mInfo.mExtensions.length() + 1u;
             break;
         case PlatformInfo::ExtensionsWithVersion:
-            if (mInfo.mVersion < CL_MAKE_VERSION(3, 0, 0))
-            {
-                return CL_INVALID_VALUE;
-            }
             copyValue = mInfo.mExtensionsWithVersion.data();
             copySize  = mInfo.mExtensionsWithVersion.size() *
                        sizeof(decltype(mInfo.mExtensionsWithVersion)::value_type);
             break;
         case PlatformInfo::HostTimerResolution:
-            if (mInfo.mVersion < CL_MAKE_VERSION(2, 1, 0))
-            {
-                return CL_INVALID_VALUE;
-            }
             copyValue = &mInfo.mHostTimerRes;
             copySize  = sizeof(mInfo.mHostTimerRes);
             break;

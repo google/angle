@@ -4,6 +4,7 @@
 // found in the LICENSE file.
 //
 // validationCL.cpp: Validation functions for generic CL entry point parameters
+// based on the OpenCL Specificaion V3.0.7, see https://www.khronos.org/registry/OpenCL/
 
 #include "libANGLE/validationCL_autogen.h"
 
@@ -66,6 +67,66 @@ const Platform *ValidateContextProperties(const cl_context_properties *propertie
     return static_cast<Platform *>(platform);
 }
 
+bool ValidateMemoryFlags(cl_mem_flags flags, const Platform &platform)
+{
+    cl_mem_flags allowedFlags = CL_MEM_READ_WRITE | CL_MEM_WRITE_ONLY | CL_MEM_READ_ONLY;
+    // These flags are mutually exclusive. Count of set flags should not exceed one.
+    if (static_cast<int>((flags & CL_MEM_READ_WRITE) != 0u) +
+            static_cast<int>((flags & CL_MEM_WRITE_ONLY) != 0u) +
+            static_cast<int>((flags & CL_MEM_READ_ONLY) != 0u) >
+        1)
+    {
+        return false;
+    }
+
+    allowedFlags |= CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR | CL_MEM_COPY_HOST_PTR;
+    // CL_MEM_USE_HOST_PTR is mutually exclusive with the other two flags
+    if ((flags & CL_MEM_USE_HOST_PTR) != 0u &&
+        ((flags & CL_MEM_ALLOC_HOST_PTR) != 0u || (flags & CL_MEM_COPY_HOST_PTR) != 0u))
+    {
+        return false;
+    }
+
+    if (platform.isVersionOrNewer(1u, 2u))
+    {
+        allowedFlags |= CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_NO_ACCESS;
+        // These flags are mutually exclusive. Count of set flags should not exceed one.
+        if (static_cast<int>((flags & CL_MEM_HOST_WRITE_ONLY) != 0u) +
+                static_cast<int>((flags & CL_MEM_HOST_READ_ONLY) != 0u) +
+                static_cast<int>((flags & CL_MEM_HOST_NO_ACCESS) != 0u) >
+            1)
+        {
+            return false;
+        }
+    }
+
+    if (platform.isVersionOrNewer(2u, 0u))
+    {
+        allowedFlags |= CL_MEM_KERNEL_READ_AND_WRITE;
+    }
+
+    // flags should be zero when allowed flags are masked out
+    if ((flags & ~allowedFlags) != 0u)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+bool ValidateMemoryProperties(const cl_mem_properties *properties)
+{
+    if (properties != nullptr)
+    {
+        // OpenCL 3.0 does not define any optional properties
+        if (*properties != 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 }  // namespace
 
 // CL 1.0
@@ -91,7 +152,12 @@ cl_int ValidateGetPlatformInfo(cl_platform_id platform,
     {
         return CL_INVALID_PLATFORM;
     }
+    const Platform &pltfrm = *static_cast<const Platform *>(platform);
+
     if (param_name == PlatformInfo::InvalidEnum ||
+        (param_name == PlatformInfo::HostTimerResolution && !pltfrm.isVersionOrNewer(2u, 1u)) ||
+        (param_name == PlatformInfo::NumericVersion && !pltfrm.isVersionOrNewer(3u, 0u)) ||
+        (param_name == PlatformInfo::ExtensionsWithVersion && !pltfrm.isVersionOrNewer(3u, 0u)) ||
         (param_value_size == 0u && param_value != nullptr))
     {
         return CL_INVALID_VALUE;
@@ -133,6 +199,103 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
     if (param_name == DeviceInfo::InvalidEnum || (param_value_size == 0u && param_value != nullptr))
     {
         return CL_INVALID_VALUE;
+    }
+    const Device &dev = *static_cast<const Device *>(device);
+    // Enums ordered within their version block as they appear in the OpenCL spec V3.0.7, table 5
+    switch (param_name)
+    {
+        case DeviceInfo::PreferredVectorWidthHalf:
+        case DeviceInfo::NativeVectorWidthChar:
+        case DeviceInfo::NativeVectorWidthShort:
+        case DeviceInfo::NativeVectorWidthInt:
+        case DeviceInfo::NativeVectorWidthLong:
+        case DeviceInfo::NativeVectorWidthFloat:
+        case DeviceInfo::NativeVectorWidthDouble:
+        case DeviceInfo::NativeVectorWidthHalf:
+        case DeviceInfo::HostUnifiedMemory:
+        case DeviceInfo::OpenCL_C_Version:
+            if (!dev.isVersionOrNewer(1u, 1u))
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+
+        case DeviceInfo::ImageMaxBufferSize:
+        case DeviceInfo::ImageMaxArraySize:
+        case DeviceInfo::DoubleFpConfig:
+        case DeviceInfo::LinkerAvailable:
+        case DeviceInfo::BuiltInKernels:
+        case DeviceInfo::PrintfBufferSize:
+        case DeviceInfo::PreferredInteropUserSync:
+        case DeviceInfo::ParentDevice:
+        case DeviceInfo::PartitionMaxSubDevices:
+        case DeviceInfo::PartitionProperties:
+        case DeviceInfo::PartitionAffinityDomain:
+        case DeviceInfo::PartitionType:
+        case DeviceInfo::ReferenceCount:
+            if (!dev.isVersionOrNewer(1u, 2u))
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+
+        case DeviceInfo::MaxReadWriteImageArgs:
+        case DeviceInfo::ImagePitchAlignment:
+        case DeviceInfo::ImageBaseAddressAlignment:
+        case DeviceInfo::MaxPipeArgs:
+        case DeviceInfo::PipeMaxActiveReservations:
+        case DeviceInfo::PipeMaxPacketSize:
+        case DeviceInfo::MaxGlobalVariableSize:
+        case DeviceInfo::GlobalVariablePreferredTotalSize:
+        case DeviceInfo::QueueOnDeviceProperties:
+        case DeviceInfo::QueueOnDevicePreferredSize:
+        case DeviceInfo::QueueOnDeviceMaxSize:
+        case DeviceInfo::MaxOnDeviceQueues:
+        case DeviceInfo::MaxOnDeviceEvents:
+        case DeviceInfo::SVM_Capabilities:
+        case DeviceInfo::PreferredPlatformAtomicAlignment:
+        case DeviceInfo::PreferredGlobalAtomicAlignment:
+        case DeviceInfo::PreferredLocalAtomicAlignment:
+            if (!dev.isVersionOrNewer(2u, 0u))
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+
+        case DeviceInfo::IL_Version:
+        case DeviceInfo::MaxNumSubGroups:
+        case DeviceInfo::SubGroupIndependentForwardProgress:
+            if (!dev.isVersionOrNewer(2u, 1u))
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+
+        case DeviceInfo::ILsWithVersion:
+        case DeviceInfo::BuiltInKernelsWithVersion:
+        case DeviceInfo::NumericVersion:
+        case DeviceInfo::OpenCL_C_AllVersions:
+        case DeviceInfo::OpenCL_C_Features:
+        case DeviceInfo::ExtensionsWithVersion:
+        case DeviceInfo::AtomicMemoryCapabilities:
+        case DeviceInfo::AtomicFenceCapabilities:
+        case DeviceInfo::NonUniformWorkGroupSupport:
+        case DeviceInfo::WorkGroupCollectiveFunctionsSupport:
+        case DeviceInfo::GenericAddressSpaceSupport:
+        case DeviceInfo::DeviceEnqueueCapabilities:
+        case DeviceInfo::PipeSupport:
+        case DeviceInfo::PreferredWorkGroupSizeMultiple:
+        case DeviceInfo::LatestConformanceVersionPassed:
+            if (!dev.isVersionOrNewer(3u, 0u))
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+
+        case DeviceInfo::InvalidEnum:
+            return CL_INVALID_VALUE;
+        default:
+            break;
     }
     return CL_SUCCESS;
 }
@@ -240,12 +403,11 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
-    const cl_version version =
-        static_cast<CommandQueue *>(command_queue)->getDevice().getInfo().mVersion;
+    const Device &device = static_cast<const CommandQueue *>(command_queue)->getDevice();
     if (param_name == CommandQueueInfo::InvalidEnum ||
-        (param_name == CommandQueueInfo::Size && version < CL_MAKE_VERSION(2, 0, 0)) ||
-        (param_name == CommandQueueInfo::DeviceDefault && version < CL_MAKE_VERSION(2, 1, 0)) ||
-        (param_name == CommandQueueInfo::PropertiesArray && version < CL_MAKE_VERSION(3, 0, 0)) ||
+        (param_name == CommandQueueInfo::Size && !device.isVersionOrNewer(2u, 0u)) ||
+        (param_name == CommandQueueInfo::DeviceDefault && !device.isVersionOrNewer(2u, 1u)) ||
+        (param_name == CommandQueueInfo::PropertiesArray && !device.isVersionOrNewer(3u, 0u)) ||
         (param_value_size == 0u && param_value != nullptr))
     {
         return CL_INVALID_VALUE;
@@ -259,17 +421,41 @@ bool ValidateCreateBuffer(cl_context context,
                           const void *host_ptr,
                           cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    const Context &ctx = *static_cast<Context *>(context);
+    if (!ValidateMemoryFlags(flags, ctx.getPlatform()))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    if (size == 0u)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_BUFFER_SIZE, false);
+    }
+    for (const DeviceRefPtr &device : ctx.getDevices())
+    {
+        if (size > device->getInfo().mMaxMemAllocSize)
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_BUFFER_SIZE, false);
+        }
+    }
+    if ((host_ptr != nullptr) != ((flags & (CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR)) != 0u))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_HOST_PTR, false);
+    }
     return true;
 }
 
 cl_int ValidateRetainMemObject(cl_mem memobj)
 {
-    return CL_SUCCESS;
+    return Memory::IsValid(memobj) ? CL_SUCCESS : CL_INVALID_MEM_OBJECT;
 }
 
 cl_int ValidateReleaseMemObject(cl_mem memobj)
 {
-    return CL_SUCCESS;
+    return Memory::IsValid(memobj) ? CL_SUCCESS : CL_INVALID_MEM_OBJECT;
 }
 
 cl_int ValidateGetSupportedImageFormats(cl_context context,
@@ -288,6 +474,20 @@ cl_int ValidateGetMemObjectInfo(cl_mem memobj,
                                 const void *param_value,
                                 const size_t *param_value_size_ret)
 {
+    if (!Memory::IsValid(memobj))
+    {
+        return CL_INVALID_MEM_OBJECT;
+    }
+    const Platform &platform = static_cast<const Memory *>(memobj)->getContext().getPlatform();
+    if (param_name == MemInfo::InvalidEnum ||
+        (param_name == MemInfo::AssociatedMemObject && !platform.isVersionOrNewer(1u, 1u)) ||
+        (param_name == MemInfo::Offset && !platform.isVersionOrNewer(1u, 1u)) ||
+        (param_name == MemInfo::UsesSVM_Pointer && !platform.isVersionOrNewer(2u, 0u)) ||
+        (param_name == MemInfo::Properties && !platform.isVersionOrNewer(3u, 0u)) ||
+        (param_value_size == 0u && param_value != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
@@ -762,6 +962,35 @@ bool ValidateCreateSubBuffer(cl_mem buffer,
                              const void *buffer_create_info,
                              cl_int *errcode_ret)
 {
+    if (!Buffer::IsValid(buffer))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_MEM_OBJECT, false);
+    }
+    const Buffer &buf = *static_cast<const Buffer *>(buffer);
+    if (buf.isSubBuffer() || !buf.getContext().getPlatform().isVersionOrNewer(1u, 1u))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_MEM_OBJECT, false);
+    }
+    const cl_mem_flags bufFlags = buf.getFlags();
+    if (!ValidateMemoryFlags(flags, buf.getContext().getPlatform()) ||
+        ((bufFlags & CL_MEM_WRITE_ONLY) != 0u &&
+         (flags & (CL_MEM_READ_WRITE | CL_MEM_READ_ONLY)) != 0u) ||
+        ((bufFlags & CL_MEM_READ_ONLY) != 0u &&
+         (flags & (CL_MEM_READ_WRITE | CL_MEM_WRITE_ONLY)) != 0u) ||
+        (flags & (CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR | CL_MEM_COPY_HOST_PTR)) != 0u ||
+        ((bufFlags & CL_MEM_HOST_WRITE_ONLY) != 0u && (flags & CL_MEM_HOST_READ_ONLY) != 0u) ||
+        ((bufFlags & CL_MEM_HOST_READ_ONLY) != 0u && (flags & CL_MEM_HOST_WRITE_ONLY) != 0u) ||
+        ((bufFlags & CL_MEM_HOST_NO_ACCESS) != 0u &&
+         (flags & (CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_WRITE_ONLY)) != 0u) ||
+        buffer_create_type != CL_BUFFER_CREATE_TYPE_REGION || buffer_create_info == nullptr ||
+        !buf.isRegionValid(*static_cast<const cl_buffer_region *>(buffer_create_info)))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    if (static_cast<const cl_buffer_region *>(buffer_create_info)->size == 0u)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_BUFFER_SIZE, false);
+    }
     return true;
 }
 
@@ -853,8 +1082,7 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
                                 const cl_device_id *out_devices,
                                 const cl_uint *num_devices_ret)
 {
-    if (!Device::IsValid(in_device) ||
-        static_cast<Device *>(in_device)->getInfo().mVersion < CL_MAKE_VERSION(1, 2, 0))
+    if (!Device::IsValid(in_device) || !static_cast<Device *>(in_device)->isVersionOrNewer(1u, 2u))
     {
         return CL_INVALID_DEVICE;
     }
@@ -869,16 +1097,14 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
 
 cl_int ValidateRetainDevice(cl_device_id device)
 {
-    return Device::IsValid(device) &&
-                   static_cast<Device *>(device)->getInfo().mVersion >= CL_MAKE_VERSION(1, 2, 0)
+    return Device::IsValid(device) && static_cast<Device *>(device)->isVersionOrNewer(1u, 2u)
                ? CL_SUCCESS
                : CL_INVALID_DEVICE;
 }
 
 cl_int ValidateReleaseDevice(cl_device_id device)
 {
-    return Device::IsValid(device) &&
-                   static_cast<Device *>(device)->getInfo().mVersion >= CL_MAKE_VERSION(1, 2, 0)
+    return Device::IsValid(device) && static_cast<Device *>(device)->isVersionOrNewer(1u, 2u)
                ? CL_SUCCESS
                : CL_INVALID_DEVICE;
 }
@@ -1011,7 +1237,7 @@ bool ValidateCreateCommandQueueWithProperties(cl_context context,
         ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
     }
     if (!static_cast<Context *>(context)->hasDevice(device) ||
-        static_cast<Device *>(device)->getInfo().mVersion < CL_MAKE_VERSION(2, 0, 0))
+        !static_cast<Device *>(device)->isVersionOrNewer(2u, 0u))
     {
         ANGLE_ERROR_RETURN(CL_INVALID_DEVICE, false);
     }
@@ -1257,6 +1483,18 @@ bool ValidateCreateBufferWithProperties(cl_context context,
                                         const void *host_ptr,
                                         cl_int *errcode_ret)
 {
+    if (!ValidateCreateBuffer(context, flags, size, host_ptr, errcode_ret))
+    {
+        return false;
+    }
+    if (!static_cast<Context *>(context)->getPlatform().isVersionOrNewer(3u, 0u))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (!ValidateMemoryProperties(properties))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_PROPERTY, false);
+    }
     return true;
 }
 

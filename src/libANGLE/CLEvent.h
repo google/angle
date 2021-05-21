@@ -18,7 +18,7 @@ class Event final : public _cl_event, public Object
 {
   public:
     Event(const cl_icd_dispatch &dispatch);
-    ~Event() = default;
+    ~Event() override = default;
 };
 
 }  // namespace cl

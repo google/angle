@@ -26,13 +26,16 @@ class Platform final : public _cl_platform_id, public Object
     using PtrList        = std::list<PlatformPtr>;
     using CreateImplFunc = std::function<rx::CLPlatformImpl::Ptr(const cl::Platform &)>;
 
-    ~Platform();
+    ~Platform() override;
 
     const rx::CLPlatformImpl::Info &getInfo() const;
+    bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
     bool hasDevice(const _cl_device_id *device) const;
     const DevicePtrList &getDevices() const;
+
     bool hasContext(const _cl_context *context) const;
     bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
+    bool hasMemory(const _cl_mem *memory) const;
 
     cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
 
@@ -93,6 +96,11 @@ inline const rx::CLPlatformImpl::Info &Platform::getInfo() const
     return mInfo;
 }
 
+inline bool Platform::isVersionOrNewer(cl_uint major, cl_uint minor) const
+{
+    return mInfo.mVersion >= CL_MAKE_VERSION(major, minor, 0u);
+}
+
 inline bool Platform::hasDevice(const _cl_device_id *device) const
 {
     return std::find_if(mDevices.cbegin(), mDevices.cend(), [=](const DevicePtr &ptr) {
@@ -116,6 +124,13 @@ inline bool Platform::hasCommandQueue(const _cl_command_queue *commandQueue) con
 {
     return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
                return ptr->hasCommandQueue(commandQueue);
+           }) != mContexts.cend();
+}
+
+inline bool Platform::hasMemory(const _cl_mem *memory) const
+{
+    return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
+               return ptr->hasMemory(memory);
            }) != mContexts.cend();
 }
 

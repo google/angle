@@ -17,7 +17,7 @@ class Kernel final : public _cl_kernel, public Object
 {
   public:
     Kernel(const cl_icd_dispatch &dispatch);
-    ~Kernel() = default;
+    ~Kernel() override = default;
 };
 
 }  // namespace cl

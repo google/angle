@@ -25,6 +25,10 @@ class CLContextCL : public CLContextImpl
 
     CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
                                                cl_int *errcodeRet) override;
+    CLMemoryImpl::Ptr createBuffer(const cl::Buffer &buffer,
+                                   size_t size,
+                                   void *hostPtr,
+                                   cl_int *errcodeRet) override;
 
   private:
     const cl_context mNative;

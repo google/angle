@@ -11,7 +11,7 @@
 
 #include "libANGLE/renderer/cl/cl_types.h"
 
-#include "libANGLE/renderer/CLContextImpl.h"
+#include "libANGLE/renderer/CLCommandQueueImpl.h"
 
 namespace rx
 {
