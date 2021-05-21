@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f74c933_0807eda1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1861,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-21T19:23:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e4c039a_aaa29e66",
+      "revId": "4b35a1c81156bdccd989d22c2da29535b3a269b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e1a1ed6f_349ff536",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-05-21T16:41:14Z",
       "side": 1,
       "message": "I suggest ivec2 for example, just to be sure the old code (that produced ivec4 basically) would fail.",
+      "range": {
+        "startLine": 1828,
+        "startChar": 9,
+        "endLine": 1828,
+        "endChar": 14
+      },
+      "revId": "4b35a1c81156bdccd989d22c2da29535b3a269b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ac17160_64732c4e",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1828,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-21T19:23:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e1a1ed6f_349ff536",
       "range": {
         "startLine": 1828,
         "startChar": 9,

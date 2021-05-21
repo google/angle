@@ -147,6 +147,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c45155cd_e079464a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1366,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-21T19:23:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "091ab3e0_45663254",
+      "range": {
+        "startLine": 1366,
+        "startChar": 4,
+        "endLine": 1366,
+        "endChar": 31
+      },
+      "revId": "63ade3bee95a162ce3ad300151daed10751e005d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9463a07c_62c49ba8",
@@ -170,6 +194,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b0273bfb_6db7ced5",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1370,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-21T19:23:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9463a07c_62c49ba8",
+      "range": {
+        "startLine": 1370,
+        "startChar": 14,
+        "endLine": 1370,
+        "endChar": 43
+      },
+      "revId": "63ade3bee95a162ce3ad300151daed10751e005d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2c7b37d4_536a7811",
@@ -183,6 +231,30 @@
       "writtenOn": "2021-05-05T02:06:58Z",
       "side": 1,
       "message": "Again, VK_FORMAT_R8G8B8A8_UNORM is a float format with matching bit width.",
+      "range": {
+        "startLine": 1375,
+        "startChar": 14,
+        "endLine": 1375,
+        "endChar": 43
+      },
+      "revId": "63ade3bee95a162ce3ad300151daed10751e005d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3403319e_eb277c65",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1375,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-21T19:23:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c7b37d4_536a7811",
       "range": {
         "startLine": 1375,
         "startChar": 14,
