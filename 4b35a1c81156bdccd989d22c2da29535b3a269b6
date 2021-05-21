@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a66ccc9c_5da56d05",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-21T16:41:14Z",
+      "side": 1,
+      "message": "Thanks for working through the issues with me! Just a couple nits, otherwise the change LGTM.",
+      "revId": "4b35a1c81156bdccd989d22c2da29535b3a269b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2e4c039a_aaa29e66",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1861,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-21T16:41:14Z",
+      "side": 1,
+      "message": "ConvertFormatSignedness has a lot of handwritten code (would have been ideal to autogenerate, but I\u0027m not blocking you on that). Could you please add some sanity check here in the form of an ASSERT? For example that the number of channels are the same and the width of the channels too?",
+      "revId": "4b35a1c81156bdccd989d22c2da29535b3a269b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e1a1ed6f_349ff536",
+        "filename": "src/tests/gl_tests/VertexAttributeTest.cpp",
+        "patchSetId": 10
+      },
+      "lineNbr": 1828,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-21T16:41:14Z",
+      "side": 1,
+      "message": "I suggest ivec2 for example, just to be sure the old code (that produced ivec4 basically) would fail.",
+      "range": {
+        "startLine": 1828,
+        "startChar": 9,
+        "endLine": 1828,
+        "endChar": 14
+      },
+      "revId": "4b35a1c81156bdccd989d22c2da29535b3a269b6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
