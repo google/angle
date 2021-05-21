@@ -100,6 +100,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f93a018_706b3a33",
+        "filename": "infra/specs/angle.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-21T23:00:46Z",
+      "side": 1,
+      "message": "My 1000 P21 devices estimate didn\u0027t account for that.\nShould I request 2000? ;-)",
+      "parentUuid": "07829b10_f6158427",
+      "range": {
+        "startLine": 381,
+        "startChar": 13,
+        "endLine": 381,
+        "endChar": 27
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "beb76bce_3985670c",
@@ -137,6 +161,30 @@
       "side": 1,
       "message": "Ack, this is all copied from Chromium configs. I don\u0027t know if it would be better as numbers in an ideal world but we can\u0027t change that here.",
       "parentUuid": "beb76bce_3985670c",
+      "range": {
+        "startLine": 405,
+        "startChar": 27,
+        "endLine": 405,
+        "endChar": 30
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfb31394_ccf69411",
+        "filename": "infra/specs/angle.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-21T23:00:46Z",
+      "side": 1,
+      "message": "That\u0027s what Swarming advertises.\nI guess it\u0027s possible to make Swarming report 11 for these devices, but doesn\u0027t seem necessary.",
+      "parentUuid": "dfdf3ffb_35096279",
       "range": {
         "startLine": 405,
         "startChar": 27,
