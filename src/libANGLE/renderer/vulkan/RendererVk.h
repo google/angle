@@ -447,7 +447,6 @@ class RendererVk : angle::NonCopyable
     VkPhysicalDeviceMultisampledRenderToSingleSampledFeaturesEXT
         mMultisampledRenderToSingleSampledFeatures;
     VkPhysicalDeviceDriverPropertiesKHR mDriverProperties;
-    VkPhysicalDeviceCustomBorderColorFeaturesEXT mCustomBorderColorFeatures;
     VkExternalFenceProperties mExternalFenceProperties;
     VkExternalSemaphoreProperties mExternalSemaphoreProperties;
     VkPhysicalDeviceSamplerYcbcrConversionFeatures mSamplerYcbcrConversionFeatures;
