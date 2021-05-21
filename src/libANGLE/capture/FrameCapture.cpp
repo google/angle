@@ -1071,6 +1071,24 @@ void WriteCppReplay(bool compression,
         out << "extern \"C\" {\n";
     }
 
+    if (frameIndex == 1)
+    {
+        std::stringstream setupCallStream;
+
+        setupCallStream << "void " << FmtSetupFunction(kNoPartId) << "\n";
+        setupCallStream << "{\n";
+
+        size_t maxClientArraySize = MaxClientArraySize(clientArraySizes);
+
+        WriteInitReplayCall(compression, setupCallStream, context->id(), captureLabel,
+                            maxClientArraySize, readBufferSize);
+        WriteCppReplayFunctionWithParts(context, ReplayFunc::Setup, &dataTracker, frameIndex,
+                                        binaryData, setupCalls, header, setupCallStream, out);
+
+        out << setupCallStream.str();
+        out << "}\n";
+    }
+
     if (frameIndex == frameCount)
     {
         // Emit code to reset back to starting state
@@ -4890,8 +4908,6 @@ void FrameCapture::writeCppReplayIndexFiles(const gl::Context *context, bool wri
     const egl::Config *config           = context->getConfig();
     const egl::AttributeMap &attributes = context->getDisplay()->getAttributeMap();
 
-    DataTracker dataTracker;
-
     unsigned frameCount = getFrameCount();
 
     std::stringstream header;
@@ -4979,22 +4995,6 @@ void FrameCapture::writeCppReplayIndexFiles(const gl::Context *context, bool wri
     {
         source << "using namespace " << mCaptureLabel << ";\n";
         source << "\n";
-    }
-
-    {
-        std::stringstream setupCallStream;
-
-        setupCallStream << "void " << FmtSetupFunction(kNoPartId) << "\n";
-        setupCallStream << "{\n";
-
-        WriteInitReplayCall(mCompression, setupCallStream, context->id(), mCaptureLabel,
-                            MaxClientArraySize(mClientArraySizes), mReadBufferSize);
-
-        WriteCppReplayFunctionWithParts(context, ReplayFunc::Setup, &dataTracker, mFrameIndex,
-                                        &mBinaryData, mSetupCalls, header, setupCallStream, source);
-
-        source << setupCallStream.str();
-        source << "}\n";
     }
 
     source << "extern \"C\" {\n";

@@ -38,18 +38,9 @@ ColorMaskTest.AMDZeroColorMaskBug/ES3_OpenGL
 SimpleOperationTest.ClearAndSwap/*
 SimpleOperationTest.DrawQuadAndSwap/*
 
-
-# Tests that fail randomly when run in groups but pass when run standalone
-BufferDataTest.ZeroNonNULLData/ES2_Vulkan
-BufferDataTest.ZeroNonNULLData/ES2_Vulkan_AsyncQueue
-BufferDataTest.NULLResolvedData/ES2_Vulkan
-BufferDataTest.NULLResolvedData/ES2_Vulkan_AsyncQueue
-BufferDataTest.ExtensionDependency/ES2_Vulkan_AsyncQueue
-BufferDataTest.RepeatedDrawWithDynamic/ES2_Vulkan
-BufferDataTest.MapBufferOES/ES2_Vulkan_AsyncQueue
-
 # Crashed tests
 BlitFramebufferANGLETest.*
+BufferDataTest.*
 ClipDistanceTest.*
 CopyCompressedTextureTest.InternalFormat/*
 DebugMarkerTest.*
