@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e333fc86_29fa6aaa",
+        "filename": "src/compiler/translator/OutputSPIRV.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-21T19:51:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "468f8719_4f15ca9f",
+      "range": {
+        "startLine": 349,
+        "startChar": 30,
+        "endLine": 349,
+        "endChar": 37
+      },
+      "revId": "b054834464e8c642d43846f75e8e1a636d227417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ec1553f0_92c526d9",
@@ -54,6 +78,24 @@
       "writtenOn": "2021-05-21T18:17:53Z",
       "side": 1,
       "message": "nit: remove",
+      "revId": "b054834464e8c642d43846f75e8e1a636d227417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84404ef1_23e0f524",
+        "filename": "src/compiler/translator/tree_ops/vulkan/DeclarePerVertexBlocks.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-21T19:51:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ec1553f0_92c526d9",
       "revId": "b054834464e8c642d43846f75e8e1a636d227417",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -89,6 +131,24 @@
       "side": 1,
       "message": "Because the other shaders have this (implicitly defined):\n\nout struct gl_PerVertex\n{\n   ....\n};\n\nSo gl_PerVertex is a nameless I/O block.",
       "parentUuid": "bde92ad5_2d68cc41",
+      "revId": "b054834464e8c642d43846f75e8e1a636d227417",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "44c4d046_143d5141",
+        "filename": "src/compiler/translator/tree_ops/vulkan/DeclarePerVertexBlocks.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-21T19:51:26Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "760d5340_27aee6e5",
       "revId": "b054834464e8c642d43846f75e8e1a636d227417",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
