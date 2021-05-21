@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a09ac00_1d6dcdde",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-21T17:37:56Z",
+      "side": 1,
+      "message": "Mohan, if you could also give this one a try on your GPU as well to see if it has any perf regressions. If no regression, we should turn it on. This will also help other situations that now you are able to detect GPU completion on the object earlier. For example, crrev.com/c/2909758, where mapBuffer might wait for GPU to finish, this will reduce that wait time.\n\nI have done my own testing on pixel4, I am not seeing obvious regression, but the data is bit vague due to noise. I do plan do another round of testing with GPU clock locked, but any data from you will be awesome.",
+      "revId": "417ec90a34455ad3f9efb6be352f8f34dd8272d3",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
