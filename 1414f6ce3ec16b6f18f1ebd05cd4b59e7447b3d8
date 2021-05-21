@@ -35,6 +35,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "95996763_c44ee69a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-21T17:49:32Z",
+      "side": 1,
+      "message": "Feel free to CQ+2 it once you CR+2 it, we don\u0027t have auto-submit atm.",
+      "parentUuid": "e0c4ce6f_c8dc6956",
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18c294ea_7800a144",
@@ -48,6 +66,30 @@
       "writtenOn": "2021-05-21T16:14:08Z",
       "side": 1,
       "message": "Some day should figure out how to run the traces longer, as there are features/fixes landing that aren\u0027t hit with a single frame (like the dynamic Vk buffer changes recently).  I know this is a resourcing thing.",
+      "range": {
+        "startLine": 381,
+        "startChar": 13,
+        "endLine": 381,
+        "endChar": 27
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "07829b10_f6158427",
+        "filename": "infra/specs/angle.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-21T17:49:32Z",
+      "side": 1,
+      "message": "Ack, measuring perf in precommit is a dream I\u0027m chasing.",
+      "parentUuid": "18c294ea_7800a144",
       "range": {
         "startLine": 381,
         "startChar": 13,
@@ -81,6 +123,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "dfdf3ffb_35096279",
+        "filename": "infra/specs/angle.json",
+        "patchSetId": 3
+      },
+      "lineNbr": 405,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-21T17:49:32Z",
+      "side": 1,
+      "message": "Ack, this is all copied from Chromium configs. I don\u0027t know if it would be better as numbers in an ideal world but we can\u0027t change that here.",
+      "parentUuid": "beb76bce_3985670c",
+      "range": {
+        "startLine": 405,
+        "startChar": 27,
+        "endLine": 405,
+        "endChar": 30
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9c4cea03_38e3c6ae",
@@ -94,6 +160,30 @@
       "writtenOn": "2021-05-21T17:35:18Z",
       "side": 1,
       "message": "Sounds like this worked with Pixel 2 and driver \u003e 0x801EA000?\nI wouldn\u0027t want something that worked to regress.\nHow about adding Pixel 4 to the condition?",
+      "range": {
+        "startLine": 2359,
+        "startChar": 67,
+        "endLine": 2359,
+        "endChar": 78
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cac5a08e_43ea88f3",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2359,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-21T17:49:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9c4cea03_38e3c6ae",
       "range": {
         "startLine": 2359,
         "startChar": 67,
@@ -141,6 +231,30 @@
       "side": 1,
       "message": "It\u0027s also possible that our phones have an older driver than the one you recorded with.",
       "parentUuid": "438dea09_b827702e",
+      "range": {
+        "startLine": 898,
+        "startChar": 42,
+        "endLine": 898,
+        "endChar": 52
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5881f192_bac9caa8",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-21T17:49:32Z",
+      "side": 1,
+      "message": "Ack, this is a GL driver incompatibility thing. What ANGLE treats as a no-op the QC driver treats as an error (drawing a triangle with 0-2 verts).",
+      "parentUuid": "614a9fff_fb945d14",
       "range": {
         "startLine": 898,
         "startChar": 42,
