@@ -77,6 +77,24 @@ def write_blueprint_key_value(output, name, value, indent=1):
 
 
 def write_blueprint(output, target_type, values):
+    if target_type == 'license':
+        comment = """
+// Added automatically by a large-scale-change that took the approach of
+// 'apply every license found to every target'. While this makes sure we respect
+// every license restriction, it may not be entirely correct.
+//
+// e.g. GPL in an MIT project might only apply to the contrib/ directory.
+//
+// Please consider splitting the single license below into multiple licenses,
+// taking care not to lose any license_kind information, and overriding the
+// default license using the 'licenses: [...]' property on targets as needed.
+//
+// For unused files, consider creating a 'fileGroup' with "//visibility:private"
+// to attach the license to, and including a comment whether the files may be
+// used in the current project.
+// See: http://go/android-license-faq"""
+        output.append(comment)
+
     output.append('%s {' % target_type)
     for (key, value) in values.items():
         write_blueprint_key_value(output, key, value)
@@ -502,6 +520,27 @@ def main():
     blueprint_targets = []
     for target in targets_to_write:
         blueprint_targets.append(gn_target_to_blueprint(target, build_info))
+
+    # Add license build rules
+    blueprint_targets.append(('package', {
+        'default_applicable_licenses': ['external_angle_license'],
+    }))
+    blueprint_targets.append(('license', {
+        'name': 'external_angle_license',
+        'visibility': [':__subpackages__'],
+        'license_kinds': [
+            'SPDX-license-identifier-Apache-2.0',
+            'SPDX-license-identifier-BSD',
+            'SPDX-license-identifier-GPL',
+            'SPDX-license-identifier-GPL-2.0',
+            'SPDX-license-identifier-GPL-3.0',
+            'SPDX-license-identifier-LGPL',
+            'SPDX-license-identifier-MIT',
+            'SPDX-license-identifier-Zlib',
+            'legacy_unencumbered',
+        ],
+        'license_text': ['LICENSE'],
+    }))
 
     # Add APKs with all of the root libraries
     blueprint_targets.append((
