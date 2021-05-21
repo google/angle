@@ -22,6 +22,30 @@
       },
       "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b9f63fa_a4ed1f90",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5150,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-21T17:09:50Z",
+      "side": 1,
+      "message": "Yes, most tests in MipmapTest.cpp uses exact like this, so we are already covered.",
+      "parentUuid": "4885be8b_24e37e50",
+      "range": {
+        "startLine": 5150,
+        "startChar": 34,
+        "endLine": 5150,
+        "endChar": 45
+      },
+      "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
