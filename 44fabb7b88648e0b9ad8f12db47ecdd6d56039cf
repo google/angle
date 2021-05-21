@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de0eb64e_ae9e43b7",
+        "filename": "src/tests/gl_tests/IndexBufferOffsetTest.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 188,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-21T15:00:28Z",
+      "side": 0,
+      "message": "Rather than remove the swap (which triggers a lot of work), can we add a draw or clear to initialize the framebuffer?",
+      "range": {
+        "startLine": 188,
+        "startChar": 8,
+        "endLine": 188,
+        "endChar": 19
+      },
+      "revId": "44fabb7b88648e0b9ad8f12db47ecdd6d56039cf",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
