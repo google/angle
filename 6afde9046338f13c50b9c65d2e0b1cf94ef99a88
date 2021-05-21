@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d23c243c_9c617c0e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-21T17:23:14Z",
+      "side": 1,
+      "message": "Manhattan is cycling 2 sets of buffers. This CL not just reduce the unnecessary transfer to transfer barrier, but reduces memcpy and vkCmdCopyBuffer for one g{lMap|UnMap}Buffer call, so actually reduces CPU and GPU workload.\n\nIn case of any real application actually use mapBuffer call for every frame, the better fix is to track a queue serial for GPU write operation and you acquire a new buffer and wait for GPU write to finish and memcpy from old buffer to new buffer and return new buffer to user. The old buffer is then released. Since this kind of usage GPU almost never write to it, you basically never need to wait, essentially ping-pong two GPU accessible buffers. This approach you only have one memcpy, instead of memcpy+VkCmdCopyBuffer. As I mentioned earlier, there is no evidence any real app is using this (mapBuffer is not designed for this kind of usage), so we can save that effort until we actually find such need.\n\nBut yes, Mohan please do verify it did not regress on your side and let me know any issue you may find.",
+      "parentUuid": "11f4ebe4_63760008",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 15,
+        "endChar": 67
+      },
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "fd0173e0_1b7ffe2f",
