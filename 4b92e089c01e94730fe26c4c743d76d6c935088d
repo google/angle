@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7da7ca1b_002f1f84",
+        "filename": "src/libANGLE/renderer/vulkan/vk_cache_utils.cpp",
+        "patchSetId": 14
+      },
+      "lineNbr": 3291,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-21T01:03:30Z",
+      "side": 1,
+      "message": "Looks like mPadding is uninitialized on this path and that\u0027s probably the cause of the memory sanitizer failures in http://anglebug.com/5996 .",
+      "revId": "4b92e089c01e94730fe26c4c743d76d6c935088d",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
