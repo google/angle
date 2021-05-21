@@ -1340,7 +1340,10 @@ bool TranslatorVulkan::translate(TIntermBlock *root,
     }
 
 #if defined(ANGLE_ENABLE_DIRECT_SPIRV_GENERATION)
-    if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0 && getShaderType() == GL_VERTEX_SHADER)
+    constexpr ShCompileOptions kUnsupportedTransformations =
+        SH_ADD_VULKAN_XFB_EMULATION_SUPPORT_CODE | SH_ADD_BRESENHAM_LINE_RASTER_EMULATION;
+    if ((compileOptions & SH_GENERATE_SPIRV_DIRECTLY) != 0 && getShaderType() == GL_VERTEX_SHADER &&
+        (compileOptions & kUnsupportedTransformations) == 0)
     {
         // Declare the implicitly defined gl_PerVertex I/O blocks if not already.  This will help
         // SPIR-V generation treat them mostly like usual I/O blocks.

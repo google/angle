@@ -515,7 +515,7 @@ class GLSLTest_ES3 : public GLSLTest
 class GLSLTest_ES31 : public GLSLTest
 {};
 
-std::string BuillBigInitialStackShader(int length)
+std::string BuildBigInitialStackShader(int length)
 {
     std::string result;
     result += "void main() { \n";
@@ -1477,6 +1477,25 @@ TEST_P(GLSLTest_ES3, MissingReturnStructOfArrays)
         "s f() { if (v_varying > 0.0) { return s(float[2](1.0, 1.0), int[2](1, 1),"
         "vec2[2](vec2(1.0, 1.0), vec2(1.0, 1.0))); } }\n"
         "void main() { gl_Position = vec4(f().a[0], 0, 0, 1); }\n";
+
+    GLuint program = CompileProgram(kVS, essl3_shaders::fs::Red());
+    EXPECT_NE(0u, program);
+}
+
+// Verify that non-const index used on an array returned by a function compiles
+TEST_P(GLSLTest_ES3, ReturnArrayOfStructsThenNonConstIndex)
+{
+    constexpr char kVS[] = R"(#version 300 es
+in float v_varying;
+struct s { float a; int b; vec2 c; };
+s[2] f()
+{
+    return s[2](s(v_varying, 1, vec2(1.0, 1.0)), s(v_varying / 2.0, 1, vec2(1.0, 1.0)));
+}
+void main()
+{
+    gl_Position = vec4(f()[uint(v_varying)].a, 0, 0, 1);
+})";
 
     GLuint program = CompileProgram(kVS, essl3_shaders::fs::Red());
     EXPECT_NE(0u, program);
@@ -8178,7 +8197,7 @@ TEST_P(GLSLTest, MemoryExhaustedTest)
 {
     ANGLE_SKIP_TEST_IF(IsD3D11_FL93());
     GLuint program =
-        CompileProgram(essl1_shaders::vs::Simple(), BuillBigInitialStackShader(36).c_str());
+        CompileProgram(essl1_shaders::vs::Simple(), BuildBigInitialStackShader(36).c_str());
     EXPECT_NE(0u, program);
 }
 

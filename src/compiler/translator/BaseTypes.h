@@ -1086,6 +1086,11 @@ inline bool IsShaderOut(TQualifier qualifier)
         case EvqSampleOut:
         case EvqPatchOut:
         case EvqFragmentInOut:
+        // Per-vertex built-ins when used without gl_in or gl_out are always output.
+        case EvqPosition:
+        case EvqPointSize:
+        case EvqClipDistance:
+        case EvqCullDistance:
             return true;
         default:
             return false;

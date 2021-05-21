@@ -177,6 +177,8 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::Blob *getSpirvExecutionModes() { return &mSpirvExecutionModes; }
     spirv::Blob *getSpirvDebug() { return &mSpirvDebug; }
     spirv::Blob *getSpirvDecorations() { return &mSpirvDecorations; }
+    spirv::Blob *getSpirvTypeAndConstantDecls() { return &mSpirvTypeAndConstantDecls; }
+    spirv::Blob *getSpirvTypePointerDecls() { return &mSpirvTypePointerDecls; }
     spirv::Blob *getSpirvVariableDecls() { return &mSpirvVariableDecls; }
     spirv::Blob *getSpirvFunctions() { return &mSpirvFunctions; }
 
@@ -189,6 +191,12 @@ class SPIRVBuilder : angle::NonCopyable
 
     uint32_t calculateBaseAlignmentAndSize(const SpirvType &type, uint32_t *sizeInStorageBlockOut);
     uint32_t calculateSizeAndWriteOffsetDecorations(const SpirvType &type, spirv::IdRef typeId);
+
+    spirv::IdRef getBoolConstant(bool value);
+    spirv::IdRef getUintConstant(uint32_t value);
+    spirv::IdRef getIntConstant(int32_t value);
+    spirv::IdRef getFloatConstant(float value);
+    spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
 
     // TODO: remove name hashing once translation through glslang is removed.  That is necessary to
     // avoid name collision between ANGLE's internal symbols and user-defined ones when compiling
@@ -215,14 +223,9 @@ class SPIRVBuilder : angle::NonCopyable
                                 spirv::LiteralInteger *sampledOut);
     spv::ImageFormat getImageFormat(TLayoutImageInternalFormat imageInternalFormat);
 
-    spirv::IdRef getBoolConstant(bool value);
     spirv::IdRef getBasicConstantHelper(uint32_t value,
                                         TBasicType type,
                                         angle::HashMap<uint32_t, spirv::IdRef> *constants);
-    spirv::IdRef getUintConstant(uint32_t value);
-    spirv::IdRef getIntConstant(int32_t value);
-    spirv::IdRef getFloatConstant(float value);
-    spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
 
     uint32_t nextUnusedBinding();
     uint32_t nextUnusedInputLocation(uint32_t consumedCount);

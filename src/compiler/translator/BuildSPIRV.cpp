@@ -293,7 +293,7 @@ SpirvTypeData SPIRVBuilder::declareType(const SpirvType &type, const char *block
     // unconditionally and having the SPIR-V transformer remove them, it's better to avoid
     // generating them in the first place.  This both simplifies the transformer and reduces SPIR-V
     // binary size that gets written to disk cache.  http://anglebug.com/4889
-    if (type.block != nullptr)
+    if (type.block != nullptr && type.arraySizes.empty())
     {
         spirv::WriteName(&mSpirvDebug, typeId, blockName);
 
@@ -912,6 +912,10 @@ uint32_t SPIRVBuilder::calculateBaseAlignmentAndSize(const SpirvType &type,
         // > laid out in order, according to rule (9).
         SpirvType baseType  = type;
         baseType.arraySizes = {};
+        if (baseType.arraySizes.empty() && baseType.block == nullptr)
+        {
+            baseType.blockStorage = EbsUnspecified;
+        }
 
         const SpirvTypeData &baseTypeData = getSpirvTypeData(baseType, "");
         uint32_t baseAlignment            = baseTypeData.baseAlignment;
@@ -1172,6 +1176,12 @@ spirv::Blob SPIRVBuilder::getSpirv()
         spirv::WriteExecutionMode(&result, mEntryPointId, executionMode);
     }
     result.insert(result.end(), mSpirvExecutionModes.begin(), mSpirvExecutionModes.end());
+
+    // - OpSource instruction.
+    //
+    // This is to support debuggers and capture/replay tools and isn't strictly necessary.
+    spirv::WriteSource(&result, spv::SourceLanguageGLSL, spirv::LiteralInteger(450), nullptr,
+                       nullptr);
 
     // Append the already generated sections in order
     result.insert(result.end(), mSpirvDebug.begin(), mSpirvDebug.end());
