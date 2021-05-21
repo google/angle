@@ -18,6 +18,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0c4ce6f_c8dc6956",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-21T17:35:18Z",
+      "side": 1,
+      "message": "I\u0027ll wait for android-arm64-rel to have a green build before I +2.",
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "18c294ea_7800a144",
@@ -66,6 +83,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9c4cea03_38e3c6ae",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 2359,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-21T17:35:18Z",
+      "side": 1,
+      "message": "Sounds like this worked with Pixel 2 and driver \u003e 0x801EA000?\nI wouldn\u0027t want something that worked to regress.\nHow about adding Pixel 4 to the condition?",
+      "range": {
+        "startLine": 2359,
+        "startChar": 67,
+        "endLine": 2359,
+        "endChar": 78
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "438dea09_b827702e",
         "filename": "src/tests/perf_tests/TracePerfTest.cpp",
         "patchSetId": 3
@@ -77,6 +117,30 @@
       "writtenOn": "2021-05-21T16:14:08Z",
       "side": 1,
       "message": "This is weird.  The trace was recorded on a Pixel 4 XL.  I must have landed this trace between switching processes and never re-ran it on native QCOM.",
+      "range": {
+        "startLine": 898,
+        "startChar": 42,
+        "endLine": 898,
+        "endChar": 52
+      },
+      "revId": "1414f6ce3ec16b6f18f1ebd05cd4b59e7447b3d8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "614a9fff_fb945d14",
+        "filename": "src/tests/perf_tests/TracePerfTest.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 898,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-21T17:35:18Z",
+      "side": 1,
+      "message": "It\u0027s also possible that our phones have an older driver than the one you recorded with.",
+      "parentUuid": "438dea09_b827702e",
       "range": {
         "startLine": 898,
         "startChar": 42,
