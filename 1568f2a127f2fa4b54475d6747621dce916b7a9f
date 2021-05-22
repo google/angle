@@ -118,6 +118,30 @@
       },
       "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06bc6b45_3615fd6a",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5150,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-22T03:56:57Z",
+      "side": 1,
+      "message": "Sorry, I mean WAW. Yes this WAW syncval failure is new with this CL. \n\nAdding a new ImageLayout adds complexity and an if check every time a barrier is inserted. If you really don\u0027t want to introduce one syncval failure, how about just use VK_ACCESS_MEMORY_READ_BIT/VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT pair? It does not trigger syncval failure and did change layout to TRANSFER_SRC. Almost certain the image will be used in fragment shader next, and all fragment shader will be depend on prior transfer stage to finish anyway, so it shouldn\u0027t introduce new bubbles in the pipe.",
+      "parentUuid": "9db37e79_30c0a8b1",
+      "range": {
+        "startLine": 5150,
+        "startChar": 34,
+        "endLine": 5150,
+        "endChar": 45
+      },
+      "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
