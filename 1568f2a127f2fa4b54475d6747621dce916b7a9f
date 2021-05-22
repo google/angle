@@ -94,6 +94,30 @@
       },
       "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9db37e79_30c0a8b1",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5150,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-22T02:20:27Z",
+      "side": 1,
+      "message": "To be clear, there\u0027s no syncval error before the change? In that case, we should try to avoid introducing one.\n\nI\u0027m not sure what the best solution would be, but how about we introduce a new ImageLayout like GenerateMipmapWithBlit that could use multiple stages as src (TRANSFER and TOP) to account for the different levels of the image having had a barrier against different stages? We can basically fiddle with it until syncval is satisfied and the perf gain remains.\n\nBy the way, what do you mean by WRW? Do you mean WAW (write-after-write)?",
+      "parentUuid": "5e64dffe_70538b19",
+      "range": {
+        "startLine": 5150,
+        "startChar": 34,
+        "endLine": 5150,
+        "endChar": 45
+      },
+      "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
