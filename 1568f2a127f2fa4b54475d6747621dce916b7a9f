@@ -142,6 +142,30 @@
       },
       "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f8663bc4_d73cb0c6",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5150,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-22T04:26:53Z",
+      "side": 1,
+      "message": "Unfortunately we can\u0027t rely on \"almost certain\" :( The real issue is that this code is issuing a barrier against an unknown future usage. I don\u0027t think there\u0027s any way to make this work as-is (we always have to meet the next usage until we can decide what should really be done).\n\nHow about this idea: let\u0027s skip the very last barrier, then set the ImageLayout to TransferDst instead of TransferSrc. Then on next usage it will assume the previous usage of the whole image was write-by-transfer (even though only the last mip actually is).",
+      "parentUuid": "06bc6b45_3615fd6a",
+      "range": {
+        "startLine": 5150,
+        "startChar": 34,
+        "endLine": 5150,
+        "endChar": 45
+      },
+      "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
