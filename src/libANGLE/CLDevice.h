@@ -41,7 +41,7 @@ class Device final : public _cl_device_id, public Object
     cl_int getInfoUInt(DeviceInfo name, cl_uint *value) const;
     cl_int getInfoULong(DeviceInfo name, cl_ulong *value) const;
 
-    cl_int getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
+    cl_int getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     cl_int createSubDevices(const cl_device_partition_property *properties,
                             cl_uint numDevices,

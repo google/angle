@@ -37,7 +37,11 @@ class CommandQueue final : public _cl_command_queue, public Object
     void retain() noexcept;
     bool release();
 
-    cl_int getInfo(CommandQueueInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
+    cl_int getInfo(CommandQueueInfo name,
+                   size_t valueSize,
+                   void *value,
+                   size_t *valueSizeRet) const;
+
     cl_int setProperty(cl_command_queue_properties properties,
                        cl_bool enable,
                        cl_command_queue_properties *oldProperties);

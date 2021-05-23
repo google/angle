@@ -35,7 +35,7 @@ class Memory : public _cl_mem, public Object
     void retain() noexcept;
     bool release();
 
-    cl_int getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
+    cl_int getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     static bool IsValid(const _cl_mem *memory);
 
@@ -53,6 +53,16 @@ class Memory : public _cl_mem, public Object
            cl_mem_flags flags,
            size_t offset,
            size_t size,
+           cl_int *errcodeRet);
+
+    Memory(const Image &image,
+           Context &context,
+           PropArray &&properties,
+           cl_mem_flags flags,
+           const cl_image_format &format,
+           const ImageDescriptor &desc,
+           Memory *parent,
+           void *hostPtr,
            cl_int *errcodeRet);
 
     const ContextRefPtr mContext;

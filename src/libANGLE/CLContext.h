@@ -35,7 +35,7 @@ class Context final : public _cl_context, public Object
     void retain() noexcept;
     bool release();
 
-    cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
+    cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     cl_command_queue createCommandQueue(cl_device_id device,
                                         cl_command_queue_properties properties,
@@ -50,6 +50,31 @@ class Context final : public _cl_context, public Object
                         size_t size,
                         void *hostPtr,
                         cl_int *errcodeRet);
+
+    cl_mem createImage(const cl_mem_properties *properties,
+                       cl_mem_flags flags,
+                       const cl_image_format *format,
+                       const cl_image_desc *desc,
+                       void *hostPtr,
+                       cl_int *errcodeRet);
+
+    cl_mem createImage2D(cl_mem_flags flags,
+                         const cl_image_format *format,
+                         size_t width,
+                         size_t height,
+                         size_t rowPitch,
+                         void *hostPtr,
+                         cl_int *errcodeRet);
+
+    cl_mem createImage3D(cl_mem_flags flags,
+                         const cl_image_format *format,
+                         size_t width,
+                         size_t height,
+                         size_t depth,
+                         size_t rowPitch,
+                         size_t slicePitch,
+                         void *hostPtr,
+                         cl_int *errcodeRet);
 
     static bool IsValid(const _cl_context *context);
 
@@ -69,6 +94,9 @@ class Context final : public _cl_context, public Object
             void *userData,
             bool userSync,
             cl_int *errcodeRet);
+
+    cl_command_queue createCommandQueue(CommandQueue *commandQueue, cl_int *errcodeRet);
+    cl_mem createMemory(Memory *memory, cl_int *errcodeRet);
 
     void destroyCommandQueue(CommandQueue *commandQueue);
     void destroyMemory(Memory *memory);

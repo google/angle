@@ -20,14 +20,8 @@ cl_mem Buffer::createSubBuffer(cl_mem_flags flags,
                                cl_int *errcodeRet)
 {
     const cl_buffer_region &region = *static_cast<const cl_buffer_region *>(createInfo);
-    mContext->mMemories.emplace_back(
-        new Buffer(*this, flags, region.origin, region.size, errcodeRet));
-    if (!mContext->mMemories.back()->mImpl)
-    {
-        mContext->mMemories.back()->release();
-        return nullptr;
-    }
-    return mContext->mMemories.back().get();
+    return mContext->createMemory(new Buffer(*this, flags, region.origin, region.size, errcodeRet),
+                                  errcodeRet);
 }
 
 Buffer::Buffer(Context &context,

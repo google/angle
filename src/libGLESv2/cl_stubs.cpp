@@ -13,6 +13,7 @@
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
 
@@ -241,8 +242,8 @@ cl_mem CreateImage(cl_context context,
                    void *host_ptr,
                    cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateImage);
-    return 0;
+    return static_cast<Context *>(context)->createImage(nullptr, flags, image_format, image_desc,
+                                                        host_ptr, errcode_ret);
 }
 
 cl_mem CreateImageWithProperties(cl_context context,
@@ -253,8 +254,8 @@ cl_mem CreateImageWithProperties(cl_context context,
                                  void *host_ptr,
                                  cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateImageWithProperties);
-    return 0;
+    return static_cast<Context *>(context)->createImage(properties, flags, image_format, image_desc,
+                                                        host_ptr, errcode_ret);
 }
 
 cl_mem CreatePipe(cl_context context,
@@ -307,8 +308,8 @@ cl_int GetImageInfo(cl_mem image,
                     void *param_value,
                     size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetImageInfo);
-    return 0;
+    return static_cast<Image *>(image)->getInfo(param_name, param_value_size, param_value,
+                                                param_value_size_ret);
 }
 
 cl_int GetPipeInfo(cl_mem pipe,
@@ -1080,8 +1081,8 @@ cl_mem CreateImage2D(cl_context context,
                      void *host_ptr,
                      cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateImage2D);
-    return 0;
+    return static_cast<Context *>(context)->createImage2D(
+        flags, image_format, image_width, image_height, image_row_pitch, host_ptr, errcode_ret);
 }
 
 cl_mem CreateImage3D(cl_context context,
@@ -1095,8 +1096,9 @@ cl_mem CreateImage3D(cl_context context,
                      void *host_ptr,
                      cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateImage3D);
-    return 0;
+    return static_cast<Context *>(context)->createImage3D(
+        flags, image_format, image_width, image_height, image_depth, image_row_pitch,
+        image_slice_pitch, host_ptr, errcode_ret);
 }
 
 cl_int EnqueueMarker(cl_command_queue command_queue, cl_event *event)

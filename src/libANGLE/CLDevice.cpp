@@ -36,7 +36,7 @@ bool Device::release()
     return released;
 }
 
-cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *valueSizeRet)
+cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     static_assert(std::is_same<cl_uint, cl_bool>::value &&
                       std::is_same<cl_uint, cl_device_mem_cache_type>::value &&

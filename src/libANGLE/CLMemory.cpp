@@ -28,7 +28,7 @@ bool Memory::release()
     return released;
 }
 
-cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet)
+cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     static_assert(
         std::is_same<cl_uint, cl_bool>::value && std::is_same<cl_uint, cl_mem_object_type>::value,
@@ -150,6 +150,25 @@ Memory::Memory(const Buffer &buffer,
       mOffset(offset),
       mImpl(parent.mImpl->createSubBuffer(buffer, size, errcodeRet)),
       mSize(size)
+{}
+
+Memory::Memory(const Image &image,
+               Context &context,
+               PropArray &&properties,
+               cl_mem_flags flags,
+               const cl_image_format &format,
+               const ImageDescriptor &desc,
+               Memory *parent,
+               void *hostPtr,
+               cl_int *errcodeRet)
+    : _cl_mem(context.getDispatch()),
+      mContext(&context),
+      mProperties(std::move(properties)),
+      mFlags(flags),
+      mHostPtr((flags & CL_MEM_USE_HOST_PTR) != 0u ? hostPtr : nullptr),
+      mParent(parent),
+      mImpl(context.mImpl->createImage(image, format, desc, hostPtr, errcodeRet)),
+      mSize(mImpl ? mImpl->getSize() : 0u)
 {}
 
 }  // namespace cl

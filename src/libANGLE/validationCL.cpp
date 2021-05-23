@@ -8,6 +8,8 @@
 
 #include "libANGLE/validationCL_autogen.h"
 
+#include "libANGLE/cl_utils.h"
+
 #define ANGLE_ERROR_RETURN(error, ret) \
     if (errcode_ret != nullptr)        \
     {                                  \
@@ -123,6 +125,90 @@ bool ValidateMemoryProperties(const cl_mem_properties *properties)
         {
             return false;
         }
+    }
+    return true;
+}
+
+bool ValidateImageFormat(const cl_image_format *image_format, const Platform &platform)
+{
+    if (image_format == nullptr)
+    {
+        return false;
+    }
+    switch (image_format->image_channel_order)
+    {
+        case CL_R:
+        case CL_A:
+        case CL_LUMINANCE:
+        case CL_INTENSITY:
+        case CL_RG:
+        case CL_RA:
+        case CL_RGB:
+        case CL_RGBA:
+        case CL_ARGB:
+        case CL_BGRA:
+            break;
+
+        case CL_Rx:
+        case CL_RGx:
+        case CL_RGBx:
+            if (!platform.isVersionOrNewer(1u, 1u))
+            {
+                return false;
+            }
+            break;
+
+        case CL_DEPTH:
+        case CL_ABGR:
+        case CL_sRGB:
+        case CL_sRGBA:
+        case CL_sBGRA:
+        case CL_sRGBx:
+            if (!platform.isVersionOrNewer(2u, 0u))
+            {
+                return false;
+            }
+            break;
+
+        default:
+            return false;
+    }
+
+    switch (image_format->image_channel_data_type)
+    {
+        case CL_SNORM_INT8:
+        case CL_SNORM_INT16:
+        case CL_UNORM_INT8:
+        case CL_UNORM_INT16:
+        case CL_SIGNED_INT8:
+        case CL_SIGNED_INT16:
+        case CL_SIGNED_INT32:
+        case CL_UNSIGNED_INT8:
+        case CL_UNSIGNED_INT16:
+        case CL_UNSIGNED_INT32:
+        case CL_HALF_FLOAT:
+        case CL_FLOAT:
+            break;
+
+        case CL_UNORM_SHORT_565:
+        case CL_UNORM_SHORT_555:
+        case CL_UNORM_INT_101010:
+            if (image_format->image_channel_order != CL_RGB &&
+                image_format->image_channel_order != CL_RGBx)
+            {
+                return false;
+            }
+            break;
+
+        case CL_UNORM_INT_101010_2:
+            if (!platform.isVersionOrNewer(2u, 1u) || image_format->image_channel_order != CL_RGBA)
+            {
+                return false;
+            }
+            break;
+
+        default:
+            return false;
     }
     return true;
 }
@@ -497,6 +583,19 @@ cl_int ValidateGetImageInfo(cl_mem image,
                             const void *param_value,
                             const size_t *param_value_size_ret)
 {
+    if (!Image::IsValid(image))
+    {
+        return CL_INVALID_MEM_OBJECT;
+    }
+    const Platform &platform = static_cast<const Image *>(image)->getContext().getPlatform();
+    if (param_name == ImageInfo::InvalidEnum ||
+        ((param_name == ImageInfo::ArraySize || param_name == ImageInfo::Buffer ||
+          param_name == ImageInfo::NumMipLevels || param_name == ImageInfo::NumSamples) &&
+         !platform.isVersionOrNewer(1u, 2u)) ||
+        (param_value_size == 0u && param_value != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
@@ -872,7 +971,9 @@ bool ValidateCreateImage2D(cl_context context,
                            const void *host_ptr,
                            cl_int *errcode_ret)
 {
-    return true;
+    const cl_image_desc desc = {CL_MEM_OBJECT_IMAGE2D, image_width, image_height, 0u, 0u,
+                                image_row_pitch,       0u,          0u,           0u, {nullptr}};
+    return ValidateCreateImage(context, flags, image_format, &desc, host_ptr, errcode_ret);
 }
 
 bool ValidateCreateImage3D(cl_context context,
@@ -886,7 +987,10 @@ bool ValidateCreateImage3D(cl_context context,
                            const void *host_ptr,
                            cl_int *errcode_ret)
 {
-    return true;
+    const cl_image_desc desc = {
+        CL_MEM_OBJECT_IMAGE3D, image_width,       image_height, image_depth, 0u,
+        image_row_pitch,       image_slice_pitch, 0u,           0u,          {nullptr}};
+    return ValidateCreateImage(context, flags, image_format, &desc, host_ptr, errcode_ret);
 }
 
 cl_int ValidateEnqueueMarker(cl_command_queue command_queue, const cl_event *event)
@@ -1116,6 +1220,109 @@ bool ValidateCreateImage(cl_context context,
                          const void *host_ptr,
                          cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    const Context &ctx = *static_cast<Context *>(context);
+    if (!ValidateMemoryFlags(flags, ctx.getPlatform()))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    if (!ValidateImageFormat(image_format, ctx.getPlatform()))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_IMAGE_FORMAT_DESCRIPTOR, false);
+    }
+
+    const size_t elemSize = GetElementSize(*image_format);
+    if (elemSize == 0u)
+    {
+        ERR() << "Failed to calculate image element size";
+    }
+    const size_t rowPitch = image_desc == nullptr ? 0u
+                                                  : (image_desc->image_row_pitch != 0u
+                                                         ? image_desc->image_row_pitch
+                                                         : image_desc->image_width * elemSize);
+    const size_t sliceSize = image_desc == nullptr
+                                 ? 0u
+                                 : rowPitch * (image_desc->image_type == CL_MEM_OBJECT_IMAGE1D_ARRAY
+                                                   ? 1u
+                                                   : image_desc->image_height);
+
+    if (image_desc == nullptr ||
+        (image_desc->image_type != CL_MEM_OBJECT_IMAGE1D &&
+         image_desc->image_type != CL_MEM_OBJECT_IMAGE2D &&
+         image_desc->image_type != CL_MEM_OBJECT_IMAGE3D &&
+         image_desc->image_type != CL_MEM_OBJECT_IMAGE1D_ARRAY &&
+         image_desc->image_type != CL_MEM_OBJECT_IMAGE2D_ARRAY &&
+         image_desc->image_type != CL_MEM_OBJECT_IMAGE1D_BUFFER) ||
+        image_desc->image_width == 0u ||
+        (image_desc->image_height == 0u &&
+         (image_desc->image_type == CL_MEM_OBJECT_IMAGE2D ||
+          image_desc->image_type == CL_MEM_OBJECT_IMAGE3D ||
+          image_desc->image_type == CL_MEM_OBJECT_IMAGE2D_ARRAY)) ||
+        (image_desc->image_depth == 0u && image_desc->image_type == CL_MEM_OBJECT_IMAGE3D) ||
+        (image_desc->image_array_size == 0u &&
+         (image_desc->image_type == CL_MEM_OBJECT_IMAGE1D_ARRAY ||
+          image_desc->image_type == CL_MEM_OBJECT_IMAGE2D_ARRAY)) ||
+        (image_desc->image_row_pitch != 0u &&
+         (host_ptr == nullptr || image_desc->image_row_pitch < image_desc->image_width * elemSize ||
+          (image_desc->image_row_pitch % elemSize) != 0u)) ||
+        (image_desc->image_slice_pitch != 0u &&
+         (host_ptr == nullptr || image_desc->image_slice_pitch < sliceSize ||
+          (image_desc->image_slice_pitch % rowPitch) != 0u)) ||
+        image_desc->num_mip_levels != 0u || image_desc->num_samples != 0u ||
+        (image_desc->buffer != nullptr &&
+         (!Buffer::IsValid(image_desc->buffer) ||
+          (image_desc->image_type != CL_MEM_OBJECT_IMAGE1D_BUFFER &&
+           image_desc->image_type != CL_MEM_OBJECT_IMAGE2D)) &&
+         (!Image::IsValid(image_desc->buffer) || image_desc->image_type != CL_MEM_OBJECT_IMAGE2D)))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_IMAGE_DESCRIPTOR, false);
+    }
+
+    const DeviceRefList &devices = ctx.getDevices();
+    // Fail if no device supports images
+    if (std::find_if(devices.cbegin(), devices.cend(), [](const DeviceRefPtr &ptr) {
+            return ptr->getInfo().mImageSupport == CL_TRUE;
+        }) == devices.cend())
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_OPERATION, false);
+    }
+
+    // Fail if image dimensions exceed supported maximum of all devices
+    if (std::find_if(devices.cbegin(), devices.cend(), [&](const DeviceRefPtr &ptr) {
+            switch (image_desc->image_type)
+            {
+                case CL_MEM_OBJECT_IMAGE1D:
+                    return image_desc->image_width <= ptr->getInfo().mImage2D_MaxWidth;
+                case CL_MEM_OBJECT_IMAGE2D:
+                    return image_desc->image_width <= ptr->getInfo().mImage2D_MaxWidth &&
+                           image_desc->image_height <= ptr->getInfo().mImage2D_MaxHeight;
+                case CL_MEM_OBJECT_IMAGE3D:
+                    return image_desc->image_width <= ptr->getInfo().mImage3D_MaxWidth &&
+                           image_desc->image_height <= ptr->getInfo().mImage3D_MaxHeight &&
+                           image_desc->image_depth <= ptr->getInfo().mImage3D_MaxDepth;
+                case CL_MEM_OBJECT_IMAGE1D_ARRAY:
+                    return image_desc->image_width <= ptr->getInfo().mImage2D_MaxWidth &&
+                           image_desc->image_array_size <= ptr->getInfo().mImageMaxArraySize;
+                case CL_MEM_OBJECT_IMAGE2D_ARRAY:
+                    return image_desc->image_width <= ptr->getInfo().mImage2D_MaxWidth &&
+                           image_desc->image_height <= ptr->getInfo().mImage2D_MaxHeight &&
+                           image_desc->image_array_size <= ptr->getInfo().mImageMaxArraySize;
+                case CL_MEM_OBJECT_IMAGE1D_BUFFER:
+                    return image_desc->image_width <= ptr->getInfo().mImageMaxBufferSize;
+            }
+            return false;
+        }) == devices.cend())
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_IMAGE_SIZE, false);
+    }
+
+    if ((host_ptr != nullptr) != ((flags & (CL_MEM_USE_HOST_PTR | CL_MEM_COPY_HOST_PTR)) != 0u))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_HOST_PTR, false);
+    }
     return true;
 }
 
@@ -1506,6 +1713,18 @@ bool ValidateCreateImageWithProperties(cl_context context,
                                        const void *host_ptr,
                                        cl_int *errcode_ret)
 {
+    if (!ValidateCreateImage(context, flags, image_format, image_desc, host_ptr, errcode_ret))
+    {
+        return false;
+    }
+    if (!static_cast<Context *>(context)->getPlatform().isVersionOrNewer(3u, 0u))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (!ValidateMemoryProperties(properties))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_PROPERTY, false);
+    }
     return true;
 }
 

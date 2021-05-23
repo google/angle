@@ -22,7 +22,7 @@ class Object
     virtual ~Object();
 
     cl_uint getRefCount() { return mRefCount; }
-    const cl_uint *getRefCountPtr() { return &mRefCount; }
+    const cl_uint *getRefCountPtr() const { return &mRefCount; }
 
   protected:
     void addRef() noexcept { ++mRefCount; }

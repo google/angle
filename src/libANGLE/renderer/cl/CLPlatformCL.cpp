@@ -222,7 +222,7 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
          mNative->getDispatch().clEnqueueCopyBufferRect == nullptr))
     {
         ERR() << "Missing entry points for OpenCL 1.1";
-        return info;
+        return Info{};
     }
 
     if (info.mVersion >= CL_MAKE_VERSION(1, 2, 0) &&
@@ -243,7 +243,7 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
          mNative->getDispatch().clGetExtensionFunctionAddressForPlatform == nullptr))
     {
         ERR() << "Missing entry points for OpenCL 1.2";
-        return info;
+        return Info{};
     }
 
     if (info.mVersion >= CL_MAKE_VERSION(2, 0, 0) &&
@@ -262,7 +262,7 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
          mNative->getDispatch().clSetKernelExecInfo == nullptr))
     {
         ERR() << "Missing entry points for OpenCL 2.0";
-        return info;
+        return Info{};
     }
 
     if (info.mVersion >= CL_MAKE_VERSION(2, 1, 0) &&
@@ -275,7 +275,7 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
          mNative->getDispatch().clSetDefaultDeviceCommandQueue == nullptr))
     {
         ERR() << "Missing entry points for OpenCL 2.1";
-        return info;
+        return Info{};
     }
 
     if (info.mVersion >= CL_MAKE_VERSION(2, 2, 0) &&
@@ -283,7 +283,7 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
          mNative->getDispatch().clSetProgramSpecializationConstant == nullptr))
     {
         ERR() << "Missing entry points for OpenCL 2.2";
-        return info;
+        return Info{};
     }
 
     if (info.mVersion >= CL_MAKE_VERSION(3, 0, 0) &&
@@ -292,7 +292,7 @@ CLPlatformImpl::Info CLPlatformCL::createInfo() const
          mNative->getDispatch().clSetContextDestructorCallback == nullptr))
     {
         ERR() << "Missing entry points for OpenCL 3.0";
-        return info;
+        return Info{};
     }
 
     return info;

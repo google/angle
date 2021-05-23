@@ -64,7 +64,10 @@ Platform::~Platform()
     removeRef();
 }
 
-cl_int Platform::getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet)
+cl_int Platform::getInfo(PlatformInfo name,
+                         size_t valueSize,
+                         void *value,
+                         size_t *valueSizeRet) const
 {
     const void *copyValue = nullptr;
     size_t copySize       = 0u;
@@ -200,16 +203,10 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
     {
         refDevices.emplace_back(static_cast<Device *>(*devices++));
     }
-
-    platform->mContexts.emplace_back(new Context(*platform, std::move(propArray),
-                                                 std::move(refDevices), notify, userData, userSync,
-                                                 errcodeRet));
-    if (!platform->mContexts.back()->mImpl)
-    {
-        platform->mContexts.back()->release();
-        return nullptr;
-    }
-    return platform->mContexts.back().get();
+    return platform->createContext(
+        new Context(*platform, std::move(propArray), std::move(refDevices), notify, userData,
+                    userSync, errcodeRet),
+        errcodeRet);
 }
 
 cl_context Platform::CreateContextFromType(const cl_context_properties *properties,
@@ -222,15 +219,9 @@ cl_context Platform::CreateContextFromType(const cl_context_properties *properti
     bool userSync                = false;
     Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
     ASSERT(platform != nullptr);
-
-    platform->mContexts.emplace_back(new Context(*platform, std::move(propArray), deviceType,
-                                                 notify, userData, userSync, errcodeRet));
-    if (!platform->mContexts.back()->mImpl || platform->mContexts.back()->mDevices.empty())
-    {
-        platform->mContexts.back()->release();
-        return nullptr;
-    }
-    return platform->mContexts.back().get();
+    return platform->createContext(new Context(*platform, std::move(propArray), deviceType, notify,
+                                               userData, userSync, errcodeRet),
+                                   errcodeRet);
 }
 
 Platform::Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc)
@@ -239,6 +230,21 @@ Platform::Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &create
       mInfo(mImpl->createInfo()),
       mDevices(mImpl->createDevices(*this))
 {}
+
+cl_context Platform::createContext(Context *context, cl_int *errcodeRet)
+{
+    mContexts.emplace_back(context);
+    if (!mContexts.back()->mImpl)
+    {
+        mContexts.back()->release();
+        return nullptr;
+    }
+    if (errcodeRet != nullptr)
+    {
+        *errcodeRet = CL_SUCCESS;
+    }
+    return mContexts.back().get();
+}
 
 void Platform::destroyContext(Context *context)
 {

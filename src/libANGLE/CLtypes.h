@@ -28,6 +28,7 @@ class CommandQueue;
 class Context;
 class Device;
 class Event;
+class Image;
 class Kernel;
 class Memory;
 class Object;
@@ -52,6 +53,19 @@ using MemoryRefPtr  = RefPointer<Memory>;
 
 using DevicePtrList = std::list<DevicePtr>;
 using DeviceRefList = std::vector<DeviceRefPtr>;
+
+struct ImageDescriptor
+{
+    cl_mem_object_type type;
+    size_t width;
+    size_t height;
+    size_t depth;
+    size_t arraySize;
+    size_t rowPitch;
+    size_t slicePitch;
+    cl_uint numMipLevels;
+    cl_uint numSamples;
+};
 
 }  // namespace cl
 

@@ -15,6 +15,7 @@
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/Debug.h"
@@ -115,6 +116,58 @@ CLMemoryImpl::Ptr CLContextCL::createBuffer(const cl::Buffer &buffer,
     }
     return CLMemoryImpl::Ptr(nativeBuffer != nullptr ? new CLMemoryCL(buffer, nativeBuffer)
                                                      : nullptr);
+}
+
+CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
+                                           const cl_image_format &format,
+                                           const cl::ImageDescriptor &desc,
+                                           void *hostPtr,
+                                           cl_int *errcodeRet)
+{
+    cl_mem nativeImage = nullptr;
+
+    if (mContext.getPlatform().isVersionOrNewer(1u, 2u))
+    {
+        const cl_image_desc nativeDesc = {
+            desc.type,       desc.width,
+            desc.height,     desc.depth,
+            desc.arraySize,  desc.rowPitch,
+            desc.slicePitch, desc.numMipLevels,
+            desc.numSamples, {static_cast<cl_mem>(image.getParent().get())}};
+
+        if (image.getProperties().empty())
+        {
+            nativeImage = mNative->getDispatch().clCreateImage(mNative, image.getFlags(), &format,
+                                                               &nativeDesc, hostPtr, errcodeRet);
+        }
+        else
+        {
+            nativeImage = mNative->getDispatch().clCreateImageWithProperties(
+                mNative, image.getProperties().data(), image.getFlags(), &format, &nativeDesc,
+                hostPtr, errcodeRet);
+        }
+    }
+    else
+    {
+        switch (desc.type)
+        {
+            case CL_MEM_OBJECT_IMAGE2D:
+                nativeImage = mNative->getDispatch().clCreateImage2D(
+                    mNative, image.getFlags(), &format, desc.width, desc.height, desc.rowPitch,
+                    hostPtr, errcodeRet);
+                break;
+            case CL_MEM_OBJECT_IMAGE3D:
+                nativeImage = mNative->getDispatch().clCreateImage3D(
+                    mNative, image.getFlags(), &format, desc.width, desc.height, desc.depth,
+                    desc.rowPitch, desc.slicePitch, hostPtr, errcodeRet);
+                break;
+            default:
+                ERR() << "Failed to create unsupported image type";
+                break;
+        }
+    }
+
+    return CLMemoryImpl::Ptr(nativeImage != nullptr ? new CLMemoryCL(image, nativeImage) : nullptr);
 }
 
 }  // namespace rx

@@ -8,6 +8,7 @@
 #include "libANGLE/CLContext.h"
 
 #include "libANGLE/CLBuffer.h"
+#include "libANGLE/CLImage.h"
 #include "libANGLE/CLPlatform.h"
 
 #include <cstring>
@@ -27,7 +28,7 @@ bool Context::release()
     return released;
 }
 
-cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet)
+cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     cl_uint numDevices    = 0u;
     const void *copyValue = nullptr;
@@ -80,14 +81,9 @@ cl_command_queue Context::createCommandQueue(cl_device_id device,
                                              cl_command_queue_properties properties,
                                              cl_int *errcodeRet)
 {
-    mCommandQueues.emplace_back(
-        new CommandQueue(*this, *static_cast<Device *>(device), properties, errcodeRet));
-    if (!mCommandQueues.back()->mImpl)
-    {
-        mCommandQueues.back()->release();
-        return nullptr;
-    }
-    return mCommandQueues.back().get();
+    return createCommandQueue(
+        new CommandQueue(*this, *static_cast<Device *>(device), properties, errcodeRet),
+        errcodeRet);
 }
 
 cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
@@ -117,15 +113,9 @@ cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
         propArray.reserve(propIt - properties);
         propArray.insert(propArray.cend(), properties, propIt);
     }
-
-    mCommandQueues.emplace_back(new CommandQueue(*this, *static_cast<Device *>(device),
-                                                 std::move(propArray), props, size, errcodeRet));
-    if (!mCommandQueues.back()->mImpl)
-    {
-        mCommandQueues.back()->release();
-        return nullptr;
-    }
-    return mCommandQueues.back().get();
+    return createCommandQueue(new CommandQueue(*this, *static_cast<Device *>(device),
+                                               std::move(propArray), props, size, errcodeRet),
+                              errcodeRet);
 }
 
 cl_mem Context::createBuffer(const cl_mem_properties *properties,
@@ -134,13 +124,53 @@ cl_mem Context::createBuffer(const cl_mem_properties *properties,
                              void *hostPtr,
                              cl_int *errcodeRet)
 {
-    mMemories.emplace_back(new Buffer(*this, {}, flags, size, hostPtr, errcodeRet));
-    if (!mMemories.back()->mImpl)
-    {
-        mMemories.back()->release();
-        return nullptr;
-    }
-    return mMemories.back().get();
+    return createMemory(new Buffer(*this, {}, flags, size, hostPtr, errcodeRet), errcodeRet);
+}
+
+cl_mem Context::createImage(const cl_mem_properties *properties,
+                            cl_mem_flags flags,
+                            const cl_image_format *format,
+                            const cl_image_desc *desc,
+                            void *hostPtr,
+                            cl_int *errcodeRet)
+{
+    const ImageDescriptor imageDesc = {
+        desc->image_type,        desc->image_width,      desc->image_height,
+        desc->image_depth,       desc->image_array_size, desc->image_row_pitch,
+        desc->image_slice_pitch, desc->num_mip_levels,   desc->num_samples};
+    return createMemory(new Image(*this, {}, flags, *format, imageDesc,
+                                  static_cast<Memory *>(desc->buffer), hostPtr, errcodeRet),
+                        errcodeRet);
+}
+
+cl_mem Context::createImage2D(cl_mem_flags flags,
+                              const cl_image_format *format,
+                              size_t width,
+                              size_t height,
+                              size_t rowPitch,
+                              void *hostPtr,
+                              cl_int *errcodeRet)
+{
+    const ImageDescriptor imageDesc = {
+        CL_MEM_OBJECT_IMAGE2D, width, height, 0u, 0u, rowPitch, 0u, 0u, 0u};
+    return createMemory(
+        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errcodeRet), errcodeRet);
+}
+
+cl_mem Context::createImage3D(cl_mem_flags flags,
+                              const cl_image_format *format,
+                              size_t width,
+                              size_t height,
+                              size_t depth,
+                              size_t rowPitch,
+                              size_t slicePitch,
+                              void *hostPtr,
+                              cl_int *errcodeRet)
+{
+    const ImageDescriptor imageDesc = {
+        CL_MEM_OBJECT_IMAGE3D, width, height, depth, 0u, rowPitch, slicePitch, 0u, 0u};
+    return createMemory(
+        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errcodeRet), errcodeRet);
 }
 
 bool Context::IsValid(const _cl_context *context)
@@ -188,6 +218,36 @@ Context::Context(Platform &platform,
       mNotify(notify),
       mUserData(userData)
 {}
+
+cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue, cl_int *errcodeRet)
+{
+    mCommandQueues.emplace_back(commandQueue);
+    if (!mCommandQueues.back()->mImpl)
+    {
+        mCommandQueues.back()->release();
+        return nullptr;
+    }
+    if (errcodeRet != nullptr)
+    {
+        *errcodeRet = CL_SUCCESS;
+    }
+    return mCommandQueues.back().get();
+}
+
+cl_mem Context::createMemory(Memory *memory, cl_int *errcodeRet)
+{
+    mMemories.emplace_back(memory);
+    if (!mMemories.back()->mImpl || mMemories.back()->mSize == 0u)
+    {
+        mMemories.back()->release();
+        return nullptr;
+    }
+    if (errcodeRet != nullptr)
+    {
+        *errcodeRet = CL_SUCCESS;
+    }
+    return mMemories.back().get();
+}
 
 void Context::destroyCommandQueue(CommandQueue *commandQueue)
 {

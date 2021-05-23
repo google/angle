@@ -85,7 +85,13 @@ CLDeviceImpl::Info CLDeviceCL::createInfo(cl_device_type type) const
         return Info{};
     }
 
-    if (!GetDeviceInfo(mNative, cl::DeviceInfo::MaxMemAllocSize, info.mMaxMemAllocSize))
+    if (!GetDeviceInfo(mNative, cl::DeviceInfo::MaxMemAllocSize, info.mMaxMemAllocSize) ||
+        !GetDeviceInfo(mNative, cl::DeviceInfo::ImageSupport, info.mImageSupport) ||
+        !GetDeviceInfo(mNative, cl::DeviceInfo::Image2D_MaxWidth, info.mImage2D_MaxWidth) ||
+        !GetDeviceInfo(mNative, cl::DeviceInfo::Image2D_MaxHeight, info.mImage2D_MaxHeight) ||
+        !GetDeviceInfo(mNative, cl::DeviceInfo::Image3D_MaxWidth, info.mImage3D_MaxWidth) ||
+        !GetDeviceInfo(mNative, cl::DeviceInfo::Image3D_MaxHeight, info.mImage3D_MaxHeight) ||
+        !GetDeviceInfo(mNative, cl::DeviceInfo::Image3D_MaxDepth, info.mImage3D_MaxDepth))
     {
         return Info{};
     }
@@ -109,8 +115,18 @@ CLDeviceImpl::Info CLDeviceCL::createInfo(cl_device_type type) const
     RemoveUnsupportedCLExtensions(info.mExtensions);
 
     if (info.mVersion >= CL_MAKE_VERSION(1, 2, 0) &&
-        (!GetDeviceInfo(mNative, cl::DeviceInfo::PartitionProperties, info.mPartitionProperties) ||
+        (!GetDeviceInfo(mNative, cl::DeviceInfo::ImageMaxBufferSize, info.mImageMaxBufferSize) ||
+         !GetDeviceInfo(mNative, cl::DeviceInfo::ImageMaxArraySize, info.mImageMaxArraySize) ||
+         !GetDeviceInfo(mNative, cl::DeviceInfo::PartitionProperties, info.mPartitionProperties) ||
          !GetDeviceInfo(mNative, cl::DeviceInfo::PartitionType, info.mPartitionType)))
+    {
+        return Info{};
+    }
+
+    if (info.mVersion >= CL_MAKE_VERSION(2, 0, 0) &&
+        (!GetDeviceInfo(mNative, cl::DeviceInfo::ImagePitchAlignment, info.mImagePitchAlignment) ||
+         !GetDeviceInfo(mNative, cl::DeviceInfo::ImageBaseAddressAlignment,
+                        info.mImageBaseAddressAlignment)))
     {
         return Info{};
     }

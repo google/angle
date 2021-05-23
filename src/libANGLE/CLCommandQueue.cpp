@@ -37,7 +37,7 @@ bool CommandQueue::release()
 cl_int CommandQueue::getInfo(CommandQueueInfo name,
                              size_t valueSize,
                              void *value,
-                             size_t *valueSizeRet)
+                             size_t *valueSizeRet) const
 {
     void *valPointer      = nullptr;
     const void *copyValue = nullptr;

@@ -37,7 +37,7 @@ class Platform final : public _cl_platform_id, public Object
     bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
     bool hasMemory(const _cl_mem *memory) const;
 
-    cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet);
+    cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     cl_int getDeviceIDs(cl_device_type deviceType,
                         cl_uint numEntries,
@@ -75,6 +75,7 @@ class Platform final : public _cl_platform_id, public Object
   private:
     Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc);
 
+    cl_context createContext(Context *context, cl_int *errcodeRet);
     void destroyContext(Context *context);
 
     static PtrList &GetList();
