@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71ddf03a_60cfe8a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1493187
+      },
+      "writtenOn": "2021-05-23T00:02:16Z",
+      "side": 1,
+      "message": "Any idea when this change will reach https://android.googlesource.com/platform/external/angle/ ?\n\nI was hoping the latest commit would have done it\n\nff8701c Merge remote-tracking branch \u0027aosp/upstream-mirror\u0027 by Tim Van Patten · 30 hours ago master\n\nBut apparently not, as the .find_ignore files are still there...",
+      "revId": "85acc55aae5da2f610f6560e01ef3ad3e1a02a9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
