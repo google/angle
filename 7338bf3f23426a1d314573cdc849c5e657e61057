@@ -52,6 +52,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "015bb271_88c92ddc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-24T19:47:34Z",
+      "side": 1,
+      "message": "Having trouble reproducing the failure of conformance2/buffers/get-buffer-sub-data-validity.html locally, both inside and outside the Telemetry harness.\n",
+      "revId": "7338bf3f23426a1d314573cdc849c5e657e61057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "042eb863_1d42ddbd",
