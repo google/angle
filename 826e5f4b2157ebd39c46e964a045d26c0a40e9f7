@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d8cbf3ea_42fcc9b4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-24T20:53:52Z",
+      "side": 1,
+      "message": "Patchset 2-\u003e3 contains the fix for the WebGL2 test conformance2/buffers/get-buffer-sub-data-validity.html .\n",
+      "revId": "826e5f4b2157ebd39c46e964a045d26c0a40e9f7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
