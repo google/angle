@@ -24,7 +24,7 @@ function generate_Android_bp_file() {
         "x64"
     )
 
-    for abi in ${abis[@]}; do
+    for abi in "${abis[@]}"; do
         # generate gn build files and convert them to blueprints
         gn_args=(
             "target_os = \"android\""
@@ -43,7 +43,7 @@ function generate_Android_bp_file() {
 
             # Disable all backends except Vulkan
             "angle_enable_vulkan = true"
-            "angle_enable_gl = true" # TODO(geofflang): Disable GL once Andrid no longer requires it. anglebug.com/4444
+            "angle_enable_gl = false"
             "angle_enable_d3d9 = false"
             "angle_enable_d3d11 = false"
             "angle_enable_null = false"
@@ -53,8 +53,8 @@ function generate_Android_bp_file() {
             "angle_enable_swiftshader = false"
 
             # Disable all shader translator targets except desktop GL (for Vulkan)
-            "angle_enable_essl = true" # TODO(geofflang): Disable ESSL once Andrid no longer requires it. anglebug.com/4444
-            "angle_enable_glsl = true" # TODO(geofflang): Disable ESSL once Andrid no longer requires it. anglebug.com/4444
+            "angle_enable_essl = false"
+            "angle_enable_glsl = false"
             "angle_enable_hlsl = false"
 
             "angle_enable_commit_id = false"
@@ -122,8 +122,8 @@ add_only_deps=(
 )
 
 # Delete dep directories so that gclient can check them out
-for dep in ${deps[@]} ${delete_only_deps[@]}; do
-    rm -rf $dep
+for dep in "${deps[@]}" "${delete_only_deps[@]}"; do
+    rm -rf "$dep"
 done
 
 # Sync all of ANGLE's deps so that 'gn gen' works
@@ -136,8 +136,8 @@ git add Android.bp
 
 # Delete the .git files in each dep so that it can be added to this repo. Some deps like jsoncpp
 # have multiple layers of deps so delete everything before adding them.
-for dep in ${deps[@]} ${delete_only_deps[@]}; do
-   rm -rf $dep/.git
+for dep in "${deps[@]}" "${delete_only_deps[@]}"; do
+   rm -rf "$dep"/.git
 done
 
 extra_removal_files=(
@@ -153,12 +153,12 @@ extra_removal_files=(
    "third_party/zlib/contrib/tests/fuzzers/OWNERS"
 )
 
-for removal_file in ${extra_removal_files[@]}; do
-   rm -f $removal_file
+for removal_file in "${extra_removal_files[@]}"; do
+   rm -f "$removal_file"
 done
 
-for dep in ${deps[@]} ${add_only_deps[@]}; do
-   git add -f $dep
+for dep in "${deps[@]}" "${add_only_deps[@]}"; do
+   git add -f "$dep"
 done
 
 # Done with depot_tools
