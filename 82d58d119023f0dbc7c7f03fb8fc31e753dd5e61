@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "95d96e94_341bfad8",
+        "filename": "src/libANGLE/CLMemory.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-24T13:52:54Z",
+      "side": 1,
+      "message": "Tracking bug",
+      "range": {
+        "startLine": 84,
+        "startChar": 38,
+        "endLine": 84,
+        "endChar": 50
+      },
+      "revId": "82d58d119023f0dbc7c7f03fb8fc31e753dd5e61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a38024ab_416cc867",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-24T13:52:54Z",
+      "side": 1,
+      "message": "If you can XOR the mutually exclusive flags, this code might simplify.",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 77,
+        "endChar": 10
+      },
+      "revId": "82d58d119023f0dbc7c7f03fb8fc31e753dd5e61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c4a63fc0_434caecc",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-24T13:52:54Z",
+      "side": 1,
+      "message": "nit: Clearer to check and return the failure, then have a full \"return true\" at the end.",
+      "range": {
+        "startLine": 108,
+        "startChar": 4,
+        "endLine": 109,
+        "endChar": 41
+      },
+      "revId": "82d58d119023f0dbc7c7f03fb8fc31e753dd5e61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48ee0b58_7585298f",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-24T13:52:54Z",
+      "side": 1,
+      "message": "Is this a 3.0 exclusive check? The comment seems out of place.",
+      "range": {
+        "startLine": 116,
+        "startChar": 11,
+        "endLine": 116,
+        "endChar": 21
+      },
+      "revId": "82d58d119023f0dbc7c7f03fb8fc31e753dd5e61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17667054_aacd0e4e",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-24T13:52:54Z",
+      "side": 1,
+      "message": "If there is *any* way to refactor this for readability, it would be worth it.",
+      "range": {
+        "startLine": 970,
+        "startChar": 0,
+        "endLine": 981,
+        "endChar": 87
+      },
+      "revId": "82d58d119023f0dbc7c7f03fb8fc31e753dd5e61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
