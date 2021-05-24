@@ -479,13 +479,10 @@ enum class SamplerInfo : uint8_t
     NormalizedCoords = 2,
     AddressingMode   = 3,
     FilterMode       = 4,
-    MipFilterMode    = 5,
-    LOD_Min          = 6,
-    LOD_Max          = 7,
-    Properties       = 8,
+    Properties       = 5,
 
-    InvalidEnum = 9,
-    EnumCount   = 9,
+    InvalidEnum = 6,
+    EnumCount   = 6,
 };
 
 template <>

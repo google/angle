@@ -2159,12 +2159,6 @@ SamplerInfo FromCLenum<SamplerInfo>(CLenum from)
             return SamplerInfo::AddressingMode;
         case CL_SAMPLER_FILTER_MODE:
             return SamplerInfo::FilterMode;
-        case CL_SAMPLER_MIP_FILTER_MODE:
-            return SamplerInfo::MipFilterMode;
-        case CL_SAMPLER_LOD_MIN:
-            return SamplerInfo::LOD_Min;
-        case CL_SAMPLER_LOD_MAX:
-            return SamplerInfo::LOD_Max;
         case CL_SAMPLER_PROPERTIES:
             return SamplerInfo::Properties;
         default:
@@ -2186,12 +2180,6 @@ CLenum ToCLenum(SamplerInfo from)
             return CL_SAMPLER_ADDRESSING_MODE;
         case SamplerInfo::FilterMode:
             return CL_SAMPLER_FILTER_MODE;
-        case SamplerInfo::MipFilterMode:
-            return CL_SAMPLER_MIP_FILTER_MODE;
-        case SamplerInfo::LOD_Min:
-            return CL_SAMPLER_LOD_MIN;
-        case SamplerInfo::LOD_Max:
-            return CL_SAMPLER_LOD_MAX;
         case SamplerInfo::Properties:
             return CL_SAMPLER_PROPERTIES;
         default:
@@ -2218,15 +2206,6 @@ std::ostream &operator<<(std::ostream &os, SamplerInfo value)
             break;
         case SamplerInfo::FilterMode:
             os << "CL_SAMPLER_FILTER_MODE";
-            break;
-        case SamplerInfo::MipFilterMode:
-            os << "CL_SAMPLER_MIP_FILTER_MODE";
-            break;
-        case SamplerInfo::LOD_Min:
-            os << "CL_SAMPLER_LOD_MIN";
-            break;
-        case SamplerInfo::LOD_Max:
-            os << "CL_SAMPLER_LOD_MAX";
             break;
         case SamplerInfo::Properties:
             os << "CL_SAMPLER_PROPERTIES";

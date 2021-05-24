@@ -12,6 +12,7 @@
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLDevice.h"
 #include "libANGLE/CLMemory.h"
+#include "libANGLE/CLSampler.h"
 #include "libANGLE/renderer/CLContextImpl.h"
 
 namespace cl
@@ -28,9 +29,11 @@ class Context final : public _cl_context, public Object
     const Platform &getPlatform() const noexcept;
     bool hasDevice(const _cl_device_id *device) const;
     const DeviceRefList &getDevices() const;
+    bool supportsImages() const;
 
     bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
     bool hasMemory(const _cl_mem *memory) const;
+    bool hasSampler(const _cl_sampler *sampler) const;
 
     void retain() noexcept;
     bool release();
@@ -76,6 +79,14 @@ class Context final : public _cl_context, public Object
                          void *hostPtr,
                          cl_int *errcodeRet);
 
+    cl_sampler createSampler(cl_bool normalizedCoords,
+                             AddressingMode addressingMode,
+                             FilterMode filterMode,
+                             cl_int *errcodeRet);
+
+    cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties,
+                                           cl_int *errcodeRet);
+
     static bool IsValid(const _cl_context *context);
 
   private:
@@ -97,9 +108,11 @@ class Context final : public _cl_context, public Object
 
     cl_command_queue createCommandQueue(CommandQueue *commandQueue, cl_int *errcodeRet);
     cl_mem createMemory(Memory *memory, cl_int *errcodeRet);
+    cl_sampler createSampler(Sampler *sampler, cl_int *errcodeRet);
 
     void destroyCommandQueue(CommandQueue *commandQueue);
     void destroyMemory(Memory *memory);
+    void destroySampler(Sampler *sampler);
 
     static void CL_CALLBACK ErrorCallback(const char *errinfo,
                                           const void *privateInfo,
@@ -115,11 +128,13 @@ class Context final : public _cl_context, public Object
 
     CommandQueue::PtrList mCommandQueues;
     Memory::PtrList mMemories;
+    Sampler::PtrList mSamplers;
 
     friend class Buffer;
     friend class CommandQueue;
     friend class Memory;
     friend class Platform;
+    friend class Sampler;
 };
 
 inline const Platform &Context::getPlatform() const noexcept
@@ -139,6 +154,13 @@ inline const DeviceRefList &Context::getDevices() const
     return mDevices;
 }
 
+inline bool Context::supportsImages() const
+{
+    return (std::find_if(mDevices.cbegin(), mDevices.cend(), [](const DeviceRefPtr &ptr) {
+                return ptr->getInfo().mImageSupport == CL_TRUE;
+            }) != mDevices.cend());
+}
+
 inline bool Context::hasCommandQueue(const _cl_command_queue *commandQueue) const
 {
     return std::find_if(mCommandQueues.cbegin(), mCommandQueues.cend(),
@@ -151,6 +173,13 @@ inline bool Context::hasMemory(const _cl_mem *memory) const
     return std::find_if(mMemories.cbegin(), mMemories.cend(), [=](const MemoryPtr &ptr) {
                return ptr.get() == memory;
            }) != mMemories.cend();
+}
+
+inline bool Context::hasSampler(const _cl_sampler *sampler) const
+{
+    return std::find_if(mSamplers.cbegin(), mSamplers.cend(), [=](const SamplerPtr &ptr) {
+               return ptr.get() == sampler;
+           }) != mSamplers.cend();
 }
 
 inline void Context::retain() noexcept

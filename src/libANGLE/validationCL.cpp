@@ -601,12 +601,12 @@ cl_int ValidateGetImageInfo(cl_mem image,
 
 cl_int ValidateRetainSampler(cl_sampler sampler)
 {
-    return CL_SUCCESS;
+    return Sampler::IsValid(sampler) ? CL_SUCCESS : CL_INVALID_SAMPLER;
 }
 
 cl_int ValidateReleaseSampler(cl_sampler sampler)
 {
-    return CL_SUCCESS;
+    return Sampler::IsValid(sampler) ? CL_SUCCESS : CL_INVALID_SAMPLER;
 }
 
 cl_int ValidateGetSamplerInfo(cl_sampler sampler,
@@ -615,6 +615,17 @@ cl_int ValidateGetSamplerInfo(cl_sampler sampler,
                               const void *param_value,
                               const size_t *param_value_size_ret)
 {
+    if (!Sampler::IsValid(sampler))
+    {
+        return CL_INVALID_SAMPLER;
+    }
+    const Platform &platform = static_cast<const Sampler *>(sampler)->getContext().getPlatform();
+    if (param_name == SamplerInfo::InvalidEnum ||
+        (param_name == SamplerInfo::Properties && !platform.isVersionOrNewer(3u, 0u)) ||
+        (param_value_size == 0u && param_value != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
@@ -1047,6 +1058,19 @@ bool ValidateCreateSampler(cl_context context,
                            FilterMode filter_mode,
                            cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if ((normalized_coords != CL_FALSE && normalized_coords != CL_TRUE) ||
+        addressing_mode == AddressingMode::InvalidEnum || filter_mode == FilterMode::InvalidEnum)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    if (!static_cast<Context *>(context)->supportsImages())
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_OPERATION, false);
+    }
     return true;
 }
 
@@ -1281,16 +1305,13 @@ bool ValidateCreateImage(cl_context context,
         ANGLE_ERROR_RETURN(CL_INVALID_IMAGE_DESCRIPTOR, false);
     }
 
-    const DeviceRefList &devices = ctx.getDevices();
-    // Fail if no device supports images
-    if (std::find_if(devices.cbegin(), devices.cend(), [](const DeviceRefPtr &ptr) {
-            return ptr->getInfo().mImageSupport == CL_TRUE;
-        }) == devices.cend())
+    if (!ctx.supportsImages())
     {
         ANGLE_ERROR_RETURN(CL_INVALID_OPERATION, false);
     }
 
     // Fail if image dimensions exceed supported maximum of all devices
+    const DeviceRefList &devices = ctx.getDevices();
     if (std::find_if(devices.cbegin(), devices.cend(), [&](const DeviceRefPtr &ptr) {
             switch (image_desc->image_type)
             {
@@ -1524,6 +1545,53 @@ bool ValidateCreateSamplerWithProperties(cl_context context,
                                          const cl_sampler_properties *sampler_properties,
                                          cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (sampler_properties != nullptr)
+    {
+        bool hasNormalizedCoords            = false;
+        bool hasAddressingMode              = false;
+        bool hasFilterMode                  = false;
+        const cl_sampler_properties *propIt = sampler_properties;
+        while (*propIt != 0)
+        {
+            switch (*propIt++)
+            {
+                case CL_SAMPLER_NORMALIZED_COORDS:
+                    if (hasNormalizedCoords || (*propIt != CL_FALSE && *propIt != CL_TRUE))
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+                    }
+                    hasNormalizedCoords = true;
+                    ++propIt;
+                    break;
+                case CL_SAMPLER_ADDRESSING_MODE:
+                    if (hasAddressingMode || FromCLenum<AddressingMode>(static_cast<CLenum>(
+                                                 *propIt++)) == AddressingMode::InvalidEnum)
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+                    }
+                    hasAddressingMode = true;
+                    break;
+                case CL_SAMPLER_FILTER_MODE:
+                    if (hasFilterMode || FromCLenum<FilterMode>(static_cast<CLenum>(*propIt++)) ==
+                                             FilterMode::InvalidEnum)
+                    {
+                        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+                    }
+                    hasFilterMode = true;
+                    break;
+                default:
+                    ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+            }
+        }
+    }
+    if (!static_cast<Context *>(context)->supportsImages())
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_OPERATION, false);
+    }
     return true;
 }
 

@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
 #include "libANGLE/renderer/cl/CLMemoryCL.h"
+#include "libANGLE/renderer/cl/CLSamplerCL.h"
 
 #include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLCommandQueue.h"
@@ -18,6 +19,7 @@
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
+#include "libANGLE/CLSampler.h"
 #include "libANGLE/Debug.h"
 
 namespace rx
@@ -168,6 +170,36 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
     }
 
     return CLMemoryImpl::Ptr(nativeImage != nullptr ? new CLMemoryCL(image, nativeImage) : nullptr);
+}
+
+CLSamplerImpl::Ptr CLContextCL::createSampler(const cl::Sampler &sampler, cl_int *errcodeRet)
+{
+    cl_sampler nativeSampler = nullptr;
+    if (!mContext.getPlatform().isVersionOrNewer(2u, 0u))
+    {
+        nativeSampler = mNative->getDispatch().clCreateSampler(
+            mNative, sampler.getNormalizedCoords(), cl::ToCLenum(sampler.getAddressingMode()),
+            cl::ToCLenum(sampler.getFilterMode()), errcodeRet);
+    }
+    else if (!sampler.getProperties().empty())
+    {
+        nativeSampler = mNative->getDispatch().clCreateSamplerWithProperties(
+            mNative, sampler.getProperties().data(), errcodeRet);
+    }
+    else
+    {
+        const cl_sampler_properties propArray[] = {CL_SAMPLER_NORMALIZED_COORDS,
+                                                   sampler.getNormalizedCoords(),
+                                                   CL_SAMPLER_ADDRESSING_MODE,
+                                                   cl::ToCLenum(sampler.getAddressingMode()),
+                                                   CL_SAMPLER_FILTER_MODE,
+                                                   cl::ToCLenum(sampler.getFilterMode()),
+                                                   0u};
+        nativeSampler =
+            mNative->getDispatch().clCreateSamplerWithProperties(mNative, propArray, errcodeRet);
+    }
+    return CLSamplerImpl::Ptr(nativeSampler != nullptr ? new CLSamplerCL(sampler, nativeSampler)
+                                                       : nullptr);
 }
 
 }  // namespace rx

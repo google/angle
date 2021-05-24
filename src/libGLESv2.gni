@@ -473,6 +473,7 @@ libangle_cl_headers = [
   "src/libANGLE/renderer/CLDeviceImpl.h",
   "src/libANGLE/renderer/CLMemoryImpl.h",
   "src/libANGLE/renderer/CLPlatformImpl.h",
+  "src/libANGLE/renderer/CLSamplerImpl.h",
   "src/libANGLE/renderer/CLtypes.h",
   "src/libANGLE/validationCL.h",
   "src/libANGLE/validationCL_autogen.h",
@@ -497,6 +498,7 @@ libangle_cl_sources = [
   "src/libANGLE/renderer/CLDeviceImpl.cpp",
   "src/libANGLE/renderer/CLMemoryImpl.cpp",
   "src/libANGLE/renderer/CLPlatformImpl.cpp",
+  "src/libANGLE/renderer/CLSamplerImpl.cpp",
   "src/libANGLE/validationCL.cpp",
 ]
 

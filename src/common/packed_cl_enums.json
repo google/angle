@@ -194,9 +194,6 @@
         "NormalizedCoords": "CL_SAMPLER_NORMALIZED_COORDS",
         "AddressingMode": "CL_SAMPLER_ADDRESSING_MODE",
         "FilterMode": "CL_SAMPLER_FILTER_MODE",
-        "MipFilterMode": "CL_SAMPLER_MIP_FILTER_MODE",
-        "LOD_Min": "CL_SAMPLER_LOD_MIN",
-        "LOD_Max": "CL_SAMPLER_LOD_MAX",
         "Properties": "CL_SAMPLER_PROPERTIES"
     },
     "ProgramInfo": {

@@ -345,20 +345,20 @@ cl_sampler CreateSamplerWithProperties(cl_context context,
                                        const cl_sampler_properties *sampler_properties,
                                        cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateSamplerWithProperties);
-    return 0;
+    return static_cast<Context *>(context)->createSamplerWithProperties(sampler_properties,
+                                                                        errcode_ret);
 }
 
 cl_int RetainSampler(cl_sampler sampler)
 {
-    WARN_NOT_SUPPORTED(RetainSampler);
-    return 0;
+    static_cast<Sampler *>(sampler)->retain();
+    return CL_SUCCESS;
 }
 
 cl_int ReleaseSampler(cl_sampler sampler)
 {
-    WARN_NOT_SUPPORTED(ReleaseSampler);
-    return 0;
+    static_cast<Sampler *>(sampler)->release();
+    return CL_SUCCESS;
 }
 
 cl_int GetSamplerInfo(cl_sampler sampler,
@@ -367,8 +367,8 @@ cl_int GetSamplerInfo(cl_sampler sampler,
                       void *param_value,
                       size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetSamplerInfo);
-    return 0;
+    return static_cast<Sampler *>(sampler)->getInfo(param_name, param_value_size, param_value,
+                                                    param_value_size_ret);
 }
 
 cl_program CreateProgramWithSource(cl_context context,
@@ -1152,8 +1152,8 @@ cl_sampler CreateSampler(cl_context context,
                          FilterMode filter_mode,
                          cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateSampler);
-    return 0;
+    return static_cast<Context *>(context)->createSampler(normalized_coords, addressing_mode,
+                                                          filter_mode, errcode_ret);
 }
 
 cl_int EnqueueTask(cl_command_queue command_queue,

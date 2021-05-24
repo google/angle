@@ -173,6 +173,53 @@ cl_mem Context::createImage3D(cl_mem_flags flags,
         new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errcodeRet), errcodeRet);
 }
 
+cl_sampler Context::createSampler(cl_bool normalizedCoords,
+                                  AddressingMode addressingMode,
+                                  FilterMode filterMode,
+                                  cl_int *errcodeRet)
+{
+    return createSampler(
+        new Sampler(*this, {}, normalizedCoords, addressingMode, filterMode, errcodeRet),
+        errcodeRet);
+}
+
+cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *properties,
+                                                cl_int *errcodeRet)
+{
+    Sampler::PropArray propArray;
+    cl_bool normalizedCoords      = CL_TRUE;
+    AddressingMode addressingMode = AddressingMode::Clamp;
+    FilterMode filterMode         = FilterMode::Nearest;
+
+    if (properties != nullptr)
+    {
+        const cl_sampler_properties *propIt = properties;
+        while (*propIt != 0)
+        {
+            switch (*propIt++)
+            {
+                case CL_SAMPLER_NORMALIZED_COORDS:
+                    normalizedCoords = static_cast<decltype(normalizedCoords)>(*propIt++);
+                    break;
+                case CL_SAMPLER_ADDRESSING_MODE:
+                    addressingMode = FromCLenum<AddressingMode>(static_cast<CLenum>(*propIt++));
+                    break;
+                case CL_SAMPLER_FILTER_MODE:
+                    filterMode = FromCLenum<FilterMode>(static_cast<CLenum>(*propIt++));
+                    break;
+            }
+        }
+        // Include the trailing zero
+        ++propIt;
+        propArray.reserve(propIt - properties);
+        propArray.insert(propArray.cend(), properties, propIt);
+    }
+
+    return createSampler(new Sampler(*this, std::move(propArray), normalizedCoords, addressingMode,
+                                     filterMode, errcodeRet),
+                         errcodeRet);
+}
+
 bool Context::IsValid(const _cl_context *context)
 {
     const Platform::PtrList &platforms = Platform::GetPlatforms();
@@ -249,6 +296,21 @@ cl_mem Context::createMemory(Memory *memory, cl_int *errcodeRet)
     return mMemories.back().get();
 }
 
+cl_sampler Context::createSampler(Sampler *sampler, cl_int *errcodeRet)
+{
+    mSamplers.emplace_back(sampler);
+    if (!mSamplers.back()->mImpl)
+    {
+        mSamplers.back()->release();
+        return nullptr;
+    }
+    if (errcodeRet != nullptr)
+    {
+        *errcodeRet = CL_SUCCESS;
+    }
+    return mSamplers.back().get();
+}
+
 void Context::destroyCommandQueue(CommandQueue *commandQueue)
 {
     auto commandQueueIt = mCommandQueues.cbegin();
@@ -280,6 +342,23 @@ void Context::destroyMemory(Memory *memory)
     else
     {
         ERR() << "Memory not found";
+    }
+}
+
+void Context::destroySampler(Sampler *sampler)
+{
+    auto samplerIt = mSamplers.cbegin();
+    while (samplerIt != mSamplers.cend() && samplerIt->get() != sampler)
+    {
+        ++samplerIt;
+    }
+    if (samplerIt != mSamplers.cend())
+    {
+        mSamplers.erase(samplerIt);
+    }
+    else
+    {
+        ERR() << "Sampler not found";
     }
 }
 

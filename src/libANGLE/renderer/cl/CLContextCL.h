@@ -37,6 +37,8 @@ class CLContextCL : public CLContextImpl
                                   void *hostPtr,
                                   cl_int *errcodeRet) override;
 
+    CLSamplerImpl::Ptr createSampler(const cl::Sampler &sampler, cl_int *errcodeRet) override;
+
   private:
     const cl_context mNative;
 };

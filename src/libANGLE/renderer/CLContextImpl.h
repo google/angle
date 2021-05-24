@@ -11,6 +11,7 @@
 #include "libANGLE/renderer/CLCommandQueueImpl.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
 #include "libANGLE/renderer/CLMemoryImpl.h"
+#include "libANGLE/renderer/CLSamplerImpl.h"
 
 namespace rx
 {
@@ -38,6 +39,8 @@ class CLContextImpl : angle::NonCopyable
                                           const cl::ImageDescriptor &desc,
                                           void *hostPtr,
                                           cl_int *errcodeRet) = 0;
+
+    virtual CLSamplerImpl::Ptr createSampler(const cl::Sampler &sampler, cl_int *errcodeRet) = 0;
 
   protected:
     const cl::Context &mContext;

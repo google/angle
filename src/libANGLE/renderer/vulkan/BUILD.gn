@@ -115,6 +115,8 @@ if (angle_enable_cl) {
     "CLMemoryVk.h",
     "CLPlatformVk.cpp",
     "CLPlatformVk.h",
+    "CLSamplerVk.cpp",
+    "CLSamplerVk.h",
     "cl_types.h",
   ]
 }
