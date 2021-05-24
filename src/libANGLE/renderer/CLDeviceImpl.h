@@ -37,6 +37,7 @@ class CLDeviceImpl : angle::NonCopyable
         std::vector<size_t> mMaxWorkItemSizes;
         cl_ulong mMaxMemAllocSize = 0u;
         cl_bool mImageSupport     = CL_FALSE;
+        std::string mIL_Version;
         NameVersionVector mILsWithVersion;
         size_t mImage2D_MaxWidth           = 0u;
         size_t mImage2D_MaxHeight          = 0u;
@@ -47,6 +48,7 @@ class CLDeviceImpl : angle::NonCopyable
         size_t mImageMaxArraySize          = 0u;
         cl_uint mImagePitchAlignment       = 0u;
         cl_uint mImageBaseAddressAlignment = 0u;
+        std::string mBuiltInKernels;
         NameVersionVector mBuiltInKernelsWithVersion;
         std::string mVersionStr;
         cl_version mVersion = 0u;

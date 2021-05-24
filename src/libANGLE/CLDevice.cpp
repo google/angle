@@ -22,6 +22,31 @@ Device::~Device()
     }
 }
 
+bool Device::supportsBuiltInKernel(const std::string &name) const
+{
+    if (name.empty() || mInfo.mBuiltInKernels.empty())
+    {
+        return false;
+    }
+    // Compare kernel name with all sub-strings terminated by semi-colon or end of string
+    std::string::size_type start = 0u;
+    do
+    {
+        std::string::size_type end = mInfo.mBuiltInKernels.find(';', start);
+        if (end == std::string::npos)
+        {
+            end = mInfo.mBuiltInKernels.length();
+        }
+        const std::string::size_type length = end - start;
+        if (length == name.length() && mInfo.mBuiltInKernels.compare(start, length, name) == 0)
+        {
+            return true;
+        }
+        start = end + 1u;
+    } while (start < mInfo.mBuiltInKernels.size());
+    return false;
+}
+
 bool Device::release()
 {
     if (isRoot())
@@ -170,8 +195,6 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             break;
 
         // Handle all string types
-        case DeviceInfo::IL_Version:
-        case DeviceInfo::BuiltInKernels:
         case DeviceInfo::Name:
         case DeviceInfo::Vendor:
         case DeviceInfo::DriverVersion:
@@ -207,10 +230,18 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             copyValue = &mInfo.mMaxMemAllocSize;
             copySize  = sizeof(mInfo.mMaxMemAllocSize);
             break;
+        case DeviceInfo::IL_Version:
+            copyValue = mInfo.mIL_Version.c_str();
+            copySize  = mInfo.mIL_Version.length() + 1u;
+            break;
         case DeviceInfo::ILsWithVersion:
             copyValue = mInfo.mILsWithVersion.data();
             copySize =
                 mInfo.mILsWithVersion.size() * sizeof(decltype(mInfo.mILsWithVersion)::value_type);
+            break;
+        case DeviceInfo::BuiltInKernels:
+            copyValue = mInfo.mBuiltInKernels.c_str();
+            copySize  = mInfo.mBuiltInKernels.length() + 1u;
             break;
         case DeviceInfo::BuiltInKernelsWithVersion:
             copyValue = mInfo.mBuiltInKernelsWithVersion.data();

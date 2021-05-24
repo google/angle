@@ -35,6 +35,8 @@ class Device final : public _cl_device_id, public Object
     bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
     bool hasSubDevice(const _cl_device_id *device) const;
 
+    bool supportsBuiltInKernel(const std::string &name) const;
+
     void retain() noexcept;
     bool release();
 

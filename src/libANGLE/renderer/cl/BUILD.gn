@@ -19,6 +19,8 @@ _cl_backend_sources = [
   "CLMemoryCL.h",
   "CLPlatformCL.cpp",
   "CLPlatformCL.h",
+  "CLProgramCL.cpp",
+  "CLProgramCL.h",
   "CLSamplerCL.cpp",
   "CLSamplerCL.h",
   "cl_types.h",

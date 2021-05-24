@@ -47,7 +47,7 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
             break;
         case ContextInfo::Devices:
             static_assert(sizeof(decltype(mDevices)::value_type) == sizeof(Device *),
-                          "Device::RefList has wrong element size");
+                          "DeviceRefList has wrong element size");
             copyValue = mDevices.data();
             copySize  = mDevices.size() * sizeof(decltype(mDevices)::value_type);
             break;
@@ -220,6 +220,76 @@ cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *pro
                          errcodeRet);
 }
 
+cl_program Context::createProgramWithSource(cl_uint count,
+                                            const char **strings,
+                                            const size_t *lengths,
+                                            cl_int *errcodeRet)
+{
+    std::string source;
+    if (lengths == nullptr)
+    {
+        while (count-- != 0u)
+        {
+            source.append(*strings++);
+        }
+    }
+    else
+    {
+        while (count-- != 0u)
+        {
+            if (*lengths != 0u)
+            {
+                source.append(*strings++, *lengths);
+            }
+            else
+            {
+                source.append(*strings++);
+            }
+            ++lengths;
+        }
+    }
+    return createProgram(new Program(*this, std::move(source), errcodeRet), errcodeRet);
+}
+
+cl_program Context::createProgramWithIL(const void *il, size_t length, cl_int *errcodeRet)
+{
+    return createProgram(new Program(*this, il, length, errcodeRet), errcodeRet);
+}
+
+cl_program Context::createProgramWithBinary(cl_uint numDevices,
+                                            const cl_device_id *devices,
+                                            const size_t *lengths,
+                                            const unsigned char **binaries,
+                                            cl_int *binaryStatus,
+                                            cl_int *errcodeRet)
+{
+    DeviceRefList refDevices;
+    Binaries binaryVec;
+    while (numDevices-- != 0u)
+    {
+        refDevices.emplace_back(static_cast<Device *>(*devices++));
+        binaryVec.emplace_back(*lengths++);
+        std::memcpy(binaryVec.back().data(), *binaries++, binaryVec.back().size());
+    }
+    return createProgram(
+        new Program(*this, std::move(refDevices), std::move(binaryVec), binaryStatus, errcodeRet),
+        errcodeRet);
+}
+
+cl_program Context::createProgramWithBuiltInKernels(cl_uint numDevices,
+                                                    const cl_device_id *devices,
+                                                    const char *kernelNames,
+                                                    cl_int *errcodeRet)
+{
+    DeviceRefList refDevices;
+    while (numDevices-- != 0u)
+    {
+        refDevices.emplace_back(static_cast<Device *>(*devices++));
+    }
+    return createProgram(new Program(*this, std::move(refDevices), kernelNames, errcodeRet),
+                         errcodeRet);
+}
+
 bool Context::IsValid(const _cl_context *context)
 {
     const Platform::PtrList &platforms = Platform::GetPlatforms();
@@ -311,6 +381,21 @@ cl_sampler Context::createSampler(Sampler *sampler, cl_int *errcodeRet)
     return mSamplers.back().get();
 }
 
+cl_program Context::createProgram(Program *program, cl_int *errcodeRet)
+{
+    mPrograms.emplace_back(program);
+    if (!mPrograms.back()->mImpl)
+    {
+        mPrograms.back()->release();
+        return nullptr;
+    }
+    if (errcodeRet != nullptr)
+    {
+        *errcodeRet = CL_SUCCESS;
+    }
+    return mPrograms.back().get();
+}
+
 void Context::destroyCommandQueue(CommandQueue *commandQueue)
 {
     auto commandQueueIt = mCommandQueues.cbegin();
@@ -359,6 +444,23 @@ void Context::destroySampler(Sampler *sampler)
     else
     {
         ERR() << "Sampler not found";
+    }
+}
+
+void Context::destroyProgram(Program *program)
+{
+    auto programIt = mPrograms.cbegin();
+    while (programIt != mPrograms.cend() && programIt->get() != program)
+    {
+        ++programIt;
+    }
+    if (programIt != mPrograms.cend())
+    {
+        mPrograms.erase(programIt);
+    }
+    else
+    {
+        ERR() << "Program not found";
     }
 }
 

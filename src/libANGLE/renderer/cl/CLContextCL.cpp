@@ -10,6 +10,7 @@
 #include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
 #include "libANGLE/renderer/cl/CLMemoryCL.h"
+#include "libANGLE/renderer/cl/CLProgramCL.h"
 #include "libANGLE/renderer/cl/CLSamplerCL.h"
 
 #include "libANGLE/CLBuffer.h"
@@ -19,6 +20,7 @@
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
+#include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
 #include "libANGLE/Debug.h"
 
@@ -199,6 +201,70 @@ CLSamplerImpl::Ptr CLContextCL::createSampler(const cl::Sampler &sampler, cl_int
             mNative->getDispatch().clCreateSamplerWithProperties(mNative, propArray, errcodeRet);
     }
     return CLSamplerImpl::Ptr(nativeSampler != nullptr ? new CLSamplerCL(sampler, nativeSampler)
+                                                       : nullptr);
+}
+
+CLProgramImpl::Ptr CLContextCL::createProgramWithSource(const cl::Program &program,
+                                                        const std::string &source,
+                                                        cl_int *errcodeRet)
+{
+    const char *sourceStr          = source.c_str();
+    const size_t length            = source.length();
+    const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithSource(
+        mNative, 1u, &sourceStr, &length, errcodeRet);
+    return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
+                                                       : nullptr);
+}
+
+CLProgramImpl::Ptr CLContextCL::createProgramWithIL(const cl::Program &program,
+                                                    const void *il,
+                                                    size_t length,
+                                                    cl_int *errcodeRet)
+{
+    const cl_program nativeProgram =
+        mNative->getDispatch().clCreateProgramWithIL(mNative, il, length, errcodeRet);
+    return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
+                                                       : nullptr);
+}
+
+CLProgramImpl::Ptr CLContextCL::createProgramWithBinary(const cl::Program &program,
+                                                        const cl::Binaries &binaries,
+                                                        cl_int *binaryStatus,
+                                                        cl_int *errcodeRet)
+{
+    ASSERT(program.getDevices().size() == binaries.size());
+    std::vector<cl_device_id> nativeDevices;
+    for (const cl::DeviceRefPtr &device : program.getDevices())
+    {
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL &>().getNative());
+    }
+    std::vector<size_t> lengths;
+    std::vector<const unsigned char *> nativeBinaries;
+    for (const cl::Binary &binary : binaries)
+    {
+        lengths.emplace_back(binary.size());
+        nativeBinaries.emplace_back(binary.data());
+    }
+    const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithBinary(
+        mNative, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), lengths.data(),
+        nativeBinaries.data(), binaryStatus, errcodeRet);
+    return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
+                                                       : nullptr);
+}
+
+CLProgramImpl::Ptr CLContextCL::createProgramWithBuiltInKernels(const cl::Program &program,
+                                                                const char *kernel_names,
+                                                                cl_int *errcodeRet)
+{
+    std::vector<cl_device_id> nativeDevices;
+    for (const cl::DeviceRefPtr &device : program.getDevices())
+    {
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL &>().getNative());
+    }
+    const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithBuiltInKernels(
+        mNative, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), kernel_names,
+        errcodeRet);
+    return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
                                                        : nullptr);
 }
 

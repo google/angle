@@ -635,6 +635,21 @@ bool ValidateCreateProgramWithSource(cl_context context,
                                      const size_t *lengths,
                                      cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (count == 0u || strings == nullptr)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    while (count-- != 0u)
+    {
+        if (*strings++ == nullptr)
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+        }
+    }
     return true;
 }
 
@@ -646,17 +661,37 @@ bool ValidateCreateProgramWithBinary(cl_context context,
                                      const cl_int *binary_status,
                                      cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (num_devices == 0u || device_list == nullptr || lengths == nullptr || binaries == nullptr)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    const Context &ctx = *static_cast<Context *>(context);
+    while (num_devices-- != 0u)
+    {
+        if (!ctx.hasDevice(*device_list++))
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_DEVICE, false);
+        }
+        if (*lengths++ == 0u || *binaries++ == nullptr)
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+        }
+    }
     return true;
 }
 
 cl_int ValidateRetainProgram(cl_program program)
 {
-    return CL_SUCCESS;
+    return Program::IsValid(program) ? CL_SUCCESS : CL_INVALID_PROGRAM;
 }
 
 cl_int ValidateReleaseProgram(cl_program program)
 {
-    return CL_SUCCESS;
+    return Program::IsValid(program) ? CL_SUCCESS : CL_INVALID_PROGRAM;
 }
 
 cl_int ValidateBuildProgram(cl_program program,
@@ -675,6 +710,22 @@ cl_int ValidateGetProgramInfo(cl_program program,
                               const void *param_value,
                               const size_t *param_value_size_ret)
 {
+    if (!Program::IsValid(program))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+    const Platform &platform = static_cast<const Program *>(program)->getContext().getPlatform();
+    if (param_name == ProgramInfo::InvalidEnum ||
+        ((param_name == ProgramInfo::NumKernels || param_name == ProgramInfo::KernelNames) &&
+         !platform.isVersionOrNewer(1u, 2u)) ||
+        (param_name == ProgramInfo::IL && !platform.isVersionOrNewer(2u, 1u)) ||
+        ((param_name == ProgramInfo::ScopeGlobalCtorsPresent ||
+          param_name == ProgramInfo::ScopeGlobalDtorsPresent) &&
+         !platform.isVersionOrNewer(2u, 2u)) ||
+        (param_value_size == 0u && param_value != nullptr))
+    {
+        return CL_INVALID_VALUE;
+    }
     return CL_SUCCESS;
 }
 
@@ -1267,6 +1318,7 @@ bool ValidateCreateImage(cl_context context,
                                                   : (image_desc->image_row_pitch != 0u
                                                          ? image_desc->image_row_pitch
                                                          : image_desc->image_width * elemSize);
+
     const size_t sliceSize = image_desc == nullptr
                                  ? 0u
                                  : rowPitch * (image_desc->image_type == CL_MEM_OBJECT_IMAGE1D_ARRAY
@@ -1353,6 +1405,42 @@ bool ValidateCreateProgramWithBuiltInKernels(cl_context context,
                                              const char *kernel_names,
                                              cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    const Context &ctx = *static_cast<Context *>(context);
+    if (!ctx.getPlatform().isVersionOrNewer(1u, 2u))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (num_devices == 0u || device_list == nullptr || kernel_names == nullptr)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
+    for (size_t index = 0u; index < num_devices; ++index)
+    {
+        if (!ctx.hasDevice(device_list[index]))
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_DEVICE, false);
+        }
+    }
+    // Check for support of each kernel name terminated by semi-colon or end of string
+    const char *start = kernel_names;
+    do
+    {
+        const char *end = start;
+        while (*end != '\0' && *end != ';')
+        {
+            ++end;
+        }
+        const size_t length = end - start;
+        if (length != 0u && !ctx.supportsBuiltInKernel(std::string(start, length)))
+        {
+            ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+        }
+        start = end;
+    } while (*start++ != '\0');
     return true;
 }
 
@@ -1693,6 +1781,23 @@ bool ValidateCreateProgramWithIL(cl_context context,
                                  size_t length,
                                  cl_int *errcode_ret)
 {
+    if (!Context::IsValid(context))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    const Context &ctx = *static_cast<Context *>(context);
+    if (!ctx.getPlatform().isVersionOrNewer(2u, 1u))
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_CONTEXT, false);
+    }
+    if (!ctx.supportsIL())
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_OPERATION, false);
+    }
+    if (il == nullptr || length == 0u)
+    {
+        ANGLE_ERROR_RETURN(CL_INVALID_VALUE, false);
+    }
     return true;
 }
 

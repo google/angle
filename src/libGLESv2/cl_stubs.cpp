@@ -377,8 +377,8 @@ cl_program CreateProgramWithSource(cl_context context,
                                    const size_t *lengths,
                                    cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateProgramWithSource);
-    return 0;
+    return static_cast<Context *>(context)->createProgramWithSource(count, strings, lengths,
+                                                                    errcode_ret);
 }
 
 cl_program CreateProgramWithBinary(cl_context context,
@@ -389,8 +389,8 @@ cl_program CreateProgramWithBinary(cl_context context,
                                    cl_int *binary_status,
                                    cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateProgramWithBinary);
-    return 0;
+    return static_cast<Context *>(context)->createProgramWithBinary(
+        num_devices, device_list, lengths, binaries, binary_status, errcode_ret);
 }
 
 cl_program CreateProgramWithBuiltInKernels(cl_context context,
@@ -399,8 +399,8 @@ cl_program CreateProgramWithBuiltInKernels(cl_context context,
                                            const char *kernel_names,
                                            cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateProgramWithBuiltInKernels);
-    return 0;
+    return static_cast<Context *>(context)->createProgramWithBuiltInKernels(
+        num_devices, device_list, kernel_names, errcode_ret);
 }
 
 cl_program CreateProgramWithIL(cl_context context,
@@ -408,20 +408,19 @@ cl_program CreateProgramWithIL(cl_context context,
                                size_t length,
                                cl_int *errcode_ret)
 {
-    WARN_NOT_SUPPORTED(CreateProgramWithIL);
-    return 0;
+    return static_cast<Context *>(context)->createProgramWithIL(il, length, errcode_ret);
 }
 
 cl_int RetainProgram(cl_program program)
 {
-    WARN_NOT_SUPPORTED(RetainProgram);
-    return 0;
+    static_cast<Program *>(program)->retain();
+    return CL_SUCCESS;
 }
 
 cl_int ReleaseProgram(cl_program program)
 {
-    WARN_NOT_SUPPORTED(ReleaseProgram);
-    return 0;
+    static_cast<Program *>(program)->release();
+    return CL_SUCCESS;
 }
 
 cl_int BuildProgram(cl_program program,
@@ -492,8 +491,8 @@ cl_int GetProgramInfo(cl_program program,
                       void *param_value,
                       size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetProgramInfo);
-    return 0;
+    return static_cast<Program *>(program)->getInfo(param_name, param_value_size, param_value,
+                                                    param_value_size_ret);
 }
 
 cl_int GetProgramBuildInfo(cl_program program,

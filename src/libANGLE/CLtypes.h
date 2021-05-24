@@ -54,6 +54,9 @@ using MemoryRefPtr  = RefPointer<Memory>;
 using DevicePtrList = std::list<DevicePtr>;
 using DeviceRefList = std::vector<DeviceRefPtr>;
 
+using Binary   = std::vector<unsigned char>;
+using Binaries = std::vector<Binary>;
+
 struct ImageDescriptor
 {
     cl_mem_object_type type;

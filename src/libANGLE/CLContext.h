@@ -12,6 +12,7 @@
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLDevice.h"
 #include "libANGLE/CLMemory.h"
+#include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
 #include "libANGLE/renderer/CLContextImpl.h"
 
@@ -29,11 +30,15 @@ class Context final : public _cl_context, public Object
     const Platform &getPlatform() const noexcept;
     bool hasDevice(const _cl_device_id *device) const;
     const DeviceRefList &getDevices() const;
+
     bool supportsImages() const;
+    bool supportsIL() const;
+    bool supportsBuiltInKernel(const std::string &name) const;
 
     bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
     bool hasMemory(const _cl_mem *memory) const;
     bool hasSampler(const _cl_sampler *sampler) const;
+    bool hasProgram(const _cl_program *program) const;
 
     void retain() noexcept;
     bool release();
@@ -87,6 +92,25 @@ class Context final : public _cl_context, public Object
     cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties,
                                            cl_int *errcodeRet);
 
+    cl_program createProgramWithSource(cl_uint count,
+                                       const char **strings,
+                                       const size_t *lengths,
+                                       cl_int *errcodeRet);
+
+    cl_program createProgramWithIL(const void *il, size_t length, cl_int *errcodeRet);
+
+    cl_program createProgramWithBinary(cl_uint numDevices,
+                                       const cl_device_id *devices,
+                                       const size_t *lengths,
+                                       const unsigned char **binaries,
+                                       cl_int *binaryStatus,
+                                       cl_int *errcodeRet);
+
+    cl_program createProgramWithBuiltInKernels(cl_uint numDevices,
+                                               const cl_device_id *devices,
+                                               const char *kernelNames,
+                                               cl_int *errcodeRet);
+
     static bool IsValid(const _cl_context *context);
 
   private:
@@ -109,10 +133,12 @@ class Context final : public _cl_context, public Object
     cl_command_queue createCommandQueue(CommandQueue *commandQueue, cl_int *errcodeRet);
     cl_mem createMemory(Memory *memory, cl_int *errcodeRet);
     cl_sampler createSampler(Sampler *sampler, cl_int *errcodeRet);
+    cl_program createProgram(Program *program, cl_int *errcodeRet);
 
     void destroyCommandQueue(CommandQueue *commandQueue);
     void destroyMemory(Memory *memory);
     void destroySampler(Sampler *sampler);
+    void destroyProgram(Program *program);
 
     static void CL_CALLBACK ErrorCallback(const char *errinfo,
                                           const void *privateInfo,
@@ -129,11 +155,13 @@ class Context final : public _cl_context, public Object
     CommandQueue::PtrList mCommandQueues;
     Memory::PtrList mMemories;
     Sampler::PtrList mSamplers;
+    Program::PtrList mPrograms;
 
     friend class Buffer;
     friend class CommandQueue;
     friend class Memory;
     friend class Platform;
+    friend class Program;
     friend class Sampler;
 };
 
@@ -161,6 +189,20 @@ inline bool Context::supportsImages() const
             }) != mDevices.cend());
 }
 
+inline bool Context::supportsIL() const
+{
+    return (std::find_if(mDevices.cbegin(), mDevices.cend(), [](const DeviceRefPtr &ptr) {
+                return !ptr->getInfo().mIL_Version.empty();
+            }) != mDevices.cend());
+}
+
+inline bool Context::supportsBuiltInKernel(const std::string &name) const
+{
+    return (std::find_if(mDevices.cbegin(), mDevices.cend(), [&](const DeviceRefPtr &ptr) {
+                return ptr->supportsBuiltInKernel(name);
+            }) != mDevices.cend());
+}
+
 inline bool Context::hasCommandQueue(const _cl_command_queue *commandQueue) const
 {
     return std::find_if(mCommandQueues.cbegin(), mCommandQueues.cend(),
@@ -180,6 +222,13 @@ inline bool Context::hasSampler(const _cl_sampler *sampler) const
     return std::find_if(mSamplers.cbegin(), mSamplers.cend(), [=](const SamplerPtr &ptr) {
                return ptr.get() == sampler;
            }) != mSamplers.cend();
+}
+
+inline bool Context::hasProgram(const _cl_program *program) const
+{
+    return std::find_if(mPrograms.cbegin(), mPrograms.cend(), [=](const ProgramPtr &ptr) {
+               return ptr.get() == program;
+           }) != mPrograms.cend();
 }
 
 inline void Context::retain() noexcept

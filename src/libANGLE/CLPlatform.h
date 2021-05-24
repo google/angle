@@ -37,6 +37,7 @@ class Platform final : public _cl_platform_id, public Object
     bool hasCommandQueue(const _cl_command_queue *commandQueue) const;
     bool hasMemory(const _cl_mem *memory) const;
     bool hasSampler(const _cl_sampler *sampler) const;
+    bool hasProgram(const _cl_program *program) const;
 
     cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
@@ -140,6 +141,13 @@ inline bool Platform::hasSampler(const _cl_sampler *sampler) const
 {
     return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
                return ptr->hasSampler(sampler);
+           }) != mContexts.cend();
+}
+
+inline bool Platform::hasProgram(const _cl_program *program) const
+{
+    return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
+               return ptr->hasProgram(program);
            }) != mContexts.cend();
 }
 

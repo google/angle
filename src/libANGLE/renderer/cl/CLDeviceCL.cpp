@@ -114,13 +114,21 @@ CLDeviceImpl::Info CLDeviceCL::createInfo(cl_device_type type) const
     info.mExtensions.assign(valString.data());
     RemoveUnsupportedCLExtensions(info.mExtensions);
 
-    if (info.mVersion >= CL_MAKE_VERSION(1, 2, 0) &&
-        (!GetDeviceInfo(mNative, cl::DeviceInfo::ImageMaxBufferSize, info.mImageMaxBufferSize) ||
-         !GetDeviceInfo(mNative, cl::DeviceInfo::ImageMaxArraySize, info.mImageMaxArraySize) ||
-         !GetDeviceInfo(mNative, cl::DeviceInfo::PartitionProperties, info.mPartitionProperties) ||
-         !GetDeviceInfo(mNative, cl::DeviceInfo::PartitionType, info.mPartitionType)))
+    if (info.mVersion >= CL_MAKE_VERSION(1, 2, 0))
     {
-        return Info{};
+        if (!GetDeviceInfo(mNative, cl::DeviceInfo::ImageMaxBufferSize, info.mImageMaxBufferSize) ||
+            !GetDeviceInfo(mNative, cl::DeviceInfo::ImageMaxArraySize, info.mImageMaxArraySize) ||
+            !GetDeviceInfo(mNative, cl::DeviceInfo::BuiltInKernels, valString))
+        {
+            return Info{};
+        }
+        info.mBuiltInKernels.assign(valString.data());
+        if (!GetDeviceInfo(mNative, cl::DeviceInfo::PartitionProperties,
+                           info.mPartitionProperties) ||
+            !GetDeviceInfo(mNative, cl::DeviceInfo::PartitionType, info.mPartitionType))
+        {
+            return Info{};
+        }
     }
 
     if (info.mVersion >= CL_MAKE_VERSION(2, 0, 0) &&
@@ -129,6 +137,15 @@ CLDeviceImpl::Info CLDeviceCL::createInfo(cl_device_type type) const
                         info.mImageBaseAddressAlignment)))
     {
         return Info{};
+    }
+
+    if (info.mVersion >= CL_MAKE_VERSION(2, 1, 0))
+    {
+        if (!GetDeviceInfo(mNative, cl::DeviceInfo::IL_Version, valString))
+        {
+            return Info{};
+        }
+        info.mIL_Version.assign(valString.data());
     }
 
     if (info.mVersion >= CL_MAKE_VERSION(3, 0, 0) &&

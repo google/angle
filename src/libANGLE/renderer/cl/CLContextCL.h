@@ -39,6 +39,24 @@ class CLContextCL : public CLContextImpl
 
     CLSamplerImpl::Ptr createSampler(const cl::Sampler &sampler, cl_int *errcodeRet) override;
 
+    CLProgramImpl::Ptr createProgramWithSource(const cl::Program &program,
+                                               const std::string &source,
+                                               cl_int *errcodeRet) override;
+
+    CLProgramImpl::Ptr createProgramWithIL(const cl::Program &program,
+                                           const void *il,
+                                           size_t length,
+                                           cl_int *errcodeRet) override;
+
+    CLProgramImpl::Ptr createProgramWithBinary(const cl::Program &program,
+                                               const cl::Binaries &binaries,
+                                               cl_int *binaryStatus,
+                                               cl_int *errcodeRet) override;
+
+    CLProgramImpl::Ptr createProgramWithBuiltInKernels(const cl::Program &program,
+                                                       const char *kernel_names,
+                                                       cl_int *errcodeRet) override;
+
   private:
     const cl_context mNative;
 };
