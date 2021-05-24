@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6a5f5163_6a386802",
+        "filename": "src/libANGLE/CLImage.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-24T15:18:09Z",
+      "side": 1,
+      "message": "You mean break instead of return true, and return false from default?",
+      "parentUuid": "d08be399_75c1db1c",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 17
+      },
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d4ab5016_16f72eb8",
         "filename": "src/libANGLE/cl_utils.cpp",
         "patchSetId": 1
@@ -37,6 +61,30 @@
       "writtenOn": "2021-05-24T14:15:48Z",
       "side": 1,
       "message": "Prefer a default in each of these that squawks when unknown values come through.",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 25
+      },
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8756fea_d2487fff",
+        "filename": "src/libANGLE/cl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-24T15:18:09Z",
+      "side": 1,
+      "message": "The default case is implicitely handled when the switch doesn\u0027t return a value. If the default case would also return, the function return is unreachable.",
+      "parentUuid": "d4ab5016_16f72eb8",
       "range": {
         "startLine": 15,
         "startChar": 4,
@@ -70,6 +118,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a023b8b7_19f37582",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-24T15:18:09Z",
+      "side": 1,
+      "message": "Here is no warning message on purpose. On failure the calling validation will emit a CL_INVALID_VALUE. The CL implementation is not supposed to print errors. The only other way would be to use context notifications. We can consider to add those later.",
+      "parentUuid": "94af3d4a_a8c9a2e5",
+      "range": {
+        "startLine": 152,
+        "startChar": 0,
+        "endLine": 152,
+        "endChar": 29
+      },
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3fc13bc5_61f2cf7c",
@@ -83,6 +155,30 @@
       "writtenOn": "2021-05-24T14:15:48Z",
       "side": 1,
       "message": "This looks difficult to maintain, worth splitting up a bit for readability.",
+      "range": {
+        "startLine": 586,
+        "startChar": 0,
+        "endLine": 590,
+        "endChar": 59
+      },
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "55853a27_c6d62bbd",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 590,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-24T15:18:09Z",
+      "side": 1,
+      "message": "Ok, also more like this upcoming. I will revise readablility of this file later together.",
+      "parentUuid": "3fc13bc5_61f2cf7c",
       "range": {
         "startLine": 586,
         "startChar": 0,
@@ -116,6 +212,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5cec1166_205b47e4",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1274,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-24T15:18:09Z",
+      "side": 1,
+      "message": "I agree, will address this later with the others.",
+      "parentUuid": "8641c108_2ad3e32a",
+      "range": {
+        "startLine": 1248,
+        "startChar": 0,
+        "endLine": 1274,
+        "endChar": 99
+      },
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "687ab264_94b64358",
@@ -129,6 +249,24 @@
       "writtenOn": "2021-05-24T14:15:48Z",
       "side": 1,
       "message": "If possible, move this to default with an error message.",
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f75a69d5_ae734355",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-24T15:18:09Z",
+      "side": 1,
+      "message": "Then I get unreachable code again.",
+      "parentUuid": "687ab264_94b64358",
       "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
