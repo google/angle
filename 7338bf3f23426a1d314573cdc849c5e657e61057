@@ -86,6 +86,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "41a34958_a4f061af",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-24T22:42:57Z",
+      "side": 1,
+      "message": "Version of this CL containing fix for conformance2/buffers/get-buffer-sub-data-validity.html :\nhttps://chromium-review.googlesource.com/c/angle/angle/+/2915675\n",
+      "revId": "7338bf3f23426a1d314573cdc849c5e657e61057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "042eb863_1d42ddbd",
