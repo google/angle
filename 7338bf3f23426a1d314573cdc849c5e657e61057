@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5efee87e_cf7c7c0a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-24T18:18:28Z",
+      "side": 1,
+      "message": "It looks like some other commands have to signal that work was done in order to fix the WebGL2 conformance failure conformance2/buffers/get-buffer-sub-data-validity.html .",
+      "revId": "7338bf3f23426a1d314573cdc849c5e657e61057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "042eb863_1d42ddbd",
