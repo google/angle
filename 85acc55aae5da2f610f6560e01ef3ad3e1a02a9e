@@ -16,6 +16,24 @@
       "message": "Any idea when this change will reach https://android.googlesource.com/platform/external/angle/ ?\n\nI was hoping the latest commit would have done it\n\nff8701c Merge remote-tracking branch \u0027aosp/upstream-mirror\u0027 by Tim Van Patten · 30 hours ago master\n\nBut apparently not, as the .find_ignore files are still there...",
       "revId": "85acc55aae5da2f610f6560e01ef3ad3e1a02a9e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e79af0c_fcf1d59c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-24T15:12:45Z",
+      "side": 1,
+      "message": "The roll into AOSP is currently blocked by b/187850319",
+      "parentUuid": "71ddf03a_60cfe8a5",
+      "revId": "85acc55aae5da2f610f6560e01ef3ad3e1a02a9e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
