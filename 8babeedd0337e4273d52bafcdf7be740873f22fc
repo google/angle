@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2fc7eb32_dc907787",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1359249
+      },
+      "writtenOn": "2021-05-24T21:17:54Z",
+      "side": 1,
+      "message": "4 of the failures are do to call to ClientWait. I dereference ContextVk, however there is a deqp-EGL test case that uses a null context. This dereference to get hasProtectedContent causes a fault.\nFIXED - next upload.",
+      "revId": "8babeedd0337e4273d52bafcdf7be740873f22fc",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
