@@ -69,6 +69,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3f520f33_14c66580",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-24T20:31:20Z",
+      "side": 1,
+      "message": "Reproducible locally by serving up a copy of this repository locally:\nhttps://github.com/KhronosGroup/WebGL\n\nand navigating to:\nhttp://localhost:8080/sdk/tests/conformance2/buffers/get-buffer-sub-data-validity.html?quiet\u003d1\n\nNeed to be careful. Causing the browser to perform any redraw - including moving the cursor out of the omnibox - will allow the test to pass. Otherwise it times out. Tracking down where the timeout happens now.\n",
+      "revId": "7338bf3f23426a1d314573cdc849c5e657e61057",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "042eb863_1d42ddbd",
