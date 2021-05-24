@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4f91dd62_4624e8e0",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 620,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-24T14:27:59Z",
+      "side": 1,
+      "message": "Can be split up for readability.",
+      "range": {
+        "startLine": 618,
+        "startChar": 0,
+        "endLine": 620,
+        "endChar": 59
+      },
+      "revId": "7f147df8bb8c3a24add090d24a72642a40d10d41",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
