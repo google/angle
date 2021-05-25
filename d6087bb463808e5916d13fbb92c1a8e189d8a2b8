@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83b93b41_e75ffed3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-25T17:04:44Z",
+      "side": 1,
+      "message": "This is huge. libGLESv2.so on a Fuchsia build (which is also ARM, and Vulkan-only) was about 4.5MB last time I tried.",
+      "range": {
+        "startLine": 13,
+        "startChar": 28,
+        "endLine": 13,
+        "endChar": 34
+      },
+      "revId": "d6087bb463808e5916d13fbb92c1a8e189d8a2b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
