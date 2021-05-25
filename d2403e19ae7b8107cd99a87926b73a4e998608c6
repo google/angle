@@ -192,6 +192,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "66de940e_abe8594e",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-25T15:18:18Z",
+      "side": 1,
+      "message": "Then perhaps\n\n mParent.get() !\u003d nullptr\n\nwhich is a common pattern in ANGLE.",
+      "parentUuid": "033fcd6c_8167056b",
+      "range": {
+        "startLine": 53,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 15
+      },
+      "revId": "d2403e19ae7b8107cd99a87926b73a4e998608c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2ef62fb_3c940918",
