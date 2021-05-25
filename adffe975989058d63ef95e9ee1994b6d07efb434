@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2069b8dd_6c82b50e",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 4139,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T18:53:29Z",
+      "side": 1,
+      "message": "one request - the old test was nice and consise. Can you split this into two tests, one like the old test and one like the new test, possibly calling helper functions to reuse code if necessary?",
+      "range": {
+        "startLine": 4139,
+        "startChar": 7,
+        "endLine": 4139,
+        "endChar": 30
+      },
+      "revId": "adffe975989058d63ef95e9ee1994b6d07efb434",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
