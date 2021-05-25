@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "abc75baa_fc684872",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T19:03:18Z",
+      "side": 1,
+      "message": "re-lgtm",
+      "revId": "1be908f91ebed5a262b36b355a6ace823bfb2d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80cb198a_47854425",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4257,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T19:03:18Z",
+      "side": 1,
+      "message": "did you want to use RAII types here? GLTexture/GLFramebuffer etc. You can use them in arrays still, just use references or pointers.",
+      "range": {
+        "startLine": 4257,
+        "startChar": 4,
+        "endLine": 4257,
+        "endChar": 11
+      },
+      "revId": "1be908f91ebed5a262b36b355a6ace823bfb2d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "115d8cf6_81d8ab1a",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4330,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T19:03:18Z",
+      "side": 1,
+      "message": "nit: you don\u0027t need to use ?: here, it\u0027s implied by the check.",
+      "range": {
+        "startLine": 4329,
+        "startChar": 34,
+        "endLine": 4330,
+        "endChar": 47
+      },
+      "revId": "1be908f91ebed5a262b36b355a6ace823bfb2d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b1b9929_7775f8bf",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4398,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T19:03:18Z",
+      "side": 1,
+      "message": "nit: should probably fix this before landing.",
+      "range": {
+        "startLine": 4398,
+        "startChar": 31,
+        "endLine": 4398,
+        "endChar": 40
+      },
+      "revId": "1be908f91ebed5a262b36b355a6ace823bfb2d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
