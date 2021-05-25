@@ -46,6 +46,30 @@
       },
       "revId": "d6087bb463808e5916d13fbb92c1a8e189d8a2b8",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c91c92f_6a91feae",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-25T17:29:06Z",
+      "side": 1,
+      "message": "Geoff is right.   The x86_64 and x86 builds of libGLESv2_angle.so in AOSP with these changes are 7.8MB each, which are larger than the Fuschia builds, but not quite as bad as the 16.7BM for the full APK with both libraries make it look.\n\nI\u0027m sure there\u0027s still more that can bring the library sizes down further, but there doesn\u0027t seem to be a magic bullet yet.",
+      "parentUuid": "6fa3673a_2fe2c9b9",
+      "range": {
+        "startLine": 13,
+        "startChar": 28,
+        "endLine": 13,
+        "endChar": 34
+      },
+      "revId": "d6087bb463808e5916d13fbb92c1a8e189d8a2b8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
