@@ -153,7 +153,7 @@ bool GetSystemInfoVulkan(SystemInfo *info)
     auto pfnGetPhysicalDeviceProperties =
         vkLibrary.getProc<PFN_vkGetPhysicalDeviceProperties>("vkGetPhysicalDeviceProperties");
     uint32_t physicalDeviceCount = 0;
-    if (!pfnEnumeratePhysicalDevices ||
+    if (!pfnEnumeratePhysicalDevices || !pfnGetPhysicalDeviceProperties ||
         pfnEnumeratePhysicalDevices(instance, &physicalDeviceCount, nullptr) != VK_SUCCESS)
     {
         return false;
