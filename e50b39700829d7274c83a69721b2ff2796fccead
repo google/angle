@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cac99d8e_67f229a1",
+        "filename": "src/libANGLE/CLImage.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T16:59:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6a5f5163_6a386802",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 112,
+        "endChar": 17
+      },
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d4ab5016_16f72eb8",
@@ -109,6 +133,30 @@
       "side": 1,
       "message": "agree, use UNREACHABLE() before the 0u to \u0027squawk\u0027 as Cody suggested",
       "parentUuid": "a8756fea_d2487fff",
+      "range": {
+        "startLine": 15,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 25
+      },
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09eb06a9_ce2fa0d6",
+        "filename": "src/libANGLE/cl_utils.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T16:59:18Z",
+      "side": 1,
+      "message": "I added default cases and changed the functions to avoid unreachable code.",
+      "parentUuid": "d67460c4_546f9602",
       "range": {
         "startLine": 15,
         "startChar": 4,
@@ -291,6 +339,24 @@
       "side": 1,
       "message": "Then I get unreachable code again.",
       "parentUuid": "687ab264_94b64358",
+      "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd4414bb_ecf2d794",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 1311,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T16:59:18Z",
+      "side": 1,
+      "message": "Addressed in the upcoming CL.",
+      "parentUuid": "f75a69d5_ae734355",
       "revId": "e50b39700829d7274c83a69721b2ff2796fccead",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
