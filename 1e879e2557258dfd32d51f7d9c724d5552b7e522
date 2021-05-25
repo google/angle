@@ -16,6 +16,46 @@
       "message": "Coming back to this CL ... I previously added feature flag, but forgot to push it.",
       "revId": "1e879e2557258dfd32d51f7d9c724d5552b7e522",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91aaec5b_6e05f8ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-25T18:29:40Z",
+      "side": 1,
+      "message": "You would in the very least need to call ContextVk::framebufferFetchBarrier() (or set the appropriate dirty bit) automatically. I\u0027m guessing that would be on program change if the program is a fetch program (maybe also when switching away from fetch?). Mohan may better know what the right spot would be.",
+      "revId": "1e879e2557258dfd32d51f7d9c724d5552b7e522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d9caccc_ea97cc5c",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 2478,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-25T18:29:40Z",
+      "side": 1,
+      "message": "You can use `mFeatures.exposeNonConformantExtensionsAndVersions.enabled` so future changes to the logic of that feature automatically apply to this.",
+      "range": {
+        "startLine": 2478,
+        "startChar": 28,
+        "endLine": 2478,
+        "endChar": 69
+      },
+      "revId": "1e879e2557258dfd32d51f7d9c724d5552b7e522",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
