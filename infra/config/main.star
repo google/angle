@@ -407,12 +407,6 @@ luci.cq_group(
             builder = "chromium:try/android_angle_rel_ng",
         ),
         luci.cq_tryjob_verifier(
-            builder = "chromium:try/android_angle_vk64_deqp_rel_ng",
-        ),
-        luci.cq_tryjob_verifier(
-            builder = "chromium:try/android_angle_vk64_rel_ng",
-        ),
-        luci.cq_tryjob_verifier(
             builder = "chromium:try/fuchsia-angle-try",
         ),
         luci.cq_tryjob_verifier(
