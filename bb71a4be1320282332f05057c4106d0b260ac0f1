@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03758a81_9d00b414",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-25T21:29:55Z",
+      "side": 1,
+      "message": "Thanks for the test and fix!",
+      "revId": "bb71a4be1320282332f05057c4106d0b260ac0f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c12d0fc2_23a1d5cf",
@@ -72,6 +89,30 @@
       "side": 1,
       "message": "Right, that all got removed in this patchset because these lines are used to determine if texture itself is complete or not and if feedbackk loop formed or not, and if the drawQuad should generate invalid_op error or not. But on OpenGLES, it does not generate invalid_op regardless of feedback loop. Since I have to fix this EXPECT_EQ(expectError, glGetError()) failure, these code basically become unused, thus removed.",
       "parentUuid": "c12d0fc2_23a1d5cf",
+      "range": {
+        "startLine": 4320,
+        "startChar": 16,
+        "endLine": 4320,
+        "endChar": 58
+      },
+      "revId": "bb71a4be1320282332f05057c4106d0b260ac0f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8eda4cff_97f83b5f",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4320,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-25T21:29:55Z",
+      "side": 1,
+      "message": "Got it, thanks!",
+      "parentUuid": "1483890b_0ba22c1c",
       "range": {
         "startLine": 4320,
         "startChar": 16,
