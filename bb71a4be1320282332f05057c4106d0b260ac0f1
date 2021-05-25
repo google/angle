@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "902e0f2a_f994c46e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-25T20:53:25Z",
+      "side": 1,
+      "message": "LGTM, but I haven\u0027t found the original source to compare against.  I don\u0027t have permission to open the Chromium bug listed.  Therefore, I\u0027m only doing a +1 at the moment.",
+      "revId": "bb71a4be1320282332f05057c4106d0b260ac0f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
