@@ -576,7 +576,10 @@ void CaptureGetUniformIndices_uniformNames(const State &glState,
                                            GLuint *uniformIndices,
                                            ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    for (GLsizei index = 0; index < uniformCount; ++index)
+    {
+        CaptureString(uniformNames[index], paramCapture);
+    }
 }
 
 void CaptureGetUniformIndices_uniformIndices(const State &glState,
@@ -587,7 +590,7 @@ void CaptureGetUniformIndices_uniformIndices(const State &glState,
                                              GLuint *uniformIndices,
                                              ParamCapture *paramCapture)
 {
-    UNIMPLEMENTED();
+    CaptureMemory(uniformIndices, sizeof(GLuint) * uniformCount, paramCapture);
 }
 
 void CaptureGetUniformuiv_params(const State &glState,
