@@ -24,7 +24,6 @@
 // Layered rendering (only fail when run in sequence, reproduced with --bot-mode)
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.layered_fbo.fb_texture_invalid_level_number = FAIL
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.layered_fbo.fb_texture_argument_refers_to_buffer_texture = FAIL
-5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.layered_rendering.layered_rendering = FAIL
 // Crashes on ASSERT due to mismatch between shader resources and pipeline layout
 5579 VULKAN WIN : KHR-GLES32.core.geometry_shader.api.max_image_uniforms = SKIP
 // Failures on windows nvidia
