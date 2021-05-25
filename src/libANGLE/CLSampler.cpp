@@ -73,6 +73,8 @@ cl_int Sampler::getInfo(SamplerInfo name, size_t valueSize, void *value, size_t 
 
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return type
+        // as described in the Sampler Object Queries table and param_value is not NULL.
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -102,14 +104,14 @@ Sampler::Sampler(Context &context,
                  cl_bool normalizedCoords,
                  AddressingMode addressingMode,
                  FilterMode filterMode,
-                 cl_int *errcodeRet)
+                 cl_int &errorCode)
     : _cl_sampler(context.getDispatch()),
       mContext(&context),
       mProperties(std::move(properties)),
       mNormalizedCoords(normalizedCoords),
       mAddressingMode(addressingMode),
       mFilterMode(filterMode),
-      mImpl(context.mImpl->createSampler(*this, errcodeRet))
+      mImpl(context.mImpl->createSampler(*this, errorCode))
 {}
 
 }  // namespace cl

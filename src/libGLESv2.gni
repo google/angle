@@ -453,6 +453,7 @@ cl_includes = [
 ]
 
 libangle_cl_headers = [
+  "src/libANGLE/CLBitField.h",
   "src/libANGLE/CLBuffer.h",
   "src/libANGLE/CLCommandQueue.h",
   "src/libANGLE/CLContext.h",

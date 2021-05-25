@@ -77,6 +77,8 @@ cl_int Image::getInfo(ImageInfo name, size_t valueSize, void *value, size_t *val
 
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return type
+        // as described in the Image Object Queries table and param_value is not NULL.
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -116,12 +118,12 @@ bool Image::IsValid(const _cl_mem *image)
 
 Image::Image(Context &context,
              PropArray &&properties,
-             cl_mem_flags flags,
+             MemFlags flags,
              const cl_image_format &format,
              const ImageDescriptor &desc,
              Memory *parent,
              void *hostPtr,
-             cl_int *errcodeRet)
+             cl_int &errorCode)
     : Memory(*this,
              context,
              std::move(properties),
@@ -130,7 +132,7 @@ Image::Image(Context &context,
              desc,
              parent,
              hostPtr,
-             errcodeRet),
+             errorCode),
       mFormat(format),
       mDesc(desc)
 {}

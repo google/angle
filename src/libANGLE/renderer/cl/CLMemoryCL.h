@@ -21,11 +21,11 @@ class CLMemoryCL : public CLMemoryImpl
     CLMemoryCL(const cl::Memory &memory, cl_mem native);
     ~CLMemoryCL() override;
 
-    size_t getSize() const override;
+    size_t getSize(cl_int &errorCode) const override;
 
     CLMemoryImpl::Ptr createSubBuffer(const cl::Buffer &buffer,
                                       size_t size,
-                                      cl_int *errcodeRet) override;
+                                      cl_int &errorCode) override;
 
   private:
     const cl_mem mNative;

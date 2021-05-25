@@ -65,7 +65,7 @@ CLDeviceCL::~CLDeviceCL()
     }
 }
 
-CLDeviceImpl::Info CLDeviceCL::createInfo(cl_device_type type) const
+CLDeviceImpl::Info CLDeviceCL::createInfo(cl::DeviceType type) const
 {
     Info info(type);
     std::vector<char> valString;
@@ -134,7 +134,8 @@ CLDeviceImpl::Info CLDeviceCL::createInfo(cl_device_type type) const
     if (info.mVersion >= CL_MAKE_VERSION(2, 0, 0) &&
         (!GetDeviceInfo(mNative, cl::DeviceInfo::ImagePitchAlignment, info.mImagePitchAlignment) ||
          !GetDeviceInfo(mNative, cl::DeviceInfo::ImageBaseAddressAlignment,
-                        info.mImageBaseAddressAlignment)))
+                        info.mImageBaseAddressAlignment) ||
+         !GetDeviceInfo(mNative, cl::DeviceInfo::QueueOnDeviceMaxSize, info.mQueueOnDeviceMaxSize)))
     {
         return Info{};
     }
@@ -211,14 +212,15 @@ cl_int CLDeviceCL::createSubDevices(cl::Device &device,
         mNative, properties, numDevices, nativeSubDevices.data(), nullptr);
     if (result == CL_SUCCESS)
     {
+        cl::DeviceType type = device.getInfo().mType;
+        type.clear(CL_DEVICE_TYPE_DEFAULT);
         for (cl_device_id nativeSubDevice : nativeSubDevices)
         {
             const cl::Device::CreateImplFunc createImplFunc = [&](const cl::Device &device) {
                 return Ptr(new CLDeviceCL(device, nativeSubDevice));
             };
-            subDeviceList.emplace_back(cl::Device::CreateDevice(
-                device.getPlatform(), &device, device.getInfo().mType & ~CL_DEVICE_TYPE_DEFAULT,
-                createImplFunc));
+            subDeviceList.emplace_back(
+                cl::Device::CreateDevice(device.getPlatform(), &device, type, createImplFunc));
             if (!subDeviceList.back())
             {
                 subDeviceList.clear();

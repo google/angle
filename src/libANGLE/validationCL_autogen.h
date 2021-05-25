@@ -26,7 +26,7 @@ cl_int ValidateGetPlatformInfo(cl_platform_id platform,
                                const void *param_value,
                                const size_t *param_value_size_ret);
 cl_int ValidateGetDeviceIDs(cl_platform_id platform,
-                            cl_device_type device_type,
+                            DeviceType device_typePacked,
                             cl_uint num_entries,
                             const cl_device_id *devices,
                             const cl_uint *num_devices);
@@ -35,23 +35,21 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
                              size_t param_value_size,
                              const void *param_value,
                              const size_t *param_value_size_ret);
-bool ValidateCreateContext(const cl_context_properties *properties,
-                           cl_uint num_devices,
-                           const cl_device_id *devices,
-                           void(CL_CALLBACK *pfn_notify)(const char *errinfo,
-                                                         const void *private_info,
-                                                         size_t cb,
-                                                         void *user_data),
-                           const void *user_data,
-                           cl_int *errcode_ret);
-bool ValidateCreateContextFromType(const cl_context_properties *properties,
-                                   cl_device_type device_type,
-                                   void(CL_CALLBACK *pfn_notify)(const char *errinfo,
-                                                                 const void *private_info,
-                                                                 size_t cb,
-                                                                 void *user_data),
-                                   const void *user_data,
-                                   cl_int *errcode_ret);
+cl_int ValidateCreateContext(const cl_context_properties *properties,
+                             cl_uint num_devices,
+                             const cl_device_id *devices,
+                             void(CL_CALLBACK *pfn_notify)(const char *errinfo,
+                                                           const void *private_info,
+                                                           size_t cb,
+                                                           void *user_data),
+                             const void *user_data);
+cl_int ValidateCreateContextFromType(const cl_context_properties *properties,
+                                     DeviceType device_typePacked,
+                                     void(CL_CALLBACK *pfn_notify)(const char *errinfo,
+                                                                   const void *private_info,
+                                                                   size_t cb,
+                                                                   void *user_data),
+                                     const void *user_data);
 cl_int ValidateRetainContext(cl_context context);
 cl_int ValidateReleaseContext(cl_context context);
 cl_int ValidateGetContextInfo(cl_context context,
@@ -66,15 +64,14 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
                                    size_t param_value_size,
                                    const void *param_value,
                                    const size_t *param_value_size_ret);
-bool ValidateCreateBuffer(cl_context context,
-                          cl_mem_flags flags,
-                          size_t size,
-                          const void *host_ptr,
-                          cl_int *errcode_ret);
+cl_int ValidateCreateBuffer(cl_context context,
+                            MemFlags flagsPacked,
+                            size_t size,
+                            const void *host_ptr);
 cl_int ValidateRetainMemObject(cl_mem memobj);
 cl_int ValidateReleaseMemObject(cl_mem memobj);
 cl_int ValidateGetSupportedImageFormats(cl_context context,
-                                        cl_mem_flags flags,
+                                        MemFlags flagsPacked,
                                         MemObjectType image_typePacked,
                                         cl_uint num_entries,
                                         const cl_image_format *image_formats,
@@ -96,18 +93,16 @@ cl_int ValidateGetSamplerInfo(cl_sampler sampler,
                               size_t param_value_size,
                               const void *param_value,
                               const size_t *param_value_size_ret);
-bool ValidateCreateProgramWithSource(cl_context context,
-                                     cl_uint count,
-                                     const char **strings,
-                                     const size_t *lengths,
-                                     cl_int *errcode_ret);
-bool ValidateCreateProgramWithBinary(cl_context context,
-                                     cl_uint num_devices,
-                                     const cl_device_id *device_list,
-                                     const size_t *lengths,
-                                     const unsigned char **binaries,
-                                     const cl_int *binary_status,
-                                     cl_int *errcode_ret);
+cl_int ValidateCreateProgramWithSource(cl_context context,
+                                       cl_uint count,
+                                       const char **strings,
+                                       const size_t *lengths);
+cl_int ValidateCreateProgramWithBinary(cl_context context,
+                                       cl_uint num_devices,
+                                       const cl_device_id *device_list,
+                                       const size_t *lengths,
+                                       const unsigned char **binaries,
+                                       const cl_int *binary_status);
 cl_int ValidateRetainProgram(cl_program program);
 cl_int ValidateReleaseProgram(cl_program program);
 cl_int ValidateBuildProgram(cl_program program,
@@ -127,7 +122,7 @@ cl_int ValidateGetProgramBuildInfo(cl_program program,
                                    size_t param_value_size,
                                    const void *param_value,
                                    const size_t *param_value_size_ret);
-bool ValidateCreateKernel(cl_program program, const char *kernel_name, cl_int *errcode_ret);
+cl_int ValidateCreateKernel(cl_program program, const char *kernel_name);
 cl_int ValidateCreateKernelsInProgram(cl_program program,
                                       cl_uint num_kernels,
                                       const cl_kernel *kernels,
@@ -240,28 +235,26 @@ cl_int ValidateEnqueueCopyBufferToImage(cl_command_queue command_queue,
                                         cl_uint num_events_in_wait_list,
                                         const cl_event *event_wait_list,
                                         const cl_event *event);
-bool ValidateEnqueueMapBuffer(cl_command_queue command_queue,
-                              cl_mem buffer,
-                              cl_bool blocking_map,
-                              cl_map_flags map_flags,
-                              size_t offset,
-                              size_t size,
-                              cl_uint num_events_in_wait_list,
-                              const cl_event *event_wait_list,
-                              const cl_event *event,
-                              cl_int *errcode_ret);
-bool ValidateEnqueueMapImage(cl_command_queue command_queue,
-                             cl_mem image,
-                             cl_bool blocking_map,
-                             cl_map_flags map_flags,
-                             const size_t *origin,
-                             const size_t *region,
-                             const size_t *image_row_pitch,
-                             const size_t *image_slice_pitch,
-                             cl_uint num_events_in_wait_list,
-                             const cl_event *event_wait_list,
-                             const cl_event *event,
-                             cl_int *errcode_ret);
+cl_int ValidateEnqueueMapBuffer(cl_command_queue command_queue,
+                                cl_mem buffer,
+                                cl_bool blocking_map,
+                                MapFlags map_flagsPacked,
+                                size_t offset,
+                                size_t size,
+                                cl_uint num_events_in_wait_list,
+                                const cl_event *event_wait_list,
+                                const cl_event *event);
+cl_int ValidateEnqueueMapImage(cl_command_queue command_queue,
+                               cl_mem image,
+                               cl_bool blocking_map,
+                               MapFlags map_flagsPacked,
+                               const size_t *origin,
+                               const size_t *region,
+                               const size_t *image_row_pitch,
+                               const size_t *image_slice_pitch,
+                               cl_uint num_events_in_wait_list,
+                               const cl_event *event_wait_list,
+                               const cl_event *event);
 cl_int ValidateEnqueueUnmapMemObject(cl_command_queue command_queue,
                                      cl_mem memobj,
                                      const void *mapped_ptr,
@@ -288,43 +281,39 @@ cl_int ValidateEnqueueNativeKernel(cl_command_queue command_queue,
                                    const cl_event *event_wait_list,
                                    const cl_event *event);
 cl_int ValidateSetCommandQueueProperty(cl_command_queue command_queue,
-                                       cl_command_queue_properties properties,
+                                       CommandQueueProperties propertiesPacked,
                                        cl_bool enable,
                                        const cl_command_queue_properties *old_properties);
-bool ValidateCreateImage2D(cl_context context,
-                           cl_mem_flags flags,
-                           const cl_image_format *image_format,
-                           size_t image_width,
-                           size_t image_height,
-                           size_t image_row_pitch,
-                           const void *host_ptr,
-                           cl_int *errcode_ret);
-bool ValidateCreateImage3D(cl_context context,
-                           cl_mem_flags flags,
-                           const cl_image_format *image_format,
-                           size_t image_width,
-                           size_t image_height,
-                           size_t image_depth,
-                           size_t image_row_pitch,
-                           size_t image_slice_pitch,
-                           const void *host_ptr,
-                           cl_int *errcode_ret);
+cl_int ValidateCreateImage2D(cl_context context,
+                             MemFlags flagsPacked,
+                             const cl_image_format *image_format,
+                             size_t image_width,
+                             size_t image_height,
+                             size_t image_row_pitch,
+                             const void *host_ptr);
+cl_int ValidateCreateImage3D(cl_context context,
+                             MemFlags flagsPacked,
+                             const cl_image_format *image_format,
+                             size_t image_width,
+                             size_t image_height,
+                             size_t image_depth,
+                             size_t image_row_pitch,
+                             size_t image_slice_pitch,
+                             const void *host_ptr);
 cl_int ValidateEnqueueMarker(cl_command_queue command_queue, const cl_event *event);
 cl_int ValidateEnqueueWaitForEvents(cl_command_queue command_queue,
                                     cl_uint num_events,
                                     const cl_event *event_list);
 cl_int ValidateEnqueueBarrier(cl_command_queue command_queue);
 cl_int ValidateUnloadCompiler();
-bool ValidateGetExtensionFunctionAddress(const char *func_name);
-bool ValidateCreateCommandQueue(cl_context context,
-                                cl_device_id device,
-                                cl_command_queue_properties properties,
-                                cl_int *errcode_ret);
-bool ValidateCreateSampler(cl_context context,
-                           cl_bool normalized_coords,
-                           AddressingMode addressing_modePacked,
-                           FilterMode filter_modePacked,
-                           cl_int *errcode_ret);
+cl_int ValidateGetExtensionFunctionAddress(const char *func_name);
+cl_int ValidateCreateCommandQueue(cl_context context,
+                                  cl_device_id device,
+                                  CommandQueueProperties propertiesPacked);
+cl_int ValidateCreateSampler(cl_context context,
+                             cl_bool normalized_coords,
+                             AddressingMode addressing_modePacked,
+                             FilterMode filter_modePacked);
 cl_int ValidateEnqueueTask(cl_command_queue command_queue,
                            cl_kernel kernel,
                            cl_uint num_events_in_wait_list,
@@ -332,16 +321,15 @@ cl_int ValidateEnqueueTask(cl_command_queue command_queue,
                            const cl_event *event);
 
 // CL 1.1
-bool ValidateCreateSubBuffer(cl_mem buffer,
-                             cl_mem_flags flags,
-                             cl_buffer_create_type buffer_create_type,
-                             const void *buffer_create_info,
-                             cl_int *errcode_ret);
+cl_int ValidateCreateSubBuffer(cl_mem buffer,
+                               MemFlags flagsPacked,
+                               cl_buffer_create_type buffer_create_type,
+                               const void *buffer_create_info);
 cl_int ValidateSetMemObjectDestructorCallback(cl_mem memobj,
                                               void(CL_CALLBACK *pfn_notify)(cl_mem memobj,
                                                                             void *user_data),
                                               const void *user_data);
-bool ValidateCreateUserEvent(cl_context context, cl_int *errcode_ret);
+cl_int ValidateCreateUserEvent(cl_context context);
 cl_int ValidateSetUserEventStatus(cl_event event, cl_int execution_status);
 cl_int ValidateSetEventCallback(cl_event event,
                                 cl_int command_exec_callback_type,
@@ -399,17 +387,15 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
                                 const cl_uint *num_devices_ret);
 cl_int ValidateRetainDevice(cl_device_id device);
 cl_int ValidateReleaseDevice(cl_device_id device);
-bool ValidateCreateImage(cl_context context,
-                         cl_mem_flags flags,
-                         const cl_image_format *image_format,
-                         const cl_image_desc *image_desc,
-                         const void *host_ptr,
-                         cl_int *errcode_ret);
-bool ValidateCreateProgramWithBuiltInKernels(cl_context context,
-                                             cl_uint num_devices,
-                                             const cl_device_id *device_list,
-                                             const char *kernel_names,
-                                             cl_int *errcode_ret);
+cl_int ValidateCreateImage(cl_context context,
+                           MemFlags flagsPacked,
+                           const cl_image_format *image_format,
+                           const cl_image_desc *image_desc,
+                           const void *host_ptr);
+cl_int ValidateCreateProgramWithBuiltInKernels(cl_context context,
+                                               cl_uint num_devices,
+                                               const cl_device_id *device_list,
+                                               const char *kernel_names);
 cl_int ValidateCompileProgram(cl_program program,
                               cl_uint num_devices,
                               const cl_device_id *device_list,
@@ -419,15 +405,14 @@ cl_int ValidateCompileProgram(cl_program program,
                               const char **header_include_names,
                               void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                               const void *user_data);
-bool ValidateLinkProgram(cl_context context,
-                         cl_uint num_devices,
-                         const cl_device_id *device_list,
-                         const char *options,
-                         cl_uint num_input_programs,
-                         const cl_program *input_programs,
-                         void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
-                         const void *user_data,
-                         cl_int *errcode_ret);
+cl_int ValidateLinkProgram(cl_context context,
+                           cl_uint num_devices,
+                           const cl_device_id *device_list,
+                           const char *options,
+                           cl_uint num_input_programs,
+                           const cl_program *input_programs,
+                           void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
+                           const void *user_data);
 cl_int ValidateUnloadPlatformCompiler(cl_platform_id platform);
 cl_int ValidateGetKernelArgInfo(cl_kernel kernel,
                                 cl_uint arg_index,
@@ -455,7 +440,7 @@ cl_int ValidateEnqueueFillImage(cl_command_queue command_queue,
 cl_int ValidateEnqueueMigrateMemObjects(cl_command_queue command_queue,
                                         cl_uint num_mem_objects,
                                         const cl_mem *mem_objects,
-                                        cl_mem_migration_flags flags,
+                                        MemMigrationFlags flagsPacked,
                                         cl_uint num_events_in_wait_list,
                                         const cl_event *event_wait_list,
                                         const cl_event *event);
@@ -467,29 +452,30 @@ cl_int ValidateEnqueueBarrierWithWaitList(cl_command_queue command_queue,
                                           cl_uint num_events_in_wait_list,
                                           const cl_event *event_wait_list,
                                           const cl_event *event);
-bool ValidateGetExtensionFunctionAddressForPlatform(cl_platform_id platform, const char *func_name);
+cl_int ValidateGetExtensionFunctionAddressForPlatform(cl_platform_id platform,
+                                                      const char *func_name);
 
 // CL 2.0
-bool ValidateCreateCommandQueueWithProperties(cl_context context,
-                                              cl_device_id device,
-                                              const cl_queue_properties *properties,
-                                              cl_int *errcode_ret);
-bool ValidateCreatePipe(cl_context context,
-                        cl_mem_flags flags,
-                        cl_uint pipe_packet_size,
-                        cl_uint pipe_max_packets,
-                        const cl_pipe_properties *properties,
-                        cl_int *errcode_ret);
+cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
+                                                cl_device_id device,
+                                                const cl_queue_properties *properties);
+cl_int ValidateCreatePipe(cl_context context,
+                          MemFlags flagsPacked,
+                          cl_uint pipe_packet_size,
+                          cl_uint pipe_max_packets,
+                          const cl_pipe_properties *properties);
 cl_int ValidateGetPipeInfo(cl_mem pipe,
                            PipeInfo param_namePacked,
                            size_t param_value_size,
                            const void *param_value,
                            const size_t *param_value_size_ret);
-bool ValidateSVMAlloc(cl_context context, cl_svm_mem_flags flags, size_t size, cl_uint alignment);
-bool ValidateSVMFree(cl_context context, const void *svm_pointer);
-bool ValidateCreateSamplerWithProperties(cl_context context,
-                                         const cl_sampler_properties *sampler_properties,
-                                         cl_int *errcode_ret);
+cl_int ValidateSVMAlloc(cl_context context,
+                        SVM_MemFlags flagsPacked,
+                        size_t size,
+                        cl_uint alignment);
+cl_int ValidateSVMFree(cl_context context, const void *svm_pointer);
+cl_int ValidateCreateSamplerWithProperties(cl_context context,
+                                           const cl_sampler_properties *sampler_properties);
 cl_int ValidateSetKernelArgSVMPointer(cl_kernel kernel, cl_uint arg_index, const void *arg_value);
 cl_int ValidateSetKernelExecInfo(cl_kernel kernel,
                                  KernelExecInfo param_namePacked,
@@ -524,7 +510,7 @@ cl_int ValidateEnqueueSVMMemFill(cl_command_queue command_queue,
                                  const cl_event *event);
 cl_int ValidateEnqueueSVMMap(cl_command_queue command_queue,
                              cl_bool blocking_map,
-                             cl_map_flags flags,
+                             MapFlags flagsPacked,
                              const void *svm_ptr,
                              size_t size,
                              cl_uint num_events_in_wait_list,
@@ -544,11 +530,8 @@ cl_int ValidateGetDeviceAndHostTimer(cl_device_id device,
                                      const cl_ulong *device_timestamp,
                                      const cl_ulong *host_timestamp);
 cl_int ValidateGetHostTimer(cl_device_id device, const cl_ulong *host_timestamp);
-bool ValidateCreateProgramWithIL(cl_context context,
-                                 const void *il,
-                                 size_t length,
-                                 cl_int *errcode_ret);
-bool ValidateCloneKernel(cl_kernel source_kernel, cl_int *errcode_ret);
+cl_int ValidateCreateProgramWithIL(cl_context context, const void *il, size_t length);
+cl_int ValidateCloneKernel(cl_kernel source_kernel);
 cl_int ValidateGetKernelSubGroupInfo(cl_kernel kernel,
                                      cl_device_id device,
                                      KernelSubGroupInfo param_namePacked,
@@ -561,7 +544,7 @@ cl_int ValidateEnqueueSVMMigrateMem(cl_command_queue command_queue,
                                     cl_uint num_svm_pointers,
                                     const void **svm_pointers,
                                     const size_t *sizes,
-                                    cl_mem_migration_flags flags,
+                                    MemMigrationFlags flagsPacked,
                                     cl_uint num_events_in_wait_list,
                                     const cl_event *event_wait_list,
                                     const cl_event *event);
@@ -581,19 +564,17 @@ cl_int ValidateSetContextDestructorCallback(cl_context context,
                                             void(CL_CALLBACK *pfn_notify)(cl_context context,
                                                                           void *user_data),
                                             const void *user_data);
-bool ValidateCreateBufferWithProperties(cl_context context,
-                                        const cl_mem_properties *properties,
-                                        cl_mem_flags flags,
-                                        size_t size,
-                                        const void *host_ptr,
-                                        cl_int *errcode_ret);
-bool ValidateCreateImageWithProperties(cl_context context,
-                                       const cl_mem_properties *properties,
-                                       cl_mem_flags flags,
-                                       const cl_image_format *image_format,
-                                       const cl_image_desc *image_desc,
-                                       const void *host_ptr,
-                                       cl_int *errcode_ret);
+cl_int ValidateCreateBufferWithProperties(cl_context context,
+                                          const cl_mem_properties *properties,
+                                          MemFlags flagsPacked,
+                                          size_t size,
+                                          const void *host_ptr);
+cl_int ValidateCreateImageWithProperties(cl_context context,
+                                         const cl_mem_properties *properties,
+                                         MemFlags flagsPacked,
+                                         const cl_image_format *image_format,
+                                         const cl_image_desc *image_desc,
+                                         const void *host_ptr);
 
 // cl_khr_icd
 cl_int ValidateIcdGetPlatformIDsKHR(cl_uint num_entries,

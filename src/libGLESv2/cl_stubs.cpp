@@ -52,7 +52,7 @@ cl_int GetPlatformInfo(cl_platform_id platform,
 }
 
 cl_int GetDeviceIDs(cl_platform_id platform,
-                    cl_device_type device_type,
+                    DeviceType device_type,
                     cl_uint num_entries,
                     cl_device_id *devices,
                     cl_uint *num_devices)
@@ -123,23 +123,23 @@ cl_context CreateContext(const cl_context_properties *properties,
                                                        size_t cb,
                                                        void *user_data),
                          void *user_data,
-                         cl_int *errcode_ret)
+                         cl_int &errorCode)
 {
     return Platform::CreateContext(properties, num_devices, devices, pfn_notify, user_data,
-                                   errcode_ret);
+                                   errorCode);
 }
 
 cl_context CreateContextFromType(const cl_context_properties *properties,
-                                 cl_device_type device_type,
+                                 DeviceType device_type,
                                  void(CL_CALLBACK *pfn_notify)(const char *errinfo,
                                                                const void *private_info,
                                                                size_t cb,
                                                                void *user_data),
                                  void *user_data,
-                                 cl_int *errcode_ret)
+                                 cl_int &errorCode)
 {
     return Platform::CreateContextFromType(properties, device_type, pfn_notify, user_data,
-                                           errcode_ret);
+                                           errorCode);
 }
 
 cl_int RetainContext(cl_context context)
@@ -176,10 +176,10 @@ cl_int SetContextDestructorCallback(cl_context context,
 cl_command_queue CreateCommandQueueWithProperties(cl_context context,
                                                   cl_device_id device,
                                                   const cl_queue_properties *properties,
-                                                  cl_int *errcode_ret)
+                                                  cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createCommandQueueWithProperties(device, properties,
-                                                                             errcode_ret);
+                                                                             errorCode);
 }
 
 cl_int RetainCommandQueue(cl_command_queue command_queue)
@@ -205,65 +205,64 @@ cl_int GetCommandQueueInfo(cl_command_queue command_queue,
 }
 
 cl_mem CreateBuffer(cl_context context,
-                    cl_mem_flags flags,
+                    MemFlags flags,
                     size_t size,
                     void *host_ptr,
-                    cl_int *errcode_ret)
+                    cl_int &errorCode)
 {
-    return static_cast<Context *>(context)->createBuffer(nullptr, flags, size, host_ptr,
-                                                         errcode_ret);
+    return static_cast<Context *>(context)->createBuffer(nullptr, flags, size, host_ptr, errorCode);
 }
 
 cl_mem CreateBufferWithProperties(cl_context context,
                                   const cl_mem_properties *properties,
-                                  cl_mem_flags flags,
+                                  MemFlags flags,
                                   size_t size,
                                   void *host_ptr,
-                                  cl_int *errcode_ret)
+                                  cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createBuffer(properties, flags, size, host_ptr,
-                                                         errcode_ret);
+                                                         errorCode);
 }
 
 cl_mem CreateSubBuffer(cl_mem buffer,
-                       cl_mem_flags flags,
+                       MemFlags flags,
                        cl_buffer_create_type buffer_create_type,
                        const void *buffer_create_info,
-                       cl_int *errcode_ret)
+                       cl_int &errorCode)
 {
     return static_cast<Buffer *>(buffer)->createSubBuffer(flags, buffer_create_type,
-                                                          buffer_create_info, errcode_ret);
+                                                          buffer_create_info, errorCode);
 }
 
 cl_mem CreateImage(cl_context context,
-                   cl_mem_flags flags,
+                   MemFlags flags,
                    const cl_image_format *image_format,
                    const cl_image_desc *image_desc,
                    void *host_ptr,
-                   cl_int *errcode_ret)
+                   cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createImage(nullptr, flags, image_format, image_desc,
-                                                        host_ptr, errcode_ret);
+                                                        host_ptr, errorCode);
 }
 
 cl_mem CreateImageWithProperties(cl_context context,
                                  const cl_mem_properties *properties,
-                                 cl_mem_flags flags,
+                                 MemFlags flags,
                                  const cl_image_format *image_format,
                                  const cl_image_desc *image_desc,
                                  void *host_ptr,
-                                 cl_int *errcode_ret)
+                                 cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createImage(properties, flags, image_format, image_desc,
-                                                        host_ptr, errcode_ret);
+                                                        host_ptr, errorCode);
 }
 
 cl_mem CreatePipe(cl_context context,
-                  cl_mem_flags flags,
+                  MemFlags flags,
                   cl_uint pipe_packet_size,
                   cl_uint pipe_max_packets,
                   const cl_pipe_properties *properties,
-                  cl_int *errcode_ret)
+                  cl_int &errorCode)
 {
     WARN_NOT_SUPPORTED(CreatePipe);
     return 0;
@@ -282,7 +281,7 @@ cl_int ReleaseMemObject(cl_mem memobj)
 }
 
 cl_int GetSupportedImageFormats(cl_context context,
-                                cl_mem_flags flags,
+                                MemFlags flags,
                                 MemObjectType image_type,
                                 cl_uint num_entries,
                                 cl_image_format *image_formats,
@@ -330,7 +329,7 @@ cl_int SetMemObjectDestructorCallback(cl_mem memobj,
     return 0;
 }
 
-void *SVMAlloc(cl_context context, cl_svm_mem_flags flags, size_t size, cl_uint alignment)
+void *SVMAlloc(cl_context context, SVM_MemFlags flags, size_t size, cl_uint alignment)
 {
     WARN_NOT_SUPPORTED(SVMAlloc);
     return 0;
@@ -343,10 +342,10 @@ void SVMFree(cl_context context, void *svm_pointer)
 
 cl_sampler CreateSamplerWithProperties(cl_context context,
                                        const cl_sampler_properties *sampler_properties,
-                                       cl_int *errcode_ret)
+                                       cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createSamplerWithProperties(sampler_properties,
-                                                                        errcode_ret);
+                                                                        errorCode);
 }
 
 cl_int RetainSampler(cl_sampler sampler)
@@ -375,10 +374,10 @@ cl_program CreateProgramWithSource(cl_context context,
                                    cl_uint count,
                                    const char **strings,
                                    const size_t *lengths,
-                                   cl_int *errcode_ret)
+                                   cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createProgramWithSource(count, strings, lengths,
-                                                                    errcode_ret);
+                                                                    errorCode);
 }
 
 cl_program CreateProgramWithBinary(cl_context context,
@@ -387,28 +386,25 @@ cl_program CreateProgramWithBinary(cl_context context,
                                    const size_t *lengths,
                                    const unsigned char **binaries,
                                    cl_int *binary_status,
-                                   cl_int *errcode_ret)
+                                   cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createProgramWithBinary(
-        num_devices, device_list, lengths, binaries, binary_status, errcode_ret);
+        num_devices, device_list, lengths, binaries, binary_status, errorCode);
 }
 
 cl_program CreateProgramWithBuiltInKernels(cl_context context,
                                            cl_uint num_devices,
                                            const cl_device_id *device_list,
                                            const char *kernel_names,
-                                           cl_int *errcode_ret)
+                                           cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createProgramWithBuiltInKernels(
-        num_devices, device_list, kernel_names, errcode_ret);
+        num_devices, device_list, kernel_names, errorCode);
 }
 
-cl_program CreateProgramWithIL(cl_context context,
-                               const void *il,
-                               size_t length,
-                               cl_int *errcode_ret)
+cl_program CreateProgramWithIL(cl_context context, const void *il, size_t length, cl_int &errorCode)
 {
-    return static_cast<Context *>(context)->createProgramWithIL(il, length, errcode_ret);
+    return static_cast<Context *>(context)->createProgramWithIL(il, length, errorCode);
 }
 
 cl_int RetainProgram(cl_program program)
@@ -456,7 +452,7 @@ cl_program LinkProgram(cl_context context,
                        const cl_program *input_programs,
                        void(CL_CALLBACK *pfn_notify)(cl_program program, void *user_data),
                        void *user_data,
-                       cl_int *errcode_ret)
+                       cl_int &errorCode)
 {
     WARN_NOT_SUPPORTED(LinkProgram);
     return 0;
@@ -506,7 +502,7 @@ cl_int GetProgramBuildInfo(cl_program program,
     return 0;
 }
 
-cl_kernel CreateKernel(cl_program program, const char *kernel_name, cl_int *errcode_ret)
+cl_kernel CreateKernel(cl_program program, const char *kernel_name, cl_int &errorCode)
 {
     WARN_NOT_SUPPORTED(CreateKernel);
     return 0;
@@ -521,7 +517,7 @@ cl_int CreateKernelsInProgram(cl_program program,
     return 0;
 }
 
-cl_kernel CloneKernel(cl_kernel source_kernel, cl_int *errcode_ret)
+cl_kernel CloneKernel(cl_kernel source_kernel, cl_int &errorCode)
 {
     WARN_NOT_SUPPORTED(CloneKernel);
     return 0;
@@ -621,7 +617,7 @@ cl_int GetEventInfo(cl_event event,
     return 0;
 }
 
-cl_event CreateUserEvent(cl_context context, cl_int *errcode_ret)
+cl_event CreateUserEvent(cl_context context, cl_int &errorCode)
 {
     WARN_NOT_SUPPORTED(CreateUserEvent);
     return 0;
@@ -880,13 +876,13 @@ cl_int EnqueueCopyBufferToImage(cl_command_queue command_queue,
 void *EnqueueMapBuffer(cl_command_queue command_queue,
                        cl_mem buffer,
                        cl_bool blocking_map,
-                       cl_map_flags map_flags,
+                       MapFlags map_flags,
                        size_t offset,
                        size_t size,
                        cl_uint num_events_in_wait_list,
                        const cl_event *event_wait_list,
                        cl_event *event,
-                       cl_int *errcode_ret)
+                       cl_int &errorCode)
 {
     WARN_NOT_SUPPORTED(EnqueueMapBuffer);
     return 0;
@@ -895,7 +891,7 @@ void *EnqueueMapBuffer(cl_command_queue command_queue,
 void *EnqueueMapImage(cl_command_queue command_queue,
                       cl_mem image,
                       cl_bool blocking_map,
-                      cl_map_flags map_flags,
+                      MapFlags map_flags,
                       const size_t *origin,
                       const size_t *region,
                       size_t *image_row_pitch,
@@ -903,7 +899,7 @@ void *EnqueueMapImage(cl_command_queue command_queue,
                       cl_uint num_events_in_wait_list,
                       const cl_event *event_wait_list,
                       cl_event *event,
-                      cl_int *errcode_ret)
+                      cl_int &errorCode)
 {
     WARN_NOT_SUPPORTED(EnqueueMapImage);
     return 0;
@@ -923,7 +919,7 @@ cl_int EnqueueUnmapMemObject(cl_command_queue command_queue,
 cl_int EnqueueMigrateMemObjects(cl_command_queue command_queue,
                                 cl_uint num_mem_objects,
                                 const cl_mem *mem_objects,
-                                cl_mem_migration_flags flags,
+                                MemMigrationFlags flags,
                                 cl_uint num_events_in_wait_list,
                                 const cl_event *event_wait_list,
                                 cl_event *event)
@@ -1023,7 +1019,7 @@ cl_int EnqueueSVMMemFill(cl_command_queue command_queue,
 
 cl_int EnqueueSVMMap(cl_command_queue command_queue,
                      cl_bool blocking_map,
-                     cl_map_flags flags,
+                     MapFlags flags,
                      void *svm_ptr,
                      size_t size,
                      cl_uint num_events_in_wait_list,
@@ -1048,7 +1044,7 @@ cl_int EnqueueSVMMigrateMem(cl_command_queue command_queue,
                             cl_uint num_svm_pointers,
                             const void **svm_pointers,
                             const size_t *sizes,
-                            cl_mem_migration_flags flags,
+                            MemMigrationFlags flags,
                             cl_uint num_events_in_wait_list,
                             const cl_event *event_wait_list,
                             cl_event *event)
@@ -1063,7 +1059,7 @@ void *GetExtensionFunctionAddressForPlatform(cl_platform_id platform, const char
 }
 
 cl_int SetCommandQueueProperty(cl_command_queue command_queue,
-                               cl_command_queue_properties properties,
+                               CommandQueueProperties properties,
                                cl_bool enable,
                                cl_command_queue_properties *old_properties)
 {
@@ -1072,20 +1068,20 @@ cl_int SetCommandQueueProperty(cl_command_queue command_queue,
 }
 
 cl_mem CreateImage2D(cl_context context,
-                     cl_mem_flags flags,
+                     MemFlags flags,
                      const cl_image_format *image_format,
                      size_t image_width,
                      size_t image_height,
                      size_t image_row_pitch,
                      void *host_ptr,
-                     cl_int *errcode_ret)
+                     cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createImage2D(
-        flags, image_format, image_width, image_height, image_row_pitch, host_ptr, errcode_ret);
+        flags, image_format, image_width, image_height, image_row_pitch, host_ptr, errorCode);
 }
 
 cl_mem CreateImage3D(cl_context context,
-                     cl_mem_flags flags,
+                     MemFlags flags,
                      const cl_image_format *image_format,
                      size_t image_width,
                      size_t image_height,
@@ -1093,11 +1089,11 @@ cl_mem CreateImage3D(cl_context context,
                      size_t image_row_pitch,
                      size_t image_slice_pitch,
                      void *host_ptr,
-                     cl_int *errcode_ret)
+                     cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createImage3D(
         flags, image_format, image_width, image_height, image_depth, image_row_pitch,
-        image_slice_pitch, host_ptr, errcode_ret);
+        image_slice_pitch, host_ptr, errorCode);
 }
 
 cl_int EnqueueMarker(cl_command_queue command_queue, cl_event *event)
@@ -1139,20 +1135,20 @@ void *GetExtensionFunctionAddress(const char *func_name)
 
 cl_command_queue CreateCommandQueue(cl_context context,
                                     cl_device_id device,
-                                    cl_command_queue_properties properties,
-                                    cl_int *errcode_ret)
+                                    CommandQueueProperties properties,
+                                    cl_int &errorCode)
 {
-    return static_cast<Context *>(context)->createCommandQueue(device, properties, errcode_ret);
+    return static_cast<Context *>(context)->createCommandQueue(device, properties, errorCode);
 }
 
 cl_sampler CreateSampler(cl_context context,
                          cl_bool normalized_coords,
                          AddressingMode addressing_mode,
                          FilterMode filter_mode,
-                         cl_int *errcode_ret)
+                         cl_int &errorCode)
 {
     return static_cast<Context *>(context)->createSampler(normalized_coords, addressing_mode,
-                                                          filter_mode, errcode_ret);
+                                                          filter_mode, errorCode);
 }
 
 cl_int EnqueueTask(cl_command_queue command_queue,

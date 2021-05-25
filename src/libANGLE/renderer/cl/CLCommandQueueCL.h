@@ -22,7 +22,7 @@ class CLCommandQueueCL : public CLCommandQueueImpl
     CLCommandQueueCL(const cl::CommandQueue &commandQueue, cl_command_queue native);
     ~CLCommandQueueCL() override;
 
-    cl_int setProperty(cl_command_queue_properties properties, cl_bool enable) override;
+    cl_int setProperty(cl::CommandQueueProperties properties, cl_bool enable) override;
 
   private:
     const cl_command_queue mNative;

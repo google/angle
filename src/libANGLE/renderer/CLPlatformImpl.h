@@ -50,19 +50,15 @@ class CLPlatformImpl : angle::NonCopyable
     virtual Info createInfo() const                                       = 0;
     virtual cl::DevicePtrList createDevices(cl::Platform &platform) const = 0;
 
-    virtual CLContextImpl::Ptr createContext(const cl::Context &context,
+    virtual CLContextImpl::Ptr createContext(cl::Context &context,
                                              const cl::DeviceRefList &devices,
-                                             cl::ContextErrorCB notify,
-                                             void *userData,
                                              bool userSync,
-                                             cl_int *errcodeRet) = 0;
+                                             cl_int &errorCode) = 0;
 
-    virtual CLContextImpl::Ptr createContextFromType(const cl::Context &context,
-                                                     cl_device_type deviceType,
-                                                     cl::ContextErrorCB notify,
-                                                     void *userData,
+    virtual CLContextImpl::Ptr createContextFromType(cl::Context &context,
+                                                     cl::DeviceType deviceType,
                                                      bool userSync,
-                                                     cl_int *errcodeRet) = 0;
+                                                     cl_int &errorCode) = 0;
 
   protected:
     const cl::Platform &mPlatform;

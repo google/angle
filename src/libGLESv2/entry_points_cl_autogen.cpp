@@ -76,9 +76,12 @@ cl_int CL_API_CALL clGetDeviceIDs(cl_platform_id platform,
              (uintptr_t)platform, static_cast<unsigned long long>(device_type), num_entries,
              (uintptr_t)devices, (uintptr_t)num_devices);
 
-    ANGLE_CL_VALIDATE_ERROR(GetDeviceIDs, platform, device_type, num_entries, devices, num_devices);
+    DeviceType device_typePacked = PackParam<DeviceType>(device_type);
 
-    return GetDeviceIDs(platform, device_type, num_entries, devices, num_devices);
+    ANGLE_CL_VALIDATE_ERROR(GetDeviceIDs, platform, device_typePacked, num_entries, devices,
+                            num_devices);
+
+    return GetDeviceIDs(platform, device_typePacked, num_entries, devices, num_devices);
 }
 
 cl_int CL_API_CALL clGetDeviceInfo(cl_device_id device,
@@ -125,10 +128,19 @@ cl_context CL_API_CALL clCreateContext(const cl_context_properties *properties,
              (uintptr_t)properties, num_devices, (uintptr_t)devices, (uintptr_t)pfn_notify,
              (uintptr_t)user_data, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateContext, properties, num_devices, devices, pfn_notify,
-                              user_data, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateContext, properties, num_devices, devices, pfn_notify,
+                                  user_data);
 
-    return CreateContext(properties, num_devices, devices, pfn_notify, user_data, errcode_ret);
+    cl_int errorCode = CL_SUCCESS;
+    cl_context object =
+        CreateContext(properties, num_devices, devices, pfn_notify, user_data, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_context CL_API_CALL
@@ -150,10 +162,21 @@ clCreateContextFromType(const cl_context_properties *properties,
              (uintptr_t)properties, static_cast<unsigned long long>(device_type),
              (uintptr_t)pfn_notify, (uintptr_t)user_data, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateContextFromType, properties, device_type, pfn_notify, user_data,
-                              errcode_ret);
+    DeviceType device_typePacked = PackParam<DeviceType>(device_type);
 
-    return CreateContextFromType(properties, device_type, pfn_notify, user_data, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateContextFromType, properties, device_typePacked, pfn_notify,
+                                  user_data);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_context object =
+        CreateContextFromType(properties, device_typePacked, pfn_notify, user_data, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clRetainContext(cl_context context)
@@ -262,9 +285,19 @@ cl_mem CL_API_CALL clCreateBuffer(cl_context context,
              (uintptr_t)context, static_cast<unsigned long long>(flags), size, (uintptr_t)host_ptr,
              (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateBuffer, context, flags, size, host_ptr, errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreateBuffer(context, flags, size, host_ptr, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateBuffer, context, flagsPacked, size, host_ptr);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object    = CreateBuffer(context, flagsPacked, size, host_ptr, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clRetainMemObject(cl_mem memobj)
@@ -305,13 +338,14 @@ cl_int CL_API_CALL clGetSupportedImageFormats(cl_context context,
              (uintptr_t)context, static_cast<unsigned long long>(flags), image_type, num_entries,
              (uintptr_t)image_formats, (uintptr_t)num_image_formats);
 
+    MemFlags flagsPacked           = PackParam<MemFlags>(flags);
     MemObjectType image_typePacked = PackParam<MemObjectType>(image_type);
 
-    ANGLE_CL_VALIDATE_ERROR(GetSupportedImageFormats, context, flags, image_typePacked, num_entries,
-                            image_formats, num_image_formats);
+    ANGLE_CL_VALIDATE_ERROR(GetSupportedImageFormats, context, flagsPacked, image_typePacked,
+                            num_entries, image_formats, num_image_formats);
 
-    return GetSupportedImageFormats(context, flags, image_typePacked, num_entries, image_formats,
-                                    num_image_formats);
+    return GetSupportedImageFormats(context, flagsPacked, image_typePacked, num_entries,
+                                    image_formats, num_image_formats);
 }
 
 cl_int CL_API_CALL clGetMemObjectInfo(cl_mem memobj,
@@ -422,10 +456,17 @@ cl_program CL_API_CALL clCreateProgramWithSource(cl_context context,
              (uintptr_t)context, count, (uintptr_t)strings, (uintptr_t)lengths,
              (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateProgramWithSource, context, count, strings, lengths,
-                              errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateProgramWithSource, context, count, strings, lengths);
 
-    return CreateProgramWithSource(context, count, strings, lengths, errcode_ret);
+    cl_int errorCode  = CL_SUCCESS;
+    cl_program object = CreateProgramWithSource(context, count, strings, lengths, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_program CL_API_CALL clCreateProgramWithBinary(cl_context context,
@@ -445,11 +486,19 @@ cl_program CL_API_CALL clCreateProgramWithBinary(cl_context context,
              (uintptr_t)context, num_devices, (uintptr_t)device_list, (uintptr_t)lengths,
              (uintptr_t)binaries, (uintptr_t)binary_status, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateProgramWithBinary, context, num_devices, device_list, lengths,
-                              binaries, binary_status, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateProgramWithBinary, context, num_devices, device_list,
+                                  lengths, binaries, binary_status);
 
-    return CreateProgramWithBinary(context, num_devices, device_list, lengths, binaries,
-                                   binary_status, errcode_ret);
+    cl_int errorCode  = CL_SUCCESS;
+    cl_program object = CreateProgramWithBinary(context, num_devices, device_list, lengths,
+                                                binaries, binary_status, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clRetainProgram(cl_program program)
@@ -557,9 +606,17 @@ cl_kernel CL_API_CALL clCreateKernel(cl_program program,
              ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)program, (uintptr_t)kernel_name, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateKernel, program, kernel_name, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateKernel, program, kernel_name);
 
-    return CreateKernel(program, kernel_name, errcode_ret);
+    cl_int errorCode = CL_SUCCESS;
+    cl_kernel object = CreateKernel(program, kernel_name, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clCreateKernelsInProgram(cl_program program,
@@ -1029,12 +1086,23 @@ void *CL_API_CALL clEnqueueMapBuffer(cl_command_queue command_queue,
              static_cast<unsigned long long>(map_flags), offset, size, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(EnqueueMapBuffer, command_queue, buffer, blocking_map, map_flags,
-                              offset, size, num_events_in_wait_list, event_wait_list, event,
-                              errcode_ret);
+    MapFlags map_flagsPacked = PackParam<MapFlags>(map_flags);
 
-    return EnqueueMapBuffer(command_queue, buffer, blocking_map, map_flags, offset, size,
-                            num_events_in_wait_list, event_wait_list, event, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(EnqueueMapBuffer, command_queue, buffer, blocking_map,
+                                  map_flagsPacked, offset, size, num_events_in_wait_list,
+                                  event_wait_list, event);
+
+    cl_int errorCode = CL_SUCCESS;
+    void *object =
+        EnqueueMapBuffer(command_queue, buffer, blocking_map, map_flagsPacked, offset, size,
+                         num_events_in_wait_list, event_wait_list, event, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 void *CL_API_CALL clEnqueueMapImage(cl_command_queue command_queue,
@@ -1064,13 +1132,23 @@ void *CL_API_CALL clEnqueueMapImage(cl_command_queue command_queue,
              (uintptr_t)image_row_pitch, (uintptr_t)image_slice_pitch, num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(EnqueueMapImage, command_queue, image, blocking_map, map_flags,
-                              origin, region, image_row_pitch, image_slice_pitch,
-                              num_events_in_wait_list, event_wait_list, event, errcode_ret);
+    MapFlags map_flagsPacked = PackParam<MapFlags>(map_flags);
 
-    return EnqueueMapImage(command_queue, image, blocking_map, map_flags, origin, region,
-                           image_row_pitch, image_slice_pitch, num_events_in_wait_list,
-                           event_wait_list, event, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(
+        EnqueueMapImage, command_queue, image, blocking_map, map_flagsPacked, origin, region,
+        image_row_pitch, image_slice_pitch, num_events_in_wait_list, event_wait_list, event);
+
+    cl_int errorCode = CL_SUCCESS;
+    void *object     = EnqueueMapImage(command_queue, image, blocking_map, map_flagsPacked, origin,
+                                   region, image_row_pitch, image_slice_pitch,
+                                   num_events_in_wait_list, event_wait_list, event, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clEnqueueUnmapMemObject(cl_command_queue command_queue,
@@ -1173,10 +1251,12 @@ cl_int CL_API_CALL clSetCommandQueueProperty(cl_command_queue command_queue,
              (uintptr_t)command_queue, static_cast<unsigned long long>(properties), enable,
              (uintptr_t)old_properties);
 
-    ANGLE_CL_VALIDATE_ERROR(SetCommandQueueProperty, command_queue, properties, enable,
+    CommandQueueProperties propertiesPacked = PackParam<CommandQueueProperties>(properties);
+
+    ANGLE_CL_VALIDATE_ERROR(SetCommandQueueProperty, command_queue, propertiesPacked, enable,
                             old_properties);
 
-    return SetCommandQueueProperty(command_queue, properties, enable, old_properties);
+    return SetCommandQueueProperty(command_queue, propertiesPacked, enable, old_properties);
 }
 
 cl_mem CL_API_CALL clCreateImage2D(cl_context context,
@@ -1198,11 +1278,21 @@ cl_mem CL_API_CALL clCreateImage2D(cl_context context,
         (uintptr_t)context, static_cast<unsigned long long>(flags), (uintptr_t)image_format,
         image_width, image_height, image_row_pitch, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateImage2D, context, flags, image_format, image_width,
-                              image_height, image_row_pitch, host_ptr, errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreateImage2D(context, flags, image_format, image_width, image_height, image_row_pitch,
-                         host_ptr, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateImage2D, context, flagsPacked, image_format, image_width,
+                                  image_height, image_row_pitch, host_ptr);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object    = CreateImage2D(context, flagsPacked, image_format, image_width, image_height,
+                                  image_row_pitch, host_ptr, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_mem CL_API_CALL clCreateImage3D(cl_context context,
@@ -1227,12 +1317,23 @@ cl_mem CL_API_CALL clCreateImage3D(cl_context context,
              image_width, image_height, image_depth, image_row_pitch, image_slice_pitch,
              (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateImage3D, context, flags, image_format, image_width,
-                              image_height, image_depth, image_row_pitch, image_slice_pitch,
-                              host_ptr, errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreateImage3D(context, flags, image_format, image_width, image_height, image_depth,
-                         image_row_pitch, image_slice_pitch, host_ptr, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateImage3D, context, flagsPacked, image_format, image_width,
+                                  image_height, image_depth, image_row_pitch, image_slice_pitch,
+                                  host_ptr);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object =
+        CreateImage3D(context, flagsPacked, image_format, image_width, image_height, image_depth,
+                      image_row_pitch, image_slice_pitch, host_ptr, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clEnqueueMarker(cl_command_queue command_queue, cl_event *event)
@@ -1308,9 +1409,19 @@ cl_command_queue CL_API_CALL clCreateCommandQueue(cl_context context,
              (uintptr_t)context, (uintptr_t)device, static_cast<unsigned long long>(properties),
              (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateCommandQueue, context, device, properties, errcode_ret);
+    CommandQueueProperties propertiesPacked = PackParam<CommandQueueProperties>(properties);
 
-    return CreateCommandQueue(context, device, properties, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateCommandQueue, context, device, propertiesPacked);
+
+    cl_int errorCode        = CL_SUCCESS;
+    cl_command_queue object = CreateCommandQueue(context, device, propertiesPacked, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_sampler CL_API_CALL clCreateSampler(cl_context context,
@@ -1331,11 +1442,19 @@ cl_sampler CL_API_CALL clCreateSampler(cl_context context,
     AddressingMode addressing_modePacked = PackParam<AddressingMode>(addressing_mode);
     FilterMode filter_modePacked         = PackParam<FilterMode>(filter_mode);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateSampler, context, normalized_coords, addressing_modePacked,
-                              filter_modePacked, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateSampler, context, normalized_coords, addressing_modePacked,
+                                  filter_modePacked);
 
-    return CreateSampler(context, normalized_coords, addressing_modePacked, filter_modePacked,
-                         errcode_ret);
+    cl_int errorCode  = CL_SUCCESS;
+    cl_sampler object = CreateSampler(context, normalized_coords, addressing_modePacked,
+                                      filter_modePacked, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clEnqueueTask(cl_command_queue command_queue,
@@ -1375,10 +1494,21 @@ cl_mem CL_API_CALL clCreateSubBuffer(cl_mem buffer,
              (uintptr_t)buffer, static_cast<unsigned long long>(flags), buffer_create_type,
              (uintptr_t)buffer_create_info, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateSubBuffer, buffer, flags, buffer_create_type,
-                              buffer_create_info, errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreateSubBuffer(buffer, flags, buffer_create_type, buffer_create_info, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateSubBuffer, buffer, flagsPacked, buffer_create_type,
+                                  buffer_create_info);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object =
+        CreateSubBuffer(buffer, flagsPacked, buffer_create_type, buffer_create_info, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clSetMemObjectDestructorCallback(cl_mem memobj,
@@ -1405,9 +1535,17 @@ cl_event CL_API_CALL clCreateUserEvent(cl_context context, cl_int *errcode_ret)
     CL_EVENT(CreateUserEvent, "context = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateUserEvent, context, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateUserEvent, context);
 
-    return CreateUserEvent(context, errcode_ret);
+    cl_int errorCode = CL_SUCCESS;
+    cl_event object  = CreateUserEvent(context, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clSetUserEventStatus(cl_event event, cl_int execution_status)
@@ -1623,10 +1761,21 @@ cl_mem CL_API_CALL clCreateImage(cl_context context,
              (uintptr_t)context, static_cast<unsigned long long>(flags), (uintptr_t)image_format,
              (uintptr_t)image_desc, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateImage, context, flags, image_format, image_desc, host_ptr,
-                              errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreateImage(context, flags, image_format, image_desc, host_ptr, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateImage, context, flagsPacked, image_format, image_desc,
+                                  host_ptr);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object =
+        CreateImage(context, flagsPacked, image_format, image_desc, host_ptr, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_program CL_API_CALL clCreateProgramWithBuiltInKernels(cl_context context,
@@ -1643,11 +1792,19 @@ cl_program CL_API_CALL clCreateProgramWithBuiltInKernels(cl_context context,
              (uintptr_t)context, num_devices, (uintptr_t)device_list, (uintptr_t)kernel_names,
              (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateProgramWithBuiltInKernels, context, num_devices, device_list,
-                              kernel_names, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateProgramWithBuiltInKernels, context, num_devices,
+                                  device_list, kernel_names);
 
-    return CreateProgramWithBuiltInKernels(context, num_devices, device_list, kernel_names,
-                                           errcode_ret);
+    cl_int errorCode = CL_SUCCESS;
+    cl_program object =
+        CreateProgramWithBuiltInKernels(context, num_devices, device_list, kernel_names, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clCompileProgram(cl_program program,
@@ -1703,12 +1860,19 @@ cl_program CL_API_CALL clLinkProgram(cl_context context,
              num_input_programs, (uintptr_t)input_programs, (uintptr_t)pfn_notify,
              (uintptr_t)user_data, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(LinkProgram, context, num_devices, device_list, options,
-                              num_input_programs, input_programs, pfn_notify, user_data,
-                              errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(LinkProgram, context, num_devices, device_list, options,
+                                  num_input_programs, input_programs, pfn_notify, user_data);
 
-    return LinkProgram(context, num_devices, device_list, options, num_input_programs,
-                       input_programs, pfn_notify, user_data, errcode_ret);
+    cl_int errorCode  = CL_SUCCESS;
+    cl_program object = LinkProgram(context, num_devices, device_list, options, num_input_programs,
+                                    input_programs, pfn_notify, user_data, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clUnloadPlatformCompiler(cl_platform_id platform)
@@ -1820,10 +1984,12 @@ cl_int CL_API_CALL clEnqueueMigrateMemObjects(cl_command_queue command_queue,
              static_cast<unsigned long long>(flags), num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
-    ANGLE_CL_VALIDATE_ERROR(EnqueueMigrateMemObjects, command_queue, num_mem_objects, mem_objects,
-                            flags, num_events_in_wait_list, event_wait_list, event);
+    MemMigrationFlags flagsPacked = PackParam<MemMigrationFlags>(flags);
 
-    return EnqueueMigrateMemObjects(command_queue, num_mem_objects, mem_objects, flags,
+    ANGLE_CL_VALIDATE_ERROR(EnqueueMigrateMemObjects, command_queue, num_mem_objects, mem_objects,
+                            flagsPacked, num_events_in_wait_list, event_wait_list, event);
+
+    return EnqueueMigrateMemObjects(command_queue, num_mem_objects, mem_objects, flagsPacked,
                                     num_events_in_wait_list, event_wait_list, event);
 }
 
@@ -1897,10 +2063,18 @@ clCreateCommandQueueWithProperties(cl_context context,
              ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)device, (uintptr_t)properties, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateCommandQueueWithProperties, context, device, properties,
-                              errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateCommandQueueWithProperties, context, device, properties);
 
-    return CreateCommandQueueWithProperties(context, device, properties, errcode_ret);
+    cl_int errorCode = CL_SUCCESS;
+    cl_command_queue object =
+        CreateCommandQueueWithProperties(context, device, properties, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_mem CL_API_CALL clCreatePipe(cl_context context,
@@ -1920,10 +2094,21 @@ cl_mem CL_API_CALL clCreatePipe(cl_context context,
         (uintptr_t)context, static_cast<unsigned long long>(flags), pipe_packet_size,
         pipe_max_packets, (uintptr_t)properties, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreatePipe, context, flags, pipe_packet_size, pipe_max_packets,
-                              properties, errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreatePipe(context, flags, pipe_packet_size, pipe_max_packets, properties, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreatePipe, context, flagsPacked, pipe_packet_size,
+                                  pipe_max_packets, properties);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object =
+        CreatePipe(context, flagsPacked, pipe_packet_size, pipe_max_packets, properties, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clGetPipeInfo(cl_mem pipe,
@@ -1959,9 +2144,11 @@ void *CL_API_CALL clSVMAlloc(cl_context context,
     CL_EVENT(SVMAlloc, "context = 0x%016" PRIxPTR ", flags = %llu, size = %zu, alignment = %u",
              (uintptr_t)context, static_cast<unsigned long long>(flags), size, alignment);
 
-    ANGLE_CL_VALIDATE_POINTER(SVMAlloc, context, flags, size, alignment);
+    SVM_MemFlags flagsPacked = PackParam<SVM_MemFlags>(flags);
 
-    return SVMAlloc(context, flags, size, alignment);
+    ANGLE_CL_VALIDATE_POINTER(SVMAlloc, context, flagsPacked, size, alignment);
+
+    return SVMAlloc(context, flagsPacked, size, alignment);
 }
 
 void CL_API_CALL clSVMFree(cl_context context, void *svm_pointer)
@@ -1988,10 +2175,17 @@ clCreateSamplerWithProperties(cl_context context,
              ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)sampler_properties, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateSamplerWithProperties, context, sampler_properties,
-                              errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateSamplerWithProperties, context, sampler_properties);
 
-    return CreateSamplerWithProperties(context, sampler_properties, errcode_ret);
+    cl_int errorCode  = CL_SUCCESS;
+    cl_sampler object = CreateSamplerWithProperties(context, sampler_properties, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clSetKernelArgSVMPointer(cl_kernel kernel,
@@ -2133,11 +2327,13 @@ cl_int CL_API_CALL clEnqueueSVMMap(cl_command_queue command_queue,
              (uintptr_t)svm_ptr, size, num_events_in_wait_list, (uintptr_t)event_wait_list,
              (uintptr_t)event);
 
-    ANGLE_CL_VALIDATE_ERROR(EnqueueSVMMap, command_queue, blocking_map, flags, svm_ptr, size,
+    MapFlags flagsPacked = PackParam<MapFlags>(flags);
+
+    ANGLE_CL_VALIDATE_ERROR(EnqueueSVMMap, command_queue, blocking_map, flagsPacked, svm_ptr, size,
                             num_events_in_wait_list, event_wait_list, event);
 
-    return EnqueueSVMMap(command_queue, blocking_map, flags, svm_ptr, size, num_events_in_wait_list,
-                         event_wait_list, event);
+    return EnqueueSVMMap(command_queue, blocking_map, flagsPacked, svm_ptr, size,
+                         num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int CL_API_CALL clEnqueueSVMUnmap(cl_command_queue command_queue,
@@ -2218,9 +2414,17 @@ cl_program CL_API_CALL clCreateProgramWithIL(cl_context context,
              ", length = %zu, errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)context, (uintptr_t)il, length, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateProgramWithIL, context, il, length, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateProgramWithIL, context, il, length);
 
-    return CreateProgramWithIL(context, il, length, errcode_ret);
+    cl_int errorCode  = CL_SUCCESS;
+    cl_program object = CreateProgramWithIL(context, il, length, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_kernel CL_API_CALL clCloneKernel(cl_kernel source_kernel, cl_int *errcode_ret)
@@ -2230,9 +2434,17 @@ cl_kernel CL_API_CALL clCloneKernel(cl_kernel source_kernel, cl_int *errcode_ret
     CL_EVENT(CloneKernel, "source_kernel = 0x%016" PRIxPTR ", errcode_ret = 0x%016" PRIxPTR "",
              (uintptr_t)source_kernel, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CloneKernel, source_kernel, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CloneKernel, source_kernel);
 
-    return CloneKernel(source_kernel, errcode_ret);
+    cl_int errorCode = CL_SUCCESS;
+    cl_kernel object = CloneKernel(source_kernel, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_int CL_API_CALL clGetKernelSubGroupInfo(cl_kernel kernel,
@@ -2285,10 +2497,12 @@ cl_int CL_API_CALL clEnqueueSVMMigrateMem(cl_command_queue command_queue,
              static_cast<unsigned long long>(flags), num_events_in_wait_list,
              (uintptr_t)event_wait_list, (uintptr_t)event);
 
-    ANGLE_CL_VALIDATE_ERROR(EnqueueSVMMigrateMem, command_queue, num_svm_pointers, svm_pointers,
-                            sizes, flags, num_events_in_wait_list, event_wait_list, event);
+    MemMigrationFlags flagsPacked = PackParam<MemMigrationFlags>(flags);
 
-    return EnqueueSVMMigrateMem(command_queue, num_svm_pointers, svm_pointers, sizes, flags,
+    ANGLE_CL_VALIDATE_ERROR(EnqueueSVMMigrateMem, command_queue, num_svm_pointers, svm_pointers,
+                            sizes, flagsPacked, num_events_in_wait_list, event_wait_list, event);
+
+    return EnqueueSVMMigrateMem(command_queue, num_svm_pointers, svm_pointers, sizes, flagsPacked,
                                 num_events_in_wait_list, event_wait_list, event);
 }
 
@@ -2362,10 +2576,21 @@ cl_mem CL_API_CALL clCreateBufferWithProperties(cl_context context,
              (uintptr_t)context, (uintptr_t)properties, static_cast<unsigned long long>(flags),
              size, (uintptr_t)host_ptr, (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateBufferWithProperties, context, properties, flags, size,
-                              host_ptr, errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreateBufferWithProperties(context, properties, flags, size, host_ptr, errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateBufferWithProperties, context, properties, flagsPacked,
+                                  size, host_ptr);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object =
+        CreateBufferWithProperties(context, properties, flagsPacked, size, host_ptr, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
@@ -2386,11 +2611,21 @@ cl_mem CL_API_CALL clCreateImageWithProperties(cl_context context,
              (uintptr_t)image_format, (uintptr_t)image_desc, (uintptr_t)host_ptr,
              (uintptr_t)errcode_ret);
 
-    ANGLE_CL_VALIDATE_POINTER(CreateImageWithProperties, context, properties, flags, image_format,
-                              image_desc, host_ptr, errcode_ret);
+    MemFlags flagsPacked = PackParam<MemFlags>(flags);
 
-    return CreateImageWithProperties(context, properties, flags, image_format, image_desc, host_ptr,
-                                     errcode_ret);
+    ANGLE_CL_VALIDATE_ERRCODE_RET(CreateImageWithProperties, context, properties, flagsPacked,
+                                  image_format, image_desc, host_ptr);
+
+    cl_int errorCode = CL_SUCCESS;
+    cl_mem object    = CreateImageWithProperties(context, properties, flagsPacked, image_format,
+                                              image_desc, host_ptr, errorCode);
+
+    ASSERT((errorCode == CL_SUCCESS) == (object != nullptr));
+    if (errcode_ret != nullptr)
+    {
+        *errcode_ret = errorCode;
+    }
+    return object;
 }
 
 // cl_khr_icd

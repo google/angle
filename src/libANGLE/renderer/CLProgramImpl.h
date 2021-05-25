@@ -21,7 +21,7 @@ class CLProgramImpl : angle::NonCopyable
     CLProgramImpl(const cl::Program &program);
     virtual ~CLProgramImpl();
 
-    virtual std::string getSource() const = 0;
+    virtual std::string getSource(cl_int &errorCode) const = 0;
 
   protected:
     const cl::Program &mProgram;

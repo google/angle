@@ -30,7 +30,7 @@ class CommandQueue final : public _cl_command_queue, public Object
     const Context &getContext() const;
     const Device &getDevice() const;
 
-    cl_command_queue_properties getProperties() const;
+    CommandQueueProperties getProperties() const;
     bool hasSize() const;
     cl_uint getSize() const;
 
@@ -42,7 +42,7 @@ class CommandQueue final : public _cl_command_queue, public Object
                    void *value,
                    size_t *valueSizeRet) const;
 
-    cl_int setProperty(cl_command_queue_properties properties,
+    cl_int setProperty(CommandQueueProperties properties,
                        cl_bool enable,
                        cl_command_queue_properties *oldProperties);
 
@@ -51,20 +51,20 @@ class CommandQueue final : public _cl_command_queue, public Object
   private:
     CommandQueue(Context &context,
                  Device &device,
-                 cl_command_queue_properties properties,
-                 cl_int *errcodeRet);
+                 CommandQueueProperties properties,
+                 cl_int &errorCode);
 
     CommandQueue(Context &context,
                  Device &device,
                  PropArray &&propArray,
-                 cl_command_queue_properties properties,
+                 CommandQueueProperties properties,
                  cl_uint size,
-                 cl_int *errcodeRet);
+                 cl_int &errorCode);
 
     const ContextRefPtr mContext;
     const DeviceRefPtr mDevice;
     const PropArray mPropArray;
-    cl_command_queue_properties mProperties;
+    CommandQueueProperties mProperties;
     const cl_uint mSize = kNoSize;
     const rx::CLCommandQueueImpl::Ptr mImpl;
 
@@ -81,7 +81,7 @@ inline const Device &CommandQueue::getDevice() const
     return *mDevice;
 }
 
-inline cl_command_queue_properties CommandQueue::getProperties() const
+inline CommandQueueProperties CommandQueue::getProperties() const
 {
     return mProperties;
 }

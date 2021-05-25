@@ -111,13 +111,10 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
         case DeviceInfo::NativeVectorWidthHalf:
         case DeviceInfo::MaxClockFrequency:
         case DeviceInfo::AddressBits:
-        case DeviceInfo::ImageSupport:
         case DeviceInfo::MaxReadImageArgs:
         case DeviceInfo::MaxWriteImageArgs:
         case DeviceInfo::MaxReadWriteImageArgs:
         case DeviceInfo::MaxSamplers:
-        case DeviceInfo::ImagePitchAlignment:
-        case DeviceInfo::ImageBaseAddressAlignment:
         case DeviceInfo::MaxPipeArgs:
         case DeviceInfo::PipeMaxActiveReservations:
         case DeviceInfo::PipeMaxPacketSize:
@@ -134,7 +131,6 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
         case DeviceInfo::CompilerAvailable:
         case DeviceInfo::LinkerAvailable:
         case DeviceInfo::QueueOnDevicePreferredSize:
-        case DeviceInfo::QueueOnDeviceMaxSize:
         case DeviceInfo::MaxOnDeviceQueues:
         case DeviceInfo::MaxOnDeviceEvents:
         case DeviceInfo::PreferredInteropUserSync:
@@ -176,13 +172,6 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
 
         // Handle all size_t and aliased types
         case DeviceInfo::MaxWorkGroupSize:
-        case DeviceInfo::Image2D_MaxWidth:
-        case DeviceInfo::Image2D_MaxHeight:
-        case DeviceInfo::Image3D_MaxWidth:
-        case DeviceInfo::Image3D_MaxHeight:
-        case DeviceInfo::Image3D_MaxDepth:
-        case DeviceInfo::ImageMaxBufferSize:
-        case DeviceInfo::ImageMaxArraySize:
         case DeviceInfo::MaxParameterSize:
         case DeviceInfo::MaxGlobalVariableSize:
         case DeviceInfo::GlobalVariablePreferredTotalSize:
@@ -230,6 +219,10 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             copyValue = &mInfo.mMaxMemAllocSize;
             copySize  = sizeof(mInfo.mMaxMemAllocSize);
             break;
+        case DeviceInfo::ImageSupport:
+            copyValue = &mInfo.mImageSupport;
+            copySize  = sizeof(mInfo.mImageSupport);
+            break;
         case DeviceInfo::IL_Version:
             copyValue = mInfo.mIL_Version.c_str();
             copySize  = mInfo.mIL_Version.length() + 1u;
@@ -238,6 +231,46 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             copyValue = mInfo.mILsWithVersion.data();
             copySize =
                 mInfo.mILsWithVersion.size() * sizeof(decltype(mInfo.mILsWithVersion)::value_type);
+            break;
+        case DeviceInfo::Image2D_MaxWidth:
+            copyValue = &mInfo.mImage2D_MaxWidth;
+            copySize  = sizeof(mInfo.mImage2D_MaxWidth);
+            break;
+        case DeviceInfo::Image2D_MaxHeight:
+            copyValue = &mInfo.mImage2D_MaxHeight;
+            copySize  = sizeof(mInfo.mImage2D_MaxHeight);
+            break;
+        case DeviceInfo::Image3D_MaxWidth:
+            copyValue = &mInfo.mImage3D_MaxWidth;
+            copySize  = sizeof(mInfo.mImage3D_MaxWidth);
+            break;
+        case DeviceInfo::Image3D_MaxHeight:
+            copyValue = &mInfo.mImage3D_MaxHeight;
+            copySize  = sizeof(mInfo.mImage3D_MaxHeight);
+            break;
+        case DeviceInfo::Image3D_MaxDepth:
+            copyValue = &mInfo.mImage3D_MaxDepth;
+            copySize  = sizeof(mInfo.mImage3D_MaxDepth);
+            break;
+        case DeviceInfo::ImageMaxBufferSize:
+            copyValue = &mInfo.mImageMaxBufferSize;
+            copySize  = sizeof(mInfo.mImageMaxBufferSize);
+            break;
+        case DeviceInfo::ImageMaxArraySize:
+            copyValue = &mInfo.mImageMaxArraySize;
+            copySize  = sizeof(mInfo.mImageMaxArraySize);
+            break;
+        case DeviceInfo::ImagePitchAlignment:
+            copyValue = &mInfo.mImagePitchAlignment;
+            copySize  = sizeof(mInfo.mImagePitchAlignment);
+            break;
+        case DeviceInfo::ImageBaseAddressAlignment:
+            copyValue = &mInfo.mImageBaseAddressAlignment;
+            copySize  = sizeof(mInfo.mImageBaseAddressAlignment);
+            break;
+        case DeviceInfo::QueueOnDeviceMaxSize:
+            copyValue = &mInfo.mQueueOnDeviceMaxSize;
+            copySize  = sizeof(mInfo.mQueueOnDeviceMaxSize);
             break;
         case DeviceInfo::BuiltInKernels:
             copyValue = mInfo.mBuiltInKernels.c_str();
@@ -303,7 +336,7 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
             break;
 
         default:
-            WARN() << "CL device info " << name << " is not (yet) supported";
+            ASSERT(false);
             return CL_INVALID_VALUE;
     }
 
@@ -313,6 +346,8 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
     }
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return
+        // type as specified in the Device Queries table and param_value is not a NULL value
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -354,7 +389,7 @@ cl_int Device::createSubDevices(const cl_device_partition_property *properties,
 
 DevicePtr Device::CreateDevice(Platform &platform,
                                Device *parent,
-                               cl_device_type type,
+                               DeviceType type,
                                const CreateImplFunc &createImplFunc)
 {
     DevicePtr device(new Device(platform, parent, type, createImplFunc));
@@ -371,7 +406,7 @@ bool Device::IsValid(const _cl_device_id *device)
 
 Device::Device(Platform &platform,
                Device *parent,
-               cl_device_type type,
+               DeviceType type,
                const CreateImplFunc &createImplFunc)
     : _cl_device_id(platform.getDispatch()),
       mPlatform(platform),

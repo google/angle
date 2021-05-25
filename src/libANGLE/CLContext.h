@@ -46,35 +46,35 @@ class Context final : public _cl_context, public Object
     cl_int getInfo(ContextInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     cl_command_queue createCommandQueue(cl_device_id device,
-                                        cl_command_queue_properties properties,
-                                        cl_int *errcodeRet);
+                                        CommandQueueProperties properties,
+                                        cl_int &errorCode);
 
     cl_command_queue createCommandQueueWithProperties(cl_device_id device,
                                                       const cl_queue_properties *properties,
-                                                      cl_int *errcodeRet);
+                                                      cl_int &errorCode);
 
     cl_mem createBuffer(const cl_mem_properties *properties,
-                        cl_mem_flags flags,
+                        MemFlags flags,
                         size_t size,
                         void *hostPtr,
-                        cl_int *errcodeRet);
+                        cl_int &errorCode);
 
     cl_mem createImage(const cl_mem_properties *properties,
-                       cl_mem_flags flags,
+                       MemFlags flags,
                        const cl_image_format *format,
                        const cl_image_desc *desc,
                        void *hostPtr,
-                       cl_int *errcodeRet);
+                       cl_int &errorCode);
 
-    cl_mem createImage2D(cl_mem_flags flags,
+    cl_mem createImage2D(MemFlags flags,
                          const cl_image_format *format,
                          size_t width,
                          size_t height,
                          size_t rowPitch,
                          void *hostPtr,
-                         cl_int *errcodeRet);
+                         cl_int &errorCode);
 
-    cl_mem createImage3D(cl_mem_flags flags,
+    cl_mem createImage3D(MemFlags flags,
                          const cl_image_format *format,
                          size_t width,
                          size_t height,
@@ -82,36 +82,42 @@ class Context final : public _cl_context, public Object
                          size_t rowPitch,
                          size_t slicePitch,
                          void *hostPtr,
-                         cl_int *errcodeRet);
+                         cl_int &errorCode);
 
     cl_sampler createSampler(cl_bool normalizedCoords,
                              AddressingMode addressingMode,
                              FilterMode filterMode,
-                             cl_int *errcodeRet);
+                             cl_int &errorCode);
 
     cl_sampler createSamplerWithProperties(const cl_sampler_properties *properties,
-                                           cl_int *errcodeRet);
+                                           cl_int &errorCode);
 
     cl_program createProgramWithSource(cl_uint count,
                                        const char **strings,
                                        const size_t *lengths,
-                                       cl_int *errcodeRet);
+                                       cl_int &errorCode);
 
-    cl_program createProgramWithIL(const void *il, size_t length, cl_int *errcodeRet);
+    cl_program createProgramWithIL(const void *il, size_t length, cl_int &errorCode);
 
     cl_program createProgramWithBinary(cl_uint numDevices,
                                        const cl_device_id *devices,
                                        const size_t *lengths,
                                        const unsigned char **binaries,
                                        cl_int *binaryStatus,
-                                       cl_int *errcodeRet);
+                                       cl_int &errorCode);
 
     cl_program createProgramWithBuiltInKernels(cl_uint numDevices,
                                                const cl_device_id *devices,
                                                const char *kernelNames,
-                                               cl_int *errcodeRet);
+                                               cl_int &errorCode);
 
     static bool IsValid(const _cl_context *context);
+    static bool IsValidAndVersionOrNewer(const _cl_context *context, cl_uint major, cl_uint minor);
+
+    static void CL_CALLBACK ErrorCallback(const char *errinfo,
+                                          const void *privateInfo,
+                                          size_t cb,
+                                          void *userData);
 
   private:
     Context(Platform &platform,
@@ -120,37 +126,32 @@ class Context final : public _cl_context, public Object
             ContextErrorCB notify,
             void *userData,
             bool userSync,
-            cl_int *errcodeRet);
+            cl_int &errorCode);
 
     Context(Platform &platform,
             PropArray &&properties,
-            cl_device_type deviceType,
+            DeviceType deviceType,
             ContextErrorCB notify,
             void *userData,
             bool userSync,
-            cl_int *errcodeRet);
+            cl_int &errorCode);
 
-    cl_command_queue createCommandQueue(CommandQueue *commandQueue, cl_int *errcodeRet);
-    cl_mem createMemory(Memory *memory, cl_int *errcodeRet);
-    cl_sampler createSampler(Sampler *sampler, cl_int *errcodeRet);
-    cl_program createProgram(Program *program, cl_int *errcodeRet);
+    cl_command_queue createCommandQueue(CommandQueue *commandQueue);
+    cl_mem createMemory(Memory *memory);
+    cl_sampler createSampler(Sampler *sampler);
+    cl_program createProgram(Program *program);
 
     void destroyCommandQueue(CommandQueue *commandQueue);
     void destroyMemory(Memory *memory);
     void destroySampler(Sampler *sampler);
     void destroyProgram(Program *program);
 
-    static void CL_CALLBACK ErrorCallback(const char *errinfo,
-                                          const void *privateInfo,
-                                          size_t cb,
-                                          void *userData);
-
     Platform &mPlatform;
-    const rx::CLContextImpl::Ptr mImpl;
     const PropArray mProperties;
-    const DeviceRefList mDevices;
     const ContextErrorCB mNotify;
     void *const mUserData;
+    const rx::CLContextImpl::Ptr mImpl;
+    const DeviceRefList mDevices;
 
     CommandQueue::PtrList mCommandQueues;
     Memory::PtrList mMemories;

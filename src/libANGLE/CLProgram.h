@@ -32,16 +32,16 @@ class Program final : public _cl_program, public Object
     static bool IsValid(const _cl_program *program);
 
   private:
-    Program(Context &context, std::string &&source, cl_int *errcodeRet);
-    Program(Context &context, const void *il, size_t length, cl_int *errcodeRet);
+    Program(Context &context, std::string &&source, cl_int &errorCode);
+    Program(Context &context, const void *il, size_t length, cl_int &errorCode);
 
     Program(Context &context,
             DeviceRefList &&devices,
             Binaries &&binaries,
             cl_int *binaryStatus,
-            cl_int *errcodeRet);
+            cl_int &errorCode);
 
-    Program(Context &context, DeviceRefList &&devices, const char *kernelNames, cl_int *errcodeRet);
+    Program(Context &context, DeviceRefList &&devices, const char *kernelNames, cl_int &errorCode);
 
     const ContextRefPtr mContext;
     const DeviceRefList mDevices;

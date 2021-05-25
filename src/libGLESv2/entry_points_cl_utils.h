@@ -8,6 +8,7 @@
 #ifndef LIBGLESV2_ENTRY_POINTS_CL_UTILS_H_
 #define LIBGLESV2_ENTRY_POINTS_CL_UTILS_H_
 
+#include "libANGLE/CLBitField.h"
 #include "libANGLE/Debug.h"
 
 #include "common/PackedCLEnums_autogen.h"
@@ -25,9 +26,19 @@
 namespace cl
 {
 
-// Handling only packed enums
-template <typename Enum>
-constexpr auto PackParam = FromCLenum<Enum>;
+// Handling packed enums
+template <typename PackedT, typename FromT>
+typename std::enable_if_t<std::is_enum<PackedT>::value, PackedT> PackParam(FromT from)
+{
+    return FromCLenum<PackedT>(from);
+}
+
+// Handling bit fields
+template <typename PackedT, typename FromT>
+typename std::enable_if_t<std::is_same<PackedT, BitField>::value, PackedT> PackParam(FromT from)
+{
+    return PackedT(from);
+}
 
 void InitBackEnds(bool isIcd);
 

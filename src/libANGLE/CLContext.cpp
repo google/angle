@@ -56,11 +56,14 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
             copySize  = mProperties.size() * sizeof(decltype(mProperties)::value_type);
             break;
         default:
+            ASSERT(false);
             return CL_INVALID_VALUE;
     }
 
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return type
+        // as specified in the Context Attributes table and param_value is not a NULL value.
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -78,21 +81,20 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
 }
 
 cl_command_queue Context::createCommandQueue(cl_device_id device,
-                                             cl_command_queue_properties properties,
-                                             cl_int *errcodeRet)
+                                             CommandQueueProperties properties,
+                                             cl_int &errorCode)
 {
     return createCommandQueue(
-        new CommandQueue(*this, *static_cast<Device *>(device), properties, errcodeRet),
-        errcodeRet);
+        new CommandQueue(*this, *static_cast<Device *>(device), properties, errorCode));
 }
 
 cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
                                                            const cl_queue_properties *properties,
-                                                           cl_int *errcodeRet)
+                                                           cl_int &errorCode)
 {
     CommandQueue::PropArray propArray;
-    cl_command_queue_properties props = 0u;
-    cl_uint size                      = CommandQueue::kNoSize;
+    CommandQueueProperties props;
+    cl_uint size = CommandQueue::kNoSize;
     if (properties != nullptr)
     {
         const cl_queue_properties *propIt = properties;
@@ -101,7 +103,7 @@ cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
             switch (*propIt++)
             {
                 case CL_QUEUE_PROPERTIES:
-                    props = *propIt++;
+                    props = static_cast<cl_command_queue_properties>(*propIt++);
                     break;
                 case CL_QUEUE_SIZE:
                     size = static_cast<decltype(size)>(*propIt++);
@@ -114,50 +116,48 @@ cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
         propArray.insert(propArray.cend(), properties, propIt);
     }
     return createCommandQueue(new CommandQueue(*this, *static_cast<Device *>(device),
-                                               std::move(propArray), props, size, errcodeRet),
-                              errcodeRet);
+                                               std::move(propArray), props, size, errorCode));
 }
 
 cl_mem Context::createBuffer(const cl_mem_properties *properties,
-                             cl_mem_flags flags,
+                             MemFlags flags,
                              size_t size,
                              void *hostPtr,
-                             cl_int *errcodeRet)
+                             cl_int &errorCode)
 {
-    return createMemory(new Buffer(*this, {}, flags, size, hostPtr, errcodeRet), errcodeRet);
+    return createMemory(new Buffer(*this, {}, flags, size, hostPtr, errorCode));
 }
 
 cl_mem Context::createImage(const cl_mem_properties *properties,
-                            cl_mem_flags flags,
+                            MemFlags flags,
                             const cl_image_format *format,
                             const cl_image_desc *desc,
                             void *hostPtr,
-                            cl_int *errcodeRet)
+                            cl_int &errorCode)
 {
     const ImageDescriptor imageDesc = {
         desc->image_type,        desc->image_width,      desc->image_height,
         desc->image_depth,       desc->image_array_size, desc->image_row_pitch,
         desc->image_slice_pitch, desc->num_mip_levels,   desc->num_samples};
     return createMemory(new Image(*this, {}, flags, *format, imageDesc,
-                                  static_cast<Memory *>(desc->buffer), hostPtr, errcodeRet),
-                        errcodeRet);
+                                  static_cast<Memory *>(desc->buffer), hostPtr, errorCode));
 }
 
-cl_mem Context::createImage2D(cl_mem_flags flags,
+cl_mem Context::createImage2D(MemFlags flags,
                               const cl_image_format *format,
                               size_t width,
                               size_t height,
                               size_t rowPitch,
                               void *hostPtr,
-                              cl_int *errcodeRet)
+                              cl_int &errorCode)
 {
     const ImageDescriptor imageDesc = {
         CL_MEM_OBJECT_IMAGE2D, width, height, 0u, 0u, rowPitch, 0u, 0u, 0u};
     return createMemory(
-        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errcodeRet), errcodeRet);
+        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errorCode));
 }
 
-cl_mem Context::createImage3D(cl_mem_flags flags,
+cl_mem Context::createImage3D(MemFlags flags,
                               const cl_image_format *format,
                               size_t width,
                               size_t height,
@@ -165,26 +165,25 @@ cl_mem Context::createImage3D(cl_mem_flags flags,
                               size_t rowPitch,
                               size_t slicePitch,
                               void *hostPtr,
-                              cl_int *errcodeRet)
+                              cl_int &errorCode)
 {
     const ImageDescriptor imageDesc = {
         CL_MEM_OBJECT_IMAGE3D, width, height, depth, 0u, rowPitch, slicePitch, 0u, 0u};
     return createMemory(
-        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errcodeRet), errcodeRet);
+        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errorCode));
 }
 
 cl_sampler Context::createSampler(cl_bool normalizedCoords,
                                   AddressingMode addressingMode,
                                   FilterMode filterMode,
-                                  cl_int *errcodeRet)
+                                  cl_int &errorCode)
 {
     return createSampler(
-        new Sampler(*this, {}, normalizedCoords, addressingMode, filterMode, errcodeRet),
-        errcodeRet);
+        new Sampler(*this, {}, normalizedCoords, addressingMode, filterMode, errorCode));
 }
 
 cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *properties,
-                                                cl_int *errcodeRet)
+                                                cl_int &errorCode)
 {
     Sampler::PropArray propArray;
     cl_bool normalizedCoords      = CL_TRUE;
@@ -216,14 +215,13 @@ cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *pro
     }
 
     return createSampler(new Sampler(*this, std::move(propArray), normalizedCoords, addressingMode,
-                                     filterMode, errcodeRet),
-                         errcodeRet);
+                                     filterMode, errorCode));
 }
 
 cl_program Context::createProgramWithSource(cl_uint count,
                                             const char **strings,
                                             const size_t *lengths,
-                                            cl_int *errcodeRet)
+                                            cl_int &errorCode)
 {
     std::string source;
     if (lengths == nullptr)
@@ -248,12 +246,12 @@ cl_program Context::createProgramWithSource(cl_uint count,
             ++lengths;
         }
     }
-    return createProgram(new Program(*this, std::move(source), errcodeRet), errcodeRet);
+    return createProgram(new Program(*this, std::move(source), errorCode));
 }
 
-cl_program Context::createProgramWithIL(const void *il, size_t length, cl_int *errcodeRet)
+cl_program Context::createProgramWithIL(const void *il, size_t length, cl_int &errorCode)
 {
-    return createProgram(new Program(*this, il, length, errcodeRet), errcodeRet);
+    return createProgram(new Program(*this, il, length, errorCode));
 }
 
 cl_program Context::createProgramWithBinary(cl_uint numDevices,
@@ -261,7 +259,7 @@ cl_program Context::createProgramWithBinary(cl_uint numDevices,
                                             const size_t *lengths,
                                             const unsigned char **binaries,
                                             cl_int *binaryStatus,
-                                            cl_int *errcodeRet)
+                                            cl_int &errorCode)
 {
     DeviceRefList refDevices;
     Binaries binaryVec;
@@ -272,22 +270,20 @@ cl_program Context::createProgramWithBinary(cl_uint numDevices,
         std::memcpy(binaryVec.back().data(), *binaries++, binaryVec.back().size());
     }
     return createProgram(
-        new Program(*this, std::move(refDevices), std::move(binaryVec), binaryStatus, errcodeRet),
-        errcodeRet);
+        new Program(*this, std::move(refDevices), std::move(binaryVec), binaryStatus, errorCode));
 }
 
 cl_program Context::createProgramWithBuiltInKernels(cl_uint numDevices,
                                                     const cl_device_id *devices,
                                                     const char *kernelNames,
-                                                    cl_int *errcodeRet)
+                                                    cl_int &errorCode)
 {
     DeviceRefList refDevices;
     while (numDevices-- != 0u)
     {
         refDevices.emplace_back(static_cast<Device *>(*devices++));
     }
-    return createProgram(new Program(*this, std::move(refDevices), kernelNames, errcodeRet),
-                         errcodeRet);
+    return createProgram(new Program(*this, std::move(refDevices), kernelNames, errorCode));
 }
 
 bool Context::IsValid(const _cl_context *context)
@@ -298,45 +294,61 @@ bool Context::IsValid(const _cl_context *context)
            }) != platforms.cend();
 }
 
+bool Context::IsValidAndVersionOrNewer(const _cl_context *context, cl_uint major, cl_uint minor)
+{
+    const Platform::PtrList &platforms = Platform::GetPlatforms();
+    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
+               return platform->isVersionOrNewer(major, minor) && platform->hasContext(context);
+           }) != platforms.cend();
+}
+
+void Context::ErrorCallback(const char *errinfo, const void *privateInfo, size_t cb, void *userData)
+{
+    Context *const context = static_cast<Context *>(userData);
+    if (!Context::IsValid(context))
+    {
+        WARN() << "Context error for invalid context";
+        return;
+    }
+    if (context->mNotify != nullptr)
+    {
+        context->mNotify(errinfo, privateInfo, cb, context->mUserData);
+    }
+}
+
 Context::Context(Platform &platform,
                  PropArray &&properties,
                  DeviceRefList &&devices,
                  ContextErrorCB notify,
                  void *userData,
                  bool userSync,
-                 cl_int *errcodeRet)
+                 cl_int &errorCode)
     : _cl_context(platform.getDispatch()),
       mPlatform(platform),
-      mImpl(
-          platform.mImpl->createContext(*this, devices, ErrorCallback, this, userSync, errcodeRet)),
       mProperties(std::move(properties)),
-      mDevices(std::move(devices)),
       mNotify(notify),
-      mUserData(userData)
+      mUserData(userData),
+      mImpl(platform.mImpl->createContext(*this, devices, userSync, errorCode)),
+      mDevices(std::move(devices))
 {}
 
 Context::Context(Platform &platform,
                  PropArray &&properties,
-                 cl_device_type deviceType,
+                 DeviceType deviceType,
                  ContextErrorCB notify,
                  void *userData,
                  bool userSync,
-                 cl_int *errcodeRet)
+                 cl_int &errorCode)
     : _cl_context(platform.getDispatch()),
       mPlatform(platform),
-      mImpl(platform.mImpl->createContextFromType(*this,
-                                                  deviceType,
-                                                  ErrorCallback,
-                                                  this,
-                                                  userSync,
-                                                  errcodeRet)),
       mProperties(std::move(properties)),
-      mDevices(mImpl ? mImpl->getDevices() : DeviceRefList{}),
       mNotify(notify),
-      mUserData(userData)
+      mUserData(userData),
+      mImpl(platform.mImpl->createContextFromType(*this, deviceType, userSync, errorCode)),
+      mDevices(mImpl ? mImpl->getDevices(errorCode) : DeviceRefList{})
 {}
 
-cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue, cl_int *errcodeRet)
+cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue)
 {
     mCommandQueues.emplace_back(commandQueue);
     if (!mCommandQueues.back()->mImpl)
@@ -344,14 +356,10 @@ cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue, cl_int 
         mCommandQueues.back()->release();
         return nullptr;
     }
-    if (errcodeRet != nullptr)
-    {
-        *errcodeRet = CL_SUCCESS;
-    }
     return mCommandQueues.back().get();
 }
 
-cl_mem Context::createMemory(Memory *memory, cl_int *errcodeRet)
+cl_mem Context::createMemory(Memory *memory)
 {
     mMemories.emplace_back(memory);
     if (!mMemories.back()->mImpl || mMemories.back()->mSize == 0u)
@@ -359,14 +367,10 @@ cl_mem Context::createMemory(Memory *memory, cl_int *errcodeRet)
         mMemories.back()->release();
         return nullptr;
     }
-    if (errcodeRet != nullptr)
-    {
-        *errcodeRet = CL_SUCCESS;
-    }
     return mMemories.back().get();
 }
 
-cl_sampler Context::createSampler(Sampler *sampler, cl_int *errcodeRet)
+cl_sampler Context::createSampler(Sampler *sampler)
 {
     mSamplers.emplace_back(sampler);
     if (!mSamplers.back()->mImpl)
@@ -374,24 +378,16 @@ cl_sampler Context::createSampler(Sampler *sampler, cl_int *errcodeRet)
         mSamplers.back()->release();
         return nullptr;
     }
-    if (errcodeRet != nullptr)
-    {
-        *errcodeRet = CL_SUCCESS;
-    }
     return mSamplers.back().get();
 }
 
-cl_program Context::createProgram(Program *program, cl_int *errcodeRet)
+cl_program Context::createProgram(Program *program)
 {
     mPrograms.emplace_back(program);
     if (!mPrograms.back()->mImpl)
     {
         mPrograms.back()->release();
         return nullptr;
-    }
-    if (errcodeRet != nullptr)
-    {
-        *errcodeRet = CL_SUCCESS;
     }
     return mPrograms.back().get();
 }
@@ -461,20 +457,6 @@ void Context::destroyProgram(Program *program)
     else
     {
         ERR() << "Program not found";
-    }
-}
-
-void Context::ErrorCallback(const char *errinfo, const void *privateInfo, size_t cb, void *userData)
-{
-    Context *const context = static_cast<Context *>(userData);
-    if (!Context::IsValid(context))
-    {
-        WARN() << "Context error for invalid context";
-        return;
-    }
-    if (context->mNotify != nullptr)
-    {
-        context->mNotify(errinfo, privateInfo, cb, context->mUserData);
     }
 }
 

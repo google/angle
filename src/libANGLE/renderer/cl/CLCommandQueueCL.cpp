@@ -24,9 +24,10 @@ CLCommandQueueCL::~CLCommandQueueCL()
     }
 }
 
-cl_int CLCommandQueueCL::setProperty(cl_command_queue_properties properties, cl_bool enable)
+cl_int CLCommandQueueCL::setProperty(cl::CommandQueueProperties properties, cl_bool enable)
 {
-    return mNative->getDispatch().clSetCommandQueueProperty(mNative, properties, enable, nullptr);
+    return mNative->getDispatch().clSetCommandQueueProperty(mNative, properties.get(), enable,
+                                                            nullptr);
 }
 
 }  // namespace rx

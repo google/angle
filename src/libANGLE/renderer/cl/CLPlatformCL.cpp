@@ -315,7 +315,7 @@ cl::DevicePtrList CLPlatformCL::createDevices(cl::Platform &platform) const
         {
             // Fetch all device types for front end initialization, and find the default device.
             // If none exists declare first device as default.
-            std::vector<cl_device_type> types(nativeDevices.size(), 0u);
+            std::vector<cl::DeviceType> types(nativeDevices.size());
             size_t defaultIndex = 0u;
             for (size_t index = 0u; index < nativeDevices.size(); ++index)
             {
@@ -324,7 +324,7 @@ cl::DevicePtrList CLPlatformCL::createDevices(cl::Platform &platform) const
                         nullptr) == CL_SUCCESS)
                 {
                     // If default device found, select it
-                    if ((types[index] & CL_DEVICE_TYPE_DEFAULT) != 0u)
+                    if (types[index].isSet(CL_DEVICE_TYPE_DEFAULT))
                     {
                         defaultIndex = index;
                     }
@@ -341,11 +341,11 @@ cl::DevicePtrList CLPlatformCL::createDevices(cl::Platform &platform) const
                 // Make sure the default bit is set in exactly one device
                 if (index == defaultIndex)
                 {
-                    types[index] |= CL_DEVICE_TYPE_DEFAULT;
+                    types[index].set(CL_DEVICE_TYPE_DEFAULT);
                 }
                 else
                 {
-                    types[index] &= ~CL_DEVICE_TYPE_DEFAULT;
+                    types[index].clear(CL_DEVICE_TYPE_DEFAULT);
                 }
 
                 const cl::Device::CreateImplFunc createImplFunc = [&](const cl::Device &device) {
@@ -369,12 +369,10 @@ cl::DevicePtrList CLPlatformCL::createDevices(cl::Platform &platform) const
     return devices;
 }
 
-CLContextImpl::Ptr CLPlatformCL::createContext(const cl::Context &context,
+CLContextImpl::Ptr CLPlatformCL::createContext(cl::Context &context,
                                                const cl::DeviceRefList &devices,
-                                               cl::ContextErrorCB notify,
-                                               void *userData,
                                                bool userSync,
-                                               cl_int *errcodeRet)
+                                               cl_int &errorCode)
 {
     cl_context_properties properties[] = {
         CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(mNative),
@@ -389,25 +387,23 @@ CLContextImpl::Ptr CLPlatformCL::createContext(const cl::Context &context,
 
     CLContextImpl::Ptr contextImpl;
     cl_context nativeContext = mNative->getDispatch().clCreateContext(
-        properties, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), notify,
-        userData, errcodeRet);
+        properties, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(),
+        cl::Context::ErrorCallback, &context, &errorCode);
     return CLContextImpl::Ptr(nativeContext != nullptr ? new CLContextCL(context, nativeContext)
                                                        : nullptr);
 }
 
-CLContextImpl::Ptr CLPlatformCL::createContextFromType(const cl::Context &context,
-                                                       cl_device_type deviceType,
-                                                       cl::ContextErrorCB notify,
-                                                       void *userData,
+CLContextImpl::Ptr CLPlatformCL::createContextFromType(cl::Context &context,
+                                                       cl::DeviceType deviceType,
                                                        bool userSync,
-                                                       cl_int *errcodeRet)
+                                                       cl_int &errorCode)
 {
     cl_context_properties properties[] = {
         CL_CONTEXT_PLATFORM, reinterpret_cast<cl_context_properties>(mNative),
         userSync && mPlatform.isVersionOrNewer(1u, 2u) ? CL_CONTEXT_INTEROP_USER_SYNC : 0, CL_TRUE,
         0};
     cl_context nativeContext = mNative->getDispatch().clCreateContextFromType(
-        properties, deviceType, notify, userData, errcodeRet);
+        properties, deviceType.get(), cl::Context::ErrorCallback, &context, &errorCode);
     return CLContextImpl::Ptr(nativeContext != nullptr ? new CLContextCL(context, nativeContext)
                                                        : nullptr);
 }

@@ -27,7 +27,7 @@ class Memory : public _cl_mem, public Object
 
     const Context &getContext() const;
     const PropArray &getProperties() const;
-    cl_mem_flags getFlags() const;
+    MemFlags getFlags() const;
     void *getHostPtr() const;
     const MemoryRefPtr &getParent() const;
     size_t getOffset() const;
@@ -43,31 +43,31 @@ class Memory : public _cl_mem, public Object
     Memory(const Buffer &buffer,
            Context &context,
            PropArray &&properties,
-           cl_mem_flags flags,
+           MemFlags flags,
            size_t size,
            void *hostPtr,
-           cl_int *errcodeRet);
+           cl_int &errorCode);
 
     Memory(const Buffer &buffer,
            Buffer &parent,
-           cl_mem_flags flags,
+           MemFlags flags,
            size_t offset,
            size_t size,
-           cl_int *errcodeRet);
+           cl_int &errorCode);
 
     Memory(const Image &image,
            Context &context,
            PropArray &&properties,
-           cl_mem_flags flags,
+           MemFlags flags,
            const cl_image_format &format,
            const ImageDescriptor &desc,
            Memory *parent,
            void *hostPtr,
-           cl_int *errcodeRet);
+           cl_int &errorCode);
 
     const ContextRefPtr mContext;
     const PropArray mProperties;
-    const cl_mem_flags mFlags;
+    const MemFlags mFlags;
     void *const mHostPtr = nullptr;
     const MemoryRefPtr mParent;
     const size_t mOffset = 0u;
@@ -90,7 +90,7 @@ inline const Memory::PropArray &Memory::getProperties() const
     return mProperties;
 }
 
-inline cl_mem_flags Memory::getFlags() const
+inline MemFlags Memory::getFlags() const
 {
     return mFlags;
 }

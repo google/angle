@@ -21,13 +21,13 @@
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
 
-#define ANGLE_CL_VALIDATE_VOID(EP, ...) \
-    do                                  \
-    {                                   \
-        if (!Validate##EP(__VA_ARGS__)) \
-        {                               \
-            return;                     \
-        }                               \
+#define ANGLE_CL_VALIDATE_VOID(EP, ...)              \
+    do                                               \
+    {                                                \
+        if (Validate##EP(__VA_ARGS__) != CL_SUCCESS) \
+        {                                            \
+            return;                                  \
+        }                                            \
     } while (0)
 
 #define ANGLE_CL_VALIDATE_ERROR(EP, ...)              \
@@ -40,13 +40,28 @@
         }                                             \
     } while (0)
 
-#define ANGLE_CL_VALIDATE_POINTER(EP, ...) \
-    do                                     \
-    {                                      \
-        if (!Validate##EP(__VA_ARGS__))    \
-        {                                  \
-            return nullptr;                \
-        }                                  \
+#define ANGLE_CL_VALIDATE_ERRCODE_RET(EP, ...)        \
+    do                                                \
+    {                                                 \
+        cl_int errorCode = Validate##EP(__VA_ARGS__); \
+        if (errorCode != CL_SUCCESS)                  \
+        {                                             \
+            if (errcode_ret != nullptr)               \
+            {                                         \
+                *errcode_ret = errorCode;             \
+            }                                         \
+            return nullptr;                           \
+        }                                             \
+    } while (0)
+
+#define ANGLE_CL_VALIDATE_POINTER(EP, ...)            \
+    do                                                \
+    {                                                 \
+        cl_int errorCode = Validate##EP(__VA_ARGS__); \
+        if (errorCode != CL_SUCCESS)                  \
+        {                                             \
+            return nullptr;                           \
+        }                                             \
     } while (0)
 
 #endif  // LIBANGLE_VALIDATIONCL_H_

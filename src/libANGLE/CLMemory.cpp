@@ -95,6 +95,8 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
 
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return type
+        // as described in the Memory Object Info table and param_value is not NULL.
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -122,25 +124,25 @@ bool Memory::IsValid(const _cl_mem *memory)
 Memory::Memory(const Buffer &buffer,
                Context &context,
                PropArray &&properties,
-               cl_mem_flags flags,
+               MemFlags flags,
                size_t size,
                void *hostPtr,
-               cl_int *errcodeRet)
+               cl_int &errorCode)
     : _cl_mem(context.getDispatch()),
       mContext(&context),
       mProperties(std::move(properties)),
       mFlags(flags),
-      mHostPtr((flags & CL_MEM_USE_HOST_PTR) != 0u ? hostPtr : nullptr),
-      mImpl(context.mImpl->createBuffer(buffer, size, hostPtr, errcodeRet)),
+      mHostPtr(flags.isSet(CL_MEM_USE_HOST_PTR) ? hostPtr : nullptr),
+      mImpl(context.mImpl->createBuffer(buffer, size, hostPtr, errorCode)),
       mSize(size)
 {}
 
 Memory::Memory(const Buffer &buffer,
                Buffer &parent,
-               cl_mem_flags flags,
+               MemFlags flags,
                size_t offset,
                size_t size,
-               cl_int *errcodeRet)
+               cl_int &errorCode)
     : _cl_mem(parent.getDispatch()),
       mContext(parent.mContext),
       mFlags(flags),
@@ -148,27 +150,27 @@ Memory::Memory(const Buffer &buffer,
                                           : nullptr),
       mParent(&parent),
       mOffset(offset),
-      mImpl(parent.mImpl->createSubBuffer(buffer, size, errcodeRet)),
+      mImpl(parent.mImpl->createSubBuffer(buffer, size, errorCode)),
       mSize(size)
 {}
 
 Memory::Memory(const Image &image,
                Context &context,
                PropArray &&properties,
-               cl_mem_flags flags,
+               MemFlags flags,
                const cl_image_format &format,
                const ImageDescriptor &desc,
                Memory *parent,
                void *hostPtr,
-               cl_int *errcodeRet)
+               cl_int &errorCode)
     : _cl_mem(context.getDispatch()),
       mContext(&context),
       mProperties(std::move(properties)),
       mFlags(flags),
-      mHostPtr((flags & CL_MEM_USE_HOST_PTR) != 0u ? hostPtr : nullptr),
+      mHostPtr(flags.isSet(CL_MEM_USE_HOST_PTR) ? hostPtr : nullptr),
       mParent(parent),
-      mImpl(context.mImpl->createImage(image, format, desc, hostPtr, errcodeRet)),
-      mSize(mImpl ? mImpl->getSize() : 0u)
+      mImpl(context.mImpl->createImage(image, format, desc, hostPtr, errorCode)),
+      mSize(mImpl ? mImpl->getSize(errorCode) : 0u)
 {}
 
 }  // namespace cl

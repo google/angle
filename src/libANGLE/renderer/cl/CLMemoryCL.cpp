@@ -25,13 +25,13 @@ CLMemoryCL::~CLMemoryCL()
     }
 }
 
-size_t CLMemoryCL::getSize() const
+size_t CLMemoryCL::getSize(cl_int &errorCode) const
 {
     size_t size = 0u;
-    if (mNative->getDispatch().clGetMemObjectInfo(mNative, CL_MEM_SIZE, sizeof(size), &size,
-                                                  nullptr) != CL_SUCCESS)
+    errorCode = mNative->getDispatch().clGetMemObjectInfo(mNative, CL_MEM_SIZE, sizeof(size), &size,
+                                                          nullptr);
+    if (errorCode != CL_SUCCESS)
     {
-        ERR() << "Failed to query CL memory object size";
         return 0u;
     }
     return size;
@@ -39,11 +39,11 @@ size_t CLMemoryCL::getSize() const
 
 CLMemoryImpl::Ptr CLMemoryCL::createSubBuffer(const cl::Buffer &buffer,
                                               size_t size,
-                                              cl_int *errcodeRet)
+                                              cl_int &errorCode)
 {
     const cl_buffer_region region = {buffer.getOffset(), size};
     const cl_mem nativeBuffer     = mNative->getDispatch().clCreateSubBuffer(
-        mNative, buffer.getFlags(), CL_BUFFER_CREATE_TYPE_REGION, &region, errcodeRet);
+        mNative, buffer.getFlags().get(), CL_BUFFER_CREATE_TYPE_REGION, &region, &errorCode);
     return CLMemoryImpl::Ptr(nativeBuffer != nullptr ? new CLMemoryCL(buffer, nativeBuffer)
                                                      : nullptr);
 }

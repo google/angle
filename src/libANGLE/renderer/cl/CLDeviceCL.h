@@ -22,7 +22,7 @@ class CLDeviceCL : public CLDeviceImpl
 
     cl_device_id getNative();
 
-    Info createInfo(cl_device_type type) const override;
+    Info createInfo(cl::DeviceType type) const override;
 
     cl_int getInfoUInt(cl::DeviceInfo name, cl_uint *value) const override;
     cl_int getInfoULong(cl::DeviceInfo name, cl_ulong *value) const override;

@@ -21,7 +21,7 @@ class CLCommandQueueImpl : angle::NonCopyable
     CLCommandQueueImpl(const cl::CommandQueue &commandQueue);
     virtual ~CLCommandQueueImpl();
 
-    virtual cl_int setProperty(cl_command_queue_properties properties, cl_bool enable) = 0;
+    virtual cl_int setProperty(cl::CommandQueueProperties properties, cl_bool enable) = 0;
 
   protected:
     const cl::CommandQueue &mCommandQueue;

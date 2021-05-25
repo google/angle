@@ -21,7 +21,7 @@ class CLProgramCL : public CLProgramImpl
     CLProgramCL(const cl::Program &program, cl_program native);
     ~CLProgramCL() override;
 
-    std::string getSource() const override;
+    std::string getSource(cl_int &errorCode) const override;
 
   private:
     const cl_program mNative;

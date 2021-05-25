@@ -82,6 +82,8 @@ cl_int CommandQueue::getInfo(CommandQueueInfo name,
 
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return type
+        // as specified in the Command Queue Parameter table, and param_value is not a NULL value.
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -98,24 +100,24 @@ cl_int CommandQueue::getInfo(CommandQueueInfo name,
     return CL_SUCCESS;
 }
 
-cl_int CommandQueue::setProperty(cl_command_queue_properties properties,
+cl_int CommandQueue::setProperty(CommandQueueProperties properties,
                                  cl_bool enable,
                                  cl_command_queue_properties *oldProperties)
 {
     if (oldProperties != nullptr)
     {
-        *oldProperties = mProperties;
+        *oldProperties = mProperties.get();
     }
     const cl_int result = mImpl->setProperty(properties, enable);
     if (result == CL_SUCCESS)
     {
         if (enable == CL_FALSE)
         {
-            mProperties &= ~properties;
+            mProperties.clear(properties);
         }
         else
         {
-            mProperties |= properties;
+            mProperties.set(properties);
         }
     }
     return result;
@@ -131,30 +133,30 @@ bool CommandQueue::IsValid(const _cl_command_queue *commandQueue)
 
 CommandQueue::CommandQueue(Context &context,
                            Device &device,
-                           cl_command_queue_properties properties,
-                           cl_int *errcodeRet)
+                           CommandQueueProperties properties,
+                           cl_int &errorCode)
     : _cl_command_queue(context.getDispatch()),
       mContext(&context),
       mDevice(&device),
       mProperties(properties),
-      mImpl(context.mImpl->createCommandQueue(*this, errcodeRet))
+      mImpl(context.mImpl->createCommandQueue(*this, errorCode))
 {}
 
 CommandQueue::CommandQueue(Context &context,
                            Device &device,
                            PropArray &&propArray,
-                           cl_command_queue_properties properties,
+                           CommandQueueProperties properties,
                            cl_uint size,
-                           cl_int *errcodeRet)
+                           cl_int &errorCode)
     : _cl_command_queue(context.getDispatch()),
       mContext(&context),
       mDevice(&device),
       mPropArray(std::move(propArray)),
       mProperties(properties),
       mSize(size),
-      mImpl(context.mImpl->createCommandQueue(*this, errcodeRet))
+      mImpl(context.mImpl->createCommandQueue(*this, errorCode))
 {
-    if ((mProperties & CL_QUEUE_ON_DEVICE_DEFAULT) != 0u)
+    if (mProperties.isSet(CL_QUEUE_ON_DEVICE_DEFAULT))
     {
         mDevice->mDefaultCommandQueue = this;
     }

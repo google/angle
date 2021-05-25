@@ -52,16 +52,17 @@ class Device final : public _cl_device_id, public Object
 
     static DevicePtr CreateDevice(Platform &platform,
                                   Device *parent,
-                                  cl_device_type type,
+                                  DeviceType type,
                                   const CreateImplFunc &createImplFunc);
 
     static bool IsValid(const _cl_device_id *device);
-    static bool IsValidType(cl_device_type type);
+    static bool IsValidAndVersionOrNewer(const _cl_device_id *device, cl_uint major, cl_uint minor);
+    static bool IsValidType(DeviceType type);
 
   private:
     Device(Platform &platform,
            Device *parent,
-           cl_device_type type,
+           DeviceType type,
            const CreateImplFunc &createImplFunc);
 
     void destroySubDevice(Device *device);
@@ -134,9 +135,16 @@ inline cl_int Device::getInfoULong(DeviceInfo name, cl_ulong *value) const
     return mImpl->getInfoULong(name, value);
 }
 
-inline bool Device::IsValidType(cl_device_type type)
+inline bool Device::IsValidAndVersionOrNewer(const _cl_device_id *device,
+                                             cl_uint major,
+                                             cl_uint minor)
 {
-    return type <= CL_DEVICE_TYPE_CUSTOM || type == CL_DEVICE_TYPE_ALL;
+    return IsValid(device) && static_cast<const Device *>(device)->isVersionOrNewer(major, minor);
+}
+
+inline bool Device::IsValidType(DeviceType type)
+{
+    return type.get() <= CL_DEVICE_TYPE_CUSTOM || type == CL_DEVICE_TYPE_ALL;
 }
 
 }  // namespace cl

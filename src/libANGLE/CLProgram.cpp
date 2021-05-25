@@ -98,6 +98,8 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
 
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return type
+        // as described in the Program Object Queries table and param_value is not NULL.
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -122,45 +124,45 @@ bool Program::IsValid(const _cl_program *program)
            }) != platforms.cend();
 }
 
-Program::Program(Context &context, std::string &&source, cl_int *errcodeRet)
+Program::Program(Context &context, std::string &&source, cl_int &errorCode)
     : _cl_program(context.getDispatch()),
       mContext(&context),
       mDevices(context.getDevices()),
-      mImpl(context.mImpl->createProgramWithSource(*this, source, errcodeRet)),
+      mImpl(context.mImpl->createProgramWithSource(*this, source, errorCode)),
       mSource(std::move(source))
 {}
 
-Program::Program(Context &context, const void *il, size_t length, cl_int *errcodeRet)
+Program::Program(Context &context, const void *il, size_t length, cl_int &errorCode)
     : _cl_program(context.getDispatch()),
       mContext(&context),
       mDevices(context.getDevices()),
       mIL(static_cast<const char *>(il), length),
-      mImpl(context.mImpl->createProgramWithIL(*this, il, length, errcodeRet)),
-      mSource(mImpl ? mImpl->getSource() : std::string{})
+      mImpl(context.mImpl->createProgramWithIL(*this, il, length, errorCode)),
+      mSource(mImpl ? mImpl->getSource(errorCode) : std::string{})
 {}
 
 Program::Program(Context &context,
                  DeviceRefList &&devices,
                  Binaries &&binaries,
                  cl_int *binaryStatus,
-                 cl_int *errcodeRet)
+                 cl_int &errorCode)
     : _cl_program(context.getDispatch()),
       mContext(&context),
       mDevices(std::move(devices)),
-      mImpl(context.mImpl->createProgramWithBinary(*this, binaries, binaryStatus, errcodeRet)),
-      mSource(mImpl ? mImpl->getSource() : std::string{}),
+      mImpl(context.mImpl->createProgramWithBinary(*this, binaries, binaryStatus, errorCode)),
+      mSource(mImpl ? mImpl->getSource(errorCode) : std::string{}),
       mBinaries(std::move(binaries))
 {}
 
 Program::Program(Context &context,
                  DeviceRefList &&devices,
                  const char *kernelNames,
-                 cl_int *errcodeRet)
+                 cl_int &errorCode)
     : _cl_program(context.getDispatch()),
       mContext(&context),
       mDevices(std::move(devices)),
-      mImpl(context.mImpl->createProgramWithBuiltInKernels(*this, kernelNames, errcodeRet)),
-      mSource(mImpl ? mImpl->getSource() : std::string{})
+      mImpl(context.mImpl->createProgramWithBuiltInKernels(*this, kernelNames, errorCode)),
+      mSource(mImpl ? mImpl->getSource(errorCode) : std::string{})
 {}
 
 }  // namespace cl

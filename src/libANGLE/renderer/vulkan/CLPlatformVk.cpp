@@ -58,7 +58,7 @@ CLPlatformImpl::Info CLPlatformVk::createInfo() const
 
 cl::DevicePtrList CLPlatformVk::createDevices(cl::Platform &platform) const
 {
-    cl_device_type type = 0u;  // TODO(jplate) Fetch device type from Vulkan
+    cl::DeviceType type;  // TODO(jplate) Fetch device type from Vulkan
     cl::DevicePtrList devices;
     const cl::Device::CreateImplFunc createImplFunc = [](const cl::Device &device) {
         return CLDeviceVk::Ptr(new CLDeviceVk(device));
@@ -71,23 +71,19 @@ cl::DevicePtrList CLPlatformVk::createDevices(cl::Platform &platform) const
     return devices;
 }
 
-CLContextImpl::Ptr CLPlatformVk::createContext(const cl::Context &context,
+CLContextImpl::Ptr CLPlatformVk::createContext(cl::Context &context,
                                                const cl::DeviceRefList &devices,
-                                               cl::ContextErrorCB notify,
-                                               void *userData,
                                                bool userSync,
-                                               cl_int *errcodeRet)
+                                               cl_int &errorCode)
 {
     CLContextImpl::Ptr contextImpl;
     return contextImpl;
 }
 
-CLContextImpl::Ptr CLPlatformVk::createContextFromType(const cl::Context &context,
-                                                       cl_device_type deviceType,
-                                                       cl::ContextErrorCB notify,
-                                                       void *userData,
+CLContextImpl::Ptr CLPlatformVk::createContextFromType(cl::Context &context,
+                                                       cl::DeviceType deviceType,
                                                        bool userSync,
-                                                       cl_int *errcodeRet)
+                                                       cl_int &errorCode)
 {
     CLContextImpl::Ptr contextImpl;
     return contextImpl;

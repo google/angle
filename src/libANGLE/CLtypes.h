@@ -8,12 +8,14 @@
 #ifndef LIBANGLE_CLTYPES_H_
 #define LIBANGLE_CLTYPES_H_
 
+#include "libANGLE/CLBitField.h"
 #include "libANGLE/CLRefPointer.h"
 
 #include "common/PackedCLEnums_autogen.h"
 
 // Include frequently used standard headers
 #include <algorithm>
+#include <functional>
 #include <list>
 #include <memory>
 #include <string>

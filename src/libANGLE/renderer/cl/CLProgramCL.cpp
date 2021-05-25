@@ -24,27 +24,24 @@ CLProgramCL::~CLProgramCL()
     }
 }
 
-std::string CLProgramCL::getSource() const
+std::string CLProgramCL::getSource(cl_int &errorCode) const
 {
     size_t size = 0u;
-    if (mNative->getDispatch().clGetProgramInfo(mNative, CL_PROGRAM_SOURCE, 0u, nullptr, &size) ==
-        CL_SUCCESS)
+    errorCode =
+        mNative->getDispatch().clGetProgramInfo(mNative, CL_PROGRAM_SOURCE, 0u, nullptr, &size);
+    if (errorCode == CL_SUCCESS)
     {
         if (size != 0u)
         {
             std::vector<char> valString(size, '\0');
-            if (mNative->getDispatch().clGetProgramInfo(mNative, CL_PROGRAM_SOURCE, size,
-                                                        valString.data(), nullptr) == CL_SUCCESS)
+            errorCode = mNative->getDispatch().clGetProgramInfo(mNative, CL_PROGRAM_SOURCE, size,
+                                                                valString.data(), nullptr);
+            if (errorCode == CL_SUCCESS)
             {
                 return std::string(valString.data(), valString.size() - 1u);
             }
         }
-        else
-        {
-            return std::string{};
-        }
     }
-    ERR() << "Failed to query CL program source";
     return std::string{};
 }
 

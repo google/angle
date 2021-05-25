@@ -72,6 +72,7 @@ class RefPointer
     T *operator->() const { return mCLObject; }
     T &operator*() const { return *mCLObject; }
 
+    bool isValid() const { return mCLObject != nullptr; }
     T *get() const { return mCLObject; }
     explicit operator bool() const { return mCLObject != nullptr; }
 

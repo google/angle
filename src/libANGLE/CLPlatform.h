@@ -15,8 +15,6 @@
 
 #include "anglebase/no_destructor.h"
 
-#include <functional>
-
 namespace cl
 {
 
@@ -41,7 +39,7 @@ class Platform final : public _cl_platform_id, public Object
 
     cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
-    cl_int getDeviceIDs(cl_device_type deviceType,
+    cl_int getDeviceIDs(DeviceType deviceType,
                         cl_uint numEntries,
                         cl_device_id *devices,
                         cl_uint *numDevices) const;
@@ -49,22 +47,22 @@ class Platform final : public _cl_platform_id, public Object
     static void CreatePlatform(const cl_icd_dispatch &dispatch,
                                const CreateImplFunc &createImplFunc);
 
-    static cl_int GetPlatformIDs(cl_uint num_entries,
+    static cl_int GetPlatformIDs(cl_uint numEntries,
                                  cl_platform_id *platforms,
-                                 cl_uint *num_platforms);
+                                 cl_uint *numPlatforms);
 
     static cl_context CreateContext(const cl_context_properties *properties,
                                     cl_uint numDevices,
                                     const cl_device_id *devices,
                                     ContextErrorCB notify,
                                     void *userData,
-                                    cl_int *errcodeRet);
+                                    cl_int &errorCode);
 
     static cl_context CreateContextFromType(const cl_context_properties *properties,
-                                            cl_device_type deviceType,
+                                            DeviceType deviceType,
                                             ContextErrorCB notify,
                                             void *userData,
-                                            cl_int *errcodeRet);
+                                            cl_int &errorCode);
 
     static const PtrList &GetPlatforms();
     static Platform *GetDefault();
@@ -77,7 +75,7 @@ class Platform final : public _cl_platform_id, public Object
   private:
     Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc);
 
-    cl_context createContext(Context *context, cl_int *errcodeRet);
+    cl_context createContext(Context *context);
     void destroyContext(Context *context);
 
     static PtrList &GetList();

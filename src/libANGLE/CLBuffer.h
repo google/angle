@@ -23,22 +23,22 @@ class Buffer final : public Memory
     bool isSubBuffer() const;
     bool isRegionValid(const cl_buffer_region &region) const;
 
-    cl_mem createSubBuffer(cl_mem_flags flags,
+    cl_mem createSubBuffer(MemFlags flags,
                            cl_buffer_create_type createType,
                            const void *createInfo,
-                           cl_int *errcodeRet);
+                           cl_int &errorCode);
 
     static bool IsValid(const _cl_mem *buffer);
 
   private:
     Buffer(Context &context,
            PropArray &&properties,
-           cl_mem_flags flags,
+           MemFlags flags,
            size_t size,
            void *hostPtr,
-           cl_int *errcodeRet);
+           cl_int &errorCode);
 
-    Buffer(Buffer &parent, cl_mem_flags flags, size_t offset, size_t size, cl_int *errcodeRet);
+    Buffer(Buffer &parent, MemFlags flags, size_t offset, size_t size, cl_int &errorCode);
 
     friend class Context;
 };
@@ -50,7 +50,7 @@ inline cl_mem_object_type Buffer::getType() const
 
 inline bool Buffer::isSubBuffer() const
 {
-    return bool(mParent);
+    return mParent.isValid();
 }
 
 inline bool Buffer::isRegionValid(const cl_buffer_region &region) const

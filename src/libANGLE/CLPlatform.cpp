@@ -16,13 +16,12 @@ namespace cl
 namespace
 {
 
-bool IsDeviceTypeMatch(cl_device_type select, cl_device_type type)
+bool IsDeviceTypeMatch(DeviceType select, DeviceType type)
 {
-    // The type 'cl_device_type' is a bitfield, so masking out the selected bits indicates
-    // if a given type is a match. A custom device is an exception, which only matches
-    // if it was explicitely selected, as defined here:
+    // The type 'DeviceType' is a bitfield, so it matches if any selected bit is set.
+    // A custom device is an exception, which only matches if it was explicitely selected, see:
     // https://www.khronos.org/registry/OpenCL/specs/3.0-unified/html/OpenCL_API.html#clGetDeviceIDs
-    return type == CL_DEVICE_TYPE_CUSTOM ? select == CL_DEVICE_TYPE_CUSTOM : (type & select) != 0u;
+    return type == CL_DEVICE_TYPE_CUSTOM ? select == CL_DEVICE_TYPE_CUSTOM : type.isSet(select);
 }
 
 Context::PropArray ParseContextProperties(const cl_context_properties *properties,
@@ -112,11 +111,14 @@ cl_int Platform::getInfo(PlatformInfo name,
             copySize  = sizeof(kIcdSuffix);
             break;
         default:
+            ASSERT(false);
             return CL_INVALID_VALUE;
     }
 
     if (value != nullptr)
     {
+        // CL_INVALID_VALUE if size in bytes specified by param_value_size is < size of return type
+        // as specified in the OpenCL Platform Queries table, and param_value is not a NULL value.
         if (valueSize < copySize)
         {
             return CL_INVALID_VALUE;
@@ -133,7 +135,7 @@ cl_int Platform::getInfo(PlatformInfo name,
     return CL_SUCCESS;
 }
 
-cl_int Platform::getDeviceIDs(cl_device_type deviceType,
+cl_int Platform::getDeviceIDs(DeviceType deviceType,
                               cl_uint numEntries,
                               cl_device_id *devices,
                               cl_uint *numDevices) const
@@ -154,7 +156,14 @@ cl_int Platform::getDeviceIDs(cl_device_type deviceType,
     {
         *numDevices = found;
     }
-    return found == 0u ? CL_DEVICE_NOT_FOUND : CL_SUCCESS;
+
+    // CL_DEVICE_NOT_FOUND if no OpenCL devices that matched device_type were found.
+    if (found == 0u)
+    {
+        return CL_DEVICE_NOT_FOUND;
+    }
+
+    return CL_SUCCESS;
 }
 
 void Platform::CreatePlatform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc)
@@ -166,20 +175,20 @@ void Platform::CreatePlatform(const cl_icd_dispatch &dispatch, const CreateImplF
     }
 }
 
-cl_int Platform::GetPlatformIDs(cl_uint num_entries,
+cl_int Platform::GetPlatformIDs(cl_uint numEntries,
                                 cl_platform_id *platforms,
-                                cl_uint *num_platforms)
+                                cl_uint *numPlatforms)
 {
-    const PtrList &platformList = GetList();
-    if (num_platforms != nullptr)
+    const PtrList &platformList = GetPlatforms();
+    if (numPlatforms != nullptr)
     {
-        *num_platforms = static_cast<cl_uint>(platformList.size());
+        *numPlatforms = static_cast<cl_uint>(platformList.size());
     }
     if (platforms != nullptr)
     {
         cl_uint entry   = 0u;
         auto platformIt = platformList.cbegin();
-        while (entry < num_entries && platformIt != platformList.cend())
+        while (entry < numEntries && platformIt != platformList.cend())
         {
             platforms[entry++] = (*platformIt++).get();
         }
@@ -192,7 +201,7 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
                                    const cl_device_id *devices,
                                    ContextErrorCB notify,
                                    void *userData,
-                                   cl_int *errcodeRet)
+                                   cl_int &errorCode)
 {
     Platform *platform           = nullptr;
     bool userSync                = false;
@@ -203,25 +212,23 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
     {
         refDevices.emplace_back(static_cast<Device *>(*devices++));
     }
-    return platform->createContext(
-        new Context(*platform, std::move(propArray), std::move(refDevices), notify, userData,
-                    userSync, errcodeRet),
-        errcodeRet);
+    return platform->createContext(new Context(*platform, std::move(propArray),
+                                               std::move(refDevices), notify, userData, userSync,
+                                               errorCode));
 }
 
 cl_context Platform::CreateContextFromType(const cl_context_properties *properties,
-                                           cl_device_type deviceType,
+                                           DeviceType deviceType,
                                            ContextErrorCB notify,
                                            void *userData,
-                                           cl_int *errcodeRet)
+                                           cl_int &errorCode)
 {
     Platform *platform           = nullptr;
     bool userSync                = false;
     Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
     ASSERT(platform != nullptr);
     return platform->createContext(new Context(*platform, std::move(propArray), deviceType, notify,
-                                               userData, userSync, errcodeRet),
-                                   errcodeRet);
+                                               userData, userSync, errorCode));
 }
 
 Platform::Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc)
@@ -231,17 +238,13 @@ Platform::Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &create
       mDevices(mImpl->createDevices(*this))
 {}
 
-cl_context Platform::createContext(Context *context, cl_int *errcodeRet)
+cl_context Platform::createContext(Context *context)
 {
     mContexts.emplace_back(context);
-    if (!mContexts.back()->mImpl)
+    if (!mContexts.back()->mImpl || mContexts.back()->mDevices.empty())
     {
         mContexts.back()->release();
         return nullptr;
-    }
-    if (errcodeRet != nullptr)
-    {
-        *errcodeRet = CL_SUCCESS;
     }
     return mContexts.back().get();
 }
