@@ -240,6 +240,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6240b4a8_204cee10",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T15:29:29Z",
+      "side": 1,
+      "message": "Jamie, can you write `5.0.operator int()` instead of `int(5.0)`? No, because it is a cast. Can you write `mParent.operator bool()` instead of `bool(mParent)`? Yes, because it is a conversion.",
+      "parentUuid": "bb8f39e1_62231736",
+      "range": {
+        "startLine": 53,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 15
+      },
+      "revId": "d2403e19ae7b8107cd99a87926b73a4e998608c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2ef62fb_3c940918",
