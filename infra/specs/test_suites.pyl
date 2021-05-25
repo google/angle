@@ -696,6 +696,9 @@
           'angle_skia_gold_test',
           'chrome-gpu-gold-service-account',
         ],
+        'android_swarming': {
+          'shards': 10,
+        },
       }
     },
 

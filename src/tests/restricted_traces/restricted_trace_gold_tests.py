@@ -204,8 +204,11 @@ def get_skia_gold_keys(args):
             return self.lines
 
     with common.temporary_file() as tempfile_path:
+        sysinfo_env = env.copy()
+        sysinfo_env.pop('GTEST_TOTAL_SHARDS', None)
+        sysinfo_env.pop('GTEST_SHARD_INDEX', None)
         binary = get_binary_name('angle_system_info_test')
-        if run_wrapper(args, [binary, '--vulkan', '-v'], env, tempfile_path):
+        if run_wrapper(args, [binary, '--vulkan', '-v'], sysinfo_env, tempfile_path):
             raise Exception('Error getting system info.')
 
         filter = Filter()
