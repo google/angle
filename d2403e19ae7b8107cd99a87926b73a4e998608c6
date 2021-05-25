@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09eaaa4b_1637312b",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T13:29:56Z",
+      "side": 1,
+      "message": "nit: https://google.github.io/styleguide/cppguide.html#Casting",
+      "range": {
+        "startLine": 53,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 15
+      },
+      "revId": "d2403e19ae7b8107cd99a87926b73a4e998608c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2ef62fb_3c940918",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 426,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T13:29:56Z",
+      "side": 1,
+      "message": "can you please add error messages as you add these errors? spec:\n\npfn_notify is a callback function that can be registered by the application. This callback function\nwill be used by the OpenCL implementation to report information on errors during context\ncreation as well as errors that occur at runtime in this context. This callback function may be\ncalled asynchronously by the OpenCL implementation. It is the application’s responsibility to\nensure that the callback function is thread-safe. The parameters to this callback function are:\n\nerrinfo is a pointer to an error string\n\nWe could add all the error strings as a follow-up, seems easier to add them as we go now. How you implement this is up to you.",
+      "range": {
+        "startLine": 426,
+        "startChar": 8,
+        "endLine": 426,
+        "endChar": 26
+      },
+      "revId": "d2403e19ae7b8107cd99a87926b73a4e998608c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
