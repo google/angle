@@ -96,6 +96,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d405811b_112b89ef",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-25T14:49:38Z",
+      "side": 1,
+      "message": "John: this obviously isn\u0027t a huge deal, so I don\u0027t want to block the review, but I don\u0027t see the style guide making any distinction about conversion vs casting. I think it\u0027s referring to what you call conversion as casting in that section. i.e. static_cast\u003cint\u003e(5.0) would be a cast not a conversion, similarly (int)5.0 and int(5.0) it\u0027s referring to as casts even if you understand them as conversions.",
+      "parentUuid": "b61d84b5_248735e0",
+      "range": {
+        "startLine": 53,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 15
+      },
+      "revId": "d2403e19ae7b8107cd99a87926b73a4e998608c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2ef62fb_3c940918",
