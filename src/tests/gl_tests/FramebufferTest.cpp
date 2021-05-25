@@ -3335,9 +3335,6 @@ TEST_P(FramebufferTest, BindAndDrawDifferentSizedFBOs)
 // LINEAR_MIPMAP_LINEAR did not make any changes.
 TEST_P(FramebufferTest_ES3, FramebufferBindToNewLevelAfterMaxIncreaseShouldntCrash)
 {
-    // http://crbug.com/1197431
-    ANGLE_SKIP_TEST_IF(IsVulkan());
-
     constexpr char kFS[] = R"(precision mediump float;
 uniform sampler2D u_tex0;
 void main() {
