@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d943e199_67e9b256",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-25T23:02:49Z",
+      "side": 1,
+      "message": "Maybe run 64-bit on Pixel 4 and 32-bit on Pixel 2?",
+      "revId": "b1447172090fe23383a726ca82b78630b515bca2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
