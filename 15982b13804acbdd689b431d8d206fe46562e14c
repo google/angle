@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eaa88d75_8a3afd66",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-25T21:38:24Z",
+      "side": 1,
+      "message": "LGTM",
+      "revId": "15982b13804acbdd689b431d8d206fe46562e14c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e097051_0f9fb1a6",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-25T21:38:24Z",
+      "side": 1,
+      "message": "Break up for readability please.",
+      "range": {
+        "startLine": 713,
+        "startChar": 0,
+        "endLine": 720,
+        "endChar": 59
+      },
+      "revId": "15982b13804acbdd689b431d8d206fe46562e14c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
