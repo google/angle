@@ -128,6 +128,24 @@
       "parentUuid": "7b5edbb3_8c15c3a6",
       "revId": "791a5334e19aa70eed4132502afb82ef16ea6f32",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e4ffc17_0c35cbfb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-25T21:11:11Z",
+      "side": 1,
+      "message": "Awesome. The test landed in the meantime, so please remove the suppression from that test too. You can add a reference to the bug in that change so this fixes gets attributed to that bug!",
+      "parentUuid": "423d3f45_9163c2c1",
+      "revId": "791a5334e19aa70eed4132502afb82ef16ea6f32",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
