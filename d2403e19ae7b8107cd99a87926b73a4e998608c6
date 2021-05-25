@@ -168,6 +168,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "033fcd6c_8167056b",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T15:13:42Z",
+      "side": 1,
+      "message": "`mParent !\u003d nullptr` is not possible, because mParent is a smart pointer and has no comparison operator with nullptr.",
+      "parentUuid": "03efe0ce_49216c03",
+      "range": {
+        "startLine": 53,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 15
+      },
+      "revId": "d2403e19ae7b8107cd99a87926b73a4e998608c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2ef62fb_3c940918",
