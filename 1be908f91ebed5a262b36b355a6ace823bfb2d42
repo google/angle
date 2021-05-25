@@ -41,6 +41,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "77c36b58_b1f1a374",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4257,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-25T20:14:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80cb198a_47854425",
+      "range": {
+        "startLine": 4257,
+        "startChar": 4,
+        "endLine": 4257,
+        "endChar": 11
+      },
+      "revId": "1be908f91ebed5a262b36b355a6ace823bfb2d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "115d8cf6_81d8ab1a",
@@ -64,6 +88,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1211b6ce_f45a632b",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4330,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-25T20:14:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "115d8cf6_81d8ab1a",
+      "range": {
+        "startLine": 4329,
+        "startChar": 34,
+        "endLine": 4330,
+        "endChar": 47
+      },
+      "revId": "1be908f91ebed5a262b36b355a6ace823bfb2d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4b1b9929_7775f8bf",
@@ -77,6 +125,30 @@
       "writtenOn": "2021-05-25T19:03:18Z",
       "side": 1,
       "message": "nit: should probably fix this before landing.",
+      "range": {
+        "startLine": 4398,
+        "startChar": 31,
+        "endLine": 4398,
+        "endChar": 40
+      },
+      "revId": "1be908f91ebed5a262b36b355a6ace823bfb2d42",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4537b343_db3ba8de",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4398,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-25T20:14:03Z",
+      "side": 1,
+      "message": "Done. \nI think the failure is because of the webgl and opengles3 spec difference. feedback loop is not supposed to generate GL error on OpenGLES, but is invalid_op on webgl.",
+      "parentUuid": "4b1b9929_7775f8bf",
       "range": {
         "startLine": 4398,
         "startChar": 31,
