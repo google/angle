@@ -189,6 +189,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a3f2902_15e2019b",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T22:29:24Z",
+      "side": 1,
+      "message": "Amended the comment in another CL.",
+      "parentUuid": "5241e991_da8ac282",
+      "range": {
+        "startLine": 116,
+        "startChar": 11,
+        "endLine": 116,
+        "endChar": 21
+      },
+      "revId": "82d58d119023f0dbc7c7f03fb8fc31e753dd5e61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "17667054_aacd0e4e",
@@ -226,6 +250,30 @@
       "side": 1,
       "message": "The validation rules in the specs are not very readable as well 😊. I was thinking of a small helper function `IsSet(flags, CL_MEM_WHATEVER)`, which would already help. Any additional idea? There is more stuff like this in the upcomping CLs, so I should defer this and do them all together.",
       "parentUuid": "17667054_aacd0e4e",
+      "range": {
+        "startLine": 970,
+        "startChar": 0,
+        "endLine": 981,
+        "endChar": 87
+      },
+      "revId": "82d58d119023f0dbc7c7f03fb8fc31e753dd5e61",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a642466e_a206a018",
+        "filename": "src/libANGLE/validationCL.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 981,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T22:29:24Z",
+      "side": 1,
+      "message": "Refactored in another CL.",
+      "parentUuid": "f2678c23_ca3d843c",
       "range": {
         "startLine": 970,
         "startChar": 0,
