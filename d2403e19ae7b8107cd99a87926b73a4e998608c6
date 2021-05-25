@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b61d84b5_248735e0",
+        "filename": "src/libANGLE/CLBuffer.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-25T14:47:15Z",
+      "side": 1,
+      "message": "This refers to casts, not to conversion operators.",
+      "parentUuid": "3f2393de_61a147dc",
+      "range": {
+        "startLine": 53,
+        "startChar": 11,
+        "endLine": 53,
+        "endChar": 15
+      },
+      "revId": "d2403e19ae7b8107cd99a87926b73a4e998608c6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b2ef62fb_3c940918",
