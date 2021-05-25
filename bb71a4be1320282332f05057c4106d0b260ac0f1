@@ -16,6 +16,46 @@
       "message": "LGTM, but I haven\u0027t found the original source to compare against.  I don\u0027t have permission to open the Chromium bug listed.  Therefore, I\u0027m only doing a +1 at the moment.",
       "revId": "bb71a4be1320282332f05057c4106d0b260ac0f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3ff68bd4_d4e5946a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-25T21:21:25Z",
+      "side": 1,
+      "message": "Thanks for pointing me to the source Charlie.  One question.  Assuming the answer is true, it really LGTM and I will +2.",
+      "revId": "bb71a4be1320282332f05057c4106d0b260ac0f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c12d0fc2_23a1d5cf",
+        "filename": "src/tests/gl_tests/TextureTest.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 4320,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-25T21:21:25Z",
+      "side": 1,
+      "message": "Just to verify (after comparing this with the original webGL test), you are not intending to compare texture completeness.  True?\n\nIf not, the webGL test source also has useMips; and it\u0027s used to determine srcMaxSampledMip and eventually textureComplete, which is used for whether a GL_INVALID_OPERATION is expected.",
+      "range": {
+        "startLine": 4320,
+        "startChar": 16,
+        "endLine": 4320,
+        "endChar": 58
+      },
+      "revId": "bb71a4be1320282332f05057c4106d0b260ac0f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
