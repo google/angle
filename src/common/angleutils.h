@@ -310,6 +310,15 @@ inline bool IsLittleEndian()
 #    define ANGLE_SCOPED_DISABLE_LSAN()
 #endif
 
+// The ANGLE_NO_SANITIZE_MEMORY macro suppresses MemorySanitizer checks for
+// use-of-uninitialized-data. It can be used to decorate functions with known
+// false positives.
+#ifdef __clang__
+#    define ANGLE_NO_SANITIZE_MEMORY __attribute__((no_sanitize_memory))
+#else
+#    define ANGLE_NO_SANITIZE_MEMORY
+#endif
+
 // The below inlining code lifted from V8.
 #if defined(__clang__) || (defined(__GNUC__) && defined(__has_attribute))
 #    define ANGLE_HAS_ATTRIBUTE_ALWAYS_INLINE (__has_attribute(always_inline))
