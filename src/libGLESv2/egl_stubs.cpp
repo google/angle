@@ -8,7 +8,7 @@
 
 #include "libGLESv2/egl_stubs_autogen.h"
 
-#include "common/version.h"
+#include "common/angle_version.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
 #include "libANGLE/EGLSync.h"

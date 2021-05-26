@@ -661,17 +661,8 @@ action("angle_commit_id") {
   public_configs = [ ":angle_commit_id_config" ]
 }
 
-# TODO(jmadill): Remove this. http://b/168736059
-group("commit_id") {
-  data_deps = [ ":angle_commit_id" ]
-}
-
 angle_source_set("angle_version") {
-  # TODO(jmadill): Remove version.h. http://b/168736059
-  sources = [
-    "src/common/angle_version.h",
-    "src/common/version.h",
-  ]
+  sources = [ "src/common/angle_version.h" ]
   public_deps = [ ":angle_commit_id" ]
 }
 

@@ -16,10 +16,10 @@
 
 #include "sys/stat.h"
 
+#include "common/angle_version.h"
 #include "common/mathutil.h"
 #include "common/string_utils.h"
 #include "common/system_utils.h"
-#include "common/version.h"
 #include "libANGLE/Config.h"
 #include "libANGLE/Context.h"
 #include "libANGLE/Display.h"
