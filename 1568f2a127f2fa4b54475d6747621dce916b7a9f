@@ -190,6 +190,30 @@
       },
       "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d6c303b_333a458d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 5150,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-26T19:21:58Z",
+      "side": 1,
+      "message": "TransferDst also wont work because the real issue here is to not leave the mipmap levels in mixed layout. If we have to pick a layout that is not transfer, the better bet is fragmentShaderRead, since that is most reasonable usage that you will expect after glGenerateMipmap call. PS3 changes all levels to ImageLayout::FragmentShaderReadOnly;",
+      "parentUuid": "7110f5c3_661b9368",
+      "range": {
+        "startLine": 5150,
+        "startChar": 34,
+        "endLine": 5150,
+        "endChar": 45
+      },
+      "revId": "1568f2a127f2fa4b54475d6747621dce916b7a9f",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
