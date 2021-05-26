@@ -16,6 +16,132 @@
       "message": "PTAL",
       "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a378e00d_2c9c8d08",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:26:59Z",
+      "side": 1,
+      "message": "Thank you so much for doing this!",
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2cca9b8c_390f0611",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:26:59Z",
+      "side": 1,
+      "message": "Would be ideal to avoid duplication entirely, but at least for this change I suggest at least making the extra constructor a template (with argument `size_t ExtensionCount`).",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 41
+      },
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c607988_c0534f08",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 728,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:26:59Z",
+      "side": 1,
+      "message": "Suggest caching the fields other than \"extensions\" before the `if` above to reduce duplication.",
+      "range": {
+        "startLine": 728,
+        "startChar": 32,
+        "endLine": 728,
+        "endChar": 83
+      },
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "104a107f_990b1538",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1319,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:26:59Z",
+      "side": 1,
+      "message": "1. This is duplicated a few times, please turn into a helper\n2. This should be trivially done with list comprehension and join. Like:\n\n    \u0027, \u0027.join([\u0027TExtension::\u0027 + ext for ext in extension_list])",
+      "range": {
+        "startLine": 1311,
+        "startChar": 0,
+        "endLine": 1319,
+        "endChar": 36
+      },
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8eec9b32_92cbd778",
+        "filename": "src/compiler/translator/gen_builtin_symbols.py",
+        "patchSetId": 7
+      },
+      "lineNbr": 1732,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:26:59Z",
+      "side": 1,
+      "message": "You can just drop this I believe.",
+      "range": {
+        "startLine": 1731,
+        "startChar": 38,
+        "endLine": 1732,
+        "endChar": 38
+      },
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b713e7a_4a92f159",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1584,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:26:59Z",
+      "side": 1,
+      "message": "Should these be:\n\n    extensions-\u003egeometryShaderOES \u003d functions-\u003ehasGLESExtension(\"GL_OES_geometry_shader\");\n    extensions-\u003egeometryShaderEXT \u003d functions-\u003ehasGLESExtension(\"GL_EXT_geometry_shader\");\n\nif GLES? +Geoff",
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
