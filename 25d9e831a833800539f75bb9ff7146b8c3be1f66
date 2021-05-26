@@ -89,6 +89,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bc8b81b3_3aef061d",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-26T19:20:04Z",
+      "side": 1,
+      "message": "Yeah we could remove it because it doesn\u0027t work. Or fix it. Would prefer to do that in a follow-up CL.",
+      "parentUuid": "7a592539_996f31f0",
+      "range": {
+        "startLine": 380,
+        "startChar": 0,
+        "endLine": 380,
+        "endChar": 98
+      },
+      "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b2d492a_48806cb4",
