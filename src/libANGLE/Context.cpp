@@ -3558,6 +3558,7 @@ void Context::initCaps()
 {
     mState.mCaps = mImplementation->getNativeCaps();
 
+    // TODO (http://anglebug.com/6010): mSupportedExtensions should not be modified here
     mSupportedExtensions = generateSupportedExtensions();
 
     if (!mDisplay->getFrontendFeatures().allowCompressedFormats.enabled)
@@ -3790,6 +3791,17 @@ void Context::initCaps()
         constexpr GLint maxDrawBuffers = 4;
         INFO() << "Limiting draw buffer count to " << maxDrawBuffers;
         ANGLE_LIMIT_CAP(mState.mCaps.maxDrawBuffers, maxDrawBuffers);
+
+        // Unity based applications are sending down GL streams with undefined behavior.
+        // Disabling EGL_KHR_create_context_no_error (which enables a new EGL attrib) prevents that,
+        // but we don't have the infrastructure for disabling EGL extensions yet.
+        // Instead, disable GL_KHR_no_error (which disables exposing the GL extension), which
+        // prevents writing invalid calls to the capture.
+        INFO() << "Enabling validation to prevent invalid calls from being captured. This "
+                  "effectively disables GL_KHR_no_error and enables GL_ANGLE_robust_client_memory.";
+        mSkipValidation                       = false;
+        mState.mExtensions.noError            = mSkipValidation;
+        mState.mExtensions.robustClientMemory = !mSkipValidation;
     }
 
     // Disable support for OES_get_program_binary
