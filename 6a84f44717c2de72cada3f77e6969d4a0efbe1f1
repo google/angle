@@ -22,6 +22,30 @@
       },
       "revId": "6a84f44717c2de72cada3f77e6969d4a0efbe1f1",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "67fdd4b4_a398b650",
+        "filename": "src/libANGLE/CLProgram.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-26T14:01:01Z",
+      "side": 1,
+      "message": "Yes, will remember in general. I use list here on purpose, because I don\u0027t need random access and the elements are typically removed from random positions within the list.",
+      "parentUuid": "6317835f_d3c8fc87",
+      "range": {
+        "startLine": 20,
+        "startChar": 25,
+        "endLine": 20,
+        "endChar": 29
+      },
+      "revId": "6a84f44717c2de72cada3f77e6969d4a0efbe1f1",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
