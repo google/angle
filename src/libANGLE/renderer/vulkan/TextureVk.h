@@ -273,6 +273,13 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
 
     angle::Result ensureMutable(ContextVk *contextVk);
 
+    bool getAndResetImmutableSamplerDirtyState()
+    {
+        bool isDirty           = mImmutableSamplerDirty;
+        mImmutableSamplerDirty = false;
+        return isDirty;
+    }
+
   private:
     // Transform an image index from the frontend into one that can be used on the backing
     // ImageHelper, taking into account mipmap or cube face offsets
@@ -469,9 +476,12 @@ class TextureVk : public TextureImpl, public angle::ObserverInterface
     angle::Result refreshImageViews(ContextVk *contextVk);
     bool shouldDecodeSRGB(ContextVk *contextVk, GLenum srgbDecode, bool texelFetchStaticUse) const;
     void initImageUsageFlags(ContextVk *contextVk, const vk::Format &format);
+    void handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
+                                          const vk::ImageHelper *nextImage);
 
     bool mOwnsImage;
     bool mRequiresMutableStorage;
+    bool mImmutableSamplerDirty;
 
     gl::TextureType mImageNativeType;
 

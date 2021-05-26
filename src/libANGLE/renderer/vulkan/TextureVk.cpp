@@ -269,6 +269,7 @@ TextureVk::TextureVk(const gl::TextureState &state, RendererVk *renderer)
     : TextureImpl(state),
       mOwnsImage(false),
       mRequiresMutableStorage(false),
+      mImmutableSamplerDirty(false),
       mImageNativeType(gl::TextureType::InvalidEnum),
       mImageLayerOffset(0),
       mImageLevelOffset(0),
@@ -1289,18 +1290,50 @@ angle::Result TextureVk::setStorageExternalMemory(const gl::Context *context,
     return angle::Result::Continue;
 }
 
+void TextureVk::handleImmutableSamplerTransition(const vk::ImageHelper *previousImage,
+                                                 const vk::ImageHelper *nextImage)
+{
+    // Did the previous image have an immutable sampler
+    bool previousImageHadImmutableSampler =
+        previousImage && previousImage->valid() && previousImage->hasImmutableSampler();
+
+    // Does the next image require an immutable sampler?
+    bool nextImageRequiresImmutableSampler =
+        nextImage && nextImage->valid() && nextImage->hasImmutableSampler();
+
+    // Has the external format changed?
+    bool externalFormatChanged = false;
+    if (previousImageHadImmutableSampler && nextImageRequiresImmutableSampler)
+    {
+        externalFormatChanged =
+            previousImage->getExternalFormat() != nextImage->getExternalFormat();
+    }
+
+    // Handle transition of immutable sampler state
+    if ((previousImageHadImmutableSampler != nextImageRequiresImmutableSampler) ||
+        externalFormatChanged)
+    {
+        // The immutable sampler state is dirty.
+        mSampler.reset();
+        mImmutableSamplerDirty = true;
+    }
+}
+
 angle::Result TextureVk::setEGLImageTarget(const gl::Context *context,
                                            gl::TextureType type,
                                            egl::Image *image)
 {
     ContextVk *contextVk = vk::GetImpl(context);
     RendererVk *renderer = contextVk->getRenderer();
+    ImageVk *imageVk     = vk::GetImpl(image);
+
+    // TODO: Textures other than EGLImage targets can have immutable samplers.
+    // http://anglebug.com/5773
+    handleImmutableSamplerTransition(mImage, (imageVk) ? imageVk->getImage() : nullptr);
 
     releaseAndDeleteImageAndViews(contextVk);
 
     const vk::Format &format = renderer->getFormat(image->getFormat().info->sizedInternalFormat);
-
-    ImageVk *imageVk = vk::GetImpl(image);
     setImageHelper(contextVk, imageVk->getImage(), imageVk->getImageTextureType(), format,
                    imageVk->getImageLevel().get(), imageVk->getImageLayer(),
                    gl::LevelIndex(mState.getEffectiveBaseLevel()), false);
