@@ -16,6 +16,41 @@
       "message": "Maybe run 64-bit on Pixel 4 and 32-bit on Pixel 2?",
       "revId": "b1447172090fe23383a726ca82b78630b515bca2",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84b230a9_b05b62b5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-26T13:34:11Z",
+      "side": 1,
+      "message": "Except for Geoff\u0027s need for older Android testing, we don\u0027t want to maintain support for testing P2 with Vulkan as the driver has many bugs and is no longer updated.",
+      "parentUuid": "d943e199_67e9b256",
+      "revId": "b1447172090fe23383a726ca82b78630b515bca2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1dc8a399_310586e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-26T13:34:11Z",
+      "side": 1,
+      "message": "Thanks Yuly.",
+      "revId": "b1447172090fe23383a726ca82b78630b515bca2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
