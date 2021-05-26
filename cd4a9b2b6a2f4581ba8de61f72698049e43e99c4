@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "62d2b366_3cce5884",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2021-05-26T16:35:36Z",
+      "side": 1,
+      "message": "I think other options could be to have the thread_local variable declared in a singleton, or as a static variable inside a function, so that it\u0027s created the first time we access it, rather than being created when the ANGLE library is loaded.",
+      "revId": "cd4a9b2b6a2f4581ba8de61f72698049e43e99c4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
