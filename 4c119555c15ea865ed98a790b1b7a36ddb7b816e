@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b44e672d_e3ee1f90",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1499132
+      },
+      "writtenOn": "2021-05-26T14:43:35Z",
+      "side": 1,
+      "message": "Cody, this includes all requested readability improvements of the past four CLs.\nJamie, as requested from you some time ago, all validation functions now return the same type.",
+      "revId": "4c119555c15ea865ed98a790b1b7a36ddb7b816e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
