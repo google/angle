@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5abe196_a4e2a7fb",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3476,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-26T21:43:53Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 3476,
+        "startChar": 4,
+        "endLine": 3476,
+        "endChar": 49
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d964e5fb_29093b74",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3492,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-26T21:43:53Z",
+      "side": 1,
+      "message": "ref",
+      "range": {
+        "startLine": 3492,
+        "startChar": 4,
+        "endLine": 3492,
+        "endChar": 61
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9e0a258_5673feb7",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-26T21:43:53Z",
+      "side": 1,
+      "message": "Note that we have to manually set mSkipValidation here.  It is used to set the extension above (see refs).  We\u0027re basically undoing it here.",
+      "range": {
+        "startLine": 3802,
+        "startChar": 0,
+        "endLine": 3803,
+        "endChar": 65
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
