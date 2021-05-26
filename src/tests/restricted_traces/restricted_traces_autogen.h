@@ -87,6 +87,7 @@ enum class RestrictedTraceID
     fifa_mobile,
     free_fire,
     gardenscapes,
+    genshin_impact,
     google_maps,
     happy_color,
     hay_day,

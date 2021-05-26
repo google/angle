@@ -45,6 +45,7 @@
 #include "fifa_mobile/fifa_mobile_capture_context1.h"
 #include "free_fire/free_fire_capture_context1.h"
 #include "gardenscapes/gardenscapes_capture_context1.h"
+#include "genshin_impact/genshin_impact_capture_context3.h"
 #include "google_maps/google_maps_capture_context1.h"
 #include "happy_color/happy_color_capture_context1.h"
 #include "hay_day/hay_day_capture_context1.h"
@@ -266,6 +267,11 @@ constexpr angle::PackedEnumMap<RestrictedTraceID, TraceInfo> kTraceInfos = {
       gardenscapes::kReplayContextClientMinorVersion, gardenscapes::kReplayFrameStart,
       gardenscapes::kReplayFrameEnd, gardenscapes::kReplayDrawSurfaceWidth,
       gardenscapes::kReplayDrawSurfaceHeight, "gardenscapes"}},
+    {RestrictedTraceID::genshin_impact,
+     {genshin_impact::kReplayContextClientMajorVersion,
+      genshin_impact::kReplayContextClientMinorVersion, genshin_impact::kReplayFrameStart,
+      genshin_impact::kReplayFrameEnd, genshin_impact::kReplayDrawSurfaceWidth,
+      genshin_impact::kReplayDrawSurfaceHeight, "genshin_impact"}},
     {RestrictedTraceID::google_maps,
      {google_maps::kReplayContextClientMajorVersion, google_maps::kReplayContextClientMinorVersion,
       google_maps::kReplayFrameStart, google_maps::kReplayFrameEnd,
