@@ -39,8 +39,6 @@
 #include "libANGLE/renderer/gl/renderergl_utils.h"
 #include "libANGLE/renderer/renderer_utils.h"
 
-#include <iostream>
-
 namespace
 {
 
@@ -217,14 +215,8 @@ RendererGL::~RendererGL()
 
 angle::Result RendererGL::flush()
 {
-    if (!mWorkDoneSinceLastFlush && !mNeedsFlushBeforeDeleteTextures)
-    {
-        return angle::Result::Continue;
-    }
-
     mFunctions->flush();
     mNeedsFlushBeforeDeleteTextures = false;
-    mWorkDoneSinceLastFlush         = false;
     return angle::Result::Continue;
 }
 
@@ -237,7 +229,6 @@ angle::Result RendererGL::finish()
 
     mFunctions->finish();
     mNeedsFlushBeforeDeleteTextures = false;
-    mWorkDoneSinceLastFlush         = false;
 
     if (mFeatures.finishDoesNotCauseQueriesToBeAvailable.enabled && mUseDebugOutput)
     {
@@ -344,27 +335,23 @@ angle::Result RendererGL::dispatchCompute(const gl::Context *context,
                                           GLuint numGroupsZ)
 {
     mFunctions->dispatchCompute(numGroupsX, numGroupsY, numGroupsZ);
-    mWorkDoneSinceLastFlush = true;
     return angle::Result::Continue;
 }
 
 angle::Result RendererGL::dispatchComputeIndirect(const gl::Context *context, GLintptr indirect)
 {
     mFunctions->dispatchComputeIndirect(indirect);
-    mWorkDoneSinceLastFlush = true;
     return angle::Result::Continue;
 }
 
 angle::Result RendererGL::memoryBarrier(GLbitfield barriers)
 {
     mFunctions->memoryBarrier(barriers);
-    mWorkDoneSinceLastFlush = true;
     return angle::Result::Continue;
 }
 angle::Result RendererGL::memoryBarrierByRegion(GLbitfield barriers)
 {
     mFunctions->memoryBarrierByRegion(barriers);
-    mWorkDoneSinceLastFlush = true;
     return angle::Result::Continue;
 }
 
@@ -442,11 +429,6 @@ void RendererGL::setMaxShaderCompilerThreads(GLuint count)
 void RendererGL::setNeedsFlushBeforeDeleteTextures()
 {
     mNeedsFlushBeforeDeleteTextures = true;
-}
-
-void RendererGL::markWorkSubmitted()
-{
-    mWorkDoneSinceLastFlush = true;
 }
 
 void RendererGL::flushIfNecessaryBeforeDeleteTextures()
