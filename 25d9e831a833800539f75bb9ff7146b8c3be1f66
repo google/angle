@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "7a592539_996f31f0",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-26T19:18:51Z",
+      "side": 1,
+      "message": "So the tests would always pass here?\nCan we remove the flaky retries if they don\u0027t work, then?",
+      "parentUuid": "6126e72e_975ac130",
+      "range": {
+        "startLine": 380,
+        "startChar": 0,
+        "endLine": 380,
+        "endChar": 98
+      },
+      "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7b2d492a_48806cb4",
         "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
         "patchSetId": 1
