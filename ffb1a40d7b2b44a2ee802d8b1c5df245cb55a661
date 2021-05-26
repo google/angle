@@ -16,6 +16,24 @@
       "message": "Shabi, I started re-doing the existing \"non-coherent\" tests so that I can share code and create a number of \"coherent\" tests.  There\u0027s some clean-up needed, but is this approach good (i.e. to share shaders and test code to reduce duplication)?",
       "revId": "ffb1a40d7b2b44a2ee802d8b1c5df245cb55a661",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "115b437f_31d6ed46",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:29:46Z",
+      "side": 1,
+      "message": "Sharing between coherent and non-coherent tests sounds ideal.",
+      "parentUuid": "361e1513_c03d9ba2",
+      "revId": "ffb1a40d7b2b44a2ee802d8b1c5df245cb55a661",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
