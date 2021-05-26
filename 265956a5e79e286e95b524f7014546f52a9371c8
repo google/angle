@@ -138,6 +138,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "911f24c5_81b6bbf4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-26T22:22:13Z",
+      "side": 1,
+      "message": "I think early fragment test probably won\u0027t be much difference. At least on some GPU I know it actually makes zero difference. We will split it out in future if we find a need.",
+      "parentUuid": "38dee488_b73a4d8d",
+      "range": {
+        "startLine": 132,
+        "startChar": 52,
+        "endLine": 132,
+        "endChar": 94
+      },
+      "revId": "265956a5e79e286e95b524f7014546f52a9371c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bc32aee6_ac2fcb87",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 4
