@@ -95,6 +95,8 @@
 5557 VULKAN LINUX : KHR-GLES32.core.shader_macros.fragment_precision_high_tess_* = SKIP
 5557 VULKAN LINUX : KHR-GLES32.core.texture_cube_map_array.sampling = SKIP
 
+6008 VULKAN NVIDIA LINUX :  KHR-GLES32.core.framebuffer_completeness.cube_map_layered_attachment_valid_size_and_format = SKIP
+
 // Texture border clamp support
 3577 VULKAN : KHR-GLES32.core.texture_border_clamp.* = SKIP
 3577 VULKAN : KHR-GLES32.core.gpu_shader5.*clamp*_border = SKIP
