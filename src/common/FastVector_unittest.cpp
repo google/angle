@@ -32,6 +32,12 @@ TEST(FastVector, Constructors)
     FastVector<int, 5> copyRValue(std::move(count));
     EXPECT_EQ(3u, copyRValue.size());
 
+    FastVector<int, 5> copyIter(countAndValue.begin(), countAndValue.end());
+    EXPECT_EQ(copyIter, countAndValue);
+
+    FastVector<int, 5> copyIterEmpty(countAndValue.begin(), countAndValue.begin());
+    EXPECT_TRUE(copyIterEmpty.empty());
+
     FastVector<int, 5> initializerList{1, 2, 3, 4, 5};
     EXPECT_EQ(5u, initializerList.size());
     EXPECT_EQ(3, initializerList[2]);

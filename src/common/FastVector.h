@@ -41,6 +41,9 @@ class FastVector final
     FastVector(FastVector<T, N, Storage> &&other);
     FastVector(std::initializer_list<value_type> init);
 
+    template <class InputIt, std::enable_if_t<!std::is_integral<InputIt>::value, bool> = true>
+    FastVector(InputIt first, InputIt last);
+
     FastVector<T, N, Storage> &operator=(const FastVector<T, N, Storage> &other);
     FastVector<T, N, Storage> &operator=(FastVector<T, N, Storage> &&other);
     FastVector<T, N, Storage> &operator=(std::initializer_list<value_type> init);
@@ -139,11 +142,8 @@ FastVector<T, N, Storage>::FastVector(size_type count)
 
 template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector(const FastVector<T, N, Storage> &other)
-{
-    ensure_capacity(other.mSize);
-    mSize = other.mSize;
-    std::copy(other.begin(), other.end(), begin());
-}
+    : FastVector(other.begin(), other.end())
+{}
 
 template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector(FastVector<T, N, Storage> &&other) : FastVector()
@@ -155,6 +155,15 @@ template <class T, size_t N, class Storage>
 FastVector<T, N, Storage>::FastVector(std::initializer_list<value_type> init)
 {
     assign_from_initializer_list(init);
+}
+
+template <class T, size_t N, class Storage>
+template <class InputIt, std::enable_if_t<!std::is_integral<InputIt>::value, bool>>
+FastVector<T, N, Storage>::FastVector(InputIt first, InputIt last)
+{
+    mSize = last - first;
+    ensure_capacity(mSize);
+    std::copy(first, last, begin());
 }
 
 template <class T, size_t N, class Storage>
