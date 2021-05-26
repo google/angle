@@ -697,7 +697,7 @@
           'chrome-gpu-gold-service-account',
         ],
         'android_swarming': {
-          'shards': 10,
+          'shards': 6,
         },
       }
     },

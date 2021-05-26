@@ -452,7 +452,7 @@
             }
           ],
           "service_account": "chrome-gpu-gold@chops-service-accounts.iam.gserviceaccount.com",
-          "shards": 10
+          "shards": 6
         },
         "test_id_prefix": "ninja://src/tests/restricted_traces:angle_restricted_trace_gold_tests/"
       }

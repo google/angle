@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env vpython
 #
 # [VPYTHON:BEGIN]
 # wheel: <
@@ -60,8 +60,9 @@ def IsWindows():
 
 
 DEFAULT_TEST_SUITE = 'angle_perftests'
-DEFAULT_TEST_PREFIX = '--gtest_filter=TracePerfTest.Run/vulkan_'
+DEFAULT_TEST_PREFIX = 'TracePerfTest.Run/vulkan_'
 DEFAULT_SCREENSHOT_PREFIX = 'angle_vulkan_'
+DEFAULT_BATCH_SIZE = 5
 
 # Filters out stuff like: " I   72.572s run_tests_on_device(96071FFAZ00096) "
 ANDROID_LOGGING_PREFIX = r'I +\d+.\d+s \w+\(\w+\)  '
@@ -325,6 +326,16 @@ def upload_test_result_to_skia_gold(args, gold_session_manager, gold_session, go
     return FAIL
 
 
+def _get_batches(traces, batch_size):
+    for i in range(0, len(traces), batch_size):
+        yield traces[i:i + batch_size]
+
+
+def _get_gtest_filter_for_batch(batch):
+    expanded = ['%s%s' % (DEFAULT_TEST_PREFIX, trace) for trace in batch]
+    return '--gtest_filter=%s' % ':'.join(expanded)
+
+
 def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_results):
     keys = get_skia_gold_keys(args)
 
@@ -335,20 +346,27 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
         gold_session = gold_session_manager.GetSkiaGoldSession(keys)
 
         traces = [trace.split(' ')[0] for trace in tests]
-        for test in traces:
 
-            # Apply test filter if present.
-            if args.isolated_script_test_filter:
-                full_name = 'angle_restricted_trace_gold_tests.%s' % test
+        if args.isolated_script_test_filter:
+            filtered = []
+            for trace in traces:
+                # Apply test filter if present.
+                full_name = 'angle_restricted_trace_gold_tests.%s' % trace
                 if not fnmatch.fnmatch(full_name, args.isolated_script_test_filter):
                     logging.info('Skipping test %s because it does not match filter %s' %
                                  (full_name, args.isolated_script_test_filter))
-                    continue
+                else:
+                    filtered += [trace]
+            traces = filtered
 
+        batches = _get_batches(traces, args.batch_size)
+
+        for batch in batches:
             with common.temporary_file() as tempfile_path:
+                gtest_filter = _get_gtest_filter_for_batch(batch)
                 cmd = [
                     args.test_suite,
-                    DEFAULT_TEST_PREFIX + test,
+                    gtest_filter,
                     '--render-test-output-dir=%s' % screenshot_dir,
                     '--one-frame-only',
                     '--verbose-logging',
@@ -358,23 +376,24 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                 for iteration in range(0, args.flaky_retries + 1):
                     if result != PASS:
                         if iteration > 0:
-                            logging.info('Retrying flaky test: "%s"...' % test)
+                            logging.info('Test run failed, running retry #%d...' % (iteration + 1))
                         result = PASS if run_wrapper(args, cmd, env, tempfile_path) == 0 else FAIL
 
                 artifacts = {}
 
-                if result == PASS:
-                    result = upload_test_result_to_skia_gold(args, gold_session_manager,
-                                                             gold_session, gold_properties,
-                                                             screenshot_dir, test, artifacts)
+                for trace in batch:
+                    if result == PASS:
+                        result = upload_test_result_to_skia_gold(args, gold_session_manager,
+                                                                 gold_session, gold_properties,
+                                                                 screenshot_dir, trace, artifacts)
 
-                expected_result = SKIP if result == SKIP else PASS
-                test_results[test] = {'expected': expected_result, 'actual': result}
-                if result == FAIL:
-                    test_results[test]['is_unexpected'] = True
-                if len(artifacts) > 0:
-                    test_results[test]['artifacts'] = artifacts
-                results['num_failures_by_type'][result] += 1
+                    expected_result = SKIP if result == SKIP else PASS
+                    test_results[trace] = {'expected': expected_result, 'actual': result}
+                    if result == FAIL:
+                        test_results[trace]['is_unexpected'] = True
+                    if len(artifacts) > 0:
+                        test_results[trace]['artifacts'] = artifacts
+                    results['num_failures_by_type'][result] += 1
 
         return results['num_failures_by_type'][FAIL] == 0
 
@@ -403,6 +422,11 @@ def main():
         help='Index of the current shard for test splitting. Default is 0.',
         type=int,
         default=0)
+    parser.add_argument(
+        '--batch-size',
+        help='Number of tests to run in a group. Default: %d' % DEFAULT_BATCH_SIZE,
+        type=int,
+        default=DEFAULT_BATCH_SIZE)
 
     add_skia_gold_args(parser)
 
