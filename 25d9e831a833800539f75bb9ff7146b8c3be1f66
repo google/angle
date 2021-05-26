@@ -16,6 +16,52 @@
       "message": "PTAL Yuly, looks like a big win on Android. I should probably look more closely to make sure everything is working OK. I didn\u0027t experiment on different batch sizes.",
       "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "28468bdd_18819bb8",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-26T18:37:02Z",
+      "side": 1,
+      "message": "I think only failed tests should be retried and not the whole batch.",
+      "range": {
+        "startLine": 380,
+        "startChar": 0,
+        "endLine": 380,
+        "endChar": 98
+      },
+      "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b2d492a_48806cb4",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-26T18:37:02Z",
+      "side": 1,
+      "message": "missing indent?",
+      "range": {
+        "startLine": 390,
+        "startChar": 0,
+        "endLine": 397,
+        "endChar": 0
+      },
+      "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
