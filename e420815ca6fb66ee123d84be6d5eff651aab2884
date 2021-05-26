@@ -142,6 +142,24 @@
       "message": "Should these be:\n\n    extensions-\u003egeometryShaderOES \u003d functions-\u003ehasGLESExtension(\"GL_OES_geometry_shader\");\n    extensions-\u003egeometryShaderEXT \u003d functions-\u003ehasGLESExtension(\"GL_EXT_geometry_shader\");\n\nif GLES? +Geoff",
       "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fe1d8da_ba782d7c",
+        "filename": "src/libANGLE/renderer/gl/renderergl_utils.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 1584,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-26T01:29:14Z",
+      "side": 1,
+      "message": "Forgot to actually CC Geoff",
+      "parentUuid": "6b713e7a_4a92f159",
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
