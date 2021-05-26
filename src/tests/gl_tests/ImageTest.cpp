@@ -93,9 +93,11 @@ GLubyte kSrgbColorCube[]   = {18, 62, 155, 255, 149, 26,  60, 255, 41, 149, 38, 
                             3,  26, 202, 255, 117, 164, 16, 255, 19, 41,  32, 255};
 constexpr int kColorspaceAttributeIndex = 2;
 
-constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM = 1;
-constexpr int AHARDWAREBUFFER_FORMAT_D24_UNORM      = 0x31;
-constexpr int AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420   = 0x23;
+constexpr int AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM  = 1;
+constexpr int AHARDWAREBUFFER_FORMAT_D24_UNORM       = 0x31;
+constexpr int AHARDWAREBUFFER_FORMAT_Y8Cr8Cb8_420_SP = 0x11;
+constexpr int AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420    = 0x23;
+constexpr int AHARDWAREBUFFER_FORMAT_YV12            = 0x32315659;
 
 }  // anonymous namespace
 
@@ -1876,6 +1878,148 @@ void ImageTest::SourceAHBTarget2D_helper(const EGLint *attribs)
     eglDestroyImageKHR(window->getDisplay(), image);
     destroyAndroidHardwareBuffer(source);
     glDeleteTextures(1, &target);
+}
+
+// Testing source AHB EGL images, target 2D external texture, cycling through YUV sources.
+TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughYuvSourcesNoData)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    // Create YCbCr source and image but without initial data
+    AHardwareBuffer *ycbcrSource;
+    EGLImageKHR ycbcrImage;
+    createEGLImageAndroidHardwareBufferSource(2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420,
+                                              kDefaultAttribs, {}, &ycbcrSource, &ycbcrImage);
+    EXPECT_NE(ycbcrSource, nullptr);
+    EXPECT_NE(ycbcrImage, EGL_NO_IMAGE_KHR);
+
+    // Create YCrCb source and image but without initial data
+    AHardwareBuffer *ycrcbSource;
+    EGLImageKHR ycrcbImage;
+    createEGLImageAndroidHardwareBufferSource(2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cr8Cb8_420_SP,
+                                              kDefaultAttribs, {}, &ycrcbSource, &ycrcbImage);
+    EXPECT_NE(ycrcbSource, nullptr);
+    EXPECT_NE(ycrcbImage, EGL_NO_IMAGE_KHR);
+
+    // Create YV12 source and image but without initial data
+    AHardwareBuffer *yv12Source;
+    EGLImageKHR yv12Image;
+    createEGLImageAndroidHardwareBufferSource(2, 2, 1, AHARDWAREBUFFER_FORMAT_YV12, kDefaultAttribs,
+                                              {}, &yv12Source, &yv12Image);
+    EXPECT_NE(yv12Source, nullptr);
+    EXPECT_NE(yv12Image, EGL_NO_IMAGE_KHR);
+
+    // Create a texture target to bind the egl image
+    GLTexture target;
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, target);
+    // Disable mipmapping
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind YCbCr image
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, ycbcrImage);
+    // Draw while sampling should result in no EGL/GL errors
+    glUseProgram(mTextureExternalProgram);
+    glUniform1i(mTextureExternalUniformLocation, 0);
+    drawQuad(mTextureExternalProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind YCrCb image
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, ycrcbImage);
+    // Draw while sampling should result in no EGL/GL errors
+    glUseProgram(mTextureExternalProgram);
+    glUniform1i(mTextureExternalUniformLocation, 0);
+    drawQuad(mTextureExternalProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind YV12 image
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, yv12Image);
+    // Draw while sampling should result in no EGL/GL errors
+    glUseProgram(mTextureExternalProgram);
+    glUniform1i(mTextureExternalUniformLocation, 0);
+    drawQuad(mTextureExternalProgram, "position", 0.5f);
+    ASSERT_GL_NO_ERROR();
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), ycbcrImage);
+    destroyAndroidHardwareBuffer(ycbcrSource);
+    eglDestroyImageKHR(window->getDisplay(), ycrcbImage);
+    destroyAndroidHardwareBuffer(ycrcbSource);
+    eglDestroyImageKHR(window->getDisplay(), yv12Image);
+    destroyAndroidHardwareBuffer(yv12Source);
+}
+
+// Testing source AHB EGL images, target 2D external texture, cycling through RGB and YUV sources.
+TEST_P(ImageTest, SourceAHBTarget2DExternalCycleThroughRgbAndYuvSources)
+{
+    ANGLE_SKIP_TEST_IF(!IsAndroid());
+
+    EGLWindow *window = getEGLWindow();
+
+    ANGLE_SKIP_TEST_IF(!hasOESExt() || !hasBaseExt() || !has2DTextureExt());
+    ANGLE_SKIP_TEST_IF(!hasAndroidImageNativeBufferExt() || !hasAndroidHardwareBufferSupport());
+
+    // Create RGB Image
+    GLubyte rgbColor[4] = {0, 0, 255, 255};
+
+    AHardwareBuffer *rgbSource;
+    EGLImageKHR rgbImage;
+    createEGLImageAndroidHardwareBufferSource(1, 1, 1, AHARDWAREBUFFER_FORMAT_R8G8B8A8_UNORM,
+                                              kDefaultAttribs, {{rgbColor, 4}}, &rgbSource,
+                                              &rgbImage);
+
+    // Create YUV Image
+    // 3 planes of data
+    GLubyte dataY[4]  = {40, 40, 40, 40};
+    GLubyte dataCb[1] = {
+        240,
+    };
+    GLubyte dataCr[1] = {
+        109,
+    };
+
+    GLubyte expectedRgbColor[4] = {0, 0, 255, 255};
+
+    AHardwareBuffer *yuvSource;
+    EGLImageKHR yuvImage;
+    createEGLImageAndroidHardwareBufferSource(
+        2, 2, 1, AHARDWAREBUFFER_FORMAT_Y8Cb8Cr8_420, kDefaultAttribs,
+        {{dataY, 1}, {dataCb, 1}, {dataCr, 1}}, &yuvSource, &yuvImage);
+
+    // Create a texture target to bind the egl image
+    GLTexture target;
+    glBindTexture(GL_TEXTURE_EXTERNAL_OES, target);
+    // Disable mipmapping
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    ASSERT_GL_NO_ERROR();
+
+    // Bind YUV image
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, yuvImage);
+    // Expect render target to have the same color as expectedRgbColor
+    verifyResultsExternal(target, expectedRgbColor);
+
+    // Bind RGB image
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, rgbImage);
+    // Expect render target to have the same color as rgbColor
+    verifyResultsExternal(target, rgbColor);
+
+    // Bind YUV image
+    glEGLImageTargetTexture2DOES(GL_TEXTURE_EXTERNAL_OES, yuvImage);
+    // Expect render target to have the same color as expectedRgbColor
+    verifyResultsExternal(target, expectedRgbColor);
+
+    // Clean up
+    eglDestroyImageKHR(window->getDisplay(), yuvImage);
+    destroyAndroidHardwareBuffer(yuvSource);
+    eglDestroyImageKHR(window->getDisplay(), rgbImage);
+    destroyAndroidHardwareBuffer(rgbSource);
 }
 
 // Testing source AHB EGL image, target 2D texture retaining initial data.
