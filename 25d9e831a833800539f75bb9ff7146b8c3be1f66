@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d08b22d_eb70764e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-26T15:14:50Z",
+      "side": 1,
+      "message": "PTAL Yuly, looks like a big win on Android. I should probably look more closely to make sure everything is working OK. I didn\u0027t experiment on different batch sizes.",
+      "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
