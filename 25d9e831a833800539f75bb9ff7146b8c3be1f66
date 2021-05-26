@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6126e72e_975ac130",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 380,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-26T19:12:30Z",
+      "side": 1,
+      "message": "Can I defer this? We don\u0027t know which tests failed in this section - it\u0027s a crash or other situation. I wasn\u0027t going to parse stdout or anything like that. Below is where we know which tests failed. Note that my prior implementation of retries wasn\u0027t actually working for the Intel flake because the tests would fail below, not at this line.",
+      "parentUuid": "28468bdd_18819bb8",
+      "range": {
+        "startLine": 380,
+        "startChar": 0,
+        "endLine": 380,
+        "endChar": 98
+      },
+      "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7b2d492a_48806cb4",
         "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
         "patchSetId": 1
@@ -54,6 +78,30 @@
       "writtenOn": "2021-05-26T18:37:02Z",
       "side": 1,
       "message": "missing indent?",
+      "range": {
+        "startLine": 390,
+        "startChar": 0,
+        "endLine": 397,
+        "endChar": 0
+      },
+      "revId": "25d9e831a833800539f75bb9ff7146b8c3be1f66",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "384b5eb9_a5ede8d0",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 397,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-26T19:12:30Z",
+      "side": 1,
+      "message": "Ah, Python. Thanks for catching. Tried to replicate the older behaviour better here.",
+      "parentUuid": "7b2d492a_48806cb4",
       "range": {
         "startLine": 390,
         "startChar": 0,
