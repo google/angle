@@ -16,6 +16,23 @@
       "message": "PTAL\n",
       "revId": "89562a21b3e9de0206591c800eb0c32619be3dc6",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d141e84e_f67c56c4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-26T19:03:03Z",
+      "side": 1,
+      "message": "Filed https://bugs.chromium.org/p/angleproject/issues/detail?id\u003d6005 about the unreliability of the Pixel 4 bots. Re-submitting with No-Try.\n",
+      "revId": "89562a21b3e9de0206591c800eb0c32619be3dc6",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
