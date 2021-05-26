@@ -3403,8 +3403,9 @@ bool SkipCall(EntryPoint entryPoint)
             return true;
 
         case EntryPoint::GLGetActiveUniform:
-            // Skip this call because:
-            // - We don't use the return values from this call.
+        case EntryPoint::GLGetActiveUniformsiv:
+            // Skip these calls because:
+            // - We don't use the return values.
             // - Active uniform counts can vary between platforms due to cross stage optimizations
             //   and asking about uniforms above GL_ACTIVE_UNIFORMS triggers errors.
             return true;
