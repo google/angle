@@ -372,20 +372,23 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                     '--verbose-logging',
                 ] + extra_flags
 
-                result = None
+                batch_result = None
                 for iteration in range(0, args.flaky_retries + 1):
-                    if result != PASS:
+                    if batch_result != PASS:
                         if iteration > 0:
                             logging.info('Test run failed, running retry #%d...' % (iteration + 1))
-                        result = PASS if run_wrapper(args, cmd, env, tempfile_path) == 0 else FAIL
+                        batch_result = PASS if run_wrapper(args, cmd, env,
+                                                           tempfile_path) == 0 else FAIL
 
                 artifacts = {}
 
                 for trace in batch:
-                    if result == PASS:
+                    if batch_result == PASS:
                         result = upload_test_result_to_skia_gold(args, gold_session_manager,
                                                                  gold_session, gold_properties,
                                                                  screenshot_dir, trace, artifacts)
+                    else:
+                        result = batch_result
 
                     expected_result = SKIP if result == SKIP else PASS
                     test_results[trace] = {'expected': expected_result, 'actual': result}
