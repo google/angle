@@ -16,6 +16,24 @@
       "message": "The change is fine in that it\u0027s easy to revert, but I\u0027m not really sure if disabling the shadow buffer entirely is a good idea. Sunny mentioned the same idea too, so there is precedent for something like this.\n\nI believe the use-case that prompted Mohan\u0027s team to implement this was Manhattan doing something like mapping the same PBO every frame and updating a small portion of it. We couldn\u0027t just map the PBO because it was in use by the GPU at the same time. While causing a GPU bubble right now may not affect the FPS for one reason or another, down the line it\u0027s not something we\u0027d really want.\n\nI do agree that keeping a potentially huge copy around is not ideal and perhaps there are ways to minimize that.\n\nEither way, I don\u0027t mind this going through for the time being if there are no objections from Mohan.",
       "revId": "8f9b82d55e0632a86874e8592ffb9ee2acf246d7",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a77d729_483b48a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T17:11:27Z",
+      "side": 1,
+      "message": "Instead of GPU inaccessible shadow buffer, the proper way is to create a GPU/CPU both accessible vkBuffer and copy the data. But as I explained above, we can revisit the need of this when we have data says so.",
+      "parentUuid": "e884bd4a_2832bbc3",
+      "revId": "8f9b82d55e0632a86874e8592ffb9ee2acf246d7",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

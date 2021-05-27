@@ -72,6 +72,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "12ba9282_10471df2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T17:11:27Z",
+      "side": 1,
+      "message": "Sunny already run the number and says this fix the regression. (This not just remove the transfer to transfer barrier, but also reduces GPU workload, i.e, CopyBuffer). I will remove \"I think\".",
+      "parentUuid": "c76a642a_31d24ded",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 15,
+        "endChar": 67
+      },
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "fd0173e0_1b7ffe2f",
