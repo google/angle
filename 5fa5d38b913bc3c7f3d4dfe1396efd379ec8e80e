@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "22352b2b_b21ea2a9",
+        "filename": "src/libANGLE/renderer/vulkan/MemoryObjectVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:36:54Z",
+      "side": 1,
+      "message": "+Geoff",
+      "parentUuid": "c2a13fa9_3ab80544",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7debf0a2_457947d6",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 15
@@ -54,6 +72,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "a472c84b_0b757a1b",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:36:54Z",
+      "side": 1,
+      "message": "Ack. As long as non-protected resources can be used in a protected command buffer it should be fine.\n\nOtherwise this is used with the swapchain, so you can take protected-ness from the swapchain.",
+      "parentUuid": "7debf0a2_457947d6",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "03c00fb8_cbc3c0ad",
         "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
         "patchSetId": 15
@@ -65,6 +101,24 @@
       "writtenOn": "2021-05-27T18:08:47Z",
       "side": 1,
       "message": "CullWidgets, assuming no protected bit here.",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "178ed313_61a1b7af",
+        "filename": "src/libANGLE/renderer/vulkan/OverlayVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 196,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:36:54Z",
+      "side": 1,
+      "message": "ditto.",
+      "parentUuid": "03c00fb8_cbc3c0ad",
       "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
@@ -99,6 +153,24 @@
       "writtenOn": "2021-05-27T18:08:47Z",
       "side": 1,
       "message": "All the stagingBuffer copies I left Unprotected.",
+      "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a16dc99_5ebcbbe1",
+        "filename": "src/libANGLE/renderer/vulkan/TextureVk.cpp",
+        "patchSetId": 15
+      },
+      "lineNbr": 1007,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:36:54Z",
+      "side": 1,
+      "message": "Whatever logic decides this when the texture\u0027s image itself is created should likely be used here for the staging buffers as well. There is no real \"protection\" if the contents are in a non-protected buffer anyway IMO!",
+      "parentUuid": "bdbbf5f9_81172d19",
       "revId": "5fa5d38b913bc3c7f3d4dfe1396efd379ec8e80e",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
