@@ -235,6 +235,30 @@
       },
       "revId": "68422b6100454df87ae626271861332aa141c4ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c959f3af_53fadb4d",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 1354,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:32:12Z",
+      "side": 1,
+      "message": "+1 to DS for all of these.\n\nFor the read-only case, I\u0027d say DSAttachmentAndFragmentShaderReadOnly (instead of DSFragmentShaderReadOnly)",
+      "parentUuid": "f1e80495_0ba5c70c",
+      "range": {
+        "startLine": 1350,
+        "startChar": 0,
+        "endLine": 1354,
+        "endChar": 35
+      },
+      "revId": "68422b6100454df87ae626271861332aa141c4ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
