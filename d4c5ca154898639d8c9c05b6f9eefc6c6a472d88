@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5258179_f517fa91",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5140,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:26:02Z",
+      "side": 1,
+      "message": "I\u0027d add a note here that FragmentShaderReadOnly is a \"bet\" we made on what the future usage of the image would be.",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f7d06e5a_01a6cce9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5152,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:26:02Z",
+      "side": 1,
+      "message": "Should similarly have an if to avoid issuing a barrier if levelCount will end up 0. Actually, maybe that should just turn into ASSERT. glGenerateMipmap generates a full mipmap, so maxLevel should always be mLevelCount.",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3a672d12_b27258b9",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5166,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:26:02Z",
+      "side": 1,
+      "message": "Do mLastNonShaderReadOnlyLayout and mCurrentShaderReadStageMask need to be updated as well?",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
