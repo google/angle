@@ -65,9 +65,9 @@
 5981 PIXEL4ORXL GLES : VulkanExternalImageTest.TextureFormatCompatChromiumFd/* = SKIP
 
 5946 PIXEL4ORXL VULKAN : TransformFeedbackTestES32.PrimitivesWrittenAndGenerated/* = SKIP
-5947 PIXEL4ORXL VULKAN : FramebufferFetchNonCoherentES31.DrawFetchBlitDrawFetch/* = SKIP
-5947 PIXEL4ORXL VULKAN : FramebufferFetchNonCoherentES31.DrawNonFetchDrawFetchWithDifferentAttachments/* = SKIP
-5947 PIXEL4ORXL VULKAN : FramebufferFetchNonCoherentES31.DrawNonFetchDrawFetchWithDifferentPrograms/* = SKIP
+5947 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawFetchBlitDrawFetch_NonCoherent/* = SKIP
+5947 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentAttachments_NonCoherent/* = SKIP
+5947 PIXEL4ORXL VULKAN : FramebufferFetchES31.DrawNonFetchDrawFetchWithDifferentPrograms_NonCoherent/* = SKIP
 5981 PIXEL4ORXL VULKAN : BlitFramebufferANGLETest.BlitWithDepthDefaultToUser/* = SKIP
 5981 PIXEL4ORXL VULKAN : BlitFramebufferANGLETest.BlitWithDepthUserToDefault/* = SKIP
 5981 PIXEL4ORXL VULKAN : ClearTestES3.MaskedClearHeterogeneousAttachments/* = SKIP

@@ -3,8 +3,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 //
-// ExternalBufferTest:
-//   Tests the correctness of EXT_shader_framebuffer_fetch_non_coherent extension.
+// FramebufferFetchTest:
+//   Tests the correctness of the EXT_shader_framebuffer_fetch and the
+//   EXT_shader_framebuffer_fetch_non_coherent extensions.
 //
 
 #include "test_utils/ANGLETest.h"
@@ -13,15 +14,234 @@
 
 namespace angle
 {
+//
+// Shared Vertex Shaders for the tests below
+//
+// A 1.0 GLSL vertex shader
+static constexpr char k100VS[] = R"(#version 100
+attribute vec4 a_position;
 
-class FramebufferFetchNonCoherentES31 : public ANGLETest
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+// A 3.1 GLSL vertex shader
+static constexpr char k310VS[] = R"(#version 310 es
+in highp vec4 a_position;
+
+void main (void)
+{
+    gl_Position = a_position;
+})";
+
+//
+// Shared simple (i.e. no framebuffer fetch) Fragment Shaders for the tests below
+//
+// Simple (i.e. no framebuffer fetch) 3.1 GLSL fragment shader that writes to 1 attachment
+static constexpr char k310NoFetch1AttachmentFS[] = R"(#version 310 es
+layout(location = 0) out highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color = u_color;
+})";
+
+//
+// Shared Coherent Fragment Shaders for the tests below
+//
+// Coherent version of a 1.0 GLSL fragment shader that uses gl_LastFragData
+static constexpr char k100CoherentFS[] = R"(#version 100
+#extension GL_EXT_shader_framebuffer_fetch : require
+mediump vec4 gl_LastFragData[gl_MaxDrawBuffers];
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    gl_FragColor = u_color + gl_LastFragData[0];
+})";
+
+// Coherent version of a 3.1 GLSL fragment shader that writes to 1 attachment
+static constexpr char k310Coherent1AttachmentFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
+
+// Coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments
+static constexpr char k310Coherent4AttachmentFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color0;
+layout(location = 1) inout highp vec4 o_color1;
+layout(location = 2) inout highp vec4 o_color2;
+layout(location = 3) inout highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 += u_color;
+    o_color2 += u_color;
+    o_color3 += u_color;
+})";
+
+// Coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments via an inout
+// array
+static constexpr char k310Coherent4AttachmentArrayFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color[4];
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color[0] += u_color;
+    o_color[1] += u_color;
+    o_color[2] += u_color;
+    o_color[3] += u_color;
+})";
+
+// Coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments with the order of
+// non-fetch program and fetch program with different attachments (version 1)
+static constexpr char k310CoherentDifferent4AttachmentFS1[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(location = 2) inout highp vec4 o_color2;
+layout(location = 3) out highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 += u_color;
+    o_color3 = u_color;
+})";
+
+// Coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments with the order
+// of non-fetch program and fetch program with different attachments (version 2)
+static constexpr char k310CoherentDifferent4AttachmentFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch : require
+layout(location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(location = 2) out highp vec4 o_color2;
+layout(location = 3) inout highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 = u_color;
+    o_color3 += u_color;
+})";
+
+//
+// Shared Non-Coherent Fragment Shaders for the tests below
+//
+// Non-coherent version of a 1.0 GLSL fragment shader that uses gl_LastFragData
+static constexpr char k100NonCoherentFS[] = R"(#version 100
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent) mediump vec4 gl_LastFragData[gl_MaxDrawBuffers];
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    gl_FragColor = u_color + gl_LastFragData[0];
+})";
+
+// Non-coherent version of a 3.1 GLSL fragment shader that writes to 1 attachment
+static constexpr char k310NonCoherent1AttachmentFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color;
+
+uniform highp vec4 u_color;
+void main (void)
+{
+    o_color += u_color;
+})";
+
+// Non-coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments
+static constexpr char k310NonCoherent4AttachmentFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(noncoherent, location = 1) inout highp vec4 o_color1;
+layout(noncoherent, location = 2) inout highp vec4 o_color2;
+layout(noncoherent, location = 3) inout highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 += u_color;
+    o_color2 += u_color;
+    o_color3 += u_color;
+})";
+
+// Non-coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments via an inout
+// array
+static constexpr char k310NonCoherent4AttachmentArrayFS[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color[4];
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color[0] += u_color;
+    o_color[1] += u_color;
+    o_color[2] += u_color;
+    o_color[3] += u_color;
+})";
+
+// Non-coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments with the order
+// of non-fetch program and fetch program with different attachments (version 1)
+static constexpr char k310NonCoherentDifferent4AttachmentFS1[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(noncoherent, location = 2) inout highp vec4 o_color2;
+layout(location = 3) out highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 += u_color;
+    o_color3 = u_color;
+})";
+
+// Non-coherent version of a 3.1 GLSL fragment shader that writes to 4 attachments with the order
+// of non-fetch program and fetch program with different attachments (version 2)
+static constexpr char k310NonCoherentDifferent4AttachmentFS2[] = R"(#version 310 es
+#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
+layout(noncoherent, location = 0) inout highp vec4 o_color0;
+layout(location = 1) out highp vec4 o_color1;
+layout(location = 2) out highp vec4 o_color2;
+layout(noncoherent, location = 3) inout highp vec4 o_color3;
+uniform highp vec4 u_color;
+
+void main (void)
+{
+    o_color0 += u_color;
+    o_color1 = u_color;
+    o_color2 = u_color;
+    o_color3 += u_color;
+})";
+
+class FramebufferFetchES31 : public ANGLETest
 {
   protected:
     static constexpr GLuint kMaxColorBuffer = 4u;
     static constexpr GLuint kViewportWidth  = 16u;
     static constexpr GLuint kViewportHeight = 16u;
 
-    FramebufferFetchNonCoherentES31()
+    FramebufferFetchES31()
     {
         setWindowWidth(16);
         setWindowHeight(16);
@@ -30,9 +250,75 @@ class FramebufferFetchNonCoherentES31 : public ANGLETest
         setConfigBlueBits(8);
         setConfigAlphaBits(8);
         setConfigDepthBits(24);
+
+        mCoherentExtension = false;
     }
 
-    void render(GLuint coordLoc, GLboolean isFramebufferFetchProgram)
+    enum WhichExtension
+    {
+        COHERENT,
+        NON_COHERENT,
+    };
+    void setWhichExtension(WhichExtension whichExtension)
+    {
+        mCoherentExtension = (whichExtension == COHERENT) ? true : false;
+    }
+
+    enum WhichFragmentShader
+    {
+        GLSL100,
+        GLSL310_NO_FETCH_1ATTACHMENT,
+        GLSL310_1ATTACHMENT,
+        GLSL310_4ATTACHMENT,
+        GLSL310_4ATTACHMENT_ARRAY,
+        GLSL310_4ATTACHMENT_DIFFERENT1,
+        GLSL310_4ATTACHMENT_DIFFERENT2,
+    };
+    const char *getFragmentShader(WhichFragmentShader whichFragmentShader)
+    {
+        if (mCoherentExtension)
+        {
+            switch (whichFragmentShader)
+            {
+                case GLSL100:
+                    return k100CoherentFS;
+                case GLSL310_NO_FETCH_1ATTACHMENT:
+                    return k310NoFetch1AttachmentFS;
+                case GLSL310_1ATTACHMENT:
+                    return k310Coherent1AttachmentFS;
+                case GLSL310_4ATTACHMENT:
+                    return k310Coherent4AttachmentFS;
+                case GLSL310_4ATTACHMENT_ARRAY:
+                    return k310Coherent4AttachmentArrayFS;
+                case GLSL310_4ATTACHMENT_DIFFERENT1:
+                    return k310CoherentDifferent4AttachmentFS1;
+                case GLSL310_4ATTACHMENT_DIFFERENT2:
+                    return k310CoherentDifferent4AttachmentFS2;
+            }
+        }
+        else
+        {
+            switch (whichFragmentShader)
+            {
+                case GLSL100:
+                    return k100NonCoherentFS;
+                case GLSL310_NO_FETCH_1ATTACHMENT:
+                    return k310NoFetch1AttachmentFS;
+                case GLSL310_1ATTACHMENT:
+                    return k310NonCoherent1AttachmentFS;
+                case GLSL310_4ATTACHMENT:
+                    return k310NonCoherent4AttachmentFS;
+                case GLSL310_4ATTACHMENT_ARRAY:
+                    return k310NonCoherent4AttachmentArrayFS;
+                case GLSL310_4ATTACHMENT_DIFFERENT1:
+                    return k310NonCoherentDifferent4AttachmentFS1;
+                case GLSL310_4ATTACHMENT_DIFFERENT2:
+                    return k310NonCoherentDifferent4AttachmentFS2;
+            }
+        }
+    }
+
+    void render(GLuint coordLoc, GLboolean needsFramebufferFetchBarrier)
     {
         const GLfloat coords[] = {
             -1.0f, -1.0f, +1.0f, -1.0f, +1.0f, +1.0f, -1.0f, +1.0f,
@@ -56,7 +342,7 @@ class FramebufferFetchNonCoherentES31 : public ANGLETest
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, (GLsizeiptr)sizeof(indices), &indices[0],
                      GL_STATIC_DRAW);
 
-        if (isFramebufferFetchProgram)
+        if (needsFramebufferFetchBarrier)
         {
             glFramebufferFetchBarrierEXT();
         }
@@ -65,1129 +351,1049 @@ class FramebufferFetchNonCoherentES31 : public ANGLETest
 
         ASSERT_GL_NO_ERROR();
     }
+
+    void BasicTest(GLProgram program)
+    {
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorBufferTex;
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, greenColor.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex,
+                               0);
+
+        ASSERT_GL_NO_ERROR();
+
+        float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocation = glGetUniformLocation(program, "u_color");
+        glUniform4fv(colorLocation, 1, color);
+
+        GLint positionLocation = glGetAttribLocation(program, "a_position");
+        render(positionLocation, !mCoherentExtension);
+
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void MultipleRenderTargetTest(GLProgram program)
+    {
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> color0(kViewportWidth * kViewportHeight, GLColor::black);
+        std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
+        std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
+        std::vector<GLColor> color3(kViewportWidth * kViewportHeight, GLColor::cyan);
+        GLTexture colorBufferTex[kMaxColorBuffer];
+        GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color0.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[2]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[3]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color3.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                                   colorBufferTex[i], 0);
+        }
+        glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+
+        ASSERT_GL_NO_ERROR();
+
+        float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocation = glGetUniformLocation(program, "u_color");
+        glUniform4fv(colorLocation, 1, color);
+
+        GLint positionLocation = glGetAttribLocation(program, "a_position");
+        render(positionLocation, !mCoherentExtension);
+
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::white);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void MultipleRenderTargetArrayTest(GLProgram program)
+    {
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> color0(kViewportWidth * kViewportHeight, GLColor::black);
+        std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
+        std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
+        std::vector<GLColor> color3(kViewportWidth * kViewportHeight, GLColor::cyan);
+        GLTexture colorBufferTex[kMaxColorBuffer];
+        GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color0.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[2]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex[3]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color3.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                                   colorBufferTex[i], 0);
+        }
+        glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+
+        ASSERT_GL_NO_ERROR();
+
+        float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocation = glGetUniformLocation(program, "u_color");
+        glUniform4fv(colorLocation, 1, color);
+
+        GLint positionLocation = glGetAttribLocation(program, "a_position");
+        render(positionLocation, !mCoherentExtension);
+
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::white);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void MultipleDrawTest(GLProgram program)
+    {
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorBufferTex;
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, greenColor.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex,
+                               0);
+
+        ASSERT_GL_NO_ERROR();
+
+        float color1[4]     = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocation = glGetUniformLocation(program, "u_color");
+        glUniform4fv(colorLocation, 1, color1);
+
+        GLint positionLocation = glGetAttribLocation(program, "a_position");
+        render(positionLocation, !mCoherentExtension);
+
+        float color2[4] = {0.0f, 0.0f, 1.0f, 1.0f};
+        glUniform4fv(colorLocation, 1, color2);
+
+        render(positionLocation, !mCoherentExtension);
+
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::white);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void DrawNonFetchDrawFetchTest(GLProgram programNonFetch, GLProgram programFetch)
+    {
+        glUseProgram(programNonFetch);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorBufferTex;
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, greenColor.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex,
+                               0);
+
+        ASSERT_GL_NO_ERROR();
+
+        float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+
+        GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocationNonFetch, GL_FALSE);
+
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glUseProgram(programFetch);
+
+        float colorGreen[4]      = {0.0f, 1.0f, 0.0f, 1.0f};
+        GLint colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
+        glUniform4fv(colorLocationFetch, 1, colorGreen);
+
+        GLint positionLocationFetch = glGetAttribLocation(programFetch, "a_position");
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocationFetch, !mCoherentExtension);
+
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glUseProgram(programNonFetch);
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocationNonFetch, GL_FALSE);
+
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glUseProgram(programFetch);
+        glUniform4fv(colorLocationFetch, 1, colorGreen);
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocationFetch, !mCoherentExtension);
+
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void DrawFetchDrawNonFetchTest(GLProgram programNonFetch, GLProgram programFetch)
+    {
+        glUseProgram(programFetch);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorBufferTex;
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, greenColor.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex,
+                               0);
+
+        ASSERT_GL_NO_ERROR();
+
+        float colorRed[4]        = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
+        glUniform4fv(colorLocationFetch, 1, colorRed);
+
+        GLint positionLocationFetch = glGetAttribLocation(programFetch, "a_position");
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocationFetch, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glUseProgram(programNonFetch);
+
+        GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+
+        GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocationNonFetch, GL_FALSE);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        float colorGreen[4] = {0.0f, 1.0f, 0.0f, 1.0f};
+        glUseProgram(programFetch);
+        glUniform4fv(colorLocationFetch, 1, colorGreen);
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocationFetch, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glUseProgram(programNonFetch);
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocationNonFetch, GL_FALSE);
+
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void DrawNonFetchDrawFetchWithDifferentAttachmentsTest(GLProgram programNonFetch,
+                                                           GLProgram programFetch)
+    {
+        glUseProgram(programNonFetch);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorTex;
+        glBindTexture(GL_TEXTURE_2D, colorTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, greenColor.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+
+        ASSERT_GL_NO_ERROR();
+
+        float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+
+        GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocationNonFetch, GL_FALSE);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glUseProgram(programFetch);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer framebufferMRT1;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
+        std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
+        std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
+        GLTexture colorBufferTex1[kMaxColorBuffer];
+        GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[2]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[3]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                                   colorBufferTex1[i], 0);
+        }
+        glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+        ASSERT_GL_NO_ERROR();
+
+        GLint colorLocation = glGetUniformLocation(programFetch, "u_color");
+        glUniform4fv(colorLocation, 1, colorRed);
+
+        GLint positionLocation = glGetAttribLocation(programFetch, "a_position");
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        GLFramebuffer framebufferMRT2;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT2);
+        GLTexture colorBufferTex2[kMaxColorBuffer];
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex2[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex2[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex2[2]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex2[3]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                                   colorBufferTex2[i], 0);
+        }
+        glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+        ASSERT_GL_NO_ERROR();
+
+        glUniform4fv(colorLocation, 1, colorRed);
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void DrawNonFetchDrawFetchWithDifferentProgramsTest(GLProgram programNonFetch,
+                                                        GLProgram programFetch1,
+                                                        GLProgram programFetch2)
+    {
+        glUseProgram(programNonFetch);
+        ASSERT_GL_NO_ERROR();
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorTex;
+        glBindTexture(GL_TEXTURE_2D, colorTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, greenColor.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+
+        ASSERT_GL_NO_ERROR();
+
+        float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+
+        GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocationNonFetch, GL_FALSE);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glUseProgram(programFetch1);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer framebufferMRT1;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
+        std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorBufferTex1[kMaxColorBuffer];
+        GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[2]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[3]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                                   colorBufferTex1[i], 0);
+        }
+        glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+        ASSERT_GL_NO_ERROR();
+
+        GLint colorLocation = glGetUniformLocation(programFetch1, "u_color");
+        glUniform4fv(colorLocation, 1, colorRed);
+
+        GLint positionLocation = glGetAttribLocation(programFetch1, "a_position");
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glUseProgram(programFetch2);
+        ASSERT_GL_NO_ERROR();
+
+        glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+
+        GLint colorLocation1 = glGetUniformLocation(programFetch2, "u_color");
+        glUniform4fv(colorLocation1, 1, colorRed);
+
+        GLint positionLocation1 = glGetAttribLocation(programFetch2, "a_position");
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation1, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void DrawFetchBlitDrawFetchTest(GLProgram programNonFetch, GLProgram programFetch)
+    {
+        glUseProgram(programFetch);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer framebufferMRT1;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
+        std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
+        std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
+        GLTexture colorBufferTex1[kMaxColorBuffer];
+        GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
+                                                    GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[0]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[1]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color1.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[2]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex1[3]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glBindTexture(GL_TEXTURE_2D, 0);
+        for (unsigned int i = 0; i < kMaxColorBuffer; i++)
+        {
+            glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
+                                   colorBufferTex1[i], 0);
+        }
+        glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
+        ASSERT_GL_NO_ERROR();
+
+        float colorRed[4]   = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocation = glGetUniformLocation(programFetch, "u_color");
+        glUniform4fv(colorLocation, 1, colorRed);
+
+        GLint positionLocation = glGetAttribLocation(programFetch, "a_position");
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        GLFramebuffer framebufferColor;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferColor);
+
+        GLTexture colorTex;
+        glBindTexture(GL_TEXTURE_2D, colorTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, color2.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
+
+        glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, framebufferColor);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, framebufferMRT1);
+
+        glBlitFramebuffer(0, 0, kViewportWidth, kViewportHeight, 0, 0, kViewportWidth,
+                          kViewportHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        ASSERT_GL_NO_ERROR();
+
+        glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
+
+        float colorGreen[4] = {0.0f, 1.0f, 0.0f, 1.0f};
+        glUniform4fv(colorLocation, 1, colorGreen);
+
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        glReadBuffer(colorAttachments[0]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::cyan);
+        glReadBuffer(colorAttachments[1]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::green);
+        glReadBuffer(colorAttachments[2]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::cyan);
+        glReadBuffer(colorAttachments[3]);
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::green);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    void ProgramPipelineTest(const char *kVS, const char *kFS1, const char *kFS2)
+    {
+        GLProgram programVert, programNonFetch, programFetch;
+        const char *sourceArray[3] = {kVS, kFS1, kFS2};
+
+        GLShader vertShader(GL_VERTEX_SHADER);
+        glShaderSource(vertShader, 1, &sourceArray[0], nullptr);
+        glCompileShader(vertShader);
+        glProgramParameteri(programVert, GL_PROGRAM_SEPARABLE, GL_TRUE);
+        glAttachShader(programVert, vertShader);
+        glLinkProgram(programVert);
+        ASSERT_GL_NO_ERROR();
+
+        GLShader fragShader1(GL_FRAGMENT_SHADER);
+        glShaderSource(fragShader1, 1, &sourceArray[1], nullptr);
+        glCompileShader(fragShader1);
+        glProgramParameteri(programNonFetch, GL_PROGRAM_SEPARABLE, GL_TRUE);
+        glAttachShader(programNonFetch, fragShader1);
+        glLinkProgram(programNonFetch);
+        ASSERT_GL_NO_ERROR();
+
+        GLShader fragShader2(GL_FRAGMENT_SHADER);
+        glShaderSource(fragShader2, 1, &sourceArray[2], nullptr);
+        glCompileShader(fragShader2);
+        glProgramParameteri(programFetch, GL_PROGRAM_SEPARABLE, GL_TRUE);
+        glAttachShader(programFetch, fragShader2);
+        glLinkProgram(programFetch);
+        ASSERT_GL_NO_ERROR();
+
+        GLProgramPipeline pipeline1, pipeline2, pipeline3, pipeline4;
+        glUseProgramStages(pipeline1, GL_VERTEX_SHADER_BIT, programVert);
+        glUseProgramStages(pipeline1, GL_FRAGMENT_SHADER_BIT, programNonFetch);
+        glBindProgramPipeline(pipeline1);
+        ASSERT_GL_NO_ERROR();
+
+        GLFramebuffer framebuffer;
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
+        GLTexture colorBufferTex;
+        glBindTexture(GL_TEXTURE_2D, colorBufferTex);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
+                     GL_UNSIGNED_BYTE, greenColor.data());
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex,
+                               0);
+        ASSERT_GL_NO_ERROR();
+
+        glActiveShaderProgram(pipeline1, programNonFetch);
+        float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
+        GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+        ASSERT_GL_NO_ERROR();
+
+        glActiveShaderProgram(pipeline1, programVert);
+        GLint positionLocation = glGetAttribLocation(programVert, "a_position");
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocation, GL_FALSE);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glUseProgramStages(pipeline2, GL_VERTEX_SHADER_BIT, programVert);
+        glUseProgramStages(pipeline2, GL_FRAGMENT_SHADER_BIT, programFetch);
+        glBindProgramPipeline(pipeline2);
+        ASSERT_GL_NO_ERROR();
+
+        glActiveShaderProgram(pipeline2, programFetch);
+        float colorGreen[4]      = {0.0f, 1.0f, 0.0f, 1.0f};
+        GLint colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
+        glUniform4fv(colorLocationFetch, 1, colorGreen);
+
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glUseProgramStages(pipeline3, GL_VERTEX_SHADER_BIT, programVert);
+        glUseProgramStages(pipeline3, GL_FRAGMENT_SHADER_BIT, programNonFetch);
+        glBindProgramPipeline(pipeline3);
+        ASSERT_GL_NO_ERROR();
+
+        glActiveShaderProgram(pipeline3, programNonFetch);
+        colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
+        glUniform4fv(colorLocationNonFetch, 1, colorRed);
+
+        ASSERT_GL_NO_ERROR();
+
+        // Render without regard to glFramebufferFetchBarrierEXT()
+        render(positionLocation, GL_FALSE);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
+
+        glUseProgramStages(pipeline4, GL_VERTEX_SHADER_BIT, programVert);
+        glUseProgramStages(pipeline4, GL_FRAGMENT_SHADER_BIT, programFetch);
+        glBindProgramPipeline(pipeline4);
+        ASSERT_GL_NO_ERROR();
+
+        glActiveShaderProgram(pipeline4, programFetch);
+        colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
+        glUniform4fv(colorLocationFetch, 1, colorGreen);
+        // Render potentially with a glFramebufferFetchBarrierEXT() depending on the [non-]coherent
+        // extension being used
+        render(positionLocation, !mCoherentExtension);
+        ASSERT_GL_NO_ERROR();
+
+        EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    bool mCoherentExtension;
 };
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with inout qualifier
-TEST_P(FramebufferFetchNonCoherentES31, BasicInout)
+// Test coherent extension with inout qualifier
+TEST_P(FramebufferFetchES31, BasicInout_Coherent)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color;
-
-uniform highp vec4 u_color;
-void main (void)
-{
-    o_color += u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
     GLProgram program;
-    program.makeRaster(kVS, kFS);
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
     glUseProgram(program);
-
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorBufferTex;
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocation = glGetUniformLocation(program, "u_color");
-    glUniform4fv(colorLocation, 1, color);
-
-    GLint positionLocation = glGetAttribLocation(program, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    BasicTest(program);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with gl_LastFragData
-TEST_P(FramebufferFetchNonCoherentES31, BasicLastFragData)
+// Test non-coherent extension with inout qualifier
+TEST_P(FramebufferFetchES31, BasicInout_NonCoherent)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-
-    constexpr char kVS[] = R"(#version 100
-attribute vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS[] = R"(#version 100
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent) mediump vec4 gl_LastFragData[gl_MaxDrawBuffers];
-uniform highp vec4 u_color;
-
-void main (void)
-{
-    gl_FragColor = u_color + gl_LastFragData[0];
-})";
+    setWhichExtension(NON_COHERENT);
 
     GLProgram program;
-    program.makeRaster(kVS, kFS);
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
     glUseProgram(program);
-
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorBufferTex;
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocation = glGetUniformLocation(program, "u_color");
-    glUniform4fv(colorLocation, 1, color);
-
-    GLint positionLocation = glGetAttribLocation(program, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    BasicTest(program);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with multiple render target
-TEST_P(FramebufferFetchNonCoherentES31, MultipleRenderTarget)
+// Test coherent extension with gl_LastFragData
+TEST_P(FramebufferFetchES31, BasicLastFragData_Coherent)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color0;
-layout(noncoherent, location = 1) inout highp vec4 o_color1;
-layout(noncoherent, location = 2) inout highp vec4 o_color2;
-layout(noncoherent, location = 3) inout highp vec4 o_color3;
-uniform highp vec4 u_color;
-
-void main (void)
-{
-    o_color0 += u_color;
-    o_color1 += u_color;
-    o_color2 += u_color;
-    o_color3 += u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
     GLProgram program;
-    program.makeRaster(kVS, kFS);
+    program.makeRaster(k100VS, getFragmentShader(GLSL100));
     glUseProgram(program);
-
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> color0(kViewportWidth * kViewportHeight, GLColor::black);
-    std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
-    std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
-    std::vector<GLColor> color3(kViewportWidth * kViewportHeight, GLColor::cyan);
-    GLTexture colorBufferTex[kMaxColorBuffer];
-    GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
-                                                GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color0.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[3]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color3.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
-    {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
-                               colorBufferTex[i], 0);
-    }
-    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
-
-    ASSERT_GL_NO_ERROR();
-
-    float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocation = glGetUniformLocation(program, "u_color");
-    glUniform4fv(colorLocation, 1, color);
-
-    GLint positionLocation = glGetAttribLocation(program, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::white);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    BasicTest(program);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with multiple render target using inout array
-TEST_P(FramebufferFetchNonCoherentES31, MultipleRenderTargetWithInoutArray)
+// Test non-coherent extension with gl_LastFragData
+TEST_P(FramebufferFetchES31, BasicLastFragData_NonCoherent)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color[4];
-uniform highp vec4 u_color;
-
-void main (void)
-{
-    o_color[0] += u_color;
-    o_color[1] += u_color;
-    o_color[2] += u_color;
-    o_color[3] += u_color;
-})";
+    setWhichExtension(NON_COHERENT);
 
     GLProgram program;
-    program.makeRaster(kVS, kFS);
+    program.makeRaster(k100VS, getFragmentShader(GLSL100));
     glUseProgram(program);
-
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> color0(kViewportWidth * kViewportHeight, GLColor::black);
-    std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
-    std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
-    std::vector<GLColor> color3(kViewportWidth * kViewportHeight, GLColor::cyan);
-    GLTexture colorBufferTex[kMaxColorBuffer];
-    GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
-                                                GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color0.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex[3]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color3.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
-    {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
-                               colorBufferTex[i], 0);
-    }
-    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
-
-    ASSERT_GL_NO_ERROR();
-
-    float color[4]      = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocation = glGetUniformLocation(program, "u_color");
-    glUniform4fv(colorLocation, 1, color);
-
-    GLint positionLocation = glGetAttribLocation(program, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::white);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    BasicTest(program);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with multiple draw
-TEST_P(FramebufferFetchNonCoherentES31, MultipleDraw)
+// Testing coherent extension with multiple render target
+TEST_P(FramebufferFetchES31, MultipleRenderTarget_Coherent)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color;
-
-uniform highp vec4 u_color;
-void main (void)
-{
-    o_color += u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
     GLProgram program;
-    program.makeRaster(kVS, kFS);
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT));
     glUseProgram(program);
-
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorBufferTex;
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    float color1[4]     = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocation = glGetUniformLocation(program, "u_color");
-    glUniform4fv(colorLocation, 1, color1);
-
-    GLint positionLocation = glGetAttribLocation(program, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    float color2[4] = {0.0f, 0.0f, 1.0f, 1.0f};
-    glUniform4fv(colorLocation, 1, color2);
-
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::white);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    MultipleRenderTargetTest(program);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with the order of non-fetch program and fetch
-// program
-TEST_P(FramebufferFetchNonCoherentES31, DrawNonFetchDrawFetch)
+// Testing non-coherent extension with multiple render target
+TEST_P(FramebufferFetchES31, MultipleRenderTarget_NonCoherent)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
 
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
+    GLProgram program;
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT));
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
 
-void main (void)
+    MultipleRenderTargetTest(program);
+}
+
+// Testing non-coherent extension with multiple render target using inout array
+TEST_P(FramebufferFetchES31, MultipleRenderTargetWithInoutArray_NonCoherent)
 {
-    gl_Position = a_position;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
 
-    constexpr char kFS1[] = R"(#version 310 es
-layout(location = 0) out highp vec4 o_color;
+    GLProgram program;
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT));
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
 
-uniform highp vec4 u_color;
-void main (void)
+    MultipleRenderTargetTest(program);
+}
+
+// Testing coherent extension with multiple render target using inout array
+TEST_P(FramebufferFetchES31, MultipleRenderTargetWithInoutArray_Coherent)
 {
-    o_color = u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
-    constexpr char kFS2[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color;
+    GLProgram program;
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT));
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
 
-uniform highp vec4 u_color;
-void main (void)
+    MultipleRenderTargetTest(program);
+}
+
+// Test coherent extension with multiple draw
+TEST_P(FramebufferFetchES31, MultipleDraw_Coherent)
 {
-    o_color += u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
+
+    GLProgram program;
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    MultipleDrawTest(program);
+}
+
+// Test non-coherent extension with multiple draw
+TEST_P(FramebufferFetchES31, MultipleDraw_NonCoherent)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
+
+    GLProgram program;
+    program.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
+    glUseProgram(program);
+    ASSERT_GL_NO_ERROR();
+
+    MultipleDrawTest(program);
+}
+
+// Testing coherent extension with the order of non-fetch program and fetch program
+TEST_P(FramebufferFetchES31, DrawNonFetchDrawFetch_Coherent)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
     GLProgram programNonFetch, programFetch;
-    programNonFetch.makeRaster(kVS, kFS1);
-    glUseProgram(programNonFetch);
-
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorBufferTex;
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-
-    GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
-    render(positionLocationNonFetch, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    programFetch.makeRaster(kVS, kFS2);
-    glUseProgram(programFetch);
-
-    float colorGreen[4]      = {0.0f, 1.0f, 0.0f, 1.0f};
-    GLint colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
-    glUniform4fv(colorLocationFetch, 1, colorGreen);
-
-    GLint positionLocationFetch = glGetAttribLocation(programFetch, "a_position");
-    render(positionLocationFetch, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glUseProgram(programNonFetch);
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-    render(positionLocationNonFetch, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    glUseProgram(programFetch);
-    glUniform4fv(colorLocationFetch, 1, colorGreen);
-    render(positionLocationFetch, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    DrawNonFetchDrawFetchTest(programNonFetch, programFetch);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with the order of fetch program and non-fetch
-// program
-TEST_P(FramebufferFetchNonCoherentES31, DrawFetchDrawNonFetch)
+// Testing non-coherent extension with the order of non-fetch program and fetch program
+TEST_P(FramebufferFetchES31, DrawNonFetchDrawFetch_NonCoherent)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
-
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS1[] = R"(#version 310 es
-layout(location = 0) out highp vec4 o_color;
-
-uniform highp vec4 u_color;
-void main (void)
-{
-    o_color = u_color;
-})";
-
-    constexpr char kFS2[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color;
-
-uniform highp vec4 u_color;
-void main (void)
-{
-    o_color += u_color;
-})";
+    setWhichExtension(NON_COHERENT);
 
     GLProgram programNonFetch, programFetch;
-    programFetch.makeRaster(kVS, kFS2);
-    glUseProgram(programFetch);
-
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorBufferTex;
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    float colorRed[4]        = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
-    glUniform4fv(colorLocationFetch, 1, colorRed);
-
-    GLint positionLocationFetch = glGetAttribLocation(programFetch, "a_position");
-    render(positionLocationFetch, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    programNonFetch.makeRaster(kVS, kFS1);
-    glUseProgram(programNonFetch);
-
-    GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-
-    GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
-    render(positionLocationNonFetch, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    float colorGreen[4] = {0.0f, 1.0f, 0.0f, 1.0f};
-    glUseProgram(programFetch);
-    glUniform4fv(colorLocationFetch, 1, colorGreen);
-    render(positionLocationFetch, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glUseProgram(programNonFetch);
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-    render(positionLocationNonFetch, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    DrawNonFetchDrawFetchTest(programNonFetch, programFetch);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with the order of non-fetch program and fetch
-// program with different attachments
-TEST_P(FramebufferFetchNonCoherentES31, DrawNonFetchDrawFetchWithDifferentAttachments)
+// Testing coherent extension with the order of fetch program and non-fetch program
+TEST_P(FramebufferFetchES31, DrawFetchDrawNonFetch_Coherent)
 {
-    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS1[] = R"(#version 310 es
-layout(location = 0) out highp vec4 o_color;
-
-uniform highp vec4 u_color;
-void main (void)
-{
-    o_color = u_color;
-})";
-
-    constexpr char kFS2[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color0;
-layout(location = 1) out highp vec4 o_color1;
-layout(noncoherent, location = 2) inout highp vec4 o_color2;
-layout(location = 3) out highp vec4 o_color3;
-uniform highp vec4 u_color;
-
-void main (void)
-{
-    o_color0 += u_color;
-    o_color1 = u_color;
-    o_color2 += u_color;
-    o_color3 = u_color;
-})";
-
-    GLProgram programNonFetch, programFetch1;
-    programNonFetch.makeRaster(kVS, kFS1);
-    glUseProgram(programNonFetch);
-
+    GLProgram programNonFetch, programFetch;
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorTex;
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-
-    GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
-    render(positionLocationNonFetch, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    programFetch1.makeRaster(kVS, kFS2);
-    glUseProgram(programFetch1);
-
-    ASSERT_GL_NO_ERROR();
-
-    GLFramebuffer framebufferMRT1;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
-    std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
-    std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
-    GLTexture colorBufferTex1[kMaxColorBuffer];
-    GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
-                                                GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[3]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
-    {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
-                               colorBufferTex1[i], 0);
-    }
-    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
-
-    ASSERT_GL_NO_ERROR();
-
-    GLint colorLocation = glGetUniformLocation(programFetch1, "u_color");
-    glUniform4fv(colorLocation, 1, colorRed);
-
-    GLint positionLocation = glGetAttribLocation(programFetch1, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    GLFramebuffer framebufferMRT2;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT2);
-    GLTexture colorBufferTex2[kMaxColorBuffer];
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex2[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex2[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex2[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex2[3]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
-    {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
-                               colorBufferTex2[i], 0);
-    }
-    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
-
-    ASSERT_GL_NO_ERROR();
-
-    glUniform4fv(colorLocation, 1, colorRed);
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    DrawFetchDrawNonFetchTest(programNonFetch, programFetch);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with the order of non-fetch program and fetch
-// with different programs
-TEST_P(FramebufferFetchNonCoherentES31, DrawNonFetchDrawFetchWithDifferentPrograms)
+// Testing non-coherent extension with the order of fetch program and non-fetch program
+TEST_P(FramebufferFetchES31, DrawFetchDrawNonFetch_NonCoherent)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
 
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
+    GLProgram programNonFetch, programFetch;
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_1ATTACHMENT));
+    ASSERT_GL_NO_ERROR();
 
-void main (void)
+    DrawFetchDrawNonFetchTest(programNonFetch, programFetch);
+}
+
+// Testing coherent extension with the order of non-fetch program and fetch program with
+// different attachments
+TEST_P(FramebufferFetchES31, DrawNonFetchDrawFetchWithDifferentAttachments_Coherent)
 {
-    gl_Position = a_position;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
-    constexpr char kFS1[] = R"(#version 310 es
-layout(location = 0) out highp vec4 o_color;
+    GLProgram programNonFetch, programFetch;
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT1));
+    ASSERT_GL_NO_ERROR();
 
-uniform highp vec4 u_color;
-void main (void)
+    DrawNonFetchDrawFetchWithDifferentAttachmentsTest(programNonFetch, programFetch);
+}
+
+// Testing non-coherent extension with the order of non-fetch program and fetch program with
+// different attachments
+TEST_P(FramebufferFetchES31, DrawNonFetchDrawFetchWithDifferentAttachments_NonCoherent)
 {
-    o_color = u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
 
-    constexpr char kFS2[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color0;
-layout(location = 1) out highp vec4 o_color1;
-layout(noncoherent, location = 2) inout highp vec4 o_color2;
-layout(location = 3) out highp vec4 o_color3;
-uniform highp vec4 u_color;
+    GLProgram programNonFetch, programFetch;
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT1));
+    ASSERT_GL_NO_ERROR();
 
-void main (void)
+    DrawNonFetchDrawFetchWithDifferentAttachmentsTest(programNonFetch, programFetch);
+}
+
+// Testing coherent extension with the order of non-fetch program and fetch with different
+// programs
+TEST_P(FramebufferFetchES31, DrawNonFetchDrawFetchWithDifferentPrograms_Coherent)
 {
-    o_color0 += u_color;
-    o_color1 = u_color;
-    o_color2 += u_color;
-    o_color3 = u_color;
-})";
-
-    constexpr char kFS3[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color0;
-layout(location = 1) out highp vec4 o_color1;
-layout(location = 2) out highp vec4 o_color2;
-layout(noncoherent, location = 3) inout highp vec4 o_color3;
-uniform highp vec4 u_color;
-
-void main (void)
-{
-    o_color0 += u_color;
-    o_color1 = u_color;
-    o_color2 = u_color;
-    o_color3 += u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
     GLProgram programNonFetch, programFetch1, programFetch2;
-    programNonFetch.makeRaster(kVS, kFS1);
-    glUseProgram(programNonFetch);
-
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch1.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT1));
+    programFetch2.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT2));
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorTex;
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-
-    GLint positionLocationNonFetch = glGetAttribLocation(programNonFetch, "a_position");
-    render(positionLocationNonFetch, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    programFetch1.makeRaster(kVS, kFS2);
-    glUseProgram(programFetch1);
-
-    ASSERT_GL_NO_ERROR();
-
-    GLFramebuffer framebufferMRT1;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
-    std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorBufferTex1[kMaxColorBuffer];
-    GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
-                                                GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[3]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
-    {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
-                               colorBufferTex1[i], 0);
-    }
-    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
-
-    ASSERT_GL_NO_ERROR();
-
-    GLint colorLocation = glGetUniformLocation(programFetch1, "u_color");
-    glUniform4fv(colorLocation, 1, colorRed);
-
-    GLint positionLocation = glGetAttribLocation(programFetch1, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    programFetch2.makeRaster(kVS, kFS3);
-    glUseProgram(programFetch2);
-
-    ASSERT_GL_NO_ERROR();
-
-    glClearColor(0.0f, 1.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
-
-    GLint colorLocation1 = glGetUniformLocation(programFetch2, "u_color");
-    glUniform4fv(colorLocation1, 1, colorRed);
-
-    GLint positionLocation1 = glGetAttribLocation(programFetch2, "a_position");
-    render(positionLocation1, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    DrawNonFetchDrawFetchWithDifferentProgramsTest(programNonFetch, programFetch1, programFetch2);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with the order of draw fetch, blit and draw
-// fetch
-TEST_P(FramebufferFetchNonCoherentES31, DrawFetchBlitDrawFetch)
+// Testing non-coherent extension with the order of non-fetch program and fetch with different
+// programs
+TEST_P(FramebufferFetchES31, DrawNonFetchDrawFetchWithDifferentPrograms_NonCoherent)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
 
-    constexpr char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
-
-void main (void)
-{
-    gl_Position = a_position;
-})";
-
-    constexpr char kFS1[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-layout(noncoherent, location = 0) inout highp vec4 o_color0;
-layout(location = 1) out highp vec4 o_color1;
-layout(noncoherent, location = 2) inout highp vec4 o_color2;
-layout(location = 3) out highp vec4 o_color3;
-uniform highp vec4 u_color;
-
-void main (void)
-{
-    o_color0 += u_color;
-    o_color1 = u_color;
-    o_color2 += u_color;
-    o_color3 = u_color;
-})";
-
-    GLProgram programFetch;
-    programFetch.makeRaster(kVS, kFS1);
-    glUseProgram(programFetch);
-
+    GLProgram programNonFetch, programFetch1, programFetch2;
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch1.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT1));
+    programFetch2.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT2));
     ASSERT_GL_NO_ERROR();
 
-    GLFramebuffer framebufferMRT1;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
-    std::vector<GLColor> color1(kViewportWidth * kViewportHeight, GLColor::green);
-    std::vector<GLColor> color2(kViewportWidth * kViewportHeight, GLColor::blue);
-    GLTexture colorBufferTex1[kMaxColorBuffer];
-    GLenum colorAttachments[kMaxColorBuffer] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1,
-                                                GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[0]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[1]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color1.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex1[3]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glBindTexture(GL_TEXTURE_2D, 0);
-    for (unsigned int i = 0; i < kMaxColorBuffer; i++)
-    {
-        glFramebufferTexture2D(GL_FRAMEBUFFER, colorAttachments[i], GL_TEXTURE_2D,
-                               colorBufferTex1[i], 0);
-    }
-    glDrawBuffers(kMaxColorBuffer, &colorAttachments[0]);
-
-    ASSERT_GL_NO_ERROR();
-
-    float colorRed[4]   = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocation = glGetUniformLocation(programFetch, "u_color");
-    glUniform4fv(colorLocation, 1, colorRed);
-
-    GLint positionLocation = glGetAttribLocation(programFetch, "a_position");
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::magenta);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    GLFramebuffer framebufferColor;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebufferColor);
-
-    GLTexture colorTex;
-    glBindTexture(GL_TEXTURE_2D, colorTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, color2.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTex, 0);
-
-    glBindFramebuffer(GL_READ_FRAMEBUFFER_ANGLE, framebufferColor);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER_ANGLE, framebufferMRT1);
-
-    glBlitFramebuffer(0, 0, kViewportWidth, kViewportHeight, 0, 0, kViewportWidth, kViewportHeight,
-                      GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-    ASSERT_GL_NO_ERROR();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, framebufferMRT1);
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::blue);
-
-    float colorGreen[4] = {0.0f, 1.0f, 0.0f, 1.0f};
-    glUniform4fv(colorLocation, 1, colorGreen);
-
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    glReadBuffer(colorAttachments[0]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::cyan);
-    glReadBuffer(colorAttachments[1]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::green);
-    glReadBuffer(colorAttachments[2]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::cyan);
-    glReadBuffer(colorAttachments[3]);
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::green);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    DrawNonFetchDrawFetchWithDifferentProgramsTest(programNonFetch, programFetch1, programFetch2);
 }
 
-// Testing EXT_shader_framebuffer_fetch_non_coherent with program pipeline
-TEST_P(FramebufferFetchNonCoherentES31, ProgramPipeline)
+// Testing coherent extension with the order of draw fetch, blit and draw fetch
+TEST_P(FramebufferFetchES31, DrawFetchBlitDrawFetch_Coherent)
+{
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
+
+    GLProgram programNonFetch, programFetch;
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT1));
+    ASSERT_GL_NO_ERROR();
+
+    DrawFetchBlitDrawFetchTest(programNonFetch, programFetch);
+}
+
+// Testing non-coherent extension with the order of draw fetch, blit and draw fetch
+TEST_P(FramebufferFetchES31, DrawFetchBlitDrawFetch_NonCoherent)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
 
-    const char kVS[] = R"(#version 310 es
-in highp vec4 a_position;
+    GLProgram programNonFetch, programFetch;
+    programNonFetch.makeRaster(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT));
+    programFetch.makeRaster(k310VS, getFragmentShader(GLSL310_4ATTACHMENT_DIFFERENT1));
+    ASSERT_GL_NO_ERROR();
 
-void main (void)
+    DrawFetchBlitDrawFetchTest(programNonFetch, programFetch);
+}
+
+// Testing coherent extension with program pipeline
+TEST_P(FramebufferFetchES31, ProgramPipeline_Coherent)
 {
-    gl_Position = a_position;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch"));
+    setWhichExtension(COHERENT);
 
-    constexpr char kFS1[] = R"(#version 310 es
-layout(location = 0) out highp vec4 o_color;
+    ProgramPipelineTest(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT),
+                        getFragmentShader(GLSL310_1ATTACHMENT));
+}
 
-uniform highp vec4 u_color;
-void main (void)
+// Testing non-coherent extension with program pipeline
+TEST_P(FramebufferFetchES31, ProgramPipeline_NonCoherent)
 {
-    o_color = u_color;
-})";
+    ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
+    setWhichExtension(NON_COHERENT);
 
-    constexpr char kFS2[] = R"(#version 310 es
-#extension GL_EXT_shader_framebuffer_fetch_non_coherent : require
-
-layout(noncoherent, location = 0) inout highp vec4 o_color;
-
-uniform highp vec4 u_color;
-void main (void)
-{
-    o_color += u_color;
-})";
-
-    GLProgram programVert, programNonFetch, programFetch;
-    const char *sourceArray[3] = {kVS, kFS1, kFS2};
-
-    GLShader vertShader(GL_VERTEX_SHADER);
-    glShaderSource(vertShader, 1, &sourceArray[0], nullptr);
-    glCompileShader(vertShader);
-    glProgramParameteri(programVert, GL_PROGRAM_SEPARABLE, GL_TRUE);
-    glAttachShader(programVert, vertShader);
-    glLinkProgram(programVert);
-    ASSERT_GL_NO_ERROR();
-
-    GLShader fragShader1(GL_FRAGMENT_SHADER);
-    glShaderSource(fragShader1, 1, &sourceArray[1], nullptr);
-    glCompileShader(fragShader1);
-    glProgramParameteri(programNonFetch, GL_PROGRAM_SEPARABLE, GL_TRUE);
-    glAttachShader(programNonFetch, fragShader1);
-    glLinkProgram(programNonFetch);
-    ASSERT_GL_NO_ERROR();
-
-    GLShader fragShader2(GL_FRAGMENT_SHADER);
-    glShaderSource(fragShader2, 1, &sourceArray[2], nullptr);
-    glCompileShader(fragShader2);
-    glProgramParameteri(programFetch, GL_PROGRAM_SEPARABLE, GL_TRUE);
-    glAttachShader(programFetch, fragShader2);
-    glLinkProgram(programFetch);
-    ASSERT_GL_NO_ERROR();
-
-    GLProgramPipeline pipeline1, pipeline2, pipeline3, pipeline4;
-    glUseProgramStages(pipeline1, GL_VERTEX_SHADER_BIT, programVert);
-    glUseProgramStages(pipeline1, GL_FRAGMENT_SHADER_BIT, programNonFetch);
-    glBindProgramPipeline(pipeline1);
-    ASSERT_GL_NO_ERROR();
-
-    GLFramebuffer framebuffer;
-    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-    std::vector<GLColor> greenColor(kViewportWidth * kViewportHeight, GLColor::green);
-    GLTexture colorBufferTex;
-    glBindTexture(GL_TEXTURE_2D, colorBufferTex);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, kViewportWidth, kViewportHeight, 0, GL_RGBA,
-                 GL_UNSIGNED_BYTE, greenColor.data());
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorBufferTex, 0);
-
-    ASSERT_GL_NO_ERROR();
-
-    glActiveShaderProgram(pipeline1, programNonFetch);
-    float colorRed[4]           = {1.0f, 0.0f, 0.0f, 1.0f};
-    GLint colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-
-    ASSERT_GL_NO_ERROR();
-
-    glActiveShaderProgram(pipeline1, programVert);
-    GLint positionLocation = glGetAttribLocation(programVert, "a_position");
-    render(positionLocation, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    glUseProgramStages(pipeline2, GL_VERTEX_SHADER_BIT, programVert);
-    glUseProgramStages(pipeline2, GL_FRAGMENT_SHADER_BIT, programFetch);
-    glBindProgramPipeline(pipeline2);
-    ASSERT_GL_NO_ERROR();
-
-    glActiveShaderProgram(pipeline2, programFetch);
-    float colorGreen[4]      = {0.0f, 1.0f, 0.0f, 1.0f};
-    GLint colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
-    glUniform4fv(colorLocationFetch, 1, colorGreen);
-
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glUseProgramStages(pipeline3, GL_VERTEX_SHADER_BIT, programVert);
-    glUseProgramStages(pipeline3, GL_FRAGMENT_SHADER_BIT, programNonFetch);
-    glBindProgramPipeline(pipeline3);
-    ASSERT_GL_NO_ERROR();
-
-    glActiveShaderProgram(pipeline3, programNonFetch);
-    colorLocationNonFetch = glGetUniformLocation(programNonFetch, "u_color");
-    glUniform4fv(colorLocationNonFetch, 1, colorRed);
-
-    ASSERT_GL_NO_ERROR();
-
-    render(positionLocation, GL_FALSE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::red);
-
-    glUseProgramStages(pipeline4, GL_VERTEX_SHADER_BIT, programVert);
-    glUseProgramStages(pipeline4, GL_FRAGMENT_SHADER_BIT, programFetch);
-    glBindProgramPipeline(pipeline4);
-    ASSERT_GL_NO_ERROR();
-
-    glActiveShaderProgram(pipeline4, programFetch);
-    colorLocationFetch = glGetUniformLocation(programFetch, "u_color");
-    glUniform4fv(colorLocationFetch, 1, colorGreen);
-    render(positionLocation, GL_TRUE);
-
-    ASSERT_GL_NO_ERROR();
-
-    EXPECT_PIXEL_COLOR_EQ(kViewportWidth / 2, kViewportHeight / 2, GLColor::yellow);
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    ProgramPipelineTest(k310VS, getFragmentShader(GLSL310_NO_FETCH_1ATTACHMENT),
+                        getFragmentShader(GLSL310_1ATTACHMENT));
 }
 
 // TODO: http://anglebug.com/5792
-TEST_P(FramebufferFetchNonCoherentES31, DISABLED_UniformUsageCombinations)
+TEST_P(FramebufferFetchES31, DISABLED_UniformUsageCombinations)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
@@ -1346,7 +1552,7 @@ void main()
 
 // Testing that binding the location value using GLES API is conflicted to the location value of the
 // fragment inout.
-TEST_P(FramebufferFetchNonCoherentES31, FixedUniformLocation)
+TEST_P(FramebufferFetchES31, FixedUniformLocation)
 {
     ANGLE_SKIP_TEST_IF(!IsGLExtensionEnabled("GL_EXT_shader_framebuffer_fetch_non_coherent"));
 
@@ -1399,6 +1605,6 @@ void main (void)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchNonCoherentES31);
-ANGLE_INSTANTIATE_TEST_ES31(FramebufferFetchNonCoherentES31);
+GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(FramebufferFetchES31);
+ANGLE_INSTANTIATE_TEST_ES31(FramebufferFetchES31);
 }  // namespace angle
