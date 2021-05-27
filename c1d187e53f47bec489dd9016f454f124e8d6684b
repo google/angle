@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "15470daa_082e51a2",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3476,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-27T18:10:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5abe196_a4e2a7fb",
+      "range": {
+        "startLine": 3476,
+        "startChar": 4,
+        "endLine": 3476,
+        "endChar": 49
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d964e5fb_29093b74",
@@ -37,6 +61,30 @@
       "writtenOn": "2021-05-26T21:43:53Z",
       "side": 1,
       "message": "ref",
+      "range": {
+        "startLine": 3492,
+        "startChar": 4,
+        "endLine": 3492,
+        "endChar": 61
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b5787334_a13e01b5",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3492,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-27T18:10:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d964e5fb_29093b74",
       "range": {
         "startLine": 3492,
         "startChar": 4,
@@ -204,6 +252,30 @@
       "side": 1,
       "message": "\u003e I\u0027d like to mark this TODO, file a bug and put up a separate CL that moves away from modifying mSupportedExtensions here.\n\nSounds good.",
       "parentUuid": "9e850893_1583ae33",
+      "range": {
+        "startLine": 3802,
+        "startChar": 0,
+        "endLine": 3803,
+        "endChar": 65
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41a4ce7e_e76f633d",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-27T18:10:14Z",
+      "side": 1,
+      "message": "Added TODO near the beginning of the function",
+      "parentUuid": "ef74116a_ea65a12b",
       "range": {
         "startLine": 3802,
         "startChar": 0,
