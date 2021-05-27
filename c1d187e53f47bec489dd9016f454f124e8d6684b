@@ -188,6 +188,30 @@
       },
       "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef74116a_ea65a12b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T17:48:05Z",
+      "side": 1,
+      "message": "\u003e I\u0027d like to mark this TODO, file a bug and put up a separate CL that moves away from modifying mSupportedExtensions here.\n\nSounds good.",
+      "parentUuid": "9e850893_1583ae33",
+      "range": {
+        "startLine": 3802,
+        "startChar": 0,
+        "endLine": 3803,
+        "endChar": 65
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
