@@ -140,6 +140,30 @@
       },
       "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de50a7dc_3122aa6e",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1105284
+      },
+      "writtenOn": "2021-05-27T16:11:03Z",
+      "side": 1,
+      "message": "mSupportedExtensions is the list of all extensions that this context could support. In some situations, we don\u0027t expose everything that is supported (WebGL/EGL_ANGLE_create_context_extensions_enabled [0]). mExtensions should always be a subset of mSupportedExtensions as extensions are enabled over time.\n\nThere is definitely a bug here, this function should not modify mSupportedExtensions. That logic should happen in generateSupportedExtensions instead.\n\n[0] https://source.chromium.org/chromium/chromium/src/+/main:third_party/angle/extensions/EGL_ANGLE_create_context_extensions_enabled.txt",
+      "parentUuid": "259245ee_63a2d44b",
+      "range": {
+        "startLine": 3802,
+        "startChar": 0,
+        "endLine": 3803,
+        "endChar": 65
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
