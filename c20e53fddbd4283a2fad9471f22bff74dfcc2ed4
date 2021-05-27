@@ -68,6 +68,24 @@
       "message": "Is this adequate? \"if (IsAndroid())\" - does it depend on a version of Android to support protected SwapChain Images?",
       "revId": "c20e53fddbd4283a2fad9471f22bff74dfcc2ed4",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dae2feb5_aaed2b30",
+        "filename": "src/libANGLE/renderer/vulkan/RendererVk.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 2225,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T17:32:01Z",
+      "side": 1,
+      "message": "You should be able to write and avoid the if:\n\n    ANGLE_FEATURE_CONDITION(\u0026mFeatures, supportsSurfaceProtectedSwapchains, IsAndroid());\n\nI don\u0027t have an answer to the actual question though.",
+      "parentUuid": "bc659f1b_c893b082",
+      "revId": "c20e53fddbd4283a2fad9471f22bff74dfcc2ed4",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
