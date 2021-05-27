@@ -48,6 +48,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "c76a642a_31d24ded",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T17:00:36Z",
+      "side": 1,
+      "message": "Rather than \"I think\", I\u0027d prefer to have actual numbers to prove whether this feature is helping or hurting.\n\nCan you include some numbers from a device that shows a difference with this CL?",
+      "parentUuid": "d23c243c_9c617c0e",
+      "range": {
+        "startLine": 14,
+        "startChar": 18,
+        "endLine": 15,
+        "endChar": 67
+      },
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "fd0173e0_1b7ffe2f",
@@ -132,6 +156,24 @@
       "side": 1,
       "message": "The main point here is that the time spent in glMapBuffer() call is not the metric you should target for. Because somewhere it will have to wait if CPU goes too much ahead of GPU. The real metric should be if it improves fps or not. I can hardly believe doing two data copy is a good ting on integrated memory system.",
       "parentUuid": "83ffddd7_8142a58f",
+      "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0b0c9b0_754571f9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T17:00:36Z",
+      "side": 1,
+      "message": "It doesn\u0027t seem this concern ever got addressed.   It doesn\u0027t look like this feature was created for functionality, so presumably ANGLE will still work correctly with it disabled.\n\nMohan - Any ideas on apps that may trigger an issue here?",
+      "parentUuid": "dd47cdc1_7e15de0e",
       "revId": "6afde9046338f13c50b9c65d2e0b1cf94ef99a88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
