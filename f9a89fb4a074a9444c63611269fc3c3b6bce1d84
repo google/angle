@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9fc500c3_55335391",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1002745
+      },
+      "writtenOn": "2021-05-27T18:36:02Z",
+      "side": 1,
+      "message": "Added a macro to angleutils to make the final syntax more palatable.",
+      "revId": "f9a89fb4a074a9444c63611269fc3c3b6bce1d84",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
