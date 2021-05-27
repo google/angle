@@ -84,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "478ebd8f_dd7a6dc0",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T17:17:26Z",
+      "side": 1,
+      "message": "nit: would be nice to do this template thing on all the classes here, including TSymbol. Then you wouldn\u0027t need to specialize these constructors, or pad with TExtension::UNDEFINED.",
+      "parentUuid": "5f2ec3e3_8bfd3b76",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 41
+      },
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c607988_c0534f08",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 7
