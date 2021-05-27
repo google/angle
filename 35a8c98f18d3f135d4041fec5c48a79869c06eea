@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "28c77283_209df1d7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T17:12:53Z",
+      "side": 1,
+      "message": "Ken, your input would be useful here.",
+      "revId": "35a8c98f18d3f135d4041fec5c48a79869c06eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9b8cc51b_f625d93a",
@@ -14,6 +31,24 @@
       "writtenOn": "2021-05-26T23:23:12Z",
       "side": 1,
       "message": "It seems the bots were failing due to a WebGL test. The new tests that are failing seem to be a port of the same WebGL test so this skip no longer works \n\nOur change introduces a check into framebufferTexture2D that makes it return INVALID_VALUE if the level specified is outside the level TEXTURE_IMMUTABLE_LEVELS.\nThis seems to be in accordance to the gles 3.2 spec, but the WebGL 1.0 spec links to the 2.0 spec for this instead. \n\nWebgl 1.0 spec \n    void framebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, WebGLTexture? texture, GLint level) (OpenGL ES 2.0 §4.4.3, man page)\n    The WebGL 1.0 spec links to the gles 2.0 spec which states in section 4.4 Framebuffer objects, p113:\n        level specifies the mipmap level of the texture image to be attached to the\n        framebuffer and must be 0. Otherwise, INVALID_VALUE is generated.\n    The test uses levels 0-3(TEXTURE_IMMUTABLE_LEVELS is 2), and it expects no error from framebufferTexture2D rather than INVALID_VALUE.\n    The test fails claiming that after draw there\u0027s an INVALID_VALUE error as our new validation check put it on the stack.\n    The behavior the test expects doesn\u0027t seem compliant with either the gles 2.0 or the gles 3.2 specification since in the case of 2.0, levels 1-3 should all return INVALID_VALUE, and in the case of 3.2, level 3 should return INVALID_VALUE.\n\nIf we do not allow the framebufferTexture2D call through, then it also leads to the framebuffer being registered as complete when level \u003d 3 since the other 2 attachments are complete which isn\u0027t acceptable under the test\u0027s requirements.\n\nI\u0027m not too sure how we want to handle it. Maybe we need to modify the ported Webgl test and the original Webgl test?",
+      "revId": "35a8c98f18d3f135d4041fec5c48a79869c06eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d97215d9_b4d0dc07",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1786,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T17:12:53Z",
+      "side": 1,
+      "message": "+kbr",
+      "parentUuid": "9b8cc51b_f625d93a",
       "revId": "35a8c98f18d3f135d4041fec5c48a79869c06eea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
