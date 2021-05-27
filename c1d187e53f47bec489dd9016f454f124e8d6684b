@@ -116,6 +116,30 @@
       },
       "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "259245ee_63a2d44b",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1329751
+      },
+      "writtenOn": "2021-05-27T14:32:46Z",
+      "side": 1,
+      "message": "Seems unintentional. I wonder if we could change mExtensions to a reference to mSupportedExtensions. No idea why/how we ended up with two copies.",
+      "parentUuid": "6f0ed202_5fd5a8fd",
+      "range": {
+        "startLine": 3802,
+        "startChar": 0,
+        "endLine": 3803,
+        "endChar": 65
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
