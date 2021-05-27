@@ -187,6 +187,30 @@
       },
       "revId": "68422b6100454df87ae626271861332aa141c4ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "debf3b52_2a553164",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 1354,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T18:16:54Z",
+      "side": 1,
+      "message": "Scratch my comment above. DepthStencilAttachmentAndFragmentShaderRead is D/S attachment write and shader read. But they are on different mipmap levels. This is a valid usage for immutable texture. I can change it to DepthStencilAttachmentWriteAndFragmentShaderRead.\n\nDepthStencilFragmentShaderReadOnly is D/S attachment and shader both read only.\n\nYes, names are a bit confusing, feel free to suggest better names.",
+      "parentUuid": "bb17b37e_e9e61adb",
+      "range": {
+        "startLine": 1350,
+        "startChar": 0,
+        "endLine": 1354,
+        "endChar": 35
+      },
+      "revId": "68422b6100454df87ae626271861332aa141c4ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
