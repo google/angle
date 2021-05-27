@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e7769881_434bbc26",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 5168,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T18:35:15Z",
+      "side": 1,
+      "message": "I checked, and this seems fine. Could you please add a comment that this works fine because only the stage and access masks are used (and that TransferDst has more strict access masks, so it subsumes TransferSrc).",
+      "range": {
+        "startLine": 5168,
+        "startChar": 48,
+        "endLine": 5168,
+        "endChar": 59
+      },
+      "revId": "ad0de87fd42dc0ac4a01ca477300cdc08a855098",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
