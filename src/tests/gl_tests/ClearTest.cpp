@@ -2482,6 +2482,39 @@ TEST_P(ClearTest, DISABLED_ClearReachesWindow)
     angle::Sleep(2000);
 }
 
+// Test that clearing slices of a 3D texture and reading them back works.
+TEST_P(ClearTestES3, ClearAndReadPixels3DTexture)
+{
+    constexpr uint32_t kWidth  = 128;
+    constexpr uint32_t kHeight = 128;
+    constexpr uint32_t kDepth  = 7;
+
+    GLTexture texture;
+    glBindTexture(GL_TEXTURE_3D, texture);
+    glTexStorage3D(GL_TEXTURE_3D, 1, GL_RGBA8, kWidth, kHeight, kDepth);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    std::array<GLColor, kDepth> clearColors = {
+        GLColor::red,  GLColor::green,   GLColor::blue,  GLColor::yellow,
+        GLColor::cyan, GLColor::magenta, GLColor::white,
+    };
+
+    GLFramebuffer framebuffer;
+    glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+
+    for (uint32_t z = 0; z < kDepth; ++z)
+    {
+        glFramebufferTextureLayer(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, z);
+        glClearBufferfv(GL_COLOR, 0, clearColors[z].toNormalizedVector().data());
+    }
+
+    for (uint32_t z = 0; z < kDepth; ++z)
+    {
+        glFramebufferTextureLayer(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texture, 0, z);
+        EXPECT_PIXEL_COLOR_EQ(0, 0, clearColors[z]);
+    }
+}
+
 #ifdef Bool
 // X11 craziness.
 #    undef Bool

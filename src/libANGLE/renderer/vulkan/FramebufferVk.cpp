@@ -303,8 +303,10 @@ bool IsAnyAttachment3DWithoutAllLayers(const RenderTargetCache<RenderTargetVk> &
     {
         RenderTargetVk *colorRenderTarget = colorRenderTargets[colorIndexGL];
         ASSERT(colorRenderTarget);
-        if (colorRenderTarget->getLayerCount() > framebufferLayerCount &&
-            colorRenderTarget->getImageForRenderPass().getType() == VK_IMAGE_TYPE_3D)
+
+        const vk::ImageHelper &image = colorRenderTarget->getImageForRenderPass();
+
+        if (image.getType() == VK_IMAGE_TYPE_3D && image.getExtents().depth > framebufferLayerCount)
         {
             return true;
         }

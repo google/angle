@@ -294,11 +294,15 @@ angle::Result RenderTargetVk::flushStagedUpdates(ContextVk *contextVk,
     ASSERT(mImage->valid() && (!isResolveImageOwnerOfData() || mResolveImage->valid()));
     ASSERT(framebufferLayerCount != 0);
 
-    // Note that the layer index for 3D textures is always zero according to Vulkan.
+    // It's impossible to defer clears to slices of a 3D images, as the clear applies to all the
+    // slices, while deferred clears only clear a single slice (where the framebuffer is attached).
+    // Additionally, the layer index for 3D textures is always zero according to Vulkan.
     uint32_t layerIndex = mLayerIndex;
     if (mImage->getType() == VK_IMAGE_TYPE_3D)
     {
-        layerIndex = 0;
+        layerIndex         = 0;
+        deferredClears     = nullptr;
+        deferredClearIndex = 0;
     }
 
     vk::ImageHelper *image = getOwnerOfData();
