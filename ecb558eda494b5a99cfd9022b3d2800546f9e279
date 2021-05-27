@@ -24,6 +24,30 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b2e93253_afb4ed27",
+        "filename": "src/compiler/translator/TranslatorMetalDirect.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:18:40Z",
+      "side": 1,
+      "message": "Let\u0027s just keep it for now.",
+      "parentUuid": "d8ee8a85_34ffda01",
+      "range": {
+        "startLine": 217,
+        "startChar": 0,
+        "endLine": 248,
+        "endChar": 1
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94ccc223_94741c1d",
@@ -223,6 +247,30 @@
       "writtenOn": "2021-05-14T17:27:48Z",
       "side": 1,
       "message": "I had to make this public because:\n1. There was a static function CreateDriverUniformRef in TranslatorMetalDirect that took in driverUniforms as a TVariable*, but that seems to be an old pattern, so I got rid of it.\n2. There are still parts. of CreateDriverUniformRef that I could\u0027t use the getters from this file for.\n\nI think the better solution would be to make new getters/functions and not make this public.",
+      "range": {
+        "startLine": 52,
+        "startChar": 0,
+        "endLine": 52,
+        "endChar": 71
+      },
+      "revId": "ecb558eda494b5a99cfd9022b3d2800546f9e279",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c929aeba_d5b95272",
+        "filename": "src/compiler/translator/tree_util/DriverUniform.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:18:40Z",
+      "side": 1,
+      "message": "A getter for the specific field would match the rest of the code, so +1 to that.",
+      "parentUuid": "835310b8_eea163ba",
       "range": {
         "startLine": 52,
         "startChar": 0,

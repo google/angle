@@ -476,6 +476,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "afd8b941_917829db",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/ReduceInterfaceBlocks.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T19:18:40Z",
+      "side": 1,
+      "message": "Can disable the failing validations in Compiler::mValidateASTOptions if this is intentionally leaving the tree in an inconsistent state.",
+      "parentUuid": "9188d41d_c9ce6092",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a8cdab51_d271ab0b",
         "filename": "src/compiler/translator/TranslatorMetalDirect/SeparateCompoundStructDeclarations.h",
         "patchSetId": 5
