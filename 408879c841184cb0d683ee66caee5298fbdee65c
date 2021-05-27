@@ -270,6 +270,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c38fae25_d5d41fc5",
+        "filename": "src/compiler/translator/TranslatorMetalDirect.cpp",
+        "patchSetId": 5
+      },
+      "lineNbr": 1203,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b064f79d_5dcfa125",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4f694fb1_5371161c",
@@ -436,6 +454,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "3aa6ba45_2d0b8774",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/NameEmbeddedUniformStructsMetal.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "12e643af_9b5263df",
+      "range": {
+        "startLine": 26,
+        "startChar": 22,
+        "endLine": 26,
+        "endChar": 53
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f2b06ab2_6595cce2",
         "filename": "src/compiler/translator/TranslatorMetalDirect/ProgramPrelude.cpp",
         "patchSetId": 5
@@ -492,6 +534,42 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "50ae6b51_4c765898",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/ReduceInterfaceBlocks.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "afd8b941_917829db",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b586e83e_abda43a0",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/ReduceInterfaceBlocks.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "afd8b941_917829db",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a8cdab51_d271ab0b",
@@ -505,6 +583,30 @@
       "writtenOn": "2021-05-14T19:22:21Z",
       "side": 1,
       "message": "This is a duplicate of SeparateStructFromUniformDeclarations. That transformation can be modified to always separate structs, not just for uniforms.",
+      "range": {
+        "startLine": 20,
+        "startChar": 22,
+        "endLine": 20,
+        "endChar": 56
+      },
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c098b5ff_6fad2838",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/SeparateCompoundStructDeclarations.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 20,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "a8cdab51_d271ab0b",
       "range": {
         "startLine": 20,
         "startChar": 22,
@@ -532,6 +634,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c3c9a92_d7f656b7",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/ToposortStructs.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2243faf1_5c0de98e",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bcee4835_c00360d2",
@@ -545,6 +665,24 @@
       "writtenOn": "2021-05-14T19:22:21Z",
       "side": 1,
       "message": "Can you check where this is used? It may be used to implement a transformation where something is added to run at the end of main. In that case, there\u0027s already something that does this: RunAtTheEndOfShader().",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b14db3c_375e4529",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/WrapMain.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "bcee4835_c00360d2",
       "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },

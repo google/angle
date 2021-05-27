@@ -16,6 +16,24 @@
       "message": "s/TODO/UNIMPLEMENTED/",
       "revId": "621b6a346552f5d97adb9026c67947d7c8edb136",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bf84643d_38bc7e0e",
+        "filename": "src/compiler/translator/TranslatorMetalDirect/EmitMetal.cpp",
+        "patchSetId": 7
+      },
+      "lineNbr": 436,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T20:56:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3e893e5_80a64b5f",
+      "revId": "621b6a346552f5d97adb9026c67947d7c8edb136",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
