@@ -43,14 +43,14 @@
   # is not necessarily so (i.e., we might have mac, win, and linux
   # bots all using the 'release_bot' config).
   'configs': {
-    'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'goma', 'android', 'arm', 'debug'],
-    'angle_goma_android_arm_release_bot': ['angle', 'opencl', 'goma', 'android', 'arm', 'release'],
-    'angle_goma_android_arm64_debug_bot': ['angle', 'opencl', 'goma', 'android', 'arm64', 'debug'],
-    'angle_goma_android_arm64_release_bot': ['angle', 'opencl', 'goma', 'android', 'arm64', 'release'],
-    'angle_goma_debug_bot': ['angle', 'opencl', 'goma', 'debug'],
-    'angle_goma_release_bot': ['angle', 'opencl', 'goma', 'release'],
-    'angle_goma_x86_debug_bot': ['angle', 'opencl', 'goma', 'x86', 'debug'],
-    'angle_goma_x86_release_bot': ['angle', 'opencl', 'goma', 'x86', 'release'],
+    'angle_goma_android_arm_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'debug'],
+    'angle_goma_android_arm_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm', 'release'],
+    'angle_goma_android_arm64_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm64', 'debug'],
+    'angle_goma_android_arm64_release_bot': ['angle', 'opencl', 'traces', 'goma', 'android', 'arm64', 'release'],
+    'angle_goma_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'debug'],
+    'angle_goma_release_bot': ['angle', 'opencl', 'traces', 'goma', 'release'],
+    'angle_goma_x86_debug_bot': ['angle', 'opencl', 'traces', 'goma', 'x86', 'debug'],
+    'angle_goma_x86_release_bot': ['angle', 'opencl', 'traces', 'goma', 'x86', 'release'],
     'angle_non_clang_debug_bot': ['angle', 'opencl', 'non_clang', 'debug'],
     'angle_non_clang_release_bot': ['angle', 'opencl', 'non_clang', 'release'],
     'angle_non_clang_x86_debug_bot': ['angle', 'opencl', 'non_clang', 'x86', 'debug'],
@@ -66,7 +66,7 @@
       'gn_args': 'target_os="android"',
     },
     'angle': {
-      'gn_args': 'build_angle_gles1_conform_tests=true build_angle_trace_perf_tests=true is_component_build=true',
+      'gn_args': 'build_angle_gles1_conform_tests=true is_component_build=true',
     },
     'opencl': {
       'gn_args': 'angle_enable_cl=true',
@@ -88,6 +88,9 @@
     },
     'release': {
       'gn_args': 'is_debug=false dcheck_always_on=true',
+    },
+    'traces': {
+      'gn_args': 'build_angle_trace_perf_tests=true',
     },
     'winuwp': {
       'gn_args': 'target_os="winuwp"',
