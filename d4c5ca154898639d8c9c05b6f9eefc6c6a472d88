@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "113310be_fc960ab7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T16:51:06Z",
+      "side": 1,
+      "message": "+1 assuming this passes CQ.\n\nAlso, since this is possibly making ANGLE less \"correct\" (if the caller doesn\u0027t use the generated mipmaps with a shader read next), it would be good to justify this change with some performance numbers in the commit message.",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5258179_f517fa91",
@@ -14,6 +31,24 @@
       "writtenOn": "2021-05-27T16:26:02Z",
       "side": 1,
       "message": "I\u0027d add a note here that FragmentShaderReadOnly is a \"bet\" we made on what the future usage of the image would be.",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "76958394_f1458305",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5140,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T16:51:06Z",
+      "side": 1,
+      "message": "Is there a good way to check if this is adding any tech debt to enabling the sync validation layer as part of CQ?",
+      "parentUuid": "e5258179_f517fa91",
       "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
