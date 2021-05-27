@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d3bb7e60_52feccf3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-27T06:01:36Z",
+      "side": 1,
+      "message": "Well crap.  MSVC doesn\u0027t like string literals over 65535 and we just got our first one:\n\n\"../../src/tests/restricted_traces/genshin_impact/genshin_impact_capture_context3_frame001.cpp(4636): fatal error C1091: compiler limit: string exceeds 65535 bytes in length\"\n\nhttps://ci.chromium.org/ui/p/angle/builders/try/win-msvc-x64-rel/18865/overview\n\nWould prefer to just skip this test when compiling with MSVC since we only use clang anyway.\n\nThis might be fixed by moving shaders to a file, or allocating the string in heap memory somehow.",
+      "revId": "57bc9f826061d9a3b9c1946e7a8ba6b758198e50",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
