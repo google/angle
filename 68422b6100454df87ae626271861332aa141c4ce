@@ -211,6 +211,30 @@
       },
       "revId": "68422b6100454df87ae626271861332aa141c4ce",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1e80495_0ba5c70c",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 1354,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T18:23:18Z",
+      "side": 1,
+      "message": "Now I remember why I didn\u0027t use DepthStencilAttachmentWriteAndFragmentShaderRead. It exceeds the string length and I was trying to not increase the string length. How about DSAttachmentWriteAndFragmentShaderRead?",
+      "parentUuid": "debf3b52_2a553164",
+      "range": {
+        "startLine": 1350,
+        "startChar": 0,
+        "endLine": 1354,
+        "endChar": 35
+      },
+      "revId": "68422b6100454df87ae626271861332aa141c4ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
