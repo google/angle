@@ -51,6 +51,24 @@
       "parentUuid": "9b8cc51b_f625d93a",
       "revId": "35a8c98f18d3f135d4041fec5c48a79869c06eea",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f462d224_e8b0ebc5",
+        "filename": "src/libANGLE/validationES.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 1786,
+      "author": {
+        "id": 1105344
+      },
+      "writtenOn": "2021-05-27T21:05:13Z",
+      "side": 1,
+      "message": "It looks like the WebGL test you\u0027re referencing is:\nhttps://github.com/KhronosGroup/WebGL/blob/master/sdk/tests/conformance2/textures/misc/immutable-tex-render-feedback.html\n\nThis WebGL test applies only to WebGL 2.0 (based on ES 3.0). WebGL 1.0 (based on ES 2.0) did not have immutable textures.\n\nPlease look at ES 3.0.6 spec p. 207-208, FramebufferTexture2D and errors it can generate. Are these errors different than ES 3.2? If so then the validation here is going to need to change between context versions. Looking through the above WebGL test, though it looks like it binds mipmap levels outside the [level_base, level_max] range, from what I can tell those aren\u0027t supposed to generate OpenGL errors.",
+      "parentUuid": "d97215d9_b4d0dc07",
+      "revId": "35a8c98f18d3f135d4041fec5c48a79869c06eea",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
