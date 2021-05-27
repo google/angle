@@ -162,6 +162,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "61e43e49_3f7a1ea4",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:47:59Z",
+      "side": 1,
+      "message": "One gotcha I learned from syncval is that even though the later stages in src include the previous stages for the sake of execution barriers, they *don\u0027t* for memory barriers. I suggest using kAllDepthStencilPipelineStageFlags here to include LATE too.",
+      "parentUuid": "911f24c5_81b6bbf4",
+      "range": {
+        "startLine": 132,
+        "startChar": 52,
+        "endLine": 132,
+        "endChar": 94
+      },
+      "revId": "265956a5e79e286e95b524f7014546f52a9371c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bc32aee6_ac2fcb87",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 4
@@ -221,6 +245,30 @@
       "side": 1,
       "message": "dstStage is EARLY_FRAGMENT_TESTS or FRAGMENT probably does not matter much. But this layout specifically says that shader is not using it, so it does not have VK_ACCESS_SHADER_READ_BIT which may avoid unnecessary cache invalidation on the shader core. I don\u0027t know how much difference it may have, probably depends on GPU architecture as well. And there is almost no cost for us to have this layout to describe the exact usage, so I think still worth it.",
       "parentUuid": "81214682_f4320052",
+      "range": {
+        "startLine": 158,
+        "startChar": 21,
+        "endLine": 158,
+        "endChar": 51
+      },
+      "revId": "265956a5e79e286e95b524f7014546f52a9371c8",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "27f3cf4d_36891a78",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 4
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:47:59Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "e52ddc3c_a5b9782b",
       "range": {
         "startLine": 158,
         "startChar": 21,

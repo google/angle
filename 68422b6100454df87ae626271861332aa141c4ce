@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5f720ce_8718ce79",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:47:59Z",
+      "side": 1,
+      "message": "Similarly, kAllDepthStencilPipelineStageFlags here to include EARLY too.",
+      "range": {
+        "startLine": 215,
+        "startChar": 52,
+        "endLine": 215,
+        "endChar": 93
+      },
+      "revId": "68422b6100454df87ae626271861332aa141c4ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39fac977_da504dd8",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 244,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:47:59Z",
+      "side": 1,
+      "message": "kAllDepthStencilPipelineStageFlags",
+      "range": {
+        "startLine": 244,
+        "startChar": 12,
+        "endLine": 244,
+        "endChar": 54
+      },
+      "revId": "68422b6100454df87ae626271861332aa141c4ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0995f7c_ea398952",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 24
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:47:59Z",
+      "side": 1,
+      "message": "kAllDepthStencilPipelineStageFlags",
+      "range": {
+        "startLine": 245,
+        "startChar": 12,
+        "endLine": 245,
+        "endChar": 53
+      },
+      "revId": "68422b6100454df87ae626271861332aa141c4ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b709f46_44186938",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.h",
+        "patchSetId": 24
+      },
+      "lineNbr": 1354,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T16:47:59Z",
+      "side": 1,
+      "message": "The names here are a little confusing. Am I right to understand that DepthStencilAttachmentAndFragmentShaderRead means writable D/S attachment, but shader read-only at the same time (is that even valid?)\n\nDespite the name, looks like DepthStencilFragmentShaderReadOnly is used also when the image is used as an attachment. Should it say something like this?\n\n    DepthStencilAttachmentAndFragmentShaderReadOnly\n\nI\u0027d suggest DepthStencilAttachmentAndFragmentShaderRead to DepthStencilAttachmentWriteAndFragmentShaderRead at the same time to make it clear that one expects the attachment to be writable.",
+      "range": {
+        "startLine": 1350,
+        "startChar": 0,
+        "endLine": 1354,
+        "endChar": 35
+      },
+      "revId": "68422b6100454df87ae626271861332aa141c4ce",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
