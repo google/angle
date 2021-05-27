@@ -68,6 +68,30 @@
       },
       "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d11c224e_ed5c9447",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T01:40:33Z",
+      "side": 1,
+      "message": "This seems reasonable, but I\u0027m concerned about an order of operations error with the line above (ref1):\n\n    mState.mExtensions \u003d mSupportedExtensions;\n\nWe are modifying mSupportedExtensions after we\u0027ve already copied the values into State::mExtensions.\n\nNote that this bug already exists (ref2), so it would be good to fix this properly by moving the `mState.mExtensions \u003d mSupportedExtensions` to the end of initCaps() so no one else gets bit by it in the future.",
+      "parentUuid": "b9e0a258_5673feb7",
+      "range": {
+        "startLine": 3802,
+        "startChar": 0,
+        "endLine": 3803,
+        "endChar": 65
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

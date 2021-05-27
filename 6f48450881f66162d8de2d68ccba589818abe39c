@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5d875a7_0aa0aaf9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T01:40:33Z",
+      "side": 1,
+      "message": "typo: to",
+      "range": {
+        "startLine": 19,
+        "startChar": 57,
+        "endLine": 19,
+        "endChar": 60
+      },
+      "revId": "6f48450881f66162d8de2d68ccba589818abe39c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8372fa70_5fc7536a",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3598,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T01:40:33Z",
+      "side": 1,
+      "message": "ref1",
+      "revId": "6f48450881f66162d8de2d68ccba589818abe39c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3bd010f1_1b7f93cc",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 2
+      },
+      "lineNbr": 3748,
+      "author": {
+        "id": 1297197
+      },
+      "writtenOn": "2021-05-27T01:40:33Z",
+      "side": 1,
+      "message": "ref2",
+      "revId": "6f48450881f66162d8de2d68ccba589818abe39c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
