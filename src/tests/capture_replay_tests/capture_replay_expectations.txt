@@ -20,6 +20,9 @@ WebGLDrawElementsTest.DrawElementsTypeAlignment/*
 WebGLGLSLTest.*
 WebGLReadOutsideFramebufferTest.*
 
+# http://anglebug.com/6006 Failing on bots
+GLSLTest.InactiveVaryingInVertexActiveInFragment/*
+
 # http://anglebug.com/5974 New tests, need triage
 IndexBufferOffsetTest.UInt16Index/*
 IndexBufferOffsetTest.UInt16IndexSmallUpdates/*
