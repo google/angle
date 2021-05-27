@@ -92,6 +92,30 @@
       },
       "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6f0ed202_5fd5a8fd",
+        "filename": "src/libANGLE/Context.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 3803,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-27T04:31:39Z",
+      "side": 1,
+      "message": "Its not clear to me what the design here is, given two copies of the extensions.\n\nmSupportedExtensions is:\n\n    // Extensions supported by the implementation plus extensions that are implemented entirely\n    // within the frontend.\n    Extensions mSupportedExtensions;\n\nwhile mExtensions is part of State:\n\n    // Caps to use for validation\n    ...\n    Extensions mExtensions;\n\nIf they are supposed to be in lock step, then we can move all these modifications directly to mSupportedExtensions and modify mExtensions at the end.  If they are supposed to be distinct, where mSupportedExtensions is a pure list and mExtensions is the modified list, then ref2 should be changed to mExtensions.",
+      "parentUuid": "d11c224e_ed5c9447",
+      "range": {
+        "startLine": 3802,
+        "startChar": 0,
+        "endLine": 3803,
+        "endChar": 65
+      },
+      "revId": "c1d187e53f47bec489dd9016f454f124e8d6684b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
