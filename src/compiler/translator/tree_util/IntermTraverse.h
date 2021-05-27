@@ -149,6 +149,11 @@ class TIntermTraverser : angle::NonCopyable
         return nullptr;
     }
 
+    // Returns what child index is currently being visited.  For example when visiting the children
+    // of an aggregate, it can be used to find out which argument of the parent (aggregate) node
+    // they correspond to.
+    size_t getParentChildIndex() const { return mCurrentChildIndex; }
+
     const TIntermBlock *getParentBlock() const;
 
     TIntermNode *getRootNode() const
@@ -287,6 +292,8 @@ class TIntermTraverser : angle::NonCopyable
 
     // All the nodes from root to the current node during traversing.
     TVector<TIntermNode *> mPath;
+    // The current child of parent being traversed.
+    size_t mCurrentChildIndex;
 
     // All the code blocks from the root to the current node's parent during traversal.
     std::vector<ParentBlock> mParentBlockStack;

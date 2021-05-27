@@ -27,6 +27,8 @@ void TIntermTraverser::traverse(T *node)
 
     bool visit = true;
 
+    mCurrentChildIndex = 0;
+
     // Visit the node before children if pre-visiting.
     if (preVisit)
         visit = node->visit(PreVisit, this);
@@ -38,6 +40,7 @@ void TIntermTraverser::traverse(T *node)
 
         while (childIndex < childCount && visit)
         {
+            mCurrentChildIndex = childIndex;
             node->getChildNode(childIndex)->traverse(this);
             if (inVisit && childIndex != childCount - 1)
             {
@@ -217,7 +220,8 @@ TIntermTraverser::TIntermTraverser(bool preVisit,
       mMaxDepth(0),
       mMaxAllowedDepth(std::numeric_limits<int>::max()),
       mInGlobalScope(true),
-      mSymbolTable(symbolTable)
+      mSymbolTable(symbolTable),
+      mCurrentChildIndex(0)
 {
     // Only enabling inVisit is not supported.
     ASSERT(!(inVisit && !preVisit && !postVisit));

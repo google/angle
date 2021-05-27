@@ -51,7 +51,7 @@ spirv::IdRef SPIRVBuilder::getNewId()
     return newId;
 }
 
-const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, TLayoutBlockStorage blockStorage)
+SpirvType SPIRVBuilder::getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const
 {
     SpirvType spirvType;
     spirvType.type                = type.getBasicType();
@@ -68,16 +68,13 @@ const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, TLayoutBlockSt
         spirvType.matrixPacking = EmpColumnMajor;
     }
 
-    const char *blockName = "";
     if (type.getStruct() != nullptr)
     {
         spirvType.block = type.getStruct();
-        blockName       = type.getStruct()->name().data();
     }
     else if (type.isInterfaceBlock())
     {
         spirvType.block = type.getInterfaceBlock();
-        blockName       = type.getInterfaceBlock()->name().data();
 
         // Calculate the block storage from the interface block automatically.  The fields inherit
         // from this.  Default to std140.
@@ -92,6 +89,23 @@ const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, TLayoutBlockSt
     {
         // No difference in type for non-block non-array types in std140 and std430 block storage.
         spirvType.blockStorage = EbsUnspecified;
+    }
+
+    return spirvType;
+}
+
+const SpirvTypeData &SPIRVBuilder::getTypeData(const TType &type, TLayoutBlockStorage blockStorage)
+{
+    SpirvType spirvType = getSpirvType(type, blockStorage);
+
+    const char *blockName = "";
+    if (type.getStruct() != nullptr)
+    {
+        blockName = type.getStruct()->name().data();
+    }
+    else if (type.isInterfaceBlock())
+    {
+        blockName = type.getInterfaceBlock()->name().data();
     }
 
     return getSpirvTypeData(spirvType, blockName);

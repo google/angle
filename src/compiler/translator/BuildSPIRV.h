@@ -169,6 +169,7 @@ class SPIRVBuilder : angle::NonCopyable
     {}
 
     spirv::IdRef getNewId();
+    SpirvType getSpirvType(const TType &type, TLayoutBlockStorage blockStorage) const;
     const SpirvTypeData &getTypeData(const TType &type, TLayoutBlockStorage blockStorage);
     const SpirvTypeData &getSpirvTypeData(const SpirvType &type, const char *blockName);
     spirv::IdRef getTypePointerId(spirv::IdRef typeId, spv::StorageClass storageClass);
