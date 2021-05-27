@@ -126,6 +126,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3ae73927_f31dc012",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5152,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T17:41:35Z",
+      "side": 1,
+      "message": "Ack. You could add an ASSERT(mLevelCount \u003d\u003d maxLevel + 1); for sanity checking",
+      "parentUuid": "ecc4f1d6_f77702cb",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a672d12_b27258b9",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 3
@@ -155,6 +173,24 @@
       "side": 1,
       "message": "The access.onImageTransferWrite() call above at line 5075 should already handle all these (barrierImpl clear mCurrentShaderReadStageMask).",
       "parentUuid": "3a672d12_b27258b9",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f761034e_9de3d78f",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5166,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-27T17:41:35Z",
+      "side": 1,
+      "message": "My question was whether they should actually get set to something. Admittedly I\u0027m hazy on the details of how those are used, but the names at least suggest they should get set here like:\n\n    mLastNonShaderReadOnlyLayout \u003d ImageLayout::FragmentShaderReadOnly;\n    mCurrentShaderReadStageMask \u003d Fragment;",
+      "parentUuid": "3ecb003d_08c41a91",
       "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
