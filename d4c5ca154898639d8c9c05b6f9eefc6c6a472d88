@@ -142,6 +142,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e07a4891_ed921375",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5152,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T17:56:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ae73927_f31dc012",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3a672d12_b27258b9",
@@ -191,6 +209,24 @@
       "side": 1,
       "message": "My question was whether they should actually get set to something. Admittedly I\u0027m hazy on the details of how those are used, but the names at least suggest they should get set here like:\n\n    mLastNonShaderReadOnlyLayout \u003d ImageLayout::FragmentShaderReadOnly;\n    mCurrentShaderReadStageMask \u003d Fragment;",
       "parentUuid": "3ecb003d_08c41a91",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0a60729_0acaee1e",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5166,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T17:56:01Z",
+      "side": 1,
+      "message": "Good point. Fixed.",
+      "parentUuid": "f761034e_9de3d78f",
       "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
