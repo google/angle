@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5a65059_71c9e895",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1290487
+      },
+      "writtenOn": "2021-05-27T22:55:47Z",
+      "side": 1,
+      "message": "Shabi, I split this off into a separate CL, that adds new tests for the coherent extension by refactoring/sharing shader+test source between tests for both extensions.  PTAL.",
+      "revId": "d0d63407ed61551f04d935a656319e35899178e2",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
