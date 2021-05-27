@@ -548,6 +548,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68598194_e3db5986",
+        "filename": "src/compiler/translator/TranslatorMetalUtils.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T18:37:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a66108da_aa99f555",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "84810ebc_a99deaef",
@@ -612,6 +630,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df1e29ed_2c77df4e",
+        "filename": "src/compiler/translator/tree_util/IntermRebuild.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T18:37:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7ddb6f7d_b9507821",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "66f3a9f4_7ecfdf72",
@@ -625,6 +661,24 @@
       "writtenOn": "2021-05-14T19:22:21Z",
       "side": 1,
       "message": "Not sure where this terrible code is used, but if it\u0027s IntermRebuild, please move it under TranslatorMetalDirect too.",
+      "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d86372c7_43d34eb3",
+        "filename": "src/compiler/translator/tree_util/NodeType.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1326275
+      },
+      "writtenOn": "2021-05-27T18:37:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66f3a9f4_7ecfdf72",
       "revId": "408879c841184cb0d683ee66caee5298fbdee65c",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
