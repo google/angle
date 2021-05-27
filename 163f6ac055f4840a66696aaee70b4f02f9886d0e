@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0e1bfe9a_1da071ce",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 386,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-27T22:11:47Z",
+      "side": 1,
+      "message": "I found the problem, this stops uploading after the first failure.",
+      "range": {
+        "startLine": 385,
+        "startChar": 0,
+        "endLine": 386,
+        "endChar": 92
+      },
+      "revId": "163f6ac055f4840a66696aaee70b4f02f9886d0e",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
