@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "583f0231_189b7ea7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1256237
+      },
+      "writtenOn": "2021-05-27T18:11:52Z",
+      "side": 1,
+      "message": "Jamie, PTAL at the approach.\n\nWould prefer something that errors if you try to specify this combination:\n\n  is_clang \u003d false\n  build_angle_trace_perf_tests \u003d true\n\nBut I think that would trip up the bots.",
+      "revId": "16c2e6a4a03c438a2c548f0de08078374ee18e58",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
