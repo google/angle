@@ -23,6 +23,12 @@ class CLProgramCL : public CLProgramImpl
 
     std::string getSource(cl_int &errorCode) const override;
 
+    CLKernelImpl::Ptr createKernel(const cl::Kernel &kernel,
+                                   const char *name,
+                                   cl_int &errorCode) override;
+
+    cl_int createKernels(cl::Program &program) override;
+
   private:
     const cl_program mNative;
 };

@@ -10,6 +10,8 @@
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLPlatform.h"
 
+#include <cstring>
+
 namespace cl
 {
 
@@ -27,7 +29,8 @@ bool Program::release()
 
 cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
-    static_assert(std::is_same<cl_uint, cl_addressing_mode>::value &&
+    static_assert(std::is_same<cl_uint, cl_bool>::value &&
+                      std::is_same<cl_uint, cl_addressing_mode>::value &&
                       std::is_same<cl_uint, cl_filter_mode>::value,
                   "OpenCL type mismatch");
 
@@ -56,7 +59,7 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
             break;
         case ProgramInfo::Devices:
             static_assert(sizeof(decltype(mDevices)::value_type) == sizeof(Device *),
-                          "DeviceRefList has wrong element size");
+                          "DeviceRefs has wrong element size");
             copyValue = mDevices.data();
             copySize  = mDevices.size() * sizeof(decltype(mDevices)::value_type);
             break;
@@ -89,9 +92,23 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
             copySize  = binaries.size() * sizeof(decltype(binaries)::value_type);
             break;
         case ProgramInfo::NumKernels:
+            copyValue = &mNumKernels;
+            copySize  = sizeof(mNumKernels);
+            break;
         case ProgramInfo::KernelNames:
+            copyValue = mKernelNames.c_str();
+            copySize  = mKernelNames.length() + 1u;
+            break;
         case ProgramInfo::ScopeGlobalCtorsPresent:
+            valUInt   = CL_FALSE;
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
+            break;
         case ProgramInfo::ScopeGlobalDtorsPresent:
+            valUInt   = CL_FALSE;
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
+            break;
         default:
             return CL_INVALID_VALUE;
     }
@@ -114,6 +131,47 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
         *valueSizeRet = copySize;
     }
     return CL_SUCCESS;
+}
+
+cl_kernel Program::createKernel(const char *kernel_name, cl_int &errorCode)
+{
+    return createKernel(new Kernel(*this, kernel_name, errorCode));
+}
+
+cl_int Program::createKernel(const Kernel::CreateImplFunc &createImplFunc)
+{
+    cl_int errorCode = CL_SUCCESS;
+    createKernel(new Kernel(*this, createImplFunc, errorCode));
+    return errorCode;
+}
+
+cl_int Program::createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet)
+{
+    cl_int errorCode = mImpl->createKernels(*this);
+    if (errorCode == CL_SUCCESS)
+    {
+        // CL_INVALID_VALUE if kernels is not NULL and
+        // num_kernels is less than the number of kernels in program.
+        if (kernels != nullptr && numKernels < mKernels.size())
+        {
+            errorCode = CL_INVALID_VALUE;
+        }
+        else
+        {
+            if (kernels != nullptr)
+            {
+                for (const KernelPtr &kernel : mKernels)
+                {
+                    *kernels++ = kernel.get();
+                }
+            }
+            if (numKernelsRet != nullptr)
+            {
+                *numKernelsRet = static_cast<cl_uint>(mKernels.size());
+            }
+        }
+    }
+    return errorCode;
 }
 
 bool Program::IsValid(const _cl_program *program)
@@ -142,7 +200,7 @@ Program::Program(Context &context, const void *il, size_t length, cl_int &errorC
 {}
 
 Program::Program(Context &context,
-                 DeviceRefList &&devices,
+                 DeviceRefs &&devices,
                  Binaries &&binaries,
                  cl_int *binaryStatus,
                  cl_int &errorCode)
@@ -154,15 +212,40 @@ Program::Program(Context &context,
       mBinaries(std::move(binaries))
 {}
 
-Program::Program(Context &context,
-                 DeviceRefList &&devices,
-                 const char *kernelNames,
-                 cl_int &errorCode)
+Program::Program(Context &context, DeviceRefs &&devices, const char *kernelNames, cl_int &errorCode)
     : _cl_program(context.getDispatch()),
       mContext(&context),
       mDevices(std::move(devices)),
       mImpl(context.mImpl->createProgramWithBuiltInKernels(*this, kernelNames, errorCode)),
       mSource(mImpl ? mImpl->getSource(errorCode) : std::string{})
 {}
+
+cl_kernel Program::createKernel(Kernel *kernel)
+{
+    mKernels.emplace_back(kernel);
+    if (!mKernels.back()->mImpl)
+    {
+        mKernels.back()->release();
+        return nullptr;
+    }
+    return mKernels.back().get();
+}
+
+void Program::destroyKernel(Kernel *kernel)
+{
+    auto kernelIt = mKernels.cbegin();
+    while (kernelIt != mKernels.cend() && kernelIt->get() != kernel)
+    {
+        ++kernelIt;
+    }
+    if (kernelIt != mKernels.cend())
+    {
+        mKernels.erase(kernelIt);
+    }
+    else
+    {
+        ERR() << "Kernel not found";
+    }
+}
 
 }  // namespace cl

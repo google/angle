@@ -97,7 +97,7 @@ inline bool Device::isRoot() const noexcept
 template <typename T>
 inline T &Device::getImpl() const
 {
-    return static_cast<T>(*mImpl);
+    return static_cast<T &>(*mImpl);
 }
 
 inline const rx::CLDeviceImpl::Info &Device::getInfo() const

@@ -22,7 +22,7 @@ class CLPlatformVk : public CLPlatformImpl
     cl::DevicePtrList createDevices(cl::Platform &platform) const override;
 
     CLContextImpl::Ptr createContext(cl::Context &context,
-                                     const cl::DeviceRefList &devices,
+                                     const cl::DeviceRefs &devices,
                                      bool userSync,
                                      cl_int &errorCode) override;
 

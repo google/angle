@@ -29,7 +29,7 @@ class Context final : public _cl_context, public Object
 
     const Platform &getPlatform() const noexcept;
     bool hasDevice(const _cl_device_id *device) const;
-    const DeviceRefList &getDevices() const;
+    const DeviceRefs &getDevices() const;
 
     bool supportsImages() const;
     bool supportsIL() const;
@@ -39,6 +39,7 @@ class Context final : public _cl_context, public Object
     bool hasMemory(const _cl_mem *memory) const;
     bool hasSampler(const _cl_sampler *sampler) const;
     bool hasProgram(const _cl_program *program) const;
+    bool hasKernel(const _cl_kernel *kernel) const;
 
     void retain() noexcept;
     bool release();
@@ -122,7 +123,7 @@ class Context final : public _cl_context, public Object
   private:
     Context(Platform &platform,
             PropArray &&properties,
-            DeviceRefList &&devices,
+            DeviceRefs &&devices,
             ContextErrorCB notify,
             void *userData,
             bool userSync,
@@ -151,7 +152,7 @@ class Context final : public _cl_context, public Object
     const ContextErrorCB mNotify;
     void *const mUserData;
     const rx::CLContextImpl::Ptr mImpl;
-    const DeviceRefList mDevices;
+    const DeviceRefs mDevices;
 
     CommandQueue::PtrList mCommandQueues;
     Memory::PtrList mMemories;
@@ -178,7 +179,7 @@ inline bool Context::hasDevice(const _cl_device_id *device) const
            }) != mDevices.cend();
 }
 
-inline const DeviceRefList &Context::getDevices() const
+inline const DeviceRefs &Context::getDevices() const
 {
     return mDevices;
 }
@@ -229,6 +230,13 @@ inline bool Context::hasProgram(const _cl_program *program) const
 {
     return std::find_if(mPrograms.cbegin(), mPrograms.cend(), [=](const ProgramPtr &ptr) {
                return ptr.get() == program;
+           }) != mPrograms.cend();
+}
+
+inline bool Context::hasKernel(const _cl_kernel *kernel) const
+{
+    return std::find_if(mPrograms.cbegin(), mPrograms.cend(), [=](const ProgramPtr &ptr) {
+               return ptr->hasKernel(kernel);
            }) != mPrograms.cend();
 }
 

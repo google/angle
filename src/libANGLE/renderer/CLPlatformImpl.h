@@ -51,7 +51,7 @@ class CLPlatformImpl : angle::NonCopyable
     virtual cl::DevicePtrList createDevices(cl::Platform &platform) const = 0;
 
     virtual CLContextImpl::Ptr createContext(cl::Context &context,
-                                             const cl::DeviceRefList &devices,
+                                             const cl::DeviceRefs &devices,
                                              bool userSync,
                                              cl_int &errorCode) = 0;
 

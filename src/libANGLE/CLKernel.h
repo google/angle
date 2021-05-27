@@ -9,6 +9,7 @@
 #define LIBANGLE_CLKERNEL_H_
 
 #include "libANGLE/CLObject.h"
+#include "libANGLE/renderer/CLKernelImpl.h"
 
 namespace cl
 {
@@ -16,9 +17,68 @@ namespace cl
 class Kernel final : public _cl_kernel, public Object
 {
   public:
-    Kernel(const cl_icd_dispatch &dispatch);
-    ~Kernel() override = default;
+    using PtrList        = std::list<KernelPtr>;
+    using CreateImplFunc = std::function<rx::CLKernelImpl::Ptr(const cl::Kernel &)>;
+
+    ~Kernel() override;
+
+    const Program &getProgram() const;
+    const rx::CLKernelImpl::Info &getInfo() const;
+
+    template <typename T>
+    T &getImpl() const;
+
+    void retain() noexcept;
+    bool release();
+
+    cl_int getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
+
+    cl_int getWorkGroupInfo(cl_device_id device,
+                            KernelWorkGroupInfo name,
+                            size_t valueSize,
+                            void *value,
+                            size_t *valueSizeRet) const;
+
+    cl_int getArgInfo(cl_uint argIndex,
+                      KernelArgInfo name,
+                      size_t valueSize,
+                      void *value,
+                      size_t *valueSizeRet) const;
+
+    static bool IsValid(const _cl_kernel *kernel);
+    static bool IsValidAndVersionOrNewer(const _cl_kernel *kernel, cl_uint major, cl_uint minor);
+
+  private:
+    Kernel(Program &program, const char *name, cl_int &errorCode);
+    Kernel(Program &program, const CreateImplFunc &createImplFunc, cl_int &errorCode);
+
+    const ProgramRefPtr mProgram;
+    const rx::CLKernelImpl::Ptr mImpl;
+    const rx::CLKernelImpl::Info mInfo;
+
+    friend class Program;
 };
+
+inline const Program &Kernel::getProgram() const
+{
+    return *mProgram;
+}
+
+inline const rx::CLKernelImpl::Info &Kernel::getInfo() const
+{
+    return mInfo;
+}
+
+template <typename T>
+inline T &Kernel::getImpl() const
+{
+    return static_cast<T &>(*mImpl);
+}
+
+inline void Kernel::retain() noexcept
+{
+    addRef();
+}
 
 }  // namespace cl
 

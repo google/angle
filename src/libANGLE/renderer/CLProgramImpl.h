@@ -8,7 +8,7 @@
 #ifndef LIBANGLE_RENDERER_CLPROGRAMIMPL_H_
 #define LIBANGLE_RENDERER_CLPROGRAMIMPL_H_
 
-#include "libANGLE/renderer/CLtypes.h"
+#include "libANGLE/renderer/CLKernelImpl.h"
 
 namespace rx
 {
@@ -22,6 +22,12 @@ class CLProgramImpl : angle::NonCopyable
     virtual ~CLProgramImpl();
 
     virtual std::string getSource(cl_int &errorCode) const = 0;
+
+    virtual CLKernelImpl::Ptr createKernel(const cl::Kernel &kernel,
+                                           const char *name,
+                                           cl_int &errorCode) = 0;
+
+    virtual cl_int createKernels(cl::Program &program) = 0;
 
   protected:
     const cl::Program &mProgram;

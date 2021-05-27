@@ -39,7 +39,7 @@ CLContextCL::~CLContextCL()
     }
 }
 
-cl::DeviceRefList CLContextCL::getDevices(cl_int &errorCode) const
+cl::DeviceRefs CLContextCL::getDevices(cl_int &errorCode) const
 {
     size_t valueSize = 0u;
     errorCode = mNative->getDispatch().clGetContextInfo(mNative, CL_CONTEXT_DEVICES, 0u, nullptr,
@@ -52,12 +52,12 @@ cl::DeviceRefList CLContextCL::getDevices(cl_int &errorCode) const
         if (errorCode == CL_SUCCESS)
         {
             const cl::DevicePtrList &platformDevices = mContext.getPlatform().getDevices();
-            cl::DeviceRefList devices;
+            cl::DeviceRefs devices;
             for (cl_device_id nativeDevice : nativeDevices)
             {
                 auto it = platformDevices.cbegin();
                 while (it != platformDevices.cend() &&
-                       (*it)->getImpl<CLDeviceCL &>().getNative() != nativeDevice)
+                       (*it)->getImpl<CLDeviceCL>().getNative() != nativeDevice)
                 {
                     ++it;
                 }
@@ -70,20 +70,20 @@ cl::DeviceRefList CLContextCL::getDevices(cl_int &errorCode) const
                     ASSERT(false);
                     errorCode = CL_INVALID_DEVICE;
                     ERR() << "Device not found in platform list";
-                    return cl::DeviceRefList{};
+                    return cl::DeviceRefs{};
                 }
             }
             return devices;
         }
     }
-    return cl::DeviceRefList{};
+    return cl::DeviceRefs{};
 }
 
 CLCommandQueueImpl::Ptr CLContextCL::createCommandQueue(const cl::CommandQueue &commandQueue,
                                                         cl_int &errorCode)
 {
     const cl::Device &device        = commandQueue.getDevice();
-    const cl_device_id nativeDevice = device.getImpl<CLDeviceCL &>().getNative();
+    const cl_device_id nativeDevice = device.getImpl<CLDeviceCL>().getNative();
     cl_command_queue nativeQueue    = nullptr;
     if (!device.isVersionOrNewer(2u, 0u))
     {
@@ -238,7 +238,7 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithBinary(const cl::Program &progr
     std::vector<cl_device_id> nativeDevices;
     for (const cl::DeviceRefPtr &device : program.getDevices())
     {
-        nativeDevices.emplace_back(device->getImpl<CLDeviceCL &>().getNative());
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
     std::vector<size_t> lengths;
     std::vector<const unsigned char *> nativeBinaries;
@@ -261,7 +261,7 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithBuiltInKernels(const cl::Progra
     std::vector<cl_device_id> nativeDevices;
     for (const cl::DeviceRefPtr &device : program.getDevices())
     {
-        nativeDevices.emplace_back(device->getImpl<CLDeviceCL &>().getNative());
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
     const cl_program nativeProgram = mNative->getDispatch().clCreateProgramWithBuiltInKernels(
         mNative, static_cast<cl_uint>(nativeDevices.size()), nativeDevices.data(), kernel_names,

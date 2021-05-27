@@ -370,7 +370,7 @@ cl::DevicePtrList CLPlatformCL::createDevices(cl::Platform &platform) const
 }
 
 CLContextImpl::Ptr CLPlatformCL::createContext(cl::Context &context,
-                                               const cl::DeviceRefList &devices,
+                                               const cl::DeviceRefs &devices,
                                                bool userSync,
                                                cl_int &errorCode)
 {
@@ -382,7 +382,7 @@ CLContextImpl::Ptr CLPlatformCL::createContext(cl::Context &context,
     std::vector<cl_device_id> nativeDevices;
     for (const cl::DeviceRefPtr &device : devices)
     {
-        nativeDevices.emplace_back(device->getImpl<CLDeviceCL &>().getNative());
+        nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
 
     CLContextImpl::Ptr contextImpl;

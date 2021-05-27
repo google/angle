@@ -504,8 +504,7 @@ cl_int GetProgramBuildInfo(cl_program program,
 
 cl_kernel CreateKernel(cl_program program, const char *kernel_name, cl_int &errorCode)
 {
-    WARN_NOT_SUPPORTED(CreateKernel);
-    return 0;
+    return static_cast<Program *>(program)->createKernel(kernel_name, errorCode);
 }
 
 cl_int CreateKernelsInProgram(cl_program program,
@@ -513,8 +512,7 @@ cl_int CreateKernelsInProgram(cl_program program,
                               cl_kernel *kernels,
                               cl_uint *num_kernels_ret)
 {
-    WARN_NOT_SUPPORTED(CreateKernelsInProgram);
-    return 0;
+    return static_cast<Program *>(program)->createKernels(num_kernels, kernels, num_kernels_ret);
 }
 
 cl_kernel CloneKernel(cl_kernel source_kernel, cl_int &errorCode)
@@ -525,14 +523,14 @@ cl_kernel CloneKernel(cl_kernel source_kernel, cl_int &errorCode)
 
 cl_int RetainKernel(cl_kernel kernel)
 {
-    WARN_NOT_SUPPORTED(RetainKernel);
-    return 0;
+    static_cast<Kernel *>(kernel)->retain();
+    return CL_SUCCESS;
 }
 
 cl_int ReleaseKernel(cl_kernel kernel)
 {
-    WARN_NOT_SUPPORTED(ReleaseKernel);
-    return 0;
+    static_cast<Kernel *>(kernel)->release();
+    return CL_SUCCESS;
 }
 
 cl_int SetKernelArg(cl_kernel kernel, cl_uint arg_index, size_t arg_size, const void *arg_value)
@@ -562,8 +560,8 @@ cl_int GetKernelInfo(cl_kernel kernel,
                      void *param_value,
                      size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetKernelInfo);
-    return 0;
+    return static_cast<Kernel *>(kernel)->getInfo(param_name, param_value_size, param_value,
+                                                  param_value_size_ret);
 }
 
 cl_int GetKernelArgInfo(cl_kernel kernel,
@@ -573,8 +571,8 @@ cl_int GetKernelArgInfo(cl_kernel kernel,
                         void *param_value,
                         size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetKernelArgInfo);
-    return 0;
+    return static_cast<Kernel *>(kernel)->getArgInfo(arg_index, param_name, param_value_size,
+                                                     param_value, param_value_size_ret);
 }
 
 cl_int GetKernelWorkGroupInfo(cl_kernel kernel,
@@ -584,8 +582,8 @@ cl_int GetKernelWorkGroupInfo(cl_kernel kernel,
                               void *param_value,
                               size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetKernelWorkGroupInfo);
-    return 0;
+    return static_cast<Kernel *>(kernel)->getWorkGroupInfo(device, param_name, param_value_size,
+                                                           param_value, param_value_size_ret);
 }
 
 cl_int GetKernelSubGroupInfo(cl_kernel kernel,

@@ -52,9 +52,10 @@ using SamplerPtr      = std::unique_ptr<Sampler>;
 using ContextRefPtr = RefPointer<Context>;
 using DeviceRefPtr  = RefPointer<Device>;
 using MemoryRefPtr  = RefPointer<Memory>;
+using ProgramRefPtr = RefPointer<Program>;
 
 using DevicePtrList = std::list<DevicePtr>;
-using DeviceRefList = std::vector<DeviceRefPtr>;
+using DeviceRefs    = std::vector<DeviceRefPtr>;
 
 using Binary   = std::vector<unsigned char>;
 using Binaries = std::vector<Binary>;

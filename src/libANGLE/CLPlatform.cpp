@@ -207,7 +207,7 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
     bool userSync                = false;
     Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
     ASSERT(platform != nullptr);
-    DeviceRefList refDevices;
+    DeviceRefs refDevices;
     while (numDevices-- != 0u)
     {
         refDevices.emplace_back(static_cast<Device *>(*devices++));

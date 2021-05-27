@@ -47,7 +47,7 @@ cl_int Context::getInfo(ContextInfo name, size_t valueSize, void *value, size_t 
             break;
         case ContextInfo::Devices:
             static_assert(sizeof(decltype(mDevices)::value_type) == sizeof(Device *),
-                          "DeviceRefList has wrong element size");
+                          "DeviceRefs has wrong element size");
             copyValue = mDevices.data();
             copySize  = mDevices.size() * sizeof(decltype(mDevices)::value_type);
             break;
@@ -261,7 +261,7 @@ cl_program Context::createProgramWithBinary(cl_uint numDevices,
                                             cl_int *binaryStatus,
                                             cl_int &errorCode)
 {
-    DeviceRefList refDevices;
+    DeviceRefs refDevices;
     Binaries binaryVec;
     while (numDevices-- != 0u)
     {
@@ -278,7 +278,7 @@ cl_program Context::createProgramWithBuiltInKernels(cl_uint numDevices,
                                                     const char *kernelNames,
                                                     cl_int &errorCode)
 {
-    DeviceRefList refDevices;
+    DeviceRefs refDevices;
     while (numDevices-- != 0u)
     {
         refDevices.emplace_back(static_cast<Device *>(*devices++));
@@ -318,7 +318,7 @@ void Context::ErrorCallback(const char *errinfo, const void *privateInfo, size_t
 
 Context::Context(Platform &platform,
                  PropArray &&properties,
-                 DeviceRefList &&devices,
+                 DeviceRefs &&devices,
                  ContextErrorCB notify,
                  void *userData,
                  bool userSync,
@@ -345,7 +345,7 @@ Context::Context(Platform &platform,
       mNotify(notify),
       mUserData(userData),
       mImpl(platform.mImpl->createContextFromType(*this, deviceType, userSync, errorCode)),
-      mDevices(mImpl ? mImpl->getDevices(errorCode) : DeviceRefList{})
+      mDevices(mImpl ? mImpl->getDevices(errorCode) : DeviceRefs{})
 {}
 
 cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue)

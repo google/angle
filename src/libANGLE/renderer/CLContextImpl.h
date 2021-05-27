@@ -25,7 +25,7 @@ class CLContextImpl : angle::NonCopyable
     CLContextImpl(const cl::Context &context);
     virtual ~CLContextImpl();
 
-    virtual cl::DeviceRefList getDevices(cl_int &errorCode) const = 0;
+    virtual cl::DeviceRefs getDevices(cl_int &errorCode) const = 0;
 
     virtual CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
                                                        cl_int &errorCode) = 0;

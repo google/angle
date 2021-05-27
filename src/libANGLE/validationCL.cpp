@@ -858,6 +858,18 @@ cl_int ValidateGetProgramBuildInfo(cl_program program,
 
 cl_int ValidateCreateKernel(cl_program program, const char *kernel_name)
 {
+    // CL_INVALID_PROGRAM if program is not a valid program object.
+    if (!Program::IsValid(program))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+
+    // CL_INVALID_VALUE if kernel_name is NULL.
+    if (kernel_name == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -866,17 +878,25 @@ cl_int ValidateCreateKernelsInProgram(cl_program program,
                                       const cl_kernel *kernels,
                                       const cl_uint *num_kernels_ret)
 {
+    // CL_INVALID_PROGRAM if program is not a valid program object.
+    if (!Program::IsValid(program))
+    {
+        return CL_INVALID_PROGRAM;
+    }
+
     return CL_SUCCESS;
 }
 
 cl_int ValidateRetainKernel(cl_kernel kernel)
 {
-    return CL_SUCCESS;
+    // CL_INVALID_KERNEL if kernel is not a valid kernel object.
+    return Kernel::IsValid(kernel) ? CL_SUCCESS : CL_INVALID_KERNEL;
 }
 
 cl_int ValidateReleaseKernel(cl_kernel kernel)
 {
-    return CL_SUCCESS;
+    // CL_INVALID_KERNEL if kernel is not a valid kernel object.
+    return Kernel::IsValid(kernel) ? CL_SUCCESS : CL_INVALID_KERNEL;
 }
 
 cl_int ValidateSetKernelArg(cl_kernel kernel,
@@ -893,6 +913,30 @@ cl_int ValidateGetKernelInfo(cl_kernel kernel,
                              const void *param_value,
                              const size_t *param_value_size_ret)
 {
+    // CL_INVALID_KERNEL if kernel is a not a valid kernel object.
+    if (!Kernel::IsValid(kernel))
+    {
+        return CL_INVALID_KERNEL;
+    }
+
+    // CL_INVALID_VALUE if param_name is not valid.
+    const cl_version version = static_cast<const Kernel *>(kernel)
+                                   ->getProgram()
+                                   .getContext()
+                                   .getPlatform()
+                                   .getInfo()
+                                   .mVersion;
+    switch (param_name)
+    {
+        case KernelInfo::Attributes:
+            ANGLE_VALIDATE_VERSION(1, 2);
+            break;
+        case KernelInfo::InvalidEnum:
+            return CL_INVALID_VALUE;
+        default:
+            break;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -903,6 +947,58 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
                                       const void *param_value,
                                       const size_t *param_value_size_ret)
 {
+    // CL_INVALID_KERNEL if kernel is a not a valid kernel object.
+    if (!Kernel::IsValid(kernel))
+    {
+        return CL_INVALID_KERNEL;
+    }
+    const Kernel &krnl = *static_cast<const Kernel *>(kernel);
+
+    const Device *dvc = nullptr;
+    if (device != nullptr)
+    {
+        // CL_INVALID_DEVICE if device is not in the list of devices associated with kernel ...
+        if (krnl.getProgram().getContext().hasDevice(device))
+        {
+            dvc = static_cast<const Device *>(device);
+        }
+        else
+        {
+            return CL_INVALID_DEVICE;
+        }
+    }
+    else
+    {
+        // or if device is NULL but there is more than one device associated with kernel.
+        if (krnl.getProgram().getContext().getDevices().size() == 1u)
+        {
+            dvc = krnl.getProgram().getContext().getDevices().front().get();
+        }
+        else
+        {
+            return CL_INVALID_DEVICE;
+        }
+    }
+
+    // CL_INVALID_VALUE if param_name is not valid.
+    const cl_version version = krnl.getProgram().getContext().getPlatform().getInfo().mVersion;
+    switch (param_name)
+    {
+        case KernelWorkGroupInfo::GlobalWorkSize:
+            ANGLE_VALIDATE_VERSION(1, 2);
+            // CL_INVALID_VALUE if param_name is CL_KERNEL_GLOBAL_WORK_SIZE and
+            // device is not a custom device and kernel is not a built-in kernel.
+            if (!dvc->supportsBuiltInKernel(krnl.getInfo().mFunctionName))
+            {
+                return CL_INVALID_VALUE;
+            }
+            break;
+        case KernelWorkGroupInfo::InvalidEnum:
+            return CL_INVALID_VALUE;
+        default:
+            break;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1590,7 +1686,7 @@ cl_int ValidateCreateImage(cl_context context,
 
     // CL_INVALID_IMAGE_SIZE if image dimensions specified in image_desc exceed the maximum
     // image dimensions described in the Device Queries table for all devices in context.
-    const DeviceRefList &devices = ctx.getDevices();
+    const DeviceRefs &devices = ctx.getDevices();
     if (std::find_if(devices.cbegin(), devices.cend(), [&](const DeviceRefPtr &ptr) {
             switch (image_desc->image_type)
             {
@@ -1719,6 +1815,31 @@ cl_int ValidateGetKernelArgInfo(cl_kernel kernel,
                                 const void *param_value,
                                 const size_t *param_value_size_ret)
 {
+    // CL_INVALID_KERNEL if kernel is a not a valid kernel object.
+    if (!Kernel::IsValidAndVersionOrNewer(kernel, 1u, 2u))
+    {
+        return CL_INVALID_KERNEL;
+    }
+    const Kernel &krnl = *static_cast<const Kernel *>(kernel);
+
+    // CL_INVALID_ARG_INDEX if arg_index is not a valid argument index.
+    if (arg_index >= krnl.getInfo().mArgs.size())
+    {
+        return CL_INVALID_ARG_INDEX;
+    }
+
+    // CL_KERNEL_ARG_INFO_NOT_AVAILABLE if the argument information is not available for kernel.
+    if (!krnl.getInfo().mArgs[arg_index].isAvailable())
+    {
+        return CL_KERNEL_ARG_INFO_NOT_AVAILABLE;
+    }
+
+    // CL_INVALID_VALUE if param_name is not valid.
+    if (param_name == KernelArgInfo::InvalidEnum)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 

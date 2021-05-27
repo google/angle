@@ -21,7 +21,7 @@ class CLContextCL : public CLContextImpl
     CLContextCL(const cl::Context &context, cl_context native);
     ~CLContextCL() override;
 
-    cl::DeviceRefList getDevices(cl_int &errorCode) const override;
+    cl::DeviceRefs getDevices(cl_int &errorCode) const override;
 
     CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
                                                cl_int &errorCode) override;
