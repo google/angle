@@ -53,6 +53,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c58e5de_d9d85750",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5140,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T16:54:45Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5258179_f517fa91",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f7d06e5a_01a6cce9",
@@ -72,6 +90,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ecc4f1d6_f77702cb",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5152,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T16:54:45Z",
+      "side": 1,
+      "message": "You will always need this barrier, since the very last mipmap level is in transfer_dst layout due to the blit.",
+      "parentUuid": "f7d06e5a_01a6cce9",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3a672d12_b27258b9",
         "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
         "patchSetId": 3
@@ -83,6 +119,24 @@
       "writtenOn": "2021-05-27T16:26:02Z",
       "side": 1,
       "message": "Do mLastNonShaderReadOnlyLayout and mCurrentShaderReadStageMask need to be updated as well?",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ecb003d_08c41a91",
+        "filename": "src/libANGLE/renderer/vulkan/vk_helpers.cpp",
+        "patchSetId": 3
+      },
+      "lineNbr": 5166,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T16:54:45Z",
+      "side": 1,
+      "message": "The access.onImageTransferWrite() call above at line 5075 should already handle all these (barrierImpl clear mCurrentShaderReadStageMask).",
+      "parentUuid": "3a672d12_b27258b9",
       "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
