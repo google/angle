@@ -18,6 +18,24 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "adeba573_d260da80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1392020
+      },
+      "writtenOn": "2021-05-27T17:00:36Z",
+      "side": 1,
+      "message": "It\u0027s not less correct though -- At the end of blit, you have to put all mip levels into same layout, but mip levels are in different layout right now (a mix of transfer_src and transfer_dst), so no matter which layout you pick, it is not going to be \"exact correct\". I think previously transfer_src was picked since that is the simplest. Now we picked other more likely layout, which likely reduced tiny bit of CPU overhead here if you end up use it in FS.",
+      "parentUuid": "113310be_fc960ab7",
+      "revId": "d4c5ca154898639d8c9c05b6f9eefc6c6a472d88",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5258179_f517fa91",
