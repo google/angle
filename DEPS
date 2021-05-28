@@ -27,7 +27,7 @@ vars = {
   'checkout_android_native_support': 'checkout_android or checkout_chromeos',
 
   # Version of Chromium our Chromium-based DEPS are mirrored from.
-  'chromium_revision': '9e607ee51d46d58863aaa6d550924a978241e325',
+  'chromium_revision': 'ed36a7408427f5c327572370e0ad64c09ea0fb39',
   # We never want to checkout chromium,
   # but need a dummy DEPS entry for the autoroller
   'dummy_checkout_chromium': False,
@@ -72,7 +72,7 @@ vars = {
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling catapult
   # and whatever else without interference from each other.
-  'catapult_revision': 'e83a92e7b8e7dc762352103a1b6103f0313255ca',
+  'catapult_revision': 'dca1c9711a00540c79f9b0c515e7ae4ede2491f5',
 
   # Three lines of non-changing comments so that
   # the commit queue can handle CLs rolling luci-go
@@ -112,7 +112,7 @@ vars = {
 deps = {
 
   'build': {
-    'url': '{chromium_git}/chromium/src/build.git@b5063cfbea9a54433d7b9f9113c52f604e1290dc',
+    'url': '{chromium_git}/chromium/src/build.git@862b91b57a67ead2c6b59220ce56814c15375553',
     'condition': 'not build_with_chromium',
   },
 
@@ -170,7 +170,7 @@ deps = {
   },
 
   'testing': {
-    'url': '{chromium_git}/chromium/src/testing@b014545e6cf60b4fc30252386ed3abfdb86595fc',
+    'url': '{chromium_git}/chromium/src/testing@0f500626891f94b586eb64ffeee9333319ef0ea6',
     'condition': 'not build_with_chromium',
   },
 
@@ -320,7 +320,7 @@ deps = {
   },
 
   'third_party/depot_tools': {
-    'url': '{chromium_git}/chromium/tools/depot_tools.git@6fc394f93d145c3e2f35cc812c81008004332d50',
+    'url': '{chromium_git}/chromium/tools/depot_tools.git@0694fa65f82be85b362516e7d97c5100bf27ca87',
     'condition': 'not build_with_chromium',
   },
 
@@ -559,7 +559,7 @@ deps = {
   },
 
   'tools/mb': {
-    'url': '{chromium_git}/chromium/src/tools/mb@4dfe812639c5278df3c6773724f609acd28c8370',
+    'url': '{chromium_git}/chromium/src/tools/mb@0679044e60da9a5a022f308709c7798ead204fa9',
     'condition': 'not build_with_chromium',
   },
 
