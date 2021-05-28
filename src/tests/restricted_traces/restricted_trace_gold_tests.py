@@ -380,9 +380,9 @@ def _run_tests(args, tests, extra_flags, env, screenshot_dir, results, test_resu
                         batch_result = PASS if run_wrapper(args, cmd, env,
                                                            tempfile_path) == 0 else FAIL
 
-                artifacts = {}
-
                 for trace in batch:
+                    artifacts = {}
+
                     if batch_result == PASS:
                         result = upload_test_result_to_skia_gold(args, gold_session_manager,
                                                                  gold_session, gold_properties,
