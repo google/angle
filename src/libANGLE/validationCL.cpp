@@ -1004,6 +1004,33 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
 
 cl_int ValidateWaitForEvents(cl_uint num_events, const cl_event *event_list)
 {
+    // CL_INVALID_VALUE if num_events is zero or event_list is NULL.
+    if (num_events == 0u || event_list == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    const Context *context = nullptr;
+    while (num_events-- != 0u)
+    {
+        // CL_INVALID_EVENT if event objects specified in event_list are not valid event objects.
+        if (!Event::IsValid(*event_list))
+        {
+            return CL_INVALID_EVENT;
+        }
+
+        // CL_INVALID_CONTEXT if events specified in event_list do not belong to the same context.
+        const Context *eventContext = &static_cast<const Event *>(*event_list++)->getContext();
+        if (context == nullptr)
+        {
+            context = eventContext;
+        }
+        else if (context != eventContext)
+        {
+            return CL_INVALID_CONTEXT;
+        }
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1013,17 +1040,39 @@ cl_int ValidateGetEventInfo(cl_event event,
                             const void *param_value,
                             const size_t *param_value_size_ret)
 {
+    // CL_INVALID_EVENT if event is a not a valid event object.
+    if (!Event::IsValid(event))
+    {
+        return CL_INVALID_EVENT;
+    }
+
+    // CL_INVALID_VALUE if param_name is not valid.
+    const cl_version version =
+        static_cast<const Event *>(event)->getContext().getPlatform().getInfo().mVersion;
+    switch (param_name)
+    {
+        case EventInfo::Context:
+            ANGLE_VALIDATE_VERSION(1, 1);
+            break;
+        case EventInfo::InvalidEnum:
+            return CL_INVALID_VALUE;
+        default:
+            break;
+    }
+
     return CL_SUCCESS;
 }
 
 cl_int ValidateRetainEvent(cl_event event)
 {
-    return CL_SUCCESS;
+    // CL_INVALID_EVENT if event is not a valid event object.
+    return Event::IsValid(event) ? CL_SUCCESS : CL_INVALID_EVENT;
 }
 
 cl_int ValidateReleaseEvent(cl_event event)
 {
-    return CL_SUCCESS;
+    // CL_INVALID_EVENT if event is not a valid event object.
+    return Event::IsValid(event) ? CL_SUCCESS : CL_INVALID_EVENT;
 }
 
 cl_int ValidateGetEventProfilingInfo(cl_event event,
@@ -1443,11 +1492,36 @@ cl_int ValidateSetMemObjectDestructorCallback(cl_mem memobj,
 
 cl_int ValidateCreateUserEvent(cl_context context)
 {
-    return CL_SUCCESS;
+    // CL_INVALID_CONTEXT if context is not a valid context.
+    return Context::IsValidAndVersionOrNewer(context, 1u, 1u) ? CL_SUCCESS : CL_INVALID_CONTEXT;
 }
 
 cl_int ValidateSetUserEventStatus(cl_event event, cl_int execution_status)
 {
+    // CL_INVALID_EVENT if event is not a valid user event object.
+    if (!Event::IsValidAndVersionOrNewer(event, 1u, 1u))
+    {
+        return CL_INVALID_EVENT;
+    }
+    const Event &evt = *static_cast<Event *>(event);
+    if (evt.getCommandType() != CL_COMMAND_USER)
+    {
+        return CL_INVALID_EVENT;
+    }
+
+    // CL_INVALID_VALUE if the execution_status is not CL_COMPLETE or a negative integer value.
+    if (execution_status != CL_COMPLETE && execution_status >= 0)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_OPERATION if the execution_status for event has already been changed
+    // by a previous call to clSetUserEventStatus.
+    if (evt.wasStatusChanged())
+    {
+        return CL_INVALID_OPERATION;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1458,6 +1532,21 @@ cl_int ValidateSetEventCallback(cl_event event,
                                                               void *user_data),
                                 const void *user_data)
 {
+    // CL_INVALID_EVENT if event is not a valid event object.
+    if (!Event::IsValidAndVersionOrNewer(event, 1u, 1u))
+    {
+        return CL_INVALID_EVENT;
+    }
+
+    // CL_INVALID_VALUE if pfn_event_notify is NULL
+    // or if command_exec_callback_type is not CL_SUBMITTED, CL_RUNNING, or CL_COMPLETE.
+    if (pfn_notify == nullptr ||
+        (command_exec_callback_type != CL_SUBMITTED && command_exec_callback_type != CL_RUNNING &&
+         command_exec_callback_type != CL_COMPLETE))
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 

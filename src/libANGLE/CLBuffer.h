@@ -50,7 +50,7 @@ inline cl_mem_object_type Buffer::getType() const
 
 inline bool Buffer::isSubBuffer() const
 {
-    return mParent.isValid();
+    return mParent != nullptr;
 }
 
 inline bool Buffer::isRegionValid(const cl_buffer_region &region) const

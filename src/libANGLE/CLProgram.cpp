@@ -135,13 +135,13 @@ cl_int Program::getInfo(ProgramInfo name, size_t valueSize, void *value, size_t 
 
 cl_kernel Program::createKernel(const char *kernel_name, cl_int &errorCode)
 {
-    return createKernel(new Kernel(*this, kernel_name, errorCode));
+    return createKernel(new Kernel(*this, kernel_name, errorCode), errorCode);
 }
 
 cl_int Program::createKernel(const Kernel::CreateImplFunc &createImplFunc)
 {
     cl_int errorCode = CL_SUCCESS;
-    createKernel(new Kernel(*this, createImplFunc, errorCode));
+    createKernel(new Kernel(*this, createImplFunc, errorCode), errorCode);
     return errorCode;
 }
 
@@ -220,10 +220,10 @@ Program::Program(Context &context, DeviceRefs &&devices, const char *kernelNames
       mSource(mImpl ? mImpl->getSource(errorCode) : std::string{})
 {}
 
-cl_kernel Program::createKernel(Kernel *kernel)
+cl_kernel Program::createKernel(Kernel *kernel, cl_int errorCode)
 {
     mKernels.emplace_back(kernel);
-    if (!mKernels.back()->mImpl)
+    if (errorCode != CL_SUCCESS)
     {
         mKernels.back()->release();
         return nullptr;

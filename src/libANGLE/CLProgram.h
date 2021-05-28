@@ -51,7 +51,7 @@ class Program final : public _cl_program, public Object
 
     Program(Context &context, DeviceRefs &&devices, const char *kernelNames, cl_int &errorCode);
 
-    cl_kernel createKernel(Kernel *kernel);
+    cl_kernel createKernel(Kernel *kernel, cl_int errorCode);
 
     void destroyKernel(Kernel *kernel);
 

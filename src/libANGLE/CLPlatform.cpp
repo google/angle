@@ -212,9 +212,10 @@ cl_context Platform::CreateContext(const cl_context_properties *properties,
     {
         refDevices.emplace_back(static_cast<Device *>(*devices++));
     }
-    return platform->createContext(new Context(*platform, std::move(propArray),
-                                               std::move(refDevices), notify, userData, userSync,
-                                               errorCode));
+    return platform->createContext(
+        new Context(*platform, std::move(propArray), std::move(refDevices), notify, userData,
+                    userSync, errorCode),
+        errorCode);
 }
 
 cl_context Platform::CreateContextFromType(const cl_context_properties *properties,
@@ -228,7 +229,8 @@ cl_context Platform::CreateContextFromType(const cl_context_properties *properti
     Context::PropArray propArray = ParseContextProperties(properties, platform, userSync);
     ASSERT(platform != nullptr);
     return platform->createContext(new Context(*platform, std::move(propArray), deviceType, notify,
-                                               userData, userSync, errorCode));
+                                               userData, userSync, errorCode),
+                                   errorCode);
 }
 
 Platform::Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc)
@@ -238,10 +240,10 @@ Platform::Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &create
       mDevices(mImpl->createDevices(*this))
 {}
 
-cl_context Platform::createContext(Context *context)
+cl_context Platform::createContext(Context *context, cl_int errorCode)
 {
     mContexts.emplace_back(context);
-    if (!mContexts.back()->mImpl || mContexts.back()->mDevices.empty())
+    if (errorCode != CL_SUCCESS)
     {
         mContexts.back()->release();
         return nullptr;

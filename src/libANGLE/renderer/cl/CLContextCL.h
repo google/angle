@@ -57,6 +57,10 @@ class CLContextCL : public CLContextImpl
                                                        const char *kernel_names,
                                                        cl_int &errorCode) override;
 
+    CLEventImpl::Ptr createUserEvent(const cl::Event &event, cl_int &errorCode) override;
+
+    cl_int waitForEvents(const cl::EventRefs &events) override;
+
   private:
     const cl_context mNative;
 };

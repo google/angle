@@ -10,6 +10,7 @@
 
 #include "libANGLE/renderer/CLCommandQueueImpl.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
+#include "libANGLE/renderer/CLEventImpl.h"
 #include "libANGLE/renderer/CLMemoryImpl.h"
 #include "libANGLE/renderer/CLProgramImpl.h"
 #include "libANGLE/renderer/CLSamplerImpl.h"
@@ -60,6 +61,10 @@ class CLContextImpl : angle::NonCopyable
     virtual CLProgramImpl::Ptr createProgramWithBuiltInKernels(const cl::Program &program,
                                                                const char *kernel_names,
                                                                cl_int &errorCode) = 0;
+
+    virtual CLEventImpl::Ptr createUserEvent(const cl::Event &event, cl_int &errorCode) = 0;
+
+    virtual cl_int waitForEvents(const cl::EventRefs &events) = 0;
 
   protected:
     const cl::Context &mContext;

@@ -41,10 +41,10 @@ class RefPointer
         return *this;
     }
 
-    RefPointer(RefPointer &&other) noexcept : mCLObject(nullptr) { other.swap(*this); }
+    RefPointer(RefPointer &&other) noexcept : mCLObject(nullptr) { this->swap(other); }
     RefPointer &operator=(RefPointer &&other)
     {
-        other.swap(this);
+        this->swap(other);
         return *this;
     }
 
@@ -72,7 +72,6 @@ class RefPointer
     T *operator->() const { return mCLObject; }
     T &operator*() const { return *mCLObject; }
 
-    bool isValid() const { return mCLObject != nullptr; }
     T *get() const { return mCLObject; }
     explicit operator bool() const { return mCLObject != nullptr; }
 
@@ -102,6 +101,30 @@ template <typename T>
 void swap(RefPointer<T> &left, RefPointer<T> &right)
 {
     left.swap(right);
+}
+
+template <typename T>
+bool operator==(const RefPointer<T> &ptr, nullptr_t) noexcept
+{
+    return ptr.get() == nullptr;
+}
+
+template <typename T>
+bool operator==(nullptr_t, const RefPointer<T> &ptr) noexcept
+{
+    return ptr.get() == nullptr;
+}
+
+template <typename T>
+bool operator!=(const RefPointer<T> &ptr, nullptr_t) noexcept
+{
+    return ptr.get() != nullptr;
+}
+
+template <typename T>
+bool operator!=(nullptr_t, const RefPointer<T> &ptr) noexcept
+{
+    return ptr.get() != nullptr;
 }
 
 }  // namespace cl

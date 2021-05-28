@@ -11,6 +11,7 @@
 
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLEvent.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
@@ -40,6 +41,9 @@ class Context final : public _cl_context, public Object
     bool hasSampler(const _cl_sampler *sampler) const;
     bool hasProgram(const _cl_program *program) const;
     bool hasKernel(const _cl_kernel *kernel) const;
+    bool hasEvent(const _cl_event *event) const;
+
+    EventRefPtr findEvent(const EventPredicate &eventPredicate) const;
 
     void retain() noexcept;
     bool release();
@@ -112,6 +116,10 @@ class Context final : public _cl_context, public Object
                                                const char *kernelNames,
                                                cl_int &errorCode);
 
+    cl_event createUserEvent(cl_int &errorCode);
+
+    cl_int waitForEvents(cl_uint numEvents, const cl_event *eventList);
+
     static bool IsValid(const _cl_context *context);
     static bool IsValidAndVersionOrNewer(const _cl_context *context, cl_uint major, cl_uint minor);
 
@@ -137,15 +145,17 @@ class Context final : public _cl_context, public Object
             bool userSync,
             cl_int &errorCode);
 
-    cl_command_queue createCommandQueue(CommandQueue *commandQueue);
-    cl_mem createMemory(Memory *memory);
-    cl_sampler createSampler(Sampler *sampler);
-    cl_program createProgram(Program *program);
+    cl_command_queue createCommandQueue(CommandQueue *commandQueue, cl_int errorCode);
+    cl_mem createMemory(Memory *memory, cl_int errorCode);
+    cl_sampler createSampler(Sampler *sampler, cl_int errorCode);
+    cl_program createProgram(Program *program, cl_int errorCode);
+    cl_event createEvent(Event *event, cl_int errorCode);
 
     void destroyCommandQueue(CommandQueue *commandQueue);
     void destroyMemory(Memory *memory);
     void destroySampler(Sampler *sampler);
     void destroyProgram(Program *program);
+    void destroyEvent(Event *event);
 
     Platform &mPlatform;
     const PropArray mProperties;
@@ -158,9 +168,11 @@ class Context final : public _cl_context, public Object
     Memory::PtrList mMemories;
     Sampler::PtrList mSamplers;
     Program::PtrList mPrograms;
+    Event::PtrList mEvents;
 
     friend class Buffer;
     friend class CommandQueue;
+    friend class Event;
     friend class Memory;
     friend class Platform;
     friend class Program;
@@ -238,6 +250,18 @@ inline bool Context::hasKernel(const _cl_kernel *kernel) const
     return std::find_if(mPrograms.cbegin(), mPrograms.cend(), [=](const ProgramPtr &ptr) {
                return ptr->hasKernel(kernel);
            }) != mPrograms.cend();
+}
+
+inline bool Context::hasEvent(const _cl_event *event) const
+{
+    return std::find_if(mEvents.cbegin(), mEvents.cend(),
+                        [=](const EventPtr &ptr) { return ptr.get() == event; }) != mEvents.cend();
+}
+
+inline EventRefPtr Context::findEvent(const EventPredicate &eventPredicate) const
+{
+    const auto eventIt = std::find_if(mEvents.cbegin(), mEvents.cend(), eventPredicate);
+    return EventRefPtr(eventIt != mEvents.cend() ? eventIt->get() : nullptr);
 }
 
 inline void Context::retain() noexcept

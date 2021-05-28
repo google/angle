@@ -85,7 +85,7 @@ cl_command_queue Context::createCommandQueue(cl_device_id device,
                                              cl_int &errorCode)
 {
     return createCommandQueue(
-        new CommandQueue(*this, *static_cast<Device *>(device), properties, errorCode));
+        new CommandQueue(*this, *static_cast<Device *>(device), properties, errorCode), errorCode);
 }
 
 cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
@@ -116,7 +116,8 @@ cl_command_queue Context::createCommandQueueWithProperties(cl_device_id device,
         propArray.insert(propArray.cend(), properties, propIt);
     }
     return createCommandQueue(new CommandQueue(*this, *static_cast<Device *>(device),
-                                               std::move(propArray), props, size, errorCode));
+                                               std::move(propArray), props, size, errorCode),
+                              errorCode);
 }
 
 cl_mem Context::createBuffer(const cl_mem_properties *properties,
@@ -125,7 +126,7 @@ cl_mem Context::createBuffer(const cl_mem_properties *properties,
                              void *hostPtr,
                              cl_int &errorCode)
 {
-    return createMemory(new Buffer(*this, {}, flags, size, hostPtr, errorCode));
+    return createMemory(new Buffer(*this, {}, flags, size, hostPtr, errorCode), errorCode);
 }
 
 cl_mem Context::createImage(const cl_mem_properties *properties,
@@ -140,7 +141,8 @@ cl_mem Context::createImage(const cl_mem_properties *properties,
         desc->image_depth,       desc->image_array_size, desc->image_row_pitch,
         desc->image_slice_pitch, desc->num_mip_levels,   desc->num_samples};
     return createMemory(new Image(*this, {}, flags, *format, imageDesc,
-                                  static_cast<Memory *>(desc->buffer), hostPtr, errorCode));
+                                  static_cast<Memory *>(desc->buffer), hostPtr, errorCode),
+                        errorCode);
 }
 
 cl_mem Context::createImage2D(MemFlags flags,
@@ -154,7 +156,7 @@ cl_mem Context::createImage2D(MemFlags flags,
     const ImageDescriptor imageDesc = {
         CL_MEM_OBJECT_IMAGE2D, width, height, 0u, 0u, rowPitch, 0u, 0u, 0u};
     return createMemory(
-        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errorCode));
+        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errorCode), errorCode);
 }
 
 cl_mem Context::createImage3D(MemFlags flags,
@@ -170,7 +172,7 @@ cl_mem Context::createImage3D(MemFlags flags,
     const ImageDescriptor imageDesc = {
         CL_MEM_OBJECT_IMAGE3D, width, height, depth, 0u, rowPitch, slicePitch, 0u, 0u};
     return createMemory(
-        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errorCode));
+        new Image(*this, {}, flags, *format, imageDesc, nullptr, hostPtr, errorCode), errorCode);
 }
 
 cl_sampler Context::createSampler(cl_bool normalizedCoords,
@@ -179,7 +181,7 @@ cl_sampler Context::createSampler(cl_bool normalizedCoords,
                                   cl_int &errorCode)
 {
     return createSampler(
-        new Sampler(*this, {}, normalizedCoords, addressingMode, filterMode, errorCode));
+        new Sampler(*this, {}, normalizedCoords, addressingMode, filterMode, errorCode), errorCode);
 }
 
 cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *properties,
@@ -215,7 +217,8 @@ cl_sampler Context::createSamplerWithProperties(const cl_sampler_properties *pro
     }
 
     return createSampler(new Sampler(*this, std::move(propArray), normalizedCoords, addressingMode,
-                                     filterMode, errorCode));
+                                     filterMode, errorCode),
+                         errorCode);
 }
 
 cl_program Context::createProgramWithSource(cl_uint count,
@@ -246,12 +249,12 @@ cl_program Context::createProgramWithSource(cl_uint count,
             ++lengths;
         }
     }
-    return createProgram(new Program(*this, std::move(source), errorCode));
+    return createProgram(new Program(*this, std::move(source), errorCode), errorCode);
 }
 
 cl_program Context::createProgramWithIL(const void *il, size_t length, cl_int &errorCode)
 {
-    return createProgram(new Program(*this, il, length, errorCode));
+    return createProgram(new Program(*this, il, length, errorCode), errorCode);
 }
 
 cl_program Context::createProgramWithBinary(cl_uint numDevices,
@@ -270,7 +273,8 @@ cl_program Context::createProgramWithBinary(cl_uint numDevices,
         std::memcpy(binaryVec.back().data(), *binaries++, binaryVec.back().size());
     }
     return createProgram(
-        new Program(*this, std::move(refDevices), std::move(binaryVec), binaryStatus, errorCode));
+        new Program(*this, std::move(refDevices), std::move(binaryVec), binaryStatus, errorCode),
+        errorCode);
 }
 
 cl_program Context::createProgramWithBuiltInKernels(cl_uint numDevices,
@@ -283,7 +287,24 @@ cl_program Context::createProgramWithBuiltInKernels(cl_uint numDevices,
     {
         refDevices.emplace_back(static_cast<Device *>(*devices++));
     }
-    return createProgram(new Program(*this, std::move(refDevices), kernelNames, errorCode));
+    return createProgram(new Program(*this, std::move(refDevices), kernelNames, errorCode),
+                         errorCode);
+}
+
+cl_event Context::createUserEvent(cl_int &errorCode)
+{
+    return createEvent(new Event(*this, errorCode), errorCode);
+}
+
+cl_int Context::waitForEvents(cl_uint numEvents, const cl_event *eventList)
+{
+    EventRefs events;
+    events.reserve(numEvents);
+    while (numEvents-- != 0u)
+    {
+        events.emplace_back(static_cast<Event *>(*eventList++));
+    }
+    return mImpl->waitForEvents(events);
 }
 
 bool Context::IsValid(const _cl_context *context)
@@ -348,10 +369,10 @@ Context::Context(Platform &platform,
       mDevices(mImpl ? mImpl->getDevices(errorCode) : DeviceRefs{})
 {}
 
-cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue)
+cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue, cl_int errorCode)
 {
     mCommandQueues.emplace_back(commandQueue);
-    if (!mCommandQueues.back()->mImpl)
+    if (errorCode != CL_SUCCESS)
     {
         mCommandQueues.back()->release();
         return nullptr;
@@ -359,10 +380,10 @@ cl_command_queue Context::createCommandQueue(CommandQueue *commandQueue)
     return mCommandQueues.back().get();
 }
 
-cl_mem Context::createMemory(Memory *memory)
+cl_mem Context::createMemory(Memory *memory, cl_int errorCode)
 {
     mMemories.emplace_back(memory);
-    if (!mMemories.back()->mImpl || mMemories.back()->mSize == 0u)
+    if (errorCode != CL_SUCCESS)
     {
         mMemories.back()->release();
         return nullptr;
@@ -370,10 +391,10 @@ cl_mem Context::createMemory(Memory *memory)
     return mMemories.back().get();
 }
 
-cl_sampler Context::createSampler(Sampler *sampler)
+cl_sampler Context::createSampler(Sampler *sampler, cl_int errorCode)
 {
     mSamplers.emplace_back(sampler);
-    if (!mSamplers.back()->mImpl)
+    if (errorCode != CL_SUCCESS)
     {
         mSamplers.back()->release();
         return nullptr;
@@ -381,15 +402,26 @@ cl_sampler Context::createSampler(Sampler *sampler)
     return mSamplers.back().get();
 }
 
-cl_program Context::createProgram(Program *program)
+cl_program Context::createProgram(Program *program, cl_int errorCode)
 {
     mPrograms.emplace_back(program);
-    if (!mPrograms.back()->mImpl)
+    if (errorCode != CL_SUCCESS)
     {
         mPrograms.back()->release();
         return nullptr;
     }
     return mPrograms.back().get();
+}
+
+cl_event Context::createEvent(Event *event, cl_int errorCode)
+{
+    mEvents.emplace_back(event);
+    if (errorCode != CL_SUCCESS)
+    {
+        mEvents.back()->release();
+        return nullptr;
+    }
+    return mEvents.back().get();
 }
 
 void Context::destroyCommandQueue(CommandQueue *commandQueue)
@@ -457,6 +489,23 @@ void Context::destroyProgram(Program *program)
     else
     {
         ERR() << "Program not found";
+    }
+}
+
+void Context::destroyEvent(Event *event)
+{
+    auto eventIt = mEvents.cbegin();
+    while (eventIt != mEvents.cend() && eventIt->get() != event)
+    {
+        ++eventIt;
+    }
+    if (eventIt != mEvents.cend())
+    {
+        mEvents.erase(eventIt);
+    }
+    else
+    {
+        ERR() << "Event not found";
     }
 }
 

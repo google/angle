@@ -111,6 +111,8 @@ if (angle_enable_cl) {
     "CLContextVk.h",
     "CLDeviceVk.cpp",
     "CLDeviceVk.h",
+    "CLEventVk.cpp",
+    "CLEventVk.h",
     "CLKernelVk.cpp",
     "CLKernelVk.h",
     "CLMemoryVk.cpp",

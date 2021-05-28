@@ -601,8 +601,7 @@ cl_int GetKernelSubGroupInfo(cl_kernel kernel,
 
 cl_int WaitForEvents(cl_uint num_events, const cl_event *event_list)
 {
-    WARN_NOT_SUPPORTED(WaitForEvents);
-    return 0;
+    return static_cast<Event *>(*event_list)->getContext().waitForEvents(num_events, event_list);
 }
 
 cl_int GetEventInfo(cl_event event,
@@ -611,32 +610,30 @@ cl_int GetEventInfo(cl_event event,
                     void *param_value,
                     size_t *param_value_size_ret)
 {
-    WARN_NOT_SUPPORTED(GetEventInfo);
-    return 0;
+    return static_cast<Event *>(event)->getInfo(param_name, param_value_size, param_value,
+                                                param_value_size_ret);
 }
 
 cl_event CreateUserEvent(cl_context context, cl_int &errorCode)
 {
-    WARN_NOT_SUPPORTED(CreateUserEvent);
-    return 0;
+    return static_cast<Context *>(context)->createUserEvent(errorCode);
 }
 
 cl_int RetainEvent(cl_event event)
 {
-    WARN_NOT_SUPPORTED(RetainEvent);
-    return 0;
+    static_cast<Event *>(event)->retain();
+    return CL_SUCCESS;
 }
 
 cl_int ReleaseEvent(cl_event event)
 {
-    WARN_NOT_SUPPORTED(ReleaseEvent);
-    return 0;
+    static_cast<Event *>(event)->release();
+    return CL_SUCCESS;
 }
 
 cl_int SetUserEventStatus(cl_event event, cl_int execution_status)
 {
-    WARN_NOT_SUPPORTED(SetUserEventStatus);
-    return 0;
+    return static_cast<Event *>(event)->setUserEventStatus(execution_status);
 }
 
 cl_int SetEventCallback(cl_event event,
@@ -646,8 +643,8 @@ cl_int SetEventCallback(cl_event event,
                                                       void *user_data),
                         void *user_data)
 {
-    WARN_NOT_SUPPORTED(SetEventCallback);
-    return 0;
+    return static_cast<Event *>(event)->setCallback(command_exec_callback_type, pfn_notify,
+                                                    user_data);
 }
 
 cl_int GetEventProfilingInfo(cl_event event,

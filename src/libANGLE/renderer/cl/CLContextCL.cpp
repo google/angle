@@ -9,6 +9,7 @@
 
 #include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 #include "libANGLE/renderer/cl/CLDeviceCL.h"
+#include "libANGLE/renderer/cl/CLEventCL.h"
 #include "libANGLE/renderer/cl/CLMemoryCL.h"
 #include "libANGLE/renderer/cl/CLProgramCL.h"
 #include "libANGLE/renderer/cl/CLSamplerCL.h"
@@ -17,6 +18,7 @@
 #include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLEvent.h"
 #include "libANGLE/CLImage.h"
 #include "libANGLE/CLMemory.h"
 #include "libANGLE/CLPlatform.h"
@@ -268,6 +270,24 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithBuiltInKernels(const cl::Progra
         &errorCode);
     return CLProgramImpl::Ptr(nativeProgram != nullptr ? new CLProgramCL(program, nativeProgram)
                                                        : nullptr);
+}
+
+CLEventImpl::Ptr CLContextCL::createUserEvent(const cl::Event &event, cl_int &errorCode)
+{
+    const cl_event nativeEvent = mNative->getDispatch().clCreateUserEvent(mNative, &errorCode);
+    return CLEventImpl::Ptr(nativeEvent != nullptr ? new CLEventCL(event, nativeEvent) : nullptr);
+}
+
+cl_int CLContextCL::waitForEvents(const cl::EventRefs &events)
+{
+    std::vector<cl_event> nativeEvents;
+    nativeEvents.reserve(events.size());
+    for (const cl::EventRefPtr &event : events)
+    {
+        nativeEvents.emplace_back(event->getImpl<CLEventCL>().getNative());
+    }
+    return mNative->getDispatch().clWaitForEvents(static_cast<cl_uint>(nativeEvents.size()),
+                                                  nativeEvents.data());
 }
 
 }  // namespace rx

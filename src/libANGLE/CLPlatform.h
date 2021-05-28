@@ -37,6 +37,9 @@ class Platform final : public _cl_platform_id, public Object
     bool hasSampler(const _cl_sampler *sampler) const;
     bool hasProgram(const _cl_program *program) const;
     bool hasKernel(const _cl_kernel *kernel) const;
+    bool hasEvent(const _cl_event *event) const;
+
+    EventRefPtr findEvent(const EventPredicate &eventPredicate) const;
 
     cl_int getInfo(PlatformInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
@@ -71,12 +74,14 @@ class Platform final : public _cl_platform_id, public Object
     static bool IsValid(const _cl_platform_id *platform);
     static bool IsValidOrDefault(const _cl_platform_id *platform);
 
+    static EventRefPtr FindEvent(const EventPredicate &eventPredicate);
+
     static constexpr const char *GetVendor();
 
   private:
     Platform(const cl_icd_dispatch &dispatch, const CreateImplFunc &createImplFunc);
 
-    cl_context createContext(Context *context);
+    cl_context createContext(Context *context, cl_int errorCode);
     void destroyContext(Context *context);
 
     static PtrList &GetList();
@@ -157,6 +162,24 @@ inline bool Platform::hasKernel(const _cl_kernel *kernel) const
            }) != mContexts.cend();
 }
 
+inline bool Platform::hasEvent(const _cl_event *event) const
+{
+    return std::find_if(mContexts.cbegin(), mContexts.cend(), [=](const ContextPtr &ptr) {
+               return ptr->hasEvent(event);
+           }) != mContexts.cend();
+}
+
+inline EventRefPtr Platform::findEvent(const EventPredicate &eventPredicate) const
+{
+    EventRefPtr event;
+    auto contextIt = mContexts.cbegin();
+    while (contextIt != mContexts.cend() && event == nullptr)
+    {
+        event = (*contextIt++)->findEvent(eventPredicate);
+    }
+    return event;
+}
+
 inline Platform::PtrList &Platform::GetList()
 {
     static angle::base::NoDestructor<PtrList> sList;
@@ -191,6 +214,17 @@ inline bool Platform::IsValid(const _cl_platform_id *platform)
 inline bool Platform::IsValidOrDefault(const _cl_platform_id *platform)
 {
     return platform != nullptr ? IsValid(platform) : GetDefault() != nullptr;
+}
+
+inline EventRefPtr Platform::FindEvent(const EventPredicate &eventPredicate)
+{
+    EventRefPtr event;
+    auto platformIt = GetPlatforms().cbegin();
+    while (platformIt != GetPlatforms().cend() && event == nullptr)
+    {
+        event = (*platformIt++)->findEvent(eventPredicate);
+    }
+    return event;
 }
 
 constexpr const char *Platform::GetVendor()
