@@ -16,6 +16,29 @@
       "message": "This didn\u0027t help, I still see image name doesn\u0027t match test name 😞\ngold_triage_link produced by angle_restricted_trace_gold_tests.plants_vs_zombies_2: https://angle-gold.skia.org/detail?test\u003dprofessional_baseball_spirits\u0026digest\u003d695e40e7efbc3ba66dbc97cd8c6a26b7\n",
       "revId": "ce7d80bd43eba819b9b895a80327cb5cade28b8a",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "78922a49_a673a375",
+        "filename": "src/tests/restricted_traces/restricted_trace_gold_tests.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 383,
+      "author": {
+        "id": 1001921
+      },
+      "writtenOn": "2021-05-28T18:00:28Z",
+      "side": 1,
+      "message": "Oh, I think this needs to be reset every trace.",
+      "range": {
+        "startLine": 383,
+        "startChar": 0,
+        "endLine": 383,
+        "endChar": 30
+      },
+      "revId": "ce7d80bd43eba819b9b895a80327cb5cade28b8a",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }
