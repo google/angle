@@ -16,6 +16,24 @@
       "message": "Is this no longer an issue?",
       "revId": "e697e3790cdb950da4041ad115fd2c39ba72e7aa",
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae4a317d_f0277b54",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4902,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-29T21:03:23Z",
+      "side": 0,
+      "message": "nope, since we are recreating only on a transition (which is when we have to do it anyways) and not everytime there is an immutable sampler in use, we will incur only the penalty that we have to",
+      "parentUuid": "17dfd59c_2c0832d7",
+      "revId": "e697e3790cdb950da4041ad115fd2c39ba72e7aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     }
   ]
 }

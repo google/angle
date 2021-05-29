@@ -35,6 +35,23 @@
       "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b63019a_2443d409",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1340649
+      },
+      "writtenOn": "2021-05-29T21:03:23Z",
+      "side": 1,
+      "message": "i was thinking of doing this through just dirty bits. Will upload PS2 using that logic, can always revert back to PS1 if needed",
+      "revId": "31d0e1b07087bff4ed4630f91a5aa9aaa29080ad",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "63ce2e41_17c93201",
