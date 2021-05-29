@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73992b20_491066b8",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-29T20:31:38Z",
+      "side": 1,
+      "message": "I suggest using angle::FixedVector instead of std::array for mExtensions. Then size() will tell how many elements it has and you wouldn\u0027t need to use TExtension::UNDEFINED as a hack. createExtensionList could then be removed :)",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 49,
+        "endChar": 50
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d983d10_03e436cd",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 9
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-29T20:31:38Z",
+      "side": 1,
+      "message": "nit: Capitalize",
+      "range": {
+        "startLine": 201,
+        "startChar": 21,
+        "endLine": 201,
+        "endChar": 22
+      },
+      "revId": "0e3b44e60bc0324d55e7b37530f81ab75cad018b",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
