@@ -16,7 +16,9 @@ namespace rx
 class CLKernelImpl : angle::NonCopyable
 {
   public:
-    using Ptr = std::unique_ptr<CLKernelImpl>;
+    using Ptr         = std::unique_ptr<CLKernelImpl>;
+    using CreateFunc  = std::function<Ptr(const cl::Kernel &)>;
+    using CreateFuncs = std::list<CreateFunc>;
 
     struct WorkGroupInfo
     {

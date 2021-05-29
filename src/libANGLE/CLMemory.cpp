@@ -9,7 +9,6 @@
 
 #include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLContext.h"
-#include "libANGLE/CLPlatform.h"
 
 #include <cstring>
 
@@ -17,16 +16,6 @@ namespace cl
 {
 
 Memory::~Memory() = default;
-
-bool Memory::release()
-{
-    const bool released = removeRef();
-    if (released)
-    {
-        mContext->destroyMemory(this);
-    }
-    return released;
-}
 
 cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
@@ -63,16 +52,17 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
             copySize  = sizeof(mMapCount);
             break;
         case MemInfo::ReferenceCount:
-            copyValue = getRefCountPtr();
-            copySize  = sizeof(*getRefCountPtr());
+            valUInt   = getRefCount();
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
             break;
         case MemInfo::Context:
-            valPointer = static_cast<cl_context>(mContext.get());
+            valPointer = mContext->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
         case MemInfo::AssociatedMemObject:
-            valPointer = static_cast<cl_mem>(mParent.get());
+            valPointer = Memory::CastNative(mParent.get());
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -113,14 +103,6 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
     return CL_SUCCESS;
 }
 
-bool Memory::IsValid(const _cl_mem *memory)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->hasMemory(memory);
-           }) != platforms.cend();
-}
-
 Memory::Memory(const Buffer &buffer,
                Context &context,
                PropArray &&properties,
@@ -128,12 +110,11 @@ Memory::Memory(const Buffer &buffer,
                size_t size,
                void *hostPtr,
                cl_int &errorCode)
-    : _cl_mem(context.getDispatch()),
-      mContext(&context),
+    : mContext(&context),
       mProperties(std::move(properties)),
       mFlags(flags),
       mHostPtr(flags.isSet(CL_MEM_USE_HOST_PTR) ? hostPtr : nullptr),
-      mImpl(context.mImpl->createBuffer(buffer, size, hostPtr, errorCode)),
+      mImpl(context.getImpl().createBuffer(buffer, size, hostPtr, errorCode)),
       mSize(size)
 {}
 
@@ -143,8 +124,7 @@ Memory::Memory(const Buffer &buffer,
                size_t offset,
                size_t size,
                cl_int &errorCode)
-    : _cl_mem(parent.getDispatch()),
-      mContext(parent.mContext),
+    : mContext(parent.mContext),
       mFlags(flags),
       mHostPtr(parent.mHostPtr != nullptr ? static_cast<char *>(parent.mHostPtr) + offset
                                           : nullptr),
@@ -163,13 +143,12 @@ Memory::Memory(const Image &image,
                Memory *parent,
                void *hostPtr,
                cl_int &errorCode)
-    : _cl_mem(context.getDispatch()),
-      mContext(&context),
+    : mContext(&context),
       mProperties(std::move(properties)),
       mFlags(flags),
       mHostPtr(flags.isSet(CL_MEM_USE_HOST_PTR) ? hostPtr : nullptr),
       mParent(parent),
-      mImpl(context.mImpl->createImage(image, format, desc, hostPtr, errorCode)),
+      mImpl(context.getImpl().createImage(image, format, desc, hostPtr, errorCode)),
       mSize(mImpl ? mImpl->getSize(errorCode) : 0u)
 {}
 

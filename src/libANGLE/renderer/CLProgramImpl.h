@@ -27,7 +27,9 @@ class CLProgramImpl : angle::NonCopyable
                                            const char *name,
                                            cl_int &errorCode) = 0;
 
-    virtual cl_int createKernels(cl::Program &program) = 0;
+    virtual cl_int createKernels(cl_uint numKernels,
+                                 CLKernelImpl::CreateFuncs &createFuncs,
+                                 cl_uint *numKernelsRet) = 0;
 
   protected:
     const cl::Program &mProgram;

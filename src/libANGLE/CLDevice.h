@@ -20,25 +20,20 @@ namespace cl
 class Device final : public _cl_device_id, public Object
 {
   public:
-    using CreateImplFunc = std::function<rx::CLDeviceImpl::Ptr(const cl::Device &)>;
-
     ~Device() override;
 
     Platform &getPlatform() noexcept;
     const Platform &getPlatform() const noexcept;
     bool isRoot() const noexcept;
 
-    template <typename T>
+    template <typename T = rx::CLDeviceImpl>
     T &getImpl() const;
 
     const rx::CLDeviceImpl::Info &getInfo() const;
+    cl_version getVersion() const;
     bool isVersionOrNewer(cl_uint major, cl_uint minor) const;
-    bool hasSubDevice(const _cl_device_id *device) const;
 
     bool supportsBuiltInKernel(const std::string &name) const;
-
-    void retain() noexcept;
-    bool release();
 
     cl_int getInfoUInt(DeviceInfo name, cl_uint *value) const;
     cl_int getInfoULong(DeviceInfo name, cl_ulong *value) const;
@@ -50,29 +45,19 @@ class Device final : public _cl_device_id, public Object
                             cl_device_id *subDevices,
                             cl_uint *numDevicesRet);
 
-    static DevicePtr CreateDevice(Platform &platform,
-                                  Device *parent,
-                                  DeviceType type,
-                                  const CreateImplFunc &createImplFunc);
-
-    static bool IsValid(const _cl_device_id *device);
-    static bool IsValidAndVersionOrNewer(const _cl_device_id *device, cl_uint major, cl_uint minor);
     static bool IsValidType(DeviceType type);
 
   private:
     Device(Platform &platform,
            Device *parent,
            DeviceType type,
-           const CreateImplFunc &createImplFunc);
-
-    void destroySubDevice(Device *device);
+           const rx::CLDeviceImpl::CreateFunc &createFunc);
 
     Platform &mPlatform;
-    const DeviceRefPtr mParent;
+    const DevicePtr mParent;
     const rx::CLDeviceImpl::Ptr mImpl;
     const rx::CLDeviceImpl::Info mInfo;
 
-    DevicePtrList mSubDevices;
     CommandQueue *mDefaultCommandQueue = nullptr;
 
     friend class CommandQueue;
@@ -91,7 +76,7 @@ inline const Platform &Device::getPlatform() const noexcept
 
 inline bool Device::isRoot() const noexcept
 {
-    return !mParent;
+    return mParent == nullptr;
 }
 
 template <typename T>
@@ -105,24 +90,14 @@ inline const rx::CLDeviceImpl::Info &Device::getInfo() const
     return mInfo;
 }
 
+inline cl_version Device::getVersion() const
+{
+    return mInfo.mVersion;
+}
+
 inline bool Device::isVersionOrNewer(cl_uint major, cl_uint minor) const
 {
     return mInfo.mVersion >= CL_MAKE_VERSION(major, minor, 0u);
-}
-
-inline bool Device::hasSubDevice(const _cl_device_id *device) const
-{
-    return std::find_if(mSubDevices.cbegin(), mSubDevices.cend(), [=](const DevicePtr &ptr) {
-               return ptr.get() == device || ptr->hasSubDevice(device);
-           }) != mSubDevices.cend();
-}
-
-inline void Device::retain() noexcept
-{
-    if (!isRoot())
-    {
-        addRef();
-    }
 }
 
 inline cl_int Device::getInfoUInt(DeviceInfo name, cl_uint *value) const
@@ -133,13 +108,6 @@ inline cl_int Device::getInfoUInt(DeviceInfo name, cl_uint *value) const
 inline cl_int Device::getInfoULong(DeviceInfo name, cl_ulong *value) const
 {
     return mImpl->getInfoULong(name, value);
-}
-
-inline bool Device::IsValidAndVersionOrNewer(const _cl_device_id *device,
-                                             cl_uint major,
-                                             cl_uint minor)
-{
-    return IsValid(device) && static_cast<const Device *>(device)->isVersionOrNewer(major, minor);
 }
 
 inline bool Device::IsValidType(DeviceType type)

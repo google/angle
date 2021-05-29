@@ -43,14 +43,14 @@ cl_int ValidateContextProperties(const cl_context_properties *properties, const 
                     {
                         return CL_INVALID_PROPERTY;
                     }
-                    cl_platform_id pltfrm = reinterpret_cast<cl_platform_id>(*properties++);
+                    cl_platform_id nativePlatform = reinterpret_cast<cl_platform_id>(*properties++);
                     // CL_INVALID_PLATFORM if platform value specified in properties
                     // is not a valid platform.
-                    if (!Platform::IsValid(pltfrm))
+                    if (!Platform::IsValid(nativePlatform))
                     {
                         return CL_INVALID_PLATFORM;
                     }
-                    platform = static_cast<const Platform *>(pltfrm);
+                    platform = &nativePlatform->cast<Platform>();
                     break;
                 }
                 case CL_CONTEXT_INTEROP_USER_SYNC:
@@ -251,7 +251,7 @@ cl_int ValidateGetPlatformInfo(cl_platform_id platform,
     }
 
     // CL_INVALID_VALUE if param_name is not one of the supported values.
-    const cl_version version = static_cast<const Platform *>(platform)->getInfo().mVersion;
+    const cl_version version = platform->cast<Platform>().getVersion();
     switch (param_name)
     {
         case PlatformInfo::HostTimerResolution:
@@ -313,7 +313,7 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
     // CL_INVALID_VALUE if param_name is not one of the supported values
     // or if param_name is a value that is available as an extension
     // and the corresponding extension is not supported by the device.
-    const cl_version version = static_cast<const Device *>(device)->getInfo().mVersion;
+    const cl_version version = device->cast<Device>().getVersion();
     // Enums ordered within their version block as they appear in the OpenCL spec V3.0.7, table 5
     switch (param_name)
     {
@@ -425,10 +425,11 @@ cl_int ValidateCreateContext(const cl_context_properties *properties,
     // CL_INVALID_DEVICE if any device in devices is not a valid device.
     while (num_devices-- > 0u)
     {
-        if (!platform->hasDevice(*devices++))
+        if (!Device::IsValid(*devices) || &(*devices)->cast<Device>().getPlatform() != platform)
         {
             return CL_INVALID_DEVICE;
         }
+        ++devices;
     }
 
     return CL_SUCCESS;
@@ -520,7 +521,7 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
-    const CommandQueue &queue = *static_cast<const CommandQueue *>(command_queue);
+    const CommandQueue &queue = command_queue->cast<CommandQueue>();
     // or if command_queue is not a valid command-queue for param_name.
     if (param_name == CommandQueueInfo::Size && queue.getProperties().isNotSet(CL_QUEUE_ON_DEVICE))
     {
@@ -528,7 +529,7 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
     }
 
     // CL_INVALID_VALUE if param_name is not one of the supported values.
-    const cl_version version = queue.getDevice().getInfo().mVersion;
+    const cl_version version = queue.getDevice().getVersion();
     switch (param_name)
     {
         case CommandQueueInfo::Size:
@@ -556,7 +557,7 @@ cl_int ValidateCreateBuffer(cl_context context, MemFlags flags, size_t size, con
     {
         return CL_INVALID_CONTEXT;
     }
-    const Context &ctx = *static_cast<Context *>(context);
+    const Context &ctx = context->cast<Context>();
 
     // CL_INVALID_VALUE if values specified in flags are not valid
     // as defined in the Memory Flags table.
@@ -570,7 +571,7 @@ cl_int ValidateCreateBuffer(cl_context context, MemFlags flags, size_t size, con
     {
         CL_INVALID_BUFFER_SIZE;
     }
-    for (const DeviceRefPtr &device : ctx.getDevices())
+    for (const DevicePtr &device : ctx.getDevices())
     {
         // or if size is greater than CL_DEVICE_MAX_MEM_ALLOC_SIZE for all devices in context.
         if (size > device->getInfo().mMaxMemAllocSize)
@@ -625,8 +626,7 @@ cl_int ValidateGetMemObjectInfo(cl_mem memobj,
     }
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version =
-        static_cast<const Memory *>(memobj)->getContext().getPlatform().getInfo().mVersion;
+    const cl_version version = memobj->cast<Memory>().getContext().getPlatform().getVersion();
     switch (param_name)
     {
         case MemInfo::AssociatedMemObject:
@@ -661,8 +661,7 @@ cl_int ValidateGetImageInfo(cl_mem image,
     }
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version =
-        static_cast<const Image *>(image)->getContext().getPlatform().getInfo().mVersion;
+    const cl_version version = image->cast<Image>().getContext().getPlatform().getVersion();
     switch (param_name)
     {
         case ImageInfo::ArraySize:
@@ -705,8 +704,7 @@ cl_int ValidateGetSamplerInfo(cl_sampler sampler,
     }
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version =
-        static_cast<const Sampler *>(sampler)->getContext().getPlatform().getInfo().mVersion;
+    const cl_version version = sampler->cast<Sampler>().getContext().getPlatform().getVersion();
     switch (param_name)
     {
         case SamplerInfo::Properties:
@@ -760,7 +758,7 @@ cl_int ValidateCreateProgramWithBinary(cl_context context,
     {
         return CL_INVALID_CONTEXT;
     }
-    const Context &ctx = *static_cast<Context *>(context);
+    const Context &ctx = context->cast<Context>();
 
     // CL_INVALID_VALUE if device_list is NULL or num_devices is zero.
     // CL_INVALID_VALUE if lengths or binaries is NULL.
@@ -822,8 +820,7 @@ cl_int ValidateGetProgramInfo(cl_program program,
     }
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version =
-        static_cast<const Program *>(program)->getContext().getPlatform().getInfo().mVersion;
+    const cl_version version = program->cast<Program>().getContext().getPlatform().getVersion();
     switch (param_name)
     {
         case ProgramInfo::NumKernels:
@@ -920,12 +917,8 @@ cl_int ValidateGetKernelInfo(cl_kernel kernel,
     }
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version = static_cast<const Kernel *>(kernel)
-                                   ->getProgram()
-                                   .getContext()
-                                   .getPlatform()
-                                   .getInfo()
-                                   .mVersion;
+    const cl_version version =
+        kernel->cast<Kernel>().getProgram().getContext().getPlatform().getVersion();
     switch (param_name)
     {
         case KernelInfo::Attributes:
@@ -952,15 +945,15 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
     {
         return CL_INVALID_KERNEL;
     }
-    const Kernel &krnl = *static_cast<const Kernel *>(kernel);
+    const Kernel &krnl = kernel->cast<Kernel>();
 
-    const Device *dvc = nullptr;
+    const Device *dev = nullptr;
     if (device != nullptr)
     {
         // CL_INVALID_DEVICE if device is not in the list of devices associated with kernel ...
         if (krnl.getProgram().getContext().hasDevice(device))
         {
-            dvc = static_cast<const Device *>(device);
+            dev = &device->cast<Device>();
         }
         else
         {
@@ -972,7 +965,7 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
         // or if device is NULL but there is more than one device associated with kernel.
         if (krnl.getProgram().getContext().getDevices().size() == 1u)
         {
-            dvc = krnl.getProgram().getContext().getDevices().front().get();
+            dev = krnl.getProgram().getContext().getDevices().front().get();
         }
         else
         {
@@ -988,7 +981,7 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
             ANGLE_VALIDATE_VERSION(1, 2);
             // CL_INVALID_VALUE if param_name is CL_KERNEL_GLOBAL_WORK_SIZE and
             // device is not a custom device and kernel is not a built-in kernel.
-            if (!dvc->supportsBuiltInKernel(krnl.getInfo().mFunctionName))
+            if (!dev->supportsBuiltInKernel(krnl.getInfo().mFunctionName))
             {
                 return CL_INVALID_VALUE;
             }
@@ -1020,7 +1013,7 @@ cl_int ValidateWaitForEvents(cl_uint num_events, const cl_event *event_list)
         }
 
         // CL_INVALID_CONTEXT if events specified in event_list do not belong to the same context.
-        const Context *eventContext = &static_cast<const Event *>(*event_list++)->getContext();
+        const Context *eventContext = &(*event_list++)->cast<Event>().getContext();
         if (context == nullptr)
         {
             context = eventContext;
@@ -1047,8 +1040,7 @@ cl_int ValidateGetEventInfo(cl_event event,
     }
 
     // CL_INVALID_VALUE if param_name is not valid.
-    const cl_version version =
-        static_cast<const Event *>(event)->getContext().getPlatform().getInfo().mVersion;
+    const cl_version version = event->cast<Event>().getContext().getPlatform().getVersion();
     switch (param_name)
     {
         case EventInfo::Context:
@@ -1355,7 +1347,7 @@ cl_int ValidateCreateCommandQueue(cl_context context,
     }
 
     // CL_INVALID_DEVICE if device is not a valid device or is not associated with context.
-    if (!static_cast<Context *>(context)->hasDevice(device))
+    if (!context->cast<Context>().hasDevice(device))
     {
         return CL_INVALID_DEVICE;
     }
@@ -1390,7 +1382,7 @@ cl_int ValidateCreateSampler(cl_context context,
     }
 
     // CL_INVALID_OPERATION if images are not supported by any device associated with context.
-    if (!static_cast<Context *>(context)->supportsImages())
+    if (!context->cast<Context>().supportsImages())
     {
         return CL_INVALID_OPERATION;
     }
@@ -1418,7 +1410,7 @@ cl_int ValidateCreateSubBuffer(cl_mem buffer,
     {
         return CL_INVALID_MEM_OBJECT;
     }
-    const Buffer &buf = *static_cast<const Buffer *>(buffer);
+    const Buffer &buf = buffer->cast<Buffer>();
     if (buf.isSubBuffer() || !buf.getContext().getPlatform().isVersionOrNewer(1u, 1u))
     {
         return CL_INVALID_MEM_OBJECT;
@@ -1466,15 +1458,15 @@ cl_int ValidateCreateSubBuffer(cl_mem buffer,
     // (for a given buffer_create_type) is not valid or if buffer_create_info is NULL.
     // CL_INVALID_VALUE if the region specified by the cl_buffer_region structure
     // passed in buffer_create_info is out of bounds in buffer.
-    if (buffer_create_info == nullptr ||
-        !buf.isRegionValid(*static_cast<const cl_buffer_region *>(buffer_create_info)))
+    const cl_buffer_region *region = static_cast<const cl_buffer_region *>(buffer_create_info);
+    if (region == nullptr || !buf.isRegionValid(*region))
     {
         return CL_INVALID_VALUE;
     }
 
     // CL_INVALID_BUFFER_SIZE if the size field of the cl_buffer_region structure
     // passed in buffer_create_info is 0.
-    if (static_cast<const cl_buffer_region *>(buffer_create_info)->size == 0u)
+    if (region->size == 0u)
     {
         return CL_INVALID_BUFFER_SIZE;
     }
@@ -1499,12 +1491,13 @@ cl_int ValidateCreateUserEvent(cl_context context)
 cl_int ValidateSetUserEventStatus(cl_event event, cl_int execution_status)
 {
     // CL_INVALID_EVENT if event is not a valid user event object.
-    if (!Event::IsValidAndVersionOrNewer(event, 1u, 1u))
+    if (!Event::IsValid(event))
     {
         return CL_INVALID_EVENT;
     }
-    const Event &evt = *static_cast<Event *>(event);
-    if (evt.getCommandType() != CL_COMMAND_USER)
+    const Event &evt = event->cast<Event>();
+    if (!evt.getContext().getPlatform().isVersionOrNewer(1u, 1u) ||
+        evt.getCommandType() != CL_COMMAND_USER)
     {
         return CL_INVALID_EVENT;
     }
@@ -1533,7 +1526,8 @@ cl_int ValidateSetEventCallback(cl_event event,
                                 const void *user_data)
 {
     // CL_INVALID_EVENT if event is not a valid event object.
-    if (!Event::IsValidAndVersionOrNewer(event, 1u, 1u))
+    if (!Event::IsValid(event) ||
+        !event->cast<Event>().getContext().getPlatform().isVersionOrNewer(1u, 1u))
     {
         return CL_INVALID_EVENT;
     }
@@ -1611,7 +1605,12 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
                                 const cl_uint *num_devices_ret)
 {
     // CL_INVALID_DEVICE if in_device is not a valid device.
-    if (!Device::IsValidAndVersionOrNewer(in_device, 1u, 2u))
+    if (!Device::IsValid(in_device))
+    {
+        return CL_INVALID_DEVICE;
+    }
+    const Device &device = in_device->cast<Device>();
+    if (!device.isVersionOrNewer(1u, 2u))
     {
         return CL_INVALID_DEVICE;
     }
@@ -1619,7 +1618,7 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
     // CL_INVALID_VALUE if values specified in properties are not valid
     // or if values specified in properties are valid but not supported by the device
     const std::vector<cl_device_partition_property> &devProps =
-        static_cast<Device *>(in_device)->getInfo().mPartitionProperties;
+        device.getInfo().mPartitionProperties;
     if (properties == nullptr ||
         std::find(devProps.cbegin(), devProps.cend(), *properties) == devProps.cend())
     {
@@ -1632,13 +1631,21 @@ cl_int ValidateCreateSubDevices(cl_device_id in_device,
 cl_int ValidateRetainDevice(cl_device_id device)
 {
     // CL_INVALID_DEVICE if device is not a valid device.
-    return Device::IsValidAndVersionOrNewer(device, 1u, 2u) ? CL_SUCCESS : CL_INVALID_DEVICE;
+    if (!Device::IsValid(device) || !device->cast<Device>().isVersionOrNewer(1u, 2u))
+    {
+        return CL_INVALID_DEVICE;
+    }
+    return CL_SUCCESS;
 }
 
 cl_int ValidateReleaseDevice(cl_device_id device)
 {
     // CL_INVALID_DEVICE if device is not a valid device.
-    return Device::IsValidAndVersionOrNewer(device, 1u, 2u) ? CL_SUCCESS : CL_INVALID_DEVICE;
+    if (!Device::IsValid(device) || !device->cast<Device>().isVersionOrNewer(1u, 2u))
+    {
+        return CL_INVALID_DEVICE;
+    }
+    return CL_SUCCESS;
 }
 
 cl_int ValidateCreateImage(cl_context context,
@@ -1652,7 +1659,7 @@ cl_int ValidateCreateImage(cl_context context,
     {
         return CL_INVALID_CONTEXT;
     }
-    const Context &ctx = *static_cast<Context *>(context);
+    const Context &ctx = context->cast<Context>();
 
     // CL_INVALID_VALUE if values specified in flags are not valid.
     if (!ValidateMemoryFlags(flags, ctx.getPlatform()))
@@ -1775,8 +1782,8 @@ cl_int ValidateCreateImage(cl_context context,
 
     // CL_INVALID_IMAGE_SIZE if image dimensions specified in image_desc exceed the maximum
     // image dimensions described in the Device Queries table for all devices in context.
-    const DeviceRefs &devices = ctx.getDevices();
-    if (std::find_if(devices.cbegin(), devices.cend(), [&](const DeviceRefPtr &ptr) {
+    const DevicePtrs &devices = ctx.getDevices();
+    if (std::find_if(devices.cbegin(), devices.cend(), [&](const DevicePtr &ptr) {
             switch (image_desc->image_type)
             {
                 case CL_MEM_OBJECT_IMAGE1D:
@@ -1828,7 +1835,7 @@ cl_int ValidateCreateProgramWithBuiltInKernels(cl_context context,
     {
         return CL_INVALID_CONTEXT;
     }
-    const Context &ctx = *static_cast<Context *>(context);
+    const Context &ctx = context->cast<Context>();
 
     // CL_INVALID_VALUE if device_list is NULL or num_devices is zero or if kernel_names is NULL.
     if (device_list == nullptr || num_devices == 0u || kernel_names == nullptr)
@@ -1905,11 +1912,15 @@ cl_int ValidateGetKernelArgInfo(cl_kernel kernel,
                                 const size_t *param_value_size_ret)
 {
     // CL_INVALID_KERNEL if kernel is a not a valid kernel object.
-    if (!Kernel::IsValidAndVersionOrNewer(kernel, 1u, 2u))
+    if (!Kernel::IsValid(kernel))
     {
         return CL_INVALID_KERNEL;
     }
-    const Kernel &krnl = *static_cast<const Kernel *>(kernel);
+    const Kernel &krnl = kernel->cast<Kernel>();
+    if (!krnl.getProgram().getContext().getPlatform().isVersionOrNewer(1u, 2u))
+    {
+        return CL_INVALID_KERNEL;
+    }
 
     // CL_INVALID_ARG_INDEX if arg_index is not a valid argument index.
     if (arg_index >= krnl.getInfo().mArgs.size())
@@ -2006,8 +2017,8 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
     }
 
     // CL_INVALID_DEVICE if device is not a valid device or is not associated with context.
-    if (!static_cast<Context *>(context)->hasDevice(device) ||
-        !static_cast<Device *>(device)->isVersionOrNewer(2u, 0u))
+    if (!context->cast<Context>().hasDevice(device) ||
+        !device->cast<Device>().isVersionOrNewer(2u, 0u))
     {
         return CL_INVALID_DEVICE;
     }
@@ -2044,8 +2055,7 @@ cl_int ValidateCreateCommandQueueWithProperties(cl_context context,
                 case CL_QUEUE_SIZE:
                 {
                     // CL_QUEUE_SIZE must be a value <= CL_DEVICE_QUEUE_ON_DEVICE_MAX_SIZE.
-                    if (*properties++ >
-                        static_cast<Device *>(device)->getInfo().mQueueOnDeviceMaxSize)
+                    if (*properties++ > device->cast<Device>().getInfo().mQueueOnDeviceMaxSize)
                     {
                         return CL_INVALID_VALUE;
                     }
@@ -2148,7 +2158,7 @@ cl_int ValidateCreateSamplerWithProperties(cl_context context,
     }
 
     // CL_INVALID_OPERATION if images are not supported by any device associated with context.
-    if (!static_cast<Context *>(context)->supportsImages())
+    if (!context->cast<Context>().supportsImages())
     {
         return CL_INVALID_OPERATION;
     }
@@ -2256,7 +2266,7 @@ cl_int ValidateCreateProgramWithIL(cl_context context, const void *il, size_t le
     {
         return CL_INVALID_CONTEXT;
     }
-    const Context &ctx = *static_cast<Context *>(context);
+    const Context &ctx = context->cast<Context>();
 
     // CL_INVALID_OPERATION if no devices in context support intermediate language programs.
     if (!ctx.supportsIL())
@@ -2341,7 +2351,7 @@ cl_int ValidateCreateBufferWithProperties(cl_context context,
     }
 
     // CL_INVALID_CONTEXT if context is not a valid context.
-    if (!static_cast<Context *>(context)->getPlatform().isVersionOrNewer(3u, 0u))
+    if (!context->cast<Context>().getPlatform().isVersionOrNewer(3u, 0u))
     {
         return CL_INVALID_CONTEXT;
     }
@@ -2372,7 +2382,7 @@ cl_int ValidateCreateImageWithProperties(cl_context context,
     }
 
     // CL_INVALID_CONTEXT if context is not a valid context.
-    if (!static_cast<Context *>(context)->getPlatform().isVersionOrNewer(3u, 0u))
+    if (!context->cast<Context>().getPlatform().isVersionOrNewer(3u, 0u))
     {
         return CL_INVALID_CONTEXT;
     }

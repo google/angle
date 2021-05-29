@@ -59,7 +59,7 @@ cl_int Image::getInfo(ImageInfo name, size_t valueSize, void *value, size_t *val
             copySize  = sizeof(mDesc.arraySize);
             break;
         case ImageInfo::Buffer:
-            valPointer = static_cast<cl_mem>(mParent.get());
+            valPointer = Memory::CastNative(mParent.get());
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -101,7 +101,7 @@ bool Image::IsValid(const _cl_mem *image)
     {
         return false;
     }
-    switch (static_cast<const Memory *>(image)->getType())
+    switch (image->cast<Memory>().getType())
     {
         case CL_MEM_OBJECT_IMAGE1D:
         case CL_MEM_OBJECT_IMAGE2D:

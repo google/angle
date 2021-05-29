@@ -8,7 +8,6 @@
 #include "libANGLE/renderer/cl/CLMemoryCL.h"
 
 #include "libANGLE/CLBuffer.h"
-#include "libANGLE/Debug.h"
 
 namespace rx
 {

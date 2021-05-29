@@ -8,8 +8,6 @@
 #ifndef LIBANGLE_RENDERER_CL_CLMEMORYCL_H_
 #define LIBANGLE_RENDERER_CL_CLMEMORYCL_H_
 
-#include "libANGLE/renderer/cl/cl_types.h"
-
 #include "libANGLE/renderer/CLMemoryImpl.h"
 
 namespace rx

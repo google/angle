@@ -256,8 +256,6 @@ TEMPLATE_EGL_ENTRY_POINT_WITH_RETURN = """\
 TEMPLATE_CL_ENTRY_POINT_NO_RETURN = """\
 void CL_API_CALL cl{name}({params})
 {{
-    ANGLE_SCOPED_GLOBAL_LOCK();
-
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -270,10 +268,7 @@ void CL_API_CALL cl{name}({params})
 
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_ERROR = """\
 cl_int CL_API_CALL cl{name}({params})
-{{
-    ANGLE_SCOPED_GLOBAL_LOCK();
-    {initialization}
-
+{{{initialization}
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -286,10 +281,7 @@ cl_int CL_API_CALL cl{name}({params})
 
 TEMPLATE_CL_ENTRY_POINT_WITH_ERRCODE_RET = """\
 {return_type} CL_API_CALL cl{name}({params})
-{{
-    ANGLE_SCOPED_GLOBAL_LOCK();
-    {initialization}
-
+{{{initialization}
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -310,10 +302,7 @@ TEMPLATE_CL_ENTRY_POINT_WITH_ERRCODE_RET = """\
 
 TEMPLATE_CL_ENTRY_POINT_WITH_RETURN_POINTER = """\
 {return_type} CL_API_CALL cl{name}({params})
-{{
-    ANGLE_SCOPED_GLOBAL_LOCK();
-    {initialization}
-
+{{{initialization}
     CL_EVENT({name}, "{format_params}"{comma_if_needed}{pass_params});
 
     {packed_gl_enum_conversions}
@@ -1003,7 +992,6 @@ LIBCL_SOURCE_INCLUDES = """\
 #include "libANGLE/validationCL_autogen.h"
 #include "libGLESv2/cl_stubs_autogen.h"
 #include "libGLESv2/entry_points_cl_utils.h"
-#include "libGLESv2/global_state.h"
 """
 
 TEMPLATE_EVENT_COMMENT = """\
@@ -1564,7 +1552,7 @@ def format_entry_point_def(api, command_node, cmd_name, proto, params, is_explic
     pass_params = [param_print_argument(command_node, param) for param in params]
     format_params = [param_format_string(param) for param in params]
     return_type = proto[:-len(cmd_name)].strip()
-    initialization = "InitBackEnds(%s);" % INIT_DICT[cmd_name] if cmd_name in INIT_DICT else ""
+    initialization = "InitBackEnds(%s);\n" % INIT_DICT[cmd_name] if cmd_name in INIT_DICT else ""
     event_comment = TEMPLATE_EVENT_COMMENT if cmd_name in NO_EVENT_MARKER_EXCEPTIONS_LIST else ""
     name_lower_no_suffix = strip_suffix(api, cmd_name[2:3].lower() + cmd_name[3:])
 

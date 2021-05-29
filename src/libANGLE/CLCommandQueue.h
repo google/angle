@@ -20,7 +20,6 @@ namespace cl
 class CommandQueue final : public _cl_command_queue, public Object
 {
   public:
-    using PtrList   = std::list<CommandQueuePtr>;
     using PropArray = std::vector<cl_queue_properties>;
 
     static constexpr cl_uint kNoSize = std::numeric_limits<cl_uint>::max();
@@ -34,9 +33,6 @@ class CommandQueue final : public _cl_command_queue, public Object
     bool hasSize() const;
     cl_uint getSize() const;
 
-    void retain() noexcept;
-    bool release();
-
     cl_int getInfo(CommandQueueInfo name,
                    size_t valueSize,
                    void *value,
@@ -45,8 +41,6 @@ class CommandQueue final : public _cl_command_queue, public Object
     cl_int setProperty(CommandQueueProperties properties,
                        cl_bool enable,
                        cl_command_queue_properties *oldProperties);
-
-    static bool IsValid(const _cl_command_queue *commandQueue);
 
   private:
     CommandQueue(Context &context,
@@ -61,14 +55,14 @@ class CommandQueue final : public _cl_command_queue, public Object
                  cl_uint size,
                  cl_int &errorCode);
 
-    const ContextRefPtr mContext;
-    const DeviceRefPtr mDevice;
+    const ContextPtr mContext;
+    const DevicePtr mDevice;
     const PropArray mPropArray;
     CommandQueueProperties mProperties;
     const cl_uint mSize = kNoSize;
     const rx::CLCommandQueueImpl::Ptr mImpl;
 
-    friend class Context;
+    friend class Object;
 };
 
 inline const Context &CommandQueue::getContext() const
@@ -94,11 +88,6 @@ inline bool CommandQueue::hasSize() const
 inline cl_uint CommandQueue::getSize() const
 {
     return mSize;
-}
-
-inline void CommandQueue::retain() noexcept
-{
-    addRef();
 }
 
 }  // namespace cl

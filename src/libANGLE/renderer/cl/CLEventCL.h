@@ -27,7 +27,7 @@ class CLEventCL : public CLEventImpl
 
     cl_int setUserEventStatus(cl_int executionStatus) override;
 
-    cl_int setCallback(cl_int commandExecCallbackType) override;
+    cl_int setCallback(cl::Event &event, cl_int commandExecCallbackType) override;
 
   private:
     static void CL_CALLBACK Callback(cl_event event, cl_int commandStatus, void *userData);

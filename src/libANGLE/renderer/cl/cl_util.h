@@ -12,7 +12,6 @@
 
 #include "anglebase/no_destructor.h"
 
-#include <string>
 #include <unordered_set>
 
 #define ANGLE_SUPPORTED_OPENCL_EXTENSIONS "cl_khr_extended_versioning", "cl_khr_icd"

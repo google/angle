@@ -20,21 +20,16 @@ namespace cl
 class Event final : public _cl_event, public Object
 {
   public:
-    using PtrList = std::list<EventPtr>;
-
     ~Event() override;
 
     Context &getContext();
     const Context &getContext() const;
-    const CommandQueueRefPtr &getCommandQueue() const;
+    const CommandQueuePtr &getCommandQueue() const;
     cl_command_type getCommandType() const;
     bool wasStatusChanged() const;
 
-    template <typename T>
+    template <typename T = rx::CLEventImpl>
     T &getImpl() const;
-
-    void retain() noexcept;
-    bool release();
 
     void callback(cl_int commandStatus);
 
@@ -44,16 +39,13 @@ class Event final : public _cl_event, public Object
 
     cl_int setCallback(cl_int commandExecCallbackType, EventCB pfnNotify, void *userData);
 
-    static bool IsValid(const _cl_event *event);
-    static bool IsValidAndVersionOrNewer(const _cl_event *event, cl_uint major, cl_uint minor);
-
   private:
     using CallbackData = std::pair<EventCB, void *>;
 
     Event(Context &context, cl_int &errorCode);
 
-    const ContextRefPtr mContext;
-    const CommandQueueRefPtr mCommandQueue;
+    const ContextPtr mContext;
+    const CommandQueuePtr mCommandQueue;
     const rx::CLEventImpl::Ptr mImpl;
     const cl_command_type mCommandType;
 
@@ -64,7 +56,7 @@ class Event final : public _cl_event, public Object
                   "OpenCL command execution status values are not as assumed");
     std::array<std::vector<CallbackData>, 3u> mCallbacks;
 
-    friend class Context;
+    friend class Object;
 };
 
 inline Context &Event::getContext()
@@ -77,7 +69,7 @@ inline const Context &Event::getContext() const
     return *mContext;
 }
 
-inline const CommandQueueRefPtr &Event::getCommandQueue() const
+inline const CommandQueuePtr &Event::getCommandQueue() const
 {
     return mCommandQueue;
 }
@@ -96,11 +88,6 @@ template <typename T>
 inline T &Event::getImpl() const
 {
     return static_cast<T &>(*mImpl);
-}
-
-inline void Event::retain() noexcept
-{
-    addRef();
 }
 
 }  // namespace cl

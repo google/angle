@@ -17,9 +17,6 @@ namespace cl
 class Kernel final : public _cl_kernel, public Object
 {
   public:
-    using PtrList        = std::list<KernelPtr>;
-    using CreateImplFunc = std::function<rx::CLKernelImpl::Ptr(const cl::Kernel &)>;
-
     ~Kernel() override;
 
     const Program &getProgram() const;
@@ -27,9 +24,6 @@ class Kernel final : public _cl_kernel, public Object
 
     template <typename T>
     T &getImpl() const;
-
-    void retain() noexcept;
-    bool release();
 
     cl_int getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
@@ -45,17 +39,15 @@ class Kernel final : public _cl_kernel, public Object
                       void *value,
                       size_t *valueSizeRet) const;
 
-    static bool IsValid(const _cl_kernel *kernel);
-    static bool IsValidAndVersionOrNewer(const _cl_kernel *kernel, cl_uint major, cl_uint minor);
-
   private:
     Kernel(Program &program, const char *name, cl_int &errorCode);
-    Kernel(Program &program, const CreateImplFunc &createImplFunc, cl_int &errorCode);
+    Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc, cl_int &errorCode);
 
-    const ProgramRefPtr mProgram;
+    const ProgramPtr mProgram;
     const rx::CLKernelImpl::Ptr mImpl;
     const rx::CLKernelImpl::Info mInfo;
 
+    friend class Object;
     friend class Program;
 };
 
@@ -73,11 +65,6 @@ template <typename T>
 inline T &Kernel::getImpl() const
 {
     return static_cast<T &>(*mImpl);
-}
-
-inline void Kernel::retain() noexcept
-{
-    addRef();
 }
 
 }  // namespace cl

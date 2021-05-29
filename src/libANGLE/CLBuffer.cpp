@@ -7,8 +7,6 @@
 
 #include "libANGLE/CLBuffer.h"
 
-#include "libANGLE/CLContext.h"
-
 namespace cl
 {
 
@@ -20,8 +18,7 @@ cl_mem Buffer::createSubBuffer(MemFlags flags,
                                cl_int &errorCode)
 {
     const cl_buffer_region &region = *static_cast<const cl_buffer_region *>(createInfo);
-    return mContext->createMemory(new Buffer(*this, flags, region.origin, region.size, errorCode),
-                                  errorCode);
+    return Object::Create<Buffer>(errorCode, *this, flags, region.origin, region.size);
 }
 
 Buffer::Buffer(Context &context,

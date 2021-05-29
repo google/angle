@@ -28,9 +28,9 @@ class RefPointer
     }
     ~RefPointer()
     {
-        if (mCLObject != nullptr)
+        if (mCLObject != nullptr && mCLObject->release())
         {
-            mCLObject->release();
+            delete mCLObject;
         }
     }
 

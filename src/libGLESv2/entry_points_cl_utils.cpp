@@ -9,6 +9,7 @@
 
 #include "libGLESv2/cl_dispatch_table.h"
 
+#include "libANGLE/CLPlatform.h"
 #ifdef ANGLE_ENABLE_CL_PASSTHROUGH
 #    include "libANGLE/renderer/cl/CLPlatformCL.h"
 #endif
@@ -16,25 +17,51 @@
 #    include "libANGLE/renderer/vulkan/CLPlatformVk.h"
 #endif
 
+#include "anglebase/no_destructor.h"
+
+#include <mutex>
+
 namespace cl
 {
 
 void InitBackEnds(bool isIcd)
 {
-    static bool initialized = false;
-    if (initialized)
+    enum struct State
+    {
+        Uninitialized,
+        Initializing,
+        Initialized
+    };
+    static State sState = State::Uninitialized;
+
+    // Fast thread-unsafe check first
+    if (sState == State::Initialized)
     {
         return;
     }
-    initialized = true;
 
+    static angle::base::NoDestructor<std::recursive_mutex> sMutex;
+    std::lock_guard<std::recursive_mutex> lock(*sMutex);
+
+    // Thread-safe check, return if initialized
+    // or if already initializing (re-entry from CL pass-through back end)
+    if (sState != State::Uninitialized)
+    {
+        return;
+    }
+
+    sState = State::Initializing;
+
+    rx::CLPlatformImpl::CreateFuncs createFuncs;
 #ifdef ANGLE_ENABLE_CL_PASSTHROUGH
-    rx::CLPlatformCL::Initialize(gCLIcdDispatchTable, isIcd);
+    rx::CLPlatformCL::Initialize(createFuncs, isIcd);
 #endif
-
 #ifdef ANGLE_ENABLE_VULKAN
-    rx::CLPlatformVk::Initialize(gCLIcdDispatchTable);
+    rx::CLPlatformVk::Initialize(createFuncs);
 #endif
+    Platform::Initialize(gCLIcdDispatchTable, std::move(createFuncs));
+
+    sState = State::Initialized;
 }
 
 }  // namespace cl

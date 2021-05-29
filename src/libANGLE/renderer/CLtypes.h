@@ -10,8 +10,6 @@
 
 #include "libANGLE/CLtypes.h"
 
-#include "common/angleutils.h"
-
 namespace rx
 {
 

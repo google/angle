@@ -17,7 +17,6 @@ namespace cl
 class Sampler final : public _cl_sampler, public Object
 {
   public:
-    using PtrList   = std::list<SamplerPtr>;
     using PropArray = std::vector<cl_sampler_properties>;
 
     ~Sampler() override;
@@ -28,12 +27,7 @@ class Sampler final : public _cl_sampler, public Object
     AddressingMode getAddressingMode() const;
     FilterMode getFilterMode() const;
 
-    void retain() noexcept;
-    bool release();
-
     cl_int getInfo(SamplerInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
-
-    static bool IsValid(const _cl_sampler *sampler);
 
   private:
     Sampler(Context &context,
@@ -43,14 +37,14 @@ class Sampler final : public _cl_sampler, public Object
             FilterMode filterMode,
             cl_int &errorCode);
 
-    const ContextRefPtr mContext;
+    const ContextPtr mContext;
     const PropArray mProperties;
     const cl_bool mNormalizedCoords;
     const AddressingMode mAddressingMode;
     const FilterMode mFilterMode;
     const rx::CLSamplerImpl::Ptr mImpl;
 
-    friend class Context;
+    friend class Object;
 };
 
 inline const Context &Sampler::getContext() const
@@ -76,11 +70,6 @@ inline AddressingMode Sampler::getAddressingMode() const
 inline FilterMode Sampler::getFilterMode() const
 {
     return mFilterMode;
-}
-
-inline void Sampler::retain() noexcept
-{
-    addRef();
 }
 
 }  // namespace cl

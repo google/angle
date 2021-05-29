@@ -9,7 +9,6 @@
 
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
-#include "libANGLE/CLPlatform.h"
 
 #include <cstring>
 
@@ -24,21 +23,12 @@ CommandQueue::~CommandQueue()
     }
 }
 
-bool CommandQueue::release()
-{
-    const bool released = removeRef();
-    if (released)
-    {
-        mContext->destroyCommandQueue(this);
-    }
-    return released;
-}
-
 cl_int CommandQueue::getInfo(CommandQueueInfo name,
                              size_t valueSize,
                              void *value,
                              size_t *valueSizeRet) const
 {
+    cl_uint valUInt       = 0u;
     void *valPointer      = nullptr;
     const void *copyValue = nullptr;
     size_t copySize       = 0u;
@@ -46,18 +36,19 @@ cl_int CommandQueue::getInfo(CommandQueueInfo name,
     switch (name)
     {
         case CommandQueueInfo::Context:
-            valPointer = static_cast<cl_context>(mContext.get());
+            valPointer = mContext->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
         case CommandQueueInfo::Device:
-            valPointer = static_cast<cl_device_id>(mDevice.get());
+            valPointer = mDevice->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
         case CommandQueueInfo::ReferenceCount:
-            copyValue = getRefCountPtr();
-            copySize  = sizeof(*getRefCountPtr());
+            valUInt   = getRefCount();
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
             break;
         case CommandQueueInfo::Properties:
             copyValue = &mProperties;
@@ -72,7 +63,7 @@ cl_int CommandQueue::getInfo(CommandQueueInfo name,
             copySize  = sizeof(mSize);
             break;
         case CommandQueueInfo::DeviceDefault:
-            valPointer = static_cast<cl_command_queue>(mDevice->mDefaultCommandQueue);
+            valPointer = CommandQueue::CastNative(mDevice->mDefaultCommandQueue);
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -123,23 +114,14 @@ cl_int CommandQueue::setProperty(CommandQueueProperties properties,
     return result;
 }
 
-bool CommandQueue::IsValid(const _cl_command_queue *commandQueue)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->hasCommandQueue(commandQueue);
-           }) != platforms.cend();
-}
-
 CommandQueue::CommandQueue(Context &context,
                            Device &device,
                            CommandQueueProperties properties,
                            cl_int &errorCode)
-    : _cl_command_queue(context.getDispatch()),
-      mContext(&context),
+    : mContext(&context),
       mDevice(&device),
       mProperties(properties),
-      mImpl(context.mImpl->createCommandQueue(*this, errorCode))
+      mImpl(context.getImpl().createCommandQueue(*this, errorCode))
 {}
 
 CommandQueue::CommandQueue(Context &context,
@@ -148,13 +130,12 @@ CommandQueue::CommandQueue(Context &context,
                            CommandQueueProperties properties,
                            cl_uint size,
                            cl_int &errorCode)
-    : _cl_command_queue(context.getDispatch()),
-      mContext(&context),
+    : mContext(&context),
       mDevice(&device),
       mPropArray(std::move(propArray)),
       mProperties(properties),
       mSize(size),
-      mImpl(context.mImpl->createCommandQueue(*this, errorCode))
+      mImpl(context.getImpl().createCommandQueue(*this, errorCode))
 {
     if (mProperties.isSet(CL_QUEUE_ON_DEVICE_DEFAULT))
     {

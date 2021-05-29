@@ -9,10 +9,6 @@
 
 #include "libANGLE/renderer/cl/CLKernelCL.h"
 
-#include "libANGLE/CLKernel.h"
-#include "libANGLE/CLProgram.h"
-#include "libANGLE/Debug.h"
-
 namespace rx
 {
 
@@ -58,35 +54,25 @@ CLKernelImpl::Ptr CLProgramCL::createKernel(const cl::Kernel &kernel,
                                                      : nullptr);
 }
 
-cl_int CLProgramCL::createKernels(cl::Program &program)
+cl_int CLProgramCL::createKernels(cl_uint numKernels,
+                                  CLKernelImpl::CreateFuncs &createFuncs,
+                                  cl_uint *numKernelsRet)
 {
-    cl_uint numKernels = 0u;
-    cl_int errorCode =
-        mNative->getDispatch().clCreateKernelsInProgram(mNative, 0u, nullptr, &numKernels);
+    if (numKernels == 0u)
+    {
+        return mNative->getDispatch().clCreateKernelsInProgram(mNative, 0u, nullptr, numKernelsRet);
+    }
+
+    std::vector<cl_kernel> nativeKernels(numKernels, nullptr);
+    const cl_int errorCode = mNative->getDispatch().clCreateKernelsInProgram(
+        mNative, numKernels, nativeKernels.data(), nullptr);
     if (errorCode == CL_SUCCESS)
     {
-        std::vector<cl_kernel> nativeKernels(numKernels, nullptr);
-        errorCode = mNative->getDispatch().clCreateKernelsInProgram(mNative, numKernels,
-                                                                    nativeKernels.data(), nullptr);
-        if (errorCode == CL_SUCCESS)
+        for (cl_kernel nativeKernel : nativeKernels)
         {
-            for (cl_kernel nativeKernel : nativeKernels)
-            {
-                // Check that kernel has not already been created.
-                if (std::find_if(mProgram.getKernels().cbegin(), mProgram.getKernels().cend(),
-                                 [=](const cl::KernelPtr &ptr) {
-                                     return ptr->getImpl<CLKernelCL>().getNative() == nativeKernel;
-                                 }) == mProgram.getKernels().cend())
-                {
-                    errorCode = program.createKernel([&](const cl::Kernel &kernel) {
-                        return CLKernelImpl::Ptr(new CLKernelCL(kernel, nativeKernel));
-                    });
-                    if (errorCode != CL_SUCCESS)
-                    {
-                        break;
-                    }
-                }
-            }
+            createFuncs.emplace_back([=](const cl::Kernel &kernel) {
+                return CLKernelImpl::Ptr(new CLKernelCL(kernel, nativeKernel));
+            });
         }
     }
     return errorCode;

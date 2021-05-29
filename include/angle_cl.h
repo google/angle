@@ -31,83 +31,81 @@ using ContextErrorCB = void(CL_CALLBACK *)(const char *errinfo,
 
 using EventCB = void(CL_CALLBACK *)(cl_event event, cl_int event_command_status, void *user_data);
 
-template <typename CLObjectType>
+template <typename T = void>
 struct Dispatch
 {
-    constexpr Dispatch(const cl_icd_dispatch &dispatch) : mDispatch(&dispatch)
-    {
-        static_assert(
-            std::is_standard_layout<CLObjectType>::value && offsetof(CLObjectType, mDispatch) == 0u,
-            "Not ICD compatible");
-    }
-    ~Dispatch() = default;
+    Dispatch() : mDispatch(sDispatch) {}
 
-    constexpr const cl_icd_dispatch &getDispatch() { return *mDispatch; }
+    const cl_icd_dispatch &getDispatch() const { return *mDispatch; }
 
-  private:
+    bool isValid() const { return mDispatch == sDispatch; }
+
+    static bool IsValid(const Dispatch *p) { return p != nullptr && p->isValid(); }
+
+    static const cl_icd_dispatch *sDispatch;
+
+  protected:
     // This has to be the first member to be OpenCL ICD compatible
     const cl_icd_dispatch *const mDispatch;
 };
 
+template <typename T>
+const cl_icd_dispatch *Dispatch<T>::sDispatch = nullptr;
+
+template <typename NativeObjectType>
+struct NativeObject : public Dispatch<>
+{
+    NativeObject()
+    {
+        static_assert(std::is_standard_layout<NativeObjectType>::value &&
+                          offsetof(NativeObjectType, mDispatch) == 0u,
+                      "Not ICD compatible");
+    }
+
+    template <typename T>
+    T &cast()
+    {
+        return static_cast<T &>(*this);
+    }
+
+    template <typename T>
+    const T &cast() const
+    {
+        return static_cast<const T &>(*this);
+    }
+
+    NativeObjectType *getNative() { return static_cast<NativeObjectType *>(this); }
+
+    static NativeObjectType *CastNative(NativeObjectType *p) { return p; }
+};
+
 }  // namespace cl
 
-struct _cl_platform_id : public cl::Dispatch<_cl_platform_id>
-{
-    constexpr _cl_platform_id(const cl_icd_dispatch &dispatch)
-        : cl::Dispatch<_cl_platform_id>(dispatch)
-    {}
-    ~_cl_platform_id() = default;
-};
+struct _cl_platform_id : public cl::NativeObject<_cl_platform_id>
+{};
 
-struct _cl_device_id : public cl::Dispatch<_cl_device_id>
-{
-    constexpr _cl_device_id(const cl_icd_dispatch &dispatch) : cl::Dispatch<_cl_device_id>(dispatch)
-    {}
-    ~_cl_device_id() = default;
-};
+struct _cl_device_id : public cl::NativeObject<_cl_device_id>
+{};
 
-struct _cl_context : public cl::Dispatch<_cl_context>
-{
-    constexpr _cl_context(const cl_icd_dispatch &dispatch) : cl::Dispatch<_cl_context>(dispatch) {}
-    ~_cl_context() = default;
-};
+struct _cl_context : public cl::NativeObject<_cl_context>
+{};
 
-struct _cl_command_queue : public cl::Dispatch<_cl_command_queue>
-{
-    constexpr _cl_command_queue(const cl_icd_dispatch &dispatch)
-        : cl::Dispatch<_cl_command_queue>(dispatch)
-    {}
-    ~_cl_command_queue() = default;
-};
+struct _cl_command_queue : public cl::NativeObject<_cl_command_queue>
+{};
 
-struct _cl_mem : public cl::Dispatch<_cl_mem>
-{
-    constexpr _cl_mem(const cl_icd_dispatch &dispatch) : cl::Dispatch<_cl_mem>(dispatch) {}
-    ~_cl_mem() = default;
-};
+struct _cl_mem : public cl::NativeObject<_cl_mem>
+{};
 
-struct _cl_program : public cl::Dispatch<_cl_program>
-{
-    constexpr _cl_program(const cl_icd_dispatch &dispatch) : cl::Dispatch<_cl_program>(dispatch) {}
-    ~_cl_program() = default;
-};
+struct _cl_program : public cl::NativeObject<_cl_program>
+{};
 
-struct _cl_kernel : public cl::Dispatch<_cl_kernel>
-{
-    constexpr _cl_kernel(const cl_icd_dispatch &dispatch) : cl::Dispatch<_cl_kernel>(dispatch) {}
-    ~_cl_kernel() = default;
-};
+struct _cl_kernel : public cl::NativeObject<_cl_kernel>
+{};
 
-struct _cl_event : public cl::Dispatch<_cl_event>
-{
-    constexpr _cl_event(const cl_icd_dispatch &dispatch) : cl::Dispatch<_cl_event>(dispatch) {}
-    ~_cl_event() = default;
-};
+struct _cl_event : public cl::NativeObject<_cl_event>
+{};
 
-struct _cl_sampler : public cl::Dispatch<_cl_sampler>
-{
-    constexpr _cl_sampler(const cl_icd_dispatch &dispatch) : cl::Dispatch<_cl_sampler>(dispatch) {}
-    ~_cl_sampler() = default;
-};
+struct _cl_sampler : public cl::NativeObject<_cl_sampler>
+{};
 
 #endif  // ANGLECL_H_

@@ -7,8 +7,7 @@
 
 #include "libANGLE/renderer/cl/CLEventCL.h"
 
-#include "libANGLE/CLPlatform.h"
-#include "libANGLE/Debug.h"
+#include "libANGLE/CLEvent.h"
 
 namespace rx
 {
@@ -36,24 +35,15 @@ cl_int CLEventCL::setUserEventStatus(cl_int executionStatus)
     return mNative->getDispatch().clSetUserEventStatus(mNative, executionStatus);
 }
 
-cl_int CLEventCL::setCallback(cl_int commandExecCallbackType)
+cl_int CLEventCL::setCallback(cl::Event &event, cl_int commandExecCallbackType)
 {
     return mNative->getDispatch().clSetEventCallback(mNative, commandExecCallbackType, Callback,
-                                                     nullptr);
+                                                     &event);
 }
 
 void CLEventCL::Callback(cl_event event, cl_int commandStatus, void *userData)
 {
-    const cl::EventRefPtr evt = cl::Platform::FindEvent(
-        [=](const cl::EventPtr &ptr) { return ptr->getImpl<CLEventCL>().getNative() == event; });
-    if (evt)
-    {
-        evt->callback(commandStatus);
-    }
-    else
-    {
-        WARN() << "Callback event not found";
-    }
+    static_cast<cl::Event *>(userData)->callback(commandStatus);
 }
 
 }  // namespace rx

@@ -7,8 +7,6 @@
 
 #include "libANGLE/renderer/cl/CLCommandQueueCL.h"
 
-#include "libANGLE/Debug.h"
-
 namespace rx
 {
 

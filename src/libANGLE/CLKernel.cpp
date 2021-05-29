@@ -7,7 +7,7 @@
 
 #include "libANGLE/CLKernel.h"
 
-#include "libANGLE/CLPlatform.h"
+#include "libANGLE/CLContext.h"
 #include "libANGLE/CLProgram.h"
 
 #include <cstring>
@@ -17,18 +17,9 @@ namespace cl
 
 Kernel::~Kernel() = default;
 
-bool Kernel::release()
-{
-    const bool released = removeRef();
-    if (released)
-    {
-        mProgram->destroyKernel(this);
-    }
-    return released;
-}
-
 cl_int Kernel::getInfo(KernelInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
+    cl_uint valUInt       = 0u;
     void *valPointer      = nullptr;
     const void *copyValue = nullptr;
     size_t copySize       = 0u;
@@ -44,16 +35,17 @@ cl_int Kernel::getInfo(KernelInfo name, size_t valueSize, void *value, size_t *v
             copySize  = sizeof(mInfo.mNumArgs);
             break;
         case KernelInfo::ReferenceCount:
-            copyValue = getRefCountPtr();
-            copySize  = sizeof(*getRefCountPtr());
+            valUInt   = getRefCount();
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
             break;
         case KernelInfo::Context:
-            valPointer = static_cast<cl_context>(&mProgram->getContext());
+            valPointer = mProgram->getContext().getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
         case KernelInfo::Program:
-            valPointer = static_cast<cl_program>(mProgram.get());
+            valPointer = mProgram->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -94,7 +86,7 @@ cl_int Kernel::getWorkGroupInfo(cl_device_id device,
     size_t index = 0u;
     if (device != nullptr)
     {
-        const DeviceRefs &devices = mProgram->getContext().getDevices();
+        const DevicePtrs &devices = mProgram->getContext().getDevices();
         while (index < devices.size() && devices[index].get() != device)
         {
             ++index;
@@ -215,34 +207,14 @@ cl_int Kernel::getArgInfo(cl_uint argIndex,
     return CL_SUCCESS;
 }
 
-bool Kernel::IsValid(const _cl_kernel *kernel)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->hasKernel(kernel);
-           }) != platforms.cend();
-}
-
-bool Kernel::IsValidAndVersionOrNewer(const _cl_kernel *kernel, cl_uint major, cl_uint minor)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->isVersionOrNewer(major, minor) && platform->hasKernel(kernel);
-           }) != platforms.cend();
-}
-
 Kernel::Kernel(Program &program, const char *name, cl_int &errorCode)
-    : _cl_kernel(program.getDispatch()),
-      mProgram(&program),
-      mImpl(program.mImpl->createKernel(*this, name, errorCode)),
+    : mProgram(&program),
+      mImpl(program.getImpl().createKernel(*this, name, errorCode)),
       mInfo(mImpl ? mImpl->createInfo(errorCode) : rx::CLKernelImpl::Info{})
 {}
 
-Kernel::Kernel(Program &program, const CreateImplFunc &createImplFunc, cl_int &errorCode)
-    : _cl_kernel(program.getDispatch()),
-      mProgram(&program),
-      mImpl(createImplFunc(*this)),
-      mInfo(mImpl->createInfo(errorCode))
+Kernel::Kernel(Program &program, const rx::CLKernelImpl::CreateFunc &createFunc, cl_int &errorCode)
+    : mProgram(&program), mImpl(createFunc(*this)), mInfo(mImpl->createInfo(errorCode))
 {}
 
 }  // namespace cl

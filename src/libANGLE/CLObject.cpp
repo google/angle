@@ -10,6 +10,8 @@
 namespace cl
 {
 
+Object::Object() : mRefCount(0u) {}
+
 Object::~Object()
 {
     if (mRefCount != 0u)

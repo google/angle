@@ -40,7 +40,7 @@ class Image final : public Memory
     const cl_image_format mFormat;
     const ImageDescriptor mDesc;
 
-    friend class Context;
+    friend class Object;
 };
 
 inline cl_mem_object_type Image::getType() const

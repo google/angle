@@ -8,8 +8,6 @@
 #ifndef LIBANGLE_RENDERER_CL_CLCONTEXTCL_H_
 #define LIBANGLE_RENDERER_CL_CLCONTEXTCL_H_
 
-#include "libANGLE/renderer/cl/cl_types.h"
-
 #include "libANGLE/renderer/CLContextImpl.h"
 
 namespace rx
@@ -21,7 +19,7 @@ class CLContextCL : public CLContextImpl
     CLContextCL(const cl::Context &context, cl_context native);
     ~CLContextCL() override;
 
-    cl::DeviceRefs getDevices(cl_int &errorCode) const override;
+    cl::DevicePtrs getDevices(cl_int &errorCode) const override;
 
     CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
                                                cl_int &errorCode) override;
@@ -59,7 +57,7 @@ class CLContextCL : public CLContextImpl
 
     CLEventImpl::Ptr createUserEvent(const cl::Event &event, cl_int &errorCode) override;
 
-    cl_int waitForEvents(const cl::EventRefs &events) override;
+    cl_int waitForEvents(const cl::EventPtrs &events) override;
 
   private:
     const cl_context mNative;

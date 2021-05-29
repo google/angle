@@ -27,7 +27,9 @@ class CLProgramCL : public CLProgramImpl
                                    const char *name,
                                    cl_int &errorCode) override;
 
-    cl_int createKernels(cl::Program &program) override;
+    cl_int createKernels(cl_uint numKernels,
+                         CLKernelImpl::CreateFuncs &createFuncs,
+                         cl_uint *numKernelsRet) override;
 
   private:
     const cl_program mNative;

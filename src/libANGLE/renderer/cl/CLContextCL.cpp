@@ -24,7 +24,6 @@
 #include "libANGLE/CLPlatform.h"
 #include "libANGLE/CLProgram.h"
 #include "libANGLE/CLSampler.h"
-#include "libANGLE/Debug.h"
 
 namespace rx
 {
@@ -41,7 +40,7 @@ CLContextCL::~CLContextCL()
     }
 }
 
-cl::DeviceRefs CLContextCL::getDevices(cl_int &errorCode) const
+cl::DevicePtrs CLContextCL::getDevices(cl_int &errorCode) const
 {
     size_t valueSize = 0u;
     errorCode = mNative->getDispatch().clGetContextInfo(mNative, CL_CONTEXT_DEVICES, 0u, nullptr,
@@ -53,8 +52,9 @@ cl::DeviceRefs CLContextCL::getDevices(cl_int &errorCode) const
                                                             nativeDevices.data(), nullptr);
         if (errorCode == CL_SUCCESS)
         {
-            const cl::DevicePtrList &platformDevices = mContext.getPlatform().getDevices();
-            cl::DeviceRefs devices;
+            const cl::DevicePtrs &platformDevices = mContext.getPlatform().getDevices();
+            cl::DevicePtrs devices;
+            devices.reserve(nativeDevices.size());
             for (cl_device_id nativeDevice : nativeDevices)
             {
                 auto it = platformDevices.cbegin();
@@ -72,13 +72,13 @@ cl::DeviceRefs CLContextCL::getDevices(cl_int &errorCode) const
                     ASSERT(false);
                     errorCode = CL_INVALID_DEVICE;
                     ERR() << "Device not found in platform list";
-                    return cl::DeviceRefs{};
+                    return cl::DevicePtrs{};
                 }
             }
             return devices;
         }
     }
-    return cl::DeviceRefs{};
+    return cl::DevicePtrs{};
 }
 
 CLCommandQueueImpl::Ptr CLContextCL::createCommandQueue(const cl::CommandQueue &commandQueue,
@@ -140,7 +140,7 @@ CLMemoryImpl::Ptr CLContextCL::createImage(const cl::Image &image,
             desc.height,     desc.depth,
             desc.arraySize,  desc.rowPitch,
             desc.slicePitch, desc.numMipLevels,
-            desc.numSamples, {static_cast<cl_mem>(image.getParent().get())}};
+            desc.numSamples, {cl::Memory::CastNative(image.getParent().get())}};
 
         if (image.getProperties().empty())
         {
@@ -238,7 +238,7 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithBinary(const cl::Program &progr
 {
     ASSERT(program.getDevices().size() == binaries.size());
     std::vector<cl_device_id> nativeDevices;
-    for (const cl::DeviceRefPtr &device : program.getDevices())
+    for (const cl::DevicePtr &device : program.getDevices())
     {
         nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
@@ -261,7 +261,7 @@ CLProgramImpl::Ptr CLContextCL::createProgramWithBuiltInKernels(const cl::Progra
                                                                 cl_int &errorCode)
 {
     std::vector<cl_device_id> nativeDevices;
-    for (const cl::DeviceRefPtr &device : program.getDevices())
+    for (const cl::DevicePtr &device : program.getDevices())
     {
         nativeDevices.emplace_back(device->getImpl<CLDeviceCL>().getNative());
     }
@@ -278,11 +278,11 @@ CLEventImpl::Ptr CLContextCL::createUserEvent(const cl::Event &event, cl_int &er
     return CLEventImpl::Ptr(nativeEvent != nullptr ? new CLEventCL(event, nativeEvent) : nullptr);
 }
 
-cl_int CLContextCL::waitForEvents(const cl::EventRefs &events)
+cl_int CLContextCL::waitForEvents(const cl::EventPtrs &events)
 {
     std::vector<cl_event> nativeEvents;
     nativeEvents.reserve(events.size());
-    for (const cl::EventRefPtr &event : events)
+    for (const cl::EventPtr &event : events)
     {
         nativeEvents.emplace_back(event->getImpl<CLEventCL>().getNative());
     }

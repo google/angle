@@ -38,7 +38,6 @@ config("angle_cl_backend_config") {
 
 angle_source_set("angle_cl_backend") {
   sources = _cl_backend_sources
-  configs += [ "$angle_root/src/libOpenCL:opencl_library_name" ]
 
   public_deps = [
     "$angle_root:libANGLE_headers",

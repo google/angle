@@ -16,7 +16,11 @@ namespace rx
 class CLDeviceImpl : angle::NonCopyable
 {
   public:
-    using Ptr = std::unique_ptr<CLDeviceImpl>;
+    using Ptr         = std::unique_ptr<CLDeviceImpl>;
+    using CreateFunc  = std::function<Ptr(const cl::Device &)>;
+    using CreateFuncs = std::list<CreateFunc>;
+    using CreateData  = std::pair<cl::DeviceType, CreateFunc>;
+    using CreateDatas = std::list<CreateData>;
 
     struct Info
     {
@@ -72,10 +76,9 @@ class CLDeviceImpl : angle::NonCopyable
     virtual cl_int getInfoStringLength(cl::DeviceInfo name, size_t *value) const      = 0;
     virtual cl_int getInfoString(cl::DeviceInfo name, size_t size, char *value) const = 0;
 
-    virtual cl_int createSubDevices(cl::Device &device,
-                                    const cl_device_partition_property *properties,
+    virtual cl_int createSubDevices(const cl_device_partition_property *properties,
                                     cl_uint numDevices,
-                                    cl::DevicePtrList &subDeviceList,
+                                    CreateFuncs &createFuncs,
                                     cl_uint *numDevicesRet) = 0;
 
   protected:

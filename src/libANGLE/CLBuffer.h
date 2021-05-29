@@ -40,7 +40,7 @@ class Buffer final : public Memory
 
     Buffer(Buffer &parent, MemFlags flags, size_t offset, size_t size, cl_int &errorCode);
 
-    friend class Context;
+    friend class Object;
 };
 
 inline cl_mem_object_type Buffer::getType() const
@@ -60,8 +60,7 @@ inline bool Buffer::isRegionValid(const cl_buffer_region &region) const
 
 inline bool Buffer::IsValid(const _cl_mem *buffer)
 {
-    return Memory::IsValid(buffer) &&
-           static_cast<const Memory *>(buffer)->getType() == CL_MEM_OBJECT_BUFFER;
+    return Memory::IsValid(buffer) && buffer->cast<Memory>().getType() == CL_MEM_OBJECT_BUFFER;
 }
 
 }  // namespace cl

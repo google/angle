@@ -14,13 +14,7 @@
 namespace cl
 {
 
-Device::~Device()
-{
-    if (isRoot())
-    {
-        removeRef();
-    }
-}
+Device::~Device() = default;
 
 bool Device::supportsBuiltInKernel(const std::string &name) const
 {
@@ -45,20 +39,6 @@ bool Device::supportsBuiltInKernel(const std::string &name) const
         start = end + 1u;
     } while (start < mInfo.mBuiltInKernels.size());
     return false;
-}
-
-bool Device::release()
-{
-    if (isRoot())
-    {
-        return false;
-    }
-    const bool released = removeRef();
-    if (released)
-    {
-        mParent->destroySubDevice(this);
-    }
-    return released;
 }
 
 cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
@@ -321,18 +301,19 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
 
         // Handle all mapped values
         case DeviceInfo::Platform:
-            valPointer = static_cast<cl_platform_id>(&mPlatform);
+            valPointer = mPlatform.getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
         case DeviceInfo::ParentDevice:
-            valPointer = static_cast<cl_device_id>(mParent.get());
+            valPointer = mParent->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
         case DeviceInfo::ReferenceCount:
-            copyValue = getRefCountPtr();
-            copySize  = sizeof(*getRefCountPtr());
+            valUInt   = isRoot() ? 1u : getRefCount();
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
             break;
 
         default:
@@ -373,63 +354,37 @@ cl_int Device::createSubDevices(const cl_device_partition_property *properties,
     {
         numDevices = 0u;
     }
-    DevicePtrList subDeviceList;
-    const cl_int result =
-        mImpl->createSubDevices(*this, properties, numDevices, subDeviceList, numDevicesRet);
-    if (result == CL_SUCCESS)
+    rx::CLDeviceImpl::CreateFuncs subDeviceCreateFuncs;
+    const cl_int errorCode =
+        mImpl->createSubDevices(properties, numDevices, subDeviceCreateFuncs, numDevicesRet);
+    if (errorCode == CL_SUCCESS)
     {
-        for (const DevicePtr &subDevice : subDeviceList)
+        cl::DeviceType type = mInfo.mType;
+        type.clear(CL_DEVICE_TYPE_DEFAULT);
+        DevicePtrs devices;
+        devices.reserve(subDeviceCreateFuncs.size());
+        while (!subDeviceCreateFuncs.empty())
         {
-            *subDevices++ = subDevice.get();
+            devices.emplace_back(new Device(mPlatform, this, type, subDeviceCreateFuncs.front()));
+            if (!devices.back()->mInfo.isValid())
+            {
+                return CL_INVALID_VALUE;
+            }
+            subDeviceCreateFuncs.pop_front();
         }
-        mSubDevices.splice(mSubDevices.cend(), std::move(subDeviceList));
+        for (DevicePtr &subDevice : devices)
+        {
+            *subDevices++ = subDevice.release();
+        }
     }
-    return result;
-}
-
-DevicePtr Device::CreateDevice(Platform &platform,
-                               Device *parent,
-                               DeviceType type,
-                               const CreateImplFunc &createImplFunc)
-{
-    DevicePtr device(new Device(platform, parent, type, createImplFunc));
-    return device->mInfo.isValid() ? std::move(device) : DevicePtr{};
-}
-
-bool Device::IsValid(const _cl_device_id *device)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->hasDevice(device);
-           }) != platforms.cend();
+    return errorCode;
 }
 
 Device::Device(Platform &platform,
                Device *parent,
                DeviceType type,
-               const CreateImplFunc &createImplFunc)
-    : _cl_device_id(platform.getDispatch()),
-      mPlatform(platform),
-      mParent(parent),
-      mImpl(createImplFunc(*this)),
-      mInfo(mImpl->createInfo(type))
+               const rx::CLDeviceImpl::CreateFunc &createFunc)
+    : mPlatform(platform), mParent(parent), mImpl(createFunc(*this)), mInfo(mImpl->createInfo(type))
 {}
-
-void Device::destroySubDevice(Device *device)
-{
-    auto deviceIt = mSubDevices.cbegin();
-    while (deviceIt != mSubDevices.cend() && deviceIt->get() != device)
-    {
-        ++deviceIt;
-    }
-    if (deviceIt != mSubDevices.cend())
-    {
-        mSubDevices.erase(deviceIt);
-    }
-    else
-    {
-        ERR() << "Sub-device not found";
-    }
-}
 
 }  // namespace cl

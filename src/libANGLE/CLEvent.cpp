@@ -7,8 +7,8 @@
 
 #include "libANGLE/CLEvent.h"
 
+#include "libANGLE/CLCommandQueue.h"
 #include "libANGLE/CLContext.h"
-#include "libANGLE/CLPlatform.h"
 
 #include <cstring>
 
@@ -17,22 +17,17 @@ namespace cl
 
 Event::~Event() = default;
 
-bool Event::release()
-{
-    const bool released = removeRef();
-    if (released)
-    {
-        mContext->destroyEvent(this);
-    }
-    return released;
-}
-
 void Event::callback(cl_int commandStatus)
 {
     ASSERT(commandStatus >= 0 && commandStatus < 3);
     for (const CallbackData &data : mCallbacks[commandStatus])
     {
         data.first(this, commandStatus, data.second);
+    }
+    // This event can be released after the callback was called.
+    if (release())
+    {
+        delete this;
     }
 }
 
@@ -49,6 +44,7 @@ cl_int Event::setUserEventStatus(cl_int executionStatus)
 cl_int Event::getInfo(EventInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
     cl_int execStatus     = 0;
+    cl_uint valUInt       = 0u;
     void *valPointer      = nullptr;
     const void *copyValue = nullptr;
     size_t copySize       = 0u;
@@ -56,7 +52,7 @@ cl_int Event::getInfo(EventInfo name, size_t valueSize, void *value, size_t *val
     switch (name)
     {
         case EventInfo::CommandQueue:
-            valPointer = static_cast<cl_command_queue>(mCommandQueue.get());
+            valPointer = mCommandQueue->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -65,8 +61,9 @@ cl_int Event::getInfo(EventInfo name, size_t valueSize, void *value, size_t *val
             copySize  = sizeof(mCommandType);
             break;
         case EventInfo::ReferenceCount:
-            copyValue = getRefCountPtr();
-            copySize  = sizeof(*getRefCountPtr());
+            valUInt   = getRefCount();
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
             break;
         case EventInfo::CommandExecutionStatus:
         {
@@ -80,7 +77,7 @@ cl_int Event::getInfo(EventInfo name, size_t valueSize, void *value, size_t *val
             break;
         }
         case EventInfo::Context:
-            valPointer = static_cast<cl_context>(mContext.get());
+            valPointer = mContext->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -113,36 +110,21 @@ cl_int Event::setCallback(cl_int commandExecCallbackType, EventCB pfnNotify, voi
     // Only when required register a single callback with the back end for each callback type.
     if (mCallbacks[commandExecCallbackType].empty())
     {
-        const cl_int errorCode = mImpl->setCallback(commandExecCallbackType);
+        const cl_int errorCode = mImpl->setCallback(*this, commandExecCallbackType);
         if (errorCode != CL_SUCCESS)
         {
             return errorCode;
         }
+        // This event has to be retained until the callback is called.
+        retain();
     }
     mCallbacks[commandExecCallbackType].emplace_back(pfnNotify, userData);
     return CL_SUCCESS;
 }
 
-bool Event::IsValid(const _cl_event *event)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->hasEvent(event);
-           }) != platforms.cend();
-}
-
-bool Event::IsValidAndVersionOrNewer(const _cl_event *event, cl_uint major, cl_uint minor)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->isVersionOrNewer(major, minor) && platform->hasEvent(event);
-           }) != platforms.cend();
-}
-
 Event::Event(Context &context, cl_int &errorCode)
-    : _cl_event(context.getDispatch()),
-      mContext(&context),
-      mImpl(context.mImpl->createUserEvent(*this, errorCode)),
+    : mContext(&context),
+      mImpl(context.getImpl().createUserEvent(*this, errorCode)),
       mCommandType(CL_COMMAND_USER)
 {}
 

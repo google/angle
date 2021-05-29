@@ -17,46 +17,35 @@ namespace cl
 class Program final : public _cl_program, public Object
 {
   public:
-    using PtrList = std::list<ProgramPtr>;
-
     ~Program() override;
 
     Context &getContext();
     const Context &getContext() const;
-    const DeviceRefs &getDevices() const;
-    const Kernel::PtrList &getKernels() const;
+    const DevicePtrs &getDevices() const;
 
-    bool hasKernel(const _cl_kernel *kernel) const;
-
-    void retain() noexcept;
-    bool release();
+    template <typename T = rx::CLProgramImpl>
+    T &getImpl() const;
 
     cl_int getInfo(ProgramInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const;
 
     cl_kernel createKernel(const char *kernel_name, cl_int &errorCode);
-    cl_int createKernel(const Kernel::CreateImplFunc &createImplFunc);
-    cl_int createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet);
 
-    static bool IsValid(const _cl_program *program);
+    cl_int createKernels(cl_uint numKernels, cl_kernel *kernels, cl_uint *numKernelsRet);
 
   private:
     Program(Context &context, std::string &&source, cl_int &errorCode);
     Program(Context &context, const void *il, size_t length, cl_int &errorCode);
 
     Program(Context &context,
-            DeviceRefs &&devices,
+            DevicePtrs &&devices,
             Binaries &&binaries,
             cl_int *binaryStatus,
             cl_int &errorCode);
 
-    Program(Context &context, DeviceRefs &&devices, const char *kernelNames, cl_int &errorCode);
+    Program(Context &context, DevicePtrs &&devices, const char *kernelNames, cl_int &errorCode);
 
-    cl_kernel createKernel(Kernel *kernel, cl_int errorCode);
-
-    void destroyKernel(Kernel *kernel);
-
-    const ContextRefPtr mContext;
-    const DeviceRefs mDevices;
+    const ContextPtr mContext;
+    const DevicePtrs mDevices;
     const std::string mIL;
     const rx::CLProgramImpl::Ptr mImpl;
     const std::string mSource;
@@ -64,10 +53,8 @@ class Program final : public _cl_program, public Object
     Binaries mBinaries;
     size_t mNumKernels;
     std::string mKernelNames;
-    Kernel::PtrList mKernels;
 
-    friend class Context;
-    friend class Kernel;
+    friend class Object;
 };
 
 inline Context &Program::getContext()
@@ -80,26 +67,15 @@ inline const Context &Program::getContext() const
     return *mContext;
 }
 
-inline const DeviceRefs &Program::getDevices() const
+inline const DevicePtrs &Program::getDevices() const
 {
     return mDevices;
 }
 
-inline const Kernel::PtrList &Program::getKernels() const
+template <typename T>
+inline T &Program::getImpl() const
 {
-    return mKernels;
-}
-
-inline bool Program::hasKernel(const _cl_kernel *kernel) const
-{
-    return std::find_if(mKernels.cbegin(), mKernels.cend(), [=](const KernelPtr &ptr) {
-               return ptr.get() == kernel;
-           }) != mKernels.cend();
-}
-
-inline void Program::retain() noexcept
-{
-    addRef();
+    return static_cast<T &>(*mImpl);
 }
 
 }  // namespace cl

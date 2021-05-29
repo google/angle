@@ -25,7 +25,7 @@ class CLEventImpl : angle::NonCopyable
 
     virtual cl_int setUserEventStatus(cl_int executionStatus) = 0;
 
-    virtual cl_int setCallback(cl_int commandExecCallbackType) = 0;
+    virtual cl_int setCallback(cl::Event &event, cl_int commandExecCallbackType) = 0;
 
   protected:
     const cl::Event &mEvent;

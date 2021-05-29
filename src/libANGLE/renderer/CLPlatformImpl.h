@@ -11,15 +11,15 @@
 #include "libANGLE/renderer/CLContextImpl.h"
 #include "libANGLE/renderer/CLDeviceImpl.h"
 
-#include <tuple>
-
 namespace rx
 {
 
 class CLPlatformImpl : angle::NonCopyable
 {
   public:
-    using Ptr = std::unique_ptr<CLPlatformImpl>;
+    using Ptr         = std::unique_ptr<CLPlatformImpl>;
+    using CreateFunc  = std::function<Ptr(const cl::Platform &)>;
+    using CreateFuncs = std::list<CreateFunc>;
 
     struct Info
     {
@@ -47,11 +47,11 @@ class CLPlatformImpl : angle::NonCopyable
     virtual ~CLPlatformImpl();
 
     // For initialization only
-    virtual Info createInfo() const                                       = 0;
-    virtual cl::DevicePtrList createDevices(cl::Platform &platform) const = 0;
+    virtual Info createInfo() const                         = 0;
+    virtual CLDeviceImpl::CreateDatas createDevices() const = 0;
 
     virtual CLContextImpl::Ptr createContext(cl::Context &context,
-                                             const cl::DeviceRefs &devices,
+                                             const cl::DevicePtrs &devices,
                                              bool userSync,
                                              cl_int &errorCode) = 0;
 

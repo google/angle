@@ -8,9 +8,10 @@
 #ifndef LIBANGLE_CLOBJECT_H_
 #define LIBANGLE_CLOBJECT_H_
 
+#include "libANGLE/CLtypes.h"
 #include "libANGLE/renderer/CLtypes.h"
 
-#include "libANGLE/Debug.h"
+#include <atomic>
 
 namespace cl
 {
@@ -18,15 +19,14 @@ namespace cl
 class Object
 {
   public:
-    Object() = default;
+    Object();
     virtual ~Object();
 
-    cl_uint getRefCount() { return mRefCount; }
-    const cl_uint *getRefCountPtr() const { return &mRefCount; }
+    cl_uint getRefCount() const noexcept { return mRefCount; }
 
-  protected:
-    void addRef() noexcept { ++mRefCount; }
-    bool removeRef()
+    void retain() noexcept { ++mRefCount; }
+
+    bool release()
     {
         if (mRefCount == 0u)
         {
@@ -36,8 +36,15 @@ class Object
         return --mRefCount == 0u;
     }
 
+    template <typename T, typename... Args>
+    static T *Create(cl_int &errorCode, Args &&... args)
+    {
+        RefPointer<T> object(new T(std::forward<Args>(args)..., errorCode));
+        return errorCode == CL_SUCCESS ? object.release() : nullptr;
+    }
+
   private:
-    cl_uint mRefCount = 1u;
+    std::atomic<cl_uint> mRefCount;
 };
 
 }  // namespace cl

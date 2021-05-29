@@ -8,7 +8,6 @@
 #include "libANGLE/CLSampler.h"
 
 #include "libANGLE/CLContext.h"
-#include "libANGLE/CLPlatform.h"
 
 #include <cstring>
 
@@ -16,16 +15,6 @@ namespace cl
 {
 
 Sampler::~Sampler() = default;
-
-bool Sampler::release()
-{
-    const bool released = removeRef();
-    if (released)
-    {
-        mContext->destroySampler(this);
-    }
-    return released;
-}
 
 cl_int Sampler::getInfo(SamplerInfo name, size_t valueSize, void *value, size_t *valueSizeRet) const
 {
@@ -41,11 +30,12 @@ cl_int Sampler::getInfo(SamplerInfo name, size_t valueSize, void *value, size_t 
     switch (name)
     {
         case SamplerInfo::ReferenceCount:
-            copyValue = getRefCountPtr();
-            copySize  = sizeof(*getRefCountPtr());
+            valUInt   = getRefCount();
+            copyValue = &valUInt;
+            copySize  = sizeof(valUInt);
             break;
         case SamplerInfo::Context:
-            valPointer = static_cast<cl_context>(mContext.get());
+            valPointer = mContext->getNative();
             copyValue  = &valPointer;
             copySize   = sizeof(valPointer);
             break;
@@ -91,27 +81,18 @@ cl_int Sampler::getInfo(SamplerInfo name, size_t valueSize, void *value, size_t 
     return CL_SUCCESS;
 }
 
-bool Sampler::IsValid(const _cl_sampler *sampler)
-{
-    const Platform::PtrList &platforms = Platform::GetPlatforms();
-    return std::find_if(platforms.cbegin(), platforms.cend(), [=](const PlatformPtr &platform) {
-               return platform->hasSampler(sampler);
-           }) != platforms.cend();
-}
-
 Sampler::Sampler(Context &context,
                  PropArray &&properties,
                  cl_bool normalizedCoords,
                  AddressingMode addressingMode,
                  FilterMode filterMode,
                  cl_int &errorCode)
-    : _cl_sampler(context.getDispatch()),
-      mContext(&context),
+    : mContext(&context),
       mProperties(std::move(properties)),
       mNormalizedCoords(normalizedCoords),
       mAddressingMode(addressingMode),
       mFilterMode(filterMode),
-      mImpl(context.mImpl->createSampler(*this, errorCode))
+      mImpl(context.getImpl().createSampler(*this, errorCode))
 {}
 
 }  // namespace cl

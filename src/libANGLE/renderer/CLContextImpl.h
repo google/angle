@@ -9,7 +9,6 @@
 #define LIBANGLE_RENDERER_CLCONTEXTIMPL_H_
 
 #include "libANGLE/renderer/CLCommandQueueImpl.h"
-#include "libANGLE/renderer/CLDeviceImpl.h"
 #include "libANGLE/renderer/CLEventImpl.h"
 #include "libANGLE/renderer/CLMemoryImpl.h"
 #include "libANGLE/renderer/CLProgramImpl.h"
@@ -26,7 +25,7 @@ class CLContextImpl : angle::NonCopyable
     CLContextImpl(const cl::Context &context);
     virtual ~CLContextImpl();
 
-    virtual cl::DeviceRefs getDevices(cl_int &errorCode) const = 0;
+    virtual cl::DevicePtrs getDevices(cl_int &errorCode) const = 0;
 
     virtual CLCommandQueueImpl::Ptr createCommandQueue(const cl::CommandQueue &commandQueue,
                                                        cl_int &errorCode) = 0;
@@ -64,7 +63,7 @@ class CLContextImpl : angle::NonCopyable
 
     virtual CLEventImpl::Ptr createUserEvent(const cl::Event &event, cl_int &errorCode) = 0;
 
-    virtual cl_int waitForEvents(const cl::EventRefs &events) = 0;
+    virtual cl_int waitForEvents(const cl::EventPtrs &events) = 0;
 
   protected:
     const cl::Context &mContext;

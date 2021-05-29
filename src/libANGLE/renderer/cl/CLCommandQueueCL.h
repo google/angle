@@ -9,8 +9,6 @@
 #ifndef LIBANGLE_RENDERER_CL_CLCOMMANDQUEUECL_H_
 #define LIBANGLE_RENDERER_CL_CLCOMMANDQUEUECL_H_
 
-#include "libANGLE/renderer/cl/cl_types.h"
-
 #include "libANGLE/renderer/CLCommandQueueImpl.h"
 
 namespace rx
