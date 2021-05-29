@@ -108,6 +108,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "aeec29a1_83ee1cc2",
+        "filename": "src/compiler/translator/Symbol.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1359667
+      },
+      "writtenOn": "2021-05-29T02:49:55Z",
+      "side": 1,
+      "message": "Let me know if this was what you had in mind.",
+      "parentUuid": "478ebd8f_dd7a6dc0",
+      "range": {
+        "startLine": 194,
+        "startChar": 0,
+        "endLine": 207,
+        "endChar": 41
+      },
+      "revId": "e420815ca6fb66ee123d84be6d5eff651aab2884",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "4c607988_c0534f08",
         "filename": "src/compiler/translator/gen_builtin_symbols.py",
         "patchSetId": 7
