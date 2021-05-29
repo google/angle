@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "17dfd59c_2c0832d7",
+        "filename": "src/libANGLE/renderer/vulkan/ContextVk.cpp",
+        "patchSetId": 6
+      },
+      "lineNbr": 4902,
+      "author": {
+        "id": 1300114
+      },
+      "writtenOn": "2021-05-29T20:37:09Z",
+      "side": 0,
+      "message": "Is this no longer an issue?",
+      "revId": "e697e3790cdb950da4041ad115fd2c39ba72e7aa",
+      "serverId": "3ce6091f-6c88-37e8-8c75-72f92ae8dfba"
+    }
+  ]
+}
