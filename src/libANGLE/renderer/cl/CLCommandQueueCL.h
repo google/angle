@@ -22,6 +22,85 @@ class CLCommandQueueCL : public CLCommandQueueImpl
 
     cl_int setProperty(cl::CommandQueueProperties properties, cl_bool enable) override;
 
+    cl_int enqueueReadBuffer(const cl::Buffer &buffer,
+                             bool blocking,
+                             size_t offset,
+                             size_t size,
+                             void *ptr,
+                             const cl::EventPtrs &waitEvents,
+                             CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueWriteBuffer(const cl::Buffer &buffer,
+                              bool blocking,
+                              size_t offset,
+                              size_t size,
+                              const void *ptr,
+                              const cl::EventPtrs &waitEvents,
+                              CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueReadBufferRect(const cl::Buffer &buffer,
+                                 bool blocking,
+                                 const size_t bufferOrigin[3],
+                                 const size_t hostOrigin[3],
+                                 const size_t region[3],
+                                 size_t bufferRowPitch,
+                                 size_t bufferSlicePitch,
+                                 size_t hostRowPitch,
+                                 size_t hostSlicePitch,
+                                 void *ptr,
+                                 const cl::EventPtrs &waitEvents,
+                                 CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueWriteBufferRect(const cl::Buffer &buffer,
+                                  bool blocking,
+                                  const size_t bufferOrigin[3],
+                                  const size_t hostOrigin[3],
+                                  const size_t region[3],
+                                  size_t bufferRowPitch,
+                                  size_t bufferSlicePitch,
+                                  size_t hostRowPitch,
+                                  size_t hostSlicePitch,
+                                  const void *ptr,
+                                  const cl::EventPtrs &waitEvents,
+                                  CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueCopyBuffer(const cl::Buffer &srcBuffer,
+                             const cl::Buffer &dstBuffer,
+                             size_t srcOffset,
+                             size_t dstOffset,
+                             size_t size,
+                             const cl::EventPtrs &waitEvents,
+                             CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueCopyBufferRect(const cl::Buffer &srcBuffer,
+                                 const cl::Buffer &dstBuffer,
+                                 const size_t srcOrigin[3],
+                                 const size_t dstOrigin[3],
+                                 const size_t region[3],
+                                 size_t srcRowPitch,
+                                 size_t srcSlicePitch,
+                                 size_t dstRowPitch,
+                                 size_t dstSlicePitch,
+                                 const cl::EventPtrs &waitEvents,
+                                 CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    cl_int enqueueFillBuffer(const cl::Buffer &buffer,
+                             const void *pattern,
+                             size_t patternSize,
+                             size_t offset,
+                             size_t size,
+                             const cl::EventPtrs &waitEvents,
+                             CLEventImpl::CreateFunc *eventCreateFunc) override;
+
+    void *enqueueMapBuffer(const cl::Buffer &buffer,
+                           bool blocking,
+                           cl::MapFlags mapFlags,
+                           size_t offset,
+                           size_t size,
+                           const cl::EventPtrs &waitEvents,
+                           CLEventImpl::CreateFunc *eventCreateFunc,
+                           cl_int &errorCode) override;
+
   private:
     const cl_command_queue mNative;
 };

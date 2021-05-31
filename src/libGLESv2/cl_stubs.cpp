@@ -714,8 +714,8 @@ cl_int EnqueueReadBuffer(cl_command_queue command_queue,
                          const cl_event *event_wait_list,
                          cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueReadBuffer);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueReadBuffer(
+        buffer, blocking_read, offset, size, ptr, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueReadBufferRect(cl_command_queue command_queue,
@@ -733,8 +733,10 @@ cl_int EnqueueReadBufferRect(cl_command_queue command_queue,
                              const cl_event *event_wait_list,
                              cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueReadBufferRect);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueReadBufferRect(
+        buffer, blocking_read, buffer_origin, host_origin, region, buffer_row_pitch,
+        buffer_slice_pitch, host_row_pitch, host_slice_pitch, ptr, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 cl_int EnqueueWriteBuffer(cl_command_queue command_queue,
@@ -747,8 +749,8 @@ cl_int EnqueueWriteBuffer(cl_command_queue command_queue,
                           const cl_event *event_wait_list,
                           cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueWriteBuffer);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueWriteBuffer(
+        buffer, blocking_write, offset, size, ptr, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueWriteBufferRect(cl_command_queue command_queue,
@@ -766,8 +768,10 @@ cl_int EnqueueWriteBufferRect(cl_command_queue command_queue,
                               const cl_event *event_wait_list,
                               cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueWriteBufferRect);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueWriteBufferRect(
+        buffer, blocking_write, buffer_origin, host_origin, region, buffer_row_pitch,
+        buffer_slice_pitch, host_row_pitch, host_slice_pitch, ptr, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 cl_int EnqueueFillBuffer(cl_command_queue command_queue,
@@ -780,8 +784,9 @@ cl_int EnqueueFillBuffer(cl_command_queue command_queue,
                          const cl_event *event_wait_list,
                          cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueFillBuffer);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueFillBuffer(
+        buffer, pattern, pattern_size, offset, size, num_events_in_wait_list, event_wait_list,
+        event);
 }
 
 cl_int EnqueueCopyBuffer(cl_command_queue command_queue,
@@ -794,8 +799,9 @@ cl_int EnqueueCopyBuffer(cl_command_queue command_queue,
                          const cl_event *event_wait_list,
                          cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueCopyBuffer);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueCopyBuffer(
+        src_buffer, dst_buffer, src_offset, dst_offset, size, num_events_in_wait_list,
+        event_wait_list, event);
 }
 
 cl_int EnqueueCopyBufferRect(cl_command_queue command_queue,
@@ -812,8 +818,9 @@ cl_int EnqueueCopyBufferRect(cl_command_queue command_queue,
                              const cl_event *event_wait_list,
                              cl_event *event)
 {
-    WARN_NOT_SUPPORTED(EnqueueCopyBufferRect);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueCopyBufferRect(
+        src_buffer, dst_buffer, src_origin, dst_origin, region, src_row_pitch, src_slice_pitch,
+        dst_row_pitch, dst_slice_pitch, num_events_in_wait_list, event_wait_list, event);
 }
 
 cl_int EnqueueReadImage(cl_command_queue command_queue,
@@ -914,8 +921,9 @@ void *EnqueueMapBuffer(cl_command_queue command_queue,
                        cl_event *event,
                        cl_int &errorCode)
 {
-    WARN_NOT_SUPPORTED(EnqueueMapBuffer);
-    return 0;
+    return command_queue->cast<CommandQueue>().enqueueMapBuffer(
+        buffer, blocking_map, map_flags, offset, size, num_events_in_wait_list, event_wait_list,
+        event, errorCode);
 }
 
 void *EnqueueMapImage(cl_command_queue command_queue,

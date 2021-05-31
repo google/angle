@@ -29,6 +29,8 @@ class CLEventCL : public CLEventImpl
 
     cl_int setCallback(cl::Event &event, cl_int commandExecCallbackType) override;
 
+    static std::vector<cl_event> Cast(const cl::EventPtrs &events);
+
   private:
     static void CL_CALLBACK Callback(cl_event event, cl_int commandStatus, void *userData);
 

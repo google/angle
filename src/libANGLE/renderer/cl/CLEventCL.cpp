@@ -41,6 +41,17 @@ cl_int CLEventCL::setCallback(cl::Event &event, cl_int commandExecCallbackType)
                                                      &event);
 }
 
+std::vector<cl_event> CLEventCL::Cast(const cl::EventPtrs &events)
+{
+    std::vector<cl_event> nativeEvents;
+    nativeEvents.reserve(events.size());
+    for (const cl::EventPtr &event : events)
+    {
+        nativeEvents.emplace_back(event->getImpl<CLEventCL>().getNative());
+    }
+    return nativeEvents;
+}
+
 void CLEventCL::Callback(cl_event event, cl_int commandStatus, void *userData)
 {
     static_cast<cl::Event *>(userData)->callback(commandStatus);

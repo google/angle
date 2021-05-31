@@ -39,6 +39,8 @@ class Memory : public _cl_mem, public Object
     template <typename T = rx::CLMemoryImpl>
     T &getImpl() const;
 
+    MemFlags getEffectiveFlags() const;
+
   protected:
     Memory(const Buffer &buffer,
            Context &context,

@@ -292,13 +292,7 @@ cl_event Context::createUserEvent(cl_int &errorCode)
 
 cl_int Context::waitForEvents(cl_uint numEvents, const cl_event *eventList)
 {
-    EventPtrs events;
-    events.reserve(numEvents);
-    while (numEvents-- != 0u)
-    {
-        events.emplace_back(&(*eventList++)->cast<Event>());
-    }
-    return mImpl->waitForEvents(events);
+    return mImpl->waitForEvents(Event::Cast(numEvents, eventList));
 }
 
 Context::~Context() = default;

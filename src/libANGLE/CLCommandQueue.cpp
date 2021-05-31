@@ -7,8 +7,10 @@
 
 #include "libANGLE/CLCommandQueue.h"
 
+#include "libANGLE/CLBuffer.h"
 #include "libANGLE/CLContext.h"
 #include "libANGLE/CLDevice.h"
+#include "libANGLE/CLEvent.h"
 
 #include <cstring>
 
@@ -104,6 +106,237 @@ cl_int CommandQueue::setProperty(CommandQueueProperties properties,
         }
     }
     return result;
+}
+
+cl_int CommandQueue::enqueueReadBuffer(cl_mem buffer,
+                                       cl_bool blockingRead,
+                                       size_t offset,
+                                       size_t size,
+                                       void *ptr,
+                                       cl_uint numEventsInWaitList,
+                                       const cl_event *eventWaitList,
+                                       cl_event *event)
+{
+    const Buffer &buf          = buffer->cast<Buffer>();
+    const bool blocking        = blockingRead != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode =
+        mImpl->enqueueReadBuffer(buf, blocking, offset, size, ptr, waitEvents, eventCreateFuncPtr);
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_READ_BUFFER, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueWriteBuffer(cl_mem buffer,
+                                        cl_bool blockingWrite,
+                                        size_t offset,
+                                        size_t size,
+                                        const void *ptr,
+                                        cl_uint numEventsInWaitList,
+                                        const cl_event *eventWaitList,
+                                        cl_event *event)
+{
+    const Buffer &buf          = buffer->cast<Buffer>();
+    const bool blocking        = blockingWrite != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode =
+        mImpl->enqueueWriteBuffer(buf, blocking, offset, size, ptr, waitEvents, eventCreateFuncPtr);
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_WRITE_BUFFER, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueReadBufferRect(cl_mem buffer,
+                                           cl_bool blockingRead,
+                                           const size_t *bufferOrigin,
+                                           const size_t *hostOrigin,
+                                           const size_t *region,
+                                           size_t bufferRowPitch,
+                                           size_t bufferSlicePitch,
+                                           size_t hostRowPitch,
+                                           size_t hostSlicePitch,
+                                           void *ptr,
+                                           cl_uint numEventsInWaitList,
+                                           const cl_event *eventWaitList,
+                                           cl_event *event)
+{
+    const Buffer &buf          = buffer->cast<Buffer>();
+    const bool blocking        = blockingRead != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueReadBufferRect(
+        buf, blocking, bufferOrigin, hostOrigin, region, bufferRowPitch, bufferSlicePitch,
+        hostRowPitch, hostSlicePitch, ptr, waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event =
+            Object::Create<Event>(errorCode, *this, CL_COMMAND_READ_BUFFER_RECT, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueWriteBufferRect(cl_mem buffer,
+                                            cl_bool blockingWrite,
+                                            const size_t *bufferOrigin,
+                                            const size_t *hostOrigin,
+                                            const size_t *region,
+                                            size_t bufferRowPitch,
+                                            size_t bufferSlicePitch,
+                                            size_t hostRowPitch,
+                                            size_t hostSlicePitch,
+                                            const void *ptr,
+                                            cl_uint numEventsInWaitList,
+                                            const cl_event *eventWaitList,
+                                            cl_event *event)
+{
+    const Buffer &buf          = buffer->cast<Buffer>();
+    const bool blocking        = blockingWrite != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueWriteBufferRect(
+        buf, blocking, bufferOrigin, hostOrigin, region, bufferRowPitch, bufferSlicePitch,
+        hostRowPitch, hostSlicePitch, ptr, waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event =
+            Object::Create<Event>(errorCode, *this, CL_COMMAND_WRITE_BUFFER_RECT, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueCopyBuffer(cl_mem srcBuffer,
+                                       cl_mem dstBuffer,
+                                       size_t srcOffset,
+                                       size_t dstOffset,
+                                       size_t size,
+                                       cl_uint numEventsInWaitList,
+                                       const cl_event *eventWaitList,
+                                       cl_event *event)
+{
+    const Buffer &src          = srcBuffer->cast<Buffer>();
+    const Buffer &dst          = dstBuffer->cast<Buffer>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueCopyBuffer(src, dst, srcOffset, dstOffset, size, waitEvents,
+                                                eventCreateFuncPtr);
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_BUFFER, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueCopyBufferRect(cl_mem srcBuffer,
+                                           cl_mem dstBuffer,
+                                           const size_t *srcOrigin,
+                                           const size_t *dstOrigin,
+                                           const size_t *region,
+                                           size_t srcRowPitch,
+                                           size_t srcSlicePitch,
+                                           size_t dstRowPitch,
+                                           size_t dstSlicePitch,
+                                           cl_uint numEventsInWaitList,
+                                           const cl_event *eventWaitList,
+                                           cl_event *event)
+{
+    const Buffer &src          = srcBuffer->cast<Buffer>();
+    const Buffer &dst          = dstBuffer->cast<Buffer>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueCopyBufferRect(src, dst, srcOrigin, dstOrigin, region,
+                                                    srcRowPitch, srcSlicePitch, dstRowPitch,
+                                                    dstSlicePitch, waitEvents, eventCreateFuncPtr);
+
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event =
+            Object::Create<Event>(errorCode, *this, CL_COMMAND_COPY_BUFFER_RECT, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+cl_int CommandQueue::enqueueFillBuffer(cl_mem buffer,
+                                       const void *pattern,
+                                       size_t patternSize,
+                                       size_t offset,
+                                       size_t size,
+                                       cl_uint numEventsInWaitList,
+                                       const cl_event *eventWaitList,
+                                       cl_event *event)
+{
+    const Buffer &buf          = buffer->cast<Buffer>();
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    cl_int errorCode = mImpl->enqueueFillBuffer(buf, pattern, patternSize, offset, size, waitEvents,
+                                                eventCreateFuncPtr);
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_FILL_BUFFER, eventCreateFunc);
+    }
+    return errorCode;
+}
+
+void *CommandQueue::enqueueMapBuffer(cl_mem buffer,
+                                     cl_bool blockingMap,
+                                     MapFlags mapFlags,
+                                     size_t offset,
+                                     size_t size,
+                                     cl_uint numEventsInWaitList,
+                                     const cl_event *eventWaitList,
+                                     cl_event *event,
+                                     cl_int &errorCode)
+{
+    const Buffer &buf          = buffer->cast<Buffer>();
+    const bool blocking        = blockingMap != CL_FALSE;
+    const EventPtrs waitEvents = Event::Cast(numEventsInWaitList, eventWaitList);
+    rx::CLEventImpl::CreateFunc eventCreateFunc;
+    rx::CLEventImpl::CreateFunc *const eventCreateFuncPtr =
+        event != nullptr ? &eventCreateFunc : nullptr;
+
+    void *const region = mImpl->enqueueMapBuffer(buf, blocking, mapFlags, offset, size, waitEvents,
+                                                 eventCreateFuncPtr, errorCode);
+    if (errorCode == CL_SUCCESS && event != nullptr)
+    {
+        ASSERT(eventCreateFunc);
+        *event = Object::Create<Event>(errorCode, *this, CL_COMMAND_MAP_BUFFER, eventCreateFunc);
+    }
+    return region;
 }
 
 CommandQueue::~CommandQueue()

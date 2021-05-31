@@ -71,7 +71,6 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
         case DeviceInfo::MaxPipeArgs:
         case DeviceInfo::PipeMaxActiveReservations:
         case DeviceInfo::PipeMaxPacketSize:
-        case DeviceInfo::MemBaseAddrAlign:
         case DeviceInfo::MinDataTypeAlignSize:
         case DeviceInfo::GlobalMemCacheType:
         case DeviceInfo::GlobalMemCachelineSize:
@@ -220,6 +219,10 @@ cl_int Device::getInfo(DeviceInfo name, size_t valueSize, void *value, size_t *v
         case DeviceInfo::ImageBaseAddressAlignment:
             copyValue = &mInfo.mImageBaseAddressAlignment;
             copySize  = sizeof(mInfo.mImageBaseAddressAlignment);
+            break;
+        case DeviceInfo::MemBaseAddrAlign:
+            copyValue = &mInfo.mMemBaseAddrAlign;
+            copySize  = sizeof(mInfo.mMemBaseAddrAlign);
             break;
         case DeviceInfo::QueueOnDeviceMaxSize:
             copyValue = &mInfo.mQueueOnDeviceMaxSize;

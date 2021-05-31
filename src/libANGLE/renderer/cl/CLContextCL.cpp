@@ -280,12 +280,7 @@ CLEventImpl::Ptr CLContextCL::createUserEvent(const cl::Event &event, cl_int &er
 
 cl_int CLContextCL::waitForEvents(const cl::EventPtrs &events)
 {
-    std::vector<cl_event> nativeEvents;
-    nativeEvents.reserve(events.size());
-    for (const cl::EventPtr &event : events)
-    {
-        nativeEvents.emplace_back(event->getImpl<CLEventCL>().getNative());
-    }
+    const std::vector<cl_event> nativeEvents = CLEventCL::Cast(events);
     return mNative->getDispatch().clWaitForEvents(static_cast<cl_uint>(nativeEvents.size()),
                                                   nativeEvents.data());
 }

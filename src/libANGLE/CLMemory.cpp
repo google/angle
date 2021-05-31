@@ -103,6 +103,30 @@ cl_int Memory::getInfo(MemInfo name, size_t valueSize, void *value, size_t *valu
 
 Memory::~Memory() = default;
 
+MemFlags Memory::getEffectiveFlags() const
+{
+    MemFlags flags = mFlags;
+    if (mParent)
+    {
+        const MemFlags parent = mParent->getFlags();
+        const MemFlags access(CL_MEM_READ_WRITE | CL_MEM_READ_ONLY | CL_MEM_WRITE_ONLY);
+        const MemFlags hostAccess(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_READ_ONLY |
+                                  CL_MEM_HOST_NO_ACCESS);
+        const MemFlags hostPtrFlags(CL_MEM_USE_HOST_PTR | CL_MEM_ALLOC_HOST_PTR |
+                                    CL_MEM_COPY_HOST_PTR);
+        if (flags.isNotSet(access))
+        {
+            flags.set(parent.mask(access));
+        }
+        if (flags.isNotSet(hostAccess))
+        {
+            flags.set(parent.mask(hostAccess));
+        }
+        flags.set(parent.mask(hostPtrFlags));
+    }
+    return flags;
+}
+
 Memory::Memory(const Buffer &buffer,
                Context &context,
                PropArray &&properties,

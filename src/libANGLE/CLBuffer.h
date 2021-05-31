@@ -23,6 +23,7 @@ class Buffer final : public Memory
                            const void *createInfo,
                            cl_int &errorCode);
 
+    bool isRegionValid(size_t offset, size_t size) const;
     bool isRegionValid(const cl_buffer_region &region) const;
 
     static bool IsValid(const _cl_mem *buffer);
@@ -46,6 +47,11 @@ class Buffer final : public Memory
 
     friend class Object;
 };
+
+inline bool Buffer::isRegionValid(size_t offset, size_t size) const
+{
+    return offset < mSize && offset + size <= mSize;
+}
 
 inline bool Buffer::isRegionValid(const cl_buffer_region &region) const
 {

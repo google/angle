@@ -16,7 +16,8 @@ namespace rx
 class CLEventImpl : angle::NonCopyable
 {
   public:
-    using Ptr = std::unique_ptr<CLEventImpl>;
+    using Ptr        = std::unique_ptr<CLEventImpl>;
+    using CreateFunc = std::function<Ptr(const cl::Event &)>;
 
     CLEventImpl(const cl::Event &event);
     virtual ~CLEventImpl();

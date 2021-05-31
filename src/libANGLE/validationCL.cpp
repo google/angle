@@ -11,7 +11,7 @@
 
 #include "libANGLE/cl_utils.h"
 
-#define ANGLE_VALIDATE_VERSION(major, minor)                   \
+#define ANGLE_VALIDATE_VERSION(version, major, minor)          \
     do                                                         \
     {                                                          \
         if (version < CL_MAKE_VERSION(major##u, minor##u, 0u)) \
@@ -106,8 +106,8 @@ bool ValidateMemoryFlags(MemFlags flags, const Platform &platform)
         // CL_MEM_HOST_WRITE_ONLY, CL_MEM_HOST_READ_ONLY,
         // and CL_MEM_HOST_NO_ACCESS are mutually exclusive.
         allowedFlags.set(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_NO_ACCESS);
-        if (flags.areMutuallyExclusive(CL_MEM_HOST_WRITE_ONLY, CL_MEM_HOST_READ_ONLY,
-                                       CL_MEM_HOST_NO_ACCESS))
+        if (!flags.areMutuallyExclusive(CL_MEM_HOST_WRITE_ONLY, CL_MEM_HOST_READ_ONLY,
+                                        CL_MEM_HOST_NO_ACCESS))
         {
             return false;
         }
@@ -115,6 +115,25 @@ bool ValidateMemoryFlags(MemFlags flags, const Platform &platform)
     if (platform.isVersionOrNewer(2u, 0u))
     {
         allowedFlags.set(CL_MEM_KERNEL_READ_AND_WRITE);
+    }
+    if (flags.hasOtherBitsThan(allowedFlags))
+    {
+        return false;
+    }
+    return true;
+}
+
+bool ValidateMapFlags(MapFlags flags, const Platform &platform)
+{
+    MemFlags allowedFlags(CL_MAP_READ | CL_MAP_WRITE);
+    if (platform.isVersionOrNewer(1u, 2u))
+    {
+        // CL_MAP_READ or CL_MAP_WRITE and CL_MAP_WRITE_INVALIDATE_REGION are mutually exclusive.
+        allowedFlags.set(CL_MAP_WRITE_INVALIDATE_REGION);
+        if (!flags.areMutuallyExclusive(CL_MAP_WRITE_INVALIDATE_REGION, CL_MAP_READ | CL_MAP_WRITE))
+        {
+            return false;
+        }
     }
     if (flags.hasOtherBitsThan(allowedFlags))
     {
@@ -137,13 +156,13 @@ bool ValidateMemoryProperties(const cl_mem_properties *properties)
     return true;
 }
 
-bool ValidateImageFormat(const cl_image_format *image_format, const Platform &platform)
+bool ValidateImageFormat(const cl_image_format *imageFormat, const Platform &platform)
 {
-    if (image_format == nullptr)
+    if (imageFormat == nullptr)
     {
         return false;
     }
-    switch (image_format->image_channel_order)
+    switch (imageFormat->image_channel_order)
     {
         case CL_R:
         case CL_A:
@@ -181,7 +200,7 @@ bool ValidateImageFormat(const cl_image_format *image_format, const Platform &pl
         default:
             return false;
     }
-    switch (image_format->image_channel_data_type)
+    switch (imageFormat->image_channel_data_type)
     {
         case CL_SNORM_INT8:
         case CL_SNORM_INT16:
@@ -200,15 +219,15 @@ bool ValidateImageFormat(const cl_image_format *image_format, const Platform &pl
         case CL_UNORM_SHORT_565:
         case CL_UNORM_SHORT_555:
         case CL_UNORM_INT_101010:
-            if (image_format->image_channel_order != CL_RGB &&
-                image_format->image_channel_order != CL_RGBx)
+            if (imageFormat->image_channel_order != CL_RGB &&
+                imageFormat->image_channel_order != CL_RGBx)
             {
                 return false;
             }
             break;
 
         case CL_UNORM_INT_101010_2:
-            if (!platform.isVersionOrNewer(2u, 1u) || image_format->image_channel_order != CL_RGBA)
+            if (!platform.isVersionOrNewer(2u, 1u) || imageFormat->image_channel_order != CL_RGBA)
             {
                 return false;
             }
@@ -218,6 +237,186 @@ bool ValidateImageFormat(const cl_image_format *image_format, const Platform &pl
             return false;
     }
     return true;
+}
+
+cl_int ValidateCommandQueueAndEventWaitList(cl_command_queue commandQueue,
+                                            cl_uint numEvents,
+                                            const cl_event *events)
+{
+    // CL_INVALID_COMMAND_QUEUE if command_queue is not a valid host command-queue.
+    if (!CommandQueue::IsValid(commandQueue))
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+    const CommandQueue &queue = commandQueue->cast<CommandQueue>();
+    if (!queue.isOnHost())
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+
+    // CL_INVALID_EVENT_WAIT_LIST if event_wait_list is NULL and num_events_in_wait_list > 0,
+    // or event_wait_list is not NULL and num_events_in_wait_list is 0, ...
+    if ((events == nullptr) != (numEvents == 0u))
+    {
+        return CL_INVALID_EVENT_WAIT_LIST;
+    }
+    while (numEvents-- != 0u)
+    {
+        // or if event objects in event_wait_list are not valid events.
+        if (!Event::IsValid(*events))
+        {
+            return CL_INVALID_EVENT_WAIT_LIST;
+        }
+
+        // CL_INVALID_CONTEXT if the context associated with command_queue
+        // and events in event_wait_list are not the same.
+        if (&queue.getContext() != &(*events++)->cast<Event>().getContext())
+        {
+            return CL_INVALID_CONTEXT;
+        }
+    }
+
+    return CL_SUCCESS;
+}
+
+cl_int ValidateEnqueueBuffer(const CommandQueue &queue,
+                             cl_mem buffer,
+                             bool hostRead,
+                             bool hostWrite)
+{
+    // CL_INVALID_MEM_OBJECT if buffer is not a valid buffer object.
+    if (!Buffer::IsValid(buffer))
+    {
+        return CL_INVALID_MEM_OBJECT;
+    }
+    const Buffer &buf = buffer->cast<Buffer>();
+
+    // CL_INVALID_CONTEXT if the context associated with command_queue and buffer are not the same.
+    if (&queue.getContext() != &buf.getContext())
+    {
+        return CL_INVALID_CONTEXT;
+    }
+
+    // CL_MISALIGNED_SUB_BUFFER_OFFSET if buffer is a sub-buffer object and offset specified
+    // when the sub-buffer object is created is not aligned to CL_DEVICE_MEM_BASE_ADDR_ALIGN
+    // value for device associated with queue.
+    if (buf.isSubBuffer() &&
+        (buf.getOffset() % queue.getDevice().getInfo().mMemBaseAddrAlign) != 0u)
+    {
+        return CL_MISALIGNED_SUB_BUFFER_OFFSET;
+    }
+
+    // CL_INVALID_OPERATION if a read function is called on buffer which
+    // has been created with CL_MEM_HOST_WRITE_ONLY or CL_MEM_HOST_NO_ACCESS.
+    if (hostRead && buf.getEffectiveFlags().isSet(CL_MEM_HOST_WRITE_ONLY | CL_MEM_HOST_NO_ACCESS))
+    {
+        return CL_INVALID_OPERATION;
+    }
+
+    // CL_INVALID_OPERATION if a write function is called on buffer which
+    // has been created with CL_MEM_HOST_READ_ONLY or CL_MEM_HOST_NO_ACCESS.
+    if (hostWrite && buf.getEffectiveFlags().isSet(CL_MEM_HOST_READ_ONLY | CL_MEM_HOST_NO_ACCESS))
+    {
+        return CL_INVALID_OPERATION;
+    }
+
+    return CL_SUCCESS;
+}
+
+cl_int ValidateBufferRect(const Buffer &buffer,
+                          const size_t *origin,
+                          const size_t *region,
+                          size_t rowPitch,
+                          size_t slicePitch)
+{
+    // CL_INVALID_VALUE if origin or region is NULL.
+    if (origin == nullptr || region == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if any region array element is 0.
+    if (region[0] == 0u || region[1] == 0u || region[2] == 0u)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if row_pitch is not 0 and is less than region[0].
+    if (rowPitch == 0u)
+    {
+        rowPitch = region[0];
+    }
+    else if (rowPitch < region[0])
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if slice_pitch is not 0 and is less than
+    // region[1] x row_pitch and not a multiple of row_pitch.
+    if (slicePitch == 0u)
+    {
+        slicePitch = region[1] * rowPitch;
+    }
+    else if (slicePitch < region[1] * rowPitch || (slicePitch % rowPitch) != 0u)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if the region being read or written specified
+    // by (origin, region, row_pitch, slice_pitch) is out of bounds.
+    if (!buffer.isRegionValid(
+            origin[2] * slicePitch + origin[1] * rowPitch + origin[0],
+            (region[2] - 1u) * slicePitch + (region[1] - 1u) * rowPitch + region[0]))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    return CL_SUCCESS;
+}
+
+cl_int ValidateHostRect(const size_t *hostOrigin,
+                        const size_t *region,
+                        size_t hostRowPitch,
+                        size_t hostSlicePitch,
+                        const void *ptr)
+{
+    // CL_INVALID_VALUE if host_origin or region is NULL.
+    if (hostOrigin == nullptr || region == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if any region array element is 0.
+    if (region[0] == 0u || region[1] == 0u || region[2] == 0u)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if host_row_pitch is not 0 and is less than region[0].
+    if (hostRowPitch == 0u)
+    {
+        hostRowPitch = region[0];
+    }
+    else if (hostRowPitch < region[0])
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if host_slice_pitch is not 0 and is less than
+    // region[1] x host_row_pitch and not a multiple of host_row_pitch.
+    if (hostSlicePitch != 0u &&
+        (hostSlicePitch < region[1] * hostRowPitch || (hostSlicePitch % hostRowPitch) != 0u))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if ptr is NULL.
+    if (ptr == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    return CL_SUCCESS;
 }
 
 }  // namespace
@@ -255,15 +454,16 @@ cl_int ValidateGetPlatformInfo(cl_platform_id platform,
     switch (param_name)
     {
         case PlatformInfo::HostTimerResolution:
-            ANGLE_VALIDATE_VERSION(2, 1);
+            ANGLE_VALIDATE_VERSION(version, 2, 1);
             break;
         case PlatformInfo::NumericVersion:
         case PlatformInfo::ExtensionsWithVersion:
-            ANGLE_VALIDATE_VERSION(3, 0);
+            ANGLE_VALIDATE_VERSION(version, 3, 0);
             break;
         case PlatformInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -327,7 +527,7 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
         case DeviceInfo::NativeVectorWidthHalf:
         case DeviceInfo::HostUnifiedMemory:
         case DeviceInfo::OpenCL_C_Version:
-            ANGLE_VALIDATE_VERSION(1, 1);
+            ANGLE_VALIDATE_VERSION(version, 1, 1);
             break;
 
         case DeviceInfo::ImageMaxBufferSize:
@@ -343,7 +543,7 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
         case DeviceInfo::PartitionAffinityDomain:
         case DeviceInfo::PartitionType:
         case DeviceInfo::ReferenceCount:
-            ANGLE_VALIDATE_VERSION(1, 2);
+            ANGLE_VALIDATE_VERSION(version, 1, 2);
             break;
 
         case DeviceInfo::MaxReadWriteImageArgs:
@@ -363,13 +563,13 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
         case DeviceInfo::PreferredPlatformAtomicAlignment:
         case DeviceInfo::PreferredGlobalAtomicAlignment:
         case DeviceInfo::PreferredLocalAtomicAlignment:
-            ANGLE_VALIDATE_VERSION(2, 0);
+            ANGLE_VALIDATE_VERSION(version, 2, 0);
             break;
 
         case DeviceInfo::IL_Version:
         case DeviceInfo::MaxNumSubGroups:
         case DeviceInfo::SubGroupIndependentForwardProgress:
-            ANGLE_VALIDATE_VERSION(2, 1);
+            ANGLE_VALIDATE_VERSION(version, 2, 1);
             break;
 
         case DeviceInfo::ILsWithVersion:
@@ -387,12 +587,13 @@ cl_int ValidateGetDeviceInfo(cl_device_id device,
         case DeviceInfo::PipeSupport:
         case DeviceInfo::PreferredWorkGroupSizeMultiple:
         case DeviceInfo::LatestConformanceVersionPassed:
-            ANGLE_VALIDATE_VERSION(3, 0);
+            ANGLE_VALIDATE_VERSION(version, 3, 0);
             break;
 
         case DeviceInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -523,7 +724,7 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
     }
     const CommandQueue &queue = command_queue->cast<CommandQueue>();
     // or if command_queue is not a valid command-queue for param_name.
-    if (param_name == CommandQueueInfo::Size && queue.getProperties().isNotSet(CL_QUEUE_ON_DEVICE))
+    if (param_name == CommandQueueInfo::Size && queue.isOnDevice())
     {
         return CL_INVALID_COMMAND_QUEUE;
     }
@@ -533,17 +734,18 @@ cl_int ValidateGetCommandQueueInfo(cl_command_queue command_queue,
     switch (param_name)
     {
         case CommandQueueInfo::Size:
-            ANGLE_VALIDATE_VERSION(2, 0);
+            ANGLE_VALIDATE_VERSION(version, 2, 0);
             break;
         case CommandQueueInfo::DeviceDefault:
-            ANGLE_VALIDATE_VERSION(2, 1);
+            ANGLE_VALIDATE_VERSION(version, 2, 1);
             break;
         case CommandQueueInfo::PropertiesArray:
-            ANGLE_VALIDATE_VERSION(3, 0);
+            ANGLE_VALIDATE_VERSION(version, 3, 0);
             break;
         case CommandQueueInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -631,17 +833,18 @@ cl_int ValidateGetMemObjectInfo(cl_mem memobj,
     {
         case MemInfo::AssociatedMemObject:
         case MemInfo::Offset:
-            ANGLE_VALIDATE_VERSION(1, 1);
+            ANGLE_VALIDATE_VERSION(version, 1, 1);
             break;
         case MemInfo::UsesSVM_Pointer:
-            ANGLE_VALIDATE_VERSION(2, 0);
+            ANGLE_VALIDATE_VERSION(version, 2, 0);
             break;
         case MemInfo::Properties:
-            ANGLE_VALIDATE_VERSION(3, 0);
+            ANGLE_VALIDATE_VERSION(version, 3, 0);
             break;
         case MemInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -668,11 +871,12 @@ cl_int ValidateGetImageInfo(cl_mem image,
         case ImageInfo::Buffer:
         case ImageInfo::NumMipLevels:
         case ImageInfo::NumSamples:
-            ANGLE_VALIDATE_VERSION(1, 2);
+            ANGLE_VALIDATE_VERSION(version, 1, 2);
             break;
         case ImageInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -708,11 +912,12 @@ cl_int ValidateGetSamplerInfo(cl_sampler sampler,
     switch (param_name)
     {
         case SamplerInfo::Properties:
-            ANGLE_VALIDATE_VERSION(3, 0);
+            ANGLE_VALIDATE_VERSION(version, 3, 0);
             break;
         case SamplerInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -825,18 +1030,19 @@ cl_int ValidateGetProgramInfo(cl_program program,
     {
         case ProgramInfo::NumKernels:
         case ProgramInfo::KernelNames:
-            ANGLE_VALIDATE_VERSION(1, 2);
+            ANGLE_VALIDATE_VERSION(version, 1, 2);
             break;
         case ProgramInfo::IL:
-            ANGLE_VALIDATE_VERSION(2, 1);
+            ANGLE_VALIDATE_VERSION(version, 2, 1);
             break;
         case ProgramInfo::ScopeGlobalCtorsPresent:
         case ProgramInfo::ScopeGlobalDtorsPresent:
-            ANGLE_VALIDATE_VERSION(2, 2);
+            ANGLE_VALIDATE_VERSION(version, 2, 2);
             break;
         case ProgramInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -922,11 +1128,12 @@ cl_int ValidateGetKernelInfo(cl_kernel kernel,
     switch (param_name)
     {
         case KernelInfo::Attributes:
-            ANGLE_VALIDATE_VERSION(1, 2);
+            ANGLE_VALIDATE_VERSION(version, 1, 2);
             break;
         case KernelInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -978,7 +1185,7 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
     switch (param_name)
     {
         case KernelWorkGroupInfo::GlobalWorkSize:
-            ANGLE_VALIDATE_VERSION(1, 2);
+            ANGLE_VALIDATE_VERSION(version, 1, 2);
             // CL_INVALID_VALUE if param_name is CL_KERNEL_GLOBAL_WORK_SIZE and
             // device is not a custom device and kernel is not a built-in kernel.
             if (!dev->supportsBuiltInKernel(krnl.getInfo().mFunctionName))
@@ -989,6 +1196,7 @@ cl_int ValidateGetKernelWorkGroupInfo(cl_kernel kernel,
         case KernelWorkGroupInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -1044,11 +1252,12 @@ cl_int ValidateGetEventInfo(cl_event event,
     switch (param_name)
     {
         case EventInfo::Context:
-            ANGLE_VALIDATE_VERSION(1, 1);
+            ANGLE_VALIDATE_VERSION(version, 1, 1);
             break;
         case EventInfo::InvalidEnum:
             return CL_INVALID_VALUE;
         default:
+            // All remaining possible values for param_name are valid for all versions.
             break;
     }
 
@@ -1096,6 +1305,26 @@ cl_int ValidateEnqueueReadBuffer(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    errorCode = ValidateEnqueueBuffer(command_queue->cast<CommandQueue>(), buffer, true, false);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    // CL_INVALID_VALUE if the region being read or written specified
+    // by (offset, size) is out of bounds or if ptr is a NULL value.
+    if (!buffer->cast<Buffer>().isRegionValid(offset, size) || ptr == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1109,6 +1338,26 @@ cl_int ValidateEnqueueWriteBuffer(cl_command_queue command_queue,
                                   const cl_event *event_wait_list,
                                   const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    errorCode = ValidateEnqueueBuffer(command_queue->cast<CommandQueue>(), buffer, false, true);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    // CL_INVALID_VALUE if the region being read or written specified
+    // by (offset, size) is out of bounds or if ptr is a NULL value.
+    if (!buffer->cast<Buffer>().isRegionValid(offset, size) || ptr == nullptr)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1122,6 +1371,54 @@ cl_int ValidateEnqueueCopyBuffer(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const CommandQueue &queue = command_queue->cast<CommandQueue>();
+
+    errorCode = ValidateEnqueueBuffer(queue, src_buffer, false, false);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const Buffer &src = src_buffer->cast<Buffer>();
+
+    errorCode = ValidateEnqueueBuffer(queue, dst_buffer, false, false);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const Buffer &dst = dst_buffer->cast<Buffer>();
+
+    // CL_INVALID_VALUE if src_offset, dst_offset, size, src_offset + size or dst_offset + size
+    // require accessing elements outside the src_buffer and dst_buffer buffer objects respectively.
+    if (!src.isRegionValid(src_offset, size) || !dst.isRegionValid(dst_offset, size))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_MEM_COPY_OVERLAP if src_buffer and dst_buffer are the same buffer or sub-buffer object
+    // and the source and destination regions overlap or if src_buffer and dst_buffer are
+    // different sub-buffers of the same associated buffer object and they overlap.
+    if ((src.isSubBuffer() ? src.getParent().get() : &src) ==
+        (dst.isSubBuffer() ? dst.getParent().get() : &dst))
+    {
+        // Only sub-buffers have offsets larger than zero
+        src_offset += src.getOffset();
+        dst_offset += dst.getOffset();
+
+        // The regions overlap if src_offset <= dst_offset <= src_offset + size - 1
+        // or if dst_offset <= src_offset <= dst_offset + size - 1.
+        if ((src_offset <= dst_offset && dst_offset <= src_offset + size - 1u) ||
+            (dst_offset <= src_offset && src_offset <= dst_offset + size - 1u))
+        {
+            return CL_MEM_COPY_OVERLAP;
+        }
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1204,6 +1501,34 @@ cl_int ValidateEnqueueMapBuffer(cl_command_queue command_queue,
                                 const cl_event *event_wait_list,
                                 const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const CommandQueue &queue = command_queue->cast<CommandQueue>();
+
+    // CL_INVALID_OPERATION if buffer has been created with CL_MEM_HOST_WRITE_ONLY or
+    // CL_MEM_HOST_NO_ACCESS and CL_MAP_READ is set in map_flags
+    // or if buffer has been created with CL_MEM_HOST_READ_ONLY or CL_MEM_HOST_NO_ACCESS
+    // and CL_MAP_WRITE or CL_MAP_WRITE_INVALIDATE_REGION is set in map_flags.
+    errorCode =
+        ValidateEnqueueBuffer(queue, buffer, map_flags.isSet(CL_MAP_READ),
+                              map_flags.isSet(CL_MAP_WRITE | CL_MAP_WRITE_INVALIDATE_REGION));
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    // CL_INVALID_VALUE if region being mapped given by (offset, size) is out of bounds
+    // or if size is 0 or if values specified in map_flags are not valid.
+    if (!buffer->cast<Buffer>().isRegionValid(offset, size) || size == 0u ||
+        !ValidateMapFlags(map_flags, queue.getContext().getPlatform()))
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1559,6 +1884,37 @@ cl_int ValidateEnqueueReadBufferRect(cl_command_queue command_queue,
                                      const cl_event *event_wait_list,
                                      const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const CommandQueue &queue = command_queue->cast<CommandQueue>();
+    if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 1u))
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+
+    errorCode = ValidateEnqueueBuffer(queue, buffer, true, false);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    errorCode = ValidateBufferRect(buffer->cast<Buffer>(), buffer_origin, region, buffer_row_pitch,
+                                   buffer_slice_pitch);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    errorCode = ValidateHostRect(host_origin, region, host_row_pitch, host_slice_pitch, ptr);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1577,6 +1933,37 @@ cl_int ValidateEnqueueWriteBufferRect(cl_command_queue command_queue,
                                       const cl_event *event_wait_list,
                                       const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const CommandQueue &queue = command_queue->cast<CommandQueue>();
+    if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 1u))
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+
+    errorCode = ValidateEnqueueBuffer(queue, buffer, false, true);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    errorCode = ValidateBufferRect(buffer->cast<Buffer>(), buffer_origin, region, buffer_row_pitch,
+                                   buffer_slice_pitch);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    errorCode = ValidateHostRect(host_origin, region, host_row_pitch, host_slice_pitch, ptr);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1594,6 +1981,51 @@ cl_int ValidateEnqueueCopyBufferRect(cl_command_queue command_queue,
                                      const cl_event *event_wait_list,
                                      const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const CommandQueue &queue = command_queue->cast<CommandQueue>();
+    if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 1u))
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+
+    errorCode = ValidateEnqueueBuffer(queue, src_buffer, false, false);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const Buffer &src = src_buffer->cast<Buffer>();
+
+    errorCode = ValidateEnqueueBuffer(queue, dst_buffer, false, false);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const Buffer &dst = dst_buffer->cast<Buffer>();
+
+    errorCode = ValidateBufferRect(src, src_origin, region, src_row_pitch, src_slice_pitch);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    errorCode = ValidateBufferRect(dst, dst_origin, region, dst_row_pitch, dst_slice_pitch);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    // CL_INVALID_VALUE if src_buffer and dst_buffer are the same buffer object and src_slice_pitch
+    // is not equal to dst_slice_pitch or src_row_pitch is not equal to dst_row_pitch.
+    if (&src == &dst && (src_slice_pitch != dst_slice_pitch || src_row_pitch != dst_row_pitch))
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 
@@ -1737,31 +2169,50 @@ cl_int ValidateCreateImage(cl_context context,
         default:
             return CL_INVALID_IMAGE_DESCRIPTOR;
     }
-    // image_row_pitch must be 0 if host_ptr is NULL and can be either 0
-    // or >= image_width * size of element in bytes if host_ptr is not NULL.
-    // If image_row_pitch is not 0, it must be a multiple of the image element size in bytes.
-    if (image_desc->image_row_pitch != 0u &&
-        (host_ptr == nullptr || image_desc->image_row_pitch < image_desc->image_width * elemSize ||
-         (image_desc->image_row_pitch % elemSize) != 0u))
+    if (image_desc->image_row_pitch != 0u)
     {
-        return CL_INVALID_IMAGE_DESCRIPTOR;
+        // image_row_pitch must be 0 if host_ptr is NULL.
+        if (host_ptr == nullptr)
+        {
+            return CL_INVALID_IMAGE_DESCRIPTOR;
+        }
+        // image_row_pitch can be either 0
+        // or >= image_width * size of element in bytes if host_ptr is not NULL.
+        if (image_desc->image_row_pitch < image_desc->image_width * elemSize)
+        {
+            return CL_INVALID_IMAGE_DESCRIPTOR;
+        }
+        // If image_row_pitch is not 0, it must be a multiple of the image element size in bytes.
+        if ((image_desc->image_row_pitch % elemSize) != 0u)
+        {
+            return CL_INVALID_IMAGE_DESCRIPTOR;
+        }
     }
-    // image_slice_pitch must be 0 if host_ptr is NULL. If host_ptr is not NULL, image_slice_pitch
-    // can be either 0 or >= image_row_pitch * image_height for a 2D image array or 3D image
-    // and can be either 0 or >= image_row_pitch for a 1D image array.
-    // If image_slice_pitch is not 0, it must be a multiple of the image_row_pitch.
-    if (image_desc->image_slice_pitch != 0u &&
-        (host_ptr == nullptr || image_desc->image_slice_pitch < sliceSize ||
-         (image_desc->image_slice_pitch % rowPitch) != 0u))
+    if (image_desc->image_slice_pitch != 0u)
     {
-        return CL_INVALID_IMAGE_DESCRIPTOR;
+        // image_slice_pitch must be 0 if host_ptr is NULL.
+        if (host_ptr == nullptr)
+        {
+            return CL_INVALID_IMAGE_DESCRIPTOR;
+        }
+        // If host_ptr is not NULL, image_slice_pitch can be either 0
+        // or >= image_row_pitch * image_height for a 2D image array or 3D image
+        // and can be either 0 or >= image_row_pitch for a 1D image array.
+        if (image_desc->image_slice_pitch < sliceSize)
+        {
+            return CL_INVALID_IMAGE_DESCRIPTOR;
+        }
+        // If image_slice_pitch is not 0, it must be a multiple of the image_row_pitch.
+        if ((image_desc->image_slice_pitch % rowPitch) != 0u)
+        {
+            return CL_INVALID_IMAGE_DESCRIPTOR;
+        }
     }
     // num_mip_levels and num_samples must be 0.
     if (image_desc->num_mip_levels != 0u || image_desc->num_samples != 0u)
     {
         return CL_INVALID_IMAGE_DESCRIPTOR;
     }
-
     // buffer can be a buffer memory object if image_type is CL_MEM_OBJECT_IMAGE1D_BUFFER or
     // CL_MEM_OBJECT_IMAGE2D. buffer can be an image object if image_type is CL_MEM_OBJECT_IMAGE2D.
     // Otherwise it must be NULL.
@@ -1953,6 +2404,45 @@ cl_int ValidateEnqueueFillBuffer(cl_command_queue command_queue,
                                  const cl_event *event_wait_list,
                                  const cl_event *event)
 {
+    cl_int errorCode = ValidateCommandQueueAndEventWaitList(command_queue, num_events_in_wait_list,
+                                                            event_wait_list);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+    const CommandQueue &queue = command_queue->cast<CommandQueue>();
+    if (!queue.getContext().getPlatform().isVersionOrNewer(1u, 2u))
+    {
+        return CL_INVALID_COMMAND_QUEUE;
+    }
+
+    errorCode = ValidateEnqueueBuffer(queue, buffer, false, false);
+    if (errorCode != CL_SUCCESS)
+    {
+        return errorCode;
+    }
+
+    // CL_INVALID_VALUE if offset or offset + size require accessing
+    // elements outside the buffer object respectively.
+    if (!buffer->cast<Buffer>().isRegionValid(offset, size))
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if pattern is NULL or if pattern_size is 0 or
+    // if pattern_size is not one of { 1, 2, 4, 8, 16, 32, 64, 128 }.
+    if (pattern == nullptr || pattern_size == 0u || pattern_size > 128u ||
+        (pattern_size & (pattern_size - 1u)) != 0u)
+    {
+        return CL_INVALID_VALUE;
+    }
+
+    // CL_INVALID_VALUE if offset and size are not a multiple of pattern_size.
+    if ((offset % pattern_size) != 0u || (size % pattern_size) != 0u)
+    {
+        return CL_INVALID_VALUE;
+    }
+
     return CL_SUCCESS;
 }
 

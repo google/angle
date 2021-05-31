@@ -122,10 +122,31 @@ void Event::callback(cl_int commandStatus)
     }
 }
 
+EventPtrs Event::Cast(cl_uint numEvents, const cl_event *eventList)
+{
+    EventPtrs events;
+    events.reserve(numEvents);
+    while (numEvents-- != 0u)
+    {
+        events.emplace_back(&(*eventList++)->cast<Event>());
+    }
+    return events;
+}
+
 Event::Event(Context &context, cl_int &errorCode)
     : mContext(&context),
-      mImpl(context.getImpl().createUserEvent(*this, errorCode)),
-      mCommandType(CL_COMMAND_USER)
+      mCommandType(CL_COMMAND_USER),
+      mImpl(context.getImpl().createUserEvent(*this, errorCode))
+{}
+
+Event::Event(CommandQueue &queue,
+             cl_command_type commandType,
+             const rx::CLEventImpl::CreateFunc &createFunc,
+             cl_int &errorCode)
+    : mContext(&queue.getContext()),
+      mCommandQueue(&queue),
+      mCommandType(commandType),
+      mImpl(createFunc(*this))
 {}
 
 }  // namespace cl

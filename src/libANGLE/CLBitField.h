@@ -50,6 +50,9 @@ class BitField
         return (isSet(bits1) ? 1 : 0) + (isSet(bits2) ? 1 : 0) + (isSet(bits3) ? 1 : 0) <= 1;
     }
 
+    BitField mask(cl_bitfield bits) const { return BitField(mBits & bits); }
+    BitField mask(const BitField &other) const { return BitField(mBits & other.mBits); }
+
     void set(cl_bitfield bits) { mBits |= bits; }
     void set(const BitField &other) { mBits |= other.mBits; }
     void clear(cl_bitfield bits) { mBits &= ~bits; }

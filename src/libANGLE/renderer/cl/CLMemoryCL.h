@@ -19,6 +19,8 @@ class CLMemoryCL : public CLMemoryImpl
     CLMemoryCL(const cl::Memory &memory, cl_mem native);
     ~CLMemoryCL() override;
 
+    cl_mem getNative();
+
     size_t getSize(cl_int &errorCode) const override;
 
     CLMemoryImpl::Ptr createSubBuffer(const cl::Buffer &buffer,
@@ -28,6 +30,11 @@ class CLMemoryCL : public CLMemoryImpl
   private:
     const cl_mem mNative;
 };
+
+inline cl_mem CLMemoryCL::getNative()
+{
+    return mNative;
+}
 
 }  // namespace rx
 
