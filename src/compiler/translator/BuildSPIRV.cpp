@@ -783,6 +783,68 @@ spirv::IdRef SPIRVBuilder::getCompositeConstant(spirv::IdRef typeId, const spirv
     return iter->second;
 }
 
+void SPIRVBuilder::startNewFunction()
+{
+    ASSERT(mSpirvCurrentFunctionBlocks.empty());
+
+    // Add the first block of the function.
+    mSpirvCurrentFunctionBlocks.emplace_back();
+    mSpirvCurrentFunctionBlocks.back().labelId = getNewId();
+}
+
+void SPIRVBuilder::assembleSpirvFunctionBlocks()
+{
+    // Take all the blocks and place them in the functions section of SPIR-V in sequence.
+    for (const SpirvBlock &block : mSpirvCurrentFunctionBlocks)
+    {
+        // Every block must be properly terminated.
+        ASSERT(block.isTerminated);
+
+        // Generate the OpLabel instruction for the block.
+        spirv::WriteLabel(&mSpirvFunctions, block.labelId);
+
+        // Add the variable declarations if any.
+        mSpirvFunctions.insert(mSpirvFunctions.end(), block.localVariables.begin(),
+                               block.localVariables.end());
+
+        // Add the body of the block.
+        mSpirvFunctions.insert(mSpirvFunctions.end(), block.body.begin(), block.body.end());
+    }
+
+    // Clean up.
+    mSpirvCurrentFunctionBlocks.clear();
+}
+
+spirv::IdRef SPIRVBuilder::declareVariable(spirv::IdRef typeId,
+                                           spv::StorageClass storageClass,
+                                           spirv::IdRef *initializerId,
+                                           const char *name)
+{
+    const bool isFunctionLocal = storageClass == spv::StorageClassFunction;
+
+    // Make sure storage class is consistent with where the variable is declared.
+    ASSERT(!isFunctionLocal || !mSpirvCurrentFunctionBlocks.empty());
+
+    // Function-local variables go in the first block of the function, while the rest are in the
+    // global variables section.
+    spirv::Blob *spirvSection = isFunctionLocal
+                                    ? &mSpirvCurrentFunctionBlocks.front().localVariables
+                                    : &mSpirvVariableDecls;
+
+    spirv::IdRef variableId          = getNewId();
+    const spirv::IdRef typePointerId = getTypePointerId(typeId, storageClass);
+
+    spirv::WriteVariable(spirvSection, typePointerId, variableId, storageClass, initializerId);
+
+    // Output debug information.
+    if (name)
+    {
+        spirv::WriteName(&mSpirvDebug, variableId, name);
+    }
+
+    return variableId;
+}
+
 uint32_t SPIRVBuilder::nextUnusedBinding()
 {
     return mNextUnusedBinding++;

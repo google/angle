@@ -154,6 +154,31 @@ struct SpirvTypeData
     uint32_t sizeInStorageBlock;
 };
 
+// A block of code.  SPIR-V produces forward references to blocks, such as OpBranchConditional
+// specifying the id of the if and else blocks, each of those referencing the id of the block after
+// the else.  Additionally, local variable declarations are accumulated at the top of the first
+// block in a function.  For these reasons, each block of SPIR-V is generated separately and
+// assembled at the end of the function, allowing prior blocks to be modified when necessary.
+struct SpirvBlock
+{
+    // Id of the block
+    spirv::IdRef labelId;
+
+    // Local variable declarations.  Only the first block of a function is allowed to contain any
+    // instructions here.
+    spirv::Blob localVariables;
+
+    // Everything *after* OpLabel (which itself is not generated until blocks are assembled) and
+    // local variables.
+    spirv::Blob body;
+
+    // Whether the block is terminated.  Useful for functions without return, asserting that code is
+    // not added after return/break/continue etc (i.e. dead code, which should really be removed
+    // earlier by a transformation, but could also be hacked by returning a bogus block to contain
+    // all the "garbage" to throw away), last switch case without a break, etc.
+    bool isTerminated = false;
+};
+
 // Helper class to construct SPIR-V
 class SPIRVBuilder : angle::NonCopyable
 {
@@ -182,6 +207,22 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::Blob *getSpirvTypePointerDecls() { return &mSpirvTypePointerDecls; }
     spirv::Blob *getSpirvVariableDecls() { return &mSpirvVariableDecls; }
     spirv::Blob *getSpirvFunctions() { return &mSpirvFunctions; }
+    spirv::Blob *getSpirvCurrentFunctionBlock()
+    {
+        ASSERT(!mSpirvCurrentFunctionBlocks.empty() &&
+               !mSpirvCurrentFunctionBlocks.back().isTerminated);
+        return &mSpirvCurrentFunctionBlocks.back().body;
+    }
+    bool isCurrentFunctionBlockTerminated() const
+    {
+        ASSERT(!mSpirvCurrentFunctionBlocks.empty());
+        return mSpirvCurrentFunctionBlocks.back().isTerminated;
+    }
+    void terminateCurrentFunctionBlock()
+    {
+        ASSERT(!mSpirvCurrentFunctionBlocks.empty());
+        mSpirvCurrentFunctionBlocks.back().isTerminated = true;
+    }
 
     void addCapability(spv::Capability capability);
     void addExecutionMode(spv::ExecutionMode executionMode);
@@ -198,6 +239,17 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::IdRef getIntConstant(int32_t value);
     spirv::IdRef getFloatConstant(float value);
     spirv::IdRef getCompositeConstant(spirv::IdRef typeId, const spirv::IdRefList &values);
+
+    // Helpers to start and end a function.
+    void startNewFunction();
+    void assembleSpirvFunctionBlocks();
+
+    // Helper to declare a variable.  Function-local variables must be placed in the first block of
+    // the current function.
+    spirv::IdRef declareVariable(spirv::IdRef typeId,
+                                 spv::StorageClass storageClass,
+                                 spirv::IdRef *initializerId,
+                                 const char *name);
 
     // TODO: remove name hashing once translation through glslang is removed.  That is necessary to
     // avoid name collision between ANGLE's internal symbols and user-defined ones when compiling
@@ -257,7 +309,7 @@ class SPIRVBuilder : angle::NonCopyable
     angle::HashMap<SpirvType, SpirvTypeData, SpirvTypeHash> mTypeMap;
 
     // Various sections of SPIR-V.  Each section grows as SPIR-V is generated, and the final result
-    // is obtained by stiching the sections together.  This puts the instructions in the order
+    // is obtained by stitching the sections together.  This puts the instructions in the order
     // required by the spec.
     spirv::Blob mSpirvExecutionModes;
     spirv::Blob mSpirvDebug;
@@ -266,6 +318,13 @@ class SPIRVBuilder : angle::NonCopyable
     spirv::Blob mSpirvTypePointerDecls;
     spirv::Blob mSpirvVariableDecls;
     spirv::Blob mSpirvFunctions;
+    // A list of blocks created for the current function.  These are assembled by
+    // assembleSpirvFunctionBlocks() when the function is entirely visited.  Local variables need to
+    // be inserted at the beginning of the first function block, so the entire SPIR-V of the
+    // function cannot be obtained until it's fully visited.
+    //
+    // The last block in this list is the one currently being written to.
+    std::vector<SpirvBlock> mSpirvCurrentFunctionBlocks;
 
     // List of constants that are already defined (for reuse).
     spirv::IdRef mBoolConstants[2];
